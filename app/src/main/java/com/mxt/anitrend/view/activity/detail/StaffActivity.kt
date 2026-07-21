@@ -5,55 +5,138 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.pager.detail.StaffPageAdapter
-import com.mxt.anitrend.base.custom.activity.ActivityBase
 import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget
 import com.mxt.anitrend.databinding.ActivityPagerGenericBinding
+import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.extension.serializableExtra
+import com.mxt.anitrend.model.api.retro.WebFactory
+import com.mxt.anitrend.model.api.retro.anilist.StaffModel
 import com.mxt.anitrend.model.entity.base.StaffBase
-import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
+import com.mxt.anitrend.util.IntentBundleUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
+import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.selectedIndex
+import com.mxt.anitrend.viewmodel.StaffViewModel
+import kotlinx.coroutines.launch
 import java.util.Locale
 
 /**
  * Created by max on 2017/12/14.
  * staff activity
  */
-class StaffActivity : ActivityBase<StaffBase, BasePresenter>() {
+class StaffActivity : AppCompatActivity() {
+
     private lateinit var binding: ActivityPagerGenericBinding
 
+    private var model: StaffBase? = null
+    private var staffId: Long = 0
     private var onList: Boolean? = null
 
     private var favouriteWidget: FavouriteToolbarWidget? = null
 
     private var tabMediator: TabLayoutMediator? = null
 
+    private lateinit var staffViewModel: StaffViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Preserve configured theme (was previously handled by ActivityBase.configureActivity).
+        val settings = KoinExt.get(Settings::class.java)
+        val themeRes = when (settings.theme) {
+            KeyUtil.THEME_DARK -> R.style.AppThemeDark
+            KeyUtil.THEME_BLACK -> R.style.AppThemeBlack
+            else -> R.style.AppThemeLight
+        }
+        setTheme(themeRes)
         super.onCreate(savedInstanceState)
+
+        // Process deep links (e.g. anilist.co/staff/{id}) so arg_id is injected
+        // into the intent before we read it. Previously handled by
+        // ActivityBase.onCreate -> IntentBundleUtil.checkIntentData.
+        IntentBundleUtil(intent).checkIntentData(this)
+
         binding = ActivityPagerGenericBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.customToolbar.toolbar)
-        setPresenter(BasePresenter(this))
-        setViewModel(true)
-        id = intent.getLongExtra(KeyUtil.arg_id, -1)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        if (intent.hasExtra(KeyUtil.arg_id)) {
+            staffId = intent.getLongExtra(KeyUtil.arg_id, -1)
+        }
         onList = intent.serializableExtra(KeyUtil.arg_onList)
+
+        staffViewModel = ViewModelProvider(
+            this,
+            object : ViewModelProvider.Factory {
+                @Suppress("UNCHECKED_CAST")
+                override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T =
+                    StaffViewModel(
+                        staffService = WebFactory.createService(
+                            StaffModel::class.java,
+                            applicationContext,
+                        ),
+                    ) as T
+            },
+        )[StaffViewModel::class.java]
+
+        observeViewModel()
+        setUpPager()
     }
 
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
-        viewModel?.params?.putLong(KeyUtil.arg_id, id)
-        viewModel?.params?.putSerializable(KeyUtil.arg_onList, onList)
-        onActivityReady()
+    private fun observeViewModel() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                staffViewModel.state.collect { state ->
+                    when (state) {
+                        is StaffViewModel.UiState.Loading -> { /* content loads below */ }
+                        is StaffViewModel.UiState.Success -> {
+                            model = state.staff
+                            updateUI()
+                        }
+                        is StaffViewModel.UiState.Error -> {
+                            NotifyUtil.makeText(
+                                this@StaffActivity,
+                                state.message,
+                                R.drawable.ic_warning_white_18dp,
+                                Toast.LENGTH_LONG,
+                            ).show()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setUpPager() {
+        val params = buildPagerParams()
+        val pageAdapter =
+            StaffPageAdapter(this, applicationContext).apply {
+                this.params = params
+            }
+        binding.contentMain.pageContainer.adapter = pageAdapter
+        binding.contentMain.pageContainer.offscreenPageLimit = 3
+        attachTabs(pageAdapter)
+    }
+
+    private fun buildPagerParams(): Bundle {
+        return Bundle().apply {
+            putLong(KeyUtil.arg_id, staffId)
+            putSerializable(KeyUtil.arg_onList, onList)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val isAuth = presenter.settings.isAuthenticated
+        val isAuth = KoinExt.get(Settings::class.java).isAuthenticated
         menuInflater.inflate(R.menu.staff_menu, menu)
         menu.findItem(R.id.action_favourite).isVisible = isAuth
         menu.findItem(R.id.action_on_my_list).isVisible = isAuth
@@ -63,8 +146,8 @@ class StaffActivity : ActivityBase<StaffBase, BasePresenter>() {
             if (favouriteWidget == null) {
                 favouriteMenuItem.isVisible = false
             } else {
-                getModel()?.let { model ->
-                    favouriteWidget?.setModel(model)
+                model?.let { m ->
+                    favouriteWidget?.setModel(m)
                 }
             }
         }
@@ -72,8 +155,12 @@ class StaffActivity : ActivityBase<StaffBase, BasePresenter>() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val model = getModel()
-        if (model != null) {
+        if (item.itemId == android.R.id.home) {
+            onBackPressedDispatcher.onBackPressed()
+            return true
+        }
+        val current = model
+        if (current != null) {
             when (item.itemId) {
                 R.id.action_share -> {
                     val intent =
@@ -83,13 +170,19 @@ class StaffActivity : ActivityBase<StaffBase, BasePresenter>() {
                                 String.format(
                                     Locale.getDefault(),
                                     "%s - %s",
-                                    model.name?.fullName.orEmpty(),
-                                    model.siteUrl.orEmpty(),
+                                    current.name?.fullName.orEmpty(),
+                                    current.siteUrl.orEmpty(),
                                 ),
                             )
                             type = "text/plain"
                         }
-                    startActivity(Intent.createChooser(intent, getString(R.string.abc_shareactionprovider_share_with)))
+                    startActivity(
+                        Intent.createChooser(
+                            intent,
+                            getString(R.string.abc_shareactionprovider_share_with),
+                        ),
+                    )
+                    return true
                 }
                 R.id.action_on_my_list -> {
                     val selectedIndex =
@@ -112,6 +205,7 @@ class StaffActivity : ActivityBase<StaffBase, BasePresenter>() {
                             }
                         reloadViewPager()
                     }
+                    return true
                 }
             }
         } else {
@@ -125,53 +219,22 @@ class StaffActivity : ActivityBase<StaffBase, BasePresenter>() {
         return super.onOptionsItemSelected(item)
     }
 
-    /**
-     * Make decisions, check for permissions or fire background threads from this method
-     * N.B. Must be called after onPostCreate
-     */
-    override fun onActivityReady() {
-        val pageAdapter =
-            StaffPageAdapter(this, applicationContext).apply {
-                params = viewModel?.params ?: Bundle.EMPTY
-            }
-        binding.contentMain.pageContainer.adapter = pageAdapter
-        binding.contentMain.pageContainer.offscreenPageLimit = offScreenLimit
-        attachTabs(pageAdapter)
-    }
-
     override fun onResume() {
         super.onResume()
-        if (getModel() == null) {
-            makeRequest()
-        } else {
-            updateUI()
-        }
+        staffViewModel.load(staffId)
     }
 
-    override fun updateUI() {
-        getModel()?.let { model ->
-            favouriteWidget?.setModel(model)
+    private fun updateUI() {
+        model?.let { current ->
+            favouriteWidget?.setModel(current)
+            supportActionBar?.title = current.name?.fullName
         }
-    }
-
-    override fun makeRequest() {
-        viewModel?.params?.apply {
-            putLong(KeyUtil.arg_id, id)
-        }
-        viewModel?.requestData(KeyUtil.STAFF_BASE_REQ, applicationContext)
-    }
-
-    override fun onChanged(model: StaffBase?) {
-        super.onChanged(model)
-        updateUI()
     }
 
     private fun reloadViewPager() {
+        val params = buildPagerParams()
         val adapter = StaffPageAdapter(this, applicationContext)
-
-        viewModel?.params?.putLong(KeyUtil.arg_id, id)
-        viewModel?.params?.putSerializable(KeyUtil.arg_onList, onList)
-        adapter.params = viewModel?.params ?: Bundle.EMPTY
+        adapter.params = params
 
         val currentItem = binding.contentMain.pageContainer.currentItem
         binding.contentMain.pageContainer.adapter = adapter
