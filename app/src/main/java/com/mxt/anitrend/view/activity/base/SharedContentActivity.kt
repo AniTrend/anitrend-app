@@ -3,13 +3,14 @@ package com.mxt.anitrend.view.activity.base
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ShareCompat
 import androidx.lifecycle.Lifecycle
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.spinner.IconArrayAdapter
-import com.mxt.anitrend.base.custom.activity.ActivityBase
 import com.mxt.anitrend.base.custom.consumer.BaseConsumer
+import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
 import com.mxt.anitrend.base.interfaces.event.BottomSheetListener
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener
 import com.mxt.anitrend.databinding.ActivityShareContentBinding
@@ -17,9 +18,9 @@ import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.extension.getCompatTintedDrawable
 import com.mxt.anitrend.extension.hideKeyboard
 import com.mxt.anitrend.model.entity.anilist.FeedList
-import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
+import com.mxt.anitrend.util.IntentBundleUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.Settings
@@ -29,18 +30,17 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-/**
- * Created by max on 2017/12/14.
- * share content intent activity
- */
 class SharedContentActivity :
-    ActivityBase<FeedList, BasePresenter>(),
+    AppCompatActivity(),
     BottomSheetListener,
     BaseConsumer.onRequestModelChange<FeedList>,
     ItemClickListener<Any> {
+
     private lateinit var binding: ActivityShareContentBinding
     private lateinit var toolbarBinding: com.mxt.anitrend.databinding.CustomSheetToolbarBinding
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
+
+    private var mBottomSheet: BottomSheetBase<*>? = null
 
     private val bottomSheetCallback =
         object : BottomSheetBehavior.BottomSheetCallback() {
@@ -60,8 +60,7 @@ class SharedContentActivity :
             override fun onSlide(
                 bottomSheet: View,
                 slideOffset: Float,
-            ) {
-            }
+            ) = Unit
         }
 
     private val indexIconMap =
@@ -73,7 +72,8 @@ class SharedContentActivity :
             4 to R.drawable.ic_slow_motion_video_white_24dp,
         )
 
-    override fun configureActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        // Translucent theme (previously handled by ActivityBase.configureActivity).
         val settings = KoinExt.get(Settings::class.java)
         setTheme(
             if (CompatUtil.isLightTheme(settings)) {
@@ -82,19 +82,19 @@ class SharedContentActivity :
                 R.style.AppThemeDark_Translucent
             },
         )
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Process share-intent deep links (previously ActivityBase.onCreate).
+        val intentUtil = IntentBundleUtil(intent)
+        intentUtil.checkIntentData(this)
+
         binding = ActivityShareContentBinding.inflate(layoutInflater)
         setContentView(binding.root)
         bottomSheetBehavior = BottomSheetBehavior.from(binding.designBottomSheet)
         toolbarBinding = binding.customSheetToolbar
         binding.sheetSharePostTypeApprove.setOnClickListener { getItemSelected() }
-    }
 
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
+        // Bottom-sheet setup (previously onPostCreate).
         bottomSheetBehavior.peekHeight = CompatUtil.dipToPx(KeyUtil.PEEK_HEIGHT)
         bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
@@ -107,21 +107,8 @@ class SharedContentActivity :
             )
         iconArrayAdapter.setIndexIconMap(indexIconMap)
         binding.sheetSharePostType.adapter = iconArrayAdapter
-        onActivityReady()
-    }
 
-    override fun onResume() {
-        super.onResume()
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this)
-        }
-    }
-
-    /**
-     * Make decisions, check for permissions or fire background threads from this method
-     * N.B. Must be called after onPostCreate
-     */
-    override fun onActivityReady() {
+        // Toolbar + composer setup (previously onActivityReady).
         toolbarBinding.toolbarSearch.visibility = View.GONE
         toolbarBinding.toolbarTitle.setText(R.string.menu_title_new_activity_post)
         if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
@@ -144,11 +131,9 @@ class SharedContentActivity :
         binding.composerWidget.itemClickListener = this
         binding.composerWidget.lifecycle = lifecycle
         binding.composerWidget.requestType = KeyUtil.MUT_SAVE_TEXT_FEED
-        updateUI()
-    }
 
-    override fun updateUI() {
-        val reader: ShareCompat.IntentReader? = intentBundleUtil.sharedIntent
+        // Share-intent content (previously updateUI).
+        val reader: ShareCompat.IntentReader? = intentUtil.sharedIntent
         if (reader != null) {
             binding.sheetSharedResource.setText(reader.text)
             if (reader.text != reader.subject) {
@@ -159,7 +144,18 @@ class SharedContentActivity :
         }
     }
 
-    override fun makeRequest() {
+    override fun onResume() {
+        super.onResume()
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this)
+        }
+    }
+
+    override fun onPause() {
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this)
+        }
+        super.onPause()
     }
 
     override fun onStateCollapsed() {
@@ -230,6 +226,5 @@ class SharedContentActivity :
     override fun onItemLongClick(
         target: View,
         data: IndexedValue<Any>,
-    ) {
-    }
+    ) = Unit
 }
