@@ -2,8 +2,8 @@ package com.mxt.anitrend.util
 
 import androidx.annotation.StyleRes
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.fragment.app.FragmentActivity
 import com.mxt.anitrend.R
-import com.mxt.anitrend.base.custom.activity.ActivityBase
 import com.mxt.anitrend.extension.applyConfiguredTheme
 import java.util.*
 
@@ -16,7 +16,7 @@ class ConfigurationUtil(private val settings: Settings) {
     /**
      * Applies appropriate theme and locale startup
      */
-    fun onCreateAttach(base: ActivityBase<*, *>) {
+    fun onCreateAttach(base: FragmentActivity) {
         currentTheme = settings.theme
         currentLocale = settings.userLanguage ?: Locale.getDefault().language
         @StyleRes val theme = when (currentTheme) {
@@ -31,7 +31,7 @@ class ConfigurationUtil(private val settings: Settings) {
      * Checks if the previously set theme is the same as the current when the activity resumes it's state
      */
     @Suppress("DEPRECATION")
-    fun onResumeAttach(base: ActivityBase<*, *>) {
+    fun onResumeAttach(base: FragmentActivity) {
         if (currentTheme != settings.theme || currentLocale != settings.userLanguage) {
             with(base) {
                 applyConfiguredTheme()
