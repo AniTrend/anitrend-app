@@ -100,7 +100,18 @@ import timber.log.Timber
  * Created by max on 2017/09/16.
  * Handles all service creation for Retrofit Endpoints on a background task,
  * which allows us to perform heavy operations such as token refreshing on demand
+ *
+ * @deprecated Use repository classes (e.g. [com.mxt.anitrend.repository.UserRepository],
+ * [com.mxt.anitrend.repository.MediaRepository], etc.) directly via Koin injection.
+ * The repository layer handles GraphQL request building and network calls without
+ * the overhead of this central dispatcher. See AGENTS.md for the ViewModel-first
+ * architecture migration direction.
  */
+@Deprecated(
+    message = "Use repository classes directly via Koin injection. " +
+        "See UserRepository, MediaRepository, BrowseRepository, etc.",
+    level = DeprecationLevel.WARNING,
+)
 @Suppress("UNCHECKED_CAST")
 class RequestHandler<T>(
     private val param: Bundle,

@@ -2,9 +2,11 @@ package com.mxt.anitrend.presenter.widget
 
 import android.content.Context
 import com.mxt.anitrend.base.custom.async.RequestHandler
+import com.mxt.anitrend.base.interfaces.dao.BoxQuery
 import com.mxt.anitrend.base.interfaces.event.RetroCallback
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.KeyUtil
+import com.mxt.anitrend.util.Settings
 import java.util.Locale
 
 /**
@@ -12,7 +14,9 @@ import java.util.Locale
  */
 class WidgetPresenter<T>(
     context: Context,
-) : BasePresenter(context) {
+    boxQuery: BoxQuery,
+    settings: Settings,
+) : BasePresenter(context, boxQuery, settings) {
     private var loader: RequestHandler<T>? = null
 
     /**

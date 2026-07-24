@@ -12,6 +12,8 @@ import com.mxt.anitrend.base.custom.view.image.WideImageView
 import com.mxt.anitrend.databinding.AdapterEpisodeBinding
 import com.mxt.anitrend.extension.getLayoutInflater
 import com.mxt.anitrend.model.entity.crunchy.Episode
+import java.util.Locale
+import java.util.concurrent.TimeUnit
 
 /**
  * Created by max on 2017/11/04.
@@ -19,6 +21,14 @@ import com.mxt.anitrend.model.entity.crunchy.Episode
 class EpisodeAdapter(
     context: Context,
 ) : RecyclerViewAdapter<Episode>(context) {
+
+    private fun formatDuration(duration: String?): String {
+        val timeSpan = duration?.toLongOrNull() ?: return "00:00"
+        val minutes = TimeUnit.SECONDS.toMinutes(timeSpan)
+        val seconds = timeSpan - TimeUnit.MINUTES.toSeconds(minutes)
+        return String.format(Locale.getDefault(), if (seconds < 10) "%d:0%d" else "%d:%d", minutes, seconds)
+    }
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -37,8 +47,8 @@ class EpisodeAdapter(
         }
 
         override fun onBindViewHolder(model: Episode) {
-            WideImageView.setImage(binding.seriesImage, presenter.getThumbnail(model.thumbnail))
-            binding.seriesDuration.text = presenter.getDuration(model.content)
+            WideImageView.setImage(binding.seriesImage, model.thumbnail?.getOrNull(0)?.url)
+            binding.seriesDuration.text = formatDuration(model.content?.duration)
             binding.seriesTitle.text = model.title
         }
 

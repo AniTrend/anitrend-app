@@ -4,9 +4,9 @@ import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import com.mxt.anitrend.model.api.retro.WebFactory
+import com.mxt.anitrend.model.api.retro.base.RepositoryModel
 import com.mxt.anitrend.model.entity.base.VersionBase
-import com.mxt.anitrend.presenter.widget.WidgetPresenter
+import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.date.DateUtil
 import retrofit2.HttpException
@@ -15,11 +15,9 @@ import timber.log.Timber
 class UpdateWorker(
     context: Context,
     workerParams: WorkerParameters,
-    private val presenter: WidgetPresenter<VersionBase>,
+    private val presenter: BasePresenter,
+    private val repositoryService: RepositoryModel,
 ) : CoroutineWorker(context, workerParams) {
-    private val endpoint by lazy(LazyThreadSafetyMode.NONE) {
-        WebFactory.createRepositoryService()
-    }
 
     private fun shouldCheckForUpdate(): Boolean {
         val versionBase = presenter.database.remoteVersion
@@ -34,7 +32,7 @@ class UpdateWorker(
 
     private fun requestUpdateInformation(): VersionBase? = if (shouldCheckForUpdate()) {
         val response =
-            endpoint
+            repositoryService
                 .checkVersion(
                     presenter.settings.updateChannel,
                 ).execute()

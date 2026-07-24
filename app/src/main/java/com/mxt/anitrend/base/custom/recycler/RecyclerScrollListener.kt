@@ -16,7 +16,7 @@ import com.mxt.anitrend.util.KeyUtil
  * Implementing original gist: https://gist.github.com/ssinss/e06f12ef66c51252563e
  * Modified by max to accommodate grid and staggered layout managers and other custom properties
  */
-abstract class RecyclerScrollListener : RecyclerView.OnScrollListener() {
+open class RecyclerScrollListener : RecyclerView.OnScrollListener() {
     private var previousTotal = 0 // The total number of items in the dataset after the last load
     private var loading = true // True if still waiting for the last set of data to load.
     var currentPage = 1

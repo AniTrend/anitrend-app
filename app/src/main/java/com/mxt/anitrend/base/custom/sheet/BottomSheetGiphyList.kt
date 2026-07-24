@@ -7,7 +7,6 @@ import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter
 import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView
 import com.mxt.anitrend.base.custom.view.container.CustomSwipeRefreshLayout
-import com.mxt.anitrend.base.custom.viewmodel.acquireTypedViewModelBase
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener
 import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener
 import com.mxt.anitrend.base.interfaces.event.ResponseCallback
@@ -48,7 +47,6 @@ abstract class BottomSheetGiphyList :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setViewModel(true)
     }
 
     override fun onStart() {
@@ -128,13 +126,6 @@ abstract class BottomSheetGiphyList :
             stateLayout?.showEmpty(drawable, getString(R.string.layout_empty_response))
         } else {
             stateLayout?.showContent()
-        }
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    protected fun setViewModel(stateSupported: Boolean) {
-        if (viewModel == null) {
-            viewModel = acquireTypedViewModelBase(this, stateSupported, this)
         }
     }
 

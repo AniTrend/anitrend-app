@@ -7,6 +7,9 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.MediaAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
@@ -22,13 +25,17 @@ import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.util.selectedIndex
 import com.mxt.anitrend.view.activity.detail.MediaActivity
+import com.mxt.anitrend.viewmodel.StudioMediaViewModel
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-/**
- * Created by max on 2018/03/25.
- * StudioMediaFragment
- */
 class StudioMediaFragment : FragmentBaseList<MediaBase, ConnectionContainer<PageContainer<MediaBase>>, MediaPresenter>() {
     private var id: Long = 0
+
+    private val settings: Settings by inject()
+
+    private val mediaViewModel: StudioMediaViewModel by viewModel()
 
     companion object {
         @JvmStatic
@@ -47,8 +54,41 @@ class StudioMediaFragment : FragmentBaseList<MediaBase, ConnectionContainer<Page
         isPager = true
         isFilterableEnabled = true
         mAdapter = MediaAdapter(ctx, true)
-        setPresenter(MediaPresenter(ctx))
-        setViewModel(true)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        observeMediaViewModel()
+    }
+
+    private fun observeMediaViewModel() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            // Collect on STARTED so refreshes coming back from background also update.
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                mediaViewModel.state.collect { state ->
+                    when (state) {
+                        is StudioMediaViewModel.UiState.Loading -> {
+                            showLoading()
+                        }
+                        is StudioMediaViewModel.UiState.Success -> {
+                            val container = state.container
+                            val pageContainer = container.connection
+                            if (pageContainer != null && !pageContainer.isEmpty) {
+                                if (pageContainer.hasPageInfo()) {
+                                    setPageInfo(pageContainer.pageInfo)
+                                }
+                                onPostProcessed(pageContainer.pageData)
+                            } else {
+                                onPostProcessed(emptyList())
+                            }
+                        }
+                        is StudioMediaViewModel.UiState.Error -> {
+                            showError(state.message)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @Deprecated("Deprecated in Java")
@@ -75,10 +115,10 @@ class StudioMediaFragment : FragmentBaseList<MediaBase, ConnectionContainer<Page
                 DialogUtil.createSelection(
                     ctx,
                     R.string.app_filter_sort,
-                    CompatUtil.getIndexOf(mediaSortTypes, presenter.settings.mediaSort),
+                    CompatUtil.getIndexOf(mediaSortTypes, settings.mediaSort),
                     CompatUtil.capitalizeWords(mediaSortTypes),
                 ) { dialog, _ ->
-                    presenter.settings.mediaSort =
+                    settings.mediaSort =
                         mediaSortTypes.getOrNull(dialog.selectedIndex)
                 }
                 return true
@@ -88,11 +128,11 @@ class StudioMediaFragment : FragmentBaseList<MediaBase, ConnectionContainer<Page
                 DialogUtil.createSelection(
                     ctx,
                     R.string.app_filter_order,
-                    CompatUtil.getIndexOf(sortOrders, presenter.settings.sortOrder),
+                    CompatUtil.getIndexOf(sortOrders, settings.sortOrder),
                     CompatUtil.getStringList(ctx, R.array.order_by_types),
                 ) { dialog, _ ->
-                    presenter.settings.saveSortOrder(
-                        sortOrders.getOrNull(dialog.selectedIndex) ?: presenter.settings.sortOrder,
+                    settings.saveSortOrder(
+                        sortOrders.getOrNull(dialog.selectedIndex) ?: settings.sortOrder,
                     )
                 }
                 return true
@@ -107,37 +147,20 @@ class StudioMediaFragment : FragmentBaseList<MediaBase, ConnectionContainer<Page
     }
 
     override fun makeRequest() {
-        val ctx = context ?: return
-        val pref: Settings = presenter.settings
-        viewModel?.params?.apply {
-            putLong(KeyUtil.arg_id, id)
-            putInt(KeyUtil.arg_page, presenter.currentPage)
-            putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
-            putString(KeyUtil.arg_sort, pref.mediaSort + pref.sortOrder)
-        }
-        viewModel?.requestData(KeyUtil.STUDIO_MEDIA_REQ, ctx)
+        val pref = settings
+        mediaViewModel.load(
+            studioId = id,
+            page = mScrollListener.currentPage,
+            perPage = KeyUtil.PAGING_LIMIT,
+            sort = pref.mediaSort + pref.sortOrder,
+        )
     }
 
-    override fun onChanged(value: ConnectionContainer<PageContainer<MediaBase>>?) {
-        val pageContainer = value?.connection
-        if (pageContainer != null) {
-            if (!pageContainer.isEmpty) {
-                if (pageContainer.hasPageInfo()) {
-                    presenter.setPageInfo(pageContainer.pageInfo)
-                }
-                if (!pageContainer.isEmpty) {
-                    onPostProcessed(pageContainer.pageData)
-                } else {
-                    onPostProcessed(emptyList())
-                }
-            }
-        } else {
-            onPostProcessed(emptyList())
-        }
-        if (mAdapter.itemCount < 1) {
-            onPostProcessed(null)
-        }
-    }
+    /**
+     * No-op: the direct ViewModel collection in [observeMediaViewModel] replaces the
+     * legacy [com.mxt.anitrend.base.custom.viewmodel.ViewModelBase] observer path.
+     */
+    override fun onChanged(value: ConnectionContainer<PageContainer<MediaBase>>?) = Unit
 
     override fun onItemClick(
         target: View,
@@ -162,7 +185,7 @@ class StudioMediaFragment : FragmentBaseList<MediaBase, ConnectionContainer<Page
     ) {
         when (target.id) {
             R.id.container -> {
-                if (presenter.settings.isAuthenticated) {
+                if (settings.isAuthenticated) {
                     val host = activity ?: return
                     mediaActionUtil =
                         MediaActionUtil

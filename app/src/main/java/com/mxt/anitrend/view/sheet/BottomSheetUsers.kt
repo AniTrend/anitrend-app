@@ -5,21 +5,41 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.UserAdapter
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter
+import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
-import com.mxt.anitrend.base.custom.sheet.BottomSheetList
+import com.mxt.anitrend.base.interfaces.event.ISearchDelegate
+import com.mxt.anitrend.base.interfaces.event.ItemClickListener
+import com.mxt.anitrend.coordinator.WidgetMutationCoordinator
 import com.mxt.anitrend.databinding.BottomSheetListBinding
+import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.extension.parcelableArrayList
 import com.mxt.anitrend.model.entity.base.UserBase
-import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.view.activity.detail.ProfileActivity
+import com.mxt.anitrend.widget.ProgressLayout
+import org.koin.android.ext.android.inject
 
-class BottomSheetUsers : BottomSheetList<UserBase>() {
+class BottomSheetUsers :
+    BottomSheetBase<List<UserBase>>(),
+    ItemClickListener<UserBase>,
+    Observer<List<UserBase>?> {
+
     private var binding: BottomSheetListBinding? = null
+
+    private lateinit var mAdapter: RecyclerViewAdapter<UserBase>
+    private lateinit var mLayoutManager: StaggeredGridLayoutManager
+
+    private var stateLayout: ProgressLayout? = null
+    private var recyclerView: StatefulRecyclerView? = null
+    private var mColumnSize: Int = 0
+
+    private val mutationCoordinator by inject<WidgetMutationCoordinator>()
 
     companion object {
         @JvmStatic
@@ -31,9 +51,8 @@ class BottomSheetUsers : BottomSheetList<UserBase>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val ctx = requireContext()
-        presenter = BasePresenter(ctx)
         mColumnSize = resources.getInteger(R.integer.single_list_x1)
-        mAdapter = UserAdapter(ctx)
+        mAdapter = UserAdapter(ctx, mutationCoordinator)
         val baseList = arguments?.parcelableArrayList<UserBase>(KeyUtil.arg_list_model)
         if (!baseList.isNullOrEmpty()) {
             mAdapter.onItemsInserted(baseList)
@@ -45,16 +64,18 @@ class BottomSheetUsers : BottomSheetList<UserBase>() {
         binding = BottomSheetListBinding.inflate(layoutInflater)
         dialog.setContentView(requireNotNull(binding).root)
         bindToolbarViews(requireNotNull(binding).root)
-        bindListViews(requireNotNull(binding).root)
+        stateLayout = binding?.stateLayout
+        recyclerView = binding?.recyclerView
         createBottomSheetBehavior(requireNotNull(binding).root)
         mLayoutManager = StaggeredGridLayoutManager(mColumnSize, StaggeredGridLayoutManager.VERTICAL)
         return dialog
     }
 
-    override fun updateUI() {
+    override fun onStart() {
+        super.onStart()
         toolbarTitle?.text = getString(mTitle, mAdapter.itemCount)
         toolbarSearch?.visibility = View.VISIBLE
-        mSearchDelegate = object : com.mxt.anitrend.base.interfaces.event.ISearchDelegate {
+        mSearchDelegate = object : ISearchDelegate {
             override fun onQueryChanged(query: String?) {
                 if (!TextUtils.isEmpty(query) && mAdapter.filter != null) {
                     mAdapter.filter.filter(query)
@@ -74,12 +95,33 @@ class BottomSheetUsers : BottomSheetList<UserBase>() {
         injectAdapter()
     }
 
-    override fun makeRequest() = Unit
+    private fun injectAdapter() {
+        mAdapter.setClickListener(this)
+        val recycler = recyclerView ?: return
+        if (recycler.adapter == null) {
+            recycler.setHasFixedSize(true)
+            recycler.isNestedScrollingEnabled = true
+            recycler.layoutManager = mLayoutManager
+            recycler.adapter = mAdapter
+        }
+        if (mAdapter.itemCount < 1) {
+            val drawable =
+                context?.getCompatDrawable(
+                    R.drawable.ic_new_releases_white_24dp,
+                    R.color.colorStateBlue,
+                ) ?: return
+            stateLayout?.showEmpty(drawable, getString(R.string.layout_empty_response))
+        } else {
+            stateLayout?.showContent()
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
     }
+
+    override fun onChanged(value: List<UserBase>?) = Unit
 
     override fun onItemClick(
         target: View,

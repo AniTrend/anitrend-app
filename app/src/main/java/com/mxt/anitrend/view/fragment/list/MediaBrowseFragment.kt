@@ -7,10 +7,14 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.MediaAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
 import com.mxt.anitrend.extension.parcelable
+import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.model.entity.anilist.Genre
 import com.mxt.anitrend.model.entity.anilist.MediaTag
 import com.mxt.anitrend.model.entity.base.MediaBase
@@ -20,6 +24,7 @@ import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
+import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.collection.GenreTagUtil
 import com.mxt.anitrend.util.date.DateUtil
 import com.mxt.anitrend.util.media.MediaActionUtil
@@ -27,6 +32,10 @@ import com.mxt.anitrend.util.media.MediaBrowseUtil
 import com.mxt.anitrend.util.selectedIndex
 import com.mxt.anitrend.util.selectedIndices
 import com.mxt.anitrend.view.activity.detail.MediaActivity
+import com.mxt.anitrend.viewmodel.MediaBrowseViewModel
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.Locale
 
 /**
@@ -36,6 +45,10 @@ import java.util.Locale
 open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<MediaBase>, MediaPresenter>() {
     protected lateinit var requestArgs: Bundle
     private var mediaBrowseUtil: MediaBrowseUtil? = null
+
+    private val settings: Settings by inject()
+
+    private val mediaBrowseViewModel: MediaBrowseViewModel by viewModel()
 
     companion object {
         @JvmStatic
@@ -68,19 +81,39 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
 
         val ctx = requireContext()
         mAdapter = MediaAdapter(ctx, browseUtil.isCompactType)
-        setPresenter(MediaPresenter(ctx))
-        setViewModel(true)
 
         mColumnSize =
             if (browseUtil.isCompactType) {
                 R.integer.grid_giphy_x3
             } else {
-                if (presenter.settings.mediaListStyle == KeyUtil.LIST_VIEW_STYLE_COMPACT_X1) {
+                if (settings.mediaListStyle == KeyUtil.LIST_VIEW_STYLE_COMPACT_X1) {
                     R.integer.single_list_x1
                 } else {
                     R.integer.grid_list_x2
                 }
             }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                mediaBrowseViewModel.state.collect { state ->
+                    when (state) {
+                        is MediaBrowseViewModel.UiState.Loading -> {
+                            // Loading is handled by swipeRefreshLayout in the base class
+                        }
+                        is MediaBrowseViewModel.UiState.Success -> {
+                            handleSuccess(state.content)
+                        }
+                        is MediaBrowseViewModel.UiState.Error -> {
+                            showError(state.message)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @Deprecated("Deprecated in Java")
@@ -108,10 +141,10 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
                 DialogUtil.createSelection(
                     ctx,
                     R.string.app_filter_sort,
-                    CompatUtil.getIndexOf(KeyUtil.MediaSortType, presenter.settings.mediaSort),
+                    CompatUtil.getIndexOf(KeyUtil.MediaSortType, settings.mediaSort),
                     CompatUtil.capitalizeWords(KeyUtil.MediaSortType),
                 ) { dialog, _ ->
-                    presenter.settings.mediaSort = KeyUtil.MediaSortType[dialog.selectedIndex]
+                    settings.mediaSort = KeyUtil.MediaSortType[dialog.selectedIndex]
                 }
                 return true
             }
@@ -120,17 +153,17 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
                 DialogUtil.createSelection(
                     ctx,
                     R.string.app_filter_order,
-                    CompatUtil.getIndexOf(sortOrders, presenter.settings.sortOrder),
+                    CompatUtil.getIndexOf(sortOrders, settings.sortOrder),
                     CompatUtil.getStringList(ctx, R.array.order_by_types),
                 ) { dialog, which ->
-                    presenter.settings.saveSortOrder(
-                        sortOrders.getOrNull(dialog.selectedIndex) ?: presenter.settings.sortOrder,
+                    settings.saveSortOrder(
+                        sortOrders.getOrNull(dialog.selectedIndex) ?: settings.sortOrder,
                     )
                 }
                 return true
             }
             R.id.action_genre -> {
-                val genres: List<Genre> = presenter.database.genreCollection
+                val genres: List<Genre> = mediaBrowseViewModel.genreCollection
                 if (CompatUtil.isEmpty(genres)) {
                     NotifyUtil
                         .makeText(
@@ -140,7 +173,7 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
                             Toast.LENGTH_SHORT,
                         ).show()
                 } else {
-                    val genresIndexMap = presenter.settings.selectedGenres.orEmpty()
+                    val genresIndexMap = settings.selectedGenres.orEmpty()
                     val selectedGenres = genresIndexMap.keys.toTypedArray()
                     DialogUtil.createCheckList(
                         ctx,
@@ -154,13 +187,13 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
                                 genres,
                                 dialog.selectedIndices,
                             )
-                        presenter.settings.selectedGenres = selectedIndices
+                        settings.selectedGenres = selectedIndices
                     }
                 }
                 return true
             }
             R.id.action_tag -> {
-                val tagList: List<MediaTag> = presenter.database.mediaTags
+                val tagList: List<MediaTag> = mediaBrowseViewModel.mediaTags
                 if (CompatUtil.isEmpty(tagList)) {
                     NotifyUtil
                         .makeText(
@@ -170,7 +203,7 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
                             Toast.LENGTH_SHORT,
                         ).show()
                 } else {
-                    val tagsIndexMap = presenter.settings.selectedTags.orEmpty()
+                    val tagsIndexMap = settings.selectedTags.orEmpty()
                     val selectedTags = tagsIndexMap.keys.toTypedArray()
                     DialogUtil.createCheckList(
                         ctx,
@@ -184,7 +217,7 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
                                 tagList,
                                 dialog.selectedIndices,
                             )
-                        presenter.settings.selectedTags = selectedIndices
+                        settings.selectedTags = selectedIndices
                     }
                 }
                 return true
@@ -212,19 +245,19 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
                     DialogUtil.createSelection(
                         ctx,
                         R.string.app_filter_show_type,
-                        CompatUtil.getIndexOf(animeFormats, presenter.settings.animeFormat),
+                        CompatUtil.getIndexOf(animeFormats, settings.animeFormat),
                         CompatUtil.getStringList(ctx, R.array.anime_formats),
                     ) { dialog, _ ->
-                        presenter.settings.animeFormat = animeFormats.getOrNull(dialog.selectedIndex)
+                        settings.animeFormat = animeFormats.getOrNull(dialog.selectedIndex)
                     }
                 } else {
                     DialogUtil.createSelection(
                         ctx,
                         R.string.app_filter_show_type,
-                        CompatUtil.getIndexOf(mangaFormats, presenter.settings.mangaFormat),
+                        CompatUtil.getIndexOf(mangaFormats, settings.mangaFormat),
                         CompatUtil.getStringList(ctx, R.array.manga_formats),
                     ) { dialog, _ ->
-                        presenter.settings.mangaFormat = mangaFormats.getOrNull(dialog.selectedIndex)
+                        settings.mangaFormat = mangaFormats.getOrNull(dialog.selectedIndex)
                     }
                 }
                 return true
@@ -234,10 +267,10 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
                 DialogUtil.createSelection(
                     ctx,
                     R.string.app_filter_year,
-                    CompatUtil.getIndexOf(yearRanges, presenter.settings.seasonYear),
+                    CompatUtil.getIndexOf(yearRanges, settings.seasonYear),
                     yearRanges,
                 ) { dialog, _ ->
-                    presenter.settings.saveSeasonYear(yearRanges[dialog.selectedIndex])
+                    settings.saveSeasonYear(yearRanges[dialog.selectedIndex])
                 }
                 return true
             }
@@ -253,10 +286,10 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
                 DialogUtil.createSelection(
                     ctx,
                     R.string.anime,
-                    CompatUtil.getIndexOf(mediaStatuses, presenter.settings.mediaStatus),
+                    CompatUtil.getIndexOf(mediaStatuses, settings.mediaStatus),
                     CompatUtil.getStringList(ctx, R.array.media_status),
                 ) { dialog, _ ->
-                    presenter.settings.mediaStatus = mediaStatuses.getOrNull(dialog.selectedIndex)
+                    settings.mediaStatus = mediaStatuses.getOrNull(dialog.selectedIndex)
                 }
                 return true
             }
@@ -269,46 +302,53 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
     }
 
     override fun makeRequest() {
-        val ctx = context ?: return
-        val bundle = viewModel?.params ?: return
-        val pref = presenter.settings
-
-        bundle.apply {
-            clear()
-            putAll(requestArgs)
-            putInt(KeyUtil.arg_page, presenter.currentPage)
-            applyAdultContentPreference(
-                displayAdultContent = pref.displayAdultContent,
-                configuredValue = requestArgs.takeIf { it.containsKey(KeyUtil.arg_isAdult) }?.getBoolean(KeyUtil.arg_isAdult),
-            )
+        val type = requestArgs.getString(KeyUtil.arg_mediaType)?.let {
+            runCatching { MediaType.valueOf(it) }.getOrNull()
         }
+        val isAdult: Boolean? =
+            if (!settings.displayAdultContent) {
+                false
+            } else {
+                requestArgs.takeIf { it.containsKey(KeyUtil.arg_isAdult) }?.getBoolean(KeyUtil.arg_isAdult)
+            }
+
+        var format: String? = null
+        var seasonYear: Int? = null
+        var startDateLike: String? = null
+        var status: String? = null
+        var genres: List<String?>? = null
+        var tags: List<String?>? = null
+        var sort: String? = null
 
         if (isFilterableEnabled) {
             if (mediaBrowseUtil?.isBasicFilter != true) {
                 if (CompatUtil.equals(requestArgs.getString(KeyUtil.arg_mediaType), KeyUtil.MANGA)) {
-                    bundle.putString(
-                        KeyUtil.arg_startDateLike,
-                        String.format(Locale.getDefault(), "%d%%", presenter.settings.seasonYear),
-                    )
-                    bundle.putString(KeyUtil.arg_format, pref.mangaFormat)
+                    startDateLike = String.format(Locale.getDefault(), "%d%%", settings.seasonYear)
+                    format = settings.mangaFormat
                 } else {
-                    bundle.putInt(KeyUtil.arg_seasonYear, presenter.settings.seasonYear)
-                    bundle.putString(KeyUtil.arg_format, pref.animeFormat)
+                    seasonYear = settings.seasonYear
+                    format = settings.animeFormat
                 }
-
-                bundle.putString(KeyUtil.arg_status, pref.mediaStatus)
-                bundle.putStringArrayList(
-                    KeyUtil.arg_genres,
-                    ArrayList(GenreTagUtil.getMappedValues(pref.selectedGenres).orEmpty()),
-                )
-                bundle.putStringArrayList(
-                    KeyUtil.arg_tags,
-                    ArrayList(GenreTagUtil.getMappedValues(pref.selectedTags).orEmpty()),
-                )
+                status = settings.mediaStatus
+                genres = ArrayList(GenreTagUtil.getMappedValues(settings.selectedGenres).orEmpty())
+                tags = ArrayList(GenreTagUtil.getMappedValues(settings.selectedTags).orEmpty())
             }
-            bundle.putString(KeyUtil.arg_sort, pref.mediaSort + pref.sortOrder)
+            sort = settings.mediaSort + settings.sortOrder
         }
-        viewModel?.requestData(KeyUtil.MEDIA_BROWSE_REQ, ctx)
+
+        mediaBrowseViewModel.load(
+            type = type,
+            page = mScrollListener.currentPage,
+            pageLimit = requestArgs.getInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT),
+            sort = sort,
+            isAdult = isAdult,
+            format = format,
+            seasonYear = seasonYear,
+            startDateLike = startDateLike,
+            status = status,
+            genres = genres,
+            tags = tags,
+        )
     }
 
     protected fun Bundle.applyAdultContentPreference(
@@ -349,16 +389,15 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
         }
     }
 
-    override fun onChanged(value: PageContainer<MediaBase>?) {
-        if (value != null) {
-            if (value.hasPageInfo()) {
-                presenter.setPageInfo(value.pageInfo)
-            }
-            if (!value.isEmpty) {
-                onPostProcessed(value.pageData)
-            } else {
-                onPostProcessed(emptyList())
-            }
+    /** No-op: StateFlow collector above handles the response. */
+    override fun onChanged(value: PageContainer<MediaBase>?) = Unit
+
+    private fun handleSuccess(value: PageContainer<MediaBase>) {
+        if (value.hasPageInfo()) {
+            setPageInfo(value.pageInfo)
+        }
+        if (!value.isEmpty) {
+            onPostProcessed(value.pageData)
         } else {
             onPostProcessed(emptyList())
         }
@@ -390,7 +429,7 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
     ) {
         when (target.id) {
             R.id.container -> {
-                if (presenter.settings.isAuthenticated) {
+                if (settings.isAuthenticated) {
                     val host = activity ?: return
                     mediaActionUtil =
                         MediaActionUtil

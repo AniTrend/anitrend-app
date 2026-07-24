@@ -11,12 +11,16 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
+import androidx.annotation.StyleRes
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.core.view.GravityCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.withResumed
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayoutMediator
@@ -30,39 +34,40 @@ import com.mxt.anitrend.adapter.pager.index.ReviewPageAdapter
 import com.mxt.anitrend.adapter.pager.index.SeasonPageAdapter
 import com.mxt.anitrend.adapter.pager.index.TrendingPageAdapter
 import com.mxt.anitrend.analytics.contract.ISupportAnalytics
-import com.mxt.anitrend.base.custom.activity.ActivityBase
 import com.mxt.anitrend.base.custom.activity.checkUpdate
 import com.mxt.anitrend.base.custom.activity.launchUpdateWorker
 import com.mxt.anitrend.base.custom.async.WebTokenRequest
-import com.mxt.anitrend.base.custom.consumer.BaseConsumer
 import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter
+import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
 import com.mxt.anitrend.base.custom.view.image.AvatarIndicatorView
 import com.mxt.anitrend.base.custom.view.image.HeaderImageView
 import com.mxt.anitrend.base.custom.view.search.MaterialSearchView
+import com.mxt.anitrend.base.interfaces.dao.BoxQuery
 import com.mxt.anitrend.base.interfaces.event.BottomSheetChoice
 import com.mxt.anitrend.databinding.ActivityMainBinding
 import com.mxt.anitrend.extension.LAZY_MODE_UNSAFE
+import com.mxt.anitrend.extension.applyConfiguredTheme
 import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.extension.requestNotificationsPermission
 import com.mxt.anitrend.extension.startNewActivity
-import com.mxt.anitrend.model.entity.anilist.User
-import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
+import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.date.DateUtil
+import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.view.activity.base.AboutActivity
 import com.mxt.anitrend.view.activity.base.LoggingActivity
 import com.mxt.anitrend.view.activity.base.SettingsActivity
 import com.mxt.anitrend.view.activity.detail.ProfileActivity
 import com.mxt.anitrend.view.sheet.BottomSheetMessage
+import com.mxt.anitrend.viewmodel.MainViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 import java.util.Locale
 
@@ -72,11 +77,21 @@ import java.util.Locale
  */
 
 class MainActivity :
-    ActivityBase<User, BasePresenter>(),
+    AppCompatActivity(),
     View.OnClickListener,
-    BaseConsumer.onRequestModelChange<User>,
     NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
+
+    // --- Fields carried over from ActivityBase shell ---
+    private var mediaActionUtil: MediaActionUtil? = null
+
+    private var currentTheme: String? = null
+    private var currentLocale: String? = null
+
+    /** @see ActivityBase.showBottomSheet */
+    internal var mBottomSheet: BottomSheetBase<*>? = null
+
+    private val offScreenLimit = 3
 
     private val mToolbar by lazy(LazyThreadSafetyMode.NONE) {
         binding.appBarMain.customToolbar.toolbar
@@ -125,6 +140,12 @@ class MainActivity :
 
     private var hasCheckedInstallation = false
 
+    private val mainViewModel: MainViewModel by viewModel()
+
+    private val settings: Settings by inject()
+    private val boxQuery: BoxQuery by inject()
+    private val currentUser get() = boxQuery.currentUser
+
     private lateinit var menuItems: Menu
 
     private lateinit var mHomeFeed: MenuItem
@@ -147,13 +168,14 @@ class MainActivity :
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        configureActivity()
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         searchView = binding.appBarMain.customToolbar.searchView
         val searchDelegate = object : com.mxt.anitrend.base.interfaces.event.ISearchDelegate {
             override fun onQueryChanged(query: String?) {
-                presenter.notifyAllListeners(query?.lowercase(Locale.getDefault()).orEmpty(), false)
             }
 
             override fun onSearchSubmitted(query: String?) {
@@ -170,7 +192,6 @@ class MainActivity :
             }
 
             override fun onSearchClosed() {
-                presenter.notifyAllListeners("", false)
             }
         }
         searchView?.apply {
@@ -194,8 +215,34 @@ class MainActivity :
             })
         }
         setSupportActionBar(mToolbar)
-        setPresenter(BasePresenter(applicationContext))
-        setViewModel(true)
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                mainViewModel.state.collect { state ->
+                    when (state) {
+                        is MainViewModel.UiState.Loading -> Unit
+                        is MainViewModel.UiState.Success -> {
+                            boxQuery.currentUser = state.user
+                            updateUI()
+                        }
+                        is MainViewModel.UiState.Error -> {
+                            Timber.e(state.message, "MainViewModel current user fetch failed")
+                            if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
+                                NotifyUtil.createAlerter(
+                                    this@MainActivity,
+                                    getString(R.string.text_error_request),
+                                    state.message,
+                                    R.drawable.ic_warning_white_18dp,
+                                    R.color.colorStateOrange,
+                                    KeyUtil.DURATION_MEDIUM,
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         if (savedInstanceState == null) {
             redirectShortcut = intent.getIntExtra(KeyUtil.arg_redirect, 0)
         }
@@ -264,12 +311,12 @@ class MainActivity :
      * Make decisions, check for permissions or fire background threads from this method
      * N.B. Must be called after onPostCreate
      */
-    override fun onActivityReady() {
+    fun onActivityReady() {
         if (selectedItem == 0) {
             selectedItem =
-                if (presenter.settings.isAuthenticated) {
+                if (settings.isAuthenticated) {
                     if (redirectShortcut == 0) {
-                        presenter.getNavigationItem()
+                        getNavigationItem()
                     } else {
                         redirectShortcut
                     }
@@ -345,6 +392,7 @@ class MainActivity :
 
     override fun onPause() {
         super.onPause()
+        mediaActionUtil?.onPause(null)
         mDrawerLayout.removeDrawerListener(mDrawerToggle)
     }
 
@@ -359,9 +407,8 @@ class MainActivity :
      */
     override fun onResume() {
         super.onResume()
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this)
-        }
+        onResumeThemeCheck()
+        mediaActionUtil?.onResume(null)
         mDrawerLayout.addDrawerListener(mDrawerToggle)
         mDrawerToggle.syncState()
         updateUI()
@@ -422,8 +469,8 @@ class MainActivity :
             R.id.nav_myanime -> {
                 val animeParams = Bundle()
                 animeParams.putString(KeyUtil.arg_mediaType, KeyUtil.ANIME)
-                animeParams.putString(KeyUtil.arg_userName, presenter.database.currentUser?.name)
-                animeParams.putLong(KeyUtil.arg_id, presenter.database.currentUser?.id ?: 0)
+                animeParams.putString(KeyUtil.arg_userName, currentUser?.name)
+                animeParams.putLong(KeyUtil.arg_id, currentUser?.id ?: 0)
 
                 val animeListPageAdapter =
                     MediaListPageAdapter(this, applicationContext)
@@ -437,8 +484,8 @@ class MainActivity :
             R.id.nav_mymanga -> {
                 val mangaParams = Bundle()
                 mangaParams.putString(KeyUtil.arg_mediaType, KeyUtil.MANGA)
-                mangaParams.putString(KeyUtil.arg_userName, presenter.database.currentUser?.name)
-                mangaParams.putLong(KeyUtil.arg_id, presenter.database.currentUser?.id ?: 0)
+                mangaParams.putString(KeyUtil.arg_userName, currentUser?.name)
+                mangaParams.putLong(KeyUtil.arg_id, currentUser?.id ?: 0)
 
                 val mangaListPageAdapter =
                     MediaListPageAdapter(this, applicationContext)
@@ -506,8 +553,7 @@ class MainActivity :
      *
      * @param permission the current permission granted
      */
-    override fun onPermissionGranted(permission: String) {
-        super.onPermissionGranted(permission)
+    private fun onPermissionGranted(permission: String) {
         try {
             if (permission == Manifest.permission.WRITE_EXTERNAL_STORAGE) {
                 onNavigate(R.id.nav_check_update)
@@ -517,7 +563,7 @@ class MainActivity :
         }
     }
 
-    override fun updateUI() {
+    fun updateUI() {
         headerContainer
             .findViewById<View>(R.id.banner_clickable)
             .setOnClickListener(this)
@@ -527,7 +573,7 @@ class MainActivity :
         mSignOutProfile = menuItems.findItem(R.id.nav_sign_out)
         mManageMenu = menuItems.findItem(R.id.nav_header_manage)
 
-        if (presenter.settings.isAuthenticated) {
+        if (settings.isAuthenticated) {
             setupUserItems()
         } else {
             mHeaderView.setImageResource(R.drawable.reg_bg)
@@ -536,15 +582,15 @@ class MainActivity :
         checkNewInstallation()
     }
 
-    override fun makeRequest() {
+    fun makeRequest() {
         launchUpdateWorker(menuItems)
     }
 
     private fun checkNewInstallation() {
         if (hasCheckedInstallation) return
         hasCheckedInstallation = true
-        if (presenter.settings.isFreshInstall) {
-            presenter.settings.isFreshInstall = false
+        if (settings.isFreshInstall) {
+            settings.isFreshInstall = false
             mBottomSheet =
                 BottomSheetMessage
                     .Builder()
@@ -555,31 +601,49 @@ class MainActivity :
             showBottomSheet()
             return
         }
-        if (presenter.settings.isUpdated) {
+        if (settings.isUpdated) {
             DialogUtil.createChangeLog(this)
-            presenter.settings.setUpdated()
+            settings.setUpdated()
         }
     }
 
     private fun requestCurrentUser() {
-        if (presenter.settings.isAuthenticated) {
-            presenter.updateUserLastSyncTimeStampIf(intervalInMinutes = 5) {
-                viewModel?.params?.apply {
-                    putBoolean(KeyUtil.arg_asHtml, false)
-                }
-                viewModel?.requestData(KeyUtil.USER_CURRENT_REQ, this)
+        if (settings.isAuthenticated) {
+            refreshCurrentUserIfStale {
+                mainViewModel.loadCurrentUser()
             }
         }
     }
 
+    private inline fun refreshCurrentUserIfStale(action: () -> Unit) {
+        val lastSyncedAt = settings.lastUserSyncTime
+        if (DateUtil.timeDifferenceSatisfied(KeyUtil.TIME_UNIT_MINUTES, lastSyncedAt, 5)) {
+            action()
+            settings.lastUserSyncTime = System.currentTimeMillis()
+        }
+    }
+
+    private fun getNavigationItem(): Int = when (settings.startupPage) {
+        "0" -> R.id.nav_home_feed
+        "1" -> R.id.nav_anime
+        "2" -> R.id.nav_manga
+        "3" -> R.id.nav_trending
+        "4" -> R.id.nav_airing
+        "5" -> R.id.nav_myanime
+        "6" -> R.id.nav_mymanga
+        "7" -> R.id.nav_hub
+        "8" -> R.id.nav_reviews
+        else -> R.id.nav_airing
+    }
+
     private fun setupUserItems() {
-        presenter.database.currentUser?.apply {
+        currentUser?.apply {
             mUserName.text = name.orEmpty()
             mUserAvatar.onInit()
             mHeaderView.setImage(bannerImage.orEmpty())
-            if (presenter.settings.shouldShowTipFor(KeyUtil.KEY_LOGIN_TIP)) {
+            if (settings.shouldShowTipFor(KeyUtil.KEY_LOGIN_TIP)) {
                 NotifyUtil.createLoginToast(this@MainActivity, this)
-                presenter.settings.disableTipFor(KeyUtil.KEY_LOGIN_TIP)
+                settings.disableTipFor(KeyUtil.KEY_LOGIN_TIP)
                 mBottomSheet =
                     BottomSheetMessage
                         .Builder()
@@ -600,12 +664,12 @@ class MainActivity :
 
     override fun onClick(view: View) {
         if (view.id == R.id.banner_clickable) {
-            if (presenter.settings.isAuthenticated) {
-                val user = presenter.database.currentUser
+            if (settings.isAuthenticated) {
+                val user = currentUser
                 if (user != null) {
                     startNewActivity<ProfileActivity>(
                         Bundle().apply {
-                            putString(KeyUtil.arg_userName, presenter.database.currentUser?.name)
+                            putString(KeyUtil.arg_userName, currentUser?.name)
                         },
                     )
                 } else {
@@ -628,31 +692,51 @@ class MainActivity :
             setOnQueryTextListener(null)
             setOnSearchViewListener(null)
         }
+        mediaActionUtil?.onDestroy()
         super.onDestroy()
     }
 
-    override fun onChanged(model: User?) {
-        if (model != null && lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
-            presenter.database.currentUser = model
-            updateUI()
+    private fun configureActivity() {
+        currentTheme = settings.theme
+        currentLocale = settings.userLanguage ?: Locale.getDefault().language
+        @StyleRes val theme = when (currentTheme) {
+            KeyUtil.THEME_DARK -> R.style.AppThemeDark
+            KeyUtil.THEME_BLACK -> R.style.AppThemeBlack
+            else -> R.style.AppThemeLight
+        }
+        setTheme(theme)
+    }
+
+    private fun enableEdgeToEdge() {
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        if (CompatUtil.isLightTheme(settings)) {
+            WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars =
+                true
+            WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightNavigationBars =
+                true
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    override fun onModelChanged(consumer: BaseConsumer<User>) {
-        if (consumer.requestMode == KeyUtil.USER_CURRENT_REQ &&
-            consumer.changeModel != null &&
-            consumer.changeModel.unreadNotificationCount > 0
-        ) {
-            NotifyUtil.createAlerter(
-                this,
-                R.string.notification_alert_title,
-                R.string.notification_alert_text,
-                R.drawable.ic_notifications_active_white_24dp,
-                R.color.colorAccent,
-            )
+    @Suppress("DEPRECATION")
+    private fun onResumeThemeCheck() {
+        if (currentTheme != settings.theme || currentLocale != settings.userLanguage) {
+            applyConfiguredTheme()
+            val currentIntent = intent
+            finish()
+            overridePendingTransition(0, 0)
+            startActivity(currentIntent)
+            overridePendingTransition(0, 0)
         }
     }
+
+    /** @see ActivityBase.showBottomSheet */
+    internal fun showBottomSheet() {
+        mBottomSheet?.let { sheet ->
+            sheet.show(supportFragmentManager, sheet.tag)
+        }
+    }
+
+    // endregion
 
     companion object {
         private const val KEY_SEARCH_VIEW_QUERY = "SEARCH_VIEW_QUERY"

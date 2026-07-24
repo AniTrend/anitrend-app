@@ -3,6 +3,9 @@ package com.mxt.anitrend.view.fragment.favourite
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.group.GroupCharacterAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
@@ -15,6 +18,9 @@ import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.collection.GroupingUtil
 import com.mxt.anitrend.view.activity.detail.CharacterActivity
+import com.mxt.anitrend.viewmodel.CharacterFavouritesViewModel
+import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
  * Created by max on 2018/03/25.
@@ -22,6 +28,8 @@ import com.mxt.anitrend.view.activity.detail.CharacterActivity
  */
 class CharacterFavouriteFragment : FragmentBaseList<RecyclerItem, ConnectionContainer<Favourite>, BasePresenter>() {
     private var userId: Long = 0
+
+    private val characterFavouritesViewModel: CharacterFavouritesViewModel by viewModel()
 
     companion object {
         @JvmStatic
@@ -42,8 +50,28 @@ class CharacterFavouriteFragment : FragmentBaseList<RecyclerItem, ConnectionCont
         mColumnSize = R.integer.grid_giphy_x3
         isPager = true
         mAdapter = GroupCharacterAdapter(ctx)
-        setPresenter(BasePresenter(ctx))
-        setViewModel(true)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                characterFavouritesViewModel.state.collect { state ->
+                    when (state) {
+                        is CharacterFavouritesViewModel.UiState.Loading -> {
+                            // Loading is handled by swipeRefreshLayout in the base class
+                        }
+                        is CharacterFavouritesViewModel.UiState.Success -> {
+                            handleSuccess(state.content)
+                        }
+                        is CharacterFavouritesViewModel.UiState.Error -> {
+                            showError(state.message)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     override fun updateUI() {
@@ -52,27 +80,17 @@ class CharacterFavouriteFragment : FragmentBaseList<RecyclerItem, ConnectionCont
     }
 
     override fun makeRequest() {
-        val ctx = context ?: return
-        viewModel?.params?.apply {
-            putLong(KeyUtil.arg_id, userId)
-            putInt(KeyUtil.arg_page, presenter.currentPage)
-            putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
-        }
-        viewModel?.requestData(KeyUtil.USER_CHARACTER_FAVOURITES_REQ, ctx)
+        characterFavouritesViewModel.load(userId = userId, page = mScrollListener.currentPage)
     }
 
-    override fun onChanged(content: ConnectionContainer<Favourite>?) {
-        if (content != null) {
-            if (!content.isEmpty) {
-                val pageContainer = content.connection.characters
-                if (pageContainer != null) {
-                    if (pageContainer.hasPageInfo()) {
-                        presenter.setPageInfo(pageContainer.pageInfo)
-                    }
-                    onPostProcessed(GroupingUtil.wrapInGroup(pageContainer.pageData))
-                } else {
-                    onPostProcessed(emptyList())
+    private fun handleSuccess(content: ConnectionContainer<Favourite>) {
+        if (!content.isEmpty) {
+            val pageContainer = content.connection.characters
+            if (pageContainer != null) {
+                if (pageContainer.hasPageInfo()) {
+                    setPageInfo(pageContainer.pageInfo)
                 }
+                onPostProcessed(GroupingUtil.wrapInGroup(pageContainer.pageData))
             } else {
                 onPostProcessed(emptyList())
             }
@@ -83,6 +101,9 @@ class CharacterFavouriteFragment : FragmentBaseList<RecyclerItem, ConnectionCont
             onPostProcessed(null)
         }
     }
+
+    /** No-op: StateFlow collector above handles the response. */
+    override fun onChanged(value: ConnectionContainer<Favourite>?) = Unit
 
     override fun onItemClick(
         target: View,

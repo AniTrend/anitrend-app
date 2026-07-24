@@ -8,10 +8,14 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.detail.NotificationAdapter
 import com.mxt.anitrend.base.custom.async.ThreadPool
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
+import com.mxt.anitrend.data.DatabaseHelper
 import com.mxt.anitrend.model.entity.anilist.Notification
 import com.mxt.anitrend.model.entity.base.NotificationHistory
 import com.mxt.anitrend.model.entity.base.NotificationHistory_
@@ -20,11 +24,15 @@ import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
-import com.mxt.anitrend.util.graphql.GraphUtil
+import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.view.activity.detail.CommentActivity
 import com.mxt.anitrend.view.activity.detail.MediaActivity
 import com.mxt.anitrend.view.activity.detail.ProfileActivity
+import com.mxt.anitrend.viewmodel.NotificationViewModel
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
  * Created by max on 2017/12/06.
@@ -32,6 +40,11 @@ import com.mxt.anitrend.view.activity.detail.ProfileActivity
  */
 
 class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notification>, BasePresenter>() {
+
+    private val settings: Settings by inject()
+    private val databaseHelper by inject<DatabaseHelper>()
+
+    private val notificationViewModel: NotificationViewModel by viewModel()
 
     /**
      * Override and set presenter, mColumnSize, and fetch argument/s
@@ -45,15 +58,35 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
         isPager = true
         setInflateMenu(R.menu.notification_menu)
         mAdapter = NotificationAdapter(ctx)
-        setPresenter(BasePresenter(ctx))
-        setViewModel(true)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                notificationViewModel.state.collect { state ->
+                    when (state) {
+                        is NotificationViewModel.UiState.Loading -> {
+                            // Loading is handled by swipeRefreshLayout in the base class
+                        }
+                        is NotificationViewModel.UiState.Success -> {
+                            handleSuccess(state.content)
+                        }
+                        is NotificationViewModel.UiState.Error -> {
+                            showError(state.message)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /**
      * Is automatically called in the @onStart Method if overridden in list implementation
      */
     override fun updateUI() {
-        with(presenter.database) {
+        with(databaseHelper) {
             val historyItems = getBoxStore(NotificationHistory::class.java).count()
             if (historyItems < 1) {
                 markAllNotificationsAsRead()
@@ -65,15 +98,6 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
                 currentUser = it
             }
         }
-
-        // Testing notifications by forcing the notification dispatcher
-        /*presenter.database.currentUser?.let {
-            it.unreadNotificationCount = 3
-            koinOf<Settings>().lastDismissedNotificationId = -1
-            viewModel.model.value?.let { model ->
-                koinOf<NotificationUtil>().createNotification(it, model)
-            }
-        }*/
     }
 
     @Deprecated("Deprecated in Java")
@@ -108,21 +132,19 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
         }
     }
 
-    override fun onChanged(value: PageContainer<Notification>?) {
-        if (value != null) {
-            if (value.hasPageInfo()) {
-                presenter.setPageInfo(value.pageInfo)
-            }
-            if (!value.isEmpty) {
-                @Suppress("DEPRECATION")
-                val notifications = GraphUtil.filterNotificationList(
-                    presenter,
-                    value.pageData,
-                )
-                onPostProcessed(notifications)
-            } else {
-                onPostProcessed(emptyList())
-            }
+    override fun makeRequest() {
+        notificationViewModel.load(page = mScrollListener.currentPage)
+    }
+
+    private fun handleSuccess(value: PageContainer<Notification>) {
+        if (value.hasPageInfo()) {
+            setPageInfo(value.pageInfo)
+        }
+        if (!value.isEmpty) {
+            @Suppress("DEPRECATION")
+            val filtered = value.pageData.filter { !it.type.isNullOrBlank() }
+            mScrollListener.getPageInfo()?.perPage = filtered.size
+            onPostProcessed(filtered)
         } else {
             onPostProcessed(emptyList())
         }
@@ -131,18 +153,8 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
         }
     }
 
-    /**
-     * All new or updated network requests should be handled in this method
-     */
-    override fun makeRequest() {
-        val model = viewModel ?: return
-        model.params.apply {
-            putInt(KeyUtil.arg_page, presenter.currentPage)
-            putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
-            putBoolean(KeyUtil.arg_resetNotificationCount, true)
-        }
-        model.requestData(KeyUtil.USER_NOTIFICATION_REQ, requireContext())
-    }
+    /** No-op: StateFlow collector above handles the response. */
+    override fun onChanged(value: PageContainer<Notification>?) = Unit
 
     /**
      * Ran on a background thread to assure we don't skip frames
@@ -150,7 +162,7 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
      */
     private fun setItemAsRead(data: Notification) {
         ThreadPool.execute {
-            val isNotificationRead = presenter.database.getBoxStore(NotificationHistory::class.java)
+            val isNotificationRead = databaseHelper.getBoxStore(NotificationHistory::class.java)
                 .query().equal(NotificationHistory_.id, data.id).build().count() != 0L
             if (!isNotificationRead) {
                 val dismissibleNotifications = mAdapter.data
@@ -158,10 +170,10 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
                     .map { item -> NotificationHistory(item.id) }
 
                 if (!CompatUtil.isEmpty(dismissibleNotifications)) {
-                    presenter.database.getBoxStore(NotificationHistory::class.java)
+                    databaseHelper.getBoxStore(NotificationHistory::class.java)
                         .put(dismissibleNotifications)
                 } else {
-                    presenter.database.getBoxStore(NotificationHistory::class.java)
+                    databaseHelper.getBoxStore(NotificationHistory::class.java)
                         .put(NotificationHistory(data.id))
                 }
             }
@@ -176,7 +188,7 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
         val notificationHistories = mAdapter.data
             .map { notification -> NotificationHistory(notification.id) }
 
-        presenter.database.getBoxStore(NotificationHistory::class.java)
+        databaseHelper.getBoxStore(NotificationHistory::class.java)
             .put(notificationHistories)
 
         activity?.runOnUiThread {
@@ -288,7 +300,7 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
         if (CompatUtil.equals(data.value.type, KeyUtil.AIRING)) {
             setItemAsRead(data.value)
             data.value.media?.also {
-                if (presenter.settings.isAuthenticated) {
+                if (settings.isAuthenticated) {
                     val host = activity ?: return
                     mediaActionUtil = MediaActionUtil.Builder()
                         .setId(it.id).build(host)

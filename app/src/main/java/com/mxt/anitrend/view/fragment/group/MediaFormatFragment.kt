@@ -4,6 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.group.GroupSeriesAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
@@ -16,9 +19,13 @@ import com.mxt.anitrend.presenter.fragment.MediaPresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
-import com.mxt.anitrend.util.collection.GroupingUtil
+import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.view.activity.detail.MediaActivity
+import com.mxt.anitrend.viewmodel.MediaFormatViewModel
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
  * Created by max on 2018/01/27.
@@ -26,13 +33,13 @@ import com.mxt.anitrend.view.activity.detail.MediaActivity
  */
 class MediaFormatFragment : FragmentBaseList<RecyclerItem, ConnectionContainer<PageContainer<MediaBase>>, MediaPresenter>() {
     private var id: Long = 0
-    private var onList: Boolean? = null
-
-    @KeyUtil.MediaType
-    private var mediaType: String? = null
 
     @KeyUtil.RequestType
     private var requestType: Int = 0
+
+    private val settings: Settings by inject()
+
+    private val mediaFormatViewModel: MediaFormatViewModel by viewModel()
 
     companion object {
         @JvmStatic
@@ -54,18 +61,35 @@ class MediaFormatFragment : FragmentBaseList<RecyclerItem, ConnectionContainer<P
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val ctx = requireContext()
         arguments?.let { args ->
             requestType = args.getInt(KeyUtil.arg_request_type)
             id = args.getLong(KeyUtil.arg_id)
-            onList = args.serializable(KeyUtil.arg_onList)
-            mediaType = args.getString(KeyUtil.arg_mediaType)
         }
         mColumnSize = R.integer.grid_giphy_x3
         isPager = true
-        mAdapter = GroupSeriesAdapter(ctx)
-        setPresenter(MediaPresenter(ctx))
-        setViewModel(true)
+        mAdapter = GroupSeriesAdapter(requireContext())
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                mediaFormatViewModel.state.collect { state ->
+                    when (state) {
+                        is MediaFormatViewModel.UiState.Loading -> {
+                            // Loading is handled by swipeRefreshLayout in the base class
+                        }
+                        is MediaFormatViewModel.UiState.Success -> {
+                            handleSuccess(state)
+                        }
+                        is MediaFormatViewModel.UiState.Error -> {
+                            showError(state.message)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     override fun updateUI() {
@@ -74,36 +98,54 @@ class MediaFormatFragment : FragmentBaseList<RecyclerItem, ConnectionContainer<P
     }
 
     override fun makeRequest() {
-        val ctx = context ?: return
-        viewModel?.params?.apply {
-            putLong(KeyUtil.arg_id, id)
-            putSerializable(KeyUtil.arg_onList, onList)
-            putString(KeyUtil.arg_mediaType, mediaType)
-            putInt(KeyUtil.arg_page, presenter.currentPage)
-            putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
-        }
-        viewModel?.requestData(requestType, ctx)
+        val args = arguments ?: return
+        val mediaType = args.getString(KeyUtil.arg_mediaType)
+        val onList = args.serializable<Boolean>(KeyUtil.arg_onList)
+        mediaFormatViewModel.load(
+            id = id,
+            onList = onList,
+            mediaType = mediaType,
+            page = mScrollListener.currentPage,
+            requestType = requestType,
+        )
     }
 
-    override fun onChanged(content: ConnectionContainer<PageContainer<MediaBase>>?) {
-        val pageContainer = content?.connection
-        if (pageContainer != null) {
-            if (!pageContainer.isEmpty) {
-                if (pageContainer.hasPageInfo()) {
-                    presenter.setPageInfo(pageContainer.pageInfo)
-                }
-                if (!pageContainer.isEmpty) {
-                    onPostProcessed(GroupingUtil.groupMediaByFormat(pageContainer.pageData, mAdapter.data))
-                } else {
-                    onPostProcessed(emptyList())
-                }
+    private fun handleSuccess(state: MediaFormatViewModel.UiState.Success) {
+        if (state.pageInfo != null) {
+            mScrollListener.setPageInfo(state.pageInfo)
+        }
+        if (state.isEmpty) {
+            if (mAdapter.itemCount < 1) {
+                showEmpty(getString(R.string.layout_empty_response))
+            } else {
+                setLimitReached()
             }
-        } else {
-            onPostProcessed(emptyList())
+        } else if (state.newItems.isNotEmpty()) {
+            if (isPager && !swipeRefreshLayout.isRefreshing()) {
+                if (mAdapter.itemCount < 1) {
+                    mAdapter.onItemsInserted(state.newItems)
+                } else {
+                    mAdapter.onItemRangeInserted(state.newItems)
+                }
+            } else {
+                mAdapter.onItemsInserted(state.newItems)
+            }
+            updateUI()
         }
-        if (mAdapter.itemCount < 1) {
-            onPostProcessed(null)
-        }
+    }
+
+    /** No-op: StateFlow collector above handles the response. */
+    override fun onChanged(value: ConnectionContainer<PageContainer<MediaBase>>?) = Unit
+
+    override fun onRefresh() {
+        isLimit = false
+        mScrollListener.onRefreshPage()
+        makeRequest()
+    }
+
+    override fun onLoadMore() {
+        swipeRefreshLayout.setLoading(true)
+        makeRequest()
     }
 
     override fun onItemClick(
@@ -130,7 +172,7 @@ class MediaFormatFragment : FragmentBaseList<RecyclerItem, ConnectionContainer<P
     ) {
         when (target.id) {
             R.id.container -> {
-                if (presenter.settings.isAuthenticated) {
+                if (settings.isAuthenticated) {
                     val media = data.value as? MediaBase ?: return
                     val host = activity ?: return
                     mediaActionUtil =

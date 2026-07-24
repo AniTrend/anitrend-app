@@ -5,6 +5,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mxt.anitrend.R
@@ -14,19 +17,23 @@ import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
 import com.mxt.anitrend.base.custom.view.container.CustomSwipeRefreshLayout
 import com.mxt.anitrend.base.custom.view.search.MaterialSearchView
-import com.mxt.anitrend.base.custom.viewmodel.acquireTypedViewModelBase
 import com.mxt.anitrend.base.interfaces.event.ISearchDelegate
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener
 import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener
+import com.mxt.anitrend.coordinator.WidgetMutationCoordinator
 import com.mxt.anitrend.databinding.BottomSheetListBinding
 import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.model.entity.container.body.PageContainer
-import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.view.activity.detail.ProfileActivity
+import com.mxt.anitrend.viewmodel.UserListViewModel
 import com.mxt.anitrend.widget.ProgressLayout
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 class BottomSheetListUsers :
     BottomSheetBase<PageContainer<UserBase>>(),
@@ -52,6 +59,10 @@ class BottomSheetListUsers :
 
     private var searchView: MaterialSearchView? = null
 
+    private val mutationCoordinator by inject<WidgetMutationCoordinator>()
+
+    private val userListViewModel: UserListViewModel by viewModel()
+
     private val stateLayoutOnClick =
         View.OnClickListener {
             stateLayout?.showLoading()
@@ -73,11 +84,31 @@ class BottomSheetListUsers :
             userId = args.getLong(KeyUtil.arg_userId)
             requestType = args.getInt(KeyUtil.arg_request_type)
         }
-        mAdapter = UserAdapter(ctx)
-        setViewModel(true)
+        mAdapter = UserAdapter(ctx, mutationCoordinator)
         isPager = true
-        presenter = BasePresenter(ctx)
         mColumnSize = resources.getInteger(R.integer.single_list_x1)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                userListViewModel.state.collect { state ->
+                    when (state) {
+                        is UserListViewModel.UiState.Loading -> {
+                            stateLayout?.showLoading()
+                        }
+                        is UserListViewModel.UiState.Success -> {
+                            onChanged(state.container)
+                        }
+                        is UserListViewModel.UiState.Error -> {
+                            showError(state.message)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -174,17 +205,6 @@ class BottomSheetListUsers :
         injectAdapter()
     }
 
-    private fun setViewModel(stateSupported: Boolean) {
-        if (viewModel == null) {
-            viewModel =
-                acquireTypedViewModelBase(
-                    observer = this,
-                    stateSupported = stateSupported,
-                    state = this,
-                )
-        }
-    }
-
     private fun setLimitReached() {
         if (presenter.currentPage != 0) {
             isLimit = true
@@ -205,13 +225,16 @@ class BottomSheetListUsers :
     }
 
     fun makeRequest() {
-        val ctx = context ?: return
-        viewModel?.params?.apply {
-            putLong(KeyUtil.arg_id, userId)
-            putInt(KeyUtil.arg_page, presenter.currentPage)
-            putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
+        val page = presenter.currentPage
+        val perPage = KeyUtil.PAGING_LIMIT
+        when (requestType) {
+            KeyUtil.USER_FOLLOWERS_REQ -> userListViewModel.loadFollowers(userId, page, perPage)
+            KeyUtil.USER_FOLLOWING_REQ -> userListViewModel.loadFollowing(userId, page, perPage)
+            else -> {
+                Timber.w("Unknown requestType: %s in BottomSheetListUsers", requestType)
+                showError(getString(R.string.text_unknown_error))
+            }
         }
-        viewModel?.requestData(requestType, ctx)
     }
 
     private fun onPostProcessed(content: List<UserBase>?) {

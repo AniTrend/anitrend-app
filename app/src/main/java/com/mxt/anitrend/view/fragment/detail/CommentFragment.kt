@@ -7,17 +7,19 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.detail.CommentAdapter
 import com.mxt.anitrend.adapter.recycler.index.FeedAdapter
-import com.mxt.anitrend.base.custom.consumer.BaseConsumer
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseComment
+import com.mxt.anitrend.base.custom.view.editor.ComposerWidget
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener
+import com.mxt.anitrend.coordinator.WidgetMutationCoordinator
 import com.mxt.anitrend.extension.hideKeyboard
 import com.mxt.anitrend.extension.parcelable
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.anilist.FeedReply
-import com.mxt.anitrend.presenter.widget.WidgetPresenter
+import com.mxt.anitrend.repository.FeedRepository
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
@@ -27,17 +29,19 @@ import com.mxt.anitrend.view.activity.detail.MediaActivity
 import com.mxt.anitrend.view.activity.detail.ProfileActivity
 import com.mxt.anitrend.view.sheet.BottomSheetGiphy
 import com.mxt.anitrend.view.sheet.BottomSheetUsers
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 
 /**
  * Created by max on 2017/11/16.
  * Comment fragment
  */
-class CommentFragment :
-    FragmentBaseComment(),
-    BaseConsumer.onRequestModelChange<FeedReply> {
+class CommentFragment : FragmentBaseComment() {
     private lateinit var feedAdapter: FeedAdapter
+
+    private val mutationCoordinator by inject<WidgetMutationCoordinator>()
+
+    private val feedRepository: FeedRepository by inject()
 
     companion object {
         @JvmStatic
@@ -58,12 +62,9 @@ class CommentFragment :
             }
         }
         mColumnSize = R.integer.single_list_x1
-        hasSubscriber = true
         setInflateMenu(R.menu.custom_menu)
-        mAdapter = CommentAdapter(ctx)
-        feedAdapter = FeedAdapter(ctx)
-        setPresenter(WidgetPresenter<FeedList>(ctx))
-        setViewModel(true)
+        mAdapter = CommentAdapter(ctx, mutationCoordinator)
+        feedAdapter = FeedAdapter(ctx, mutationCoordinator)
     }
 
     @Deprecated("Deprecated in Java")
@@ -114,6 +115,7 @@ class CommentFragment :
                                     .Builder()
                                     .setTitle(R.string.title_bottom_sheet_giphy)
                                     .build()
+                                    .also { (it as? BottomSheetGiphy)?.onGiphySelected = { giphy -> composerWidget.insertGiphy(giphy) } }
 
                             showBottomSheet()
                         }
@@ -131,6 +133,35 @@ class CommentFragment :
                     data: IndexedValue<Any>,
                 ) = Unit
             }
+        composerWidget.setListener(object : ComposerWidget.Listener {
+            override fun onSubmit(
+                text: String,
+                @KeyUtil.RequestType requestType: Int,
+                onResult: (Boolean) -> Unit,
+            ) {
+                lifecycleScope.launch {
+                    val success = when (requestType) {
+                        KeyUtil.MUT_SAVE_FEED_REPLY -> {
+                            feedRepository.saveActivityReply(
+                                id = null,
+                                activityId = feedList?.id ?: 0,
+                                text = text,
+                                asHtml = false,
+                            ).isSuccess
+                        }
+                        KeyUtil.MUT_SAVE_TEXT_FEED -> {
+                            feedRepository.saveTextActivity(
+                                id = feedList?.id,
+                                text = text,
+                                asHtml = false,
+                            ).isSuccess
+                        }
+                        else -> false
+                    }
+                    onResult(success)
+                }
+            }
+        })
         super.onStart()
     }
 
@@ -273,36 +304,8 @@ class CommentFragment :
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    override fun onModelChanged(consumer: BaseConsumer<FeedReply>) {
-        when (consumer.requestMode) {
-            KeyUtil.MUT_SAVE_FEED_REPLY -> {
-                if (consumer.changeModel == null) {
-                    if (mAdapter.itemCount > 1) {
-                        swipeRefreshLayout.setRefreshing(true)
-                    }
-                    onRefresh()
-                } else {
-                    val pair = CompatUtil.findIndexOf(mAdapter.data, consumer.changeModel)
-                    if (pair != null) {
-                        val pairIndex = pair.index
-                        mAdapter.onItemChanged(consumer.changeModel, pairIndex)
-                    }
-                }
-            }
-            KeyUtil.MUT_DELETE_FEED_REPLY -> {
-                val pair = CompatUtil.findIndexOf(mAdapter.data, consumer.changeModel)
-                if (pair != null) {
-                    val pairIndex = pair.index
-                    mAdapter.onItemRemoved(pairIndex)
-                }
-            }
-            KeyUtil.MUT_DELETE_FEED -> activity?.finish()
-        }
-        initExtraComponents()
-    }
-
     override fun onDestroyView() {
+        composerWidget.setListener(null)
         composerWidget.onViewRecycled()
         super.onDestroyView()
     }

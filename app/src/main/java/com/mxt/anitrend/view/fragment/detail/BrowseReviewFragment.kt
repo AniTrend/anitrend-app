@@ -7,9 +7,14 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.ReviewAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
+import com.mxt.anitrend.coordinator.WidgetMutationCoordinator
+import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.model.entity.anilist.Review
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.container.body.PageContainer
@@ -23,6 +28,10 @@ import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.util.selectedIndex
 import com.mxt.anitrend.view.activity.detail.MediaActivity
 import com.mxt.anitrend.view.sheet.BottomReviewReader
+import com.mxt.anitrend.viewmodel.BrowseReviewViewModel
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
  * Created by max on 2017/10/30.
@@ -31,6 +40,12 @@ import com.mxt.anitrend.view.sheet.BottomReviewReader
 class BrowseReviewFragment : FragmentBaseList<Review, PageContainer<Review>, BasePresenter>() {
     @KeyUtil.MediaType
     private var mediaType: String? = null
+
+    private val settings: Settings by inject()
+
+    private val mutationCoordinator by inject<WidgetMutationCoordinator>()
+
+    private val browseReviewViewModel: BrowseReviewViewModel by viewModel()
 
     companion object {
         @JvmStatic
@@ -56,9 +71,7 @@ class BrowseReviewFragment : FragmentBaseList<Review, PageContainer<Review>, Bas
         isPager = true
         mColumnSize = R.integer.single_list_x1
         isFilterableEnabled = true
-        mAdapter = ReviewAdapter(ctx)
-        setPresenter(BasePresenter(ctx))
-        setViewModel(true)
+        mAdapter = ReviewAdapter(ctx, mutationCoordinator)
     }
 
     @Deprecated("Deprecated in Java")
@@ -85,10 +98,10 @@ class BrowseReviewFragment : FragmentBaseList<Review, PageContainer<Review>, Bas
                 DialogUtil.createSelection(
                     ctx,
                     R.string.app_filter_sort,
-                    CompatUtil.getIndexOf(reviewSortTypes, presenter.settings.reviewSort),
+                    CompatUtil.getIndexOf(reviewSortTypes, settings.reviewSort),
                     CompatUtil.capitalizeWords(reviewSortTypes),
                 ) { dialog, _ ->
-                    presenter.settings.reviewSort =
+                    settings.reviewSort =
                         reviewSortTypes.getOrNull(dialog.selectedIndex)
                 }
                 return true
@@ -98,11 +111,11 @@ class BrowseReviewFragment : FragmentBaseList<Review, PageContainer<Review>, Bas
                 DialogUtil.createSelection(
                     ctx,
                     R.string.app_filter_order,
-                    CompatUtil.getIndexOf(sortOrders, presenter.settings.sortOrder),
+                    CompatUtil.getIndexOf(sortOrders, settings.sortOrder),
                     CompatUtil.getStringList(ctx, R.array.order_by_types),
                 ) { dialog, _ ->
-                    presenter.settings.saveSortOrder(
-                        sortOrders.getOrNull(dialog.selectedIndex) ?: presenter.settings.sortOrder,
+                    settings.saveSortOrder(
+                        sortOrders.getOrNull(dialog.selectedIndex) ?: settings.sortOrder,
                     )
                 }
                 return true
@@ -111,33 +124,48 @@ class BrowseReviewFragment : FragmentBaseList<Review, PageContainer<Review>, Bas
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                browseReviewViewModel.state.collect { state ->
+                    when (state) {
+                        is BrowseReviewViewModel.UiState.Loading -> {
+                            // Loading is handled by swipeRefreshLayout in the base class
+                        }
+                        is BrowseReviewViewModel.UiState.Success -> {
+                            handleSuccess(state.content)
+                        }
+                        is BrowseReviewViewModel.UiState.Error -> {
+                            showError(state.message)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     override fun updateUI() {
         injectAdapter()
     }
 
     override fun makeRequest() {
-        val ctx = context ?: return
-        val pref: Settings = presenter.settings
-        viewModel?.params?.apply {
-            putString(KeyUtil.arg_mediaType, mediaType)
-            putInt(KeyUtil.arg_page, presenter.currentPage)
-            putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
-            putString(KeyUtil.arg_sort, pref.reviewSort + pref.sortOrder)
-            putBoolean(KeyUtil.arg_asHtml, false)
-        }
-        viewModel?.requestData(KeyUtil.MEDIA_REVIEWS_REQ, ctx)
+        val type = mediaType?.let { runCatching { MediaType.valueOf(it) }.getOrNull() }
+        val sort = settings.reviewSort + settings.sortOrder
+        browseReviewViewModel.load(
+            type = type,
+            page = mScrollListener.currentPage,
+            sort = sort,
+        )
     }
 
-    override fun onChanged(value: PageContainer<Review>?) {
-        if (value != null) {
-            if (value.hasPageInfo()) {
-                presenter.setPageInfo(value.pageInfo)
-            }
-            if (!value.isEmpty) {
-                onPostProcessed(value.pageData)
-            } else {
-                onPostProcessed(emptyList())
-            }
+    private fun handleSuccess(value: PageContainer<Review>) {
+        if (value.hasPageInfo()) {
+            setPageInfo(value.pageInfo)
+        }
+        if (!value.isEmpty) {
+            onPostProcessed(value.pageData)
         } else {
             onPostProcessed(emptyList())
         }
@@ -145,6 +173,9 @@ class BrowseReviewFragment : FragmentBaseList<Review, PageContainer<Review>, Bas
             onPostProcessed(null)
         }
     }
+
+    /** No-op: StateFlow collector above handles the response. */
+    override fun onChanged(value: PageContainer<Review>?) = Unit
 
     override fun onItemClick(
         target: View,
@@ -179,7 +210,7 @@ class BrowseReviewFragment : FragmentBaseList<Review, PageContainer<Review>, Bas
     ) {
         when (target.id) {
             R.id.series_image -> {
-                if (presenter.settings.isAuthenticated) {
+                if (settings.isAuthenticated) {
                     val host = activity ?: return
                     mediaActionUtil =
                         MediaActionUtil

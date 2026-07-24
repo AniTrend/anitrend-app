@@ -4,6 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.group.GroupActorAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
@@ -18,10 +21,15 @@ import com.mxt.anitrend.presenter.fragment.MediaPresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
+import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.collection.GroupingUtil
 import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.view.activity.detail.MediaActivity
 import com.mxt.anitrend.view.activity.detail.StaffActivity
+import com.mxt.anitrend.viewmodel.CharacterActorsViewModel
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
  * Created by max on 2018/03/23.
@@ -29,6 +37,10 @@ import com.mxt.anitrend.view.activity.detail.StaffActivity
  */
 class CharacterActorsFragment : FragmentBaseList<RecyclerItem, ConnectionContainer<EdgeContainer<MediaEdge>>, MediaPresenter>() {
     private var id: Long = 0
+
+    private val settings: Settings by inject()
+
+    private val characterActorsViewModel: CharacterActorsViewModel by viewModel()
 
     companion object {
         @JvmStatic
@@ -47,8 +59,6 @@ class CharacterActorsFragment : FragmentBaseList<RecyclerItem, ConnectionContain
         isPager = true
         val ctx = requireContext()
         mAdapter = GroupActorAdapter(ctx)
-        setPresenter(MediaPresenter(ctx))
-        setViewModel(true)
 
         (mAdapter as? GroupActorAdapter)?.setMediaClickListener(
             object : ItemClickListener<RecyclerItem> {
@@ -76,7 +86,7 @@ class CharacterActorsFragment : FragmentBaseList<RecyclerItem, ConnectionContain
                 ) {
                     when (target.id) {
                         R.id.container -> {
-                            if (presenter.settings.isAuthenticated) {
+                            if (settings.isAuthenticated) {
                                 val media = data.value as? MediaBase ?: return
                                 val host = activity ?: return
                                 mediaActionUtil =
@@ -103,27 +113,43 @@ class CharacterActorsFragment : FragmentBaseList<RecyclerItem, ConnectionContain
         )
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                characterActorsViewModel.state.collect { state ->
+                    when (state) {
+                        is CharacterActorsViewModel.UiState.Loading -> {
+                            // Loading is handled by swipeRefreshLayout in the base class
+                        }
+                        is CharacterActorsViewModel.UiState.Success -> {
+                            handleSuccess(state.content)
+                        }
+                        is CharacterActorsViewModel.UiState.Error -> {
+                            showError(state.message)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     override fun updateUI() {
         setSwipeRefreshLayoutEnabled(false)
         injectAdapter()
     }
 
     override fun makeRequest() {
-        val ctx = context ?: return
-        viewModel?.params?.apply {
-            putLong(KeyUtil.arg_id, id)
-            putInt(KeyUtil.arg_page, presenter.currentPage)
-            putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
-        }
-        viewModel?.requestData(KeyUtil.CHARACTER_ACTORS_REQ, ctx)
+        characterActorsViewModel.load(id = id, page = mScrollListener.currentPage)
     }
 
-    override fun onChanged(content: ConnectionContainer<EdgeContainer<MediaEdge>>?) {
-        val edgeContainer = content?.connection
+    private fun handleSuccess(content: ConnectionContainer<EdgeContainer<MediaEdge>>) {
+        val edgeContainer = content.connection
         if (edgeContainer != null) {
             if (!edgeContainer.isEmpty) {
                 if (edgeContainer.hasPageInfo()) {
-                    presenter.setPageInfo(edgeContainer.pageInfo)
+                    setPageInfo(edgeContainer.pageInfo)
                 }
                 if (!edgeContainer.isEmpty) {
                     onPostProcessed(GroupingUtil.groupActorMediaEdge(edgeContainer.edges))
@@ -138,6 +164,9 @@ class CharacterActorsFragment : FragmentBaseList<RecyclerItem, ConnectionContain
             onPostProcessed(null)
         }
     }
+
+    /** No-op: StateFlow collector above handles the response. */
+    override fun onChanged(value: ConnectionContainer<EdgeContainer<MediaEdge>>?) = Unit
 
     override fun onItemClick(
         target: View,

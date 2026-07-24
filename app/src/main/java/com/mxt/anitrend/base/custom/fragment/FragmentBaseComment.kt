@@ -6,7 +6,6 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.snackbar.Snackbar
@@ -25,8 +24,6 @@ import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.widget.ProgressLayout
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 
 /**
  * Created by max on 2017/12/02.
@@ -239,15 +236,6 @@ abstract class FragmentBaseComment :
     override fun onLoadMore() {
         swipeRefreshLayout.setLoading(true)
         makeRequest()
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onSearch(query: String) {
-        val filter = mAdapter.filter
-        if (filter != null && lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
-            this.query = query
-            filter.filter(query)
-        }
     }
 
     protected fun injectAdapter() {

@@ -1,60 +1,49 @@
 package com.mxt.anitrend.view.activity.detail
 
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.tabs.TabLayoutMediator
+import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.pager.detail.MessagePageAdapter
-import com.mxt.anitrend.base.custom.activity.ActivityBase
 import com.mxt.anitrend.databinding.ActivityPagerGenericBinding
-import com.mxt.anitrend.model.entity.anilist.FeedList
-import com.mxt.anitrend.presenter.base.BasePresenter
+import com.mxt.anitrend.repository.UserRepository
 import com.mxt.anitrend.util.KeyUtil
+import com.mxt.anitrend.util.Settings
+import org.koin.android.ext.android.inject
 
-/**
- * Created by max on 2017/12/07.
- * MessageActivity
- */
-class MessageActivity : ActivityBase<FeedList, BasePresenter>() {
-    private lateinit var binding: ActivityPagerGenericBinding
+class MessageActivity : AppCompatActivity() {
 
-    private lateinit var messagePageAdapter: MessagePageAdapter
+    private val settings: Settings by inject()
+    private val userRepository: UserRepository by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Preserve configured theme (previously handled by ActivityBase.configureActivity).
+        val themeRes = when (settings.theme) {
+            KeyUtil.THEME_DARK -> R.style.AppThemeDark
+            KeyUtil.THEME_BLACK -> R.style.AppThemeBlack
+            else -> R.style.AppThemeLight
+        }
+        setTheme(themeRes)
         super.onCreate(savedInstanceState)
-        binding = ActivityPagerGenericBinding.inflate(layoutInflater)
+
+        val binding = ActivityPagerGenericBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.customToolbar.toolbar)
-        setPresenter(BasePresenter(this))
-        setViewModel(true)
-    }
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
-        presenter.database.currentUser?.id?.let { userId ->
-            viewModel?.params?.putLong(KeyUtil.arg_userId, userId)
+        val params = Bundle()
+        userRepository.cachedCurrentUser?.id?.let { userId ->
+            params.putLong(KeyUtil.arg_userId, userId)
         }
-        onActivityReady()
-    }
 
-    /**
-     * Make decisions, check for permissions or fire background threads from this method
-     * N.B. Must be called after onPostCreate
-     */
-    override fun onActivityReady() {
-        messagePageAdapter =
+        val messagePageAdapter =
             MessagePageAdapter(this, applicationContext).apply {
-                params = viewModel?.params ?: Bundle.EMPTY
+                this.params = params
             }
-        updateUI()
-    }
-
-    override fun updateUI() {
         binding.contentMain.pageContainer.adapter = messagePageAdapter
-        binding.contentMain.pageContainer.offscreenPageLimit = offScreenLimit
+        binding.contentMain.pageContainer.offscreenPageLimit = 3
         TabLayoutMediator(binding.customTab.smartTab, binding.contentMain.pageContainer) { tab, position ->
             tab.text = messagePageAdapter.getPageTitle(position)
         }.attach()
-    }
-
-    override fun makeRequest() {
     }
 }

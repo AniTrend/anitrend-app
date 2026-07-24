@@ -1,9 +1,26 @@
 package com.mxt.anitrend.view.fragment.list
 
 import android.os.Bundle
+import android.view.View
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import com.mxt.anitrend.graphql.generated.MediaType
+import com.mxt.anitrend.model.entity.base.MediaBase
+import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.util.KeyUtil
+import com.mxt.anitrend.util.Settings
+import com.mxt.anitrend.viewmodel.MediaLatestViewModel
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MediaLatestList : MediaBrowseFragment() {
+
+    private val settings: Settings by inject()
+
+    private val mediaLatestViewModel: MediaLatestViewModel by viewModel()
+
     companion object {
         @JvmStatic
         fun newInstance(params: Bundle): MediaLatestList {
@@ -19,17 +36,59 @@ class MediaLatestList : MediaBrowseFragment() {
         isFilterableEnabled = false
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                mediaLatestViewModel.state.collect { state ->
+                    when (state) {
+                        is MediaLatestViewModel.UiState.Loading -> {
+                            // Loading is handled by swipeRefreshLayout in the base class
+                        }
+                        is MediaLatestViewModel.UiState.Success -> {
+                            handleSuccess(state.content)
+                        }
+                        is MediaLatestViewModel.UiState.Error -> {
+                            showError(state.message)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     override fun makeRequest() {
-        val ctx = context ?: return
-        val bundle = viewModel?.params ?: return
-        bundle.putString(KeyUtil.arg_mediaType, requestArgs.getString(KeyUtil.arg_mediaType))
-        bundle.putString(KeyUtil.arg_sort, requestArgs.getString(KeyUtil.arg_sort))
-        bundle.putInt(KeyUtil.arg_page, presenter.currentPage)
-        bundle.putInt(KeyUtil.arg_page_limit, requestArgs.getInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT))
-        bundle.applyAdultContentPreference(
-            displayAdultContent = presenter.settings.displayAdultContent,
-            configuredValue = requestArgs.takeIf { it.containsKey(KeyUtil.arg_isAdult) }?.getBoolean(KeyUtil.arg_isAdult),
+        val type = requestArgs.getString(KeyUtil.arg_mediaType)?.let {
+            runCatching { MediaType.valueOf(it) }.getOrNull()
+        }
+        val sort = requestArgs.getString(KeyUtil.arg_sort)
+        val isAdult: Boolean? =
+            if (!settings.displayAdultContent) {
+                false
+            } else {
+                requestArgs.takeIf { it.containsKey(KeyUtil.arg_isAdult) }?.getBoolean(KeyUtil.arg_isAdult)
+            }
+        mediaLatestViewModel.load(
+            type = type,
+            page = mScrollListener.currentPage,
+            pageLimit = requestArgs.getInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT),
+            sort = sort,
+            isAdult = isAdult,
         )
-        viewModel?.requestData(KeyUtil.MEDIA_BROWSE_REQ, ctx)
+    }
+
+    private fun handleSuccess(content: PageContainer<MediaBase>) {
+        if (content.hasPageInfo()) {
+            setPageInfo(content.pageInfo)
+        }
+        if (!content.isEmpty) {
+            onPostProcessed(content.pageData)
+        } else {
+            onPostProcessed(emptyList())
+        }
+        if (mAdapter.itemCount < 1) {
+            onPostProcessed(null)
+        }
     }
 }

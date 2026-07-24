@@ -3,6 +3,9 @@ package com.mxt.anitrend.view.fragment.group
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.group.GroupCharacterStaffAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
@@ -17,6 +20,9 @@ import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.collection.GroupingUtil
 import com.mxt.anitrend.view.activity.detail.CharacterActivity
+import com.mxt.anitrend.viewmodel.MediaAnimeRoleViewModel
+import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
  * Created by LuK1337 on 2021/05/05.
@@ -31,6 +37,8 @@ class MediaAnimeRoleFragment : FragmentBaseList<RecyclerItem, ConnectionContaine
 
     @KeyUtil.RequestType
     private var requestType: Int = 0
+
+    private val mediaAnimeRoleViewModel: MediaAnimeRoleViewModel by viewModel()
 
     companion object {
         @JvmStatic
@@ -62,8 +70,28 @@ class MediaAnimeRoleFragment : FragmentBaseList<RecyclerItem, ConnectionContaine
         isPager = true
         val ctx = requireContext()
         mAdapter = GroupCharacterStaffAdapter(ctx)
-        setPresenter(MediaPresenter(ctx))
-        setViewModel(true)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                mediaAnimeRoleViewModel.state.collect { state ->
+                    when (state) {
+                        is MediaAnimeRoleViewModel.UiState.Loading -> {
+                            // Loading is handled by swipeRefreshLayout in the base class
+                        }
+                        is MediaAnimeRoleViewModel.UiState.Success -> {
+                            handleSuccess(state.content)
+                        }
+                        is MediaAnimeRoleViewModel.UiState.Error -> {
+                            showError(state.message)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     override fun updateUI() {
@@ -72,23 +100,19 @@ class MediaAnimeRoleFragment : FragmentBaseList<RecyclerItem, ConnectionContaine
     }
 
     override fun makeRequest() {
-        val ctx = context ?: return
-        viewModel?.params?.apply {
-            putLong(KeyUtil.arg_id, id)
-            putSerializable(KeyUtil.arg_onList, onList)
-            putString(KeyUtil.arg_mediaType, mediaType)
-            putInt(KeyUtil.arg_page, presenter.currentPage)
-            putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
-        }
-        viewModel?.requestData(requestType, ctx)
+        mediaAnimeRoleViewModel.load(
+            id = id,
+            onList = onList,
+            page = mScrollListener.currentPage,
+        )
     }
 
-    override fun onChanged(content: ConnectionContainer<EdgeContainer<MediaEdge>>?) {
-        val edgeContainer = content?.connection
+    private fun handleSuccess(content: ConnectionContainer<EdgeContainer<MediaEdge>>) {
+        val edgeContainer = content.connection
         if (edgeContainer != null) {
             if (!edgeContainer.isEmpty) {
                 if (edgeContainer.hasPageInfo()) {
-                    presenter.setPageInfo(edgeContainer.pageInfo)
+                    setPageInfo(edgeContainer.pageInfo)
                 }
                 if (!edgeContainer.isEmpty) {
                     onPostProcessed(GroupingUtil.groupCharactersByYear(edgeContainer.edges, mAdapter.data))
@@ -103,6 +127,9 @@ class MediaAnimeRoleFragment : FragmentBaseList<RecyclerItem, ConnectionContaine
             onPostProcessed(null)
         }
     }
+
+    /** No-op: StateFlow collector above handles the response. */
+    override fun onChanged(value: ConnectionContainer<EdgeContainer<MediaEdge>>?) = Unit
 
     override fun onItemClick(
         target: View,

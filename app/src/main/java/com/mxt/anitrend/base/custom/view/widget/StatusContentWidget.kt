@@ -24,7 +24,6 @@ import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.anilist.FeedReply
 import com.mxt.anitrend.util.CenterSnapUtil
 import com.mxt.anitrend.util.CompatUtil
-import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.markdown.RegexUtil
 import com.mxt.anitrend.view.activity.base.ImagePreviewActivity
 import com.mxt.anitrend.view.activity.base.VideoPlayerActivity
@@ -163,19 +162,11 @@ constructor(
         val content = data.value
         when (type) {
             RegexUtil.KEY_IMG -> {
-                val intent =
-                    Intent(context, ImagePreviewActivity::class.java).apply {
-                        putExtra(KeyUtil.arg_model, content)
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    }
+                val intent = ImagePreviewActivity.newIntent(context, content)
                 context.startActivity(intent)
             }
             RegexUtil.KEY_WEB -> {
-                val intent =
-                    Intent(context, VideoPlayerActivity::class.java).apply {
-                        putExtra(KeyUtil.arg_model, content)
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    }
+                val intent = VideoPlayerActivity.newIntent(context, content)
                 context.startActivity(intent)
             }
             RegexUtil.KEY_YOU -> {

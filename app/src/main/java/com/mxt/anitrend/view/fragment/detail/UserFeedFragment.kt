@@ -1,12 +1,21 @@
 package com.mxt.anitrend.view.fragment.detail
 
 import android.os.Bundle
-import com.mxt.anitrend.base.custom.consumer.BaseConsumer
-import com.mxt.anitrend.model.entity.base.UserBase
+import android.view.View
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import com.mxt.anitrend.graphql.generated.ActivityType
+import com.mxt.anitrend.model.entity.anilist.FeedList
+import com.mxt.anitrend.model.entity.container.body.PageContainer
+import com.mxt.anitrend.repository.UserRepository
 import com.mxt.anitrend.util.KeyUtil
+import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.view.fragment.list.FeedListFragment
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
+import com.mxt.anitrend.viewmodel.UserFeedViewModel
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
  * Created by max on 2017/11/26.
@@ -15,6 +24,11 @@ import org.greenrobot.eventbus.ThreadMode
 class UserFeedFragment : FeedListFragment() {
     private var userId: Long = 0
     private var userName: String? = null
+
+    private val settings: Settings by inject()
+    private val userRepository: UserRepository by inject()
+
+    private val userFeedViewModel: UserFeedViewModel by viewModel()
 
     companion object {
         @JvmStatic
@@ -39,29 +53,65 @@ class UserFeedFragment : FeedListFragment() {
         isFeed = false
     }
 
-    override fun makeRequest() {
-        if (presenter.settings.isAuthenticated && presenter.isCurrentUser(userId, userName)) {
-            userId = presenter.database.currentUser?.id ?: userId
-        }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        if (userId > 0) {
-            val params = viewModel?.params ?: return
-            params.applyBaseFeedRequestArguments(arguments)
-            params.remove(KeyUtil.arg_userId)
-            params.putLong(KeyUtil.arg_userId, userId)
-            params.putInt(KeyUtil.arg_page, presenter.currentPage)
-            viewModel?.requestData(KeyUtil.FEED_LIST_REQ, context ?: return)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                userFeedViewModel.state.collect { state ->
+                    when (state) {
+                        is UserFeedViewModel.UiState.Loading -> {
+                            // Loading is handled by swipeRefreshLayout in the base class
+                        }
+                        is UserFeedViewModel.UiState.Success -> {
+                            handleSuccess(state.content)
+                        }
+                        is UserFeedViewModel.UiState.Error -> {
+                            showError(state.message)
+                        }
+                    }
+                }
+            }
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    fun onUserChange(consumer: BaseConsumer<UserBase>) {
-        if (consumer.requestMode == KeyUtil.USER_BASE_REQ && userId == 0L) {
-            val user = consumer.changeModel
-            if (user != null) {
-                userId = user.id
-                makeRequest()
-            }
+    override fun makeRequest() {
+        if (settings.isAuthenticated && isCurrentUser(userId, userName)) {
+            userId = userRepository.cachedCurrentUser?.id ?: userId
+        }
+        if (userId > 0) {
+            val args = arguments ?: return
+            userFeedViewModel.load(
+                userId = userId.toInt(),
+                page = mScrollListener.currentPage,
+                pageLimit = args.getInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT),
+                isFollowing = if (args.containsKey(KeyUtil.arg_isFollowing)) args.getBoolean(KeyUtil.arg_isFollowing) else null,
+                type = args.getString(KeyUtil.arg_type)?.let { runCatching { ActivityType.valueOf(it) }.getOrNull() },
+                isMixed = if (args.containsKey(KeyUtil.arg_isMixed)) args.getBoolean(KeyUtil.arg_isMixed) else null,
+            )
+        }
+    }
+
+    private fun isCurrentUser(userId: Long, userName: String?): Boolean = settings.isAuthenticated &&
+        userRepository.cachedCurrentUser != null &&
+        (
+            userName?.let { userRepository.cachedCurrentUser?.name == it }
+                ?: (userId != 0L && userRepository.cachedCurrentUser?.id == userId)
+            )
+
+    private fun handleSuccess(value: PageContainer<FeedList>) {
+        if (value.hasPageInfo()) {
+            setPageInfo(value.pageInfo)
+        }
+        if (!value.isEmpty) {
+            val filtered = value.pageData.filter { !it.type.isNullOrBlank() }
+            mScrollListener.getPageInfo()?.perPage = filtered.size
+            onPostProcessed(filtered)
+        } else {
+            onPostProcessed(emptyList())
+        }
+        if (mAdapter.itemCount < 1) {
+            onPostProcessed(null)
         }
     }
 }

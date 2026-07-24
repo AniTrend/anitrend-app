@@ -4,25 +4,31 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
-import com.mxt.anitrend.base.custom.fragment.FragmentBase
 import com.mxt.anitrend.base.custom.view.image.AspectImageView
 import com.mxt.anitrend.binding.htmlText
 import com.mxt.anitrend.databinding.FragmentStaffOverviewBinding
 import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.model.entity.base.StaffBase
-import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
+import com.mxt.anitrend.viewmodel.StaffOverviewViewModel
+import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-/**
- * Created by max on 2018/01/30.
- * StaffOverviewFragment
- */
-class StaffOverviewFragment : FragmentBase<StaffBase, BasePresenter, StaffBase>() {
+class StaffOverviewFragment : Fragment() {
+
+    private var _binding: FragmentStaffOverviewBinding? = null
+    private val binding get() = _binding!!
+
+    private var staffId: Long = 0
     private var model: StaffBase? = null
-    private var binding: FragmentStaffOverviewBinding? = null
-    private var id: Long = 0
+
+    private val staffOverviewViewModel: StaffOverviewViewModel by viewModel()
 
     companion object {
         @JvmStatic
@@ -34,80 +40,73 @@ class StaffOverviewFragment : FragmentBase<StaffBase, BasePresenter, StaffBase>(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let { args ->
-            id = args.getLong(KeyUtil.arg_id)
+            staffId = args.getLong(KeyUtil.arg_id)
         }
-        setViewModel(true)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
-        binding = FragmentStaffOverviewBinding.inflate(inflater, container, false)
-        binding?.stateLayout?.showLoading()
-        binding?.staffImg?.setOnClickListener(this)
-        return binding?.root
+    ): View {
+        _binding = FragmentStaffOverviewBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    override fun updateUI() {
-        val binding = binding ?: return
-        val model = model
-        if (model != null) {
-            AspectImageView.setImage(binding.staffImg, model.image)
-            binding.staffNameText.text = model.name?.fullName
-            binding.staffLanguageText.text = CompatUtil.capitalizeWords(model.language)
-            binding.staffSummaryText.htmlText(model.description)
-            binding.stateLayout.showContent()
-        } else {
-            binding.stateLayout.showError(
-                context?.getCompatDrawable(R.drawable.ic_emoji_sweat),
-                getString(R.string.layout_empty_response),
-                getString(R.string.try_again),
-            ) { makeRequest() }
-        }
-    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-    override fun onStart() {
-        super.onStart()
-        if (model != null) {
-            updateUI()
-        } else {
-            makeRequest()
-        }
-    }
+        binding.stateLayout.showLoading()
+        binding.staffImg.setOnClickListener { onImageClick() }
 
-    override fun makeRequest() {
-        val ctx = context ?: return
-        viewModel?.params?.apply {
-            putLong(KeyUtil.arg_id, id)
-            putBoolean(KeyUtil.arg_asHtml, false)
-        }
-        viewModel?.requestData(KeyUtil.STAFF_OVERVIEW_REQ, ctx)
-    }
-
-    override fun onClick(v: View) {
-        when (v.id) {
-            R.id.staff_img -> {
-                CompatUtil.imagePreview(
-                    v,
-                    model?.image?.large,
-                    R.string.image_preview_error_staff_image,
-                )
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                staffOverviewViewModel.state.collect { state ->
+                    when (state) {
+                        is StaffOverviewViewModel.UiState.Loading -> {
+                            binding.stateLayout.showLoading()
+                        }
+                        is StaffOverviewViewModel.UiState.Success -> {
+                            model = state.staff
+                            bindStaff(state.staff)
+                        }
+                        is StaffOverviewViewModel.UiState.Error -> {
+                            binding.stateLayout.showError(
+                                requireContext().getCompatDrawable(R.drawable.ic_emoji_sweat),
+                                state.message,
+                                getString(R.string.try_again),
+                            ) { loadStaff() }
+                        }
+                    }
+                }
             }
-            else -> super.onClick(v)
         }
+
+        loadStaff()
+    }
+
+    private fun loadStaff() {
+        staffOverviewViewModel.load(staffId)
+    }
+
+    private fun bindStaff(staff: StaffBase) {
+        AspectImageView.setImage(binding.staffImg, staff.image)
+        binding.staffNameText.text = staff.name?.fullName
+        binding.staffLanguageText.text = CompatUtil.capitalizeWords(staff.language)
+        binding.staffSummaryText.htmlText(staff.description)
+        binding.stateLayout.showContent()
+    }
+
+    private fun onImageClick() {
+        CompatUtil.imagePreview(
+            requireView(),
+            model?.image?.large,
+            R.string.image_preview_error_staff_image,
+        )
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding = null
-    }
-
-    override fun onChanged(value: StaffBase?) {
-        if (value != null) {
-            this.model = value
-        }
-        updateUI()
+        _binding = null
     }
 }

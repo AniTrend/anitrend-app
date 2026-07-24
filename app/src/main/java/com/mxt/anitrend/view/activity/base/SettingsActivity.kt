@@ -3,6 +3,7 @@ package com.mxt.anitrend.view.activity.base
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import androidx.fragment.app.FragmentActivity
@@ -10,49 +11,40 @@ import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
 import com.google.firebase.FirebaseApp
 import com.mxt.anitrend.R
-import com.mxt.anitrend.base.custom.activity.ActivityBase
 import com.mxt.anitrend.databinding.SettingsActivityBinding
+import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.extension.applyConfiguredTheme
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.JobSchedulerUtil
+import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.Settings
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
-class SettingsActivity : ActivityBase<Nothing, BasePresenter>() {
-    private lateinit var binding: SettingsActivityBinding
+class SettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Preserve configured theme (previously handled by ActivityBase.configureActivity).
+        val settings = KoinExt.get(Settings::class.java)
+        val themeRes = when (settings.theme) {
+            KeyUtil.THEME_DARK -> R.style.AppThemeDark
+            KeyUtil.THEME_BLACK -> R.style.AppThemeBlack
+            else -> R.style.AppThemeLight
+        }
+        setTheme(themeRes)
         super.onCreate(savedInstanceState)
-        binding = SettingsActivityBinding.inflate(layoutInflater)
+
+        val binding = SettingsActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
-    }
-
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
-        onActivityReady()
-    }
-
-    /**
-     * Make decisions, check for permissions or fire background threads from this method
-     * N.B. Must be called after onPostCreate
-     */
-    override fun onActivityReady() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        updateUI()
-    }
 
-    override fun updateUI() {
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.settings, SettingsFragment())
             .commit()
-    }
-
-    override fun makeRequest() {
     }
 
     class SettingsFragment :
@@ -67,28 +59,15 @@ class SettingsActivity : ActivityBase<Nothing, BasePresenter>() {
             rootKey: String?,
         ) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
-
-            // Hide privacy category if Firebase is not initialized
             findPreference<PreferenceCategory>(getString(R.string.pref_key_privacy))?.isVisible =
                 FirebaseApp.getApps(requireContext()).isNotEmpty()
         }
 
-        /**
-         * Called when the fragment is visible to the user and actively running.
-         * This is generally
-         * tied to [Activity.onResume] of the containing
-         * Activity's lifecycle.
-         */
         override fun onResume() {
             super.onResume()
             settings.registerOnSharedPreferenceChangeListener(this)
         }
 
-        /**
-         * Called when the Fragment is no longer resumed.  This is generally
-         * tied to [Activity.onPause] of the containing
-         * Activity's lifecycle.
-         */
         override fun onPause() {
             settings.unregisterOnSharedPreferenceChangeListener(this)
             super.onPause()
@@ -134,7 +113,6 @@ class SettingsActivity : ActivityBase<Nothing, BasePresenter>() {
                         scheduler.cancelNotificationJob(applicationContext)
                         scheduler.cancelTagJob(applicationContext)
                         scheduler.cancelGenreJob(applicationContext)
-
                         scheduler.scheduleNotificationJob(applicationContext)
                         scheduler.scheduleGenreJob(applicationContext)
                         scheduler.scheduleTagJob(applicationContext)

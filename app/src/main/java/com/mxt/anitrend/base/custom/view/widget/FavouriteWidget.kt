@@ -6,20 +6,16 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.Toast
 import com.mxt.anitrend.R
-import com.mxt.anitrend.base.interfaces.event.RetroCallback
 import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.databinding.WidgetFavouriteBinding
 import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.extension.getLayoutInflater
+import com.mxt.anitrend.graphql.generated.LikeableType
 import com.mxt.anitrend.model.entity.base.UserBase
-import com.mxt.anitrend.presenter.widget.WidgetPresenter
-import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
-import com.mxt.anitrend.util.graphql.apiError
-import retrofit2.Call
-import retrofit2.Response
 import timber.log.Timber
+import java.util.Locale
 
 /**
  * Created by max on 2017/10/29.
@@ -33,12 +29,32 @@ constructor(
     defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr),
     CustomView,
-    RetroCallback<List<UserBase>>,
     View.OnClickListener {
-    private var presenter: WidgetPresenter<List<UserBase>>? = null
+
+    interface Listener {
+        fun onToggleLike(
+            id: Long,
+            type: LikeableType,
+            onResult: (Result<List<UserBase>>) -> Unit,
+        )
+    }
+
     private lateinit var binding: WidgetFavouriteBinding
     private var model: MutableList<UserBase>? = null
+    private var likeType: String? = null
+    private var modelId: Long = 0L
     private val tagName = FavouriteWidget::class.java.simpleName
+    private var listener: Listener? = null
+    private var recycled = false
+    private var currentUser: UserBase? = null
+
+    fun setListener(listener: Listener?) {
+        this.listener = listener
+    }
+
+    fun setCurrentUser(user: UserBase?) {
+        this.currentUser = user
+    }
 
     init {
         onInit()
@@ -48,7 +64,6 @@ constructor(
      * Optionally included when constructing custom views
      */
     override fun onInit() {
-        presenter = WidgetPresenter(context)
         binding = WidgetFavouriteBinding.inflate(context.getLayoutInflater(), this, true)
         binding.widgetFlipper.setOnClickListener(this)
     }
@@ -57,15 +72,15 @@ constructor(
      * Clean up any resources that won't be needed
      */
     override fun onViewRecycled() {
+        recycled = true
+        listener = null
         resetFlipperState()
-        presenter?.onDestroy()
-        presenter = null
         model = null
     }
 
     private fun resetFlipperState() {
-        if (binding.widgetFlipper.displayedChild == WidgetPresenter.LOADING_STATE) {
-            binding.widgetFlipper.displayedChild = WidgetPresenter.CONTENT_STATE
+        if (binding.widgetFlipper.displayedChild == LOADING_STATE) {
+            binding.widgetFlipper.displayedChild = CONTENT_STATE
         }
     }
 
@@ -78,18 +93,35 @@ constructor(
         @KeyUtil.LikeType likeType: String,
         modelId: Long,
     ) {
-        presenter?.params?.apply {
-            putLong(KeyUtil.arg_id, modelId)
-            putString(KeyUtil.arg_type, likeType)
-        }
+        this.likeType = likeType
+        this.modelId = modelId
     }
 
     override fun onClick(view: View) {
         when (view.id) {
             R.id.widget_flipper -> {
-                if (binding.widgetFlipper.displayedChild == WidgetPresenter.CONTENT_STATE) {
+                if (binding.widgetFlipper.displayedChild == CONTENT_STATE) {
                     binding.widgetFlipper.showNext()
-                    presenter?.requestData(KeyUtil.MUT_TOGGLE_LIKE, context, this)
+                    val type = likeType ?: return
+                    val id = modelId
+                    if (id == 0L) return
+                    val likeableType = try {
+                        LikeableType.valueOf(type)
+                    } catch (e: Exception) {
+                        Timber.e(e, "Invalid like type: $type")
+                        resetFlipperState()
+                        return
+                    }
+                    listener?.onToggleLike(id, likeableType) { result ->
+                        if (recycled || !isAttachedToWindow) return@onToggleLike
+                        result.onSuccess { newLikes ->
+                            model = newLikes.toMutableList()
+                            setIconType()
+                        }.onFailure { throwable ->
+                            Timber.e(throwable)
+                            resetFlipperState()
+                        }
+                    }
                 } else {
                     NotifyUtil
                         .makeText(
@@ -104,8 +136,8 @@ constructor(
 
     private fun setIconType() {
         val likes = model
-        val currentUser = presenter?.database?.currentUser
-        if (!CompatUtil.isEmpty(likes) && currentUser != null && likes?.contains(currentUser) == true) {
+        val user = currentUser
+        if (!likes.isNullOrEmpty() && user != null && likes.contains(user)) {
             binding.widgetLike.setCompoundDrawablesWithIntrinsicBounds(
                 context.getCompatDrawable(R.drawable.ic_favorite_grey_600_18dp, R.color.colorStateRed),
                 null,
@@ -120,51 +152,14 @@ constructor(
                 null,
             )
         }
-        binding.widgetLike.text = WidgetPresenter.convertToText(CompatUtil.sizeOf(likes))
+        binding.widgetLike.text = convertToText(likes?.size ?: 0)
         resetFlipperState()
     }
 
-    /**
-     * Invoked for a received HTTP response.
-     */
-    override fun onResponse(
-        call: Call<List<UserBase>>,
-        response: Response<List<UserBase>>,
-    ) {
-        try {
-            if (response.isSuccessful) {
-                val currentUser = presenter?.database?.currentUser
-                if (currentUser != null) {
-                    val likes = model ?: mutableListOf<UserBase>().also { model = it }
-                    if (!CompatUtil.isEmpty(likes) && likes.contains(currentUser)) {
-                        likes.remove(currentUser)
-                    } else {
-                        likes.add(currentUser)
-                    }
-                }
-                setIconType()
-            } else {
-                Timber.w(response.apiError())
-                resetFlipperState()
-            }
-        } catch (e: Exception) {
-            Timber.e(e)
-        }
-    }
+    companion object {
+        const val CONTENT_STATE = 0
+        const val LOADING_STATE = 1
 
-    /**
-     * Invoked when a network exception occurred talking to the server or when an unexpected
-     * exception occurred creating the request or processing the response.
-     */
-    override fun onFailure(
-        call: Call<List<UserBase>>,
-        throwable: Throwable,
-    ) {
-        try {
-            Timber.w(throwable)
-            resetFlipperState()
-        } catch (e: Exception) {
-            Timber.e(throwable)
-        }
+        fun convertToText(count: Int): String = String.format(Locale.getDefault(), " %d ", count)
     }
 }

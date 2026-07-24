@@ -1,10 +1,12 @@
 package com.mxt.anitrend.view.sheet
 
 import android.app.Dialog
-import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mxt.anitrend.R
@@ -14,23 +16,24 @@ import com.mxt.anitrend.base.custom.sheet.BottomSheetGiphyList
 import com.mxt.anitrend.base.custom.view.search.MaterialSearchView
 import com.mxt.anitrend.base.interfaces.event.ISearchDelegate
 import com.mxt.anitrend.databinding.BottomSheetListBinding
+import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.model.entity.giphy.Gif
 import com.mxt.anitrend.model.entity.giphy.Giphy
-import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
+import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.view.activity.base.GiphyPreviewActivity
+import com.mxt.anitrend.viewmodel.GiphyViewModel
+import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-/**
- * Created by max on 2017/12/09.
- * giphy bottom sheet container
- */
 class BottomSheetGiphy : BottomSheetGiphyList() {
     private var binding: BottomSheetListBinding? = null
     private var searchView: MaterialSearchView? = null
 
-    @KeyUtil.RequestType
-    private var requestType: Int = 0
+    var onGiphySelected: ((Giphy) -> Unit)? = null
+
+    private val giphyViewModel: GiphyViewModel by viewModel()
 
     companion object {
         @JvmStatic
@@ -42,10 +45,34 @@ class BottomSheetGiphy : BottomSheetGiphyList() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val ctx = requireContext()
-        presenter = BasePresenter(ctx)
         mAdapter = GiphyAdapter(ctx)
         mColumnSize = resources.getInteger(R.integer.grid_giphy_x3)
         isPager = true
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        observeGiphyViewModel()
+    }
+
+    private fun observeGiphyViewModel() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                giphyViewModel.state.collect { state ->
+                    when (state) {
+                        is GiphyViewModel.UiState.Loading -> {
+                            stateLayout?.showLoading()
+                        }
+                        is GiphyViewModel.UiState.Success -> {
+                            super@BottomSheetGiphy.onChanged(state.container)
+                        }
+                        is GiphyViewModel.UiState.Error -> {
+                            showError(state.message)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -82,7 +109,8 @@ class BottomSheetGiphy : BottomSheetGiphyList() {
             }
         }
         injectAdapter()
-        if (presenter.settings.shouldShowTipFor(KeyUtil.KEY_GIPHY_TIP)) {
+        val settings = KoinExt.get(Settings::class.java)
+        if (settings.shouldShowTipFor(KeyUtil.KEY_GIPHY_TIP)) {
             activity?.let {
                 NotifyUtil.createAlerter(
                     it,
@@ -93,20 +121,18 @@ class BottomSheetGiphy : BottomSheetGiphyList() {
                     KeyUtil.DURATION_LONG,
                 )
             }
-            presenter.settings.disableTipFor(KeyUtil.KEY_GIPHY_TIP)
+            settings.disableTipFor(KeyUtil.KEY_GIPHY_TIP)
         }
     }
 
     override fun makeRequest() {
-        val ctx = context ?: return
         val hasQuery = !searchQuery.isNullOrEmpty()
-        val bundle = viewModel?.params ?: Bundle()
-        bundle.putInt(KeyUtil.arg_page_offset, presenter.currentOffset)
-        requestType = if (hasQuery) KeyUtil.GIPHY_SEARCH_REQ else KeyUtil.GIPHY_TRENDING_REQ
+        val offset = presenter.currentOffset
         if (hasQuery) {
-            bundle.putString(KeyUtil.arg_search, searchQuery)
+            giphyViewModel.search(searchQuery!!, offset)
+        } else {
+            giphyViewModel.loadTrending(offset)
         }
-        viewModel?.requestData(requestType, ctx)
     }
 
     override fun onDestroyView() {
@@ -118,7 +144,7 @@ class BottomSheetGiphy : BottomSheetGiphyList() {
         target: View,
         data: IndexedValue<Giphy>,
     ) {
-        presenter.notifyAllListeners(data, false)
+        onGiphySelected?.invoke(data.value)
         closeDialog()
     }
 
@@ -129,10 +155,10 @@ class BottomSheetGiphy : BottomSheetGiphyList() {
         activity?.let { host ->
             val index = KeyUtil.GIPHY_LARGE_DOWN_SAMPLE
             val giphySample: Gif? = data.value.images[index]
-            val intent =
-                Intent(host, GiphyPreviewActivity::class.java).apply {
-                    putExtra(KeyUtil.arg_model, giphySample?.url)
-                }
+            // Empty-string sentinel: when giphySample?.url is null, the
+            // empty string triggers fromIntent → null → error toast in
+            // GiphyPreviewActivity, preserving pre-existing behaviour.
+            val intent = GiphyPreviewActivity.newIntent(host, giphySample?.url ?: "")
             host.startActivity(intent)
         }
     }

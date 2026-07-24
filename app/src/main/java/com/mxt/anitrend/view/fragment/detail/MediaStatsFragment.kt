@@ -12,10 +12,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
@@ -23,30 +27,37 @@ import com.github.mikephil.charting.formatter.PercentFormatter
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.detail.LinkAdapter
 import com.mxt.anitrend.adapter.recycler.detail.RankAdapter
-import com.mxt.anitrend.base.custom.fragment.FragmentBase
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener
 import com.mxt.anitrend.databinding.FragmentSeriesStatsBinding
 import com.mxt.anitrend.extension.getCompatColorAttr
 import com.mxt.anitrend.extension.getCompatDrawable
+import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.model.entity.anilist.ExternalLink
 import com.mxt.anitrend.model.entity.anilist.Media
 import com.mxt.anitrend.model.entity.anilist.MediaRank
 import com.mxt.anitrend.model.entity.anilist.meta.ScoreDistribution
-import com.mxt.anitrend.presenter.fragment.MediaPresenter
+import com.mxt.anitrend.model.entity.anilist.meta.StatusDistribution
 import com.mxt.anitrend.util.ChartUtil
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
+import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.media.MediaBrowseUtil
 import com.mxt.anitrend.util.media.MediaUtil
 import com.mxt.anitrend.view.activity.detail.MediaBrowseActivity
+import com.mxt.anitrend.viewmodel.MediaStatsViewModel
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.Locale
 
 /**
  * Created by max on 2017/12/28.
  */
-class MediaStatsFragment : FragmentBase<Media, MediaPresenter, Media>() {
-    private var binding: FragmentSeriesStatsBinding? = null
+class MediaStatsFragment : Fragment() {
+    private var _binding: FragmentSeriesStatsBinding? = null
+    private val binding get() = _binding!!
+
     private var model: Media? = null
     private var clipboardManager: ClipboardManager? = null
 
@@ -58,6 +69,10 @@ class MediaStatsFragment : FragmentBase<Media, MediaPresenter, Media>() {
     @KeyUtil.MediaType
     private var mediaType: String? = null
 
+    private val settings: Settings by inject()
+
+    private val mediaStatsViewModel: MediaStatsViewModel by viewModel()
+
     companion object {
         @JvmStatic
         fun newInstance(args: Bundle): MediaStatsFragment = MediaStatsFragment().apply {
@@ -67,57 +82,85 @@ class MediaStatsFragment : FragmentBase<Media, MediaPresenter, Media>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val ctx = requireContext()
         arguments?.let { args ->
             mediaId = args.getLong(KeyUtil.arg_id)
             mediaType = args.getString(KeyUtil.arg_mediaType)
         }
-        clipboardManager = ctx.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
-        isMenuDisabled = true
-        mColumnSize = R.integer.grid_list_x2
-        setPresenter(MediaPresenter(ctx))
-        setViewModel(true)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
-        binding = FragmentSeriesStatsBinding.inflate(inflater, container, false)
-        binding?.stateLayout?.showLoading()
-        binding?.linksRecycler?.apply {
+    ): View {
+        _binding = FragmentSeriesStatsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        clipboardManager = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
+
+        binding.linksRecycler.apply {
             layoutManager =
                 StaggeredGridLayoutManager(
-                    resources.getInteger(mColumnSize),
+                    resources.getInteger(R.integer.grid_list_x2),
                     StaggeredGridLayoutManager.VERTICAL,
                 )
             setHasFixedSize(true)
         }
-        binding?.rankingRecycler?.apply {
+        binding.rankingRecycler.apply {
             layoutManager =
                 StaggeredGridLayoutManager(
-                    resources.getInteger(mColumnSize),
+                    resources.getInteger(R.integer.grid_list_x2),
                     StaggeredGridLayoutManager.VERTICAL,
                 )
             setHasFixedSize(true)
         }
-        return binding?.root
+
+        binding.stateLayout.showLoading()
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                mediaStatsViewModel.state.collect { state ->
+                    when (state) {
+                        is MediaStatsViewModel.UiState.Loading -> {
+                            binding.stateLayout.showLoading()
+                        }
+                        is MediaStatsViewModel.UiState.Success -> {
+                            model = state.media
+                            updateUI()
+                        }
+                        is MediaStatsViewModel.UiState.Error -> {
+                            binding.stateLayout.showError(
+                                requireContext().getCompatDrawable(R.drawable.ic_emoji_sweat),
+                                state.message,
+                                getString(R.string.try_again),
+                            ) { loadStats() }
+                        }
+                    }
+                }
+            }
+        }
+
+        loadStats()
+    }
+
+    private fun loadStats() {
+        binding.stateLayout.showLoading()
+        val type = mediaType?.let { runCatching { MediaType.valueOf(it) }.getOrNull() }
+        val isAdult: Boolean? = if (settings.displayAdultContent) null else false
+        mediaStatsViewModel.load(mediaId = mediaId, type = type, isAdult = isAdult)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding = null
+        _binding = null
     }
 
-    override fun onStart() {
-        super.onStart()
-        makeRequest()
-    }
-
-    override fun updateUI() {
+    private fun updateUI() {
         val ctx = context ?: return
-        val binding = binding ?: return
         val model = model ?: return
         binding.linksRecycler.visibility =
             if (!CompatUtil.isEmpty(model.externalLinks)) View.VISIBLE else View.GONE
@@ -144,7 +187,7 @@ class MediaStatsFragment : FragmentBase<Media, MediaPresenter, Media>() {
                                 args.putString(KeyUtil.arg_mediaType, mediaType)
                                 args.putString(KeyUtil.arg_format, data.value.format)
                                 args.putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
-                                if (!presenter.settings.displayAdultContent) {
+                                if (!settings.displayAdultContent) {
                                     args.putBoolean(KeyUtil.arg_isAdult, false)
                                 }
 
@@ -234,26 +277,11 @@ class MediaStatsFragment : FragmentBase<Media, MediaPresenter, Media>() {
         showScoreDistribution()
     }
 
-    override fun makeRequest() {
-        val ctx = context ?: return
-        viewModel?.params?.apply {
-            putLong(KeyUtil.arg_id, mediaId)
-            putString(KeyUtil.arg_mediaType, mediaType)
-            if (presenter.settings.displayAdultContent) {
-                remove(KeyUtil.arg_isAdult)
-            } else {
-                putBoolean(KeyUtil.arg_isAdult, false)
-            }
-        }
-        viewModel?.requestData(KeyUtil.MEDIA_STATS_REQ, ctx)
-    }
-
     private fun showScoreDistribution() {
-        val binding = binding ?: return
         val ctx = context ?: return
         val scoreDistribution = model?.stats?.scoreDistribution ?: return
 
-        val barEntries = presenter.getMediaScoreDistribution(scoreDistribution)
+        val barEntries = getMediaScoreDistribution(scoreDistribution)
         val barDataSet =
             BarDataSet(barEntries, getString(R.string.title_score_distribution)).apply {
                 valueTextColor = ctx.getCompatColorAttr(R.attr.titleColor)
@@ -287,13 +315,12 @@ class MediaStatsFragment : FragmentBase<Media, MediaPresenter, Media>() {
     }
 
     private fun showStatusDistribution() {
-        val binding = binding ?: return
         val ctx = context ?: return
         val statusDistribution = model?.stats?.statusDistribution ?: return
 
         configureSeriesStats()
 
-        val pieEntries: List<PieEntry> = presenter.getMediaStats(statusDistribution)
+        val pieEntries: List<PieEntry> = getMediaStats(statusDistribution)
         val pieDataSet =
             PieDataSet(pieEntries, getString(R.string.title_series_stats)).apply {
                 sliceSpace = 3f
@@ -319,25 +346,7 @@ class MediaStatsFragment : FragmentBase<Media, MediaPresenter, Media>() {
         binding.seriesStats.invalidate()
     }
 
-    override fun onChanged(value: Media?) {
-        val binding = binding ?: return
-        if (value != null) {
-            this.model = value
-            updateUI()
-        } else {
-            binding.stateLayout.showError(
-                context?.getCompatDrawable(R.drawable.ic_emoji_sweat),
-                getString(R.string.layout_empty_response),
-                getString(R.string.try_again),
-            ) {
-                binding.stateLayout.showLoading()
-                makeRequest()
-            }
-        }
-    }
-
     private fun configureScoreDistribution(scoreDistributions: List<ScoreDistribution>) {
-        val binding = binding ?: return
         val ctx = context ?: return
         binding.seriesScoreDist.description.isEnabled = false
         binding.seriesScoreDist.setDrawGridBackground(false)
@@ -357,7 +366,6 @@ class MediaStatsFragment : FragmentBase<Media, MediaPresenter, Media>() {
     }
 
     private fun configureSeriesStats() {
-        val binding = binding ?: return
         binding.seriesStats.setUsePercentValues(true)
         binding.seriesStats.description.isEnabled = false
         binding.seriesStats.setExtraOffsets(0f, 0f, 50f, 0f)
@@ -370,14 +378,39 @@ class MediaStatsFragment : FragmentBase<Media, MediaPresenter, Media>() {
         binding.seriesStats.isHighlightPerTapEnabled = true
 
         val legend = binding.seriesStats.legend
-        legend.verticalAlignment = Legend.LegendVerticalAlignment.TOP
-        legend.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
-        legend.orientation = Legend.LegendOrientation.VERTICAL
+        legend.verticalAlignment = com.github.mikephil.charting.components.Legend.LegendVerticalAlignment.TOP
+        legend.horizontalAlignment = com.github.mikephil.charting.components.Legend.LegendHorizontalAlignment.RIGHT
+        legend.orientation = com.github.mikephil.charting.components.Legend.LegendOrientation.VERTICAL
         legend.setDrawInside(false)
         legend.xEntrySpace = 0f
         legend.yEntrySpace = 0f
         legend.yOffset = 0f
 
         binding.seriesStats.setDrawEntryLabels(false)
+    }
+
+    // Extracted from MediaPresenter
+
+    private fun getMediaStats(statusDistribution: List<StatusDistribution>): List<PieEntry> {
+        val highestStatus = statusDistribution.maxOfOrNull { it.amount } ?: 0
+        if (highestStatus > 0) {
+            return statusDistribution
+                .map { status ->
+                    PieEntry(
+                        (status.amount * 100f) / highestStatus,
+                        String.format(
+                            Locale.getDefault(),
+                            "%s: %s",
+                            CompatUtil.capitalizeWords(status.status),
+                            MediaUtil.getFormattedCount(status.amount),
+                        ),
+                    )
+                }.sortedBy { it.label }
+        }
+        return emptyList()
+    }
+
+    private fun getMediaScoreDistribution(scoreDistribution: List<ScoreDistribution>): List<BarEntry> = scoreDistribution.mapIndexed { index, score ->
+        BarEntry(index.toFloat(), score.amount.toFloat())
     }
 }

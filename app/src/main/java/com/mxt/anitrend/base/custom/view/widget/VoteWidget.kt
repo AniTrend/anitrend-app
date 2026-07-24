@@ -10,19 +10,17 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.view.text.SingleLineTextView
-import com.mxt.anitrend.base.interfaces.event.RetroCallback
 import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.databinding.WidgetVoteBinding
 import com.mxt.anitrend.extension.getCompatColor
 import com.mxt.anitrend.extension.getCompatDrawable
+import com.mxt.anitrend.graphql.generated.ReviewRating
 import com.mxt.anitrend.model.entity.anilist.Review
-import com.mxt.anitrend.presenter.widget.WidgetPresenter
+import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
-import com.mxt.anitrend.util.graphql.apiError
-import retrofit2.Call
-import retrofit2.Response
 import timber.log.Timber
+import java.util.Locale
 
 /**
  * Created by max on 2017/11/05.
@@ -36,12 +34,30 @@ constructor(
     defStyleAttr: Int = 0,
 ) : LinearLayout(context, attrs, defStyleAttr),
     CustomView,
-    View.OnClickListener,
-    RetroCallback<Review> {
-    private lateinit var presenter: WidgetPresenter<Review>
+    View.OnClickListener {
+
+    interface Listener {
+        fun onRateReview(
+            id: Long,
+            rating: ReviewRating?,
+            onResult: (Result<Review>) -> Unit,
+        )
+    }
+
     private lateinit var binding: WidgetVoteBinding
     private var model: Review? = null
     private val tagName = VoteWidget::class.java.simpleName
+    private var listener: Listener? = null
+    private var recycled = false
+    private var currentUser: UserBase? = null
+
+    fun setListener(listener: Listener?) {
+        this.listener = listener
+    }
+
+    fun setCurrentUser(user: UserBase?) {
+        this.currentUser = user
+    }
 
     @ColorRes
     private var colorStyle: Int = 0
@@ -50,27 +66,38 @@ constructor(
         onInit()
     }
 
-    private fun setParameters(
-        @KeyUtil.ReviewRating ratingType: String,
-    ) {
+    private fun performRating(@KeyUtil.ReviewRating ratingType: String) {
         val currentModel = model ?: return
-        presenter.params.apply {
-            putLong(KeyUtil.arg_id, currentModel.id)
-            putString(KeyUtil.arg_rating, ratingType)
-            putBoolean(KeyUtil.arg_asHtml, false)
+        val rating = try {
+            ReviewRating.valueOf(ratingType)
+        } catch (e: Exception) {
+            Timber.e(e, "Invalid rating type: $ratingType")
+            resetFlipperState()
+            return
         }
-        presenter.requestData(KeyUtil.MUT_RATE_REVIEW, context, this)
+        listener?.onRateReview(currentModel.id, rating) { result ->
+            if (recycled || !isAttachedToWindow) return@onRateReview
+            result.onSuccess { responseModel ->
+                currentModel.rating = responseModel.rating
+                currentModel.ratingAmount = responseModel.ratingAmount
+                currentModel.userRating = responseModel.userRating
+                setReviewStatus()
+            }.onFailure { throwable ->
+                Timber.e(throwable)
+                resetFlipperState()
+            }
+        }
     }
 
     override fun onClick(view: View) {
-        if (presenter.settings.isAuthenticated) {
+        if (currentUser != null) {
             when (view.id) {
                 R.id.widget_thumb_up_flipper -> {
-                    if (binding.widgetThumbUpFlipper.displayedChild == WidgetPresenter.CONTENT_STATE) {
+                    if (binding.widgetThumbUpFlipper.displayedChild == CONTENT_STATE) {
                         binding.widgetThumbUpFlipper.showNext()
                         val current = model?.userRating
                         val rating = if (current == KeyUtil.UP_VOTE) KeyUtil.NO_VOTE else KeyUtil.UP_VOTE
-                        setParameters(rating)
+                        performRating(rating)
                     } else {
                         NotifyUtil
                             .makeText(
@@ -81,11 +108,11 @@ constructor(
                     }
                 }
                 R.id.widget_thumb_down_flipper -> {
-                    if (binding.widgetThumbDownFlipper.displayedChild == WidgetPresenter.CONTENT_STATE) {
+                    if (binding.widgetThumbDownFlipper.displayedChild == CONTENT_STATE) {
                         binding.widgetThumbDownFlipper.showNext()
                         val current = model?.userRating
                         val rating = if (current == KeyUtil.DOWN_VOTE) KeyUtil.NO_VOTE else KeyUtil.DOWN_VOTE
-                        setParameters(rating)
+                        performRating(rating)
                     } else {
                         NotifyUtil
                             .makeText(
@@ -111,7 +138,6 @@ constructor(
      * Optionally included when constructing custom views
      */
     override fun onInit() {
-        presenter = WidgetPresenter(context)
         binding = WidgetVoteBinding.inflate(LayoutInflater.from(context), this, true)
         binding.widgetThumbUpFlipper.setOnClickListener(this)
         binding.widgetThumbDownFlipper.setOnClickListener(this)
@@ -121,17 +147,18 @@ constructor(
      * Clean up any resources that won't be needed
      */
     override fun onViewRecycled() {
-        presenter.onDestroy()
+        recycled = true
+        listener = null
         model = null
     }
 
     private fun resetFlipperState() {
-        if (binding.widgetThumbUpFlipper.displayedChild == WidgetPresenter.LOADING_STATE) {
-            binding.widgetThumbUpFlipper.displayedChild = WidgetPresenter.CONTENT_STATE
+        if (binding.widgetThumbUpFlipper.displayedChild == LOADING_STATE) {
+            binding.widgetThumbUpFlipper.displayedChild = CONTENT_STATE
         }
 
-        if (binding.widgetThumbDownFlipper.displayedChild == WidgetPresenter.LOADING_STATE) {
-            binding.widgetThumbDownFlipper.displayedChild = WidgetPresenter.CONTENT_STATE
+        if (binding.widgetThumbDownFlipper.displayedChild == LOADING_STATE) {
+            binding.widgetThumbDownFlipper.displayedChild = CONTENT_STATE
         }
     }
 
@@ -204,50 +231,16 @@ constructor(
             }
         }
 
-        binding.widgetThumbUp.text = WidgetPresenter.convertToText(currentModel.rating)
+        binding.widgetThumbUp.text = convertToText(currentModel.rating)
         val downVotes = currentModel.ratingAmount - currentModel.rating
-        binding.widgetThumbDown.text = WidgetPresenter.convertToText(if (downVotes < 0) 0 else downVotes)
+        binding.widgetThumbDown.text = convertToText(if (downVotes < 0) 0 else downVotes)
         resetFlipperState()
     }
 
-    /**
-     * Invoked for a received HTTP response.
-     */
-    override fun onResponse(
-        call: Call<Review>,
-        response: Response<Review>,
-    ) {
-        try {
-            val responseModel = response.body()
-            if (response.isSuccessful && responseModel != null) {
-                model?.apply {
-                    rating = responseModel.rating
-                    ratingAmount = responseModel.ratingAmount
-                    userRating = responseModel.userRating
-                }
-                setReviewStatus()
-            } else {
-                Timber.w(response.apiError())
-                resetFlipperState()
-            }
-        } catch (e: Exception) {
-            Timber.e(e)
-        }
-    }
+    companion object {
+        const val CONTENT_STATE = 0
+        const val LOADING_STATE = 1
 
-    /**
-     * Invoked when a network exception occurred talking to the server or when an unexpected
-     * exception occurred creating the request or processing the response.
-     */
-    override fun onFailure(
-        call: Call<Review>,
-        throwable: Throwable,
-    ) {
-        try {
-            Timber.e(throwable)
-            resetFlipperState()
-        } catch (e: Exception) {
-            Timber.e(throwable)
-        }
+        fun convertToText(count: Int): String = String.format(Locale.getDefault(), " %d ", count)
     }
 }

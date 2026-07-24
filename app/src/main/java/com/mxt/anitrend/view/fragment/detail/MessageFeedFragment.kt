@@ -3,14 +3,21 @@ package com.mxt.anitrend.view.fragment.detail
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.FeedAdapter
 import com.mxt.anitrend.model.entity.anilist.FeedList
+import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.view.activity.detail.ProfileActivity
 import com.mxt.anitrend.view.fragment.list.FeedListFragment
 import com.mxt.anitrend.view.sheet.BottomSheetComposer
+import com.mxt.anitrend.viewmodel.MessageFeedViewModel
+import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
  * Created by max on 2018/03/24.
@@ -21,6 +28,8 @@ class MessageFeedFragment : FeedListFragment() {
 
     @KeyUtil.MessageType
     private var messageType: Int = 0
+
+    private val messageFeedViewModel: MessageFeedViewModel by viewModel()
 
     companion object {
         @JvmStatic
@@ -49,19 +58,52 @@ class MessageFeedFragment : FeedListFragment() {
         (mAdapter as? FeedAdapter)?.setMessageType(messageType)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                messageFeedViewModel.state.collect { state ->
+                    when (state) {
+                        is MessageFeedViewModel.UiState.Loading -> {
+                            // Loading is handled by swipeRefreshLayout in the base class
+                        }
+                        is MessageFeedViewModel.UiState.Success -> {
+                            handleSuccess(state.content)
+                        }
+                        is MessageFeedViewModel.UiState.Error -> {
+                            showError(state.message)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     override fun makeRequest() {
-        val ctx = context ?: return
-        val params = viewModel?.params ?: return
-        params.applyBaseFeedRequestArguments(arguments)
-        params.putInt(KeyUtil.arg_page, presenter.currentPage)
-        params.putBoolean(KeyUtil.arg_asHtml, false)
-        params.remove(KeyUtil.arg_userId)
-        params.remove(KeyUtil.arg_messengerId)
-        params.putLong(
-            if (messageType == KeyUtil.MESSAGE_TYPE_INBOX) KeyUtil.arg_userId else KeyUtil.arg_messengerId,
-            userId,
+        val args = arguments ?: return
+        messageFeedViewModel.load(
+            userId = userId,
+            page = mScrollListener.currentPage,
+            pageLimit = args.getInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT),
+            messageType = messageType,
         )
-        viewModel?.requestData(KeyUtil.FEED_MESSAGE_REQ, ctx)
+    }
+
+    private fun handleSuccess(value: PageContainer<FeedList>) {
+        if (value.hasPageInfo()) {
+            setPageInfo(value.pageInfo)
+        }
+        if (!value.isEmpty) {
+            val filtered = value.pageData.filter { !it.type.isNullOrBlank() }
+            mScrollListener.getPageInfo()?.perPage = filtered.size
+            onPostProcessed(filtered)
+        } else {
+            onPostProcessed(emptyList())
+        }
+        if (mAdapter.itemCount < 1) {
+            onPostProcessed(null)
+        }
     }
 
     override fun onItemClick(

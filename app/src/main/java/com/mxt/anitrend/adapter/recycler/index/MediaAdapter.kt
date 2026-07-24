@@ -53,7 +53,7 @@ class MediaAdapter(context: Context, private val isCompatType: Boolean) : Recycl
     }
 
     private fun createAnimeViewHolder(parent: ViewGroup): AnimeViewHolder {
-        val adapter = when (presenter.settings.mediaListStyle) {
+        val adapter = when (settings.mediaListStyle) {
             KeyUtil.LIST_VIEW_STYLE_COMPACT_X1,
             KeyUtil.LIST_VIEW_STYLE_COMPACT_X2,
             -> {
@@ -67,7 +67,7 @@ class MediaAdapter(context: Context, private val isCompatType: Boolean) : Recycl
     }
 
     private fun createMangaViewHolder(parent: ViewGroup): MangaViewHolder {
-        val adapter = when (presenter.settings.mediaListStyle) {
+        val adapter = when (settings.mediaListStyle) {
             KeyUtil.LIST_VIEW_STYLE_COMPACT_X1,
             KeyUtil.LIST_VIEW_STYLE_COMPACT_X2,
             -> {
@@ -130,7 +130,7 @@ class MediaAdapter(context: Context, private val isCompatType: Boolean) : Recycl
                     binding.customRatingWidget.setAverageRating(model)
                     binding.seriesTitle.setTitle(model)
 
-                    if (presenter.settings.mediaListStyle == KeyUtil.LIST_VIEW_STYLE_COMPACT_X2) {
+                    if (settings.mediaListStyle == KeyUtil.LIST_VIEW_STYLE_COMPACT_X2) {
                         binding.customRatingWidget.visibility = View.GONE
                     }
                 }
@@ -205,7 +205,7 @@ class MediaAdapter(context: Context, private val isCompatType: Boolean) : Recycl
                     binding.customRatingWidget.setAverageRating(model)
                     binding.seriesTitle.setTitle(model)
 
-                    if (presenter.settings.mediaListStyle == KeyUtil.LIST_VIEW_STYLE_COMPACT_X2) {
+                    if (settings.mediaListStyle == KeyUtil.LIST_VIEW_STYLE_COMPACT_X2) {
                         binding.customRatingWidget.visibility = View.GONE
                     }
                 }

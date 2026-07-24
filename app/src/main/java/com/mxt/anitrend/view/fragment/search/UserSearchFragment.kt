@@ -3,21 +3,33 @@ package com.mxt.anitrend.view.fragment.search
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.UserAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
+import com.mxt.anitrend.coordinator.WidgetMutationCoordinator
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.view.activity.detail.ProfileActivity
+import com.mxt.anitrend.viewmodel.UserSearchViewModel
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
  * Created by max on 2017/12/20.
  */
 class UserSearchFragment : FragmentBaseList<UserBase, PageContainer<UserBase>, BasePresenter>() {
     private var searchQuery: String? = null
+
+    private val mutationCoordinator by inject<WidgetMutationCoordinator>()
+
+    private val userSearchViewModel: UserSearchViewModel by viewModel()
 
     companion object {
         @JvmStatic
@@ -34,9 +46,29 @@ class UserSearchFragment : FragmentBaseList<UserBase, PageContainer<UserBase>, B
         }
         mColumnSize = R.integer.single_list_x1
         isPager = true
-        mAdapter = UserAdapter(ctx)
-        setPresenter(BasePresenter(ctx))
-        setViewModel(true)
+        mAdapter = UserAdapter(ctx, mutationCoordinator)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                userSearchViewModel.state.collect { state ->
+                    when (state) {
+                        is UserSearchViewModel.UiState.Loading -> {
+                            // Loading is handled by swipeRefreshLayout in the base class
+                        }
+                        is UserSearchViewModel.UiState.Success -> {
+                            handleSuccess(state.content)
+                        }
+                        is UserSearchViewModel.UiState.Error -> {
+                            showError(state.message)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     override fun updateUI() {
@@ -44,26 +76,16 @@ class UserSearchFragment : FragmentBaseList<UserBase, PageContainer<UserBase>, B
     }
 
     override fun makeRequest() {
-        val ctx = context ?: return
-        viewModel?.params?.apply {
-            putString(KeyUtil.arg_search, searchQuery)
-            putInt(KeyUtil.arg_page, presenter.currentPage)
-            putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
-            putString(KeyUtil.arg_sort, KeyUtil.SEARCH_MATCH)
-        }
-        viewModel?.requestData(KeyUtil.USER_SEARCH_REQ, ctx)
+        val query = searchQuery ?: return
+        userSearchViewModel.load(search = query, page = mScrollListener.currentPage)
     }
 
-    override fun onChanged(content: PageContainer<UserBase>?) {
-        if (content != null) {
-            if (content.hasPageInfo()) {
-                presenter.setPageInfo(content.pageInfo)
-            }
-            if (!content.isEmpty) {
-                onPostProcessed(content.pageData)
-            } else {
-                onPostProcessed(emptyList())
-            }
+    private fun handleSuccess(content: PageContainer<UserBase>) {
+        if (content.hasPageInfo()) {
+            setPageInfo(content.pageInfo)
+        }
+        if (!content.isEmpty) {
+            onPostProcessed(content.pageData)
         } else {
             onPostProcessed(emptyList())
         }
@@ -71,6 +93,9 @@ class UserSearchFragment : FragmentBaseList<UserBase, PageContainer<UserBase>, B
             onPostProcessed(null)
         }
     }
+
+    /** No-op: StateFlow collector above handles the response. */
+    override fun onChanged(value: PageContainer<UserBase>?) = Unit
 
     override fun onItemClick(
         target: View,

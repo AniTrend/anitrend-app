@@ -2,59 +2,45 @@ package com.mxt.anitrend.view.activity.detail
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
+import androidx.appcompat.app.AppCompatActivity
 import com.mxt.anitrend.R
-import com.mxt.anitrend.base.custom.activity.ActivityBase
 import com.mxt.anitrend.databinding.ActivityFrameGenericBinding
-import com.mxt.anitrend.presenter.base.BasePresenter
+import com.mxt.anitrend.extension.KoinExt
+import com.mxt.anitrend.util.KeyUtil
+import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.view.activity.index.MainActivity
 import com.mxt.anitrend.view.fragment.detail.NotificationFragment
 
-/**
- * Created by max on 2017/10/25.
- */
-class NotificationActivity : ActivityBase<Void, BasePresenter>() {
-    private lateinit var binding: ActivityFrameGenericBinding
+class NotificationActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Preserve configured theme (previously handled by ActivityBase.configureActivity).
+        val settings = KoinExt.get(Settings::class.java)
+        val themeRes = when (settings.theme) {
+            KeyUtil.THEME_DARK -> R.style.AppThemeDark
+            KeyUtil.THEME_BLACK -> R.style.AppThemeBlack
+            else -> R.style.AppThemeLight
+        }
+        setTheme(themeRes)
         super.onCreate(savedInstanceState)
-        binding = ActivityFrameGenericBinding.inflate(layoutInflater)
+
+        val binding = ActivityFrameGenericBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.customToolbar.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        val fragment = NotificationFragment.newInstance()
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.content_frame, fragment, fragment.TAG)
+            .commit()
     }
 
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
-        setPresenter(BasePresenter(this))
-        onActivityReady()
-    }
-
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         if (isTaskRoot) {
             startActivity(Intent(this, MainActivity::class.java))
         }
         super.onBackPressed()
-    }
-
-    /**
-     * Make decisions, check for permissions or fire background threads from this method
-     * N.B. Must be called after onPostCreate
-     */
-    override fun onActivityReady() {
-        mFragment = NotificationFragment.newInstance()
-        updateUI()
-    }
-
-    override fun updateUI() {
-        mFragment?.let { fragment ->
-            val fragmentManager: FragmentManager = supportFragmentManager
-            val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
-            fragmentTransaction.replace(R.id.content_frame, fragment, fragment.TAG)
-            fragmentTransaction.commit()
-        }
-    }
-
-    override fun makeRequest() {
     }
 }

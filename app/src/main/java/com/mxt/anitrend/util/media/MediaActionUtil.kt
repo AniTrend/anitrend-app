@@ -14,6 +14,8 @@ import com.mxt.anitrend.presenter.widget.WidgetPresenter
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.graphql.apiError
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import retrofit2.Call
 import retrofit2.Response
 import timber.log.Timber
@@ -26,12 +28,12 @@ import timber.log.Timber
 class MediaActionUtil private constructor(
     private val context: FragmentActivity,
 ) : RetroCallback<MediaBase>,
-    LifecycleListener {
+    LifecycleListener,
+    KoinComponent {
     private var progressDialog: AlertDialog? = null
-    private val presenter = WidgetPresenter<MediaBase>(context)
+    private val presenter by inject<WidgetPresenter<MediaBase>>()
     private val lifecycle: Lifecycle = context.lifecycle
     private var mediaId: Long = 0
-    private val tagName = MediaActionUtil::class.java.simpleName
 
     private fun setMediaId(mediaId: Long) {
         this.mediaId = mediaId

@@ -7,10 +7,15 @@ import androidx.fragment.app.FragmentActivity
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.mxt.anitrend.R
+import com.mxt.anitrend.base.interfaces.dao.BoxQuery
 import com.mxt.anitrend.base.interfaces.event.BottomSheetChoice
+import com.mxt.anitrend.extension.KoinExt
+import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.service.DownloaderService
+import com.mxt.anitrend.util.JobSchedulerUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
+import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.view.activity.index.MainActivity
 import com.mxt.anitrend.view.sheet.BottomSheetMessage
 
@@ -28,7 +33,7 @@ private fun MainActivity.onUpdateChecked(
     silent: Boolean,
     menuItems: Menu,
 ) {
-    val remoteVersion = presenter.database.remoteVersion
+    val remoteVersion = koinOf<BoxQuery>().remoteVersion
 
     if (remoteVersion != null) {
         if (remoteVersion.isNewerVersion()) {
@@ -78,14 +83,15 @@ fun MainActivity.checkUpdate() {
             .buildWithCallback(
                 object : BottomSheetChoice {
                     override fun onPositiveButton() {
-                        val versionBase = presenter.database.remoteVersion
+                        val versionBase = koinOf<BoxQuery>().remoteVersion
                         if (versionBase != null && versionBase.isNewerVersion()) {
                             DownloaderService.downloadNewVersion(
                                 this@checkUpdate,
                                 versionBase,
                             )
                         } else {
-                            presenter.checkForUpdates(false)
+                            JobSchedulerUtil(KoinExt.get(Settings::class.java))
+                                .startUpdateJob(applicationContext, false)
                         }
                     }
 

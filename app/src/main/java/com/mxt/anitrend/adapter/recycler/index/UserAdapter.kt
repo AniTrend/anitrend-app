@@ -8,7 +8,9 @@ import com.bumptech.glide.Glide
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder
+import com.mxt.anitrend.base.custom.view.widget.FollowStateWidget
 import com.mxt.anitrend.binding.setImage
+import com.mxt.anitrend.coordinator.WidgetMutationCoordinator
 import com.mxt.anitrend.databinding.AdapterUserBinding
 import com.mxt.anitrend.extension.getLayoutInflater
 import com.mxt.anitrend.model.entity.base.UserBase
@@ -20,6 +22,7 @@ import java.util.Locale
  */
 class UserAdapter(
     context: Context,
+    private val coordinator: WidgetMutationCoordinator,
 ) : RecyclerViewAdapter<UserBase>(context) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -63,6 +66,13 @@ class UserAdapter(
         }
     }
 
+    private val followListener = object : FollowStateWidget.Listener {
+        override fun onToggleFollow(
+            userId: Long,
+            onResult: (Result<UserBase>) -> Unit,
+        ) = coordinator.toggleFollow(userId, onResult)
+    }
+
     inner class UserViewHolder(
         private val binding: AdapterUserBinding,
     ) : RecyclerViewHolder<UserBase>(binding.root) {
@@ -74,10 +84,13 @@ class UserAdapter(
             binding.userAvatar.setImage(model.avatar)
             binding.userName.text = model.name
             binding.userFollowStateWidget.setUserModel(model)
+            binding.userFollowStateWidget.setCurrentUser(coordinator.databaseHelper.currentUser)
+            binding.userFollowStateWidget.setListener(followListener)
         }
 
         override fun onViewRecycled() {
             Glide.with(getContext()).clear(binding.userAvatar)
+            binding.userFollowStateWidget.setListener(null)
             binding.userFollowStateWidget.onViewRecycled()
         }
 

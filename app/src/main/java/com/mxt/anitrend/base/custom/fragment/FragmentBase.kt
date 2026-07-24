@@ -24,10 +24,10 @@ import com.mxt.anitrend.base.custom.viewmodel.ViewModelBase
 import com.mxt.anitrend.base.interfaces.event.ActionModeListener
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener
 import com.mxt.anitrend.base.interfaces.event.ResponseCallback
-import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.util.ActionModeUtil
+import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.media.MediaActionUtil
-import org.greenrobot.eventbus.EventBus
+import org.koin.android.ext.android.inject
 import timber.log.Timber
 import kotlin.jvm.JvmName
 
@@ -45,7 +45,9 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> :
     protected var isPager: Boolean = false
     protected var isMenuDisabled: Boolean = false
     protected var isFeed: Boolean = false
-    protected var hasSubscriber: Boolean = false
+
+    private val settings by inject<Settings>()
+    private val analytics by inject<ISupportAnalytics>()
 
     @MenuRes
     private var inflateMenu: Int = 0
@@ -74,7 +76,7 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activity?.let { host ->
-            KoinExt.get(ISupportAnalytics::class.java).logCurrentScreen(host, TAG)
+            analytics.logCurrentScreen(host, TAG)
         }
     }
 
@@ -95,20 +97,10 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> :
 
     override fun onStart() {
         super.onStart()
-        if (!EventBus.getDefault().isRegistered(this) && hasSubscriber) {
-            EventBus.getDefault().register(this)
-        }
         @Suppress("DEPRECATION")
         if (!isMenuDisabled) {
             setHasOptionsMenu(true)
         }
-    }
-
-    override fun onStop() {
-        if (EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().unregister(this)
-        }
-        super.onStop()
     }
 
     override fun onPause() {
@@ -116,7 +108,7 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> :
         if (this::mediaActionUtil.isInitialized) {
             mediaActionUtil.onPause(null)
         }
-        presenterRef?.onPause(this)
+        settings.unregisterOnSharedPreferenceChangeListener(this)
     }
 
     override fun onResume() {
@@ -124,7 +116,7 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> :
         if (this::mediaActionUtil.isInitialized) {
             mediaActionUtil.onResume(null)
         }
-        presenterRef?.onResume(this)
+        settings.registerOnSharedPreferenceChangeListener(this)
     }
 
     @Deprecated("Deprecated in Java")
@@ -156,10 +148,22 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> :
 
     override fun onClick(v: View) = Unit
 
+    @Deprecated(
+        "Do not attach a presenter in new fragments. Inject collaborators instead. " +
+            "See AGENTS.md (ViewModel-first architecture) for the migration direction.",
+        level = DeprecationLevel.ERROR,
+    )
     fun setPresenter(presenter: P) {
         presenterRef = presenter
     }
 
+    @Deprecated(
+        "Use direct androidx.lifecycle.ViewModel subclasses with ViewModelProvider " +
+            "(or later Koin by viewModel() / activityViewModel()) instead of the " +
+            "legacy ViewModelBase wrapper. " +
+            "See StaffOverviewFragment and StudioMediaFragment for proven fragment-side patterns.",
+        level = DeprecationLevel.ERROR,
+    )
     @Suppress("UNCHECKED_CAST")
     protected fun setViewModel(stateSupported: Boolean) {
         if (viewModelRef == null) {

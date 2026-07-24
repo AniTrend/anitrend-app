@@ -89,6 +89,9 @@ object WebFactory {
      *
      * @param context A valid application, fragment or activity context but must be application context
      */
+    @Deprecated(
+        message = "Use Koin get<SomeModel>() instead. Retrofit instances are now managed by Koin in Modules.kt.",
+    )
     fun <S> createService(
         serviceClass: Class<S>,
         context: Context,
@@ -113,6 +116,9 @@ object WebFactory {
         return requireNotNull(mRetrofit).create(serviceClass)
     }
 
+    @Deprecated(
+        message = "Use Koin injection for the appropriate service model. Called only by the deprecated RequestHandler.",
+    )
     fun createCrunchyService(
         feeds: Boolean,
         context: Context,
@@ -139,6 +145,9 @@ object WebFactory {
         return retrofit.create(EpisodeModel::class.java)
     }
 
+    @Deprecated(
+        message = "Use Koin get<GiphyModel>() instead. Retrofit instances are now managed by Koin in Modules.kt.",
+    )
     fun createGiphyService(context: Context): GiphyModel {
         if (mGiphy == null) {
             val appContext = context.applicationContext
@@ -162,6 +171,9 @@ object WebFactory {
         return requireNotNull(mGiphy).create(GiphyModel::class.java)
     }
 
+    @Deprecated(
+        message = "Use Koin get<RepositoryModel>() instead. Retrofit instances are now managed by Koin in Modules.kt.",
+    )
     fun createRepositoryService(): RepositoryModel = Retrofit
         .Builder()
         .addConverterFactory(GsonConverterFactory.create(gson))
@@ -208,7 +220,7 @@ object WebFactory {
 
     @JvmStatic
     fun invalidate() {
-        mRetrofit = null
-        mGiphy = null
+        // Retrofit instances are now managed by Koin.
+        // Auth state is read dynamically by AuthInterceptor. No invalidation needed.
     }
 }

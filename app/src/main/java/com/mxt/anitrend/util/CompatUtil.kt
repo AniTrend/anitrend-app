@@ -29,7 +29,6 @@ import okhttp3.Cache
 import timber.log.Timber
 import java.io.File
 import java.util.*
-import kotlin.math.min
 import kotlin.math.roundToInt
 
 /**
@@ -76,11 +75,7 @@ object CompatUtil {
     fun imagePreview(view: View, imageUri: String) {
         if (imageUri.isNotBlank()) {
             val context = view.context
-            val intent = Intent(context, ImagePreviewActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            intent.putExtra(KeyUtil.arg_model, imageUri)
-            // if (context is FragmentActivity)
-            //    startSharedImageTransition(context, view, intent, R.string.transition_image_preview)
+            val intent = ImagePreviewActivity.newIntent(context, imageUri)
             context.startActivity(intent)
         }
     }
@@ -173,7 +168,7 @@ object CompatUtil {
             expression = "context.getCompatDrawable(resource, tint)",
             imports = ["com.mxt.anitrend.extension.getCompatDrawable"],
         ),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
     )
     fun getDrawable(context: Context, @DrawableRes resource: Int, @ColorRes tint: Int): Drawable {
         val drawable = DrawableCompat.wrap(Objects.requireNonNull<Drawable>(AppCompatResources.getDrawable(context, resource))).mutate()
@@ -207,7 +202,7 @@ object CompatUtil {
             expression = "context.getCompatTintedDrawable(resource)",
             imports = ["com.mxt.anitrend.extension.getCompatTintedDrawable"],
         ),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
     )
     fun getDrawableTintAttr(context: Context, @DrawableRes resource: Int, @AttrRes attribute: Int): Drawable {
         val drawable = DrawableCompat.wrap(Objects.requireNonNull<Drawable>(AppCompatResources.getDrawable(context, resource))).mutate()
@@ -232,7 +227,7 @@ object CompatUtil {
             expression = "context.getCompatColorAttr(attr)",
             imports = ["com.mxt.anitrend.extension.getCompatColorAttr"],
         ),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
     )
     @ColorInt
     fun getColorFromAttr(context: Context, @AttrRes attribute: Int): Int {
@@ -288,34 +283,13 @@ object CompatUtil {
         Resources.getSystem().displayMetrics,
     ).roundToInt()
 
-    /**
-     * Return true if the smallest width in DP of the device is equal or greater than the given
-     * value.
-     */
-    fun isScreenSw(swDp: Int): Boolean {
-        val displayMetrics = Resources.getSystem().displayMetrics
-        val widthDp = displayMetrics.widthPixels / displayMetrics.density
-        val heightDp = displayMetrics.heightPixels / displayMetrics.density
-        val screenSw = min(widthDp, heightDp)
-        return screenSw >= swDp
-    }
-
-    /**
-     * Return true if the width in DP of the device is equal or greater than the given value
-     */
-    fun isScreenW(widthDp: Int): Boolean {
-        val displayMetrics = Resources.getSystem().displayMetrics
-        val screenWidth = displayMetrics.widthPixels / displayMetrics.density
-        return screenWidth >= widthDp
-    }
-
     @Deprecated(
         message = "Use extension functions present in [ContextExt]",
         replaceWith = ReplaceWith(
             expression = "context.getCompatColor(color)",
             imports = ["com.mxt.anitrend.extension.getCompatColor"],
         ),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
     )
     fun getColor(context: Context, @ColorRes color: Int): Int = ContextCompat.getColor(context, color)
 
@@ -325,37 +299,10 @@ object CompatUtil {
             expression = "context.getLayoutInflater()",
             imports = ["com.mxt.anitrend.extension.getLayoutInflater"],
         ),
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
     )
     fun getLayoutInflater(context: Context): LayoutInflater = (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as? LayoutInflater)
         ?: LayoutInflater.from(context)
-
-    /**
-     * Credits
-     * @author hamakn
-     * https://gist.github.com/hamakn/8939eb68a920a6d7a498
-     */
-    fun getStatusBarHeight(resources: Resources): Int {
-        var statusBarHeight = 0
-        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
-        if (resourceId > 0) {
-            statusBarHeight = resources.getDimensionPixelSize(resourceId)
-        }
-        return statusBarHeight
-    }
-
-    /**
-     * Credits
-     * @author hamakn
-     * https://gist.github.com/hamakn/8939eb68a920a6d7a498
-     */
-    fun getActionBarHeight(fragmentActivity: FragmentActivity?): Int? {
-        val styledAttributes = fragmentActivity?.theme?.obtainStyledAttributes(
-            intArrayOf(android.R.attr.actionBarSize),
-        )
-        styledAttributes?.recycle()
-        return styledAttributes?.getDimension(0, 0f)?.toInt()
-    }
 
     /**
      * Credits
@@ -441,42 +388,6 @@ object CompatUtil {
     }
 
     /**
-     * Gets the index of any type of collection guaranteed that an
-     * equals override for the class of type T is implemented.
-     * <br></br>
-     * @see Object.equals
-     * @param collection the child collection item to search
-     * @param target the item to search
-     * @return nullable IndexedValue result object
-     * <br></br>
-     *
-     * @see IndexedValue
-     </T> */
-    fun <T> findIndexOf(collection: Collection<T>, target: T?): IndexedValue<T>? = if (!isEmpty(collection) && target != null) {
-        collection.withIndex().find { (_, value) -> value != null && value == target }
-    } else {
-        null
-    }
-
-    /**
-     * Gets the index of any type of collection guaranteed that an
-     * equals override for the class of type T is implemented.
-     * <br></br>
-     * @see Object.equals
-     * @param collection the child collection item to search
-     * @param target the item to search
-     * @return nullable IndexedValue result object
-     * <br></br>
-     *
-     * @see IndexedValue
-     </T> */
-    fun <T> findIndexOf(collection: Array<T>?, target: T?): IndexedValue<T>? = if (collection != null && target != null) {
-        collection.withIndex().find { (_, value) -> value != null && value == target }
-    } else {
-        null
-    }
-
-    /**
      * Sorts a given map by the order of the of the keys in the map in descending order
      * @see ComparatorUtil.getKeyComparator
      */
@@ -525,8 +436,10 @@ object CompatUtil {
      */
     fun capitalizeWords(strings: Array<String>): List<String> = strings.map { capitalizeWords(it) }
 
+    @Deprecated(message = "Use .isNullOrEmpty on the object directly", level = DeprecationLevel.WARNING)
     fun <T : Collection<*>> isEmpty(collection: T?): Boolean = collection.isNullOrEmpty()
 
+    @Deprecated(message = "Use .size on the object directly", level = DeprecationLevel.ERROR)
     fun <T : Collection<*>> sizeOf(collection: T?): Int = collection?.size ?: 0
 
     fun equals(a: Any?, b: Any): Boolean = a != null && a == b

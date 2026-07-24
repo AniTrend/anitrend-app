@@ -66,6 +66,8 @@ internal fun Project.configureDependencies() {
     dependencies.implementation(libs.koin.workManager)
     dependencies.testImplementation(libs.koin.test)
     dependencies.testImplementation(libs.koin.test.jUnit4)
+    dependencies.androidTestImplementation(libs.koin.test)
+    dependencies.androidTestImplementation(libs.koin.test.jUnit4)
 
     /** Glide Libraries */
     dependencies.implementation(libs.glide)
