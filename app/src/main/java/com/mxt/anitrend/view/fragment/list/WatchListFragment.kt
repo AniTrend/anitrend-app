@@ -7,15 +7,19 @@ import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.EpisodeAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentChannelBase
-import com.mxt.anitrend.base.interfaces.event.RetroCallback
+import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.model.entity.anilist.ExternalLink
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.presenter.widget.WidgetPresenter
+import com.mxt.anitrend.repository.MediaRepository
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.collection.EpisodeUtil
-import com.mxt.anitrend.util.graphql.apiError
-import retrofit2.Call
-import retrofit2.Response
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import timber.log.Timber
 
 /**
@@ -24,7 +28,10 @@ import timber.log.Timber
  */
 class WatchListFragment :
     FragmentChannelBase(),
-    RetroCallback<ConnectionContainer<List<ExternalLink>>> {
+    KoinComponent {
+    private val fragmentScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+    private val mediaRepository: MediaRepository by inject()
+
     private var mediaId: Long = 0
 
     @KeyUtil.MediaType
@@ -90,16 +97,32 @@ class WatchListFragment :
             bundle.putBoolean(KeyUtil.arg_feed, feed)
             viewModel?.requestData(getRequestMode(feed), context)
         } else {
-            presenter.params.apply {
-                putLong(KeyUtil.arg_id, mediaId)
-                putString(KeyUtil.arg_mediaType, mediaType)
-                if (presenter.settings.displayAdultContent) {
-                    remove(KeyUtil.arg_isAdult)
-                } else {
-                    putBoolean(KeyUtil.arg_isAdult, false)
-                }
+            fragmentScope.launch {
+                val isAdult = if (presenter.settings.displayAdultContent) null else false
+                val mediaType = mediaType?.let { MediaType.valueOf(it) }
+                mediaRepository.getMediaEpisodes(id = mediaId, type = mediaType, isAdult = isAdult)
+                    .onSuccess { connectionContainer ->
+                        if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
+                            if (!connectionContainer.isEmpty) {
+                                externalLinks = connectionContainer.connection
+                                val links = externalLinks
+                                if (mAdapter?.itemCount ?: 0 < 1 && links != null) {
+                                    targetLink = EpisodeUtil.episodeSupport(links)
+                                }
+                                if (targetLink == null) {
+                                    showEmpty(getString(R.string.waring_missing_episode_links))
+                                } else {
+                                    makeRequest()
+                                }
+                            }
+                        }
+                    }
+                    .onFailure { throwable ->
+                        if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
+                            Timber.w(throwable)
+                        }
+                    }
             }
-            presenter.requestData(KeyUtil.MEDIA_EPISODES_REQ, context, this)
         }
     }
 
@@ -112,39 +135,5 @@ class WatchListFragment :
         }
     } else {
         KeyUtil.EPISODE_FEED_REQ
-    }
-
-    override fun onResponse(
-        call: Call<ConnectionContainer<List<ExternalLink>>>,
-        response: Response<ConnectionContainer<List<ExternalLink>>>,
-    ) {
-        if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
-            val connectionContainer = response.body()
-            if (response.isSuccessful && connectionContainer != null) {
-                if (!connectionContainer.isEmpty) {
-                    externalLinks = connectionContainer.connection
-                    val links = externalLinks
-                    if (mAdapter?.itemCount ?: 0 < 1 && links != null) {
-                        targetLink = EpisodeUtil.episodeSupport(links)
-                    }
-                    if (targetLink == null) {
-                        showEmpty(getString(R.string.waring_missing_episode_links))
-                    } else {
-                        makeRequest()
-                    }
-                }
-            } else {
-                Timber.w(response.apiError())
-            }
-        }
-    }
-
-    override fun onFailure(
-        call: Call<ConnectionContainer<List<ExternalLink>>>,
-        throwable: Throwable,
-    ) {
-        if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
-            Timber.w(throwable)
-        }
     }
 }

@@ -19,10 +19,8 @@
         android:layout_height="match_parent"
         android:textColor="?titleColor"
         android:textColorHint="?subtitleColor"
-        app:searchVoiceIcon="?voiceDrawable"
         app:searchSuggestionIcon="?suggestionDrawable"
         app:searchSuggestionBackground="?colorSurface"
-        app:searchCloseIcon="?closeDrawable"
         app:searchBackIcon="?backDrawable"
         app:searchBackground="?colorSurface" />
 

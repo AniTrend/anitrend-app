@@ -16,7 +16,7 @@
         <item name="android:windowSharedElementsUseOverlay">true</item>
 
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:navigationBarColor">?attr/colorPrimaryDark</item>
+        <item name="android:navigationBarColor">?attr/colorSurface</item>
 
         <item name="android:popupMenuStyle">@style/PopupThemeDark</item>
     </style>

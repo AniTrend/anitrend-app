@@ -3,7 +3,6 @@ package com.mxt.anitrend.view.activity.detail
 import com.mxt.anitrend.util.KeyUtil
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertNull
 import org.junit.Test
 
 class StudioActivityTest {

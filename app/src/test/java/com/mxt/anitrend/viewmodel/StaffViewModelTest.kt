@@ -2,6 +2,7 @@ package com.mxt.anitrend.viewmodel
 
 import com.mxt.anitrend.model.api.retro.anilist.StaffModel
 import com.mxt.anitrend.model.entity.base.StaffBase
+import com.mxt.anitrend.repository.BaseRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -20,11 +21,13 @@ class StaffViewModelTest {
 
     private val testDispatcher = UnconfinedTestDispatcher()
     private lateinit var service: StaffModel
+    private lateinit var baseRepository: BaseRepository
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
         service = mock(StaffModel::class.java)
+        baseRepository = mock(BaseRepository::class.java)
     }
 
     @After
@@ -41,7 +44,10 @@ class StaffViewModelTest {
 
     @Test
     fun `UiState Success holds staff instance`() {
-        val staff = StaffBase().apply { id = 1L; siteUrl = "https://anilist.co/staff/1" }
+        val staff = StaffBase().apply {
+            id = 1L
+            siteUrl = "https://anilist.co/staff/1"
+        }
         val state = StaffViewModel.UiState.Success(staff)
         assertEquals(1L, state.staff.id)
         assertEquals("https://anilist.co/staff/1", state.staff.siteUrl)
@@ -58,7 +64,7 @@ class StaffViewModelTest {
 
     @Test
     fun `initial state is Loading`() = runTest {
-        val vm = StaffViewModel(staffService = service, ioDispatcher = testDispatcher)
+        val vm = StaffViewModel(staffService = service, baseRepository = baseRepository, ioDispatcher = testDispatcher)
         assertTrue(vm.state.value is StaffViewModel.UiState.Loading)
     }
 

@@ -8,7 +8,6 @@ import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.mxt.anitrend.R
-import com.mxt.anitrend.base.interfaces.event.RetroCallback
 import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.databinding.WidgetToolbarFavouriteBinding
 import com.mxt.anitrend.extension.getCompatDrawable
@@ -18,14 +17,8 @@ import com.mxt.anitrend.model.entity.base.CharacterBase
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.base.StaffBase
 import com.mxt.anitrend.model.entity.base.StudioBase
-import com.mxt.anitrend.presenter.widget.WidgetPresenter
-import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
-import com.mxt.anitrend.util.graphql.apiError
 import com.mxt.anitrend.util.media.MediaUtil
-import okhttp3.ResponseBody
-import retrofit2.Call
-import retrofit2.Response
 import timber.log.Timber
 
 /**
@@ -40,9 +33,19 @@ constructor(
     defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr),
     CustomView,
-    RetroCallback<ResponseBody>,
     View.OnClickListener {
-    private lateinit var presenter: WidgetPresenter<ResponseBody>
+
+    interface Listener {
+        fun onToggleFavourite(
+            animeId: Int?,
+            mangaId: Int?,
+            characterId: Int?,
+            staffId: Int?,
+            studioId: Int?,
+            onResult: (Result<Unit>) -> Unit,
+        )
+    }
+
     private lateinit var binding: WidgetToolbarFavouriteBinding
 
     private var staffBase: StaffBase? = null
@@ -50,7 +53,19 @@ constructor(
     private var studioBase: StudioBase? = null
     private var characterBase: CharacterBase? = null
 
+    private var animeId: Int? = null
+    private var mangaId: Int? = null
+    private var staffId: Int? = null
+    private var studioId: Int? = null
+    private var characterId: Int? = null
+
     private val tagName = FavouriteToolbarWidget::class.java.simpleName
+    private var listener: Listener? = null
+    private var recycled = false
+
+    fun setListener(listener: Listener?) {
+        this.listener = listener
+    }
 
     init {
         onInit()
@@ -65,7 +80,6 @@ constructor(
     ) : this(context, attrs, defStyleAttr)
 
     override fun onInit() {
-        presenter = WidgetPresenter(context)
         binding = WidgetToolbarFavouriteBinding.inflate(context.getLayoutInflater(), this, true)
         binding.widgetFlipper.setOnClickListener(this)
     }
@@ -74,94 +88,97 @@ constructor(
      * Clean up any resources that won't be needed
      */
     override fun onViewRecycled() {
+        recycled = true
+        listener = null
         resetFlipperState()
-        presenter.onDestroy()
     }
 
     private fun resetFlipperState() {
-        if (binding.widgetFlipper.displayedChild == WidgetPresenter.LOADING_STATE) {
-            binding.widgetFlipper.displayedChild = WidgetPresenter.CONTENT_STATE
+        if (binding.widgetFlipper.displayedChild == LOADING_STATE) {
+            binding.widgetFlipper.displayedChild = CONTENT_STATE
         }
     }
 
     fun setModel(staffBase: StaffBase) {
         this.staffBase = staffBase
         setIconType()
-        updateFavouriteRequestParams(KeyUtil.arg_staffId, staffBase.id)
+        clearIds()
+        staffId = staffBase.id.toInt()
         binding.widgetFlipper.visibility = VISIBLE
     }
 
     fun setModel(characterBase: CharacterBase) {
         this.characterBase = characterBase
         setIconType()
-        updateFavouriteRequestParams(KeyUtil.arg_characterId, characterBase.id)
+        clearIds()
+        characterId = characterBase.id.toInt()
         binding.widgetFlipper.visibility = VISIBLE
     }
 
     fun setModel(studioBase: StudioBase) {
         this.studioBase = studioBase
         setIconType()
-        updateFavouriteRequestParams(KeyUtil.arg_studioId, studioBase.id)
+        clearIds()
+        studioId = studioBase.id.toInt()
         binding.widgetFlipper.visibility = VISIBLE
     }
 
     fun setModel(mediaBase: MediaBase) {
         this.mediaBase = mediaBase
         setIconType()
-        val argId = if (MediaUtil.isAnimeType(mediaBase)) KeyUtil.arg_animeId else KeyUtil.arg_mangaId
-        updateFavouriteRequestParams(argId, mediaBase.id)
+        clearIds()
+        if (MediaUtil.isAnimeType(mediaBase)) {
+            animeId = mediaBase.id.toInt()
+        } else {
+            mangaId = mediaBase.id.toInt()
+        }
         binding.widgetFlipper.visibility = VISIBLE
     }
 
-    private fun updateFavouriteRequestParams(
-        key: String,
-        id: Long,
-    ) {
-        presenter.params.apply {
-            remove(KeyUtil.arg_animeId)
-            remove(KeyUtil.arg_mangaId)
-            remove(KeyUtil.arg_characterId)
-            remove(KeyUtil.arg_staffId)
-            remove(KeyUtil.arg_studioId)
-            putLong(key, id)
-            putInt(KeyUtil.arg_page_limit, KeyUtil.SINGLE_ITEM_LIMIT)
-        }
+    private fun clearIds() {
+        animeId = null
+        mangaId = null
+        characterId = null
+        staffId = null
+        studioId = null
     }
 
     private fun isModelSet(): Boolean = staffBase != null || characterBase != null || studioBase != null || mediaBase != null
 
     override fun onClick(view: View) {
-        if (presenter.settings.isAuthenticated) {
-            if (view.id == R.id.widget_flipper) {
-                if (isModelSet()) {
-                    if (binding.widgetFlipper.displayedChild == WidgetPresenter.CONTENT_STATE) {
-                        binding.widgetFlipper.showNext()
-                        presenter.requestData(KeyUtil.MUT_TOGGLE_FAVOURITE, context, this)
-                    } else {
-                        NotifyUtil
-                            .makeText(
-                                context,
-                                R.string.busy_please_wait,
-                                Toast.LENGTH_SHORT,
-                            ).show()
+        if (view.id == R.id.widget_flipper) {
+            if (isModelSet()) {
+                if (binding.widgetFlipper.displayedChild == CONTENT_STATE) {
+                    binding.widgetFlipper.showNext()
+                    listener?.onToggleFavourite(animeId, mangaId, characterId, staffId, studioId) { result ->
+                        if (recycled || !isAttachedToWindow) return@onToggleFavourite
+                        result.onSuccess {
+                            mediaBase?.toggleFavourite()
+                            studioBase?.toggleFavourite()
+                            staffBase?.toggleFavourite()
+                            characterBase?.toggleFavourite()
+                            setIconType()
+                        }.onFailure { throwable ->
+                            Timber.e(throwable)
+                            resetFlipperState()
+                        }
                     }
                 } else {
                     NotifyUtil
                         .makeText(
                             context,
-                            R.string.text_activity_loading,
+                            R.string.busy_please_wait,
                             Toast.LENGTH_SHORT,
                         ).show()
                 }
+            } else {
+                NotifyUtil
+                    .makeText(
+                        context,
+                        R.string.text_activity_loading,
+                        Toast.LENGTH_SHORT,
+                    ).show()
             }
-        } else {
-            NotifyUtil
-                .makeText(
-                    context,
-                    R.string.info_login_req,
-                    R.drawable.ic_group_add_grey_600_18dp,
-                    Toast.LENGTH_SHORT,
-                ).show()
         }
     }
 
@@ -201,40 +218,8 @@ constructor(
         resetFlipperState()
     }
 
-    override fun onResponse(
-        call: Call<ResponseBody>,
-        response: Response<ResponseBody>,
-    ) {
-        try {
-            if (response.isSuccessful) {
-                mediaBase?.toggleFavourite()
-                studioBase?.toggleFavourite()
-                staffBase?.toggleFavourite()
-                characterBase?.toggleFavourite()
-                setIconType()
-            } else {
-                Timber.w(response.apiError())
-                NotifyUtil
-                    .makeText(
-                        context,
-                        R.string.text_error_request,
-                        Toast.LENGTH_SHORT,
-                    ).show()
-            }
-        } catch (e: Exception) {
-            Timber.e(e)
-        }
-    }
-
-    override fun onFailure(
-        call: Call<ResponseBody>,
-        throwable: Throwable,
-    ) {
-        try {
-            Timber.w(throwable)
-            resetFlipperState()
-        } catch (e: Exception) {
-            Timber.e(e)
-        }
+    companion object {
+        const val CONTENT_STATE = 0
+        const val LOADING_STATE = 1
     }
 }

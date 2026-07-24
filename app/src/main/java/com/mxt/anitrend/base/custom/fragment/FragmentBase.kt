@@ -20,15 +20,14 @@ import com.mxt.anitrend.R
 import com.mxt.anitrend.analytics.contract.ISupportAnalytics
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
-import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.base.custom.viewmodel.ViewModelBase
 import com.mxt.anitrend.base.interfaces.event.ActionModeListener
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener
 import com.mxt.anitrend.base.interfaces.event.ResponseCallback
 import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.util.ActionModeUtil
+import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.media.MediaActionUtil
-import org.greenrobot.eventbus.EventBus
 import timber.log.Timber
 import kotlin.jvm.JvmName
 
@@ -46,7 +45,6 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> :
     protected var isPager: Boolean = false
     protected var isMenuDisabled: Boolean = false
     protected var isFeed: Boolean = false
-    protected var hasSubscriber: Boolean = false
 
     @MenuRes
     private var inflateMenu: Int = 0
@@ -96,9 +94,6 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> :
 
     override fun onStart() {
         super.onStart()
-        if (!EventBus.getDefault().isRegistered(this) && hasSubscriber) {
-            EventBus.getDefault().register(this)
-        }
         @Suppress("DEPRECATION")
         if (!isMenuDisabled) {
             setHasOptionsMenu(true)
@@ -106,9 +101,6 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> :
     }
 
     override fun onStop() {
-        if (EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().unregister(this)
-        }
         super.onStop()
     }
 

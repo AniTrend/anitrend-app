@@ -27,18 +27,15 @@ class VideoPlayerActivity : AppCompatActivity() {
     data class Args(val contentLink: String)
 
     companion object {
-        fun newIntent(context: Context, contentLink: String): Intent =
-            Intent(context, VideoPlayerActivity::class.java).apply {
-                putExtra(KeyUtil.arg_model, contentLink)
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            }
+        fun newIntent(context: Context, contentLink: String): Intent = Intent(context, VideoPlayerActivity::class.java).apply {
+            putExtra(KeyUtil.arg_model, contentLink)
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        }
 
         fun fromIntent(intent: Intent): Args? = parseArgs(intent.getStringExtra(KeyUtil.arg_model))
 
         @VisibleForTesting
-        internal fun parseArgs(raw: String?): Args? {
-            return if (!raw.isNullOrEmpty()) Args(raw) else null
-        }
+        internal fun parseArgs(raw: String?): Args? = if (!raw.isNullOrEmpty()) Args(raw) else null
     }
 
     private var contentLink: String? = null

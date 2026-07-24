@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import co.anitrend.retrofit.graphql.model.attribute.GraphError
 import com.mxt.anitrend.graphql.generated.UserBase
 import com.mxt.anitrend.model.api.retro.anilist.UserModel
+import com.mxt.anitrend.model.entity.anilist.user.UserStatisticTypes
+import com.mxt.anitrend.repository.UserRepository
 import com.mxt.anitrend.util.graphql.apiError
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -17,6 +19,7 @@ import timber.log.Timber
 
 class ProfileViewModel(
     private val userService: UserModel,
+    private val userRepository: UserRepository,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : ViewModel() {
 
@@ -74,5 +77,18 @@ class ProfileViewModel(
                 )
             }
         }
+    }
+
+    suspend fun loadStats(
+        userId: Long,
+        userName: String?,
+    ): Result<UserStatisticTypes> = withContext(ioDispatcher) {
+        userRepository.getUserStats(
+            id = if (userId > 0) userId else null,
+            userName = userName,
+        )
+            .mapCatching { connectionContainer ->
+                connectionContainer.connection
+            }
     }
 }

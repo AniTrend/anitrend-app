@@ -5,158 +5,164 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
-import com.mxt.anitrend.base.custom.fragment.FragmentBase
 import com.mxt.anitrend.binding.richMarkDown
 import com.mxt.anitrend.binding.setImage
 import com.mxt.anitrend.databinding.FragmentUserAboutBinding
-import com.mxt.anitrend.extension.empty
-import com.mxt.anitrend.extension.extras
 import com.mxt.anitrend.extension.getCompatColorAttr
 import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.model.entity.base.StatsRing
-import com.mxt.anitrend.presenter.base.BasePresenter
+import com.mxt.anitrend.repository.UserRepository
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
+import com.mxt.anitrend.util.Settings
+import com.mxt.anitrend.viewmodel.UserOverviewViewModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
-/**
- * Created by max on 2017/11/27.
- * about user fragment for the profile
- */
-
-class UserOverviewFragment : FragmentBase<User, BasePresenter, User>() {
+class UserOverviewFragment : Fragment() {
 
     private var _binding: FragmentUserAboutBinding? = null
     private val binding: FragmentUserAboutBinding
         get() = requireNotNull(_binding)
+
     private var model: User? = null
 
-    private val userId by extras(KeyUtil.arg_id, 0L)
-    private val userName by extras(KeyUtil.arg_userName, String.empty())
+    private var userId: Long = 0
+    private var userName: String = ""
+
+    private val settings: Settings by inject()
+    private val userRepository: UserRepository by inject()
+
+    private val userOverviewViewModel: UserOverviewViewModel by viewModel()
+
+    companion object {
+        fun newInstance(args: Bundle): UserOverviewFragment {
+            val fragment = UserOverviewFragment()
+            fragment.arguments = args
+            return fragment
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        isMenuDisabled = true
-        setPresenter(BasePresenter(requireContext()))
-        setViewModel(true)
+        arguments?.let { args ->
+            userId = args.getLong(KeyUtil.arg_id, 0L)
+            userName = args.getString(KeyUtil.arg_userName, "")
+        }
     }
 
-    /**
-     * Called to have the fragment instantiate its user interface view.
-     * This is optional, and non-graphical fragments can return null (which
-     * is the default implementation).  This will be called between
-     * [.onCreate] and [.onActivityCreated].
-     *
-     *
-     *
-     * If you return a View from here, you will later be called in
-     * [.onDestroyView] when the view is being released.
-     *
-     * @param inflater           The LayoutInflater object that can be used to inflate
-     * any views in the fragment,
-     * @param container          If non-null, this is the parent view that the fragment's
-     * UI should be attached to.  The fragment should not add the view itself,
-     * but this can be used to generate the LayoutParams of the view.
-     * @param savedInstanceState If non-null, this fragment is being re-constructed
-     * from a previous saved state as given here.
-     * @return Return the View for the fragment's UI, or null.
-     */
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View {
         _binding = FragmentUserAboutBinding.inflate(inflater, container, false)
-        binding.userAvatar.setOnClickListener(this)
-        binding.userStatsContainer.setOnClickListener(this)
-        binding.stateLayout.showLoading()
         return binding.root
     }
 
-    override fun onStart() {
-        super.onStart()
-        makeRequest()
-    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-    /**
-     * Is automatically called in the @onStart Method if overridden in list implementation
-     */
-    override fun updateUI() {
-        val currentModel = model ?: return
-        val viewBinding = _binding ?: return
-        viewBinding.stateLayout.showContent()
-        viewBinding.userAvatar.setImage(currentModel.avatar)
-        viewBinding.userNameText.text = currentModel.name
-        viewBinding.widgetStatusText.richMarkDown(currentModel.about)
-        if (!presenter.settings.experimentalMarkdown) {
-            viewBinding.widgetStatus.visibility = View.VISIBLE
-            viewBinding.widgetStatus.setTextData(currentModel.about)
-        } else {
-            viewBinding.widgetStatus.visibility = View.GONE
+        binding.userAvatar.setOnClickListener { onImageClick() }
+        binding.userStatsContainer.setOnClickListener { onStatsClick() }
+        binding.stateLayout.showLoading()
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                userOverviewViewModel.state.collect { state ->
+                    when (state) {
+                        is UserOverviewViewModel.UiState.Loading -> {
+                            binding.stateLayout.showLoading()
+                        }
+                        is UserOverviewViewModel.UiState.Success -> {
+                            model = state.user
+                            bindUser(state.user)
+                        }
+                        is UserOverviewViewModel.UiState.Error -> {
+                            binding.stateLayout.showError(
+                                requireContext().getCompatDrawable(R.drawable.ic_emoji_sweat),
+                                state.message,
+                                getString(R.string.try_again),
+                            ) { loadUser() }
+                        }
+                    }
+                }
+            }
         }
 
-        viewBinding.userFollowStateWidget.setUserModel(currentModel)
-        viewBinding.userAboutPanelWidget.setFragmentActivity(activity)
-        viewBinding.userAboutPanelWidget.setUserId(currentModel.id, lifecycle)
+        loadUser()
+    }
+
+    private fun loadUser() {
+        binding.stateLayout.showLoading()
+        userOverviewViewModel.load(userId = userId, userName = userName)
+    }
+
+    private fun bindUser(user: User) {
+        binding.stateLayout.showContent()
+        binding.userAvatar.setImage(user.avatar)
+        binding.userNameText.text = user.name
+        binding.widgetStatusText.richMarkDown(user.about)
+        if (!settings.experimentalMarkdown) {
+            binding.widgetStatus.visibility = View.VISIBLE
+            binding.widgetStatus.setTextData(user.about)
+        } else {
+            binding.widgetStatus.visibility = View.GONE
+        }
+
+        binding.userFollowStateWidget.setUserModel(user)
+        binding.userAboutPanelWidget.setFragmentActivity(activity)
+        binding.userAboutPanelWidget.setUserId(user.id, lifecycle)
+        loadPanelStats(user.id)
         showRingStats()
     }
 
-    /**
-     * All new or updated network requests should be handled in this method
-     */
-    override fun makeRequest() {
-        val model = viewModel ?: return
-        val ctx = context ?: return
-        model.params.apply {
-            if (userName.isNotBlank()) {
-                putString(KeyUtil.arg_userName, userName)
-            } else {
-                remove(KeyUtil.arg_userName)
-            }
-            if (userId > 0) {
-                putLong(KeyUtil.arg_id, userId)
-            } else {
-                remove(KeyUtil.arg_id)
-            }
-            putBoolean(KeyUtil.arg_asHtml, false)
-        }
-        model.requestData(KeyUtil.USER_OVERVIEW_REQ, ctx)
-    }
+    private fun loadPanelStats(userId: Long) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            val followersDef = async { userRepository.getFollowers(id = userId, perPage = 1) }
+            val followingDef = async { userRepository.getFollowing(id = userId, perPage = 1) }
+            val favsDef = async { userRepository.getFavouritesCount(id = userId, perPage = 1) }
 
-    /**
-     * Called when the model state is changed.
-     *
-     * @param model The new data
-     */
-    override fun onChanged(value: User?) {
-        val viewBinding = _binding ?: return
-        if (value != null) {
-            this.model = value
-            updateUI()
-        } else {
-            viewBinding.stateLayout.showError(
-                context?.getCompatDrawable(R.drawable.ic_emoji_sweat),
-                getString(R.string.layout_empty_response),
-                getString(R.string.try_again),
-            ) {
-                viewBinding.stateLayout.showLoading()
-                makeRequest()
+            val followersTotal = followersDef.await().getOrNull()?.pageInfo?.total
+            val followingTotal = followingDef.await().getOrNull()?.pageInfo?.total
+            val favConnection = favsDef.await().getOrNull()?.connection
+            val favouritesTotal = if (favConnection != null) {
+                listOfNotNull(
+                    favConnection.anime?.pageInfo?.total,
+                    favConnection.manga?.pageInfo?.total,
+                    favConnection.characters?.pageInfo?.total,
+                    favConnection.staff?.pageInfo?.total,
+                    favConnection.studios?.pageInfo?.total,
+                ).sum()
+            } else {
+                null
             }
+
+            binding.userAboutPanelWidget.setStats(followersTotal, followingTotal, favouritesTotal)
         }
     }
 
-    /**
-     * Called when the view previously created by [.onCreateView] has
-     * been detached from the fragment.  The next time the fragment needs
-     * to be displayed, a new view will be created.  This is called
-     * after [.onStop] and before [.onDestroy].  It is called
-     * *regardless* of whether [.onCreateView] returned a
-     * non-null view.  Internally it is called after the view's state has
-     * been saved but before it has been removed from its parent.
-     */
-    override fun onDestroyView() {
-        binding.userAboutPanelWidget.onViewRecycled()
-        super.onDestroyView()
-        _binding = null
+    private fun showRingStats() {
+        context?.let { ctx ->
+            val ringList = generateStatsData()
+            if (ringList.size > 1) {
+                binding.userStats.setDrawBg(
+                    CompatUtil.isLightTheme(settings),
+                    ctx.getCompatColorAttr(R.attr.subtitleColor),
+                )
+                binding.userStats.setData(ringList, 500)
+            }
+        }
     }
 
     private fun generateStatsData(): List<StatsRing> {
@@ -165,65 +171,43 @@ class UserOverviewFragment : FragmentBase<User, BasePresenter, User>() {
         val genres = statistics?.anime?.genres
         if (statistics != null && genres != null && genres.isNotEmpty()) {
             val highestValue = genres.maxByOrNull { it.count }?.count ?: 0
-
             userGenreStats = genres
                 .sortedByDescending { it.count }.map { genreStats ->
                     val percentage = genreStats.count.toFloat() / highestValue.toFloat() * 100f
                     StatsRing(percentage.toInt(), genreStats.genre, genreStats.count.toString())
                 }.take(5)
         }
-
         return userGenreStats
     }
 
-    private fun showRingStats() {
-        val viewBinding = _binding ?: return
-        context?.apply {
-            val ringList = generateStatsData()
-            if (ringList.size > 1) {
-                viewBinding.userStats.setDrawBg(
-                    CompatUtil.isLightTheme(presenter.settings),
-                    getCompatColorAttr(R.attr.subtitleColor),
+    private fun onImageClick() {
+        CompatUtil.imagePreview(
+            requireView(),
+            model?.avatar?.large,
+            R.string.image_preview_error_user_avatar,
+        )
+    }
+
+    private fun onStatsClick() {
+        val ringList = generateStatsData()
+        if (ringList.size > 1) {
+            context?.let { ctx ->
+                binding.userStats.setDrawBg(
+                    CompatUtil.isLightTheme(settings),
+                    ctx.getCompatColorAttr(R.attr.subtitleColor),
                 )
-                viewBinding.userStats.setData(ringList, 500)
+                binding.userStats.setData(ringList, 500)
+            }
+        } else {
+            activity?.let {
+                NotifyUtil.makeText(it, R.string.text_error_request, Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    /**
-     * Called when a view has been clicked.
-     *
-     * @param view The view that was clicked.
-     */
-    override fun onClick(v: View) {
-        val viewBinding = _binding ?: return
-        when (v.id) {
-            R.id.user_avatar -> CompatUtil.imagePreview(v, model?.avatar?.large, R.string.image_preview_error_user_avatar)
-            R.id.user_stats_container -> {
-                val ringList = generateStatsData()
-                if (ringList.size > 1) {
-                    context?.apply {
-                        viewBinding.userStats.setDrawBg(
-                            CompatUtil.isLightTheme(presenter.settings),
-                            getCompatColorAttr(R.attr.subtitleColor),
-                        )
-                        viewBinding.userStats.setData(ringList, 500)
-                    }
-                } else {
-                    activity?.apply {
-                        NotifyUtil.makeText(this, R.string.text_error_request, Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-        }
-    }
-
-    companion object {
-
-        fun newInstance(args: Bundle): UserOverviewFragment {
-            val fragment = UserOverviewFragment()
-            fragment.arguments = args
-            return fragment
-        }
+    override fun onDestroyView() {
+        binding.userAboutPanelWidget.onViewRecycled()
+        super.onDestroyView()
+        _binding = null
     }
 }

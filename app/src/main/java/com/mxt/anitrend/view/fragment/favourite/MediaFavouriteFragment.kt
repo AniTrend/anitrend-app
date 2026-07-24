@@ -4,6 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.MediaAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
@@ -14,8 +17,13 @@ import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
+import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.view.activity.detail.MediaActivity
+import com.mxt.anitrend.viewmodel.MediaFavouritesViewModel
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
  * Created by max on 2018/03/25.
@@ -26,6 +34,10 @@ class MediaFavouriteFragment : FragmentBaseList<MediaBase, ConnectionContainer<F
 
     @KeyUtil.MediaType
     private var mediaType: String? = null
+
+    private val settings: Settings by inject()
+
+    private val mediaFavouritesViewModel: MediaFavouritesViewModel by viewModel()
 
     companion object {
         @JvmStatic
@@ -51,10 +63,30 @@ class MediaFavouriteFragment : FragmentBaseList<MediaBase, ConnectionContainer<F
         }
         val ctx = requireContext()
         mAdapter = MediaAdapter(ctx, true)
-        setPresenter(BasePresenter(ctx))
         mColumnSize = R.integer.grid_giphy_x3
         isPager = true
-        setViewModel(true)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                mediaFavouritesViewModel.state.collect { state ->
+                    when (state) {
+                        is MediaFavouritesViewModel.UiState.Loading -> {
+                            // Loading is handled by swipeRefreshLayout in the base class
+                        }
+                        is MediaFavouritesViewModel.UiState.Success -> {
+                            handleSuccess(state.content)
+                        }
+                        is MediaFavouritesViewModel.UiState.Error -> {
+                            showError(state.message)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     override fun updateUI() {
@@ -62,38 +94,27 @@ class MediaFavouriteFragment : FragmentBaseList<MediaBase, ConnectionContainer<F
     }
 
     override fun makeRequest() {
-        val ctx = context ?: return
-        viewModel?.params?.apply {
-            putLong(KeyUtil.arg_id, userId)
-            putInt(KeyUtil.arg_page, presenter.currentPage)
-            putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
-        }
-        val requestMode =
-            if (CompatUtil.equals(mediaType, KeyUtil.ANIME)) {
-                KeyUtil.USER_ANIME_FAVOURITES_REQ
-            } else {
-                KeyUtil.USER_MANGA_FAVOURITES_REQ
-            }
-        viewModel?.requestData(requestMode, ctx)
+        val type = mediaType ?: return
+        mediaFavouritesViewModel.load(
+            userId = userId,
+            page = mScrollListener.currentPage,
+            mediaType = type,
+        )
     }
 
-    override fun onChanged(content: ConnectionContainer<Favourite>?) {
-        if (content != null) {
-            if (!content.isEmpty) {
-                val pageContainer =
-                    if (CompatUtil.equals(mediaType, KeyUtil.ANIME)) {
-                        content.connection.anime
-                    } else {
-                        content.connection.manga
-                    }
-                if (pageContainer != null) {
-                    if (pageContainer.hasPageInfo()) {
-                        presenter.setPageInfo(pageContainer.pageInfo)
-                    }
-                    onPostProcessed(pageContainer.pageData)
+    private fun handleSuccess(content: ConnectionContainer<Favourite>) {
+        if (!content.isEmpty) {
+            val pageContainer =
+                if (CompatUtil.equals(mediaType, KeyUtil.ANIME)) {
+                    content.connection.anime
                 } else {
-                    onPostProcessed(emptyList())
+                    content.connection.manga
                 }
+            if (pageContainer != null) {
+                if (pageContainer.hasPageInfo()) {
+                    setPageInfo(pageContainer.pageInfo)
+                }
+                onPostProcessed(pageContainer.pageData)
             } else {
                 onPostProcessed(emptyList())
             }
@@ -104,6 +125,9 @@ class MediaFavouriteFragment : FragmentBaseList<MediaBase, ConnectionContainer<F
             onPostProcessed(null)
         }
     }
+
+    /** No-op: StateFlow collector above handles the response. */
+    override fun onChanged(value: ConnectionContainer<Favourite>?) = Unit
 
     override fun onItemClick(
         target: View,
@@ -128,7 +152,7 @@ class MediaFavouriteFragment : FragmentBaseList<MediaBase, ConnectionContainer<F
     ) {
         when (target.id) {
             R.id.container -> {
-                if (presenter.settings.isAuthenticated) {
+                if (settings.isAuthenticated) {
                     val host = activity ?: return
                     mediaActionUtil =
                         MediaActionUtil

@@ -16,11 +16,10 @@ import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.google.android.material.color.MaterialColors
 import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.R
-import com.mxt.anitrend.base.custom.fragment.FragmentBase
-import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.DialogUtil
 
 /**
@@ -28,12 +27,7 @@ import com.mxt.anitrend.util.DialogUtil
  * Application about screen
  */
 
-class AboutFragment : FragmentBase<Void, BasePresenter, Void>() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setPresenter(BasePresenter(requireContext()))
-    }
+class AboutFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -312,15 +306,6 @@ class AboutFragment : FragmentBase<Void, BasePresenter, Void>() {
         value.toFloat(),
         resources.displayMetrics,
     ).toInt()
-
-    override fun updateUI() {
-    }
-
-    override fun makeRequest() {
-    }
-
-    override fun onChanged(value: Void?) {
-    }
 
     companion object {
         fun newInstance(): AboutFragment = AboutFragment()

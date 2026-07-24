@@ -34,18 +34,15 @@ class ImagePreviewActivity : AppCompatActivity() {
     data class Args(val modelUrl: String)
 
     companion object {
-        fun newIntent(context: Context, modelUrl: String): Intent =
-            Intent(context, ImagePreviewActivity::class.java).apply {
-                putExtra(KeyUtil.arg_model, modelUrl)
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            }
+        fun newIntent(context: Context, modelUrl: String): Intent = Intent(context, ImagePreviewActivity::class.java).apply {
+            putExtra(KeyUtil.arg_model, modelUrl)
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        }
 
         fun fromIntent(intent: Intent): Args? = parseArgs(intent.getStringExtra(KeyUtil.arg_model))
 
         @VisibleForTesting
-        internal fun parseArgs(raw: String?): Args? {
-            return if (!raw.isNullOrEmpty()) Args(raw) else null
-        }
+        internal fun parseArgs(raw: String?): Args? = if (!raw.isNullOrEmpty()) Args(raw) else null
 
         private const val REQUEST_PERMISSION = 102
     }
@@ -173,15 +170,13 @@ class ImagePreviewActivity : AppCompatActivity() {
         }
     }
 
-    private fun requestWritePermission(permission: String): Boolean {
-        return if (ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED) {
-            true
-        } else if (!ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
-            ActivityCompat.requestPermissions(this, arrayOf(permission), REQUEST_PERMISSION)
-            false
-        } else {
-            false
-        }
+    private fun requestWritePermission(permission: String): Boolean = if (ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED) {
+        true
+    } else if (!ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
+        ActivityCompat.requestPermissions(this, arrayOf(permission), REQUEST_PERMISSION)
+        false
+    } else {
+        false
     }
 
     private fun downloadAttachment() {

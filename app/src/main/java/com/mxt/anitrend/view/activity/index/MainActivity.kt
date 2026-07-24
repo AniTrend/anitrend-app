@@ -13,11 +13,12 @@ import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.annotation.StyleRes
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.core.view.GravityCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.withResumed
@@ -33,12 +34,9 @@ import com.mxt.anitrend.adapter.pager.index.ReviewPageAdapter
 import com.mxt.anitrend.adapter.pager.index.SeasonPageAdapter
 import com.mxt.anitrend.adapter.pager.index.TrendingPageAdapter
 import com.mxt.anitrend.analytics.contract.ISupportAnalytics
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.WindowCompat
 import com.mxt.anitrend.base.custom.activity.checkUpdate
 import com.mxt.anitrend.base.custom.activity.launchUpdateWorker
 import com.mxt.anitrend.base.custom.async.WebTokenRequest
-import com.mxt.anitrend.base.custom.consumer.BaseConsumer
 import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
 import com.mxt.anitrend.base.custom.view.image.AvatarIndicatorView
@@ -48,15 +46,11 @@ import com.mxt.anitrend.base.interfaces.dao.BoxQuery
 import com.mxt.anitrend.base.interfaces.event.BottomSheetChoice
 import com.mxt.anitrend.databinding.ActivityMainBinding
 import com.mxt.anitrend.extension.LAZY_MODE_UNSAFE
-import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.extension.applyConfiguredTheme
 import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.extension.requestNotificationsPermission
 import com.mxt.anitrend.extension.startNewActivity
-import com.mxt.anitrend.model.api.retro.WebFactory
-import com.mxt.anitrend.model.api.retro.anilist.UserModel
-import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
@@ -72,9 +66,8 @@ import com.mxt.anitrend.view.sheet.BottomSheetMessage
 import com.mxt.anitrend.viewmodel.MainViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 import java.util.Locale
 
@@ -86,7 +79,6 @@ import java.util.Locale
 class MainActivity :
     AppCompatActivity(),
     View.OnClickListener,
-    BaseConsumer.onRequestModelChange<User>,
     NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
 
@@ -148,10 +140,11 @@ class MainActivity :
 
     private var hasCheckedInstallation = false
 
-    private lateinit var mainViewModel: MainViewModel
+    private val mainViewModel: MainViewModel by viewModel()
 
-    private val settings by lazy { KoinExt.get(Settings::class.java) }
-    private val currentUser get() = koinOf<BoxQuery>().currentUser
+    private val settings: Settings by inject()
+    private val boxQuery: BoxQuery by inject()
+    private val currentUser get() = boxQuery.currentUser
 
     private lateinit var menuItems: Menu
 
@@ -183,7 +176,6 @@ class MainActivity :
         searchView = binding.appBarMain.customToolbar.searchView
         val searchDelegate = object : com.mxt.anitrend.base.interfaces.event.ISearchDelegate {
             override fun onQueryChanged(query: String?) {
-                EventBus.getDefault().post(query?.lowercase(Locale.getDefault()).orEmpty())
             }
 
             override fun onSearchSubmitted(query: String?) {
@@ -200,7 +192,6 @@ class MainActivity :
             }
 
             override fun onSearchClosed() {
-                EventBus.getDefault().post("")
             }
         }
         searchView?.apply {
@@ -224,19 +215,6 @@ class MainActivity :
             })
         }
         setSupportActionBar(mToolbar)
-        mainViewModel = ViewModelProvider(
-            this,
-            object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T =
-                    MainViewModel(
-                        userService = WebFactory.createService(
-                            UserModel::class.java,
-                            applicationContext,
-                        ),
-                    ) as T
-            },
-        )[MainViewModel::class.java]
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -244,7 +222,7 @@ class MainActivity :
                     when (state) {
                         is MainViewModel.UiState.Loading -> Unit
                         is MainViewModel.UiState.Success -> {
-                            koinOf<BoxQuery>().currentUser = state.user
+                            boxQuery.currentUser = state.user
                             updateUI()
                         }
                         is MainViewModel.UiState.Error -> {
@@ -414,9 +392,6 @@ class MainActivity :
 
     override fun onPause() {
         super.onPause()
-        if (EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().unregister(this)
-        }
         mediaActionUtil?.onPause(null)
         mDrawerLayout.removeDrawerListener(mDrawerToggle)
     }
@@ -434,9 +409,6 @@ class MainActivity :
         super.onResume()
         onResumeThemeCheck()
         mediaActionUtil?.onResume(null)
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this)
-        }
         mDrawerLayout.addDrawerListener(mDrawerToggle)
         mDrawerToggle.syncState()
         updateUI()
@@ -723,24 +695,6 @@ class MainActivity :
         mediaActionUtil?.onDestroy()
         super.onDestroy()
     }
-
-    @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    override fun onModelChanged(consumer: BaseConsumer<User>) {
-        if (consumer.requestMode == KeyUtil.USER_CURRENT_REQ &&
-            consumer.changeModel != null &&
-            consumer.changeModel.unreadNotificationCount > 0
-        ) {
-            NotifyUtil.createAlerter(
-                this,
-                R.string.notification_alert_title,
-                R.string.notification_alert_text,
-                R.drawable.ic_notifications_active_white_24dp,
-                R.color.colorAccent,
-            )
-        }
-    }
-
-    // region ActivityBase shell replacements
 
     private fun configureActivity() {
         currentTheme = settings.theme

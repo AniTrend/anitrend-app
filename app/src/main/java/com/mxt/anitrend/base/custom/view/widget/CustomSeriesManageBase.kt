@@ -1,22 +1,22 @@
 package com.mxt.anitrend.base.custom.view.widget
 
 import android.content.Context
-import android.os.Build
 import android.os.Bundle
 import android.util.AttributeSet
 import android.widget.AdapterView
 import android.widget.RelativeLayout
-import androidx.annotation.RequiresApi
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.spinner.IconArrayAdapter
 import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.model.entity.anilist.MediaList
 import com.mxt.anitrend.model.entity.anilist.meta.MediaListOptions
 import com.mxt.anitrend.model.entity.base.MediaBase
-import com.mxt.anitrend.presenter.fragment.MediaPresenter
+import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.media.MediaListUtil
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 /**
  * Created by max on 2018/01/20.
@@ -30,8 +30,10 @@ constructor(
     defStyleAttr: Int = 0,
 ) : RelativeLayout(context, attrs, defStyleAttr),
     CustomView,
-    AdapterView.OnItemSelectedListener {
-    protected lateinit var presenter: MediaPresenter
+    AdapterView.OnItemSelectedListener,
+    KoinComponent {
+
+    protected val presenter by inject<BasePresenter>()
     protected lateinit var mediaListModel: MediaList
 
     protected val indexIconMap: MutableMap<Int, Int> =
@@ -53,23 +55,11 @@ constructor(
             KeyUtil.REPEATING,
         )
 
-    init {
-        onInit()
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    constructor(
-        context: Context,
-        attrs: AttributeSet?,
-        defStyleAttr: Int,
-        defStyleRes: Int,
-    ) : this(context, attrs, defStyleAttr)
-
     /**
      * Optionally included when constructing custom views
      */
     override fun onInit() {
-        presenter = MediaPresenter(context)
+        // no-op
     }
 
     protected fun getIconArrayAdapter(): IconArrayAdapter {

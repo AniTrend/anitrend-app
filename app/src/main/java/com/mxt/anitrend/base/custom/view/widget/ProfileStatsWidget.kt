@@ -11,19 +11,12 @@ import android.widget.FrameLayout
 import androidx.annotation.RequiresApi
 import com.google.android.material.snackbar.Snackbar
 import com.mxt.anitrend.R
-import com.mxt.anitrend.base.interfaces.event.RetroCallback
 import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.databinding.WidgetProfileStatsBinding
 import com.mxt.anitrend.extension.getCompatColor
 import com.mxt.anitrend.model.entity.anilist.user.UserStatisticTypes
-import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
-import com.mxt.anitrend.presenter.widget.WidgetPresenter
 import com.mxt.anitrend.util.KeyUtil
-import com.mxt.anitrend.util.graphql.apiError
 import com.mxt.anitrend.view.activity.detail.MediaListActivity
-import retrofit2.Call
-import retrofit2.Response
-import timber.log.Timber
 import java.util.Locale
 
 /**
@@ -38,10 +31,9 @@ constructor(
     defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr),
     CustomView,
-    View.OnClickListener,
-    RetroCallback<ConnectionContainer<UserStatisticTypes>> {
+    View.OnClickListener {
+
     private lateinit var binding: WidgetProfileStatsBinding
-    private lateinit var presenter: WidgetPresenter<ConnectionContainer<UserStatisticTypes>>
 
     private var model: UserStatisticTypes? = null
 
@@ -66,7 +58,6 @@ constructor(
      * Optionally included when constructing custom views
      */
     override fun onInit() {
-        presenter = WidgetPresenter(context)
         binding = WidgetProfileStatsBinding.inflate(LayoutInflater.from(context), this, true)
         // loading place holder data
         binding.userAnimeTime.text = placeHolder
@@ -96,23 +87,17 @@ constructor(
 
     fun setParams(bundle: Bundle) {
         this.bundle = bundle
-        presenter.params.apply {
-            if (bundle.containsKey(KeyUtil.arg_id)) {
-                putLong(KeyUtil.arg_id, bundle.getLong(KeyUtil.arg_id))
-                remove(KeyUtil.arg_userName)
-            } else {
-                putString(KeyUtil.arg_userName, bundle.getString(KeyUtil.arg_userName))
-                remove(KeyUtil.arg_id)
-            }
-        }
-        presenter.requestData(KeyUtil.USER_STATS_REQ, context, this)
+    }
+
+    fun setStats(stats: UserStatisticTypes?) {
+        model = stats
+        updateUI()
     }
 
     /**
      * Clean up any resources that won't be needed
      */
     override fun onViewRecycled() {
-        presenter.onDestroy()
         model = null
     }
 
@@ -163,36 +148,6 @@ constructor(
                     }
                 context.startActivity(intent)
             }
-        }
-    }
-
-    override fun onResponse(
-        call: Call<ConnectionContainer<UserStatisticTypes>>,
-        response: Response<ConnectionContainer<UserStatisticTypes>>,
-    ) {
-        try {
-            val connectionContainer = response.body()
-            if (response.isSuccessful && connectionContainer != null) {
-                if (!connectionContainer.isEmpty) {
-                    model = connectionContainer.connection
-                    updateUI()
-                }
-            } else {
-                Timber.w(response.apiError())
-            }
-        } catch (e: Exception) {
-            Timber.e(e)
-        }
-    }
-
-    override fun onFailure(
-        call: Call<ConnectionContainer<UserStatisticTypes>>,
-        throwable: Throwable,
-    ) {
-        try {
-            Timber.w(throwable)
-        } catch (e: Exception) {
-            Timber.e(e)
         }
     }
 

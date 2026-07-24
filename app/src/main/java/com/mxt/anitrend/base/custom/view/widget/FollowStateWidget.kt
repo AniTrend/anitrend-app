@@ -6,18 +6,11 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.Toast
 import com.mxt.anitrend.R
-import com.mxt.anitrend.base.custom.consumer.BaseConsumer
-import com.mxt.anitrend.base.interfaces.event.RetroCallback
 import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.databinding.WidgetButtonStateBinding
 import com.mxt.anitrend.extension.getLayoutInflater
 import com.mxt.anitrend.model.entity.base.UserBase
-import com.mxt.anitrend.presenter.widget.WidgetPresenter
-import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
-import com.mxt.anitrend.util.graphql.apiError
-import retrofit2.Call
-import retrofit2.Response
 import timber.log.Timber
 
 /**
@@ -33,12 +26,29 @@ constructor(
     defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr),
     CustomView,
-    View.OnClickListener,
-    RetroCallback<UserBase> {
+    View.OnClickListener {
+
+    interface Listener {
+        fun onToggleFollow(
+            userId: Long,
+            onResult: (Result<UserBase>) -> Unit,
+        )
+    }
+
     private var model: UserBase? = null
     private lateinit var binding: WidgetButtonStateBinding
-    private var presenter: WidgetPresenter<UserBase>? = null
     private val tagName = FollowStateWidget::class.java.simpleName
+    private var listener: Listener? = null
+    private var recycled = false
+    private var currentUser: UserBase? = null
+
+    fun setListener(listener: Listener?) {
+        this.listener = listener
+    }
+
+    fun setCurrentUser(user: UserBase?) {
+        this.currentUser = user
+    }
 
     init {
         onInit()
@@ -49,15 +59,13 @@ constructor(
      */
     override fun onInit() {
         binding = WidgetButtonStateBinding.inflate(context.getLayoutInflater(), this, true)
-        presenter = WidgetPresenter(context)
         binding.widgetFlipper.setOnClickListener(this)
     }
 
     fun setUserModel(model: UserBase) {
         this.model = model
-        val localPresenter = presenter
-        if (localPresenter?.settings?.isAuthenticated == true) {
-            if (!localPresenter.isCurrentUser(model)) {
+        if (currentUser != null) {
+            if (!isCurrentUser(model)) {
                 setControlText()
             } else {
                 visibility = GONE
@@ -66,6 +74,8 @@ constructor(
             visibility = GONE
         }
     }
+
+    private fun isCurrentUser(userBase: UserBase): Boolean = userBase.id != 0L && currentUser?.id == userBase.id
 
     private fun setControlText() {
         val currentModel = model ?: return
@@ -81,27 +91,37 @@ constructor(
      * Clean up any resources that won't be needed
      */
     override fun onViewRecycled() {
+        recycled = true
+        listener = null
         visibility = VISIBLE
-        presenter?.onDestroy()
         resetFlipperState()
     }
 
     private fun resetFlipperState() {
-        if (binding.widgetFlipper.displayedChild == WidgetPresenter.LOADING_STATE) {
-            binding.widgetFlipper.displayedChild = WidgetPresenter.CONTENT_STATE
+        if (binding.widgetFlipper.displayedChild == LOADING_STATE) {
+            binding.widgetFlipper.displayedChild = CONTENT_STATE
         }
     }
 
     override fun onClick(view: View) {
         when (view.id) {
             R.id.widget_flipper -> {
-                if (binding.widgetFlipper.displayedChild == WidgetPresenter.CONTENT_STATE) {
+                if (binding.widgetFlipper.displayedChild == CONTENT_STATE) {
                     binding.widgetFlipper.showNext()
-                    val currentModel = model ?: return
-                    presenter?.params?.apply {
-                        putLong(KeyUtil.arg_userId, currentModel.id)
+                    val currentModel = model ?: run {
+                        resetFlipperState()
+                        return
                     }
-                    presenter?.requestData(KeyUtil.MUT_TOGGLE_FOLLOW, context, this)
+                    listener?.onToggleFollow(currentModel.id) { result ->
+                        if (recycled || !isAttachedToWindow) return@onToggleFollow
+                        result.onSuccess {
+                            model?.toggleFollow()
+                            setControlText()
+                        }.onFailure { throwable ->
+                            Timber.e(throwable)
+                            setControlText()
+                        }
+                    }
                 } else {
                     NotifyUtil
                         .makeText(
@@ -114,40 +134,8 @@ constructor(
         }
     }
 
-    /**
-     * Invoked for a received HTTP response.
-     */
-    override fun onResponse(
-        call: Call<UserBase>,
-        response: Response<UserBase>,
-    ) {
-        try {
-            if (response.isSuccessful) {
-                model?.toggleFollow()
-                model?.let { presenter?.notifyAllListeners(BaseConsumer(KeyUtil.MUT_TOGGLE_FOLLOW, it), false) }
-                setControlText()
-            } else {
-                Timber.w(response.apiError())
-                setControlText()
-            }
-        } catch (e: Exception) {
-            Timber.e(e)
-        }
-    }
-
-    /**
-     * Invoked when a network exception occurred talking to the server or when an unexpected
-     * exception occurred creating the request or processing the response.
-     */
-    override fun onFailure(
-        call: Call<UserBase>,
-        throwable: Throwable,
-    ) {
-        try {
-            Timber.w(throwable)
-            setControlText()
-        } catch (e: Exception) {
-            Timber.e(e)
-        }
+    companion object {
+        const val CONTENT_STATE = 0
+        const val LOADING_STATE = 1
     }
 }

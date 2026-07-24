@@ -2,6 +2,7 @@ package com.mxt.anitrend.viewmodel
 
 import com.mxt.anitrend.model.api.retro.anilist.StudioModel
 import com.mxt.anitrend.model.entity.base.StudioBase
+import com.mxt.anitrend.repository.BaseRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -20,11 +21,13 @@ class StudioViewModelTest {
 
     private val testDispatcher = UnconfinedTestDispatcher()
     private lateinit var service: StudioModel
+    private lateinit var baseRepository: BaseRepository
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
         service = mock(StudioModel::class.java)
+        baseRepository = mock(BaseRepository::class.java)
     }
 
     @After
@@ -41,7 +44,10 @@ class StudioViewModelTest {
 
     @Test
     fun `UiState Success holds studio instance`() {
-        val studio = StudioBase().apply { id = 1L; name = "Test" }
+        val studio = StudioBase().apply {
+            id = 1L
+            name = "Test"
+        }
         val state = StudioViewModel.UiState.Success(studio)
         assertEquals(1L, state.studio.id)
         assertEquals("Test", state.studio.name)
@@ -58,7 +64,7 @@ class StudioViewModelTest {
 
     @Test
     fun `initial state is Loading`() = runTest {
-        val vm = StudioViewModel(studioService = service, ioDispatcher = testDispatcher)
+        val vm = StudioViewModel(studioService = service, baseRepository = baseRepository, ioDispatcher = testDispatcher)
         assertTrue(vm.state.value is StudioViewModel.UiState.Loading)
     }
 

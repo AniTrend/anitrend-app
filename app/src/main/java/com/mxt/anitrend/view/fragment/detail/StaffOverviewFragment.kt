@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
@@ -14,13 +13,12 @@ import com.mxt.anitrend.base.custom.view.image.AspectImageView
 import com.mxt.anitrend.binding.htmlText
 import com.mxt.anitrend.databinding.FragmentStaffOverviewBinding
 import com.mxt.anitrend.extension.getCompatDrawable
-import com.mxt.anitrend.model.api.retro.WebFactory
-import com.mxt.anitrend.model.api.retro.anilist.StaffModel
 import com.mxt.anitrend.model.entity.base.StaffBase
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.viewmodel.StaffOverviewViewModel
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class StaffOverviewFragment : Fragment() {
 
@@ -30,7 +28,7 @@ class StaffOverviewFragment : Fragment() {
     private var staffId: Long = 0
     private var model: StaffBase? = null
 
-    private lateinit var staffOverviewViewModel: StaffOverviewViewModel
+    private val staffOverviewViewModel: StaffOverviewViewModel by viewModel()
 
     companion object {
         @JvmStatic
@@ -57,20 +55,6 @@ class StaffOverviewFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        staffOverviewViewModel = ViewModelProvider(
-            this,
-            object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T =
-                    StaffOverviewViewModel(
-                        staffService = WebFactory.createService(
-                            StaffModel::class.java,
-                            requireContext().applicationContext,
-                        ),
-                    ) as T
-            },
-        )[StaffOverviewViewModel::class.java]
 
         binding.stateLayout.showLoading()
         binding.staffImg.setOnClickListener { onImageClick() }

@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.mxt.anitrend.R
@@ -32,8 +31,6 @@ import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.collection.EpisodeUtil
 import com.mxt.anitrend.widget.ProgressLayout
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 import timber.log.Timber
 
 /**
@@ -257,14 +254,6 @@ abstract class FragmentChannelBase :
     override fun onLoadMore() {
         swipeRefreshLayout.setLoading(true)
         makeRequest()
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onSearch(query: String) {
-        if (mAdapter != null && lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
-            this.query = query
-            mAdapter?.filter?.filter(query)
-        }
     }
 
     protected fun injectAdapter() {

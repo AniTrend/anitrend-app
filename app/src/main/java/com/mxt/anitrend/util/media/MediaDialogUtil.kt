@@ -7,16 +7,18 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.text.HtmlCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mxt.anitrend.R
-import com.mxt.anitrend.base.custom.consumer.BaseConsumer
 import com.mxt.anitrend.base.custom.view.widget.CustomSeriesAnimeManage
 import com.mxt.anitrend.base.custom.view.widget.CustomSeriesManageBase
 import com.mxt.anitrend.base.custom.view.widget.CustomSeriesMangaManage
 import com.mxt.anitrend.base.interfaces.event.RetroCallback
 import com.mxt.anitrend.extension.getCompatTintedDrawable
+import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.model.entity.anilist.MediaList
 import com.mxt.anitrend.model.entity.anilist.meta.DeleteState
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.presenter.widget.WidgetPresenter
+import com.mxt.anitrend.repository.BrowseMutation
+import com.mxt.anitrend.repository.BrowseRepository
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
@@ -110,7 +112,7 @@ internal object MediaDialogUtil {
                         val responseBody = response.body()
                         if (response.isSuccessful && responseBody != null) {
                             responseBody.media = modelClone.media
-                            presenter.notifyAllListeners(BaseConsumer(requestType, responseBody), false)
+                            koinOf<BrowseRepository>().emitMutationEvent(BrowseMutation.MediaListSaved(responseBody))
                             NotifyUtil
                                 .makeText(
                                     context,
@@ -190,9 +192,8 @@ internal object MediaDialogUtil {
                         val deleteState = response.body()
                         if (response.isSuccessful && deleteState != null) {
                             if (deleteState.isDeleted) {
-                                presenter.notifyAllListeners(
-                                    BaseConsumer<MediaList>(requestType, seriesManageBase.getModel()),
-                                    false,
+                                koinOf<BrowseRepository>().emitMutationEvent(
+                                    BrowseMutation.MediaListDeleted(seriesManageBase.getModel().id),
                                 )
                                 NotifyUtil
                                     .makeText(

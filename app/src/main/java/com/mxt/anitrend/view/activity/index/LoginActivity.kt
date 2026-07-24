@@ -9,7 +9,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
@@ -17,10 +16,7 @@ import com.mxt.anitrend.base.custom.async.WebTokenRequest
 import com.mxt.anitrend.base.interfaces.dao.BoxQuery
 import com.mxt.anitrend.binding.basicText
 import com.mxt.anitrend.databinding.ActivityLoginBinding
-import com.mxt.anitrend.extension.KoinExt
-import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.model.api.retro.WebFactory
-import com.mxt.anitrend.model.api.retro.anilist.UserModel
 import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.presenter.widget.WidgetPresenter
 import com.mxt.anitrend.util.CompatUtil
@@ -33,21 +29,26 @@ import com.mxt.anitrend.viewmodel.LoginAuthState
 import com.mxt.anitrend.viewmodel.LoginAuthViewModel
 import com.mxt.anitrend.viewmodel.LoginUserViewModel
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 /**
  * Created by max on 2017/11/03.
  * Authentication activity
  */
-class LoginActivity : AppCompatActivity(), View.OnClickListener {
+class LoginActivity :
+    AppCompatActivity(),
+    View.OnClickListener {
 
     private lateinit var binding: ActivityLoginBinding
-    private lateinit var authViewModel: LoginAuthViewModel
-    private lateinit var userViewModel: LoginUserViewModel
+    private val authViewModel: LoginAuthViewModel by viewModel()
+    private val userViewModel: LoginUserViewModel by viewModel()
     private var model: User? = null
 
-    private val settings by lazy { KoinExt.get(Settings::class.java) }
-    private val scheduler by lazy { koinOf<JobSchedulerUtil>() }
+    private val settings: Settings by inject()
+    private val scheduler: JobSchedulerUtil by inject()
+    private val boxQuery: BoxQuery by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Preserve translucent theme (was previously handled by ActivityBase.configureActivity).
@@ -63,7 +64,6 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        authViewModel = ViewModelProvider(this)[LoginAuthViewModel::class.java]
         authViewModel.authState.observe(this) { authState ->
             when (authState) {
                 LoginAuthState.Loading -> Unit
@@ -78,20 +78,6 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
 
-        userViewModel = ViewModelProvider(
-            this,
-            object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T =
-                    LoginUserViewModel(
-                        userService = WebFactory.createService(
-                            UserModel::class.java,
-                            applicationContext,
-                        ),
-                    ) as T
-            },
-        )[LoginUserViewModel::class.java]
-
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 userViewModel.state.collect { state ->
@@ -99,7 +85,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                         is LoginUserViewModel.UiState.Loading -> Unit
                         is LoginUserViewModel.UiState.Success -> {
                             model = state.user
-                            koinOf<BoxQuery>().currentUser = model
+                            boxQuery.currentUser = model
                             scheduleJobAndShortcuts()
                             finish()
                         }

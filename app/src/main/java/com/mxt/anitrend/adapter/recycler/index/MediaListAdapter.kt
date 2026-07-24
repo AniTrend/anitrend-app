@@ -15,10 +15,14 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder
 import com.mxt.anitrend.base.custom.view.image.AspectImageView
 import com.mxt.anitrend.base.custom.view.text.AiringTextView
 import com.mxt.anitrend.base.custom.view.text.SeriesYearTypeTextView
+import com.mxt.anitrend.base.custom.view.widget.AutoIncrementWidget
 import com.mxt.anitrend.base.custom.view.widget.SeriesStatusWidget
 import com.mxt.anitrend.binding.setAverageRating
+import com.mxt.anitrend.coordinator.WidgetMutationCoordinator
 import com.mxt.anitrend.databinding.AdapterSeriesAiringBinding
 import com.mxt.anitrend.databinding.AdapterSeriesAiringCompactBinding
+import com.mxt.anitrend.graphql.generated.FuzzyDateInput
+import com.mxt.anitrend.graphql.generated.MediaListStatus
 import com.mxt.anitrend.model.entity.anilist.MediaList
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
@@ -29,7 +33,10 @@ import java.util.*
  * Created by max on 2017/11/03.
  * adapter for series lists
  */
-class MediaListAdapter(context: Context) : RecyclerViewAdapter<MediaList>(context) {
+class MediaListAdapter(
+    context: Context,
+    private val coordinator: WidgetMutationCoordinator,
+) : RecyclerViewAdapter<MediaList>(context) {
     private var currentUser: String? = null
 
     override fun onCreateViewHolder(
@@ -81,6 +88,32 @@ class MediaListAdapter(context: Context) : RecyclerViewAdapter<MediaList>(contex
         this.currentUser = currentUser
     }
 
+    @Suppress("LongParameterList")
+    private val autoIncrementListener = object : AutoIncrementWidget.Listener {
+        override fun onSaveMediaListEntry(
+            id: Int?,
+            mediaId: Long?,
+            status: MediaListStatus?,
+            score: Double?,
+            progress: Int?,
+            progressVolumes: Int?,
+            repeat: Int?,
+            priority: Int?,
+            private: Boolean,
+            hiddenFromStatusLists: Boolean,
+            customLists: List<String?>?,
+            advancedScores: List<Double?>?,
+            notes: String?,
+            startedAt: FuzzyDateInput?,
+            completedAt: FuzzyDateInput?,
+            onResult: (Result<MediaList>) -> Unit,
+        ) = coordinator.saveMediaListEntry(
+            id, mediaId, status, score, progress, progressVolumes, repeat, priority,
+            private, hiddenFromStatusLists, customLists, advancedScores, notes,
+            startedAt, completedAt, onResult,
+        )
+    }
+
     inner class SeriesListViewHolder
     /**
      * Default constructor which includes binding with butter knife
@@ -112,6 +145,8 @@ class MediaListAdapter(context: Context) : RecyclerViewAdapter<MediaList>(contex
                     binding.customRatingWidget.setAverageRating(model)
                     binding.seriesTitle.setTitle(model)
                     binding.seriesEpisodes.setModel(model, currentUser)
+                    binding.seriesEpisodes.setCurrentUser(coordinator.databaseHelper.currentUser)
+                    binding.seriesEpisodes.setListener(autoIncrementListener)
                 }
                 is AdapterSeriesAiringCompactBinding -> {
                     AspectImageView.setImage(binding.seriesImage, model.media.coverImage)
@@ -121,6 +156,8 @@ class MediaListAdapter(context: Context) : RecyclerViewAdapter<MediaList>(contex
                     binding.customRatingWidget.setAverageRating(model)
                     binding.seriesTitle.setTitle(model)
                     binding.seriesEpisodes.setModel(model, currentUser)
+                    binding.seriesEpisodes.setCurrentUser(coordinator.databaseHelper.currentUser)
+                    binding.seriesEpisodes.setListener(autoIncrementListener)
 
                     when (presenter.settings.mediaListStyle) {
                         KeyUtil.LIST_VIEW_STYLE_COMPACT_X1 -> {
@@ -150,11 +187,13 @@ class MediaListAdapter(context: Context) : RecyclerViewAdapter<MediaList>(contex
             when (binding) {
                 is AdapterSeriesAiringBinding -> {
                     Glide.with(context).clear(binding.seriesImage)
+                    binding.seriesEpisodes.setListener(null)
                     binding.seriesEpisodes.onViewRecycled()
                     binding.customRatingWidget.onViewRecycled()
                 }
                 is AdapterSeriesAiringCompactBinding -> {
                     Glide.with(context).clear(binding.seriesImage)
+                    binding.seriesEpisodes.setListener(null)
                     binding.seriesEpisodes.onViewRecycled()
                     binding.customRatingWidget.onViewRecycled()
                 }

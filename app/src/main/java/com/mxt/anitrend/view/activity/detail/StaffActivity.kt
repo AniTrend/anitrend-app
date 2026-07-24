@@ -7,7 +7,6 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.tabs.TabLayoutMediator
@@ -17,8 +16,6 @@ import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget
 import com.mxt.anitrend.databinding.ActivityPagerGenericBinding
 import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.extension.serializableExtra
-import com.mxt.anitrend.model.api.retro.WebFactory
-import com.mxt.anitrend.model.api.retro.anilist.StaffModel
 import com.mxt.anitrend.model.entity.base.StaffBase
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
@@ -29,6 +26,7 @@ import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.selectedIndex
 import com.mxt.anitrend.viewmodel.StaffViewModel
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.Locale
 
 /**
@@ -47,7 +45,7 @@ class StaffActivity : AppCompatActivity() {
 
     private var tabMediator: TabLayoutMediator? = null
 
-    private lateinit var staffViewModel: StaffViewModel
+    private val staffViewModel: StaffViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Preserve configured theme (was previously handled by ActivityBase.configureActivity).
@@ -74,20 +72,6 @@ class StaffActivity : AppCompatActivity() {
             staffId = intent.getLongExtra(KeyUtil.arg_id, -1)
         }
         onList = intent.serializableExtra(KeyUtil.arg_onList)
-
-        staffViewModel = ViewModelProvider(
-            this,
-            object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T =
-                    StaffViewModel(
-                        staffService = WebFactory.createService(
-                            StaffModel::class.java,
-                            applicationContext,
-                        ),
-                    ) as T
-            },
-        )[StaffViewModel::class.java]
 
         observeViewModel()
         setUpPager()
@@ -128,11 +112,9 @@ class StaffActivity : AppCompatActivity() {
         attachTabs(pageAdapter)
     }
 
-    private fun buildPagerParams(): Bundle {
-        return Bundle().apply {
-            putLong(KeyUtil.arg_id, staffId)
-            putSerializable(KeyUtil.arg_onList, onList)
-        }
+    private fun buildPagerParams(): Bundle = Bundle().apply {
+        putLong(KeyUtil.arg_id, staffId)
+        putSerializable(KeyUtil.arg_onList, onList)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -149,6 +131,20 @@ class StaffActivity : AppCompatActivity() {
                 model?.let { m ->
                     favouriteWidget?.setModel(m)
                 }
+                favouriteWidget?.setListener(object : FavouriteToolbarWidget.Listener {
+                    override fun onToggleFavourite(
+                        animeId: Int?,
+                        mangaId: Int?,
+                        characterId: Int?,
+                        staffId: Int?,
+                        studioId: Int?,
+                        onResult: (Result<Unit>) -> Unit,
+                    ) {
+                        lifecycleScope.launch {
+                            onResult(staffViewModel.toggleFavourite(animeId, mangaId, characterId, staffId, studioId))
+                        }
+                    }
+                })
             }
         }
         return true
@@ -249,5 +245,10 @@ class StaffActivity : AppCompatActivity() {
                 tab.text = adapter.getPageTitle(position)
             }
         tabMediator?.attach()
+    }
+
+    override fun onDestroy() {
+        favouriteWidget?.setListener(null)
+        super.onDestroy()
     }
 }

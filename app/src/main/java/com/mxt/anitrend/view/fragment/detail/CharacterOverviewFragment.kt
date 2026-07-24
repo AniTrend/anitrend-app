@@ -4,25 +4,31 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
-import com.mxt.anitrend.base.custom.fragment.FragmentBase
 import com.mxt.anitrend.base.custom.view.image.AspectImageView
 import com.mxt.anitrend.binding.htmlText
 import com.mxt.anitrend.databinding.FragmentCharacterOverviewBinding
 import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.model.entity.anilist.MediaCharacter
-import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
+import com.mxt.anitrend.viewmodel.CharacterOverviewViewModel
+import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-/**
- * Created by max on 2018/01/30.
- * CharacterOverviewFragment
- */
-class CharacterOverviewFragment : FragmentBase<MediaCharacter, BasePresenter, MediaCharacter>() {
+class CharacterOverviewFragment : Fragment() {
+
+    private var _binding: FragmentCharacterOverviewBinding? = null
+    private val binding get() = _binding!!
+
+    private var characterId: Long = 0
     private var model: MediaCharacter? = null
-    private var binding: FragmentCharacterOverviewBinding? = null
-    private var id: Long = 0
+
+    private val characterOverviewViewModel: CharacterOverviewViewModel by viewModel()
 
     companion object {
         @JvmStatic
@@ -34,81 +40,74 @@ class CharacterOverviewFragment : FragmentBase<MediaCharacter, BasePresenter, Me
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let { args ->
-            id = args.getLong(KeyUtil.arg_id)
+            characterId = args.getLong(KeyUtil.arg_id)
         }
-        setViewModel(true)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
-        binding = FragmentCharacterOverviewBinding.inflate(inflater, container, false)
-        binding?.stateLayout?.showLoading()
-        binding?.characterImg?.setOnClickListener(this)
-        return binding?.root
+    ): View {
+        _binding = FragmentCharacterOverviewBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
-    override fun updateUI() {
-        val binding = binding ?: return
-        val model = model
-        if (model != null) {
-            AspectImageView.setImage(binding.characterImg, model.image)
-            binding.characterNameText.text = model.name?.fullName
-            binding.characterNativeText.text = model.name?.original
-            binding.characterAlternativeText.htmlText(model.name?.alternativeFormatted)
-            binding.characterSummaryText.htmlText(model.description)
-            binding.stateLayout.showContent()
-        } else {
-            binding.stateLayout.showError(
-                context?.getCompatDrawable(R.drawable.ic_warning_white_18dp, R.color.colorStateBlue),
-                getString(R.string.layout_empty_response),
-                getString(R.string.try_again),
-            ) { makeRequest() }
-        }
-    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-    override fun onStart() {
-        super.onStart()
-        if (model != null) {
-            updateUI()
-        } else {
-            makeRequest()
-        }
-    }
+        binding.stateLayout.showLoading()
+        binding.characterImg.setOnClickListener { onImageClick() }
 
-    override fun makeRequest() {
-        val ctx = context ?: return
-        viewModel?.params?.apply {
-            putLong(KeyUtil.arg_id, id)
-            putBoolean(KeyUtil.arg_asHtml, false)
-        }
-        viewModel?.requestData(KeyUtil.CHARACTER_OVERVIEW_REQ, ctx)
-    }
-
-    override fun onClick(v: View) {
-        when (v.id) {
-            R.id.character_img -> {
-                CompatUtil.imagePreview(
-                    v,
-                    model?.image?.large,
-                    R.string.image_preview_error_character_image,
-                )
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                characterOverviewViewModel.state.collect { state ->
+                    when (state) {
+                        is CharacterOverviewViewModel.UiState.Loading -> {
+                            binding.stateLayout.showLoading()
+                        }
+                        is CharacterOverviewViewModel.UiState.Success -> {
+                            model = state.character
+                            bindCharacter(state.character)
+                        }
+                        is CharacterOverviewViewModel.UiState.Error -> {
+                            binding.stateLayout.showError(
+                                requireContext().getCompatDrawable(R.drawable.ic_warning_white_18dp, R.color.colorStateBlue),
+                                state.message,
+                                getString(R.string.try_again),
+                            ) { loadCharacter() }
+                        }
+                    }
+                }
             }
-            else -> super.onClick(v)
         }
+
+        loadCharacter()
+    }
+
+    private fun loadCharacter() {
+        characterOverviewViewModel.load(characterId)
+    }
+
+    private fun bindCharacter(character: MediaCharacter) {
+        AspectImageView.setImage(binding.characterImg, character.image)
+        binding.characterNameText.text = character.name?.fullName
+        binding.characterNativeText.text = character.name?.original
+        binding.characterAlternativeText.htmlText(character.name?.alternativeFormatted)
+        binding.characterSummaryText.htmlText(character.description)
+        binding.stateLayout.showContent()
+    }
+
+    private fun onImageClick() {
+        CompatUtil.imagePreview(
+            requireView(),
+            model?.image?.large,
+            R.string.image_preview_error_character_image,
+        )
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding = null
-    }
-
-    override fun onChanged(value: MediaCharacter?) {
-        if (value != null) {
-            this.model = value
-        }
-        updateUI()
+        _binding = null
     }
 }

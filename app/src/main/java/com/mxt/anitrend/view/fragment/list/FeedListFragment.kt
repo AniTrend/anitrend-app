@@ -7,34 +7,45 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.FeedAdapter
-import com.mxt.anitrend.base.custom.consumer.BaseConsumer
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
+import com.mxt.anitrend.coordinator.WidgetMutationCoordinator
+import com.mxt.anitrend.graphql.generated.ActivityType
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
+import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.TapTargetUtil
-import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.view.activity.detail.CommentActivity
 import com.mxt.anitrend.view.activity.detail.MediaActivity
 import com.mxt.anitrend.view.activity.detail.ProfileActivity
 import com.mxt.anitrend.view.sheet.BottomSheetComposer
 import com.mxt.anitrend.view.sheet.BottomSheetUsers
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
+import com.mxt.anitrend.viewmodel.FeedListViewModel
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
  * Created by max on 2017/11/07.
  * Home page feed base
  */
-open class FeedListFragment :
-    FragmentBaseList<FeedList, PageContainer<FeedList>, BasePresenter>(),
-    BaseConsumer.onRequestModelChange<FeedList> {
+open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>, BasePresenter>() {
+
+    private val settings: Settings by inject()
+
+    private val mutationCoordinator by inject<WidgetMutationCoordinator>()
+
+    private val feedListViewModel: FeedListViewModel by viewModel()
+
     companion object {
         @JvmStatic
         fun newInstance(params: Bundle): FeedListFragment {
@@ -51,10 +62,29 @@ open class FeedListFragment :
         isPager = true
         isFeed = true
         mColumnSize = R.integer.single_list_x1
-        hasSubscriber = true
-        mAdapter = FeedAdapter(ctx)
-        setPresenter(BasePresenter(ctx))
-        setViewModel(true)
+        mAdapter = FeedAdapter(ctx, mutationCoordinator)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                feedListViewModel.state.collect { state ->
+                    when (state) {
+                        is FeedListViewModel.UiState.Loading -> {
+                            // Loading is handled by swipeRefreshLayout in the base class
+                        }
+                        is FeedListViewModel.UiState.Success -> {
+                            handleSuccess(state.content)
+                        }
+                        is FeedListViewModel.UiState.Error -> {
+                            showError(state.message)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @Deprecated("Deprecated in Java")
@@ -78,7 +108,7 @@ open class FeedListFragment :
     override fun updateUI() {
         injectAdapter()
         if (!TapTargetUtil.isActive(KeyUtil.KEY_POST_TYPE_TIP) && isFeed) {
-            if (presenter.settings.shouldShowTipFor(KeyUtil.KEY_POST_TYPE_TIP)) {
+            if (settings.shouldShowTipFor(KeyUtil.KEY_POST_TYPE_TIP)) {
                 val host = activity ?: return
                 TapTargetUtil
                     .buildDefault(host, R.string.tip_status_post_title, R.string.tip_status_post_text, R.id.action_post)
@@ -86,7 +116,7 @@ open class FeedListFragment :
                         if (state == uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt.STATE_NON_FOCAL_PRESSED ||
                             state == uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt.STATE_FOCAL_PRESSED
                         ) {
-                            presenter.settings.disableTipFor(KeyUtil.KEY_POST_TYPE_TIP)
+                            settings.disableTipFor(KeyUtil.KEY_POST_TYPE_TIP)
                         }
                         if (state == uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt.STATE_DISMISSED) {
                             TapTargetUtil.setActive(KeyUtil.KEY_POST_TYPE_TIP, true)
@@ -98,11 +128,14 @@ open class FeedListFragment :
     }
 
     override fun makeRequest() {
-        val ctx = context ?: return
-        val params = viewModel?.params ?: return
-        params.applyBaseFeedRequestArguments(arguments)
-        params.putInt(KeyUtil.arg_page, presenter.currentPage)
-        viewModel?.requestData(KeyUtil.FEED_LIST_REQ, ctx)
+        val args = arguments ?: return
+        feedListViewModel.load(
+            page = mScrollListener.currentPage,
+            pageLimit = args.getInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT),
+            isFollowing = if (args.containsKey(KeyUtil.arg_isFollowing)) args.getBoolean(KeyUtil.arg_isFollowing) else null,
+            type = args.getString(KeyUtil.arg_type)?.let { runCatching { ActivityType.valueOf(it) }.getOrNull() },
+            isMixed = if (args.containsKey(KeyUtil.arg_isMixed)) args.getBoolean(KeyUtil.arg_isMixed) else null,
+        )
     }
 
     protected fun Bundle.applyBaseFeedRequestArguments(source: Bundle?) {
@@ -122,43 +155,17 @@ open class FeedListFragment :
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    override fun onModelChanged(consumer: BaseConsumer<FeedList>) {
-        when (consumer.requestMode) {
-            KeyUtil.MUT_SAVE_TEXT_FEED,
-            KeyUtil.MUT_SAVE_MESSAGE_FEED,
-            -> {
-                if (consumer.changeModel == null) {
-                    swipeRefreshLayout.setRefreshing(true)
-                    onRefresh()
-                } else {
-                    val pair = CompatUtil.findIndexOf(mAdapter.data, consumer.changeModel)
-                    if (pair != null) {
-                        val pairIndex = pair.index
-                        mAdapter.onItemChanged(consumer.changeModel, pairIndex)
-                    }
-                }
-            }
-            KeyUtil.MUT_DELETE_FEED -> {
-                val pair = CompatUtil.findIndexOf(mAdapter.data, consumer.changeModel)
-                if (pair != null) {
-                    val pairIndex = pair.index
-                    mAdapter.onItemRemoved(pairIndex)
-                }
-            }
-        }
-    }
+    /** No-op: StateFlow collector above handles the response. */
+    override fun onChanged(value: PageContainer<FeedList>?) = Unit
 
-    override fun onChanged(value: PageContainer<FeedList>?) {
-        if (value != null) {
-            if (value.hasPageInfo()) {
-                presenter.setPageInfo(value.pageInfo)
-            }
-            if (!value.isEmpty) {
-                onPostProcessed(GraphUtil.filterFeedList(presenter, value.pageData))
-            } else {
-                onPostProcessed(emptyList())
-            }
+    private fun handleSuccess(value: PageContainer<FeedList>) {
+        if (value.hasPageInfo()) {
+            setPageInfo(value.pageInfo)
+        }
+        if (!value.isEmpty) {
+            val filtered = value.pageData.filter { !it.type.isNullOrBlank() }
+            mScrollListener.getPageInfo()?.perPage = filtered.size
+            onPostProcessed(filtered)
         } else {
             onPostProcessed(emptyList())
         }
@@ -237,7 +244,7 @@ open class FeedListFragment :
     ) {
         when (target.id) {
             R.id.series_image -> {
-                if (presenter.settings.isAuthenticated) {
+                if (settings.isAuthenticated) {
                     val host = activity ?: return
                     data.value.media?.let { media ->
                         mediaActionUtil =

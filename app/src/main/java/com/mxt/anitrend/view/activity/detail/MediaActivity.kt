@@ -9,7 +9,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.tabs.TabLayoutMediator
@@ -22,8 +21,6 @@ import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget
 import com.mxt.anitrend.databinding.ActivitySeriesBinding
 import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.extension.getCompatDrawable
-import com.mxt.anitrend.model.api.retro.WebFactory
-import com.mxt.anitrend.model.api.retro.anilist.MediaModel
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.IntentBundleUtil
@@ -35,13 +32,16 @@ import com.mxt.anitrend.util.TutorialUtil
 import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.viewmodel.MediaViewModel
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.Locale
 
 /**
  * Created by max on 2017/12/01.
  * Media activity
  */
-class MediaActivity : AppCompatActivity(), View.OnClickListener {
+class MediaActivity :
+    AppCompatActivity(),
+    View.OnClickListener {
 
     private lateinit var binding: ActivitySeriesBinding
 
@@ -56,7 +56,7 @@ class MediaActivity : AppCompatActivity(), View.OnClickListener {
     private var manageMenuItem: MenuItem? = null
     private var mediaActionUtil: MediaActionUtil? = null
 
-    private lateinit var mediaViewModel: MediaViewModel
+    private val mediaViewModel: MediaViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Preserve configured theme (was previously handled by ActivityBase.configureActivity).
@@ -90,20 +90,6 @@ class MediaActivity : AppCompatActivity(), View.OnClickListener {
         if (intent.hasExtra(KeyUtil.arg_mediaType)) {
             mediaType = intent.getStringExtra(KeyUtil.arg_mediaType)
         }
-
-        mediaViewModel = ViewModelProvider(
-            this,
-            object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T =
-                    MediaViewModel(
-                        mediaService = WebFactory.createService(
-                            MediaModel::class.java,
-                            applicationContext,
-                        ),
-                    ) as T
-            },
-        )[MediaViewModel::class.java]
 
         observeViewModel()
         setUpPager()
@@ -182,6 +168,20 @@ class MediaActivity : AppCompatActivity(), View.OnClickListener {
                 favouriteMenuItem.isVisible = false
             } else {
                 setFavouriteWidgetMenuItemIcon()
+                favouriteWidget?.setListener(object : FavouriteToolbarWidget.Listener {
+                    override fun onToggleFavourite(
+                        animeId: Int?,
+                        mangaId: Int?,
+                        characterId: Int?,
+                        staffId: Int?,
+                        studioId: Int?,
+                        onResult: (Result<Unit>) -> Unit,
+                    ) {
+                        lifecycleScope.launch {
+                            onResult(mediaViewModel.toggleFavourite(animeId, mangaId, characterId, staffId, studioId))
+                        }
+                    }
+                })
             }
         }
         return true
@@ -300,6 +300,7 @@ class MediaActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onDestroy() {
+        favouriteWidget?.setListener(null)
         favouriteWidget?.onViewRecycled()
         mediaActionUtil?.onDestroy()
         super.onDestroy()

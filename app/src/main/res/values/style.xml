@@ -78,8 +78,6 @@
         <item name="subtitleColor">@color/m3_light_onSurfaceVariant</item>
         <item name="contentColor">@color/m3_light_onSurfaceVariant</item>
 
-        <item name="voiceDrawable">@drawable/ic_msv_voice</item>
-        <item name="closeDrawable">@drawable/ic_msv_close</item>
         <item name="backDrawable">@drawable/ic_msv_arrow_back</item>
         <item name="suggestionDrawable">@drawable/ic_msv_suggestion</item>
 
@@ -158,8 +156,6 @@
         <item name="subtitleColor">@color/m3_dark_onSurfaceVariant</item>
         <item name="contentColor">@color/m3_dark_onSurfaceVariant</item>
 
-        <item name="voiceDrawable">@drawable/ic_msv_voice</item>
-        <item name="closeDrawable">@drawable/ic_msv_close</item>
         <item name="backDrawable">@drawable/ic_msv_arrow_back</item>
         <item name="suggestionDrawable">@drawable/ic_msv_suggestion</item>
 
@@ -245,8 +241,6 @@
         <item name="subtitleColor">@color/m3_dark_onSurfaceVariant</item>
         <item name="contentColor">@color/m3_dark_onSurfaceVariant</item>
 
-        <item name="voiceDrawable">@drawable/ic_msv_voice</item>
-        <item name="closeDrawable">@drawable/ic_msv_close</item>
         <item name="backDrawable">@drawable/ic_msv_arrow_back</item>
         <item name="suggestionDrawable">@drawable/ic_msv_suggestion</item>
 
@@ -267,11 +261,11 @@
 
     <!-- Popup menu styles (Material3 parent) -->
     <style name="PopupThemeLight" parent="Widget.Material3.PopupMenu.Overflow">
-        <item name="android:popupBackground">?attr/rootColor</item>
+        <item name="android:popupBackground">?attr/colorSurfaceDim</item>
     </style>
 
     <style name="PopupThemeDark" parent="Widget.Material3.PopupMenu.Overflow">
-        <item name="android:popupBackground">?attr/rootColor</item>
+        <item name="android:popupBackground">?attr/colorSurfaceDim</item>
     </style>
 
     <!-- Toolbar child themes -->

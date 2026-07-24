@@ -8,22 +8,19 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.Toast
 import com.mxt.anitrend.R
-import com.mxt.anitrend.base.custom.consumer.BaseConsumer
-import com.mxt.anitrend.base.interfaces.event.RetroCallback
 import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.databinding.WidgetAutoIncrementerBinding
 import com.mxt.anitrend.extension.getLayoutInflater
+import com.mxt.anitrend.graphql.generated.FuzzyDateInput
+import com.mxt.anitrend.graphql.generated.MediaListStatus
 import com.mxt.anitrend.model.entity.anilist.MediaList
-import com.mxt.anitrend.presenter.widget.WidgetPresenter
+import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.date.DateUtil
-import com.mxt.anitrend.util.graphql.apiError
 import com.mxt.anitrend.util.media.MediaListUtil
 import com.mxt.anitrend.util.media.MediaUtil
-import retrofit2.Call
-import retrofit2.Response
 import timber.log.Timber
 
 /**
@@ -38,11 +35,30 @@ constructor(
     defStyleAttr: Int = 0,
 ) : LinearLayout(context, attrs, defStyleAttr),
     CustomView,
-    View.OnClickListener,
-    RetroCallback<MediaList> {
-    @KeyUtil.RequestType
-    private var requestType: Int = KeyUtil.MUT_SAVE_MEDIA_LIST
-    private lateinit var presenter: WidgetPresenter<MediaList>
+    View.OnClickListener {
+
+    @Suppress("LongParameterList")
+    interface Listener {
+        fun onSaveMediaListEntry(
+            id: Int?,
+            mediaId: Long?,
+            status: MediaListStatus?,
+            score: Double?,
+            progress: Int?,
+            progressVolumes: Int?,
+            repeat: Int?,
+            priority: Int?,
+            private: Boolean,
+            hiddenFromStatusLists: Boolean,
+            customLists: List<String?>?,
+            advancedScores: List<Double?>?,
+            notes: String?,
+            startedAt: FuzzyDateInput?,
+            completedAt: FuzzyDateInput?,
+            onResult: (Result<MediaList>) -> Unit,
+        )
+    }
+
     private lateinit var binding: WidgetAutoIncrementerBinding
 
     @KeyUtil.MediaListStatus
@@ -50,7 +66,18 @@ constructor(
     private var model: MediaList? = null
 
     private var currentUser: String? = null
+    private var currentUserFull: UserBase? = null
     private val tagName = AutoIncrementWidget::class.java.simpleName
+    private var listener: Listener? = null
+    private var recycled = false
+
+    fun setListener(listener: Listener?) {
+        this.listener = listener
+    }
+
+    fun setCurrentUser(user: UserBase?) {
+        this.currentUserFull = user
+    }
 
     init {
         onInit()
@@ -65,17 +92,16 @@ constructor(
     ) : this(context, attrs, defStyleAttr)
 
     override fun onInit() {
-        presenter = WidgetPresenter(context)
         binding = WidgetAutoIncrementerBinding.inflate(context.getLayoutInflater(), this, true)
         binding.widgetFlipper.setOnClickListener(this)
     }
 
     override fun onClick(view: View) {
         val currentModel = model ?: return
-        if (presenter.isCurrentUser(currentUser) && MediaUtil.isAllowedStatus(currentModel)) {
+        if (currentUserFull?.name == currentUser && MediaUtil.isAllowedStatus(currentModel)) {
             if (!MediaUtil.isIncrementLimitReached(currentModel)) {
                 if (view.id == R.id.widget_flipper) {
-                    if (binding.widgetFlipper.displayedChild == WidgetPresenter.CONTENT_STATE) {
+                    if (binding.widgetFlipper.displayedChild == CONTENT_STATE) {
                         binding.widgetFlipper.showNext()
                         updateModelState()
                     } else {
@@ -110,70 +136,19 @@ constructor(
         this.model = model
         this.currentUser = currentUser
         status = model.status
-        binding.seriesProgressIncrement.setSeriesModel(model, presenter.isCurrentUser(currentUser))
+        binding.seriesProgressIncrement.setSeriesModel(model, currentUserFull?.name == currentUser)
     }
 
     override fun onViewRecycled() {
+        recycled = true
+        listener = null
         resetFlipperState()
-        presenter.onDestroy()
         model = null
     }
 
     private fun resetFlipperState() {
-        if (binding.widgetFlipper.displayedChild == WidgetPresenter.LOADING_STATE) {
-            binding.widgetFlipper.displayedChild = WidgetPresenter.CONTENT_STATE
-        }
-    }
-
-    override fun onResponse(
-        call: Call<MediaList>,
-        response: Response<MediaList>,
-    ) {
-        try {
-            val responseModel = response.body()
-            val modelClone = model?.clone()
-            if (response.isSuccessful && responseModel != null && modelClone != null) {
-                val isModelCategoryChanged = responseModel.status != status
-                responseModel.media = modelClone.media
-                val updatedModel = responseModel.clone()
-                model = updatedModel
-                binding.seriesProgressIncrement.setSeriesModel(
-                    updatedModel,
-                    presenter.isCurrentUser(currentUser),
-                )
-                if (isModelCategoryChanged || MediaListUtil.isProgressUpdatable(modelClone)) {
-                    if (isModelCategoryChanged) {
-                        NotifyUtil
-                            .makeText(
-                                context,
-                                R.string.text_changes_saved,
-                                R.drawable.ic_check_circle_white_24dp,
-                                Toast.LENGTH_SHORT,
-                            ).show()
-                    }
-                    presenter.notifyAllListeners(BaseConsumer(requestType, updatedModel), false)
-                } else {
-                    resetFlipperState()
-                }
-            } else {
-                resetFlipperState()
-                Timber.w(response.apiError())
-                NotifyUtil.makeText(context, R.string.text_error_request, Toast.LENGTH_SHORT).show()
-            }
-        } catch (e: Exception) {
-            Timber.w(e)
-        }
-    }
-
-    override fun onFailure(
-        call: Call<MediaList>,
-        throwable: Throwable,
-    ) {
-        try {
-            Timber.w(throwable)
-            resetFlipperState()
-        } catch (e: Exception) {
-            Timber.e(e)
+        if (binding.widgetFlipper.displayedChild == LOADING_STATE) {
+            binding.widgetFlipper.displayedChild = CONTENT_STATE
         }
     }
 
@@ -193,12 +168,45 @@ constructor(
             currentModel.status = KeyUtil.COMPLETED
             currentModel.completedAt = DateUtil.currentDate
         }
-        val user = presenter.database.currentUser ?: return
-        presenter.params =
-            MediaListUtil.getMediaListParams(
-                currentModel,
-                user.mediaListOptions.scoreFormat,
-            )
-        presenter.requestData(requestType, context, this)
+        listener?.onSaveMediaListEntry(
+            id = currentModel.id.takeIf { it > 0 }?.toInt(),
+            mediaId = currentModel.mediaId,
+            status = currentModel.status?.let { runCatching { MediaListStatus.valueOf(it) }.getOrNull() },
+            score = currentModel.score.toDouble(),
+            progress = currentModel.progress,
+            progressVolumes = currentModel.progressVolumes,
+            repeat = currentModel.repeat,
+            priority = currentModel.priority,
+            private = currentModel.isHidden,
+            hiddenFromStatusLists = currentModel.isHiddenFromStatusLists,
+            customLists = currentModel.customLists?.filter { it.isEnabled }?.mapNotNull { it.name?.takeIf { name -> name.isNotEmpty() } },
+            advancedScores = currentModel.advancedScores?.values?.map { it.toDouble() },
+            notes = currentModel.notes,
+            startedAt = currentModel.startedAt?.let { FuzzyDateInput(day = it.day, month = it.month, year = it.year) },
+            completedAt = currentModel.completedAt?.let { FuzzyDateInput(day = it.day, month = it.month, year = it.year) },
+        ) { result ->
+            if (recycled || !isAttachedToWindow) return@onSaveMediaListEntry
+            result.onSuccess { savedResult ->
+                val isModelCategoryChanged = savedResult.status != status
+                savedResult.media = currentModel.media
+                model = savedResult
+                binding.seriesProgressIncrement.setSeriesModel(savedResult, currentUserFull?.name == currentUser)
+                if (isModelCategoryChanged || MediaListUtil.isProgressUpdatable(savedResult)) {
+                    if (isModelCategoryChanged) {
+                        NotifyUtil.makeText(context, R.string.text_changes_saved, R.drawable.ic_check_circle_white_24dp, Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    resetFlipperState()
+                }
+            }.onFailure { throwable ->
+                resetFlipperState()
+                Timber.w(throwable)
+            }
+        }
+    }
+
+    companion object {
+        const val CONTENT_STATE = 0
+        const val LOADING_STATE = 1
     }
 }

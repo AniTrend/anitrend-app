@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -18,11 +17,8 @@ import com.mxt.anitrend.base.custom.view.search.MaterialSearchView
 import com.mxt.anitrend.base.interfaces.event.ISearchDelegate
 import com.mxt.anitrend.databinding.BottomSheetListBinding
 import com.mxt.anitrend.extension.KoinExt
-import com.mxt.anitrend.model.api.retro.WebFactory
-import com.mxt.anitrend.model.api.retro.base.GiphyModel
 import com.mxt.anitrend.model.entity.giphy.Gif
 import com.mxt.anitrend.model.entity.giphy.Giphy
-import com.mxt.anitrend.model.entity.giphy.GiphyContainer
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
@@ -30,13 +26,15 @@ import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.view.activity.base.GiphyPreviewActivity
 import com.mxt.anitrend.viewmodel.GiphyViewModel
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class BottomSheetGiphy : BottomSheetGiphyList() {
     private var binding: BottomSheetListBinding? = null
     private var searchView: MaterialSearchView? = null
 
-    private lateinit var giphyViewModel: GiphyViewModel
+    var onGiphySelected: ((Giphy) -> Unit)? = null
+
+    private val giphyViewModel: GiphyViewModel by viewModel()
 
     companion object {
         @JvmStatic
@@ -52,19 +50,6 @@ class BottomSheetGiphy : BottomSheetGiphyList() {
         mAdapter = GiphyAdapter(ctx)
         mColumnSize = resources.getInteger(R.integer.grid_giphy_x3)
         isPager = true
-
-        // Direct ViewModel replaces the legacy viewModel?.requestData(...) path.
-        giphyViewModel = ViewModelProvider(
-            this,
-            object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T =
-                    GiphyViewModel(
-                        giphyService = WebFactory.createGiphyService(ctx),
-                    ) as T
-            },
-        )[GiphyViewModel::class.java]
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -161,7 +146,7 @@ class BottomSheetGiphy : BottomSheetGiphyList() {
         target: View,
         data: IndexedValue<Giphy>,
     ) {
-        EventBus.getDefault().post(data)
+        onGiphySelected?.invoke(data.value)
         closeDialog()
     }
 

@@ -1,8 +1,8 @@
 package com.mxt.anitrend.viewmodel
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.annotation.VisibleForTesting
 import co.anitrend.retrofit.graphql.model.attribute.GraphError
 import com.mxt.anitrend.graphql.generated.MediaSort
 import com.mxt.anitrend.graphql.generated.StudioMedia
@@ -84,11 +84,9 @@ class StudioMediaViewModel(
     }
 
     @VisibleForTesting
-    internal fun resolveMediaSort(sort: String?): kotlin.collections.List<MediaSort> {
-        return sort?.let {
-            runCatching {
-                listOf(MediaSort.valueOf(it))
-            }.getOrDefault(listOf(MediaSort.POPULARITY))
-        } ?: listOf(MediaSort.POPULARITY)
-    }
+    internal fun resolveMediaSort(sort: String?): kotlin.collections.List<MediaSort> = sort?.let {
+        runCatching {
+            listOf(MediaSort.valueOf(it))
+        }.getOrDefault(listOf(MediaSort.POPULARITY))
+    } ?: listOf(MediaSort.POPULARITY)
 }

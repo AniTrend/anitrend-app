@@ -8,21 +8,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.mxt.anitrend.R
-import com.mxt.anitrend.base.custom.fragment.FragmentBase
 import com.mxt.anitrend.databinding.AdapterFeedSlideBinding
 import com.mxt.anitrend.extension.parcelable
 import com.mxt.anitrend.model.entity.anilist.meta.MediaTrailer
-import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.markdown.RegexUtil
 import timber.log.Timber
 
-class YouTubeEmbedFragment : FragmentBase<MediaTrailer, BasePresenter, MediaTrailer>() {
+class YouTubeEmbedFragment : Fragment() {
     private var mediaTrailer: MediaTrailer? = null
 
     private var binding: AdapterFeedSlideBinding? = null
@@ -43,7 +42,6 @@ class YouTubeEmbedFragment : FragmentBase<MediaTrailer, BasePresenter, MediaTrai
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mediaTrailer = arguments?.parcelable(KeyUtil.arg_media_trailer)
-        setPresenter(BasePresenter(requireContext()))
     }
 
     override fun onCreateView(
@@ -61,7 +59,7 @@ class YouTubeEmbedFragment : FragmentBase<MediaTrailer, BasePresenter, MediaTrai
         makeRequest()
     }
 
-    override fun updateUI() {
+    private fun updateUI() {
         val trailer = mediaTrailer ?: return
         val youtubeLink = RegexUtil.buildYoutube(trailer.id.orEmpty())
         val thumbnailUrl = RegexUtil.getYoutubeThumb(youtubeLink)
@@ -77,7 +75,7 @@ class YouTubeEmbedFragment : FragmentBase<MediaTrailer, BasePresenter, MediaTrai
         }
     }
 
-    override fun makeRequest() {
+    private fun makeRequest() {
         val trailer = mediaTrailer ?: return
         binding?.feedStatusImage?.setOnClickListener {
             try {
@@ -98,8 +96,6 @@ class YouTubeEmbedFragment : FragmentBase<MediaTrailer, BasePresenter, MediaTrai
         }
         updateUI()
     }
-
-    override fun onChanged(value: MediaTrailer?) = Unit
 
     override fun onDestroyView() {
         super.onDestroyView()

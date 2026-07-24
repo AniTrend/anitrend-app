@@ -2,6 +2,7 @@ package com.mxt.anitrend.viewmodel
 
 import com.mxt.anitrend.model.api.retro.anilist.UserModel
 import com.mxt.anitrend.model.entity.base.UserBase
+import com.mxt.anitrend.repository.UserRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -20,11 +21,13 @@ class ProfileViewModelTest {
 
     private val testDispatcher = UnconfinedTestDispatcher()
     private lateinit var service: UserModel
+    private lateinit var userRepository: UserRepository
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
         service = mock(UserModel::class.java)
+        userRepository = mock(UserRepository::class.java)
     }
 
     @After
@@ -61,7 +64,7 @@ class ProfileViewModelTest {
 
     @Test
     fun `initial state is Loading`() = runTest {
-        val vm = ProfileViewModel(userService = service, ioDispatcher = testDispatcher)
+        val vm = ProfileViewModel(userService = service, userRepository = userRepository, ioDispatcher = testDispatcher)
         assertTrue(vm.state.value is ProfileViewModel.UiState.Loading)
     }
 

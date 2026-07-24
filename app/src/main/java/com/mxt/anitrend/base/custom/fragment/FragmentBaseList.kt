@@ -6,7 +6,6 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.mxt.anitrend.R
@@ -24,9 +23,6 @@ import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.widget.ProgressLayout
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
-
 /**
  * Created by max on 2017/09/12.
  * Abstract fragment list base class
@@ -133,10 +129,6 @@ abstract class FragmentBaseList<M, C, P : CommonPresenter> :
             mColumnSize = state.getInt(KeyUtil.key_columns)
             mScrollListener.currentPage = state.getInt(KeyUtil.arg_page)
             mScrollListener.currentOffset = state.getInt(KeyUtil.arg_page_offset)
-            // Compatibility shim: sync restored pagination state to presenter
-            // so concrete subclasses reading presenter.currentPage still work
-            presenter.currentPage = mScrollListener.currentPage
-            presenter.currentOffset = mScrollListener.currentOffset
         }
     }
 
@@ -226,18 +218,14 @@ abstract class FragmentBaseList<M, C, P : CommonPresenter> :
     }
 
     /**
-     * Migration seam: sets page info on both the standalone scroll listener and the
-     * presenter. Prefer this over calling [CommonPresenter.setPageInfo] directly when
-     * setting page info outside [onPostProcessed] (e.g. in [onChanged] overrides that
-     * bypass the standard data pipeline). The central sync in [onPostProcessed] already
-     * covers the standard path.
+     * Sets page info on the standalone scroll listener. Subclasses should call this
+     * method in their response handlers before calling [onPostProcessed] to ensure
+     * the scroll listener knows when the last page has been reached.
      *
      * @param pageInfo The page info from the API response, or null to reset.
      */
     protected fun setPageInfo(pageInfo: PageInfo?) {
         mScrollListener.setPageInfo(pageInfo)
-        // Keep presenter in sync for backward compat with concrete subclasses
-        presenter.setPageInfo(pageInfo)
     }
 
     fun showLoading() {
@@ -265,33 +253,14 @@ abstract class FragmentBaseList<M, C, P : CommonPresenter> :
     override fun onRefresh() {
         isLimit = false
         mScrollListener.onRefreshPage()
-        // Compatibility shim: keep presenter pagination in sync for concrete subclasses
-        // that still read presenter.currentPage in makeRequest()
-        presenter.onRefreshPage()
         makeRequest()
     }
 
     override fun onLoad() = Unit
 
     override fun onLoadMore() {
-        // Compatibility shim: sync pagination state from standalone scroll listener
-        // to presenter so concrete subclasses reading presenter.currentPage in makeRequest()
-        // get the correct page number after a scroll-triggered page advance.
-        presenter.currentPage = mScrollListener.currentPage
-        presenter.currentOffset = mScrollListener.currentOffset
         swipeRefreshLayout.setLoading(true)
         makeRequest()
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onSearch(query: String) {
-        if (!isPager && lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
-            val filter = mAdapter.filter
-            if (filter != null && !CompatUtil.equals(this.query, query)) {
-                this.query = query
-                filter.filter(query)
-            }
-        }
     }
 
     protected fun setSwipeRefreshLayoutEnabled(state: Boolean) {
@@ -321,11 +290,8 @@ abstract class FragmentBaseList<M, C, P : CommonPresenter> :
     }
 
     protected fun onPostProcessed(content: List<M>?) {
-        // Centrally sync pageInfo from presenter to standalone scroll listener.
-        // Concrete subclasses call presenter.setPageInfo(...) in onChanged() before
-        // reaching this method. This ensures mScrollListener knows when the last
-        // page is reached for correct scroll-stop behaviour.
-        mScrollListener.setPageInfo(presenter.getPageInfo())
+        // mScrollListener pageInfo is already set via setPageInfo() called by
+        // concrete subclasses before reaching this method.
         if (!CompatUtil.isEmpty(content)) {
             val items = content ?: emptyList()
             if (isPager && !swipeRefreshLayout.isRefreshing()) {

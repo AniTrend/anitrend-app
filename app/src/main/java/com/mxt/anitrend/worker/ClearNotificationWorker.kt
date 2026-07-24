@@ -4,17 +4,16 @@ import android.content.Context
 import androidx.work.ListenableWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import com.mxt.anitrend.base.custom.consumer.BaseConsumer
 import com.mxt.anitrend.graphql.generated.CurrentUser
 import com.mxt.anitrend.graphql.generated.UserNotifications
-import com.mxt.anitrend.model.api.retro.WebFactory
 import com.mxt.anitrend.model.api.retro.anilist.UserModel
 import com.mxt.anitrend.model.entity.anilist.Notification
 import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.model.entity.base.NotificationHistory
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.presenter.base.BasePresenter
-import com.mxt.anitrend.util.KeyUtil
+import com.mxt.anitrend.repository.UserMutation
+import com.mxt.anitrend.repository.UserRepository
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import timber.log.Timber
@@ -25,10 +24,8 @@ class ClearNotificationWorker(
 ) : Worker(context, workerParams),
     KoinComponent {
     private val presenter by inject<BasePresenter>()
-
-    private val userEndpoint by lazy(LazyThreadSafetyMode.NONE) {
-        WebFactory.createService(UserModel::class.java, applicationContext)
-    }
+    private val userEndpoint: UserModel by inject()
+    private val userRepository: UserRepository by inject()
 
     /**
      * Override this method to do your actual background processing.  This method is called on a
@@ -52,10 +49,7 @@ class ClearNotificationWorker(
             try {
                 requestUser()?.apply {
                     if (unreadNotificationCount != 0) {
-                        presenter.notifyAllListeners(
-                            BaseConsumer(KeyUtil.USER_CURRENT_REQ, this),
-                            false,
-                        )
+                        userRepository.emitMutationEvent(UserMutation.CurrentUserUpdated(this))
                         return when (clearNotifications()) {
                             true -> Result.success()
                             else -> Result.failure()

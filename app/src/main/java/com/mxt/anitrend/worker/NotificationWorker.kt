@@ -4,16 +4,15 @@ import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
-import com.mxt.anitrend.base.custom.consumer.BaseConsumer
 import com.mxt.anitrend.graphql.generated.CurrentUser
 import com.mxt.anitrend.graphql.generated.UserNotifications
-import com.mxt.anitrend.model.api.retro.WebFactory
 import com.mxt.anitrend.model.api.retro.anilist.UserModel
 import com.mxt.anitrend.model.entity.anilist.Notification
 import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.presenter.base.BasePresenter
-import com.mxt.anitrend.util.KeyUtil
+import com.mxt.anitrend.repository.UserMutation
+import com.mxt.anitrend.repository.UserRepository
 import com.mxt.anitrend.util.NotificationUtil
 import timber.log.Timber
 
@@ -25,10 +24,9 @@ class NotificationWorker(
     workerParams: WorkerParameters,
     private val presenter: BasePresenter,
     private val notificationUtil: NotificationUtil,
+    private val userService: UserModel,
+    private val userRepository: UserRepository,
 ) : CoroutineWorker(context, workerParams) {
-    private val userEndpoint by lazy(LazyThreadSafetyMode.NONE) {
-        WebFactory.createService(UserModel::class.java, applicationContext)
-    }
 
     /**
      * Override this method to do your actual background processing.  This method is called on a
@@ -52,10 +50,7 @@ class NotificationWorker(
             try {
                 requestUser()?.apply {
                     if (unreadNotificationCount != 0) {
-                        presenter.notifyAllListeners(
-                            BaseConsumer(KeyUtil.USER_CURRENT_REQ, this),
-                            false,
-                        )
+                        userRepository.emitMutationEvent(UserMutation.CurrentUserUpdated(this))
                         requestNotifications(this)
                     }
                 }
@@ -70,7 +65,7 @@ class NotificationWorker(
 
     private fun requestUser(): User? {
         val response =
-            userEndpoint
+            userService
                 .getCurrentUser(
                     CurrentUser.request(asHtml = false),
                 ).execute()
@@ -85,7 +80,7 @@ class NotificationWorker(
 
     private fun requestNotifications(user: User) {
         val response =
-            userEndpoint
+            userService
                 .getUserNotifications(
                     UserNotifications.request(resetNotificationCount = false),
                 ).execute()

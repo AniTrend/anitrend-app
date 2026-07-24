@@ -6,6 +6,7 @@ import co.anitrend.retrofit.graphql.model.attribute.GraphError
 import com.mxt.anitrend.graphql.generated.MediaBase
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.model.api.retro.anilist.MediaModel
+import com.mxt.anitrend.repository.BaseRepository
 import com.mxt.anitrend.util.graphql.apiError
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -18,6 +19,7 @@ import timber.log.Timber
 
 class MediaViewModel(
     private val mediaService: MediaModel,
+    private val baseRepository: BaseRepository,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : ViewModel() {
 
@@ -91,5 +93,15 @@ class MediaViewModel(
                 )
             }
         }
+    }
+
+    suspend fun toggleFavourite(
+        animeId: Int?,
+        mangaId: Int?,
+        characterId: Int?,
+        staffId: Int?,
+        studioId: Int?,
+    ): Result<Unit> = withContext(ioDispatcher) {
+        baseRepository.toggleFavourite(animeId, mangaId, characterId, staffId, studioId)
     }
 }

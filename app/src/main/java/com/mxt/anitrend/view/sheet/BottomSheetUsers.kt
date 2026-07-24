@@ -15,6 +15,7 @@ import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
 import com.mxt.anitrend.base.interfaces.event.ISearchDelegate
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener
+import com.mxt.anitrend.coordinator.WidgetMutationCoordinator
 import com.mxt.anitrend.databinding.BottomSheetListBinding
 import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.extension.parcelableArrayList
@@ -22,6 +23,7 @@ import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.view.activity.detail.ProfileActivity
 import com.mxt.anitrend.widget.ProgressLayout
+import org.koin.android.ext.android.inject
 
 class BottomSheetUsers :
     BottomSheetBase<List<UserBase>>(),
@@ -37,6 +39,8 @@ class BottomSheetUsers :
     private var recyclerView: StatefulRecyclerView? = null
     private var mColumnSize: Int = 0
 
+    private val mutationCoordinator by inject<WidgetMutationCoordinator>()
+
     companion object {
         @JvmStatic
         fun newInstance(bundle: Bundle): BottomSheetUsers = BottomSheetUsers().apply {
@@ -48,7 +52,7 @@ class BottomSheetUsers :
         super.onCreate(savedInstanceState)
         val ctx = requireContext()
         mColumnSize = resources.getInteger(R.integer.single_list_x1)
-        mAdapter = UserAdapter(ctx)
+        mAdapter = UserAdapter(ctx, mutationCoordinator)
         val baseList = arguments?.parcelableArrayList<UserBase>(KeyUtil.arg_list_model)
         if (!baseList.isNullOrEmpty()) {
             mAdapter.onItemsInserted(baseList)

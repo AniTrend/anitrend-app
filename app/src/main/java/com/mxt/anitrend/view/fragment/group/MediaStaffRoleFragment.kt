@@ -4,6 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.group.GroupSeriesAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
@@ -17,9 +20,14 @@ import com.mxt.anitrend.presenter.fragment.MediaPresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
+import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.collection.GroupingUtil
 import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.view.activity.detail.MediaActivity
+import com.mxt.anitrend.viewmodel.MediaStaffRoleViewModel
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
  * Created by max on 2018/01/30.
@@ -28,6 +36,10 @@ import com.mxt.anitrend.view.activity.detail.MediaActivity
 class MediaStaffRoleFragment : FragmentBaseList<RecyclerItem, ConnectionContainer<EdgeContainer<MediaEdge>>, MediaPresenter>() {
     private var id: Long = 0
     private var onList: Boolean? = null
+
+    private val settings: Settings by inject()
+
+    private val mediaStaffRoleViewModel: MediaStaffRoleViewModel by viewModel()
 
     companion object {
         @JvmStatic
@@ -46,19 +58,36 @@ class MediaStaffRoleFragment : FragmentBaseList<RecyclerItem, ConnectionContaine
         mColumnSize = R.integer.grid_giphy_x3
         isPager = true
         mAdapter = GroupSeriesAdapter(ctx)
-        setPresenter(MediaPresenter(ctx))
-        setViewModel(true)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                mediaStaffRoleViewModel.state.collect { state ->
+                    when (state) {
+                        is MediaStaffRoleViewModel.UiState.Loading -> {
+                            // Loading is handled by swipeRefreshLayout in the base class
+                        }
+                        is MediaStaffRoleViewModel.UiState.Success -> {
+                            handleSuccess(state.content)
+                        }
+                        is MediaStaffRoleViewModel.UiState.Error -> {
+                            showError(state.message)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     override fun makeRequest() {
-        val ctx = context ?: return
-        viewModel?.params?.apply {
-            putLong(KeyUtil.arg_id, id)
-            putSerializable(KeyUtil.arg_onList, onList)
-            putInt(KeyUtil.arg_page, presenter.currentPage)
-            putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
-        }
-        viewModel?.requestData(KeyUtil.STAFF_ROLES_REQ, ctx)
+        mediaStaffRoleViewModel.load(
+            id = id,
+            onList = onList,
+            page = mScrollListener.currentPage,
+        )
     }
 
     override fun updateUI() {
@@ -66,12 +95,12 @@ class MediaStaffRoleFragment : FragmentBaseList<RecyclerItem, ConnectionContaine
         injectAdapter()
     }
 
-    override fun onChanged(content: ConnectionContainer<EdgeContainer<MediaEdge>>?) {
-        val edgeContainer = content?.connection
+    private fun handleSuccess(content: ConnectionContainer<EdgeContainer<MediaEdge>>) {
+        val edgeContainer = content.connection
         if (edgeContainer != null) {
             if (!edgeContainer.isEmpty) {
                 if (edgeContainer.hasPageInfo()) {
-                    presenter.setPageInfo(edgeContainer.pageInfo)
+                    setPageInfo(edgeContainer.pageInfo)
                 }
                 if (!edgeContainer.isEmpty) {
                     onPostProcessed(GroupingUtil.groupMediaByStaffRole(edgeContainer.edges, mAdapter.data))
@@ -86,6 +115,9 @@ class MediaStaffRoleFragment : FragmentBaseList<RecyclerItem, ConnectionContaine
             onPostProcessed(null)
         }
     }
+
+    /** No-op: StateFlow collector above handles the response. */
+    override fun onChanged(value: ConnectionContainer<EdgeContainer<MediaEdge>>?) = Unit
 
     override fun onItemClick(
         target: View,
@@ -111,7 +143,7 @@ class MediaStaffRoleFragment : FragmentBaseList<RecyclerItem, ConnectionContaine
     ) {
         when (target.id) {
             R.id.container -> {
-                if (presenter.settings.isAuthenticated) {
+                if (settings.isAuthenticated) {
                     val media = data.value as? MediaBase ?: return
                     val host = activity ?: return
                     mediaActionUtil =

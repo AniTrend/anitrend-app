@@ -4,17 +4,26 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.MediaAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
+import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
+import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.view.activity.detail.MediaActivity
+import com.mxt.anitrend.viewmodel.MediaSearchViewModel
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
  * Created by max on 2017/12/20.
@@ -25,6 +34,10 @@ class MediaSearchFragment : FragmentBaseList<MediaBase, PageContainer<MediaBase>
 
     @KeyUtil.MediaType
     private var mediaType: String? = null
+
+    private val settings: Settings by inject()
+
+    private val mediaSearchViewModel: MediaSearchViewModel by viewModel()
 
     companion object {
         @JvmStatic
@@ -52,8 +65,28 @@ class MediaSearchFragment : FragmentBaseList<MediaBase, PageContainer<MediaBase>
         isPager = true
         val ctx = requireContext()
         mAdapter = MediaAdapter(ctx, true)
-        setPresenter(BasePresenter(ctx))
-        setViewModel(true)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                mediaSearchViewModel.state.collect { state ->
+                    when (state) {
+                        is MediaSearchViewModel.UiState.Loading -> {
+                            // Loading is handled by swipeRefreshLayout in the base class
+                        }
+                        is MediaSearchViewModel.UiState.Success -> {
+                            handleSuccess(state.content)
+                        }
+                        is MediaSearchViewModel.UiState.Error -> {
+                            showError(state.message)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     override fun updateUI() {
@@ -61,32 +94,23 @@ class MediaSearchFragment : FragmentBaseList<MediaBase, PageContainer<MediaBase>
     }
 
     override fun makeRequest() {
-        val ctx = context ?: return
-        viewModel?.params?.apply {
-            putString(KeyUtil.arg_search, searchQuery)
-            putString(KeyUtil.arg_mediaType, mediaType)
-            putInt(KeyUtil.arg_page, presenter.currentPage)
-            putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
-            putString(KeyUtil.arg_sort, KeyUtil.SEARCH_MATCH)
-            if (presenter.settings.displayAdultContent) {
-                remove(KeyUtil.arg_isAdult)
-            } else {
-                putBoolean(KeyUtil.arg_isAdult, false)
-            }
-        }
-        viewModel?.requestData(KeyUtil.MEDIA_SEARCH_REQ, ctx)
+        val query = searchQuery ?: return
+        val type = mediaType?.let { runCatching { MediaType.valueOf(it) }.getOrNull() }
+        val isAdult: Boolean? = if (settings.displayAdultContent) null else false
+        mediaSearchViewModel.load(
+            search = query,
+            type = type,
+            page = mScrollListener.currentPage,
+            isAdult = isAdult,
+        )
     }
 
-    override fun onChanged(content: PageContainer<MediaBase>?) {
-        if (content != null) {
-            if (content.hasPageInfo()) {
-                presenter.setPageInfo(content.pageInfo)
-            }
-            if (!content.isEmpty) {
-                onPostProcessed(content.pageData)
-            } else {
-                onPostProcessed(emptyList())
-            }
+    private fun handleSuccess(content: PageContainer<MediaBase>) {
+        if (content.hasPageInfo()) {
+            setPageInfo(content.pageInfo)
+        }
+        if (!content.isEmpty) {
+            onPostProcessed(content.pageData)
         } else {
             onPostProcessed(emptyList())
         }
@@ -94,6 +118,9 @@ class MediaSearchFragment : FragmentBaseList<MediaBase, PageContainer<MediaBase>
             onPostProcessed(null)
         }
     }
+
+    /** No-op: StateFlow collector above handles the response. */
+    override fun onChanged(value: PageContainer<MediaBase>?) = Unit
 
     override fun onItemClick(
         target: View,
@@ -118,7 +145,7 @@ class MediaSearchFragment : FragmentBaseList<MediaBase, PageContainer<MediaBase>
     ) {
         when (target.id) {
             R.id.container -> {
-                if (presenter.settings.isAuthenticated) {
+                if (settings.isAuthenticated) {
                     val host = activity ?: return
                     mediaActionUtil =
                         MediaActionUtil

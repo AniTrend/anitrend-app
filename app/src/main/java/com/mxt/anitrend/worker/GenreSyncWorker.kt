@@ -6,25 +6,22 @@ import androidx.work.WorkerParameters
 import co.anitrend.retrofit.graphql.model.EmptyGraphQLVariables
 import co.anitrend.retrofit.graphql.model.GraphQLRequest
 import com.mxt.anitrend.graphql.generated.GenreCollection
-import com.mxt.anitrend.model.api.retro.WebFactory
 import com.mxt.anitrend.model.api.retro.anilist.BaseModel
 import com.mxt.anitrend.model.entity.anilist.Genre
-import com.mxt.anitrend.presenter.widget.WidgetPresenter
+import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.graphql.apiError
 import timber.log.Timber
 
 class GenreSyncWorker(
     context: Context,
     workerParams: WorkerParameters,
-    private val presenter: WidgetPresenter<List<String>>,
+    private val presenter: BasePresenter,
+    private val baseService: BaseModel,
 ) : CoroutineWorker(context, workerParams) {
-    private val endpoint by lazy(LazyThreadSafetyMode.NONE) {
-        WebFactory.createService(BaseModel::class.java, applicationContext)
-    }
 
     private fun requestGenres(): List<Genre> {
         val response =
-            endpoint
+            baseService
                 .getGenres(
                     GraphQLRequest<EmptyGraphQLVariables>(
                         query = GenreCollection.document,

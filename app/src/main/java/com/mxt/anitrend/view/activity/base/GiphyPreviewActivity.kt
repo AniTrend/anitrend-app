@@ -31,18 +31,15 @@ class GiphyPreviewActivity :
     data class Args(val modelUrl: String)
 
     companion object {
-        fun newIntent(context: Context, modelUrl: String): Intent =
-            Intent(context, GiphyPreviewActivity::class.java).apply {
-                putExtra(KeyUtil.arg_model, modelUrl)
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            }
+        fun newIntent(context: Context, modelUrl: String): Intent = Intent(context, GiphyPreviewActivity::class.java).apply {
+            putExtra(KeyUtil.arg_model, modelUrl)
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        }
 
         fun fromIntent(intent: Intent): Args? = parseArgs(intent.getStringExtra(KeyUtil.arg_model))
 
         @VisibleForTesting
-        internal fun parseArgs(raw: String?): Args? {
-            return if (!raw.isNullOrEmpty()) Args(raw) else null
-        }
+        internal fun parseArgs(raw: String?): Args? = if (!raw.isNullOrEmpty()) Args(raw) else null
     }
 
     private lateinit var binding: ActivityGiphyPreviewBinding

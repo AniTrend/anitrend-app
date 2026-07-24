@@ -1,11 +1,11 @@
 package com.mxt.anitrend.viewmodel
 
-import com.mxt.anitrend.model.entity.container.body.AniListContainer
-import com.mxt.anitrend.model.entity.container.body.DataContainer
-import com.mxt.anitrend.model.api.retro.anilist.StaffModel
 import com.mxt.anitrend.graphql.generated.StaffOverview
+import com.mxt.anitrend.model.api.retro.anilist.StaffModel
 import com.mxt.anitrend.model.entity.anilist.meta.TitleBase
 import com.mxt.anitrend.model.entity.base.StaffBase
+import com.mxt.anitrend.model.entity.container.body.AniListContainer
+import com.mxt.anitrend.model.entity.container.body.DataContainer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -17,8 +17,8 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
+import org.mockito.Mockito.`when`
 import retrofit2.Call
 import retrofit2.Response
 import java.io.IOException
@@ -51,7 +51,10 @@ class StaffOverviewViewModelTest {
     @Test
     fun `UiState Success holds staff instance`() {
         val title = TitleBase("Test", "Staff", null, null)
-        val staff = StaffBase().apply { id = 1L; name = title }
+        val staff = StaffBase().apply {
+            id = 1L
+            name = title
+        }
         val state = StaffOverviewViewModel.UiState.Success(staff)
         assertEquals(1L, state.staff.id)
         assertEquals("Test Staff", state.staff.name?.fullName)
@@ -78,7 +81,10 @@ class StaffOverviewViewModelTest {
         @Suppress("UNCHECKED_CAST")
         val call = mock(Call::class.java) as Call<AniListContainer<StaffBase>>
         val title = TitleBase("Test", "Staff", null, null)
-        val staff = StaffBase().apply { id = 1L; name = title }
+        val staff = StaffBase().apply {
+            id = 1L
+            name = title
+        }
         val container = AniListContainer(data = DataContainer(result = staff), errors = null)
         val request = StaffOverview.request(1, asHtml = false)
 

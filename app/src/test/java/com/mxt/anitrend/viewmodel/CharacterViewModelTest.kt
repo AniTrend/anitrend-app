@@ -2,6 +2,7 @@ package com.mxt.anitrend.viewmodel
 
 import com.mxt.anitrend.model.api.retro.anilist.CharacterModel
 import com.mxt.anitrend.model.entity.base.CharacterBase
+import com.mxt.anitrend.repository.BaseRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -20,11 +21,13 @@ class CharacterViewModelTest {
 
     private val testDispatcher = UnconfinedTestDispatcher()
     private lateinit var service: CharacterModel
+    private lateinit var baseRepository: BaseRepository
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
         service = mock(CharacterModel::class.java)
+        baseRepository = mock(BaseRepository::class.java)
     }
 
     @After
@@ -61,7 +64,7 @@ class CharacterViewModelTest {
 
     @Test
     fun `initial state is Loading`() = runTest {
-        val vm = CharacterViewModel(characterService = service, ioDispatcher = testDispatcher)
+        val vm = CharacterViewModel(characterService = service, baseRepository = baseRepository, ioDispatcher = testDispatcher)
         assertTrue(vm.state.value is CharacterViewModel.UiState.Loading)
     }
 

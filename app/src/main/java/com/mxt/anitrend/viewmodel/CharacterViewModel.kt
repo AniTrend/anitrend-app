@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import co.anitrend.retrofit.graphql.model.attribute.GraphError
 import com.mxt.anitrend.graphql.generated.CharacterBase
 import com.mxt.anitrend.model.api.retro.anilist.CharacterModel
+import com.mxt.anitrend.repository.BaseRepository
 import com.mxt.anitrend.util.graphql.apiError
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -17,6 +18,7 @@ import timber.log.Timber
 
 class CharacterViewModel(
     private val characterService: CharacterModel,
+    private val baseRepository: BaseRepository,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : ViewModel() {
 
@@ -69,5 +71,15 @@ class CharacterViewModel(
                 )
             }
         }
+    }
+
+    suspend fun toggleFavourite(
+        animeId: Int?,
+        mangaId: Int?,
+        characterId: Int?,
+        staffId: Int?,
+        studioId: Int?,
+    ): Result<Unit> = withContext(ioDispatcher) {
+        baseRepository.toggleFavourite(animeId, mangaId, characterId, staffId, studioId)
     }
 }

@@ -6,8 +6,6 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.Toast
 import com.mxt.anitrend.R
-import com.mxt.anitrend.base.custom.consumer.BaseConsumer
-import com.mxt.anitrend.base.interfaces.event.RetroCallback
 import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.databinding.WidgetDeleteBinding
 import com.mxt.anitrend.extension.getCompatDrawable
@@ -15,13 +13,9 @@ import com.mxt.anitrend.extension.getLayoutInflater
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.anilist.FeedReply
 import com.mxt.anitrend.model.entity.anilist.meta.DeleteState
-import com.mxt.anitrend.presenter.widget.WidgetPresenter
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
-import com.mxt.anitrend.util.graphql.apiError
-import retrofit2.Call
-import retrofit2.Response
 import timber.log.Timber
 
 class StatusDeleteWidget
@@ -32,15 +26,28 @@ constructor(
     defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr),
     CustomView,
-    RetroCallback<DeleteState>,
     View.OnClickListener {
+
+    interface Listener {
+        fun onDeleteFeed(
+            feedId: Long,
+            @KeyUtil.RequestType requestType: Int,
+            onResult: (Result<DeleteState>) -> Unit,
+        )
+    }
+
     private lateinit var binding: WidgetDeleteBinding
-    private var presenter: WidgetPresenter<DeleteState>? = null
 
     @KeyUtil.RequestType
     private var requestType: Int = 0
     private var feedList: FeedList? = null
     private var feedReply: FeedReply? = null
+    private var listener: Listener? = null
+    private var recycled = false
+
+    fun setListener(listener: Listener?) {
+        this.listener = listener
+    }
 
     init {
         onInit()
@@ -50,7 +57,6 @@ constructor(
      * Optionally included when constructing custom views
      */
     override fun onInit() {
-        presenter = WidgetPresenter(context)
         binding = WidgetDeleteBinding.inflate(context.getLayoutInflater(), this, true)
         binding.widgetDelete.setCompoundDrawablesWithIntrinsicBounds(
             context.getCompatDrawable(R.drawable.ic_delete_red_600_18dp),
@@ -61,21 +67,11 @@ constructor(
         binding.widgetFlipper.setOnClickListener(this)
     }
 
-    private fun setParameters(
-        feedId: Long,
-        @KeyUtil.RequestType requestType: Int,
-    ) {
-        this.requestType = requestType
-        presenter?.params?.apply {
-            putLong(KeyUtil.arg_id, feedId)
-        }
-    }
-
     fun setModel(
         feedList: FeedList,
         @KeyUtil.RequestType requestType: Int,
     ) {
-        setParameters(feedList.id, requestType)
+        this.requestType = requestType
         this.feedList = feedList
     }
 
@@ -83,7 +79,7 @@ constructor(
         feedReply: FeedReply,
         @KeyUtil.RequestType requestType: Int,
     ) {
-        setParameters(feedReply.id, requestType)
+        this.requestType = requestType
         this.feedReply = feedReply
     }
 
@@ -91,16 +87,16 @@ constructor(
      * Clean up any resources that won't be needed
      */
     override fun onViewRecycled() {
+        recycled = true
+        listener = null
         resetFlipperState()
-        presenter?.onDestroy()
-        presenter = null
         feedReply = null
         feedList = null
     }
 
     private fun resetFlipperState() {
-        if (binding.widgetFlipper.displayedChild == WidgetPresenter.LOADING_STATE) {
-            binding.widgetFlipper.displayedChild = WidgetPresenter.CONTENT_STATE
+        if (binding.widgetFlipper.displayedChild == LOADING_STATE) {
+            binding.widgetFlipper.displayedChild = CONTENT_STATE
         }
     }
 
@@ -111,9 +107,21 @@ constructor(
             R.string.dialog_message_delete_activity,
         ) { _, _ ->
             if (view.id == R.id.widget_flipper) {
-                if (binding.widgetFlipper.displayedChild == WidgetPresenter.CONTENT_STATE) {
+                if (binding.widgetFlipper.displayedChild == CONTENT_STATE) {
                     binding.widgetFlipper.showNext()
-                    presenter?.requestData(requestType, context, this)
+                    val feedId = feedList?.id ?: feedReply?.id ?: run {
+                        resetFlipperState()
+                        return@createMessage
+                    }
+                    listener?.onDeleteFeed(feedId, requestType) { result ->
+                        if (recycled || !isAttachedToWindow) return@onDeleteFeed
+                        result.onSuccess {
+                            resetFlipperState()
+                        }.onFailure {
+                            resetFlipperState()
+                            Timber.w(it)
+                        }
+                    }
                 } else {
                     NotifyUtil
                         .makeText(
@@ -126,53 +134,8 @@ constructor(
         }
     }
 
-    /**
-     * Invoked for a received HTTP response.
-     */
-    override fun onResponse(
-        call: Call<DeleteState>,
-        response: Response<DeleteState>,
-    ) {
-        try {
-            val deleteState = response.body()
-            if (response.isSuccessful && deleteState != null) {
-                resetFlipperState()
-                if (deleteState.isDeleted) {
-                    when (requestType) {
-                        KeyUtil.MUT_DELETE_FEED ->
-                            presenter?.notifyAllListeners(BaseConsumer(requestType, feedList), false)
-                        KeyUtil.MUT_DELETE_FEED_REPLY ->
-                            presenter?.notifyAllListeners(BaseConsumer(requestType, feedReply), false)
-                    }
-                } else {
-                    NotifyUtil
-                        .makeText(
-                            context,
-                            R.string.text_error_request,
-                            Toast.LENGTH_SHORT,
-                        ).show()
-                }
-            } else {
-                Timber.w(response.apiError())
-            }
-        } catch (e: Exception) {
-            Timber.e(e)
-        }
-    }
-
-    /**
-     * Invoked when a network exception occurred talking to the server or when an unexpected
-     * exception occurred creating the request or processing the response.
-     */
-    override fun onFailure(
-        call: Call<DeleteState>,
-        throwable: Throwable,
-    ) {
-        try {
-            Timber.w(throwable)
-            resetFlipperState()
-        } catch (e: Exception) {
-            Timber.e(e)
-        }
+    companion object {
+        const val CONTENT_STATE = 0
+        const val LOADING_STATE = 1
     }
 }

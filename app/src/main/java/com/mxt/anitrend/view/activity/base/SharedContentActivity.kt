@@ -2,14 +2,12 @@ package com.mxt.anitrend.view.activity.base
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ShareCompat
 import androidx.lifecycle.Lifecycle
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.spinner.IconArrayAdapter
-import com.mxt.anitrend.base.custom.consumer.BaseConsumer
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
 import com.mxt.anitrend.base.interfaces.event.BottomSheetListener
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener
@@ -17,23 +15,17 @@ import com.mxt.anitrend.databinding.ActivityShareContentBinding
 import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.extension.getCompatTintedDrawable
 import com.mxt.anitrend.extension.hideKeyboard
-import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.IntentBundleUtil
 import com.mxt.anitrend.util.KeyUtil
-import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.markdown.MarkDownUtil
 import com.mxt.anitrend.view.sheet.BottomSheetGiphy
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 
 class SharedContentActivity :
     AppCompatActivity(),
     BottomSheetListener,
-    BaseConsumer.onRequestModelChange<FeedList>,
     ItemClickListener<Any> {
 
     private lateinit var binding: ActivityShareContentBinding
@@ -146,15 +138,9 @@ class SharedContentActivity :
 
     override fun onResume() {
         super.onResume()
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this)
-        }
     }
 
     override fun onPause() {
-        if (EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().unregister(this)
-        }
         super.onPause()
     }
 
@@ -168,20 +154,6 @@ class SharedContentActivity :
         toolbarBinding.toolbarState.setImageDrawable(
             getCompatTintedDrawable(R.drawable.ic_keyboard_arrow_down_grey_600_24dp),
         )
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN_ORDERED)
-    override fun onModelChanged(consumer: BaseConsumer<FeedList>) {
-        if (consumer.requestMode == KeyUtil.MUT_SAVE_TEXT_FEED) {
-            NotifyUtil
-                .makeText(
-                    this,
-                    R.string.text_compose_success,
-                    R.drawable.ic_insert_emoticon_white_24dp,
-                    Toast.LENGTH_SHORT,
-                ).show()
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        }
     }
 
     fun getItemSelected() {
@@ -209,6 +181,7 @@ class SharedContentActivity :
                         .Builder()
                         .setTitle(R.string.title_bottom_sheet_giphy)
                         .build()
+                        .also { (it as? BottomSheetGiphy)?.onGiphySelected = { giphy -> binding.composerWidget.insertGiphy(giphy) } }
                 mBottomSheet?.let { sheet ->
                     sheet.show(supportFragmentManager, sheet.tag)
                 }

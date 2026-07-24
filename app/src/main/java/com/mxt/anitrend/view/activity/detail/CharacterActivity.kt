@@ -7,7 +7,6 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.tabs.TabLayoutMediator
@@ -16,8 +15,6 @@ import com.mxt.anitrend.adapter.pager.detail.CharacterPageAdapter
 import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget
 import com.mxt.anitrend.databinding.ActivityPagerGenericBinding
 import com.mxt.anitrend.extension.KoinExt
-import com.mxt.anitrend.model.api.retro.WebFactory
-import com.mxt.anitrend.model.api.retro.anilist.CharacterModel
 import com.mxt.anitrend.model.entity.base.CharacterBase
 import com.mxt.anitrend.util.IntentBundleUtil
 import com.mxt.anitrend.util.KeyUtil
@@ -25,6 +22,7 @@ import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.viewmodel.CharacterViewModel
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.Locale
 
 /**
@@ -38,7 +36,7 @@ class CharacterActivity : AppCompatActivity() {
     private var model: CharacterBase? = null
     private var characterId: Long = 0
     private var favouriteWidget: FavouriteToolbarWidget? = null
-    private lateinit var characterViewModel: CharacterViewModel
+    private val characterViewModel: CharacterViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Preserve configured theme (was previously handled by ActivityBase.configureActivity).
@@ -64,20 +62,6 @@ class CharacterActivity : AppCompatActivity() {
         if (intent.hasExtra(KeyUtil.arg_id)) {
             characterId = intent.getLongExtra(KeyUtil.arg_id, -1)
         }
-
-        characterViewModel = ViewModelProvider(
-            this,
-            object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T =
-                    CharacterViewModel(
-                        characterService = WebFactory.createService(
-                            CharacterModel::class.java,
-                            applicationContext,
-                        ),
-                    ) as T
-            },
-        )[CharacterViewModel::class.java]
 
         observeViewModel()
         setUpPager()
@@ -129,6 +113,20 @@ class CharacterActivity : AppCompatActivity() {
             if (favouriteWidget == null) {
                 favouriteMenuItem.isVisible = false
             }
+            favouriteWidget?.setListener(object : FavouriteToolbarWidget.Listener {
+                override fun onToggleFavourite(
+                    animeId: Int?,
+                    mangaId: Int?,
+                    characterId: Int?,
+                    staffId: Int?,
+                    studioId: Int?,
+                    onResult: (Result<Unit>) -> Unit,
+                ) {
+                    lifecycleScope.launch {
+                        onResult(characterViewModel.toggleFavourite(animeId, mangaId, characterId, staffId, studioId))
+                    }
+                }
+            })
         }
         return true
     }
@@ -184,5 +182,10 @@ class CharacterActivity : AppCompatActivity() {
         model?.let { current ->
             favouriteWidget?.setModel(current)
         }
+    }
+
+    override fun onDestroy() {
+        favouriteWidget?.setListener(null)
+        super.onDestroy()
     }
 }

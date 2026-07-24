@@ -13,7 +13,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,7 +21,6 @@ import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.detail.LogEntryAdapter
 import com.mxt.anitrend.databinding.ActivityLoggingBinding
 import com.mxt.anitrend.extension.KoinExt
-import com.mxt.anitrend.extension.logFile
 import com.mxt.anitrend.model.entity.log.LogFilter
 import com.mxt.anitrend.model.entity.log.LogUiState
 import com.mxt.anitrend.util.KeyUtil
@@ -30,6 +28,7 @@ import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.viewmodel.LoggingViewModel
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 class LoggingActivity : AppCompatActivity() {
@@ -43,7 +42,7 @@ class LoggingActivity : AppCompatActivity() {
     private val logAdapter by lazy { LogEntryAdapter(this) }
 
     @VisibleForTesting
-    internal lateinit var loggingViewModel: LoggingViewModel
+    internal val loggingViewModel: LoggingViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Replicates ActivityBase.configureActivity() theme behaviour via
@@ -62,17 +61,6 @@ class LoggingActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.customToolbar.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        loggingViewModel = ViewModelProvider(
-            this,
-            object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T = LoggingViewModel(
-                    logFileProvider = { applicationContext.logFile() },
-                    metadataProvider = { buildSupportMetadata() },
-                ) as T
-            },
-        )[LoggingViewModel::class.java]
 
         configureRecycler()
         configureFilterChips()
@@ -237,27 +225,25 @@ class LoggingActivity : AppCompatActivity() {
         }
     }
 
-    private fun requestWritePermission(): Boolean {
-        return if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            true
-        } else if (!ActivityCompat.shouldShowRequestPermissionRationale(
-                this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            )
-        ) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                REQUEST_PERMISSION,
-            )
-            false
-        } else {
-            false
-        }
+    private fun requestWritePermission(): Boolean = if (ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        ) == PackageManager.PERMISSION_GRANTED
+    ) {
+        true
+    } else if (!ActivityCompat.shouldShowRequestPermissionRationale(
+            this,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        )
+    ) {
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+            REQUEST_PERMISSION,
+        )
+        false
+    } else {
+        false
     }
 
     companion object {

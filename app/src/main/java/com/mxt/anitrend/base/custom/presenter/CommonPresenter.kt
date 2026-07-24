@@ -9,7 +9,6 @@ import com.mxt.anitrend.base.interfaces.event.LifecycleListener
 import com.mxt.anitrend.data.DatabaseHelper
 import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.util.Settings
-import org.greenrobot.eventbus.EventBus
 
 /**
  * Created by max on 2017/06/09.
@@ -71,24 +70,6 @@ abstract class CommonPresenter(
      */
     override fun onDestroy() {
         bundle = null
-    }
-
-    /**
-     * Trigger all subscribers that may be listening. This method makes use of sticky broadcasts
-     * in case all subscribed listeners were not loaded in time for the broadcast
-     *
-     * @param param the object of type T to send
-     * @param sticky set true to make sticky post
-     */
-    fun <T> notifyAllListeners(
-        param: T,
-        sticky: Boolean,
-    ) {
-        if (sticky) {
-            EventBus.getDefault().postSticky(param)
-        } else {
-            EventBus.getDefault().post(param)
-        }
     }
 
     interface AbstractPresenter<S : CommonPresenter> {

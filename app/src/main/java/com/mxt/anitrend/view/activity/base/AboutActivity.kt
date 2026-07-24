@@ -33,7 +33,7 @@ class AboutActivity : AppCompatActivity() {
         val fragment = AboutFragment.newInstance()
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.content_frame, fragment, fragment.TAG)
+            .replace(R.id.content_frame, fragment, AboutFragment::class.java.simpleName)
             .commit()
     }
 }

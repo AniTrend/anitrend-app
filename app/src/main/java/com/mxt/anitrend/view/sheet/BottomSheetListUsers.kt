@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -21,10 +20,9 @@ import com.mxt.anitrend.base.custom.view.search.MaterialSearchView
 import com.mxt.anitrend.base.interfaces.event.ISearchDelegate
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener
 import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener
+import com.mxt.anitrend.coordinator.WidgetMutationCoordinator
 import com.mxt.anitrend.databinding.BottomSheetListBinding
 import com.mxt.anitrend.extension.getCompatDrawable
-import com.mxt.anitrend.model.api.retro.WebFactory
-import com.mxt.anitrend.model.api.retro.anilist.UserModel
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.presenter.base.BasePresenter
@@ -34,6 +32,8 @@ import com.mxt.anitrend.view.activity.detail.ProfileActivity
 import com.mxt.anitrend.viewmodel.UserListViewModel
 import com.mxt.anitrend.widget.ProgressLayout
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 class BottomSheetListUsers :
@@ -60,7 +60,9 @@ class BottomSheetListUsers :
 
     private var searchView: MaterialSearchView? = null
 
-    private lateinit var userListViewModel: UserListViewModel
+    private val mutationCoordinator by inject<WidgetMutationCoordinator>()
+
+    private val userListViewModel: UserListViewModel by viewModel()
 
     private val stateLayoutOnClick =
         View.OnClickListener {
@@ -83,25 +85,10 @@ class BottomSheetListUsers :
             userId = args.getLong(KeyUtil.arg_userId)
             requestType = args.getInt(KeyUtil.arg_request_type)
         }
-        mAdapter = UserAdapter(ctx)
+        mAdapter = UserAdapter(ctx, mutationCoordinator)
         isPager = true
         presenter = BasePresenter(ctx)
         mColumnSize = resources.getInteger(R.integer.single_list_x1)
-
-        // Direct ViewModel replaces the legacy acquireTypedViewModelBase/setViewModel path.
-        userListViewModel = ViewModelProvider(
-            this,
-            object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T =
-                    UserListViewModel(
-                        userService = WebFactory.createService(
-                            UserModel::class.java,
-                            ctx,
-                        ),
-                    ) as T
-            },
-        )[UserListViewModel::class.java]
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

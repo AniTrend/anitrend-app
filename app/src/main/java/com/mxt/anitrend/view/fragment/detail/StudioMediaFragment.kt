@@ -8,14 +8,11 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.MediaAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
-import com.mxt.anitrend.model.api.retro.WebFactory
-import com.mxt.anitrend.model.api.retro.anilist.StudioModel
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
@@ -30,11 +27,15 @@ import com.mxt.anitrend.util.selectedIndex
 import com.mxt.anitrend.view.activity.detail.MediaActivity
 import com.mxt.anitrend.viewmodel.StudioMediaViewModel
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class StudioMediaFragment : FragmentBaseList<MediaBase, ConnectionContainer<PageContainer<MediaBase>>, MediaPresenter>() {
     private var id: Long = 0
 
-    private lateinit var mediaViewModel: StudioMediaViewModel
+    private val settings: Settings by inject()
+
+    private val mediaViewModel: StudioMediaViewModel by viewModel()
 
     companion object {
         @JvmStatic
@@ -53,22 +54,6 @@ class StudioMediaFragment : FragmentBaseList<MediaBase, ConnectionContainer<Page
         isPager = true
         isFilterableEnabled = true
         mAdapter = MediaAdapter(ctx, true)
-        setPresenter(MediaPresenter(ctx))
-
-        // Direct ViewModel replaces the legacy setViewModel(true) path.
-        mediaViewModel = ViewModelProvider(
-            this,
-            object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T =
-                    StudioMediaViewModel(
-                        studioService = WebFactory.createService(
-                            StudioModel::class.java,
-                            ctx.applicationContext,
-                        ),
-                    ) as T
-            },
-        )[StudioMediaViewModel::class.java]
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -130,10 +115,10 @@ class StudioMediaFragment : FragmentBaseList<MediaBase, ConnectionContainer<Page
                 DialogUtil.createSelection(
                     ctx,
                     R.string.app_filter_sort,
-                    CompatUtil.getIndexOf(mediaSortTypes, presenter.settings.mediaSort),
+                    CompatUtil.getIndexOf(mediaSortTypes, settings.mediaSort),
                     CompatUtil.capitalizeWords(mediaSortTypes),
                 ) { dialog, _ ->
-                    presenter.settings.mediaSort =
+                    settings.mediaSort =
                         mediaSortTypes.getOrNull(dialog.selectedIndex)
                 }
                 return true
@@ -143,11 +128,11 @@ class StudioMediaFragment : FragmentBaseList<MediaBase, ConnectionContainer<Page
                 DialogUtil.createSelection(
                     ctx,
                     R.string.app_filter_order,
-                    CompatUtil.getIndexOf(sortOrders, presenter.settings.sortOrder),
+                    CompatUtil.getIndexOf(sortOrders, settings.sortOrder),
                     CompatUtil.getStringList(ctx, R.array.order_by_types),
                 ) { dialog, _ ->
-                    presenter.settings.saveSortOrder(
-                        sortOrders.getOrNull(dialog.selectedIndex) ?: presenter.settings.sortOrder,
+                    settings.saveSortOrder(
+                        sortOrders.getOrNull(dialog.selectedIndex) ?: settings.sortOrder,
                     )
                 }
                 return true
@@ -162,10 +147,10 @@ class StudioMediaFragment : FragmentBaseList<MediaBase, ConnectionContainer<Page
     }
 
     override fun makeRequest() {
-        val pref: Settings = presenter.settings
+        val pref = settings
         mediaViewModel.load(
             studioId = id,
-            page = presenter.currentPage,
+            page = mScrollListener.currentPage,
             perPage = KeyUtil.PAGING_LIMIT,
             sort = pref.mediaSort + pref.sortOrder,
         )
@@ -200,7 +185,7 @@ class StudioMediaFragment : FragmentBaseList<MediaBase, ConnectionContainer<Page
     ) {
         when (target.id) {
             R.id.container -> {
-                if (presenter.settings.isAuthenticated) {
+                if (settings.isAuthenticated) {
                     val host = activity ?: return
                     mediaActionUtil =
                         MediaActionUtil

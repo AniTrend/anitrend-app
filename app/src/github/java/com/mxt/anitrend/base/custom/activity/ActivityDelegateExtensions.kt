@@ -8,9 +8,9 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.interfaces.dao.BoxQuery
+import com.mxt.anitrend.base.interfaces.event.BottomSheetChoice
 import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.extension.koinOf
-import com.mxt.anitrend.base.interfaces.event.BottomSheetChoice
 import com.mxt.anitrend.service.DownloaderService
 import com.mxt.anitrend.util.JobSchedulerUtil
 import com.mxt.anitrend.util.KeyUtil

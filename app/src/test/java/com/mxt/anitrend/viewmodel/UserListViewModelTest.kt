@@ -19,8 +19,8 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
+import org.mockito.Mockito.`when`
 import retrofit2.Call
 import retrofit2.Response
 import java.io.IOException
@@ -53,7 +53,12 @@ class UserListViewModelTest {
     @Test
     fun `UiState Success wraps a container`() {
         val container = PageContainer<UserBase>().apply {
-            pageData = listOf(UserBase().apply { id = 1L; name = "Test User" })
+            pageData = listOf(
+                UserBase().apply {
+                    id = 1L
+                    name = "Test User"
+                },
+            )
         }
         val state = UserListViewModel.UiState.Success(container)
         assertEquals(1L, state.container.pageData.first().id)
@@ -80,7 +85,12 @@ class UserListViewModelTest {
         @Suppress("UNCHECKED_CAST")
         val call = mock(Call::class.java) as Call<AniListContainer<PageContainer<UserBase>>>
         val page = PageContainer<UserBase>().apply {
-            pageData = listOf(UserBase().apply { id = 1L; name = "Follower" })
+            pageData = listOf(
+                UserBase().apply {
+                    id = 1L
+                    name = "Follower"
+                },
+            )
         }
         val container = AniListContainer(data = DataContainer(result = page), errors = null)
         val request = UserFollowers.request(id = 9, page = 1, perPage = 50)
@@ -104,7 +114,12 @@ class UserListViewModelTest {
         @Suppress("UNCHECKED_CAST")
         val call = mock(Call::class.java) as Call<AniListContainer<PageContainer<UserBase>>>
         val page = PageContainer<UserBase>().apply {
-            pageData = listOf(UserBase().apply { id = 2L; name = "Following" })
+            pageData = listOf(
+                UserBase().apply {
+                    id = 2L
+                    name = "Following"
+                },
+            )
         }
         val container = AniListContainer(data = DataContainer(result = page), errors = null)
         val request = UserFollowing.request(id = 9, page = 2, perPage = 50)

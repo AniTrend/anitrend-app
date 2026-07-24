@@ -8,21 +8,15 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.pager.detail.ProfilePageAdapter
-import com.mxt.anitrend.base.custom.consumer.BaseConsumer
 import com.mxt.anitrend.base.custom.view.image.WideImageView
 import com.mxt.anitrend.base.interfaces.dao.BoxQuery
 import com.mxt.anitrend.databinding.ActivityProfileBinding
-import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.extension.getCompatDrawable
-import com.mxt.anitrend.extension.koinOf
-import com.mxt.anitrend.model.api.retro.WebFactory
-import com.mxt.anitrend.model.api.retro.anilist.UserModel
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.IntentBundleUtil
@@ -33,14 +27,17 @@ import com.mxt.anitrend.util.TutorialUtil
 import com.mxt.anitrend.view.sheet.BottomSheetComposer
 import com.mxt.anitrend.viewmodel.ProfileViewModel
 import kotlinx.coroutines.launch
-import org.greenrobot.eventbus.EventBus
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.Locale
 
 /**
  * Created by max on 2017/11/14.
  * Profile activity
  */
-class ProfileActivity : AppCompatActivity(), View.OnClickListener {
+class ProfileActivity :
+    AppCompatActivity(),
+    View.OnClickListener {
 
     private lateinit var binding: ActivityProfileBinding
 
@@ -49,11 +46,13 @@ class ProfileActivity : AppCompatActivity(), View.OnClickListener {
     private var userName: String? = null
     private var mBottomSheet: com.mxt.anitrend.base.custom.sheet.BottomSheetBase<*>? = null
 
-    private lateinit var profileViewModel: ProfileViewModel
+    private val profileViewModel: ProfileViewModel by viewModel()
+
+    private val settings: Settings by inject()
+    private val boxQuery: BoxQuery by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Preserve configured theme (was previously handled by ActivityBase.configureActivity).
-        val settings = KoinExt.get(Settings::class.java)
         val themeRes = when (settings.theme) {
             KeyUtil.THEME_DARK -> R.style.AppThemeDark
             KeyUtil.THEME_BLACK -> R.style.AppThemeBlack
@@ -91,20 +90,6 @@ class ProfileActivity : AppCompatActivity(), View.OnClickListener {
                 }
             startActivity(intent)
         }
-
-        profileViewModel = ViewModelProvider(
-            this,
-            object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T =
-                    ProfileViewModel(
-                        userService = WebFactory.createService(
-                            UserModel::class.java,
-                            applicationContext,
-                        ),
-                    ) as T
-            },
-        )[ProfileViewModel::class.java]
 
         observeViewModel()
         setUpPager()
@@ -240,9 +225,17 @@ class ProfileActivity : AppCompatActivity(), View.OnClickListener {
     private fun updateUI() {
         val current = model ?: return
         binding.profileStatsWidget.setParams(intent.extras ?: Bundle())
+        lifecycleScope.launch {
+            profileViewModel.loadStats(userId, userName)
+                .onSuccess { stats ->
+                    binding.profileStatsWidget.setStats(stats)
+                }
+                .onFailure {
+                    // stats loading failed, widget shows placeholders
+                }
+        }
         WideImageView.setImage(binding.profileBanner, current.bannerImage)
 
-        val settings = KoinExt.get(Settings::class.java)
         if (isCurrentUser(current.id)) {
             TutorialUtil()
                 .setContext(this)
@@ -266,10 +259,6 @@ class ProfileActivity : AppCompatActivity(), View.OnClickListener {
                     R.id.action_message,
                 )
         }
-
-        // Temporary EventBus bridge for legacy hosted fragments (e.g. UserFeedFragment)
-        // that need the resolved user when launched by userName without a numeric id.
-        EventBus.getDefault().post(BaseConsumer(KeyUtil.USER_BASE_REQ, current))
     }
 
     override fun onClick(view: View) {
@@ -287,9 +276,8 @@ class ProfileActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun isCurrentUser(userId: Long, userName: String? = null): Boolean {
-        val settings = KoinExt.get(Settings::class.java)
         if (!settings.isAuthenticated) return false
-        val currentUser = koinOf<BoxQuery>().currentUser ?: return false
+        val currentUser = boxQuery.currentUser ?: return false
         return if (userName != null) {
             currentUser.name == userName
         } else {

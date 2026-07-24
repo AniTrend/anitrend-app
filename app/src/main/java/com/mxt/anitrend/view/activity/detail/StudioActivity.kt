@@ -10,15 +10,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget
 import com.mxt.anitrend.databinding.ActivityFrameGenericBinding
 import com.mxt.anitrend.extension.KoinExt
-import com.mxt.anitrend.model.api.retro.WebFactory
-import com.mxt.anitrend.model.api.retro.anilist.StudioModel
 import com.mxt.anitrend.model.entity.base.StudioBase
 import com.mxt.anitrend.util.IntentBundleUtil
 import com.mxt.anitrend.util.KeyUtil
@@ -27,6 +24,7 @@ import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.view.fragment.detail.StudioMediaFragment
 import com.mxt.anitrend.viewmodel.StudioViewModel
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.Locale
 
 class StudioActivity : AppCompatActivity() {
@@ -34,10 +32,9 @@ class StudioActivity : AppCompatActivity() {
     data class Args(val id: Long)
 
     companion object {
-        fun newIntent(context: Context, id: Long): Intent =
-            Intent(context, StudioActivity::class.java).apply {
-                putExtra(KeyUtil.arg_id, id)
-            }
+        fun newIntent(context: Context, id: Long): Intent = Intent(context, StudioActivity::class.java).apply {
+            putExtra(KeyUtil.arg_id, id)
+        }
 
         fun fromIntent(intent: Intent): Args? {
             if (!intent.hasExtra(KeyUtil.arg_id)) return null
@@ -51,7 +48,7 @@ class StudioActivity : AppCompatActivity() {
     private var model: StudioBase? = null
     private var studioId: Long = 0
     private var favouriteWidget: FavouriteToolbarWidget? = null
-    private lateinit var studioViewModel: StudioViewModel
+    private val studioViewModel: StudioViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Preserve configured theme (was previously handled by ActivityBase.configureActivity).
@@ -86,20 +83,6 @@ class StudioActivity : AppCompatActivity() {
             return
         }
         studioId = args.id
-
-        studioViewModel = ViewModelProvider(
-            this,
-            object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T =
-                    StudioViewModel(
-                        studioService = WebFactory.createService(
-                            StudioModel::class.java,
-                            applicationContext,
-                        ),
-                    ) as T
-            },
-        )[StudioViewModel::class.java]
 
         observeViewModel()
         addStudioMediaFragment(intent.extras ?: Bundle.EMPTY)
@@ -147,6 +130,20 @@ class StudioActivity : AppCompatActivity() {
             if (favouriteWidget == null) {
                 favouriteMenuItem.isVisible = false
             }
+            favouriteWidget?.setListener(object : FavouriteToolbarWidget.Listener {
+                override fun onToggleFavourite(
+                    animeId: Int?,
+                    mangaId: Int?,
+                    characterId: Int?,
+                    staffId: Int?,
+                    studioId: Int?,
+                    onResult: (Result<Unit>) -> Unit,
+                ) {
+                    lifecycleScope.launch {
+                        onResult(studioViewModel.toggleFavourite(animeId, mangaId, characterId, staffId, studioId))
+                    }
+                }
+            })
         }
         return true
     }
@@ -203,5 +200,10 @@ class StudioActivity : AppCompatActivity() {
             favouriteWidget?.setModel(current)
             supportActionBar?.title = current.name
         }
+    }
+
+    override fun onDestroy() {
+        favouriteWidget?.setListener(null)
+        super.onDestroy()
     }
 }
