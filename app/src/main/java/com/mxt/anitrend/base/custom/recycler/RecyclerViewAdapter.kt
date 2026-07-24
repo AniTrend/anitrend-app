@@ -11,10 +11,11 @@ import com.mxt.anitrend.base.custom.animation.SlideInAnimation
 import com.mxt.anitrend.base.interfaces.base.BaseAnimation
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener
 import com.mxt.anitrend.base.interfaces.event.RecyclerChangeListener
-import com.mxt.anitrend.presenter.base.BasePresenter
+import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.util.ActionModeUtil
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
+import com.mxt.anitrend.util.Settings
 import java.util.ArrayList
 
 /**
@@ -30,7 +31,7 @@ abstract class RecyclerViewAdapter<T>(
     var data: MutableList<T> = ArrayList()
         protected set
     protected var clone: MutableList<T>? = null
-    protected val presenter: BasePresenter = BasePresenter(this.context)
+    protected val settings: Settings by lazy { koinOf() }
     var clickListener: ItemClickListener<T>? = null
         @JvmName("setClickListenerInternal")
         set

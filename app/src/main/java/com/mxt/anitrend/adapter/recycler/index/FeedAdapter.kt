@@ -17,6 +17,7 @@ import com.mxt.anitrend.binding.richMarkDown
 import com.mxt.anitrend.binding.setImage
 import com.mxt.anitrend.coordinator.WidgetMutationCoordinator
 import com.mxt.anitrend.databinding.AdapterFeedMessageBinding
+import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.databinding.AdapterFeedProgressBinding
 import com.mxt.anitrend.databinding.AdapterFeedStatusBinding
 import com.mxt.anitrend.databinding.CustomRecyclerUnresolvedBinding
@@ -25,6 +26,7 @@ import com.mxt.anitrend.graphql.generated.LikeableType
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.anilist.meta.DeleteState
 import com.mxt.anitrend.model.entity.base.UserBase
+import com.mxt.anitrend.repository.UserRepository
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.date.DateUtil
 
@@ -44,6 +46,8 @@ class FeedAdapter(
 
     @KeyUtil.MessageType
     private var messageType: Int = 0
+
+    private val userRepository: UserRepository by lazy { koinOf() }
 
     private val favouriteListener = object : FavouriteWidget.Listener {
         override fun onToggleLike(
@@ -143,7 +147,8 @@ class FeedAdapter(
             binding.widgetFavourite.setCurrentUser(coordinator.databaseHelper.currentUser)
             binding.widgetFavourite.setListener(favouriteListener)
             binding.widgetComment.setReplyCount(model.replyCount)
-            if (presenter.isCurrentUser(model.user)) {
+            val currentUserId = userRepository.cachedCurrentUser?.id
+            if (currentUserId != null && model.user?.id == currentUserId) {
                 binding.widgetDelete.setModel(model, KeyUtil.MUT_DELETE_FEED)
                 binding.widgetDelete.visibility = View.VISIBLE
             } else {
@@ -186,7 +191,7 @@ class FeedAdapter(
             binding.userAvatar.setImage(model.user?.avatar)
             binding.userName.text = model.user?.name
             binding.feedTime.text = DateUtil.getPrettyDateUnix(model.createdAt)
-            if (!presenter.settings.experimentalMarkdown) {
+            if (!settings.experimentalMarkdown) {
                 binding.widgetStatus.visibility = View.VISIBLE
                 binding.widgetStatus.setModel(model)
             } else {
@@ -200,7 +205,8 @@ class FeedAdapter(
             binding.widgetFavourite.setListener(favouriteListener)
             binding.widgetComment.setReplyCount(model.replyCount)
 
-            if (presenter.isCurrentUser(model.user)) {
+            val currentUserId = userRepository.cachedCurrentUser?.id
+            if (currentUserId != null && model.user?.id == currentUserId) {
                 binding.widgetDelete.setModel(model, KeyUtil.MUT_DELETE_FEED)
 
                 binding.widgetEdit.visibility = View.VISIBLE
@@ -252,7 +258,7 @@ class FeedAdapter(
             binding.recipientUserName.text = displayName
             binding.messengerUserName.text = displayName
             binding.feedTime.text = DateUtil.getPrettyDateUnix(model.createdAt)
-            if (!presenter.settings.experimentalMarkdown) {
+            if (!settings.experimentalMarkdown) {
                 binding.widgetStatus.visibility = View.VISIBLE
                 binding.widgetStatus.setModel(model)
             } else {
@@ -266,7 +272,8 @@ class FeedAdapter(
             binding.widgetFavourite.setListener(favouriteListener)
             binding.widgetComment.setReplyCount(model.replyCount)
 
-            if (presenter.isCurrentUser(model.messenger)) {
+            val currentUserId = userRepository.cachedCurrentUser?.id
+            if (currentUserId != null && model.messenger?.id == currentUserId) {
                 binding.widgetDelete.setModel(model, KeyUtil.MUT_DELETE_FEED)
 
                 binding.widgetEdit.visibility = View.VISIBLE
@@ -315,7 +322,8 @@ class FeedAdapter(
             binding.widgetFavourite.setCurrentUser(coordinator.databaseHelper.currentUser)
             binding.widgetFavourite.setListener(favouriteListener)
             binding.widgetComment.setReplyCount(model.replyCount)
-            if (presenter.isCurrentUser(model.user)) {
+            val currentUserId = userRepository.cachedCurrentUser?.id
+            if (currentUserId != null && model.user?.id == currentUserId) {
                 binding.widgetDelete.setModel(model, KeyUtil.MUT_DELETE_FEED)
                 binding.widgetDelete.visibility = View.VISIBLE
             } else {

@@ -1,6 +1,5 @@
 package com.mxt.anitrend.repository
 
-import co.anitrend.retrofit.graphql.model.attribute.GraphError
 import com.mxt.anitrend.graphql.generated.MediaSort
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.graphql.generated.StaffBase
@@ -16,9 +15,6 @@ import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.util.graphql.apiError
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.withContext
 import com.mxt.anitrend.model.entity.base.MediaBase as MediaEntity
 import com.mxt.anitrend.model.entity.base.StaffBase as StaffEntity
@@ -30,18 +26,8 @@ sealed class StaffMutation {
 
 class StaffRepository(
     private val staffService: StaffModel,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
-) {
-    private val _mutationEvents = MutableSharedFlow<StaffMutation>(replay = 1, extraBufferCapacity = 64)
-    val mutationEvents: SharedFlow<StaffMutation> = _mutationEvents.asSharedFlow()
-
-    private fun <T> handleGraphResponse(body: com.mxt.anitrend.model.entity.container.body.AniListContainer<T>): T {
-        val graphErrors: List<GraphError>? = body.errors
-        if (!graphErrors.isNullOrEmpty()) {
-            throw RuntimeException(graphErrors.first().message ?: "GraphQL error")
-        }
-        return body.data?.result ?: throw IllegalStateException("Empty response body")
-    }
+    ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+) : AbstractRepository<StaffMutation>(ioDispatcher) {
 
     suspend fun getStaffBase(id: Long): Result<StaffEntity> = withContext(ioDispatcher) {
         runCatching {

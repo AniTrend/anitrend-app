@@ -29,7 +29,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class SuggestionListFragment : MediaBrowseFragment() {
 
     private val settings: Settings by inject()
-    private val databaseHelper by lazy { DatabaseHelper() }
 
     private val suggestionListViewModel: SuggestionListViewModel by viewModel()
 
@@ -147,7 +146,7 @@ class SuggestionListFragment : MediaBrowseFragment() {
     // ---- Helpers copied from BasePresenter ----
 
     private fun getTopFavouriteGenres(limit: Int): List<String>? {
-        val userStats = databaseHelper.currentUser?.statistics ?: return null
+        val userStats = suggestionListViewModel.currentUser?.statistics ?: return null
         val genres = userStats.anime.genres ?: return null
         if (genres.isEmpty()) return null
         return genres
@@ -157,7 +156,7 @@ class SuggestionListFragment : MediaBrowseFragment() {
     }
 
     private fun getTopFavouriteTags(limit: Int): List<String>? {
-        val userStats = databaseHelper.currentUser?.statistics ?: return null
+        val userStats = suggestionListViewModel.currentUser?.statistics ?: return null
         val tags = userStats.anime.tags ?: return null
         if (tags.isEmpty()) return null
         return tags.sortedByDescending { it.count }

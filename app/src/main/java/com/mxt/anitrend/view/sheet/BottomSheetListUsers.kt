@@ -87,7 +87,6 @@ class BottomSheetListUsers :
         }
         mAdapter = UserAdapter(ctx, mutationCoordinator)
         isPager = true
-        presenter = BasePresenter(ctx)
         mColumnSize = resources.getInteger(R.integer.single_list_x1)
     }
 

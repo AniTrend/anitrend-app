@@ -91,7 +91,7 @@ internal object MediaDialogUtil {
         val progressDialog = NotifyUtil.createProgressDialog(context, R.string.text_processing_request)
         progressDialog.show()
 
-        val presenter = WidgetPresenter<MediaList>(context)
+        val presenter = koinOf<WidgetPresenter<MediaList>>()
         val params = seriesManageBase.persistChanges()
         presenter.params = params
 
@@ -172,7 +172,7 @@ internal object MediaDialogUtil {
 
         seriesManageBase.persistChanges()
 
-        val presenter = WidgetPresenter<DeleteState>(context)
+        val presenter = koinOf<WidgetPresenter<DeleteState>>()
         val params: Bundle = seriesManageBase.persistChanges()
         presenter.params = params
 

@@ -19,7 +19,9 @@ import java.util.*
  * Database helper class
  */
 
-class DatabaseHelper : BoxQuery {
+class DatabaseHelper(
+    private val store: BoxStore
+) : BoxQuery {
 
     /**
      * Gets the object box from a requested class type.
@@ -28,7 +30,7 @@ class DatabaseHelper : BoxQuery {
      * @param classType Type of class which must not be a list instance
      * @return Box of type class requested
      */
-    override fun <S> getBoxStore(classType: Class<S>): Box<S> = koinOf<BoxStore>().boxFor(classType)
+    override fun <S> getBoxStore(classType: Class<S>): Box<S> = store.boxFor(classType)
 
     /**
      * Used when the application is logging out a user preferably

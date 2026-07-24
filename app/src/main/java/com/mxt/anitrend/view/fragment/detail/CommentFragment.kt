@@ -66,8 +66,6 @@ class CommentFragment : FragmentBaseComment() {
         setInflateMenu(R.menu.custom_menu)
         mAdapter = CommentAdapter(ctx, mutationCoordinator)
         feedAdapter = FeedAdapter(ctx, mutationCoordinator)
-        setPresenter(WidgetPresenter<FeedList>(ctx))
-        setViewModel(true)
     }
 
     @Deprecated("Deprecated in Java")

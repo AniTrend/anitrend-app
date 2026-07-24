@@ -80,8 +80,6 @@ class WatchListFragment :
         }
         mAdapter = EpisodeAdapter(ctx)
         mAdapter?.setClickListener(clickListener)
-        setPresenter(WidgetPresenter<ConnectionContainer<List<ExternalLink>>>(ctx))
-        setViewModel(true)
     }
 
     override fun updateUI() {
@@ -106,7 +104,7 @@ class WatchListFragment :
                             if (!connectionContainer.isEmpty) {
                                 externalLinks = connectionContainer.connection
                                 val links = externalLinks
-                                if (mAdapter?.itemCount ?: 0 < 1 && links != null) {
+                                if ((mAdapter?.itemCount ?: 0) < 1 && links != null) {
                                     targetLink = EpisodeUtil.episodeSupport(links)
                                 }
                                 if (targetLink == null) {

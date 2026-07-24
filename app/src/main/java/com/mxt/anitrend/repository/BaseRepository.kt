@@ -2,20 +2,20 @@ package com.mxt.anitrend.repository
 
 import co.anitrend.retrofit.graphql.model.EmptyGraphQLVariables
 import co.anitrend.retrofit.graphql.model.GraphQLRequest
-import co.anitrend.retrofit.graphql.model.attribute.GraphError
+import com.mxt.anitrend.base.interfaces.dao.BoxQuery
 import com.mxt.anitrend.graphql.generated.GenreCollection
 import com.mxt.anitrend.graphql.generated.LikeableType
 import com.mxt.anitrend.graphql.generated.MediaTagCollection
 import com.mxt.anitrend.graphql.generated.ToggleFavourite
 import com.mxt.anitrend.graphql.generated.ToggleLike
 import com.mxt.anitrend.model.api.retro.anilist.BaseModel
+import com.mxt.anitrend.model.entity.anilist.Genre
 import com.mxt.anitrend.model.entity.anilist.MediaTag
+import com.mxt.anitrend.model.entity.base.NotificationHistory
+import com.mxt.anitrend.model.entity.base.NotificationHistory_
 import com.mxt.anitrend.util.graphql.apiError
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.withContext
 import com.mxt.anitrend.model.entity.base.UserBase as UserEntity
 
@@ -26,22 +26,24 @@ sealed class BaseMutation {
 
 class BaseRepository(
     private val baseService: BaseModel,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
-) {
-    private val _mutationEvents = MutableSharedFlow<BaseMutation>(replay = 1, extraBufferCapacity = 64)
-    val mutationEvents: SharedFlow<BaseMutation> = _mutationEvents.asSharedFlow()
+    private val boxQuery: BoxQuery,
+    ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+) : AbstractRepository<BaseMutation>(ioDispatcher) {
 
-    fun emitMutationEvent(event: BaseMutation) {
-        _mutationEvents.tryEmit(event)
-    }
+    /** Cached genre collection from local DB. */
+    val cachedGenres: List<Genre>
+        get() = boxQuery.genreCollection
 
-    private fun <T> handleGraphResponse(body: com.mxt.anitrend.model.entity.container.body.AniListContainer<T>): T {
-        val graphErrors: List<GraphError>? = body.errors
-        if (!graphErrors.isNullOrEmpty()) {
-            throw RuntimeException(graphErrors.first().message ?: "GraphQL error")
-        }
-        return body.data?.result ?: throw IllegalStateException("Empty response body")
-    }
+    /** Cached media tags from local DB. */
+    val cachedTags: List<MediaTag>
+        get() = boxQuery.mediaTags
+
+    /** Returns true if a notification has been marked as read locally. */
+    fun isNotificationRead(notificationId: Long): Boolean =
+        boxQuery.getBoxStore(NotificationHistory::class.java)
+            .query(NotificationHistory_.id.equal(notificationId))
+            .build()
+            .use { query -> query.findFirst() != null }
 
     suspend fun getGenres(): Result<List<String>> = withContext(ioDispatcher) {
         runCatching {

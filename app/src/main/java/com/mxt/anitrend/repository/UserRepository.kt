@@ -1,6 +1,6 @@
 package com.mxt.anitrend.repository
 
-import co.anitrend.retrofit.graphql.model.attribute.GraphError
+import com.mxt.anitrend.base.interfaces.dao.BoxQuery
 import com.mxt.anitrend.graphql.generated.AnimeFavourites
 import com.mxt.anitrend.graphql.generated.CharacterFavourites
 import com.mxt.anitrend.graphql.generated.CurrentUser
@@ -26,9 +26,6 @@ import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.util.graphql.apiError
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.withContext
 import com.mxt.anitrend.model.entity.base.UserBase as UserEntity
 
@@ -39,21 +36,19 @@ sealed class UserMutation {
 
 class UserRepository(
     private val userService: UserModel,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
-) {
-    private val _mutationEvents = MutableSharedFlow<UserMutation>(replay = 1, extraBufferCapacity = 64)
-    val mutationEvents: SharedFlow<UserMutation> = _mutationEvents.asSharedFlow()
+    private val boxQuery: BoxQuery,
+    ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+) : AbstractRepository<UserMutation>(ioDispatcher) {
 
-    fun emitMutationEvent(event: UserMutation) {
-        _mutationEvents.tryEmit(event)
-    }
+    /** Cached current user from local DB. */
+    val cachedCurrentUser: com.mxt.anitrend.model.entity.anilist.User?
+        get() = boxQuery.currentUser
 
-    private fun <T> handleGraphResponse(body: com.mxt.anitrend.model.entity.container.body.AniListContainer<T>): T {
-        val graphErrors: List<GraphError>? = body.errors
-        if (!graphErrors.isNullOrEmpty()) {
-            throw RuntimeException(graphErrors.first().message ?: "GraphQL error")
-        }
-        return body.data?.result ?: throw IllegalStateException("Empty response body")
+    /** Checks if the given user identity matches the cached current user. */
+    fun isCurrentUser(userId: Long, userName: String?): Boolean {
+        val current = boxQuery.currentUser ?: return false
+        return userName?.let { current.name == it }
+            ?: (userId != 0L && current.id == userId)
     }
 
     suspend fun getCurrentUser(asHtml: Boolean = false): Result<User> = withContext(ioDispatcher) {

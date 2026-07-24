@@ -7,6 +7,7 @@ import android.view.View
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.PieEntry
 import com.mxt.anitrend.R
+import com.mxt.anitrend.base.interfaces.dao.BoxQuery
 import com.mxt.anitrend.model.entity.anilist.Genre
 import com.mxt.anitrend.model.entity.anilist.Media
 import com.mxt.anitrend.model.entity.anilist.meta.ScoreDistribution
@@ -16,6 +17,7 @@ import com.mxt.anitrend.model.entity.base.StudioBase
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
+import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.date.DateUtil
 import com.mxt.anitrend.util.media.MediaUtil
 import java.util.Locale
@@ -25,7 +27,9 @@ import java.util.Locale
  */
 class MediaPresenter(
     context: Context,
-) : BasePresenter(context) {
+    boxQuery: BoxQuery,
+    settings: Settings
+) : BasePresenter(context, boxQuery, settings) {
     @Suppress("DEPRECATION")
     fun getHashTag(media: Media?): Spanned {
         val hashTag = media?.hashTag

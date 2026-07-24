@@ -77,7 +77,7 @@ class CommentAdapter(
             binding.userAvatar.setImage(model.user?.avatar)
             binding.userName.text = model.user?.name
             binding.feedTime.text = DateUtil.getPrettyDateUnix(model.createdAt)
-            if (!presenter.settings.experimentalMarkdown) {
+            if (!settings.experimentalMarkdown) {
                 binding.widgetStatus.visibility = View.VISIBLE
                 binding.widgetStatus.setModel(model)
             } else {

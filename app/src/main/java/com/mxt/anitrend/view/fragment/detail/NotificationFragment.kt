@@ -42,7 +42,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notification>, BasePresenter>() {
 
     private val settings: Settings by inject()
-    private val databaseHelper by lazy { DatabaseHelper() }
+    private val databaseHelper by inject<DatabaseHelper>()
 
     private val notificationViewModel: NotificationViewModel by viewModel()
 

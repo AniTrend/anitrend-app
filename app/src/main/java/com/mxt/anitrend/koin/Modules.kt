@@ -132,6 +132,7 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.workmanager.dsl.worker
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.qualifier.named
+import org.koin.dsl.bind
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -140,15 +141,14 @@ import java.io.File
 import java.util.concurrent.TimeUnit
 
 private val coreModule = module {
-    single {
-        MyObjectBox.builder()
-            .androidContext(androidContext())
-            .build()
-    }
 
-    single<BoxQuery> {
-        DatabaseHelper()
-    }
+    single {
+        DatabaseHelper(
+            store = MyObjectBox.builder()
+                .androidContext(androidContext())
+                .build(),
+        )
+    } bind BoxQuery::class
 
     single<ISupportAnalytics> {
         AnalyticsLogging(
@@ -283,10 +283,10 @@ private val workerModule = module {
 
 private val presenterModule = module {
     factory {
-        BasePresenter(androidContext())
+        BasePresenter(context = androidContext(), boxQuery = get(), settings = get())
     }
     factory {
-        WidgetPresenter<Any>(androidContext())
+        WidgetPresenter<Any>(context = androidContext(), boxQuery = get(), settings = get())
     }
 }
 
@@ -430,25 +430,25 @@ private val serviceModule = module {
 
 private val repositoryModule = module {
     single { MediaRepository(mediaService = get()) }
-    single { UserRepository(userService = get()) }
+    single { UserRepository(userService = get(), boxQuery = get()) }
     single { BrowseRepository(browseService = get()) }
     single { CharacterRepository(characterService = get()) }
     single { StaffRepository(staffService = get()) }
     single { StudioRepository(studioService = get()) }
     single { SearchRepository(searchService = get()) }
     single { FeedRepository(feedService = get()) }
-    single { BaseRepository(baseService = get()) }
+    single { BaseRepository(baseService = get(), boxQuery = get()) }
     single { WidgetMutationCoordinator(baseRepository = get(), browseRepository = get(), userRepository = get(), feedRepository = get(), databaseHelper = get()) }
 }
 
 private val mediaFeatureModule = module {
     viewModel { AiringListViewModel(browseService = get()) }
     viewModel { BrowseReviewViewModel(browseService = get()) }
-    viewModel { MediaBrowseViewModel(browseService = get()) }
+    viewModel { MediaBrowseViewModel(baseRepository = get(), browseRepository = get()) }
     viewModel { MediaLatestViewModel(browseService = get()) }
-    viewModel { MediaListViewModel(browseRepository = get(), settings = get()) }
+    viewModel { MediaListViewModel(browseRepository = get(), userRepository = get(), settings = get()) }
     viewModel { ReviewViewModel(browseService = get()) }
-    viewModel { SuggestionListViewModel(browseService = get()) }
+    viewModel { SuggestionListViewModel(userRepository = get(), browseRepository = get()) }
     viewModel { MediaCharacterViewModel(mediaService = get()) }
     viewModel { MediaFeedViewModel(mediaService = get()) }
     viewModel { MediaOverviewViewModel(repository = get(), settings = get<Settings>()) }

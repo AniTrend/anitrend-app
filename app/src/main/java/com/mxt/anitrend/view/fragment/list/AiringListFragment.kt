@@ -6,11 +6,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.adapter.recycler.index.MediaListAdapter
-import com.mxt.anitrend.data.DatabaseHelper
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.graphql.generated.ScoreFormat
 import com.mxt.anitrend.model.entity.anilist.MediaListCollection
 import com.mxt.anitrend.model.entity.container.body.PageContainer
+import com.mxt.anitrend.repository.UserRepository
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.Settings
@@ -27,7 +27,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class AiringListFragment : MediaListFragment() {
 
     private val settings: Settings by inject()
-    private val databaseHelper by lazy { DatabaseHelper() }
+    private val userRepository: UserRepository by inject()
 
     private val airingListViewModel: AiringListViewModel by viewModel()
 
@@ -38,7 +38,7 @@ class AiringListFragment : MediaListFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        databaseHelper.currentUser?.let { userBase ->
+        userRepository.cachedCurrentUser?.let { userBase ->
             userId = userBase.id
             userName = userBase.name
         }
@@ -70,7 +70,7 @@ class AiringListFragment : MediaListFragment() {
     }
 
     override fun makeRequest() {
-        val currentUser = databaseHelper.currentUser ?: return
+        val currentUser = userRepository.cachedCurrentUser ?: return
         if (userId == 0L) {
             userId = currentUser.id
         }

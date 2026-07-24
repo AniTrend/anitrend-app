@@ -25,7 +25,7 @@ object Migrations {
                     clear()
                     apply()
                 }
-                DatabaseHelper().invalidateBoxStores()
+                koinOf<DatabaseHelper>().invalidateBoxStores()
                 koinOf<JobSchedulerUtil>().cancelNotificationJob(context)
             }
         }
@@ -41,7 +41,7 @@ object Migrations {
                     clear()
                     apply()
                 }
-                DatabaseHelper().invalidateBoxStores()
+                koinOf<DatabaseHelper>().invalidateBoxStores()
                 WebFactory.invalidate()
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
                     ShortcutUtil.removeAllDynamicShortcuts(context)

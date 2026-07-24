@@ -19,7 +19,6 @@ import com.mxt.anitrend.databinding.BottomSheetListBinding
 import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.model.entity.giphy.Gif
 import com.mxt.anitrend.model.entity.giphy.Giphy
-import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.Settings
@@ -46,7 +45,6 @@ class BottomSheetGiphy : BottomSheetGiphyList() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val ctx = requireContext()
-        presenter = BasePresenter(ctx)
         mAdapter = GiphyAdapter(ctx)
         mColumnSize = resources.getInteger(R.integer.grid_giphy_x3)
         isPager = true

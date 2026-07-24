@@ -5,10 +5,10 @@ import android.view.View
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.mxt.anitrend.data.DatabaseHelper
 import com.mxt.anitrend.graphql.generated.ActivityType
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.container.body.PageContainer
+import com.mxt.anitrend.repository.UserRepository
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.view.fragment.list.FeedListFragment
@@ -26,7 +26,7 @@ class UserFeedFragment : FeedListFragment() {
     private var userName: String? = null
 
     private val settings: Settings by inject()
-    private val databaseHelper by lazy { DatabaseHelper() }
+    private val userRepository: UserRepository by inject()
 
     private val userFeedViewModel: UserFeedViewModel by viewModel()
 
@@ -77,7 +77,7 @@ class UserFeedFragment : FeedListFragment() {
 
     override fun makeRequest() {
         if (settings.isAuthenticated && isCurrentUser(userId, userName)) {
-            userId = databaseHelper.currentUser?.id ?: userId
+            userId = userRepository.cachedCurrentUser?.id ?: userId
         }
         if (userId > 0) {
             val args = arguments ?: return
@@ -93,10 +93,10 @@ class UserFeedFragment : FeedListFragment() {
     }
 
     private fun isCurrentUser(userId: Long, userName: String?): Boolean = settings.isAuthenticated &&
-        databaseHelper.currentUser != null &&
+        userRepository.cachedCurrentUser != null &&
         (
-            userName?.let { databaseHelper.currentUser?.name == it }
-                ?: (userId != 0L && databaseHelper.currentUser?.id == userId)
+            userName?.let { userRepository.cachedCurrentUser?.name == it }
+                ?: (userId != 0L && userRepository.cachedCurrentUser?.id == userId)
             )
 
     private fun handleSuccess(value: PageContainer<FeedList>) {

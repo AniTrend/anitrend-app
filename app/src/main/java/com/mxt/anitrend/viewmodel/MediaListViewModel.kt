@@ -2,7 +2,6 @@ package com.mxt.anitrend.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mxt.anitrend.data.DatabaseHelper
 import com.mxt.anitrend.graphql.generated.MediaListSort
 import com.mxt.anitrend.graphql.generated.MediaListStatus
 import com.mxt.anitrend.graphql.generated.MediaType
@@ -11,6 +10,7 @@ import com.mxt.anitrend.model.entity.anilist.MediaList
 import com.mxt.anitrend.model.entity.container.attribute.PageInfo
 import com.mxt.anitrend.repository.BrowseMutation
 import com.mxt.anitrend.repository.BrowseRepository
+import com.mxt.anitrend.repository.UserRepository
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.Settings
@@ -27,8 +27,8 @@ import timber.log.Timber
 
 class MediaListViewModel(
     private val browseRepository: BrowseRepository,
+    private val userRepository: UserRepository,
     private val settings: Settings,
-    private val databaseHelper: DatabaseHelper = DatabaseHelper(),
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : ViewModel() {
 
@@ -95,7 +95,7 @@ class MediaListViewModel(
                         statusIn?.let { runCatching { listOf(MediaListStatus.valueOf(it)) }.getOrNull() }
                     val type: MediaType? = mediaType?.let { runCatching { MediaType.valueOf(it) }.getOrNull() }
                     val scoreFormat: ScoreFormat =
-                        databaseHelper.currentUser?.mediaListOptions?.let { options ->
+                        userRepository.cachedCurrentUser?.mediaListOptions?.let { options ->
                             runCatching { ScoreFormat.valueOf(options.scoreFormat) }.getOrNull()
                         } ?: ScoreFormat.POINT_100
                     val result = browseRepository.getMediaListCollection(
@@ -160,10 +160,10 @@ class MediaListViewModel(
         userId: Long,
         userName: String?,
     ): Boolean = settings.isAuthenticated &&
-        databaseHelper.currentUser != null &&
+        userRepository.cachedCurrentUser != null &&
         (
-            userName?.let { databaseHelper.currentUser?.name == it }
-                ?: (userId != 0L && databaseHelper.currentUser?.id == userId)
+            userName?.let { userRepository.cachedCurrentUser?.name == it }
+                ?: (userId != 0L && userRepository.cachedCurrentUser?.id == userId)
             )
 
     companion object {

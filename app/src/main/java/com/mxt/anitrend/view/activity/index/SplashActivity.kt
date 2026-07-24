@@ -8,10 +8,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.async.WebTokenRequest
-import com.mxt.anitrend.data.DatabaseHelper
 import com.mxt.anitrend.databinding.ActivitySplashBinding
-import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.extension.getCompatTintedDrawable
+import com.mxt.anitrend.repository.UserRepository
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.JobSchedulerUtil
@@ -22,6 +21,7 @@ import com.mxt.anitrend.util.migration.Migrations
 import com.mxt.anitrend.view.activity.base.WelcomeActivity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 
 /**
  * Created by max on 2017/10/04.
@@ -31,11 +31,12 @@ import kotlinx.coroutines.launch
 class SplashActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySplashBinding
     private lateinit var settings: Settings
+    private val userRepository: UserRepository by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Apply theme before super.onCreate() -- replicates ActivityBase.configureActivity()
         // theme logic using the proven pattern from LoggingActivity.
-        settings = KoinExt.get(Settings::class.java)
+        settings = inject<Settings>().value
         val themeRes = when (settings.theme) {
             KeyUtil.THEME_DARK -> R.style.AppThemeDark
             KeyUtil.THEME_BLACK -> R.style.AppThemeBlack
@@ -122,7 +123,7 @@ class SplashActivity : AppCompatActivity() {
 
     private fun checkValidAuth() {
         if (settings.isAuthenticated) {
-            if (DatabaseHelper().currentUser == null) {
+            if (userRepository.cachedCurrentUser == null) {
                 WebTokenRequest.invalidateInstance(applicationContext)
             }
         }

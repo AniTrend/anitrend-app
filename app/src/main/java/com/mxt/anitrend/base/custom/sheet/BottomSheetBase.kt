@@ -20,6 +20,7 @@ import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import org.greenrobot.eventbus.EventBus
+import org.koin.android.ext.android.inject
 import timber.log.Timber
 
 /**
@@ -52,7 +53,7 @@ abstract class BottomSheetBase<T> :
     protected var mNegative: Int = 0
     protected var searchQuery: String? = null
 
-    protected lateinit var presenter: BasePresenter
+    protected val presenter by inject<BasePresenter>()
     protected var bottomSheetBehavior: BottomSheetBehavior<*>? = null
     protected var bottomSheetCallback: BottomSheetBehavior.BottomSheetCallback? =
         object : BottomSheetBehavior.BottomSheetCallback() {
@@ -82,7 +83,6 @@ abstract class BottomSheetBase<T> :
             mPositive = args.getInt(KeyUtil.arg_positive_text)
             mNegative = args.getInt(KeyUtil.arg_negative_text)
         }
-        presenter = BasePresenter(requireContext())
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog = super.onCreateDialog(savedInstanceState)

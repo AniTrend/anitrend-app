@@ -27,7 +27,7 @@ class KoinModuleVerificationTest {
      * When adding/removing a definition, update the corresponding entry.
      */
     private val expectedDefinitionCounts = mapOf(
-        0 to 9, // coreModule (added BoxQuery/DatabaseHelper)
+        0 to 8, // coreModule (DatabaseHelper now wraps BoxStore, bound to BoxQuery)
         1 to 2, // widgetModule
         2 to 5, // workerModule
         3 to 2, // presenterModule
@@ -81,11 +81,11 @@ class KoinModuleVerificationTest {
 
     @OptIn(KoinInternalApi::class)
     @Test
-    fun `appModules combined has 99 distinct definitions`() {
+    fun `appModules combined has 98 distinct definitions`() {
         val total = appModules.sumOf { it.mappings.values.distinct().size }
         assertEquals(
-            "Combined distinct definition count drifted. Expected 99, got $total.",
-            99,
+            "Combined distinct definition count drifted. Expected 98, got $total.",
+            98,
             total,
         )
     }

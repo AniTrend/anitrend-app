@@ -5,6 +5,7 @@ import androidx.annotation.IdRes
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.async.WebTokenRequest
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter
+import com.mxt.anitrend.base.interfaces.dao.BoxQuery
 import com.mxt.anitrend.model.entity.anilist.user.UserStatisticTypes
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.model.entity.crunchy.MediaContent
@@ -12,6 +13,7 @@ import com.mxt.anitrend.model.entity.crunchy.Thumbnail
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.JobSchedulerUtil
 import com.mxt.anitrend.util.KeyUtil
+import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.date.DateUtil
 import com.mxt.anitrend.util.migration.MigrationUtil
 import com.mxt.anitrend.util.migration.Migrations
@@ -24,7 +26,11 @@ import java.util.concurrent.TimeUnit
  * General presenter for most objects
  */
 
-open class BasePresenter(context: Context) : CommonPresenter(context) {
+open class BasePresenter(
+    context: Context,
+    boxQuery: BoxQuery,
+    settings: Settings,
+) : CommonPresenter(context, boxQuery, settings) {
 
     private var favouriteGenres: List<String>? = null
     private var favouriteTags: List<String>? = null
@@ -165,28 +171,5 @@ open class BasePresenter(context: Context) : CommonPresenter(context) {
         userName != null &&
         database.currentUser?.name == userName
 
-    fun isCurrentUser(userId: Long, userName: String?): Boolean = userName?.let { isCurrentUser(it) } ?: isCurrentUser(userId)
-
     fun isCurrentUser(userBase: UserBase?): Boolean = userBase != null && isCurrentUser(userBase.id)
-
-    fun checkValidAuth() {
-        if (settings.isAuthenticated) {
-            if (database.currentUser == null) {
-                Timber.w("Last attempt to authenticate failed, refreshing session!")
-                WebTokenRequest.invalidateInstance(context)
-            }
-        }
-    }
-
-    /**
-     * Runs worker to check for updates
-     */
-    fun checkForUpdates(silent: Boolean) {
-        val scheduler = JobSchedulerUtil(settings)
-        scheduler.startUpdateJob(context, silent)
-    }
-
-    companion object {
-        private val TAG = BasePresenter::class.java.simpleName
-    }
 }

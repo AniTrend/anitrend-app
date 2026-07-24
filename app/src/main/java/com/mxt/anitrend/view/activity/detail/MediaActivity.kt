@@ -19,7 +19,6 @@ import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter
 import com.mxt.anitrend.base.custom.view.image.WideImageView
 import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget
 import com.mxt.anitrend.databinding.ActivitySeriesBinding
-import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.util.CompatUtil
@@ -32,6 +31,7 @@ import com.mxt.anitrend.util.TutorialUtil
 import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.viewmodel.MediaViewModel
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.Locale
 
@@ -44,6 +44,8 @@ class MediaActivity :
     View.OnClickListener {
 
     private lateinit var binding: ActivitySeriesBinding
+
+    private val settings: Settings by inject()
 
     @KeyUtil.MediaType
     private var mediaType: String? = null
@@ -60,7 +62,6 @@ class MediaActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Preserve configured theme (was previously handled by ActivityBase.configureActivity).
-        val settings = KoinExt.get(Settings::class.java)
         val themeRes = when (settings.theme) {
             KeyUtil.THEME_DARK -> R.style.AppThemeDark
             KeyUtil.THEME_BLACK -> R.style.AppThemeBlack
@@ -149,7 +150,7 @@ class MediaActivity :
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val isAuth = KoinExt.get(Settings::class.java).isAuthenticated
+        val isAuth = settings.isAuthenticated
         menuInflater.inflate(R.menu.media_base_menu, menu)
         menu.findItem(R.id.action_favourite).isVisible = isAuth
 
@@ -259,7 +260,6 @@ class MediaActivity :
 
     override fun onResume() {
         super.onResume()
-        val settings = KoinExt.get(Settings::class.java)
         mediaViewModel.load(mediaId, mediaType, settings.displayAdultContent)
     }
 
@@ -268,13 +268,13 @@ class MediaActivity :
             WideImageView.setImage(binding.seriesBanner, current.bannerImage)
             setFavouriteWidgetMenuItemIcon()
             setMenuItemIcons()
-            if (KoinExt.get(Settings::class.java).isAuthenticated) {
+            if (settings.isAuthenticated) {
                 val favouritesPrompt =
                     TutorialUtil()
                         .setContext(this)
                         .setFocalColour(R.color.colorGrey600)
                         .setTapTarget(KeyUtil.KEY_DETAIL_TIP)
-                        .setSettings(KoinExt.get(Settings::class.java))
+                        .setSettings(settings)
                         .createTapTarget(
                             R.string.tip_series_options_title,
                             R.string.tip_series_options_message,

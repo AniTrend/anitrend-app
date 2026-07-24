@@ -49,9 +49,6 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
 
     private val settings: Settings by inject()
 
-    // TODO: should replace `by lazy { DatabaseHelper() }` with `by inject<DatabaseHelper>()` which means `DatabaseHelper` should be in Modules.kt
-    private val databaseHelper by lazy { DatabaseHelper() }
-
     private val mediaBrowseViewModel: MediaBrowseViewModel by viewModel()
 
     companion object {
@@ -167,7 +164,7 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
                 return true
             }
             R.id.action_genre -> {
-                val genres: List<Genre> = databaseHelper.genreCollection
+                val genres: List<Genre> = mediaBrowseViewModel.genreCollection
                 if (CompatUtil.isEmpty(genres)) {
                     NotifyUtil
                         .makeText(
@@ -197,7 +194,7 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
                 return true
             }
             R.id.action_tag -> {
-                val tagList: List<MediaTag> = databaseHelper.mediaTags
+                val tagList: List<MediaTag> = mediaBrowseViewModel.mediaTags
                 if (CompatUtil.isEmpty(tagList)) {
                     NotifyUtil
                         .makeText(

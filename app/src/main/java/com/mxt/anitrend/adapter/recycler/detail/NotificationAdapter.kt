@@ -14,12 +14,11 @@ import com.mxt.anitrend.base.custom.view.image.AspectImageView
 import com.mxt.anitrend.databinding.AdapterNotificationBinding
 import com.mxt.anitrend.databinding.CustomRecyclerUnresolvedBinding
 import com.mxt.anitrend.extension.getLayoutInflater
+import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.model.entity.anilist.Notification
-import com.mxt.anitrend.model.entity.base.NotificationHistory
-import com.mxt.anitrend.model.entity.base.NotificationHistory_
+import com.mxt.anitrend.repository.BaseRepository
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.date.DateUtil
-import io.objectbox.Box
 
 /**
  * Created by max on 2017/12/06.
@@ -28,9 +27,7 @@ import io.objectbox.Box
 
 class NotificationAdapter(context: Context) : RecyclerViewAdapter<Notification>(context) {
 
-    private val historyBox: Box<NotificationHistory> by lazy {
-        presenter.database.getBoxStore(NotificationHistory::class.java)
-    }
+    private val baseRepository: BaseRepository by lazy { koinOf() }
 
     override fun onCreateViewHolder(parent: ViewGroup, @KeyUtil.RecyclerViewType viewType: Int): RecyclerViewHolder<Notification> = when (viewType) {
         KeyUtil.RECYCLER_TYPE_CONTENT ->
@@ -89,11 +86,7 @@ class NotificationAdapter(context: Context) : RecyclerViewAdapter<Notification>(
          * @param model Is the model at the current adapter position
          */
         override fun onBindViewHolder(model: Notification) {
-            val notificationHistory = historyBox.query()
-                .equal(NotificationHistory_.id, model.id)
-                .build().findFirst()
-
-            if (notificationHistory != null) {
+            if (baseRepository.isNotificationRead(model.id)) {
                 binding.notificationIndicator.visibility = View.GONE
             } else {
                 binding.notificationIndicator.visibility = View.VISIBLE

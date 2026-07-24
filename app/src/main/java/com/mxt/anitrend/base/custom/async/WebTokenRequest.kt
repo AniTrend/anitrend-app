@@ -4,8 +4,10 @@ import android.content.Context
 import android.os.AsyncTask
 import android.os.Build
 import com.mxt.anitrend.analytics.contract.ISupportAnalytics
+import com.mxt.anitrend.base.interfaces.dao.BoxQuery
 import com.mxt.anitrend.data.DatabaseHelper
 import com.mxt.anitrend.extension.KoinExt
+import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.model.api.retro.WebFactory
 import com.mxt.anitrend.model.entity.anilist.WebToken
 import com.mxt.anitrend.model.entity.base.AuthBase
@@ -36,7 +38,7 @@ object WebTokenRequest {
      */
     @JvmStatic
     fun invalidateInstance(context: Context) {
-        val presenter = BasePresenter(context)
+        val presenter = koinOf<BasePresenter>()
         presenter.settings.isAuthenticated = false
         presenter.settings.lastDismissedNotificationId = -1
         presenter.database.invalidateBoxStores()
@@ -55,11 +57,11 @@ object WebTokenRequest {
      */
     private fun checkTokenState(
         context: Context,
-        presenter: BasePresenter,
+        boxQuery: BoxQuery,
     ) {
         val now = System.currentTimeMillis() / 1000L
         if (token == null || (token?.expires ?: 0) < now) {
-            val authCode = presenter.database.authCode?.code
+            val authCode = boxQuery.authCode?.code
             if (authCode == null) {
                 Timber.e("Token had an invalid instance from context: %s", context)
                 return
@@ -67,7 +69,7 @@ object WebTokenRequest {
             val response = WebFactory.requestCodeTokenSync(authCode)
             if (response != null) {
                 createNewTokenReference(response)
-                presenter.database.webToken = response
+                boxQuery.webToken = response
                 Timber.d("Token refreshed & saved at time stamp: %s", System.currentTimeMillis() / 1000L)
             } else {
                 Timber.e("Token had an invalid instance from context: %s", context)
@@ -83,12 +85,12 @@ object WebTokenRequest {
     @JvmStatic
     fun getToken(context: Context) {
         synchronized(lock) {
-            if (KoinExt.get(Settings::class.java).isAuthenticated) {
-                val presenter = BasePresenter(context)
+            if (koinOf<Settings>().isAuthenticated) {
+                val boxQuery = koinOf<BoxQuery>()
                 val now = System.currentTimeMillis() / 1000L
                 if (token == null || (token?.expires ?: 0) < now) {
-                    token = presenter.database.webToken
-                    checkTokenState(context, presenter)
+                    token = boxQuery.webToken
+                    checkTokenState(context, boxQuery)
                 }
             }
         }
@@ -105,7 +107,7 @@ object WebTokenRequest {
         val authenticatedToken = AuthenticationCodeAsync().execute(code).get()
         if (authenticatedToken != null) {
             createNewTokenReference(authenticatedToken)
-            val boxQuery = DatabaseHelper()
+            val boxQuery = koinOf<DatabaseHelper>()
             boxQuery.webToken = authenticatedToken
             boxQuery.authCode = AuthBase(code, authenticatedToken.refresh_token)
             return true

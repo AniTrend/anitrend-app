@@ -17,11 +17,11 @@ import com.mxt.anitrend.util.Settings
  */
 abstract class CommonPresenter(
     val context: Context,
+    val database: BoxQuery,
+    val settings: Settings,
 ) : RecyclerScrollListener(),
     LifecycleListener {
     private var bundle: Bundle? = null
-    private var databaseHelper: BoxQuery? = null
-    private var settingsCache: Settings? = null
 
     var params: Bundle
         get() {
@@ -32,22 +32,6 @@ abstract class CommonPresenter(
         }
         set(value) {
             bundle = value
-        }
-
-    val database: BoxQuery
-        get() {
-            if (databaseHelper == null) {
-                databaseHelper = DatabaseHelper()
-            }
-            return requireNotNull(databaseHelper)
-        }
-
-    val settings: Settings
-        get() {
-            if (settingsCache == null) {
-                settingsCache = KoinExt.get(Settings::class.java)
-            }
-            return requireNotNull(settingsCache)
         }
 
     /**

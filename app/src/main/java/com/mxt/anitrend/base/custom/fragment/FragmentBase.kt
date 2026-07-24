@@ -28,6 +28,7 @@ import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.util.ActionModeUtil
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.media.MediaActionUtil
+import org.koin.android.ext.android.inject
 import timber.log.Timber
 import kotlin.jvm.JvmName
 
@@ -45,6 +46,9 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> :
     protected var isPager: Boolean = false
     protected var isMenuDisabled: Boolean = false
     protected var isFeed: Boolean = false
+
+    private val settings by inject<Settings>()
+    private val analytics by inject<ISupportAnalytics>()
 
     @MenuRes
     private var inflateMenu: Int = 0
@@ -73,7 +77,7 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activity?.let { host ->
-            KoinExt.get(ISupportAnalytics::class.java).logCurrentScreen(host, TAG)
+            analytics.logCurrentScreen(host, TAG)
         }
     }
 
@@ -100,16 +104,12 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> :
         }
     }
 
-    override fun onStop() {
-        super.onStop()
-    }
-
     override fun onPause() {
         super.onPause()
         if (this::mediaActionUtil.isInitialized) {
             mediaActionUtil.onPause(null)
         }
-        KoinExt.get(Settings::class.java).unregisterOnSharedPreferenceChangeListener(this)
+        settings.unregisterOnSharedPreferenceChangeListener(this)
     }
 
     override fun onResume() {
@@ -117,7 +117,7 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> :
         if (this::mediaActionUtil.isInitialized) {
             mediaActionUtil.onResume(null)
         }
-        KoinExt.get(Settings::class.java).registerOnSharedPreferenceChangeListener(this)
+        settings.registerOnSharedPreferenceChangeListener(this)
     }
 
     @Deprecated("Deprecated in Java")
@@ -152,7 +152,7 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> :
     @Deprecated(
         "Do not attach a presenter in new fragments. Inject collaborators instead. " +
             "See AGENTS.md (ViewModel-first architecture) for the migration direction.",
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
     )
     fun setPresenter(presenter: P) {
         presenterRef = presenter
@@ -163,7 +163,7 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> :
             "(or later Koin by viewModel() / activityViewModel()) instead of the " +
             "legacy ViewModelBase wrapper. " +
             "See StaffOverviewFragment and StudioMediaFragment for proven fragment-side patterns.",
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
     )
     @Suppress("UNCHECKED_CAST")
     protected fun setViewModel(stateSupported: Boolean) {

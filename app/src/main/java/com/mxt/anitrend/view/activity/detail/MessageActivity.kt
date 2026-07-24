@@ -5,17 +5,19 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.pager.detail.MessagePageAdapter
-import com.mxt.anitrend.data.DatabaseHelper
 import com.mxt.anitrend.databinding.ActivityPagerGenericBinding
-import com.mxt.anitrend.extension.KoinExt
+import com.mxt.anitrend.repository.UserRepository
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.Settings
+import org.koin.android.ext.android.inject
 
 class MessageActivity : AppCompatActivity() {
 
+    private val settings: Settings by inject()
+    private val userRepository: UserRepository by inject()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         // Preserve configured theme (previously handled by ActivityBase.configureActivity).
-        val settings = KoinExt.get(Settings::class.java)
         val themeRes = when (settings.theme) {
             KeyUtil.THEME_DARK -> R.style.AppThemeDark
             KeyUtil.THEME_BLACK -> R.style.AppThemeBlack
@@ -30,7 +32,7 @@ class MessageActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val params = Bundle()
-        DatabaseHelper().currentUser?.id?.let { userId ->
+        userRepository.cachedCurrentUser?.id?.let { userId ->
             params.putLong(KeyUtil.arg_userId, userId)
         }
 

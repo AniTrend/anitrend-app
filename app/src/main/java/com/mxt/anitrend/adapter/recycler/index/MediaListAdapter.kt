@@ -43,7 +43,7 @@ class MediaListAdapter(
         parent: ViewGroup,
         viewType: Int,
     ): RecyclerViewHolder<MediaList> {
-        val adapter = when (presenter.settings.mediaListStyle) {
+        val adapter = when (settings.mediaListStyle) {
             KeyUtil.LIST_VIEW_STYLE_COMPACT_X1,
             KeyUtil.LIST_VIEW_STYLE_COMPACT_X2,
             -> {
@@ -159,7 +159,7 @@ class MediaListAdapter(
                     binding.seriesEpisodes.setCurrentUser(coordinator.databaseHelper.currentUser)
                     binding.seriesEpisodes.setListener(autoIncrementListener)
 
-                    when (presenter.settings.mediaListStyle) {
+                    when (settings.mediaListStyle) {
                         KeyUtil.LIST_VIEW_STYLE_COMPACT_X1 -> {
                             val margin = context.resources.getDimension(R.dimen.series_title_margin)
                             val layout = binding.seriesTitle.layoutParams as? LayoutParams ?: return

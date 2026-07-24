@@ -50,18 +50,12 @@ class RatingTextView :
         onInit()
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes) {
-        onInit()
-    }
-
     /**
      * Optionally included when constructing custom views
      */
     override fun onInit() {
-        val basePresenter = BasePresenter(context)
         if (presenter.settings.isAuthenticated) {
-            mediaListOptions = basePresenter.database.currentUser?.mediaListOptions
+            mediaListOptions = presenter.database.currentUser?.mediaListOptions
         }
     }
 

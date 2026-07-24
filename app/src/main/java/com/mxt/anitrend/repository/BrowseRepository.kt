@@ -1,6 +1,5 @@
 package com.mxt.anitrend.repository
 
-import co.anitrend.retrofit.graphql.model.attribute.GraphError
 import com.mxt.anitrend.graphql.generated.DeleteMediaListEntry
 import com.mxt.anitrend.graphql.generated.DeleteReview
 import com.mxt.anitrend.graphql.generated.FuzzyDateInput
@@ -31,9 +30,6 @@ import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.util.graphql.apiError
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.withContext
 import com.mxt.anitrend.model.entity.anilist.MediaList as MediaEntityList
 import com.mxt.anitrend.model.entity.anilist.MediaListCollection as MediaListCollectionEntity
@@ -49,22 +45,8 @@ sealed class BrowseMutation {
 
 class BrowseRepository(
     private val browseService: BrowseModel,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
-) {
-    private val _mutationEvents = MutableSharedFlow<BrowseMutation>(replay = 1, extraBufferCapacity = 64)
-    val mutationEvents: SharedFlow<BrowseMutation> = _mutationEvents.asSharedFlow()
-
-    fun emitMutationEvent(event: BrowseMutation) {
-        _mutationEvents.tryEmit(event)
-    }
-
-    private fun <T> handleGraphResponse(body: com.mxt.anitrend.model.entity.container.body.AniListContainer<T>): T {
-        val graphErrors: List<GraphError>? = body.errors
-        if (!graphErrors.isNullOrEmpty()) {
-            throw RuntimeException(graphErrors.first().message ?: "GraphQL error")
-        }
-        return body.data?.result ?: throw IllegalStateException("Empty response body")
-    }
+    ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+) : AbstractRepository<BrowseMutation>(ioDispatcher) {
 
     suspend fun getMediaListCollection(
         userId: Long? = null,
