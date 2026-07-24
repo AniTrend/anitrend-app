@@ -9,8 +9,6 @@ import com.mxt.anitrend.adapter.recycler.index.EpisodeAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentChannelBase
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.model.entity.anilist.ExternalLink
-import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
-import com.mxt.anitrend.presenter.widget.WidgetPresenter
 import com.mxt.anitrend.repository.MediaRepository
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.collection.EpisodeUtil

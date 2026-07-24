@@ -28,7 +28,7 @@ import java.util.Locale
 class MediaPresenter(
     context: Context,
     boxQuery: BoxQuery,
-    settings: Settings
+    settings: Settings,
 ) : BasePresenter(context, boxQuery, settings) {
     @Suppress("DEPRECATION")
     fun getHashTag(media: Media?): Spanned {

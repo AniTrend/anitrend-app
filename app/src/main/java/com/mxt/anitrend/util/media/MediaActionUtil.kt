@@ -29,7 +29,7 @@ class MediaActionUtil private constructor(
     private val context: FragmentActivity,
 ) : RetroCallback<MediaBase>,
     LifecycleListener,
-KoinComponent {
+    KoinComponent {
     private var progressDialog: AlertDialog? = null
     private val presenter by inject<WidgetPresenter<MediaBase>>()
     private val lifecycle: Lifecycle = context.lifecycle

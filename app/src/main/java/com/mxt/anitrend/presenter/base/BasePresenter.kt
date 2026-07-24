@@ -3,7 +3,6 @@ package com.mxt.anitrend.presenter.base
 import android.content.Context
 import androidx.annotation.IdRes
 import com.mxt.anitrend.R
-import com.mxt.anitrend.base.custom.async.WebTokenRequest
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter
 import com.mxt.anitrend.base.interfaces.dao.BoxQuery
 import com.mxt.anitrend.model.entity.anilist.user.UserStatisticTypes
@@ -11,13 +10,11 @@ import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.model.entity.crunchy.MediaContent
 import com.mxt.anitrend.model.entity.crunchy.Thumbnail
 import com.mxt.anitrend.util.CompatUtil
-import com.mxt.anitrend.util.JobSchedulerUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.date.DateUtil
 import com.mxt.anitrend.util.migration.MigrationUtil
 import com.mxt.anitrend.util.migration.Migrations
-import timber.log.Timber
 import java.util.*
 import java.util.concurrent.TimeUnit
 

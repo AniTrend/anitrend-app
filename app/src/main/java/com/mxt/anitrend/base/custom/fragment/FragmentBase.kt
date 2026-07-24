@@ -24,7 +24,6 @@ import com.mxt.anitrend.base.custom.viewmodel.ViewModelBase
 import com.mxt.anitrend.base.interfaces.event.ActionModeListener
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener
 import com.mxt.anitrend.base.interfaces.event.ResponseCallback
-import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.util.ActionModeUtil
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.media.MediaActionUtil

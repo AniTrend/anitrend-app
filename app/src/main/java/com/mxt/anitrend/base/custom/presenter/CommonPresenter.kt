@@ -6,8 +6,6 @@ import android.os.Bundle
 import com.mxt.anitrend.base.custom.recycler.RecyclerScrollListener
 import com.mxt.anitrend.base.interfaces.dao.BoxQuery
 import com.mxt.anitrend.base.interfaces.event.LifecycleListener
-import com.mxt.anitrend.data.DatabaseHelper
-import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.util.Settings
 
 /**

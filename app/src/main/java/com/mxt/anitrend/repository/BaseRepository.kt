@@ -39,11 +39,10 @@ class BaseRepository(
         get() = boxQuery.mediaTags
 
     /** Returns true if a notification has been marked as read locally. */
-    fun isNotificationRead(notificationId: Long): Boolean =
-        boxQuery.getBoxStore(NotificationHistory::class.java)
-            .query(NotificationHistory_.id.equal(notificationId))
-            .build()
-            .use { query -> query.findFirst() != null }
+    fun isNotificationRead(notificationId: Long): Boolean = boxQuery.getBoxStore(NotificationHistory::class.java)
+        .query(NotificationHistory_.id.equal(notificationId))
+        .build()
+        .use { query -> query.findFirst() != null }
 
     suspend fun getGenres(): Result<List<String>> = withContext(ioDispatcher) {
         runCatching {

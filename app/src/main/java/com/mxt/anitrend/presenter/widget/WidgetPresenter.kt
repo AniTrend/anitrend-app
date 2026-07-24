@@ -15,7 +15,7 @@ import java.util.Locale
 class WidgetPresenter<T>(
     context: Context,
     boxQuery: BoxQuery,
-    settings: Settings
+    settings: Settings,
 ) : BasePresenter(context, boxQuery, settings) {
     private var loader: RequestHandler<T>? = null
 

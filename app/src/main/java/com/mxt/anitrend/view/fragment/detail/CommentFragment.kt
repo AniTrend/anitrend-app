@@ -19,7 +19,6 @@ import com.mxt.anitrend.extension.hideKeyboard
 import com.mxt.anitrend.extension.parcelable
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.anilist.FeedReply
-import com.mxt.anitrend.presenter.widget.WidgetPresenter
 import com.mxt.anitrend.repository.FeedRepository
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil

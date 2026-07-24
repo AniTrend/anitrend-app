@@ -17,11 +17,11 @@ import com.mxt.anitrend.binding.richMarkDown
 import com.mxt.anitrend.binding.setImage
 import com.mxt.anitrend.coordinator.WidgetMutationCoordinator
 import com.mxt.anitrend.databinding.AdapterFeedMessageBinding
-import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.databinding.AdapterFeedProgressBinding
 import com.mxt.anitrend.databinding.AdapterFeedStatusBinding
 import com.mxt.anitrend.databinding.CustomRecyclerUnresolvedBinding
 import com.mxt.anitrend.extension.getLayoutInflater
+import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.graphql.generated.LikeableType
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.anilist.meta.DeleteState

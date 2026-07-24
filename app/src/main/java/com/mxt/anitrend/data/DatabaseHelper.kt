@@ -1,7 +1,6 @@
 package com.mxt.anitrend.data
 
 import com.mxt.anitrend.base.interfaces.dao.BoxQuery
-import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.model.entity.anilist.Genre
 import com.mxt.anitrend.model.entity.anilist.MediaTag
 import com.mxt.anitrend.model.entity.anilist.User
@@ -20,7 +19,7 @@ import java.util.*
  */
 
 class DatabaseHelper(
-    private val store: BoxStore
+    private val store: BoxStore,
 ) : BoxQuery {
 
     /**

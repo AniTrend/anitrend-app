@@ -25,7 +25,6 @@ import com.mxt.anitrend.databinding.BottomSheetListBinding
 import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.model.entity.container.body.PageContainer
-import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.view.activity.detail.ProfileActivity
