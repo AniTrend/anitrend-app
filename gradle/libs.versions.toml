@@ -2,7 +2,7 @@
 ktlint = "0.40.0"
 spotless = "7.2.1"
 
-gradle-plugin = "9.3.0"
+gradle-plugin = "9.3.1"
 
 androidx-appcompat = "1.7.1"
 androidx-core = "1.19.0"
