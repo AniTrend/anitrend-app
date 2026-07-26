@@ -129,6 +129,7 @@ import io.noties.markwon.image.glide.GlideImagesPlugin
 import io.noties.markwon.linkify.LinkifyPlugin
 import io.wax911.emojify.EmojiManager
 import io.wax911.emojify.serializer.gson.GsonDeserializer
+import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
@@ -332,6 +333,16 @@ private val networkModule = module {
         )
     }
     single {
+        GraphConverter.create(
+            json = KotlinxGraphQLJson(
+                json = Json {
+                    ignoreUnknownKeys = !BuildConfig.DEBUG
+                }
+            ),
+            registry = get(),
+        )
+    }
+    single {
         ClientInterceptor(
             agent = get(named("ua")),
         )
@@ -360,6 +371,7 @@ private val retrofitModule = module {
         WebTokenRequest.getToken(androidContext())
         Retrofit.Builder()
             .client(get<OkHttpClient>(named("anilist")))
+            // .addConverterFactory(get<GraphConverter>())
             .addConverterFactory(get<AniGraphConverter>())
             .baseUrl(BuildConfig.API_LINK)
             .build()

@@ -10,24 +10,28 @@
     android:outAnimation="@android:anim/slide_out_right"
     android:foreground="?selectableItemBackground"
     android:layout_width="wrap_content"
-    android:layout_height="@dimen/avatar_size_md"
+    android:layout_height="wrap_content"
     android:background="@drawable/material_curve_black">
 
-        <com.mxt.anitrend.base.custom.view.text.SeriesProgressTextView
-            android:id="@+id/series_progress_increment"
-            android:padding="@dimen/lg_margin"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="32/? +"/>
+    <com.mxt.anitrend.base.custom.view.text.SeriesProgressTextView
+        android:id="@+id/series_progress_increment"
+        android:padding="@dimen/lg_margin"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+        android:textSize="9sp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="32/? +"/>
 
-        <com.google.android.material.progressindicator.CircularProgressIndicator
-            android:layout_width="@dimen/widget_spinner_compact_size"
-            android:layout_height="@dimen/widget_spinner_compact_size"
-            android:layout_gravity="center"
-            android:indeterminate="true"
-            app:indicatorColor="?colorAccent" />
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        app:indicatorColor="?colorAccent"
+        app:indicatorSize="@dimen/mg_margin"
+        tools:indeterminate="false"
+        tools:progress="60"/>
 
     </ViewFlipper>

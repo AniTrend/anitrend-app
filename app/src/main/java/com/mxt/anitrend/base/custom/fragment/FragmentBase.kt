@@ -22,6 +22,7 @@ import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
 import com.mxt.anitrend.base.interfaces.event.ActionModeListener
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener
 import com.mxt.anitrend.base.interfaces.event.ResponseCallback
+import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.ActionModeUtil
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.media.MediaActionUtil
@@ -50,7 +51,7 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> :
     @MenuRes
     private var inflateMenu: Int = 0
     protected var actionMode: ActionModeUtil<M>? = null
-    private var presenterRef: P? = null
+    protected val presenter: CommonPresenter by inject<BasePresenter>()
     protected lateinit var mediaActionUtil: MediaActionUtil
 
     protected var snackbar: Snackbar? = null
@@ -60,12 +61,6 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> :
     protected var mColumnSize: Int = 0
 
     val TAG: String = javaClass.simpleName
-
-    @get:JvmName("presenterInstance")
-    val presenter: P
-        get() = requireNotNull(presenterRef)
-
-    override fun getPresenter(): P = presenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,7 +77,7 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> :
 
     override fun onDestroyView() {
         super.onDestroyView()
-        presenterRef?.onDestroy()
+        presenter.onDestroy()
         if (this::mediaActionUtil.isInitialized) {
             mediaActionUtil.onDestroy()
         }
@@ -142,15 +137,6 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> :
 
     override fun onClick(v: View) = Unit
 
-    @Deprecated(
-        "Do not attach a presenter in new fragments. Inject collaborators instead. " +
-            "See AGENTS.md (ViewModel-first architecture) for the migration direction.",
-        level = DeprecationLevel.ERROR,
-    )
-    fun setPresenter(presenter: P) {
-        presenterRef = presenter
-    }
-
     fun setFilterable(filterable: Boolean) {
         isFilterableEnabled = filterable
     }
@@ -205,4 +191,8 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> :
     override fun onItemClick(target: View, data: IndexedValue<M>) = Unit
 
     override fun onItemLongClick(target: View, data: IndexedValue<M>) = Unit
+
+    override fun getPresenter(): P {
+        return presenter as P
+    }
 }

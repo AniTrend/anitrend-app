@@ -17,11 +17,9 @@ class TagSyncWorker(
 
     private suspend fun requestTags(): List<MediaTag> {
         val data = baseRepository.getTags().getOrThrow()
-        return if (data.isEmpty()) {
+        return data.ifEmpty {
             Timber.e("MediaTagCollection returned empty data")
             emptyList()
-        } else {
-            data
         }
     }
 

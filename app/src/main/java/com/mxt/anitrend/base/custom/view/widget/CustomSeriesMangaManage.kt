@@ -29,13 +29,9 @@ constructor(
 ) : CustomSeriesManageBase(context, attrs, defStyleAttr) {
     private lateinit var binding: CustomActionMangaBinding
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    constructor(
-        context: Context,
-        attrs: AttributeSet?,
-        defStyleAttr: Int,
-        defStyleRes: Int,
-    ) : this(context, attrs, defStyleAttr)
+    init {
+        onInit()
+    }
 
     /**
      * Optionally included when constructing custom views

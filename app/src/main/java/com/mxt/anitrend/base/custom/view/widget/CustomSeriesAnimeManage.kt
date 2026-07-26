@@ -29,13 +29,9 @@ constructor(
 ) : CustomSeriesManageBase(context, attrs, defStyleAttr) {
     private lateinit var binding: CustomActionAnimeBinding
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    constructor(
-        context: Context,
-        attrs: AttributeSet?,
-        defStyleAttr: Int,
-        defStyleRes: Int,
-    ) : this(context, attrs, defStyleAttr)
+    init {
+        onInit()
+    }
 
     /**
      * Optionally included when constructing custom views
@@ -94,13 +90,6 @@ constructor(
         binding.diaCurrentCompletedAt.setDate(mediaListModel.completedAt)
 
         binding.diaCurrentStatus.onItemSelectedListener = this
-    }
-
-    /**
-     * Clean up any resources that won't be needed
-     */
-    override fun onViewRecycled() {
-        super.onViewRecycled()
     }
 
     override fun onItemSelected(

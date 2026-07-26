@@ -67,7 +67,6 @@ constructor(
 
     private var currentUser: String? = null
     private var currentUserFull: UserBase? = null
-    private val tagName = AutoIncrementWidget::class.java.simpleName
     private var listener: Listener? = null
     private var recycled = false
 
@@ -82,14 +81,6 @@ constructor(
     init {
         onInit()
     }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    constructor(
-        context: Context,
-        attrs: AttributeSet?,
-        defStyleAttr: Int,
-        defStyleRes: Int,
-    ) : this(context, attrs, defStyleAttr)
 
     override fun onInit() {
         binding = WidgetAutoIncrementerBinding.inflate(context.getLayoutInflater(), this, true)
