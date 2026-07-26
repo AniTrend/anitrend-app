@@ -115,7 +115,7 @@ anitrend-android-emoji-gson = { module = "com.github.anitrend.android-emojify:gs
 anitrend-support-markwon = "com.github.anitrend:support-markdown:0.12.1-alpha01"
 anitrend-retrofit-graphql-runtime = "com.github.AniTrend.retrofit-graphql:runtime:0.12.2"
 anitrend-retrofit-graphql-api = "com.github.AniTrend.retrofit-graphql:api:0.13.0"
-anitrend-retrofit-graphql-gradle-plugin = "com.github.AniTrend.retrofit-graphql:co.anitrend.retrofit.graphql.codegen.gradle.plugin:0.12.2"
+anitrend-retrofit-graphql-gradle-plugin = "com.github.AniTrend.retrofit-graphql:co.anitrend.retrofit.graphql.codegen.gradle.plugin:0.13.0"
 
 cash-turbine = "app.cash.turbine:turbine:1.2.1"
 
