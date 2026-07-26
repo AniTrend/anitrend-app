@@ -31,6 +31,7 @@ import com.mxt.anitrend.view.sheet.BottomSheetGiphy
 import com.mxt.anitrend.view.sheet.BottomSheetUsers
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
+import timber.log.Timber
 
 /**
  * Created by max on 2017/11/16.
@@ -176,12 +177,15 @@ class CommentFragment : FragmentBaseComment() {
             initExtraComponents()
         }
 
-        val ctx = context ?: return
-        viewModel?.params?.apply {
-            putLong(KeyUtil.arg_id, userActivityId)
-            putBoolean(KeyUtil.arg_asHtml, false)
+        lifecycleScope.launch {
+            feedRepository
+                .getFeedListReply(id = userActivityId, asHtml = false)
+                .onSuccess(::onChanged)
+                .onFailure { throwable ->
+                    Timber.e(throwable)
+                    showError(throwable.message ?: getString(R.string.text_error_request))
+                }
         }
-        viewModel?.requestData(KeyUtil.FEED_LIST_REPLY_REQ, ctx)
     }
 
     override fun onBackPress(): Boolean {

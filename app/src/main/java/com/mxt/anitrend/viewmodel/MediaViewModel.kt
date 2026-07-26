@@ -2,12 +2,9 @@ package com.mxt.anitrend.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.anitrend.retrofit.graphql.model.attribute.GraphError
-import com.mxt.anitrend.graphql.generated.MediaBase
 import com.mxt.anitrend.graphql.generated.MediaType
-import com.mxt.anitrend.model.api.retro.anilist.MediaModel
 import com.mxt.anitrend.repository.BaseRepository
-import com.mxt.anitrend.util.graphql.apiError
+import com.mxt.anitrend.repository.MediaRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +15,7 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class MediaViewModel(
-    private val mediaService: MediaModel,
+    private val mediaRepository: MediaRepository,
     private val baseRepository: BaseRepository,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : ViewModel() {
@@ -61,27 +58,7 @@ class MediaViewModel(
                         }
                     }
                     val isAdult: Boolean? = if (showAdult) null else false
-                    val request = MediaBase.request(
-                        id = mediaId.toInt(),
-                        type = typeEnum,
-                        isAdult = isAdult,
-                    )
-                    val response = mediaService.getMediaBase(request).execute()
-                    if (response.isSuccessful) {
-                        val body = response.body()
-                            ?: throw IllegalStateException("Empty response body")
-                        val graphErrors: List<GraphError>? = body.errors
-                        if (!graphErrors.isNullOrEmpty()) {
-                            throw RuntimeException(
-                                graphErrors.first().message
-                                    ?: "GraphQL error",
-                            )
-                        }
-                        body.data?.result
-                            ?: throw IllegalStateException("Empty response body")
-                    } else {
-                        throw RuntimeException(response.apiError())
-                    }
+                    mediaRepository.getMediaBase(mediaId, typeEnum, isAdult).getOrThrow()
                 }
             }.onSuccess { media ->
                 _state.value = UiState.Success(media)

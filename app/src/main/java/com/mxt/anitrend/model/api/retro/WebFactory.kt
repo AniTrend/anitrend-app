@@ -1,22 +1,10 @@
 package com.mxt.anitrend.model.api.retro
 
 import android.content.Context
-import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.google.gson.GsonBuilder
 import com.mxt.anitrend.BuildConfig
-import com.mxt.anitrend.base.custom.async.WebTokenRequest
-import com.mxt.anitrend.extension.koinOf
-import com.mxt.anitrend.model.api.converter.AniGraphConverter
-import com.mxt.anitrend.model.api.interceptor.AuthInterceptor
-import com.mxt.anitrend.model.api.interceptor.CacheInterceptor
-import com.mxt.anitrend.model.api.interceptor.ClientInterceptor
-import com.mxt.anitrend.model.api.interceptor.NetworkCacheInterceptor
 import com.mxt.anitrend.model.api.retro.anilist.AuthModel
-import com.mxt.anitrend.model.api.retro.base.GiphyModel
-import com.mxt.anitrend.model.api.retro.base.RepositoryModel
-import com.mxt.anitrend.model.api.retro.crunchy.EpisodeModel
 import com.mxt.anitrend.model.entity.anilist.WebToken
-import com.mxt.anitrend.util.CompatUtil.cacheProvider
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.graphql.apiError
 import okhttp3.Interceptor
@@ -24,7 +12,6 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
@@ -50,8 +37,6 @@ object WebFactory {
             BuildConfig.REDIRECT_URI,
             BuildConfig.RESPONSE_TYPE,
         )
-    private var mRetrofit: Retrofit? = null
-    private var mGiphy: Retrofit? = null
 
     /**
      * Creates a standard HttpBuilder with most common likely used configuration and optionally
@@ -79,113 +64,6 @@ object WebFactory {
         interceptors.forEach(okHttpClientBuilder::addInterceptor)
         return okHttpClientBuilder
     }
-
-    /**
-     * Generates retrofit service classes in a background thread
-     * and handles creation of API tokens or renewal of them
-     * <br></br>
-     *
-     * @param serviceClass The interface class to use such as
-     *
-     * @param context A valid application, fragment or activity context but must be application context
-     */
-    @Deprecated(
-        message = "Use Koin get<SomeModel>() instead. Retrofit instances are now managed by Koin in Modules.kt.",
-    )
-    fun <S> createService(
-        serviceClass: Class<S>,
-        context: Context,
-    ): S {
-        WebTokenRequest.getToken(context)
-        if (mRetrofit == null) {
-            val httpClient =
-                createHttpClient(
-                    koinOf<AuthInterceptor>(),
-                    koinOf<ClientInterceptor>(),
-                    koinOf<ChuckerInterceptor>(),
-                    logLevel = HttpLoggingInterceptor.Level.BODY,
-                )
-            mRetrofit =
-                Retrofit
-                    .Builder()
-                    .client(httpClient.build())
-                    .addConverterFactory(koinOf<AniGraphConverter>())
-                    .baseUrl(BuildConfig.API_LINK)
-                    .build()
-        }
-        return requireNotNull(mRetrofit).create(serviceClass)
-    }
-
-    @Deprecated(
-        message = "Use Koin injection for the appropriate service model. Called only by the deprecated RequestHandler.",
-    )
-    fun createCrunchyService(
-        feeds: Boolean,
-        context: Context,
-    ): EpisodeModel {
-        val appContext = context.applicationContext
-        val httpClient =
-            createHttpClient(
-                CacheInterceptor(appContext, true),
-                logLevel = HttpLoggingInterceptor.Level.HEADERS,
-            ).apply {
-                addNetworkInterceptor(NetworkCacheInterceptor(appContext, true))
-                cache(cacheProvider(appContext))
-            }
-
-        @Suppress("DEPRECATION")
-        val converterFactory = SimpleXmlConverterFactory.createNonStrict()
-        val retrofit =
-            Retrofit
-                .Builder()
-                .baseUrl(if (feeds) BuildConfig.FEEDS_LINK else BuildConfig.CRUNCHY_LINK)
-                .addConverterFactory(converterFactory)
-                .client(httpClient.build())
-                .build()
-        return retrofit.create(EpisodeModel::class.java)
-    }
-
-    @Deprecated(
-        message = "Use Koin get<GiphyModel>() instead. Retrofit instances are now managed by Koin in Modules.kt.",
-    )
-    fun createGiphyService(context: Context): GiphyModel {
-        if (mGiphy == null) {
-            val appContext = context.applicationContext
-            val httpClient =
-                createHttpClient(
-                    CacheInterceptor(appContext, true),
-                    koinOf<ClientInterceptor>(),
-                    logLevel = HttpLoggingInterceptor.Level.HEADERS,
-                ).apply {
-                    addNetworkInterceptor(NetworkCacheInterceptor(appContext, true))
-                    cache(cacheProvider(appContext))
-                }
-            mGiphy =
-                Retrofit
-                    .Builder()
-                    .baseUrl(BuildConfig.GIPHY_LINK)
-                    .addConverterFactory(GsonConverterFactory.create(gson))
-                    .client(httpClient.build())
-                    .build()
-        }
-        return requireNotNull(mGiphy).create(GiphyModel::class.java)
-    }
-
-    @Deprecated(
-        message = "Use Koin get<RepositoryModel>() instead. Retrofit instances are now managed by Koin in Modules.kt.",
-    )
-    fun createRepositoryService(): RepositoryModel = Retrofit
-        .Builder()
-        .addConverterFactory(GsonConverterFactory.create(gson))
-        .client(
-            createHttpClient(
-                logLevel = HttpLoggingInterceptor.Level.HEADERS,
-            ).build(),
-        ).baseUrl(BuildConfig.APP_REPO)
-        .build()
-        .create(
-            RepositoryModel::class.java,
-        )
 
     /**
      * Gets a new access token using the authentication code code provided from a callback

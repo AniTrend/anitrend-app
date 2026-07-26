@@ -11,8 +11,14 @@ class MediaCharacter : CharacterBase {
     var description: String? = null
         private set
 
+    constructor() : super()
+
     protected constructor(parcel: Parcel) : super(parcel) {
         description = parcel.readString()
+    }
+
+    internal fun applyDescription(value: String?) {
+        description = value
     }
 
     override fun writeToParcel(

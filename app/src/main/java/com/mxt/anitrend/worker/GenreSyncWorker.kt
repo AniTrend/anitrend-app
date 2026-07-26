@@ -3,40 +3,21 @@ package com.mxt.anitrend.worker
 import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import co.anitrend.retrofit.graphql.model.EmptyGraphQLVariables
-import co.anitrend.retrofit.graphql.model.GraphQLRequest
-import com.mxt.anitrend.graphql.generated.GenreCollection
-import com.mxt.anitrend.model.api.retro.anilist.BaseModel
 import com.mxt.anitrend.model.entity.anilist.Genre
 import com.mxt.anitrend.presenter.base.BasePresenter
-import com.mxt.anitrend.util.graphql.apiError
+import com.mxt.anitrend.repository.BaseRepository
 import timber.log.Timber
 
 class GenreSyncWorker(
     context: Context,
     workerParams: WorkerParameters,
     private val presenter: BasePresenter,
-    private val baseService: BaseModel,
+    private val baseRepository: BaseRepository,
 ) : CoroutineWorker(context, workerParams) {
 
-    private fun requestGenres(): List<Genre> {
-        val response =
-            baseService
-                .getGenres(
-                    GraphQLRequest<EmptyGraphQLVariables>(
-                        query = GenreCollection.document,
-                        operationName = GenreCollection.name,
-                    ),
-                ).execute()
-
-        if (!response.isSuccessful) {
-            Timber.e(response.apiError())
-            return emptyList()
-        }
-
-        val data: List<String>? = unwrapBody(response.body())
-
-        return if (data.isNullOrEmpty()) {
+    private suspend fun requestGenres(): List<Genre> {
+        val data = baseRepository.getGenres().getOrThrow()
+        return if (data.isEmpty()) {
             Timber.e("GenreCollection returned empty data")
             emptyList()
         } else {

@@ -13,8 +13,8 @@ import com.mxt.anitrend.base.custom.view.widget.FollowStateWidget
 import com.mxt.anitrend.data.DatabaseHelper
 import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.model.entity.base.UserBase
-import com.mxt.anitrend.presenter.widget.WidgetPresenter
 import com.mxt.anitrend.util.Settings
+import com.mxt.anitrend.util.WidgetState
 import okhttp3.Request
 import okio.Timeout
 import org.junit.Assert.assertEquals
@@ -49,13 +49,13 @@ class FollowStateWidgetInstrumentationTest {
                 widget.setUserModel(targetUser)
 
                 val flipper = widget.findViewById<ViewFlipper>(R.id.widget_flipper)
-                flipper.displayedChild = WidgetPresenter.LOADING_STATE
+                flipper.displayedChild = WidgetState.LOADING_STATE
                 widget.onResponse(call = NoOpUserBaseCall(), response = Response.success(targetUser))
 
                 val label = widget.findViewById<MaterialButton>(R.id.button_state_text)
                 assertTrue(targetUser.isFollowing)
                 assertEquals(activity.getString(R.string.following), label.text.toString())
-                assertEquals(WidgetPresenter.CONTENT_STATE, flipper.displayedChild)
+                assertEquals(WidgetState.CONTENT_STATE, flipper.displayedChild)
             }
         }
         database.invalidateBoxStores()

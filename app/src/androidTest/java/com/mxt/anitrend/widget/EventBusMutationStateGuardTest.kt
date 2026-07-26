@@ -20,9 +20,9 @@ import com.mxt.anitrend.data.DatabaseHelper
 import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.model.entity.container.attribute.PageInfo
-import com.mxt.anitrend.presenter.widget.WidgetPresenter
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.Settings
+import com.mxt.anitrend.util.WidgetState
 import org.greenrobot.eventbus.EventBus
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -123,7 +123,7 @@ class EventBusMutationStateGuardTest {
 
                 val followersCount = widget.findViewById<TextView>(R.id.user_followers_count)
                 followersCountRef.set(followersCount)
-                followersCount.text = WidgetPresenter.valueFormatter(10)
+                followersCount.text = WidgetState.valueFormatter(10)
             }
             InstrumentationRegistry.getInstrumentation().waitForIdleSync()
 
@@ -141,7 +141,7 @@ class EventBusMutationStateGuardTest {
             scenario.onActivity {
                 assertEquals(
                     "Expected the first follow mutation to increment followers to 11",
-                    WidgetPresenter.valueFormatter(11),
+                    WidgetState.valueFormatter(11),
                     followersCountRef.get().text.toString(),
                 )
                 assertTrue(
@@ -178,7 +178,7 @@ class EventBusMutationStateGuardTest {
             scenario.onActivity {
                 assertEquals(
                     "Expected the same follow mutation to be ignored after re-attach",
-                    WidgetPresenter.valueFormatter(11),
+                    WidgetState.valueFormatter(11),
                     followersCountRef.get().text.toString(),
                 )
             }

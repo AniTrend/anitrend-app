@@ -24,7 +24,7 @@ import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.crunchy.Channel
 import com.mxt.anitrend.model.entity.crunchy.Episode
 import com.mxt.anitrend.model.entity.crunchy.Rss
-import com.mxt.anitrend.presenter.widget.WidgetPresenter
+import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
@@ -37,7 +37,7 @@ import timber.log.Timber
  * Created by max on 2017/11/04.
  */
 abstract class FragmentChannelBase :
-    FragmentBase<Channel, WidgetPresenter<ConnectionContainer<List<ExternalLink>>>, Rss>(),
+    FragmentBase<Channel, BasePresenter, Rss>(),
     RecyclerLoadListener,
     CustomSwipeRefreshLayout.OnRefreshAndLoadListener,
     SharedPreferences.OnSharedPreferenceChangeListener {

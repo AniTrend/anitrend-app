@@ -75,6 +75,15 @@ class WidgetMutationCoordinator(
         }
     }
 
+    fun deleteMediaListEntry(
+        id: Long,
+        onResult: (Result<DeleteState>) -> Unit,
+    ) {
+        scope.launch {
+            onResult(browseRepository.deleteMediaListEntry(id))
+        }
+    }
+
     @Suppress("LongParameterList")
     fun saveMediaListEntry(
         id: Int?,

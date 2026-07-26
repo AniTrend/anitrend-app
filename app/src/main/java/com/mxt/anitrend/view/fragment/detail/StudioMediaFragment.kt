@@ -158,7 +158,7 @@ class StudioMediaFragment : FragmentBaseList<MediaBase, ConnectionContainer<Page
 
     /**
      * No-op: the direct ViewModel collection in [observeMediaViewModel] replaces the
-     * legacy [com.mxt.anitrend.base.custom.viewmodel.ViewModelBase] observer path.
+     * legacy observer path.
      */
     override fun onChanged(value: ConnectionContainer<PageContainer<MediaBase>>?) = Unit
 

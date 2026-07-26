@@ -14,13 +14,11 @@ import androidx.annotation.IntegerRes
 import androidx.annotation.MenuRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import com.mxt.anitrend.R
 import com.mxt.anitrend.analytics.contract.ISupportAnalytics
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
-import com.mxt.anitrend.base.custom.viewmodel.ViewModelBase
 import com.mxt.anitrend.base.interfaces.event.ActionModeListener
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener
 import com.mxt.anitrend.base.interfaces.event.ResponseCallback
@@ -52,7 +50,6 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> :
     @MenuRes
     private var inflateMenu: Int = 0
     protected var actionMode: ActionModeUtil<M>? = null
-    private var viewModelRef: ViewModelBase<VM>? = null
     private var presenterRef: P? = null
     protected lateinit var mediaActionUtil: MediaActionUtil
 
@@ -63,9 +60,6 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> :
     protected var mColumnSize: Int = 0
 
     val TAG: String = javaClass.simpleName
-
-    protected val viewModel: ViewModelBase<VM>?
-        get() = viewModelRef
 
     @get:JvmName("presenterInstance")
     val presenter: P
@@ -155,28 +149,6 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> :
     )
     fun setPresenter(presenter: P) {
         presenterRef = presenter
-    }
-
-    @Deprecated(
-        "Use direct androidx.lifecycle.ViewModel subclasses with ViewModelProvider " +
-            "(or later Koin by viewModel() / activityViewModel()) instead of the " +
-            "legacy ViewModelBase wrapper. " +
-            "See StaffOverviewFragment and StudioMediaFragment for proven fragment-side patterns.",
-        level = DeprecationLevel.ERROR,
-    )
-    @Suppress("UNCHECKED_CAST")
-    protected fun setViewModel(stateSupported: Boolean) {
-        if (viewModelRef == null) {
-            val provider = ViewModelProvider(this)
-            viewModelRef = provider.get(ViewModelBase::class.java) as ViewModelBase<VM>
-            viewModelRef?.setContext(requireContext())
-            if (viewModelRef?.model?.hasActiveObservers() == false) {
-                viewModelRef?.model?.observe(this, this)
-            }
-            if (stateSupported) {
-                viewModelRef?.state = this
-            }
-        }
     }
 
     fun setFilterable(filterable: Boolean) {

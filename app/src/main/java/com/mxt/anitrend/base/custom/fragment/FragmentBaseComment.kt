@@ -19,7 +19,7 @@ import com.mxt.anitrend.databinding.FragmentCommentBinding
 import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.anilist.FeedReply
-import com.mxt.anitrend.presenter.widget.WidgetPresenter
+import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
@@ -30,7 +30,7 @@ import com.mxt.anitrend.widget.ProgressLayout
  * Comment fragment base class style
  */
 abstract class FragmentBaseComment :
-    FragmentBase<FeedReply, WidgetPresenter<FeedList>, FeedList>(),
+    FragmentBase<FeedReply, BasePresenter, FeedList>(),
     RecyclerLoadListener,
     CustomSwipeRefreshLayout.OnRefreshAndLoadListener,
     SharedPreferences.OnSharedPreferenceChangeListener {

@@ -1,11 +1,16 @@
 package com.mxt.anitrend.repository
 
+import co.anitrend.retrofit.graphql.model.body.GraphContainer
 import com.mxt.anitrend.graphql.generated.MediaSort
 import com.mxt.anitrend.graphql.generated.StudioBase
+import com.mxt.anitrend.graphql.generated.StudioBaseData
 import com.mxt.anitrend.graphql.generated.StudioMedia
+import com.mxt.anitrend.graphql.generated.StudioMediaData
 import com.mxt.anitrend.model.api.retro.anilist.StudioModel
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
+import com.mxt.anitrend.repository.mapper.toStudioEntity
+import com.mxt.anitrend.repository.mapper.toStudioMediaConnection
 import com.mxt.anitrend.util.graphql.apiError
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -28,11 +33,19 @@ class StudioRepository(
             val request = StudioBase.request(id = id.toInt())
             val response = studioService.getStudioBase(request).execute()
             if (response.isSuccessful) {
-                handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                handleStudioBase(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
                 throw RuntimeException(response.apiError())
             }
         }
+    }
+
+    private fun handleStudioBase(body: GraphContainer<StudioBaseData>): StudioEntity {
+        val graphErrors = body.errors
+        if (!graphErrors.isNullOrEmpty()) {
+            throw RuntimeException(graphErrors.first().message ?: "GraphQL error")
+        }
+        return body.data?.toStudioEntity() ?: throw IllegalStateException("Empty response body")
     }
 
     suspend fun getStudioMedia(
@@ -45,10 +58,18 @@ class StudioRepository(
             val request = StudioMedia.request(id = id.toInt(), page = page, perPage = perPage, sort = sort)
             val response = studioService.getStudioMedia(request).execute()
             if (response.isSuccessful) {
-                handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                handleStudioMedia(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
                 throw RuntimeException(response.apiError())
             }
         }
+    }
+
+    private fun handleStudioMedia(body: GraphContainer<StudioMediaData>): ConnectionContainer<PageContainer<MediaEntity>> {
+        val graphErrors = body.errors
+        if (!graphErrors.isNullOrEmpty()) {
+            throw RuntimeException(graphErrors.first().message ?: "GraphQL error")
+        }
+        return body.data?.toStudioMediaConnection() ?: throw IllegalStateException("Empty response body")
     }
 }

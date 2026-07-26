@@ -10,22 +10,17 @@ import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.view.widget.CustomSeriesAnimeManage
 import com.mxt.anitrend.base.custom.view.widget.CustomSeriesManageBase
 import com.mxt.anitrend.base.custom.view.widget.CustomSeriesMangaManage
-import com.mxt.anitrend.base.interfaces.event.RetroCallback
+import com.mxt.anitrend.coordinator.WidgetMutationCoordinator
 import com.mxt.anitrend.extension.getCompatTintedDrawable
 import com.mxt.anitrend.extension.koinOf
-import com.mxt.anitrend.model.entity.anilist.MediaList
-import com.mxt.anitrend.model.entity.anilist.meta.DeleteState
+import com.mxt.anitrend.graphql.generated.FuzzyDateInput
+import com.mxt.anitrend.graphql.generated.MediaListStatus
+import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate
 import com.mxt.anitrend.model.entity.base.MediaBase
-import com.mxt.anitrend.presenter.widget.WidgetPresenter
-import com.mxt.anitrend.repository.BrowseMutation
-import com.mxt.anitrend.repository.BrowseRepository
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
-import com.mxt.anitrend.util.graphql.apiError
-import retrofit2.Call
-import retrofit2.Response
 import timber.log.Timber
 
 /**
@@ -91,57 +86,39 @@ internal object MediaDialogUtil {
         val progressDialog = NotifyUtil.createProgressDialog(context, R.string.text_processing_request)
         progressDialog.show()
 
-        val presenter = koinOf<WidgetPresenter<MediaList>>()
         val params = seriesManageBase.persistChanges()
-        presenter.params = params
-
-        @KeyUtil.RequestType
-        val requestType = KeyUtil.MUT_SAVE_MEDIA_LIST
-
-        presenter.requestData(
-            requestType,
-            context,
-            object : RetroCallback<MediaList> {
-                override fun onResponse(
-                    call: Call<MediaList>,
-                    response: Response<MediaList>,
-                ) {
-                    try {
-                        progressDialog.dismiss()
+        koinOf<WidgetMutationCoordinator>().saveMediaListEntry(
+            id = params.intValue(KeyUtil.arg_id),
+            mediaId = params.longValue(KeyUtil.arg_mediaId),
+            status = params.enumValue<MediaListStatus>(KeyUtil.arg_listStatus),
+            score = params.doubleValue(KeyUtil.arg_listScore),
+            progress = params.intValue(KeyUtil.arg_listProgress),
+            progressVolumes = params.intValue(KeyUtil.arg_listProgressVolumes),
+            repeat = params.intValue(KeyUtil.arg_listRepeat),
+            priority = params.intValue(KeyUtil.arg_listPriority),
+            private = params.boolValue(KeyUtil.arg_listPrivate) ?: false,
+            hiddenFromStatusLists = params.boolValue(KeyUtil.arg_listHiddenFromStatusLists) ?: false,
+            customLists = params.stringListValue(KeyUtil.arg_listCustom),
+            advancedScores = params.doubleListValue(KeyUtil.arg_listAdvancedScore),
+            notes = params.stringValue(KeyUtil.arg_listNotes),
+            startedAt = params.fuzzyDateInputValue(KeyUtil.arg_startedAt),
+            completedAt = params.fuzzyDateInputValue(KeyUtil.arg_completedAt),
+        ) { result ->
+            try {
+                progressDialog.dismiss()
+                result
+                    .onSuccess { mediaList ->
                         val modelClone = seriesManageBase.getModel().clone()
-                        val responseBody = response.body()
-                        if (response.isSuccessful && responseBody != null) {
-                            responseBody.media = modelClone.media
-                            koinOf<BrowseRepository>().emitMutationEvent(BrowseMutation.MediaListSaved(responseBody))
-                            NotifyUtil
-                                .makeText(
-                                    context,
-                                    context.getString(R.string.text_changes_saved),
-                                    R.drawable.ic_check_circle_white_24dp,
-                                    Toast.LENGTH_SHORT,
-                                ).show()
-                        } else {
-                            Timber.w(response.apiError())
-                            NotifyUtil
-                                .makeText(
-                                    context,
-                                    context.getString(R.string.text_error_request),
-                                    R.drawable.ic_warning_white_18dp,
-                                    Toast.LENGTH_SHORT,
-                                ).show()
-                        }
-                    } catch (e: Exception) {
-                        Timber.w(e)
-                    }
-                }
-
-                override fun onFailure(
-                    call: Call<MediaList>,
-                    throwable: Throwable,
-                ) {
-                    Timber.e(throwable)
-                    try {
-                        progressDialog.dismiss()
+                        mediaList.media = modelClone.media
+                        NotifyUtil
+                            .makeText(
+                                context,
+                                context.getString(R.string.text_changes_saved),
+                                R.drawable.ic_check_circle_white_24dp,
+                                Toast.LENGTH_SHORT,
+                            ).show()
+                    }.onFailure { throwable ->
+                        Timber.e(throwable)
                         NotifyUtil
                             .makeText(
                                 context,
@@ -149,12 +126,11 @@ internal object MediaDialogUtil {
                                 R.drawable.ic_warning_white_18dp,
                                 Toast.LENGTH_SHORT,
                             ).show()
-                    } catch (e: Exception) {
-                        Timber.e(e)
                     }
-                }
-            },
-        )
+            } catch (e: Exception) {
+                Timber.e(e)
+            }
+        }
     }
 
     /**
@@ -170,61 +146,23 @@ internal object MediaDialogUtil {
         val progressDialog = NotifyUtil.createProgressDialog(context, R.string.text_processing_request)
         progressDialog.show()
 
-        seriesManageBase.persistChanges()
-
-        val presenter = koinOf<WidgetPresenter<DeleteState>>()
-        val params: Bundle = seriesManageBase.persistChanges()
-        presenter.params = params
-
-        @KeyUtil.RequestType
-        val requestType = KeyUtil.MUT_DELETE_MEDIA_LIST
-
-        presenter.requestData(
-            requestType,
-            context,
-            object : RetroCallback<DeleteState> {
-                override fun onResponse(
-                    call: Call<DeleteState>,
-                    response: Response<DeleteState>,
-                ) {
-                    try {
-                        progressDialog.dismiss()
-                        val deleteState = response.body()
-                        if (response.isSuccessful && deleteState != null) {
-                            if (deleteState.isDeleted) {
-                                koinOf<BrowseRepository>().emitMutationEvent(
-                                    BrowseMutation.MediaListDeleted(seriesManageBase.getModel().id),
-                                )
-                                NotifyUtil
-                                    .makeText(
-                                        context,
-                                        context.getString(R.string.text_changes_saved),
-                                        R.drawable.ic_check_circle_white_24dp,
-                                        Toast.LENGTH_SHORT,
-                                    ).show()
-                            }
-                        } else {
-                            Timber.w(response.apiError())
+        val id = seriesManageBase.getModel().id
+        koinOf<WidgetMutationCoordinator>().deleteMediaListEntry(id) { result ->
+            try {
+                progressDialog.dismiss()
+                result
+                    .onSuccess { deleteState ->
+                        if (deleteState.isDeleted) {
                             NotifyUtil
                                 .makeText(
                                     context,
-                                    context.getString(R.string.text_error_request),
-                                    R.drawable.ic_warning_white_18dp,
+                                    context.getString(R.string.text_changes_saved),
+                                    R.drawable.ic_check_circle_white_24dp,
                                     Toast.LENGTH_SHORT,
                                 ).show()
                         }
-                    } catch (e: Exception) {
-                        Timber.e(e)
-                    }
-                }
-
-                override fun onFailure(
-                    call: Call<DeleteState>,
-                    throwable: Throwable,
-                ) {
-                    Timber.w(throwable)
-                    try {
-                        progressDialog.dismiss()
+                    }.onFailure { throwable ->
+                        Timber.w(throwable)
                         NotifyUtil
                             .makeText(
                                 context,
@@ -232,12 +170,11 @@ internal object MediaDialogUtil {
                                 R.drawable.ic_warning_white_18dp,
                                 Toast.LENGTH_SHORT,
                             ).show()
-                    } catch (e: Exception) {
-                        Timber.e(e)
                     }
-                }
-            },
-        )
+            } catch (e: Exception) {
+                Timber.e(e)
+            }
+        }
     }
 
     /**
@@ -275,5 +212,74 @@ internal object MediaDialogUtil {
                     ),
                 )
         return materialBuilder
+    }
+
+    @Suppress("DEPRECATION")
+    private fun Bundle.value(key: String): Any? = if (containsKey(key)) get(key) else null
+
+    private fun Bundle.intValue(key: String): Int? = value(key).asInt()
+
+    private fun Bundle.longValue(key: String): Long? = when (val rawValue = value(key)) {
+        is Number -> rawValue.toLong()
+        is String -> rawValue.toLongOrNull()
+        else -> null
+    }
+
+    private fun Bundle.stringValue(key: String): String? = value(key)?.toString()
+
+    private fun Bundle.boolValue(key: String): Boolean? = when (val rawValue = value(key)) {
+        is Boolean -> rawValue
+        is String -> rawValue.toBooleanStrictOrNull()
+        else -> null
+    }
+
+    private fun Bundle.doubleValue(key: String): Double? = when (val rawValue = value(key)) {
+        is Number -> rawValue.toDouble()
+        is String -> rawValue.toDoubleOrNull()
+        else -> null
+    }
+
+    private fun Any?.asInt(): Int? = when (this) {
+        is Number -> toInt()
+        is String -> toIntOrNull()
+        else -> null
+    }
+
+    private fun Bundle.stringListValue(key: String): List<String?>? = when (val rawValue = value(key)) {
+        is Iterable<*> -> rawValue.map { it?.toString() }.takeIf { it.isNotEmpty() }
+        is Array<*> -> rawValue.map { it?.toString() }.takeIf { it.isNotEmpty() }
+        else -> rawValue?.toString()?.let(::listOf)
+    }
+
+    private fun Bundle.doubleListValue(key: String): List<Double?>? = when (val rawValue = value(key)) {
+        is Iterable<*> -> rawValue.mapNotNull { valueItem ->
+            when (valueItem) {
+                is Number -> valueItem.toDouble()
+                is String -> valueItem.toDoubleOrNull()
+                else -> null
+            }
+        }.takeIf { it.isNotEmpty() }
+        is DoubleArray -> rawValue.toList().takeIf { it.isNotEmpty() }
+        is FloatArray -> rawValue.map { it.toDouble() }.takeIf { it.isNotEmpty() }
+        else -> doubleValue(key)?.let(::listOf)
+    }
+
+    private fun Bundle.fuzzyDateInputValue(key: String): FuzzyDateInput? = when (val rawValue = value(key)) {
+        is FuzzyDateInput -> rawValue
+        is FuzzyDate -> rawValue.takeIf { it.isValidDate }?.let { date ->
+            FuzzyDateInput(
+                day = date.day,
+                month = date.month,
+                year = date.year,
+            )
+        }
+        else -> null
+    }
+
+    private inline fun <reified T : Enum<T>> Bundle.enumValue(key: String): T? {
+        val enumName = value(key)?.toString() ?: return null
+        return runCatching { enumValueOf<T>(enumName) }
+            .onFailure { Timber.tag(tagName).w(it, "Unknown %s value: %s", T::class.java.simpleName, enumName) }
+            .getOrNull()
     }
 }

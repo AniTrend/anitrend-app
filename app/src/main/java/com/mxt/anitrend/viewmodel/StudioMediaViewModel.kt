@@ -3,26 +3,19 @@ package com.mxt.anitrend.viewmodel
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.anitrend.retrofit.graphql.model.attribute.GraphError
 import com.mxt.anitrend.graphql.generated.MediaSort
-import com.mxt.anitrend.graphql.generated.StudioMedia
-import com.mxt.anitrend.model.api.retro.anilist.StudioModel
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
-import com.mxt.anitrend.util.graphql.apiError
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
+import com.mxt.anitrend.repository.StudioRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class StudioMediaViewModel(
-    private val studioService: StudioModel,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val studioRepository: StudioRepository,
 ) : ViewModel() {
 
     sealed interface UiState {
@@ -47,31 +40,12 @@ class StudioMediaViewModel(
         viewModelScope.launch {
             _state.value = UiState.Loading
             runCatching {
-                withContext(ioDispatcher) {
-                    val sortList = resolveMediaSort(sort)
-                    val request = StudioMedia.request(
-                        id = studioId.toInt(),
-                        page = page,
-                        perPage = perPage,
-                        sort = sortList,
-                    )
-                    val response = studioService.getStudioMedia(request).execute()
-                    if (response.isSuccessful) {
-                        val body = response.body()
-                            ?: throw IllegalStateException("Empty response body")
-                        val graphErrors: List<GraphError>? = body.errors
-                        if (!graphErrors.isNullOrEmpty()) {
-                            throw RuntimeException(
-                                graphErrors.first().message
-                                    ?: "GraphQL error",
-                            )
-                        }
-                        body.data?.result
-                            ?: throw IllegalStateException("Empty response body")
-                    } else {
-                        throw RuntimeException(response.apiError())
-                    }
-                }
+                studioRepository.getStudioMedia(
+                    id = studioId,
+                    page = page,
+                    perPage = perPage,
+                    sort = resolveMediaSort(sort),
+                ).getOrThrow()
             }.onSuccess { container ->
                 _state.value = UiState.Success(container)
             }.onFailure { throwable ->

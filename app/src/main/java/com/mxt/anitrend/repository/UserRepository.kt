@@ -20,6 +20,7 @@ import com.mxt.anitrend.model.api.retro.anilist.UserModel
 import com.mxt.anitrend.model.entity.anilist.Favourite
 import com.mxt.anitrend.model.entity.anilist.Notification
 import com.mxt.anitrend.model.entity.anilist.User
+import com.mxt.anitrend.model.entity.base.NotificationHistory
 import com.mxt.anitrend.model.entity.anilist.user.UserStatisticTypes
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
@@ -49,6 +50,21 @@ class UserRepository(
         val current = boxQuery.currentUser ?: return false
         return userName?.let { current.name == it }
             ?: (userId != 0L && current.id == userId)
+    }
+
+    /** Persists the authenticated user in the existing current user cache. */
+    fun saveCurrentUser(user: User) {
+        boxQuery.currentUser = user
+    }
+
+    /** Persists notification ids as read notification history entries. */
+    fun saveNotificationHistory(notifications: PageContainer<Notification>) {
+        val notificationHistories = notifications.pageData
+            .map { notification -> NotificationHistory(notification.id) }
+
+        boxQuery
+            .getBoxStore(NotificationHistory::class.java)
+            .put(notificationHistories)
     }
 
     suspend fun getCurrentUser(asHtml: Boolean = false): Result<User> = withContext(ioDispatcher) {

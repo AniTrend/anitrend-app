@@ -2,9 +2,11 @@ package com.mxt.anitrend.model.api.retro.anilist
 
 import co.anitrend.retrofit.graphql.model.EmptyGraphQLVariables
 import co.anitrend.retrofit.graphql.model.GraphQLRequest
+import co.anitrend.retrofit.graphql.model.body.GraphContainer
+import com.mxt.anitrend.graphql.generated.GenreCollectionData
+import com.mxt.anitrend.graphql.generated.MediaTagCollectionData
 import com.mxt.anitrend.graphql.generated.ToggleFavouriteVariables
 import com.mxt.anitrend.graphql.generated.ToggleLikeVariables
-import com.mxt.anitrend.model.entity.anilist.MediaTag
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.model.entity.container.body.AniListContainer
 import okhttp3.ResponseBody
@@ -22,13 +24,13 @@ interface BaseModel {
     @Headers("Content-Type: application/json")
     fun getGenres(
         @Body request: GraphQLRequest<EmptyGraphQLVariables>,
-    ): Call<AniListContainer<List<String>>>
+    ): Call<GraphContainer<GenreCollectionData>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
     fun getTags(
         @Body request: GraphQLRequest<EmptyGraphQLVariables>,
-    ): Call<AniListContainer<List<MediaTag>>>
+    ): Call<GraphContainer<MediaTagCollectionData>>
 
     @POST("/")
     @Headers("Content-Type: application/json")

@@ -2,28 +2,21 @@ package com.mxt.anitrend.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.anitrend.retrofit.graphql.model.attribute.GraphError
 import com.mxt.anitrend.graphql.generated.MediaListSort
 import com.mxt.anitrend.graphql.generated.MediaListStatus
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.graphql.generated.ScoreFormat
-import com.mxt.anitrend.model.api.retro.anilist.BrowseModel
 import com.mxt.anitrend.model.entity.anilist.MediaListCollection
 import com.mxt.anitrend.model.entity.container.body.PageContainer
-import com.mxt.anitrend.util.graphql.apiError
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
+import com.mxt.anitrend.repository.BrowseRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import timber.log.Timber
-import com.mxt.anitrend.graphql.generated.MediaListCollection as GenMediaListCollection
 
 class AiringListViewModel(
-    private val browseService: BrowseModel,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val browseRepository: BrowseRepository,
 ) : ViewModel() {
 
     sealed interface UiState {
@@ -48,36 +41,16 @@ class AiringListViewModel(
         viewModelScope.launch {
             _state.value = UiState.Loading
             runCatching {
-                withContext(ioDispatcher) {
-                    val sortList: List<MediaListSort?>? =
-                        sort?.let { runCatching { MediaListSort.valueOf(it) }.getOrNull()?.let { listOf(it) } }
-                    val statusList: List<MediaListStatus?>? =
-                        statusIn?.let { runCatching { MediaListStatus.valueOf(it) }.getOrNull()?.let { listOf(it) } }
-                    val request = GenMediaListCollection.request(
-                        userId = userId,
-                        type = type,
-                        forceSingleCompletedList = true,
-                        sort = sortList,
-                        statusIn = statusList,
-                        scoreFormat = scoreFormat,
-                    )
-                    val response = browseService.getMediaListCollection(request).execute()
-                    if (response.isSuccessful) {
-                        val body = response.body()
-                            ?: throw IllegalStateException("Empty response body")
-                        val graphErrors: List<GraphError>? = body.errors
-                        if (!graphErrors.isNullOrEmpty()) {
-                            throw RuntimeException(
-                                graphErrors.first().message
-                                    ?: "GraphQL error",
-                            )
-                        }
-                        body.data?.result
-                            ?: throw IllegalStateException("Empty response body")
-                    } else {
-                        throw RuntimeException(response.apiError())
-                    }
-                }
+                val sortList = sort?.let { runCatching { MediaListSort.valueOf(it) }.getOrNull()?.let(::listOf) }
+                val statusList = statusIn?.let { runCatching { MediaListStatus.valueOf(it) }.getOrNull()?.let(::listOf) }
+                browseRepository.getMediaListCollection(
+                    userId = userId.toLong(),
+                    type = type,
+                    forceSingleCompletedList = true,
+                    sort = sortList,
+                    statusIn = statusList,
+                    scoreFormat = scoreFormat ?: ScoreFormat.POINT_100,
+                ).getOrThrow()
             }.onSuccess { content ->
                 _state.value = UiState.Success(content)
             }.onFailure { throwable ->
