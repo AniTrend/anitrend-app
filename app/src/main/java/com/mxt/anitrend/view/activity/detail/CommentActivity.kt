@@ -1,6 +1,7 @@
 package com.mxt.anitrend.view.activity.detail
 
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.mxt.anitrend.R
 import com.mxt.anitrend.databinding.ActivityFrameGenericBinding
@@ -37,5 +38,13 @@ class CommentActivity : AppCompatActivity() {
             .beginTransaction()
             .replace(R.id.content_frame, fragment, fragment.TAG)
             .commit()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            onBackPressedDispatcher.onBackPressed()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 }
