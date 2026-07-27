@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.mxt.anitrend.R
-import com.mxt.anitrend.base.custom.presenter.CommonPresenter
 import com.mxt.anitrend.base.custom.recycler.RecyclerScrollListener
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter
 import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView

@@ -19,7 +19,6 @@ import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.model.entity.anilist.MediaList
 import com.mxt.anitrend.model.entity.anilist.MediaListCollection
 import com.mxt.anitrend.model.entity.container.body.PageContainer
-import com.mxt.anitrend.presenter.fragment.MediaPresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil

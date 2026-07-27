@@ -13,7 +13,6 @@ import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.container.body.PageContainer
-import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil

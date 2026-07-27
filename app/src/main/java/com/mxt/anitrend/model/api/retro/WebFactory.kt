@@ -1,6 +1,5 @@
 package com.mxt.anitrend.model.api.retro
 
-import android.content.Context
 import com.google.gson.GsonBuilder
 import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.model.api.retro.anilist.AuthModel

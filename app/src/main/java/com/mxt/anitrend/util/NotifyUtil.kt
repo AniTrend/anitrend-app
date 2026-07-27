@@ -5,7 +5,6 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
-import android.widget.ProgressBar
 import android.widget.Space
 import android.widget.TextView
 import android.widget.Toast
@@ -218,7 +217,7 @@ object NotifyUtil {
                         CompatUtil.dipToPx(16f),
                         LinearLayout.LayoutParams.WRAP_CONTENT,
                     )
-                }
+                },
             )
             addView(
                 MaterialTextView(context).apply {

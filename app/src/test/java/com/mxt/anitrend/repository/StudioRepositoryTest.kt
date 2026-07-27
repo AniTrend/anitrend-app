@@ -4,8 +4,8 @@ import co.anitrend.retrofit.graphql.model.attribute.GraphError
 import co.anitrend.retrofit.graphql.model.body.GraphContainer
 import com.mxt.anitrend.graphql.generated.MediaFormat
 import com.mxt.anitrend.graphql.generated.MediaListStatus
-import com.mxt.anitrend.graphql.generated.MediaSort
 import com.mxt.anitrend.graphql.generated.MediaSeason
+import com.mxt.anitrend.graphql.generated.MediaSort
 import com.mxt.anitrend.graphql.generated.MediaStatus
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.graphql.generated.StudioBase
@@ -229,54 +229,51 @@ class StudioRepositoryTest {
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun studioBaseCall(): Call<GraphContainer<StudioBaseData>> =
-        mock(Call::class.java) as Call<GraphContainer<StudioBaseData>>
+    private fun studioBaseCall(): Call<GraphContainer<StudioBaseData>> = mock(Call::class.java) as Call<GraphContainer<StudioBaseData>>
 
     @Suppress("UNCHECKED_CAST")
-    private fun studioMediaCall(): Call<GraphContainer<StudioMediaData>> =
-        mock(Call::class.java) as Call<GraphContainer<StudioMediaData>>
+    private fun studioMediaCall(): Call<GraphContainer<StudioMediaData>> = mock(Call::class.java) as Call<GraphContainer<StudioMediaData>>
 
-    private fun studioMediaNode(): StudioMediaData.StudioMediaNodes =
-        StudioMediaData.StudioMediaNodes(
-            id = 10,
-            title = StudioMediaData.StudioMediaNodesTitle(
-                romaji = "Violet Evergarden",
-                english = "Violet Evergarden",
-                native = "ヴァイオレット・エヴァーガーデン",
-                userPreferred = "Violet Evergarden",
-            ),
-            coverImage = StudioMediaData.StudioMediaNodesCoverImage(
-                extraLarge = "extra.jpg",
-                large = "large.jpg",
-                medium = "medium.jpg",
-                color = "#fff",
-            ),
-            bannerImage = "banner.jpg",
-            type = MediaType.ANIME,
-            format = MediaFormat.TV,
-            season = MediaSeason.WINTER,
-            status = MediaStatus.FINISHED,
-            siteUrl = "https://anilist.co/anime/10",
-            meanScore = 84,
-            averageScore = 85,
-            startDate = StudioMediaData.StudioMediaNodesStartDate(day = 11, month = 1, year = 2018),
-            endDate = StudioMediaData.StudioMediaNodesEndDate(day = 5, month = 4, year = 2018),
-            episodes = 13,
-            chapters = null,
-            volumes = null,
-            isAdult = false,
-            isFavourite = true,
-            nextAiringEpisode = StudioMediaData.StudioMediaNodesNextAiringEpisode(
-                id = 100,
-                mediaId = 10,
-                airingAt = 123456789,
-                timeUntilAiring = 3600,
-                episode = 14,
-            ),
-            mediaListEntry = StudioMediaData.StudioMediaNodesMediaListEntry(
-                id = 200,
-                status = MediaListStatus.COMPLETED,
-            ),
-            updatedAt = 123,
-        )
+    private fun studioMediaNode(): StudioMediaData.StudioMediaNodes = StudioMediaData.StudioMediaNodes(
+        id = 10,
+        title = StudioMediaData.StudioMediaNodesTitle(
+            romaji = "Violet Evergarden",
+            english = "Violet Evergarden",
+            native = "ヴァイオレット・エヴァーガーデン",
+            userPreferred = "Violet Evergarden",
+        ),
+        coverImage = StudioMediaData.StudioMediaNodesCoverImage(
+            extraLarge = "extra.jpg",
+            large = "large.jpg",
+            medium = "medium.jpg",
+            color = "#fff",
+        ),
+        bannerImage = "banner.jpg",
+        type = MediaType.ANIME,
+        format = MediaFormat.TV,
+        season = MediaSeason.WINTER,
+        status = MediaStatus.FINISHED,
+        siteUrl = "https://anilist.co/anime/10",
+        meanScore = 84,
+        averageScore = 85,
+        startDate = StudioMediaData.StudioMediaNodesStartDate(day = 11, month = 1, year = 2018),
+        endDate = StudioMediaData.StudioMediaNodesEndDate(day = 5, month = 4, year = 2018),
+        episodes = 13,
+        chapters = null,
+        volumes = null,
+        isAdult = false,
+        isFavourite = true,
+        nextAiringEpisode = StudioMediaData.StudioMediaNodesNextAiringEpisode(
+            id = 100,
+            mediaId = 10,
+            airingAt = 123456789,
+            timeUntilAiring = 3600,
+            episode = 14,
+        ),
+        mediaListEntry = StudioMediaData.StudioMediaNodesMediaListEntry(
+            id = 200,
+            status = MediaListStatus.COMPLETED,
+        ),
+        updatedAt = 123,
+    )
 }

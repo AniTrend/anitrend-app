@@ -337,7 +337,7 @@ private val networkModule = module {
             json = KotlinxGraphQLJson(
                 json = Json {
                     ignoreUnknownKeys = !BuildConfig.DEBUG
-                }
+                },
             ),
             registry = get(),
         )

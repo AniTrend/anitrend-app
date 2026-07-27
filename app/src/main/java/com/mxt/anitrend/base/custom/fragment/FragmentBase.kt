@@ -17,18 +17,15 @@ import androidx.lifecycle.Observer
 import com.google.android.material.snackbar.Snackbar
 import com.mxt.anitrend.R
 import com.mxt.anitrend.analytics.contract.ISupportAnalytics
-import com.mxt.anitrend.base.custom.presenter.CommonPresenter
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
 import com.mxt.anitrend.base.interfaces.event.ActionModeListener
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener
 import com.mxt.anitrend.base.interfaces.event.ResponseCallback
-import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.ActionModeUtil
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.media.MediaActionUtil
 import org.koin.android.ext.android.inject
 import timber.log.Timber
-import kotlin.jvm.JvmName
 
 abstract class FragmentBase<M, VM> :
     Fragment(),

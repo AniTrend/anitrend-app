@@ -9,8 +9,7 @@ class AniGraphResponseConverter<T>(
     private val type: Type,
     private val gson: Gson,
 ) : Converter<ResponseBody, T> {
-    override fun convert(responseBody: ResponseBody): T? =
-        responseBody.use {
-            gson.fromJson(it.string(), type)
-        }
+    override fun convert(responseBody: ResponseBody): T? = responseBody.use {
+        gson.fromJson(it.string(), type)
+    }
 }

@@ -174,8 +174,7 @@ class WorkerRepositoryRoutingTest {
         override var mediaTags: List<MediaTag> = emptyList()
         override var genreCollection: List<Genre> = emptyList()
 
-        override fun <S> getBoxStore(classType: Class<S>): Box<S> =
-            throw UnsupportedOperationException("Not used in worker routing tests")
+        override fun <S> getBoxStore(classType: Class<S>): Box<S> = throw UnsupportedOperationException("Not used in worker routing tests")
 
         override fun invalidateBoxStores() = Unit
     }

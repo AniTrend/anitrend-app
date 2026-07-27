@@ -295,57 +295,51 @@ class CharacterRepositoryTest {
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun characterBaseCall(): Call<GraphContainer<CharacterBaseData>> =
-        mock(Call::class.java) as Call<GraphContainer<CharacterBaseData>>
+    private fun characterBaseCall(): Call<GraphContainer<CharacterBaseData>> = mock(Call::class.java) as Call<GraphContainer<CharacterBaseData>>
 
     @Suppress("UNCHECKED_CAST")
-    private fun characterOverviewCall(): Call<GraphContainer<CharacterOverviewData>> =
-        mock(Call::class.java) as Call<GraphContainer<CharacterOverviewData>>
+    private fun characterOverviewCall(): Call<GraphContainer<CharacterOverviewData>> = mock(Call::class.java) as Call<GraphContainer<CharacterOverviewData>>
 
     @Suppress("UNCHECKED_CAST")
-    private fun characterMediaCall(): Call<AniListContainer<ConnectionContainer<PageContainer<MediaEntity>>>> =
-        mock(Call::class.java) as Call<AniListContainer<ConnectionContainer<PageContainer<MediaEntity>>>>
+    private fun characterMediaCall(): Call<AniListContainer<ConnectionContainer<PageContainer<MediaEntity>>>> = mock(Call::class.java) as Call<AniListContainer<ConnectionContainer<PageContainer<MediaEntity>>>>
 
     @Suppress("UNCHECKED_CAST")
-    private fun characterActorsCall(): Call<AniListContainer<ConnectionContainer<EdgeContainer<MediaEdge>>>> =
-        mock(Call::class.java) as Call<AniListContainer<ConnectionContainer<EdgeContainer<MediaEdge>>>>
+    private fun characterActorsCall(): Call<AniListContainer<ConnectionContainer<EdgeContainer<MediaEdge>>>> = mock(Call::class.java) as Call<AniListContainer<ConnectionContainer<EdgeContainer<MediaEdge>>>>
 
-    private fun characterBaseData(): CharacterBaseData =
-        CharacterBaseData(
-            character = CharacterBaseData.Character(
-                id = 1,
-                name = CharacterBaseData.CharacterName(
-                    first = "Spike",
-                    last = "Spiegel",
-                    native = "スパイク・スピーゲル",
-                    alternative = listOf("Spikey"),
-                ),
-                image = CharacterBaseData.CharacterImage(
-                    large = "large.jpg",
-                    medium = "medium.jpg",
-                ),
-                isFavourite = true,
-                siteUrl = "https://anilist.co/character/1",
+    private fun characterBaseData(): CharacterBaseData = CharacterBaseData(
+        character = CharacterBaseData.Character(
+            id = 1,
+            name = CharacterBaseData.CharacterName(
+                first = "Spike",
+                last = "Spiegel",
+                native = "スパイク・スピーゲル",
+                alternative = listOf("Spikey"),
             ),
-        )
-
-    private fun characterOverviewData(): CharacterOverviewData =
-        CharacterOverviewData(
-            character = CharacterOverviewData.Character(
-                id = 2,
-                description = "Space cowboy",
-                name = CharacterOverviewData.CharacterName(
-                    first = "Faye",
-                    last = "Valentine",
-                    native = "フェイ・ヴァレンタイン",
-                    alternative = listOf("Poker Alice"),
-                ),
-                image = CharacterOverviewData.CharacterImage(
-                    large = "large-faye.jpg",
-                    medium = "medium-faye.jpg",
-                ),
-                isFavourite = false,
-                siteUrl = "https://anilist.co/character/2",
+            image = CharacterBaseData.CharacterImage(
+                large = "large.jpg",
+                medium = "medium.jpg",
             ),
-        )
+            isFavourite = true,
+            siteUrl = "https://anilist.co/character/1",
+        ),
+    )
+
+    private fun characterOverviewData(): CharacterOverviewData = CharacterOverviewData(
+        character = CharacterOverviewData.Character(
+            id = 2,
+            description = "Space cowboy",
+            name = CharacterOverviewData.CharacterName(
+                first = "Faye",
+                last = "Valentine",
+                native = "フェイ・ヴァレンタイン",
+                alternative = listOf("Poker Alice"),
+            ),
+            image = CharacterOverviewData.CharacterImage(
+                large = "large-faye.jpg",
+                medium = "medium-faye.jpg",
+            ),
+            isFavourite = false,
+            siteUrl = "https://anilist.co/character/2",
+        ),
+    )
 }

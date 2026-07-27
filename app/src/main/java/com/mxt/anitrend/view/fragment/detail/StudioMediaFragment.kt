@@ -16,7 +16,6 @@ import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
-import com.mxt.anitrend.presenter.fragment.MediaPresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil

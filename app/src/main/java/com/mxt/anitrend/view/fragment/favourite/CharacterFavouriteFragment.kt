@@ -13,7 +13,6 @@ import com.mxt.anitrend.model.entity.anilist.Favourite
 import com.mxt.anitrend.model.entity.base.CharacterBase
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.group.RecyclerItem
-import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.collection.GroupingUtil

@@ -20,7 +20,6 @@ import com.mxt.anitrend.databinding.FragmentListBinding
 import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.extension.parcelableArrayList
 import com.mxt.anitrend.model.entity.anilist.ExternalLink
-import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.crunchy.Channel
 import com.mxt.anitrend.model.entity.crunchy.Episode
 import com.mxt.anitrend.model.entity.crunchy.Rss

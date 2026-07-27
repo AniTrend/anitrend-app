@@ -15,7 +15,6 @@ import com.mxt.anitrend.model.entity.base.StaffBase
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.container.body.EdgeContainer
 import com.mxt.anitrend.model.entity.group.RecyclerItem
-import com.mxt.anitrend.presenter.fragment.MediaPresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.Settings

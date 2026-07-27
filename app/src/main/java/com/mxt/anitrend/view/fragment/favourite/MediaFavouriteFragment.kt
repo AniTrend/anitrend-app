@@ -13,7 +13,6 @@ import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
 import com.mxt.anitrend.model.entity.anilist.Favourite
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
-import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil

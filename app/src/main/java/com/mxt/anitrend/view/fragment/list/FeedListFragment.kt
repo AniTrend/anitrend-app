@@ -17,7 +17,6 @@ import com.mxt.anitrend.coordinator.WidgetMutationCoordinator
 import com.mxt.anitrend.graphql.generated.ActivityType
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.container.body.PageContainer
-import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil

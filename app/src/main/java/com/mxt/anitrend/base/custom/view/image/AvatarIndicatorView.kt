@@ -6,8 +6,8 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 import com.mxt.anitrend.R
-import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.base.interfaces.dao.BoxQuery
+import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.binding.setImage
 import com.mxt.anitrend.databinding.WidgetAvatarIndicatorBinding
 import com.mxt.anitrend.extension.getLayoutInflater

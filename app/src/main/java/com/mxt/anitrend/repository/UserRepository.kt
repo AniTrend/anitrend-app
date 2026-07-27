@@ -20,8 +20,8 @@ import com.mxt.anitrend.model.api.retro.anilist.UserModel
 import com.mxt.anitrend.model.entity.anilist.Favourite
 import com.mxt.anitrend.model.entity.anilist.Notification
 import com.mxt.anitrend.model.entity.anilist.User
-import com.mxt.anitrend.model.entity.base.NotificationHistory
 import com.mxt.anitrend.model.entity.anilist.user.UserStatisticTypes
+import com.mxt.anitrend.model.entity.base.NotificationHistory
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.util.graphql.apiError
