@@ -61,6 +61,9 @@ class WidgetMutationCoordinatorTest {
             browseRepository = browseRepository,
             userRepository = userRepository,
             feedRepository = feedRepository,
+            coroutineScope = this,
+            ioDispatcher = testDispatcher,
+            mainDispatcher = testDispatcher,
             databaseHelper = databaseHelper,
         )
         var callbackResult: Result<DeleteState>? = null
@@ -104,6 +107,9 @@ class WidgetMutationCoordinatorTest {
             browseRepository = browseRepository,
             userRepository = userRepository,
             feedRepository = feedRepository,
+            coroutineScope = this,
+            ioDispatcher = testDispatcher,
+            mainDispatcher = testDispatcher,
             databaseHelper = databaseHelper,
         )
         var callbackResult: Result<MediaList>? = null

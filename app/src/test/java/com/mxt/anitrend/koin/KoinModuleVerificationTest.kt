@@ -27,40 +27,42 @@ class KoinModuleVerificationTest {
      * When adding/removing a definition, update the corresponding entry.
      */
     private val expectedDefinitionCounts = mapOf(
-        0 to 8, // coreModule (DatabaseHelper now wraps BoxStore, bound to BoxQuery)
-        1 to 2, // widgetModule
-        2 to 5, // workerModule
-        3 to 1, // presenterModule
-        4 to 6, // networkModule
-        5 to 10, // retrofitModule (OkHttpClient x4 + Retrofit x5 + Gson)
-        6 to 13, // serviceModule (9 AniList + BaseService + RepositoryService + Crunchyroll x2)
-        7 to 11, // repositoryModule (+ CrunchyrollRepository + WidgetMutationCoordinator)
-        8 to 17, // mediaFeatureModule
-        9 to 10, // userFeatureModule
-        10 to 5, // characterFeatureModule
-        11 to 7, // staffFeatureModule
-        12 to 4, // studioFeatureModule
-        13 to 5, // utilityFeatureModule (GiphyVM + LoginAuthVM + LoggingVM + logFile + metadata)
+        0 to 5, // coroutineModule (4 dispatchers + ApplicationScope)
+        1 to 8, // coreModule (DatabaseHelper now wraps BoxStore, bound to BoxQuery)
+        2 to 2, // widgetModule
+        3 to 5, // workerModule
+        4 to 1, // presenterModule
+        5 to 6, // networkModule
+        6 to 10, // retrofitModule (OkHttpClient x4 + Retrofit x5 + Gson)
+        7 to 13, // serviceModule (9 AniList + BaseService + RepositoryService + Crunchyroll x2)
+        8 to 11, // repositoryModule (+ CrunchyrollRepository + WidgetMutationCoordinator)
+        9 to 17, // mediaFeatureModule
+        10 to 10, // userFeatureModule
+        11 to 5, // characterFeatureModule
+        12 to 7, // staffFeatureModule
+        13 to 4, // studioFeatureModule
+        14 to 5, // utilityFeatureModule (GiphyVM + LoginAuthVM + LoggingVM + logFile + metadata)
     )
 
     @OptIn(KoinInternalApi::class)
     @Test
-    fun `appModules has exactly 14 entries`() {
+    fun `appModules has exactly 15 entries`() {
         assertEquals(
-            "appModules should contain exactly 14 modules:\n" +
-                "  core, widget, worker, presenter, network, retrofit,\n" +
+            "appModules should contain exactly 15 modules:\n" +
+                "  coroutineModule, core, widget, worker, presenter, network, retrofit,\n" +
                 "  service, repository,\n" +
                 "  mediaFeature, userFeature, characterFeature, staffFeature,\n" +
                 "  studioFeature, utilityFeature",
-            14,
+            15,
             appModules.includedModules.size,
         )
     }
 
+    @OptIn(KoinInternalApi::class)
     @Test
     fun `each module is non-null and at expected position`() {
-        val modules = appModules
-        for (i in 0 until 14) {
+        val modules = appModules.includedModules
+        for (i in 0 until 15) {
             assertNotNull("Module at index $i must not be null", modules[i])
         }
     }
@@ -82,11 +84,11 @@ class KoinModuleVerificationTest {
 
     @OptIn(KoinInternalApi::class)
     @Test
-    fun `appModules combined has 104 distinct definitions`() {
+    fun `appModules combined has 109 distinct definitions`() {
         val total = appModules.includedModules.sumOf { it.mappings.values.distinct().size }
         assertEquals(
-            "Combined distinct definition count drifted. Expected 104, got $total.",
-            104,
+            "Combined distinct definition count drifted. Expected 109, got $total.",
+            109,
             total,
         )
     }

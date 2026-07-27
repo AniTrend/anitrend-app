@@ -130,6 +130,12 @@ import io.noties.markwon.image.glide.GlideImagesPlugin
 import io.noties.markwon.linkify.LinkifyPlugin
 import io.wax911.emojify.EmojiManager
 import io.wax911.emojify.serializer.gson.GsonDeserializer
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -139,12 +145,40 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.bind
 import org.koin.dsl.module
+import org.koin.dsl.onClose
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 import timber.log.Timber
 import java.io.File
 import java.util.concurrent.TimeUnit
+
+private val coroutineModule = module {
+    single<CoroutineDispatcher>(DefaultDispatcherQualifier) {
+        Dispatchers.Default
+    }
+    single<CoroutineDispatcher>(MainDispatcherQualifier) {
+        Dispatchers.Main
+    }
+    single<CoroutineDispatcher>(IoDispatcherQualifier) {
+        Dispatchers.IO
+    }
+    single<CoroutineDispatcher>(UnconfinedDispatcherQualifier) {
+        Dispatchers.Unconfined
+    }
+    single<CoroutineScope>(
+        qualifier = ApplicationScopeQualifier,
+        createdAtStart = true,
+    ) {
+        CoroutineScope(
+            SupervisorJob() +
+                get<CoroutineDispatcher>(DefaultDispatcherQualifier) +
+                CoroutineName("ApplicationScope"),
+        )
+    } onClose { scope ->
+        scope?.cancel()
+    }
+}
 
 private val coreModule = module {
     single {
@@ -492,7 +526,7 @@ private val repositoryModule = module {
     single { FeedRepository(feedService = get()) }
     single { BaseRepository(baseService = get(), boxQuery = get()) }
     single { CrunchyrollRepository(feedService = get(named("crunchyrollFeed")), crunchyrollService = get(named("crunchyroll"))) }
-    single { WidgetMutationCoordinator(baseRepository = get(), browseRepository = get(), userRepository = get(), feedRepository = get(), databaseHelper = get()) }
+    single { WidgetMutationCoordinator(baseRepository = get(), browseRepository = get(), userRepository = get(), feedRepository = get(), coroutineScope = get(), ioDispatcher = get(IoDispatcherQualifier), mainDispatcher = get(MainDispatcherQualifier), databaseHelper = get()) }
 }
 
 private val mediaFeatureModule = module {
@@ -579,6 +613,7 @@ private val utilityFeatureModule = module {
 
 val appModules = module {
     includes(
+        coroutineModule,
         coreModule,
         widgetModule,
         workerModule,
