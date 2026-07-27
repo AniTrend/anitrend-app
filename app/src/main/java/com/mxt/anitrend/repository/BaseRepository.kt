@@ -24,8 +24,20 @@ import kotlinx.coroutines.withContext
 import com.mxt.anitrend.model.entity.base.UserBase as UserEntity
 
 sealed class BaseMutation {
-    data class LikeToggled(val users: List<UserEntity>) : BaseMutation()
-    data class FavouriteToggled(val result: Any) : BaseMutation()
+    data class LikeToggled(
+        val users: List<UserEntity>,
+        val targetId: Long,
+        val targetType: LikeableType,
+    ) : BaseMutation()
+
+    data class FavouriteToggled(
+        val result: Any,
+        val animeId: Int? = null,
+        val mangaId: Int? = null,
+        val characterId: Int? = null,
+        val staffId: Int? = null,
+        val studioId: Int? = null,
+    ) : BaseMutation()
 }
 
 class BaseRepository(
@@ -100,7 +112,13 @@ class BaseRepository(
             val response = baseService.toggleLike(request).execute()
             if (response.isSuccessful) {
                 val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
-                _mutationEvents.emit(BaseMutation.LikeToggled(result))
+                _mutationEvents.emit(
+                    BaseMutation.LikeToggled(
+                        users = result,
+                        targetId = id,
+                        targetType = type,
+                    ),
+                )
                 result
             } else {
                 throw RuntimeException(response.apiError())
@@ -123,7 +141,16 @@ class BaseRepository(
             if (!response.isSuccessful) {
                 throw RuntimeException(response.apiError())
             }
-            _mutationEvents.emit(BaseMutation.FavouriteToggled(Unit))
+            _mutationEvents.emit(
+                BaseMutation.FavouriteToggled(
+                    result = Unit,
+                    animeId = animeId,
+                    mangaId = mangaId,
+                    characterId = characterId,
+                    staffId = staffId,
+                    studioId = studioId,
+                ),
+            )
         }
     }
 }

@@ -69,7 +69,7 @@ class MessageFeedFragment : FeedListFragment() {
                             // Loading is handled by swipeRefreshLayout in the base class
                         }
                         is MessageFeedViewModel.UiState.Success -> {
-                            handleSuccess(state.content)
+                            handleSuccess(state.content, state.replaceExisting)
                         }
                         is MessageFeedViewModel.UiState.Error -> {
                             showError(state.message)
@@ -90,22 +90,9 @@ class MessageFeedFragment : FeedListFragment() {
         )
     }
 
-    private fun handleSuccess(value: PageContainer<FeedList>) {
-        if (value.hasPageInfo()) {
-            setPageInfo(value.pageInfo)
-        }
-        if (!value.isEmpty) {
-            val filtered = value.pageData.filter { !it.type.isNullOrBlank() }
-            mScrollListener.getPageInfo()?.perPage = filtered.size
-            onPostProcessed(filtered)
-        } else {
-            onPostProcessed(emptyList())
-        }
-        if (mAdapter.itemCount < 1) {
-            onPostProcessed(null)
-        }
+    override fun applyUpdatedFeedResult(feed: FeedList) {
+        messageFeedViewModel.applyReturnedFeed(feed)
     }
-
     override fun onItemClick(
         target: View,
         data: IndexedValue<FeedList>,

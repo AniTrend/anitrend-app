@@ -11,11 +11,13 @@ import com.mxt.anitrend.model.entity.base.RecommendationBase
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.container.body.EdgeContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
+import com.mxt.anitrend.repository.BaseMutation
 import com.mxt.anitrend.repository.BaseRepository
 import com.mxt.anitrend.repository.MediaRepository
 import com.mxt.anitrend.util.KeyUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -40,6 +42,9 @@ class MediaDetailViewModelTest {
         Dispatchers.setMain(testDispatcher)
         mediaRepository = mock(MediaRepository::class.java)
         baseRepository = mock(BaseRepository::class.java)
+        doReturn(MutableSharedFlow<BaseMutation>())
+            .`when`(baseRepository)
+            .mutationEvents
     }
 
     @After
@@ -132,7 +137,10 @@ class MediaDetailViewModelTest {
         doReturn(Result.success(content))
             .`when`(mediaRepository)
             .getMediaSocial(6L, true, 7, 1)
-        val viewModel = MediaFeedViewModel(mediaRepository = mediaRepository)
+        val viewModel = MediaFeedViewModel(
+            mediaRepository = mediaRepository,
+            baseRepository = baseRepository,
+        )
 
         viewModel.load(mediaId = 6L, isFollowing = true, page = 7, pageLimit = 1)
 

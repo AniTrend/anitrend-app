@@ -31,7 +31,7 @@ class KoinModuleVerificationTest {
         1 to 2, // widgetModule
         2 to 5, // workerModule
         3 to 1, // presenterModule
-        4 to 5, // networkModule
+        4 to 6, // networkModule
         5 to 10, // retrofitModule (OkHttpClient x4 + Retrofit x5 + Gson)
         6 to 13, // serviceModule (9 AniList + BaseModel + RepositoryModel + Crunchyroll x2)
         7 to 11, // repositoryModule (+ CrunchyrollRepository + WidgetMutationCoordinator)
@@ -81,11 +81,11 @@ class KoinModuleVerificationTest {
 
     @OptIn(KoinInternalApi::class)
     @Test
-    fun `appModules combined has 103 distinct definitions`() {
+    fun `appModules combined has 104 distinct definitions`() {
         val total = appModules.sumOf { it.mappings.values.distinct().size }
         assertEquals(
-            "Combined distinct definition count drifted. Expected 103, got $total.",
-            103,
+            "Combined distinct definition count drifted. Expected 104, got $total.",
+            104,
             total,
         )
     }

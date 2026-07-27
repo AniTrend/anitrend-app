@@ -34,6 +34,7 @@ import com.mxt.anitrend.base.plugin.image.ImageConfigurationPlugin
 import com.mxt.anitrend.base.plugin.text.TextConfigurationPlugin
 import com.mxt.anitrend.coordinator.WidgetMutationCoordinator
 import com.mxt.anitrend.data.DatabaseHelper
+import com.mxt.anitrend.extension.logFile
 import com.mxt.anitrend.graphql.generated.GeneratedGraphQLRegistry
 import com.mxt.anitrend.model.api.converter.AniGraphConverter
 import com.mxt.anitrend.model.api.interceptor.AuthInterceptor
@@ -504,7 +505,7 @@ private val mediaFeatureModule = module {
     viewModel { ReviewViewModel(browseRepository = get()) }
     viewModel { SuggestionListViewModel(userRepository = get(), browseRepository = get()) }
     viewModel { MediaCharacterViewModel(mediaRepository = get()) }
-    viewModel { MediaFeedViewModel(mediaRepository = get()) }
+    viewModel { MediaFeedViewModel(mediaRepository = get(), baseRepository = get()) }
     viewModel { MediaOverviewViewModel(repository = get(), settings = get<Settings>()) }
     viewModel { MediaRecommendationsViewModel(mediaRepository = get()) }
     viewModel { MediaRelationViewModel(mediaRepository = get()) }
@@ -518,13 +519,13 @@ private val mediaFeatureModule = module {
 private val userFeatureModule = module {
     viewModel { MainViewModel(userRepository = get()) }
     viewModel { UserOverviewViewModel(userRepository = get()) }
-    viewModel { UserFeedViewModel(feedRepository = get()) }
+    viewModel { UserFeedViewModel(feedRepository = get(), baseRepository = get()) }
     viewModel { UserListViewModel(userRepository = get()) }
     viewModel { UserSearchViewModel(searchRepository = get()) }
     viewModel { NotificationViewModel(userRepository = get()) }
     viewModel { ProfileViewModel(userRepository = get()) }
-    viewModel { FeedListViewModel(feedRepository = get()) }
-    viewModel { MessageFeedViewModel(feedRepository = get()) }
+    viewModel { FeedListViewModel(feedRepository = get(), baseRepository = get()) }
+    viewModel { MessageFeedViewModel(feedRepository = get(), baseRepository = get()) }
     viewModel { LoginUserViewModel(userRepository = get()) }
 }
 
@@ -563,7 +564,7 @@ private val utilityFeatureModule = module {
         )
     }
     factory<File>(named("logFile")) {
-        File(androidContext().filesDir, "timber.log")
+        androidContext().logFile()
     }
     factory<MetadataProvider> {
         {

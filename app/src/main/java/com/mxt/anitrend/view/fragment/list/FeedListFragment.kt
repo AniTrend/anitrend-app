@@ -1,5 +1,6 @@
 package com.mxt.anitrend.view.fragment.list
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.ActionMode
@@ -7,6 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -14,6 +16,7 @@ import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.FeedAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
 import com.mxt.anitrend.coordinator.WidgetMutationCoordinator
+import com.mxt.anitrend.extension.parcelable
 import com.mxt.anitrend.graphql.generated.ActivityType
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.container.body.PageContainer
@@ -45,6 +48,14 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
 
     private val feedListViewModel: FeedListViewModel by viewModel()
 
+    private val commentActivityLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode != Activity.RESULT_OK) {
+            return@registerForActivityResult
+        }
+        val updatedFeed = result.data?.extras?.parcelable<FeedList>(CommentActivity.extraUpdatedFeed) ?: return@registerForActivityResult
+        applyUpdatedFeedResult(updatedFeed)
+    }
+
     companion object {
         @JvmStatic
         fun newInstance(params: Bundle): FeedListFragment {
@@ -75,7 +86,7 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
                             // Loading is handled by swipeRefreshLayout in the base class
                         }
                         is FeedListViewModel.UiState.Success -> {
-                            handleSuccess(state.content)
+                            handleSuccess(state.content, state.replaceExisting)
                         }
                         is FeedListViewModel.UiState.Error -> {
                             showError(state.message)
@@ -157,16 +168,33 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
     /** No-op: StateFlow collector above handles the response. */
     override fun onChanged(value: PageContainer<FeedList>?) = Unit
 
-    private fun handleSuccess(value: PageContainer<FeedList>) {
+    protected open fun applyUpdatedFeedResult(feed: FeedList) {
+        feedListViewModel.applyReturnedFeed(feed)
+    }
+
+    protected fun handleSuccess(
+        value: PageContainer<FeedList>,
+        replaceExisting: Boolean = false,
+    ) {
         if (value.hasPageInfo()) {
             setPageInfo(value.pageInfo)
         }
         if (!value.isEmpty) {
             val filtered = value.pageData.filter { !it.type.isNullOrBlank() }
             mScrollListener.getPageInfo()?.perPage = filtered.size
-            onPostProcessed(filtered)
+            if (replaceExisting) {
+                mAdapter.onItemsInserted(filtered)
+                updateUI()
+            } else {
+                onPostProcessed(filtered)
+            }
         } else {
-            onPostProcessed(emptyList())
+            if (replaceExisting) {
+                mAdapter.onItemsInserted(emptyList())
+                updateUI()
+            } else {
+                onPostProcessed(emptyList())
+            }
         }
         if (mAdapter.itemCount < 1) {
             onPostProcessed(null)
@@ -194,7 +222,7 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
                     Intent(host, CommentActivity::class.java).apply {
                         putExtra(KeyUtil.arg_model, data.value)
                     }
-                CompatUtil.startRevealAnim(host, target, intent)
+                commentActivityLauncher.launch(intent)
             }
             R.id.widget_edit -> {
                 mBottomSheet =

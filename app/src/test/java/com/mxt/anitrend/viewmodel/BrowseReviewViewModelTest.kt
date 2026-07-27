@@ -4,10 +4,12 @@ import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.graphql.generated.ReviewSort
 import com.mxt.anitrend.model.entity.anilist.Review
 import com.mxt.anitrend.model.entity.container.body.PageContainer
+import com.mxt.anitrend.repository.BrowseMutation
 import com.mxt.anitrend.repository.BrowseRepository
 import com.mxt.anitrend.util.KeyUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -32,6 +34,9 @@ class BrowseReviewViewModelTest {
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
         browseRepository = mock(BrowseRepository::class.java)
+        doReturn(MutableSharedFlow<BrowseMutation>())
+            .`when`(browseRepository)
+            .mutationEvents
     }
 
     @After

@@ -8,6 +8,7 @@ import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.graphql.generated.ScoreFormat
 import com.mxt.anitrend.model.entity.anilist.MediaListCollection
 import com.mxt.anitrend.model.entity.container.body.PageContainer
+import com.mxt.anitrend.repository.BrowseMutation
 import com.mxt.anitrend.repository.BrowseRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -27,6 +28,21 @@ class AiringListViewModel(
 
     private val _state = MutableStateFlow<UiState>(UiState.Loading)
     val state: StateFlow<UiState> = _state.asStateFlow()
+    private var lastType: MediaType? = null
+    private var lastUserId: Int? = null
+    private var lastSort: String? = null
+    private var lastStatusIn: String? = null
+    private var lastScoreFormat: ScoreFormat? = null
+
+    init {
+        viewModelScope.launch {
+            browseRepository.mutationEvents.collect { event ->
+                if (event is BrowseMutation.MediaListSaved || event is BrowseMutation.MediaListDeleted) {
+                    reloadIfPossible()
+                }
+            }
+        }
+    }
 
     /**
      * Loads airing media list collection. Single load; not paginated.
@@ -38,6 +54,11 @@ class AiringListViewModel(
         statusIn: String?,
         scoreFormat: ScoreFormat?,
     ) {
+        lastType = type
+        lastUserId = userId
+        lastSort = sort
+        lastStatusIn = statusIn
+        lastScoreFormat = scoreFormat
         viewModelScope.launch {
             _state.value = UiState.Loading
             runCatching {
@@ -60,5 +81,20 @@ class AiringListViewModel(
                 )
             }
         }
+    }
+
+    private fun reloadIfPossible() {
+        val type = lastType ?: return
+        val userId = lastUserId ?: return
+        if (_state.value !is UiState.Success) {
+            return
+        }
+        load(
+            type = type,
+            userId = userId,
+            sort = lastSort,
+            statusIn = lastStatusIn,
+            scoreFormat = lastScoreFormat,
+        )
     }
 }

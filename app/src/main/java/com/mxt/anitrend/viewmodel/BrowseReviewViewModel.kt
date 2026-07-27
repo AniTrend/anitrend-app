@@ -6,6 +6,7 @@ import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.graphql.generated.ReviewSort
 import com.mxt.anitrend.model.entity.anilist.Review
 import com.mxt.anitrend.model.entity.container.body.PageContainer
+import com.mxt.anitrend.repository.BrowseMutation
 import com.mxt.anitrend.repository.BrowseRepository
 import com.mxt.anitrend.util.KeyUtil
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,6 +27,20 @@ class BrowseReviewViewModel(
 
     private val _state = MutableStateFlow<UiState>(UiState.Loading)
     val state: StateFlow<UiState> = _state.asStateFlow()
+    private val loadedReviews = linkedMapOf<Long, Review>()
+
+    init {
+        viewModelScope.launch {
+            browseRepository.mutationEvents.collect { event ->
+                if (event is BrowseMutation.ReviewRated) {
+                    loadedReviews[event.review.id]?.let { review ->
+                        review.applyReviewRating(event.review)
+                        emitUpdatedReviews()
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * Loads a browsable list of reviews. Repeatable for pagination; no loadedOnce guard.
@@ -47,6 +62,7 @@ class BrowseReviewViewModel(
                     asHtml = false,
                 ).getOrThrow()
             }.onSuccess { content ->
+                trackReviews(page, content.pageData)
                 _state.value = UiState.Success(content)
             }.onFailure { throwable ->
                 Timber.e(throwable, "BrowseReviewViewModel load failed")
@@ -54,6 +70,45 @@ class BrowseReviewViewModel(
                     throwable.message ?: "Failed to load reviews",
                 )
             }
+        }
+    }
+
+    private fun trackReviews(
+        page: Int,
+        reviews: List<Review>,
+    ) {
+        if (page <= 1) {
+            loadedReviews.clear()
+        }
+        reviews.forEach { review ->
+            loadedReviews[review.id] = review
+        }
+    }
+
+    private fun Review.applyReviewRating(source: Review) {
+        rating = source.rating
+        ratingAmount = source.ratingAmount
+        userRating = source.userRating
+    }
+
+    private fun emitUpdatedReviews() {
+        val current = _state.value as? UiState.Success ?: return
+        val updatedReviews = current.content.pageData.toList()
+        _state.value = UiState.Success(
+            PageContainer<Review>().apply {
+                if (current.content.hasPageInfo()) {
+                    pageInfo = current.content.pageInfo
+                }
+                pageData = updatedReviews
+            },
+        )
+        trackAllReviews(updatedReviews)
+    }
+
+    private fun trackAllReviews(reviews: List<Review>) {
+        loadedReviews.clear()
+        reviews.forEach { review ->
+            loadedReviews[review.id] = review
         }
     }
 }
