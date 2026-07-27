@@ -22,7 +22,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * Created by max on 2018/03/25.
  * StudioFavouriteFragment
  */
-class StudioFavouriteFragment : FragmentBaseList<StudioBase, ConnectionContainer<Favourite>, BasePresenter>() {
+class StudioFavouriteFragment : FragmentBaseList<StudioBase, ConnectionContainer<Favourite>>() {
     private var userId: Long = 0
 
     private val studioFavouritesViewModel: StudioFavouritesViewModel by viewModel()

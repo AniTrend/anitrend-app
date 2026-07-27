@@ -28,7 +28,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * Created by LuK1337 on 2021/05/05.
  * MediaAnimeRoleFragment
  */
-class MediaAnimeRoleFragment : FragmentBaseList<RecyclerItem, ConnectionContainer<EdgeContainer<MediaEdge>>, MediaPresenter>() {
+class MediaAnimeRoleFragment : FragmentBaseList<RecyclerItem, ConnectionContainer<EdgeContainer<MediaEdge>>>() {
     private var id: Long = 0
     private var onList: Boolean? = null
 

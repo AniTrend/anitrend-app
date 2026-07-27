@@ -24,7 +24,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 /**
  * Created by max on 2017/12/20.
  */
-class UserSearchFragment : FragmentBaseList<UserBase, PageContainer<UserBase>, BasePresenter>() {
+class UserSearchFragment : FragmentBaseList<UserBase, PageContainer<UserBase>>() {
     private var searchQuery: String? = null
 
     private val mutationCoordinator by inject<WidgetMutationCoordinator>()

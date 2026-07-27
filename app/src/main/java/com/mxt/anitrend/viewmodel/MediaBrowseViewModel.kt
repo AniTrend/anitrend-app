@@ -50,14 +50,14 @@ class MediaBrowseViewModel(
         seasonYear: Int?,
         startDateLike: String?,
         status: String?,
-        genres: List<String?>?,
-        tags: List<String?>?,
+        genres: List<String>?,
+        tags: List<String>?,
     ) {
         viewModelScope.launch {
             _state.value = UiState.Loading
             runCatching {
                 val sortList: List<MediaSort>? =
-                    sort?.let { runCatching { MediaSort.valueOf(it) }.getOrNull()?.let { listOf(it) } }
+                    sort?.let { sortName -> runCatching { MediaSort.valueOf(sortName) }.getOrNull()?.let { listOf(it) } }
                 val formatEnum: MediaFormat? =
                     format?.let { runCatching { MediaFormat.valueOf(it) }.getOrNull() }
                 val statusEnum: MediaStatus? =
@@ -73,8 +73,8 @@ class MediaBrowseViewModel(
                     sort = sortList,
                     onList = null,
                     status = statusEnum,
-                    genres = genres,
-                    tags = tags,
+                    genres = genres?.ifEmpty { null },
+                    tags = tags?.ifEmpty { null },
                 ).getOrThrow()
             }.onSuccess { content ->
                 _state.value = UiState.Success(content)

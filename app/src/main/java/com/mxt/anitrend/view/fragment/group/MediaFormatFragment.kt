@@ -31,7 +31,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * Created by max on 2018/01/27.
  * Shared fragment between media for staff and character
  */
-class MediaFormatFragment : FragmentBaseList<RecyclerItem, ConnectionContainer<PageContainer<MediaBase>>, MediaPresenter>() {
+class MediaFormatFragment : FragmentBaseList<RecyclerItem, ConnectionContainer<PageContainer<MediaBase>>>() {
     private var id: Long = 0
 
     @KeyUtil.RequestType

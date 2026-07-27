@@ -39,7 +39,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * Created by max on 2017/12/18.
  * media list fragment
  */
-open class MediaListFragment : FragmentBaseList<MediaList, PageContainer<MediaListCollection>, MediaPresenter>() {
+open class MediaListFragment : FragmentBaseList<MediaList, PageContainer<MediaListCollection>>() {
 
     protected var userId: Long = 0
     protected var userName: String? = null

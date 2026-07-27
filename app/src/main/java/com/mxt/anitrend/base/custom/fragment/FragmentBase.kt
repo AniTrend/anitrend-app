@@ -30,12 +30,11 @@ import org.koin.android.ext.android.inject
 import timber.log.Timber
 import kotlin.jvm.JvmName
 
-abstract class FragmentBase<M, P : CommonPresenter, VM> :
+abstract class FragmentBase<M, VM> :
     Fragment(),
     View.OnClickListener,
     ActionModeListener,
     SharedPreferences.OnSharedPreferenceChangeListener,
-    CommonPresenter.AbstractPresenter<P>,
     Observer<VM?>,
     ResponseCallback,
     ItemClickListener<M> {
@@ -51,7 +50,6 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> :
     @MenuRes
     private var inflateMenu: Int = 0
     protected var actionMode: ActionModeUtil<M>? = null
-    protected val presenter: CommonPresenter by inject<BasePresenter>()
     protected lateinit var mediaActionUtil: MediaActionUtil
 
     protected var snackbar: Snackbar? = null
@@ -77,7 +75,6 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> :
 
     override fun onDestroyView() {
         super.onDestroyView()
-        presenter.onDestroy()
         if (this::mediaActionUtil.isInitialized) {
             mediaActionUtil.onDestroy()
         }
@@ -191,8 +188,4 @@ abstract class FragmentBase<M, P : CommonPresenter, VM> :
     override fun onItemClick(target: View, data: IndexedValue<M>) = Unit
 
     override fun onItemLongClick(target: View, data: IndexedValue<M>) = Unit
-
-    override fun getPresenter(): P {
-        return presenter as P
-    }
 }

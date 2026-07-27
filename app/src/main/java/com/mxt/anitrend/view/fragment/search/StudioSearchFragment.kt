@@ -21,7 +21,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * Created by max on 2017/12/20.
  * studio search fragment
  */
-class StudioSearchFragment : FragmentBaseList<StudioBase, PageContainer<StudioBase>, BasePresenter>() {
+class StudioSearchFragment : FragmentBaseList<StudioBase, PageContainer<StudioBase>>() {
     private var searchQuery: String? = null
 
     private val studioSearchViewModel: StudioSearchViewModel by viewModel()

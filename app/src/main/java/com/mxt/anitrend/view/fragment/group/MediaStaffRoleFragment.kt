@@ -33,7 +33,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * Created by max on 2018/01/30.
  * MediaStaffRoleFragment
  */
-class MediaStaffRoleFragment : FragmentBaseList<RecyclerItem, ConnectionContainer<EdgeContainer<MediaEdge>>, MediaPresenter>() {
+class MediaStaffRoleFragment : FragmentBaseList<RecyclerItem, ConnectionContainer<EdgeContainer<MediaEdge>>>() {
     private var id: Long = 0
     private var onList: Boolean? = null
 

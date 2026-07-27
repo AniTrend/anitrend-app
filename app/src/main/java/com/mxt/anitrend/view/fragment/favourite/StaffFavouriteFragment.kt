@@ -24,7 +24,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * Created by max on 2018/03/25.
  * StaffFavouriteFragment
  */
-class StaffFavouriteFragment : FragmentBaseList<StaffBase, ConnectionContainer<Favourite>, BasePresenter>() {
+class StaffFavouriteFragment : FragmentBaseList<StaffBase, ConnectionContainer<Favourite>>() {
     private var userId: Long = 0
 
     private val staffFavouritesViewModel: StaffFavouritesViewModel by viewModel()

@@ -9,6 +9,8 @@
 - GraphQL is codegen-first now: schema + operations live in `app/src/main/graphql/**`.
 - Generated operation API package is `com.mxt.anitrend.graphql.generated` (configured in `GraphQLComponents.kt`).
 - Use typed generated requests (`SomeOperation.request(...)` / `GraphQLRequest<...>`); do not reintroduce legacy `@GraphQuery` / `QueryContainerBuilder` patterns.
+- GraphQL list input variables that are semantically absent must be passed as `null`, not an empty list. Empty lists are treated by the AniList backend as real filter/search input and can produce no results, as seen around `MediaBrowseFragment` and its ViewModel.
+- Avoid nullable list item types for GraphQL filters unless the schema or business rule explicitly requires nullable elements. Prefer `List<T>?` over `List<T?>?` for values such as genres or tags, because lists like `["value", null, null]` are not meaningful backend input.
 
 ## Build and verification commands
 - Java target is 21 (`.java-version` = `21.0.11`); CI also uses JDK 21.
@@ -41,6 +43,7 @@
 ### Coexistence with legacy
 - Activities may still extend `ActivityBase<Void, BasePresenter>` for shared shell behavior while the migration is in progress.
 - Do not add new presenter usage. Presenters are legacy-only and should be removed during refactors instead of being carried forward.
+- When presenter dependencies still exist during legacy cleanup, inject the required presenter explicitly at the usage site with `by inject<T>()` rather than relying on removed base-class presenter wiring.
 
 ### Feature shape
 - **Local feature** (app-local data, no API/domain layer): `UI -> ViewModel -> local collaborators` (e.g. `LoggingActivity`, settings screens).

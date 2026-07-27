@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MediaRecommendationsFragment : FragmentBaseList<RecyclerItem, ConnectionContainer<PageContainer<RecommendationBase>>, MediaPresenter>() {
+class MediaRecommendationsFragment : FragmentBaseList<RecyclerItem, ConnectionContainer<PageContainer<RecommendationBase>>>() {
     @KeyUtil.MediaType
     private var mediaType: String? = null
     private var mediaId: Long = 0

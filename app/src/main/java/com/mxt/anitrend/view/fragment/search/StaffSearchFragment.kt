@@ -22,7 +22,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 /**
  * Created by max on 2017/12/20.
  */
-class StaffSearchFragment : FragmentBaseList<StaffBase, PageContainer<StaffBase>, BasePresenter>() {
+class StaffSearchFragment : FragmentBaseList<StaffBase, PageContainer<StaffBase>>() {
     private var searchQuery: String? = null
 
     private val staffSearchViewModel: StaffSearchViewModel by viewModel()

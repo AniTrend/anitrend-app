@@ -33,7 +33,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * Created by max on 2018/01/05.
  * MediaRelationFragment
  */
-class MediaRelationFragment : FragmentBaseList<RecyclerItem, ConnectionContainer<EdgeContainer<MediaEdge>>, MediaPresenter>() {
+class MediaRelationFragment : FragmentBaseList<RecyclerItem, ConnectionContainer<EdgeContainer<MediaEdge>>>() {
     @KeyUtil.MediaType
     private var mediaType: String? = null
     private var mediaId: Long = 0

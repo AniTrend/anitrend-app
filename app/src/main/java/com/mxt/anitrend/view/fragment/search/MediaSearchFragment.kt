@@ -29,7 +29,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * Created by max on 2017/12/20.
  * series searching fragment
  */
-class MediaSearchFragment : FragmentBaseList<MediaBase, PageContainer<MediaBase>, BasePresenter>() {
+class MediaSearchFragment : FragmentBaseList<MediaBase, PageContainer<MediaBase>>() {
     private var searchQuery: String? = null
 
     @KeyUtil.MediaType

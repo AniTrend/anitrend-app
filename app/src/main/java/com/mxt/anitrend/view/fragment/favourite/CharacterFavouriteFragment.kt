@@ -26,7 +26,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * Created by max on 2018/03/25.
  * CharacterFavouriteFragment
  */
-class CharacterFavouriteFragment : FragmentBaseList<RecyclerItem, ConnectionContainer<Favourite>, BasePresenter>() {
+class CharacterFavouriteFragment : FragmentBaseList<RecyclerItem, ConnectionContainer<Favourite>>() {
     private var userId: Long = 0
 
     private val characterFavouritesViewModel: CharacterFavouritesViewModel by viewModel()

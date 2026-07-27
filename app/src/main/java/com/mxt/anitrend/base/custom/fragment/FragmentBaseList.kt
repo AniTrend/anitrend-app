@@ -27,8 +27,8 @@ import com.mxt.anitrend.widget.ProgressLayout
  * Created by max on 2017/09/12.
  * Abstract fragment list base class
  */
-abstract class FragmentBaseList<M, C, P : CommonPresenter> :
-    FragmentBase<M, P, C>(),
+abstract class FragmentBaseList<M, C> :
+    FragmentBase<M, C>(),
     RecyclerLoadListener,
     CustomSwipeRefreshLayout.OnRefreshAndLoadListener,
     SharedPreferences.OnSharedPreferenceChangeListener {

@@ -38,7 +38,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * Created by max on 2017/11/07.
  * Home page feed base
  */
-open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>, BasePresenter>() {
+open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>>() {
 
     private val settings: Settings by inject()
 

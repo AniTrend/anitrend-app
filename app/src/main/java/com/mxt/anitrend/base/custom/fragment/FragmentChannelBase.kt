@@ -31,19 +31,22 @@ import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.collection.EpisodeUtil
 import com.mxt.anitrend.widget.ProgressLayout
+import org.koin.android.ext.android.inject
 import timber.log.Timber
 
 /**
  * Created by max on 2017/11/04.
  */
 abstract class FragmentChannelBase :
-    FragmentBase<Channel, BasePresenter, Rss>(),
+    FragmentBase<Channel, Rss>(),
     RecyclerLoadListener,
     CustomSwipeRefreshLayout.OnRefreshAndLoadListener,
     SharedPreferences.OnSharedPreferenceChangeListener {
     protected lateinit var swipeRefreshLayout: CustomSwipeRefreshLayout
     protected lateinit var recyclerView: StatefulRecyclerView
     protected lateinit var stateLayout: ProgressLayout
+
+    protected val presenter by inject<BasePresenter>()
 
     private var binding: FragmentListBinding? = null
 

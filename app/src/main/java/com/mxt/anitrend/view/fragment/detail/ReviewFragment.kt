@@ -33,7 +33,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * Created by max on 2017/12/28.
  * Reviews for a given series
  */
-class ReviewFragment : FragmentBaseList<Review, PageContainer<Review>, BasePresenter>() {
+class ReviewFragment : FragmentBaseList<Review, PageContainer<Review>>() {
     @KeyUtil.MediaType
     private var mediaType: String? = null
     private var mediaId: Long = 0

@@ -24,13 +24,14 @@ import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.widget.ProgressLayout
+import org.koin.android.ext.android.inject
 
 /**
  * Created by max on 2017/12/02.
  * Comment fragment base class style
  */
 abstract class FragmentBaseComment :
-    FragmentBase<FeedReply, BasePresenter, FeedList>(),
+    FragmentBase<FeedReply, FeedList>(),
     RecyclerLoadListener,
     CustomSwipeRefreshLayout.OnRefreshAndLoadListener,
     SharedPreferences.OnSharedPreferenceChangeListener {
@@ -39,6 +40,8 @@ abstract class FragmentBaseComment :
     protected lateinit var originRecycler: StatefulRecyclerView
     protected lateinit var stateLayout: ProgressLayout
     protected lateinit var composerWidget: ComposerWidget
+
+    protected val presenter by inject<BasePresenter>()
 
     private var binding: FragmentCommentBinding? = null
 
@@ -282,6 +285,11 @@ abstract class FragmentBaseComment :
                 showEmpty(getString(R.string.layout_empty_response))
             }
         }
+    }
+
+    override fun onDestroy() {
+        presenter.onDestroy()
+        super.onDestroy()
     }
 
     abstract override fun onItemClick(

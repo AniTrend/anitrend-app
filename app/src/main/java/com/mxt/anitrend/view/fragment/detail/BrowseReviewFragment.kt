@@ -37,7 +37,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * Created by max on 2017/10/30.
  * Media review browse
  */
-class BrowseReviewFragment : FragmentBaseList<Review, PageContainer<Review>, BasePresenter>() {
+class BrowseReviewFragment : FragmentBaseList<Review, PageContainer<Review>>() {
     @KeyUtil.MediaType
     private var mediaType: String? = null
 

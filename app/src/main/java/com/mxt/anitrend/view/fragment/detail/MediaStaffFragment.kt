@@ -29,7 +29,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 /**
  * Created by max on 2018/01/18.
  */
-class MediaStaffFragment : FragmentBaseList<RecyclerItem, ConnectionContainer<EdgeContainer<StaffEdge>>, MediaPresenter>() {
+class MediaStaffFragment : FragmentBaseList<RecyclerItem, ConnectionContainer<EdgeContainer<StaffEdge>>>() {
     @KeyUtil.MediaType
     private var mediaType: String? = null
     private var mediaId: Long = 0

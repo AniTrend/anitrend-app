@@ -24,7 +24,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 /**
  * Created by max on 2017/12/20.
  */
-class CharacterSearchFragment : FragmentBaseList<RecyclerItem, PageContainer<CharacterBase>, BasePresenter>() {
+class CharacterSearchFragment : FragmentBaseList<RecyclerItem, PageContainer<CharacterBase>>() {
     private var searchQuery: String? = null
 
     private val characterSearchViewModel: CharacterSearchViewModel by viewModel()
