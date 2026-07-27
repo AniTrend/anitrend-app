@@ -33,7 +33,7 @@ import retrofit2.http.POST
  * user models
  */
 
-interface UserModel {
+interface UserService {
     @POST("/")
     @Headers("Content-Type: application/json")
     fun getUserNotifications(

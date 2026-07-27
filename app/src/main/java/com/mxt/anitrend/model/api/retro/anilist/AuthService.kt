@@ -11,7 +11,7 @@ import retrofit2.http.POST
  * Authentication endpoints
  */
 
-interface AuthModel {
+interface AuthService {
     /**
      * If the resource owner accepts the client, they will be redirected to the client’s redirected uri.
      * A code parameter will be included in the redirect uri, this is not the access token,

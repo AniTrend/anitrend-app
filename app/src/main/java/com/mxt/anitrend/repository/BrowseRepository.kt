@@ -23,7 +23,7 @@ import com.mxt.anitrend.graphql.generated.SaveMediaListEntry
 import com.mxt.anitrend.graphql.generated.SaveReview
 import com.mxt.anitrend.graphql.generated.ScoreFormat
 import com.mxt.anitrend.graphql.generated.UpdateMediaListEntries
-import com.mxt.anitrend.model.api.retro.anilist.BrowseModel
+import com.mxt.anitrend.model.api.retro.anilist.BrowseService
 import com.mxt.anitrend.model.entity.anilist.Review
 import com.mxt.anitrend.model.entity.anilist.meta.DeleteState
 import com.mxt.anitrend.model.entity.container.body.PageContainer
@@ -44,7 +44,7 @@ sealed class BrowseMutation {
 }
 
 class BrowseRepository(
-    private val browseService: BrowseModel,
+    private val browseService: BrowseService,
     ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : AbstractRepository<BrowseMutation>(ioDispatcher) {
 

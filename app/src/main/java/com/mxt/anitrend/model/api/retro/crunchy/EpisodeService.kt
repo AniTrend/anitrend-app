@@ -9,7 +9,7 @@ import retrofit2.http.Url
  * Created by max on 2017/10/22.
  */
 
-interface EpisodeModel {
+interface EpisodeService {
     @get:GET("crunchyroll/rss/popular?format=xml")
     val popularFeed: Call<Rss>
 

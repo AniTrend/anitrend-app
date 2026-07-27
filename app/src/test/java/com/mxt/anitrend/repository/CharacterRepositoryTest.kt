@@ -8,7 +8,7 @@ import com.mxt.anitrend.graphql.generated.CharacterBaseData
 import com.mxt.anitrend.graphql.generated.CharacterMedia
 import com.mxt.anitrend.graphql.generated.CharacterOverview
 import com.mxt.anitrend.graphql.generated.CharacterOverviewData
-import com.mxt.anitrend.model.api.retro.anilist.CharacterModel
+import com.mxt.anitrend.model.api.retro.anilist.CharacterService
 import com.mxt.anitrend.model.entity.anilist.edge.MediaEdge
 import com.mxt.anitrend.model.entity.container.body.AniListContainer
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
@@ -33,7 +33,7 @@ import com.mxt.anitrend.model.entity.base.MediaBase as MediaEntity
 class CharacterRepositoryTest {
 
     private val testDispatcher = UnconfinedTestDispatcher()
-    private val service = mock(CharacterModel::class.java)
+    private val service = mock(CharacterService::class.java)
     private val repository = CharacterRepository(
         characterService = service,
         ioDispatcher = testDispatcher,

@@ -16,7 +16,7 @@ import com.mxt.anitrend.base.custom.async.WebTokenRequest
 import com.mxt.anitrend.base.interfaces.dao.BoxQuery
 import com.mxt.anitrend.binding.basicText
 import com.mxt.anitrend.databinding.ActivityLoginBinding
-import com.mxt.anitrend.model.api.retro.WebFactory
+import com.mxt.anitrend.model.api.retro.ServiceFactory
 import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.JobSchedulerUtil
@@ -189,7 +189,7 @@ class LoginActivity :
             R.id.auth_sign_in -> if (binding.widgetFlipper.displayedChild == WidgetState.CONTENT_STATE) {
                 binding.widgetFlipper.showNext()
                 try {
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(WebFactory.API_AUTH_LINK)))
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(ServiceFactory.API_AUTH_LINK)))
                 } catch (e: Exception) {
                     Timber.e(e)
                     NotifyUtil.makeText(this, R.string.text_unknown_error, Toast.LENGTH_SHORT).show()

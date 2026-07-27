@@ -7,7 +7,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.graphql.generated.ActivityType
 import com.mxt.anitrend.model.entity.anilist.FeedList
-import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.repository.UserRepository
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.Settings

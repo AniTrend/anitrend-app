@@ -29,7 +29,7 @@ import retrofit2.http.POST
  * Created by max on 2018/03/20.
  */
 
-interface BrowseModel {
+interface BrowseService {
     @POST("/")
     @Headers("Content-Type: application/json")
     fun getMediaListCollection(

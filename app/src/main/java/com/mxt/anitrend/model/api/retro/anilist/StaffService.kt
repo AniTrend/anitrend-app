@@ -23,7 +23,7 @@ import retrofit2.http.POST
  * Staff queries
  */
 
-interface StaffModel {
+interface StaffService {
     @POST("/")
     @Headers("Content-Type: application/json")
     fun getStaffBase(

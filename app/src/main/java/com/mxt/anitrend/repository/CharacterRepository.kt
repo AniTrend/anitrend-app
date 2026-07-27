@@ -10,7 +10,7 @@ import com.mxt.anitrend.graphql.generated.CharacterOverviewData
 import com.mxt.anitrend.graphql.generated.MediaSort
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.graphql.generated.StaffSort
-import com.mxt.anitrend.model.api.retro.anilist.CharacterModel
+import com.mxt.anitrend.model.api.retro.anilist.CharacterService
 import com.mxt.anitrend.model.entity.anilist.MediaCharacter
 import com.mxt.anitrend.model.entity.anilist.edge.MediaEdge
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
@@ -31,7 +31,7 @@ sealed class CharacterMutation {
 }
 
 class CharacterRepository(
-    private val characterService: CharacterModel,
+    private val characterService: CharacterService,
     ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : AbstractRepository<CharacterMutation>(ioDispatcher) {
 

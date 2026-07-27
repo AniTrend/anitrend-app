@@ -16,7 +16,7 @@ import retrofit2.http.POST
  * Studio queries
  */
 
-interface StudioModel {
+interface StudioService {
     @POST("/")
     @Headers("Content-Type: application/json")
     fun getStudioBase(

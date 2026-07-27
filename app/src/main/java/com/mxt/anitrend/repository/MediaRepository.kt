@@ -10,7 +10,7 @@ import com.mxt.anitrend.graphql.generated.MediaStaff
 import com.mxt.anitrend.graphql.generated.MediaStats
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.graphql.generated.RecommendationMedia
-import com.mxt.anitrend.model.api.retro.anilist.MediaModel
+import com.mxt.anitrend.model.api.retro.anilist.MediaService
 import com.mxt.anitrend.model.entity.anilist.ExternalLink
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.anilist.Media
@@ -33,7 +33,7 @@ sealed class MediaMutation {
 }
 
 class MediaRepository(
-    private val mediaService: MediaModel,
+    private val mediaService: MediaService,
     ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : AbstractRepository<MediaMutation>(ioDispatcher) {
 

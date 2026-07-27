@@ -33,7 +33,7 @@ class KoinModuleVerificationTest {
         3 to 1, // presenterModule
         4 to 6, // networkModule
         5 to 10, // retrofitModule (OkHttpClient x4 + Retrofit x5 + Gson)
-        6 to 13, // serviceModule (9 AniList + BaseModel + RepositoryModel + Crunchyroll x2)
+        6 to 13, // serviceModule (9 AniList + BaseService + RepositoryService + Crunchyroll x2)
         7 to 11, // repositoryModule (+ CrunchyrollRepository + WidgetMutationCoordinator)
         8 to 17, // mediaFeatureModule
         9 to 10, // userFeatureModule
@@ -43,6 +43,7 @@ class KoinModuleVerificationTest {
         13 to 5, // utilityFeatureModule (GiphyVM + LoginAuthVM + LoggingVM + logFile + metadata)
     )
 
+    @OptIn(KoinInternalApi::class)
     @Test
     fun `appModules has exactly 14 entries`() {
         assertEquals(
@@ -52,7 +53,7 @@ class KoinModuleVerificationTest {
                 "  mediaFeature, userFeature, characterFeature, staffFeature,\n" +
                 "  studioFeature, utilityFeature",
             14,
-            appModules.size,
+            appModules.includedModules.size,
         )
     }
 
@@ -68,7 +69,7 @@ class KoinModuleVerificationTest {
     @Test
     fun `each module contains expected number of definitions`() {
         expectedDefinitionCounts.forEach { (index, expected) ->
-            val module = appModules[index]
+            val module = appModules.includedModules[index]
             val actual = module.mappings.values.distinct().size
             assertEquals(
                 "Module #$index has $actual definitions, expected $expected. " +
@@ -82,7 +83,7 @@ class KoinModuleVerificationTest {
     @OptIn(KoinInternalApi::class)
     @Test
     fun `appModules combined has 104 distinct definitions`() {
-        val total = appModules.sumOf { it.mappings.values.distinct().size }
+        val total = appModules.includedModules.sumOf { it.mappings.values.distinct().size }
         assertEquals(
             "Combined distinct definition count drifted. Expected 104, got $total.",
             104,

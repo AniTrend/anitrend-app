@@ -9,7 +9,7 @@ import com.mxt.anitrend.graphql.generated.FeedMessage
 import com.mxt.anitrend.graphql.generated.SaveActivityReply
 import com.mxt.anitrend.graphql.generated.SaveMessageActivity
 import com.mxt.anitrend.graphql.generated.SaveTextActivity
-import com.mxt.anitrend.model.api.retro.anilist.FeedModel
+import com.mxt.anitrend.model.api.retro.anilist.FeedService
 import com.mxt.anitrend.model.entity.anilist.FeedReply
 import com.mxt.anitrend.model.entity.anilist.meta.DeleteState
 import com.mxt.anitrend.model.entity.container.body.PageContainer
@@ -30,7 +30,7 @@ sealed class FeedMutation {
 }
 
 class FeedRepository(
-    private val feedService: FeedModel,
+    private val feedService: FeedService,
     ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : AbstractRepository<FeedMutation>(ioDispatcher) {
 

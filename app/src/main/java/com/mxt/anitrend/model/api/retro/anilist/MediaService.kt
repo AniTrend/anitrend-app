@@ -32,7 +32,7 @@ import retrofit2.http.POST
  * Series queries
  */
 
-interface MediaModel {
+interface MediaService {
     @POST("/")
     @Headers("Content-Type: application/json")
     fun getMediaBase(

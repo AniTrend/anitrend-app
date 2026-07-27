@@ -9,7 +9,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.FeedAdapter
 import com.mxt.anitrend.model.entity.anilist.FeedList
-import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.view.activity.detail.ProfileActivity

@@ -12,7 +12,7 @@ import com.mxt.anitrend.graphql.generated.StudioBase
 import com.mxt.anitrend.graphql.generated.StudioBaseData
 import com.mxt.anitrend.graphql.generated.StudioMedia
 import com.mxt.anitrend.graphql.generated.StudioMediaData
-import com.mxt.anitrend.model.api.retro.anilist.StudioModel
+import com.mxt.anitrend.model.api.retro.anilist.StudioService
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
@@ -30,7 +30,7 @@ import retrofit2.Response
 class StudioRepositoryTest {
 
     private val testDispatcher = UnconfinedTestDispatcher()
-    private val service = mock(StudioModel::class.java)
+    private val service = mock(StudioService::class.java)
     private val repository = StudioRepository(
         studioService = service,
         ioDispatcher = testDispatcher,

@@ -24,7 +24,7 @@ import retrofit2.http.POST
  * Character relation queries
  */
 
-interface CharacterModel {
+interface CharacterService {
     @POST("/")
     @Headers("Content-Type: application/json")
     fun getCharacterBase(

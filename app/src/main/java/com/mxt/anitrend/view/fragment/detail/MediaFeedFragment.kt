@@ -6,7 +6,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.model.entity.anilist.FeedList
-import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.view.fragment.list.FeedListFragment
 import com.mxt.anitrend.viewmodel.MediaFeedViewModel

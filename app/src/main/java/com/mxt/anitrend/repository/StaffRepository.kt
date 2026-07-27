@@ -7,7 +7,7 @@ import com.mxt.anitrend.graphql.generated.StaffCharacters
 import com.mxt.anitrend.graphql.generated.StaffMedia
 import com.mxt.anitrend.graphql.generated.StaffOverview
 import com.mxt.anitrend.graphql.generated.StaffRoles
-import com.mxt.anitrend.model.api.retro.anilist.StaffModel
+import com.mxt.anitrend.model.api.retro.anilist.StaffService
 import com.mxt.anitrend.model.entity.anilist.edge.MediaEdge
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.container.body.EdgeContainer
@@ -25,7 +25,7 @@ sealed class StaffMutation {
 }
 
 class StaffRepository(
-    private val staffService: StaffModel,
+    private val staffService: StaffService,
     ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : AbstractRepository<StaffMutation>(ioDispatcher) {
 

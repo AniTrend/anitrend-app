@@ -10,7 +10,7 @@ import retrofit2.http.Body
 import retrofit2.http.Headers
 import retrofit2.http.POST
 
-interface RecommendationModel {
+interface RecommendationService {
     @POST("/")
     @Headers("Content-Type: application/json")
     fun getRecommendationMediaList(

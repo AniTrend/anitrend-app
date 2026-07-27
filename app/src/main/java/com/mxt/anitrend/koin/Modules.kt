@@ -41,19 +41,19 @@ import com.mxt.anitrend.model.api.interceptor.AuthInterceptor
 import com.mxt.anitrend.model.api.interceptor.CacheInterceptor
 import com.mxt.anitrend.model.api.interceptor.ClientInterceptor
 import com.mxt.anitrend.model.api.interceptor.NetworkCacheInterceptor
-import com.mxt.anitrend.model.api.retro.WebFactory
-import com.mxt.anitrend.model.api.retro.anilist.BaseModel
-import com.mxt.anitrend.model.api.retro.anilist.BrowseModel
-import com.mxt.anitrend.model.api.retro.anilist.CharacterModel
-import com.mxt.anitrend.model.api.retro.anilist.FeedModel
-import com.mxt.anitrend.model.api.retro.anilist.MediaModel
-import com.mxt.anitrend.model.api.retro.anilist.SearchModel
-import com.mxt.anitrend.model.api.retro.anilist.StaffModel
-import com.mxt.anitrend.model.api.retro.anilist.StudioModel
-import com.mxt.anitrend.model.api.retro.anilist.UserModel
-import com.mxt.anitrend.model.api.retro.base.GiphyModel
-import com.mxt.anitrend.model.api.retro.base.RepositoryModel
-import com.mxt.anitrend.model.api.retro.crunchy.EpisodeModel
+import com.mxt.anitrend.model.api.retro.ServiceFactory
+import com.mxt.anitrend.model.api.retro.anilist.BaseService
+import com.mxt.anitrend.model.api.retro.anilist.BrowseService
+import com.mxt.anitrend.model.api.retro.anilist.CharacterService
+import com.mxt.anitrend.model.api.retro.anilist.FeedService
+import com.mxt.anitrend.model.api.retro.anilist.MediaService
+import com.mxt.anitrend.model.api.retro.anilist.SearchService
+import com.mxt.anitrend.model.api.retro.anilist.StaffService
+import com.mxt.anitrend.model.api.retro.anilist.StudioService
+import com.mxt.anitrend.model.api.retro.anilist.UserService
+import com.mxt.anitrend.model.api.retro.base.GiphyService
+import com.mxt.anitrend.model.api.retro.base.RepositoryService
+import com.mxt.anitrend.model.api.retro.crunchy.EpisodeService
 import com.mxt.anitrend.model.entity.MyObjectBox
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.repository.BaseRepository
@@ -147,7 +147,6 @@ import java.io.File
 import java.util.concurrent.TimeUnit
 
 private val coreModule = module {
-
     single {
         DatabaseHelper(
             store = MyObjectBox.builder()
@@ -463,23 +462,23 @@ private val retrofitModule = module {
             .build()
     }
 
-    single<Gson>(named("api")) { WebFactory.gson }
+    single<Gson>(named("api")) { ServiceFactory.gson }
 }
 
 private val serviceModule = module {
-    single<MediaModel> { get<Retrofit>(named("anilist")).create(MediaModel::class.java) }
-    single<UserModel> { get<Retrofit>(named("anilist")).create(UserModel::class.java) }
-    single<BrowseModel> { get<Retrofit>(named("anilist")).create(BrowseModel::class.java) }
-    single<SearchModel> { get<Retrofit>(named("anilist")).create(SearchModel::class.java) }
-    single<StaffModel> { get<Retrofit>(named("anilist")).create(StaffModel::class.java) }
-    single<CharacterModel> { get<Retrofit>(named("anilist")).create(CharacterModel::class.java) }
-    single<FeedModel> { get<Retrofit>(named("anilist")).create(FeedModel::class.java) }
-    single<StudioModel> { get<Retrofit>(named("anilist")).create(StudioModel::class.java) }
-    single<GiphyModel> { get<Retrofit>(named("giphy")).create(GiphyModel::class.java) }
-    single<BaseModel> { get<Retrofit>(named("anilist")).create(BaseModel::class.java) }
-    single<RepositoryModel> { get<Retrofit>(named("repository")).create(RepositoryModel::class.java) }
-    single<EpisodeModel>(named("crunchyrollFeed")) { get<Retrofit>(named("crunchyrollFeed")).create(EpisodeModel::class.java) }
-    single<EpisodeModel>(named("crunchyroll")) { get<Retrofit>(named("crunchyroll")).create(EpisodeModel::class.java) }
+    single<MediaService> { get<Retrofit>(named("anilist")).create(MediaService::class.java) }
+    single<UserService> { get<Retrofit>(named("anilist")).create(UserService::class.java) }
+    single<BrowseService> { get<Retrofit>(named("anilist")).create(BrowseService::class.java) }
+    single<SearchService> { get<Retrofit>(named("anilist")).create(SearchService::class.java) }
+    single<StaffService> { get<Retrofit>(named("anilist")).create(StaffService::class.java) }
+    single<CharacterService> { get<Retrofit>(named("anilist")).create(CharacterService::class.java) }
+    single<FeedService> { get<Retrofit>(named("anilist")).create(FeedService::class.java) }
+    single<StudioService> { get<Retrofit>(named("anilist")).create(StudioService::class.java) }
+    single<GiphyService> { get<Retrofit>(named("giphy")).create(GiphyService::class.java) }
+    single<BaseService> { get<Retrofit>(named("anilist")).create(BaseService::class.java) }
+    single<RepositoryService> { get<Retrofit>(named("repository")).create(RepositoryService::class.java) }
+    single<EpisodeService>(named("crunchyrollFeed")) { get<Retrofit>(named("crunchyrollFeed")).create(EpisodeService::class.java) }
+    single<EpisodeService>(named("crunchyroll")) { get<Retrofit>(named("crunchyroll")).create(EpisodeService::class.java) }
 }
 
 private val repositoryModule = module {
@@ -578,19 +577,21 @@ private val utilityFeatureModule = module {
     }
 }
 
-val appModules = listOf(
-    coreModule,
-    widgetModule,
-    workerModule,
-    presenterModule,
-    networkModule,
-    retrofitModule,
-    serviceModule,
-    repositoryModule,
-    mediaFeatureModule,
-    userFeatureModule,
-    characterFeatureModule,
-    staffFeatureModule,
-    studioFeatureModule,
-    utilityFeatureModule,
-)
+val appModules = module {
+    includes(
+        coreModule,
+        widgetModule,
+        workerModule,
+        presenterModule,
+        networkModule,
+        retrofitModule,
+        serviceModule,
+        repositoryModule,
+        mediaFeatureModule,
+        userFeatureModule,
+        characterFeatureModule,
+        staffFeatureModule,
+        studioFeatureModule,
+        utilityFeatureModule,
+    )
+}

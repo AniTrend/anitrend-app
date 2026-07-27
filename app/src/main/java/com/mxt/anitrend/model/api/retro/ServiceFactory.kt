@@ -2,7 +2,7 @@ package com.mxt.anitrend.model.api.retro
 
 import com.google.gson.GsonBuilder
 import com.mxt.anitrend.BuildConfig
-import com.mxt.anitrend.model.api.retro.anilist.AuthModel
+import com.mxt.anitrend.model.api.retro.anilist.AuthService
 import com.mxt.anitrend.model.entity.anilist.WebToken
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.graphql.apiError
@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit
  * Created by max on 2017/10/14.
  * Retrofit service factory
  */
-object WebFactory {
+object ServiceFactory {
     @JvmField
     @Suppress("DEPRECATION")
     val gson =
@@ -80,7 +80,7 @@ object WebFactory {
                 .baseUrl(BuildConfig.API_AUTH_LINK)
                 .build()
         val refreshTokenCall =
-            retrofit.create(AuthModel::class.java).getAuthRequest(
+            retrofit.create(AuthService::class.java).getAuthRequest(
                 KeyUtil.AUTHENTICATION_CODE,
                 BuildConfig.CLIENT_ID,
                 BuildConfig.CLIENT_SECRET,
@@ -95,9 +95,10 @@ object WebFactory {
         null
     }
 
+    @Deprecated(
+        level = DeprecationLevel.WARNING,
+        message = "Retrofit instances are now managed by Koin and auth state is read dynamically by AuthInterceptor.",
+    )
     @JvmStatic
-    fun invalidate() {
-        // Retrofit instances are now managed by Koin.
-        // Auth state is read dynamically by AuthInterceptor. No invalidation needed.
-    }
+    fun invalidate() = Unit
 }

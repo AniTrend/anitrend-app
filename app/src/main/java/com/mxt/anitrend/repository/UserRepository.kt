@@ -16,7 +16,7 @@ import com.mxt.anitrend.graphql.generated.UserFollowing
 import com.mxt.anitrend.graphql.generated.UserNotifications
 import com.mxt.anitrend.graphql.generated.UserOverview
 import com.mxt.anitrend.graphql.generated.UserStats
-import com.mxt.anitrend.model.api.retro.anilist.UserModel
+import com.mxt.anitrend.model.api.retro.anilist.UserService
 import com.mxt.anitrend.model.entity.anilist.Favourite
 import com.mxt.anitrend.model.entity.anilist.Notification
 import com.mxt.anitrend.model.entity.anilist.User
@@ -36,7 +36,7 @@ sealed class UserMutation {
 }
 
 class UserRepository(
-    private val userService: UserModel,
+    private val userService: UserService,
     private val boxQuery: BoxQuery,
     ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : AbstractRepository<UserMutation>(ioDispatcher) {

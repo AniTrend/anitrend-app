@@ -6,7 +6,7 @@ import com.mxt.anitrend.graphql.generated.StudioBase
 import com.mxt.anitrend.graphql.generated.StudioBaseData
 import com.mxt.anitrend.graphql.generated.StudioMedia
 import com.mxt.anitrend.graphql.generated.StudioMediaData
-import com.mxt.anitrend.model.api.retro.anilist.StudioModel
+import com.mxt.anitrend.model.api.retro.anilist.StudioService
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.repository.mapper.toStudioEntity
@@ -24,7 +24,7 @@ sealed class StudioMutation {
 }
 
 class StudioRepository(
-    private val studioService: StudioModel,
+    private val studioService: StudioService,
     ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : AbstractRepository<StudioMutation>(ioDispatcher) {
 

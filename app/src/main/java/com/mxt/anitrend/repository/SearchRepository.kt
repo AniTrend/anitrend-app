@@ -11,7 +11,7 @@ import com.mxt.anitrend.graphql.generated.StudioSearch
 import com.mxt.anitrend.graphql.generated.StudioSort
 import com.mxt.anitrend.graphql.generated.UserSearch
 import com.mxt.anitrend.graphql.generated.UserSort
-import com.mxt.anitrend.model.api.retro.anilist.SearchModel
+import com.mxt.anitrend.model.api.retro.anilist.SearchService
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.util.graphql.apiError
 import kotlinx.coroutines.CoroutineDispatcher
@@ -29,7 +29,7 @@ sealed class SearchMutation {
 }
 
 class SearchRepository(
-    private val searchService: SearchModel,
+    private val searchService: SearchService,
     ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : AbstractRepository<SearchMutation>(ioDispatcher) {
 

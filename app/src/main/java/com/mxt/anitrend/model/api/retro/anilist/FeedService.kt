@@ -24,7 +24,7 @@ import retrofit2.http.POST
  * Feed model queries
  */
 
-interface FeedModel {
+interface FeedService {
     @POST("/")
     @Headers("Content-Type: application/json")
     fun getFeedList(

@@ -8,7 +8,7 @@ import com.mxt.anitrend.analytics.AnalyticsLogging
 import com.mxt.anitrend.data.DatabaseHelper
 import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.extension.supportsAutoUpdates
-import com.mxt.anitrend.model.api.retro.WebFactory
+import com.mxt.anitrend.model.api.retro.ServiceFactory
 import com.mxt.anitrend.util.JobSchedulerUtil
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.ShortcutUtil
@@ -42,7 +42,7 @@ object Migrations {
                     apply()
                 }
                 koinOf<DatabaseHelper>().invalidateBoxStores()
-                WebFactory.invalidate()
+                ServiceFactory.invalidate()
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
                     ShortcutUtil.removeAllDynamicShortcuts(context)
                 }

@@ -19,7 +19,7 @@ import retrofit2.http.POST
  * Search queries
  */
 
-interface SearchModel {
+interface SearchService {
 
     @POST("/")
     @Headers("Content-Type: application/json")

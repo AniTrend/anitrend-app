@@ -11,7 +11,7 @@ import com.mxt.anitrend.graphql.generated.MediaTagCollection
 import com.mxt.anitrend.graphql.generated.MediaTagCollectionData
 import com.mxt.anitrend.graphql.generated.ToggleFavourite
 import com.mxt.anitrend.graphql.generated.ToggleLike
-import com.mxt.anitrend.model.api.retro.anilist.BaseModel
+import com.mxt.anitrend.model.api.retro.anilist.BaseService
 import com.mxt.anitrend.model.entity.anilist.Genre
 import com.mxt.anitrend.model.entity.anilist.MediaTag
 import com.mxt.anitrend.model.entity.base.NotificationHistory
@@ -41,7 +41,7 @@ sealed class BaseMutation {
 }
 
 class BaseRepository(
-    private val baseService: BaseModel,
+    private val baseService: BaseService,
     private val boxQuery: BoxQuery,
     ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : AbstractRepository<BaseMutation>(ioDispatcher) {

@@ -10,7 +10,7 @@ import retrofit2.http.Query
  * giphy request end point
  */
 
-interface GiphyModel {
+interface GiphyService {
     @GET("search")
     fun findGif(
         @Query("api_key") api_key: String,

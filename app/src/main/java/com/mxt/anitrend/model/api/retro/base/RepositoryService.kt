@@ -9,7 +9,7 @@ import retrofit2.http.Path
  * Created by max on 2017/04/16.
  * Base request model
  */
-interface RepositoryModel {
+interface RepositoryService {
     @GET("/AniTrend/anitrend-app/raw/{branch}/app/.meta/version.json")
     fun checkVersion(
         @Path(

@@ -19,7 +19,7 @@ import retrofit2.http.POST
  * Created by max on 2018/03/20.
  */
 
-interface BaseModel {
+interface BaseService {
     @POST("/")
     @Headers("Content-Type: application/json")
     fun getGenres(

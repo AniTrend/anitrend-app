@@ -2,7 +2,7 @@ package com.mxt.anitrend.util.collection
 
 import com.google.gson.reflect.TypeToken
 import com.mxt.anitrend.base.interfaces.base.PreferenceConverter
-import com.mxt.anitrend.model.api.retro.WebFactory
+import com.mxt.anitrend.model.api.retro.ServiceFactory
 import com.mxt.anitrend.model.entity.anilist.Genre
 import com.mxt.anitrend.model.entity.anilist.MediaTag
 import java.lang.reflect.Type
@@ -59,13 +59,13 @@ class GenreTagUtil : PreferenceConverter<Map<Int, String>> {
             return HashMap()
         }
         val targetType: Type = object : TypeToken<Map<Int, String>>() {}.type
-        return WebFactory.gson.fromJson(json, targetType)
+        return ServiceFactory.gson.fromJson(json, targetType)
     }
 
     override fun convertToJson(entity: Map<Int, String>?): String {
         if (entity == null) {
-            return WebFactory.gson.toJson(HashMap<Int, String>())
+            return ServiceFactory.gson.toJson(HashMap<Int, String>())
         }
-        return WebFactory.gson.toJson(entity)
+        return ServiceFactory.gson.toJson(entity)
     }
 }
