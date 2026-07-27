@@ -135,24 +135,8 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
             isFollowing = if (args.containsKey(KeyUtil.arg_isFollowing)) args.getBoolean(KeyUtil.arg_isFollowing) else null,
             type = args.getString(KeyUtil.arg_type)?.let { runCatching { ActivityType.valueOf(it) }.getOrNull() },
             isMixed = if (args.containsKey(KeyUtil.arg_isMixed)) args.getBoolean(KeyUtil.arg_isMixed) else null,
+            asHtml = if (args.containsKey(KeyUtil.arg_asHtml)) args.getBoolean(KeyUtil.arg_asHtml) else false,
         )
-    }
-
-    protected fun Bundle.applyBaseFeedRequestArguments(source: Bundle?) {
-        putInt(KeyUtil.arg_page_limit, source?.getInt(KeyUtil.arg_page_limit) ?: KeyUtil.PAGING_LIMIT)
-
-        if (source?.containsKey(KeyUtil.arg_type) == true) {
-            putString(KeyUtil.arg_type, source.getString(KeyUtil.arg_type))
-        }
-        if (source?.containsKey(KeyUtil.arg_isFollowing) == true) {
-            putBoolean(KeyUtil.arg_isFollowing, source.getBoolean(KeyUtil.arg_isFollowing))
-        }
-        if (source?.containsKey(KeyUtil.arg_isMixed) == true) {
-            putBoolean(KeyUtil.arg_isMixed, source.getBoolean(KeyUtil.arg_isMixed))
-        }
-        if (source?.containsKey(KeyUtil.arg_asHtml) == true) {
-            putBoolean(KeyUtil.arg_asHtml, source.getBoolean(KeyUtil.arg_asHtml))
-        }
     }
 
     /** No-op: StateFlow collector above handles the response. */

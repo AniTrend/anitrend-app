@@ -32,26 +32,12 @@ class MediaAnimeRoleFragment : FragmentBaseList<RecyclerItem, ConnectionContaine
     private var id: Long = 0
     private var onList: Boolean? = null
 
-    @KeyUtil.MediaType
-    private var mediaType: String? = null
-
-    @KeyUtil.RequestType
-    private var requestType: Int = 0
-
     private val mediaAnimeRoleViewModel: MediaAnimeRoleViewModel by viewModel()
 
     companion object {
         @JvmStatic
-        fun newInstance(
-            params: Bundle,
-            @KeyUtil.MediaType mediaType: String,
-            @KeyUtil.RequestType requestType: Int,
-        ): MediaAnimeRoleFragment {
-            val args =
-                Bundle(params).apply {
-                    putString(KeyUtil.arg_mediaType, mediaType)
-                    putInt(KeyUtil.arg_request_type, requestType)
-                }
+        fun newInstance(params: Bundle): MediaAnimeRoleFragment {
+            val args = Bundle(params)
             return MediaAnimeRoleFragment().apply {
                 arguments = args
             }
@@ -61,10 +47,8 @@ class MediaAnimeRoleFragment : FragmentBaseList<RecyclerItem, ConnectionContaine
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let { args ->
-            requestType = args.getInt(KeyUtil.arg_request_type)
             id = args.getLong(KeyUtil.arg_id)
             onList = args.serializable(KeyUtil.arg_onList)
-            mediaType = args.getString(KeyUtil.arg_mediaType)
         }
         mColumnSize = R.integer.grid_giphy_x3
         isPager = true

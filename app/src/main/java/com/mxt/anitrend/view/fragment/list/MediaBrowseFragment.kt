@@ -14,6 +14,7 @@ import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.MediaAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
 import com.mxt.anitrend.extension.parcelable
+import com.mxt.anitrend.graphql.generated.MediaSeason
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.model.entity.anilist.Genre
 import com.mxt.anitrend.model.entity.anilist.MediaTag
@@ -65,9 +66,6 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
             Bundle(arguments ?: Bundle()).apply {
                 if (!containsKey(KeyUtil.arg_page_limit)) {
                     putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
-                }
-                if (!containsKey(KeyUtil.arg_asHtml)) {
-                    putBoolean(KeyUtil.arg_asHtml, false)
                 }
             }
         mediaBrowseUtil = arguments?.parcelable(KeyUtil.arg_media_util)
@@ -311,28 +309,52 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
                 requestArgs.takeIf { it.containsKey(KeyUtil.arg_isAdult) }?.getBoolean(KeyUtil.arg_isAdult)
             }
 
-        var format: String? = null
-        var seasonYear: Int? = null
-        var startDateLike: String? = null
-        var status: String? = null
-        var genres: List<String>? = null
-        var tags: List<String>? = null
-        var sort: String? = null
+        // Read season from bundle (no Settings fallback - Settings only stores year, not season)
+        val season: MediaSeason? = requestArgs.getString(KeyUtil.arg_season)?.let {
+            runCatching { MediaSeason.valueOf(it) }.getOrNull()
+        }
 
+        // Bundle values take precedence (explicit caller intent) - always read regardless of isFilterableEnabled
+        var format: String? = requestArgs.getString(KeyUtil.arg_format)
+        var seasonYear: Int? = if (requestArgs.containsKey(KeyUtil.arg_seasonYear)) requestArgs.getInt(KeyUtil.arg_seasonYear) else null
+        var startDateLike: String? = requestArgs.getString(KeyUtil.arg_startDateLike)
+        var status: String? = requestArgs.getString(KeyUtil.arg_status)
+        var genres: List<String>? = requestArgs.getStringArrayList(KeyUtil.arg_genres)
+        var tags: List<String>? = requestArgs.getStringArrayList(KeyUtil.arg_tags)
+        var sort: String? = requestArgs.getString(KeyUtil.arg_sort)
+
+        // Settings fallback only when isFilterableEnabled is true and bundle key is absent
         if (isFilterableEnabled) {
             if (mediaBrowseUtil?.isBasicFilter != true) {
                 if (CompatUtil.equals(requestArgs.getString(KeyUtil.arg_mediaType), KeyUtil.MANGA)) {
-                    startDateLike = String.format(Locale.getDefault(), "%d%%", settings.seasonYear)
-                    format = settings.mangaFormat
+                    if (startDateLike == null) {
+                        startDateLike = String.format(Locale.getDefault(), "%d%%", settings.seasonYear)
+                    }
+                    if (format == null) {
+                        format = settings.mangaFormat
+                    }
                 } else {
-                    seasonYear = settings.seasonYear
-                    format = settings.animeFormat
+                    if (seasonYear == null) {
+                        seasonYear = settings.seasonYear
+                    }
+                    if (format == null) {
+                        format = settings.animeFormat
+                    }
                 }
-                status = settings.mediaStatus
-                genres = ArrayList(GenreTagUtil.getMappedValues(settings.selectedGenres).orEmpty())
-                tags = ArrayList(GenreTagUtil.getMappedValues(settings.selectedTags).orEmpty())
+                if (status == null) {
+                    status = settings.mediaStatus
+                }
+                if (genres == null) {
+                    genres = ArrayList(GenreTagUtil.getMappedValues(settings.selectedGenres).orEmpty())
+                }
+                if (tags == null) {
+                    tags = ArrayList(GenreTagUtil.getMappedValues(settings.selectedTags).orEmpty())
+                }
             }
-            sort = settings.mediaSort + settings.sortOrder
+            // sort falls back to Settings when bundle key is absent (regardless of isBasicFilter)
+            if (sort == null) {
+                sort = settings.mediaSort + settings.sortOrder
+            }
         }
 
         mediaBrowseViewModel.load(
@@ -343,6 +365,7 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
             isAdult = isAdult,
             format = format,
             seasonYear = seasonYear,
+            season = season,
             startDateLike = startDateLike,
             status = status,
             genres = genres,

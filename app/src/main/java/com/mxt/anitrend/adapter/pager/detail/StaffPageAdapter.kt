@@ -30,7 +30,7 @@ class StaffPageAdapter(
         0 -> StaffOverviewFragment.newInstance(params)
         1 ->
             MediaAnimeRoleFragment
-                .newInstance(params, KeyUtil.ANIME, KeyUtil.STAFF_CHARACTERS_REQ)
+                .newInstance(params)
                 .apply { setFilterable(isAuthenticated) }
         2 ->
             MediaFormatFragment

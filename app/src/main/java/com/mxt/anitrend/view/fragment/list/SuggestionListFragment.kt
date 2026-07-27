@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
 import com.mxt.anitrend.model.entity.base.MediaBase
+import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
@@ -69,11 +70,18 @@ class SuggestionListFragment : MediaBrowseFragment() {
     }
 
     override fun makeRequest() {
+        val args = arguments ?: return
         val sort = settings.mediaSort + settings.sortOrder
         val isAdult: Boolean? = if (settings.displayAdultContent) null else false
+        val type = args.getString(KeyUtil.arg_mediaType)?.let { runCatching { MediaType.valueOf(it) }.getOrNull() } ?: MediaType.ANIME
+        val onList = if (args.containsKey(KeyUtil.arg_onList)) args.getBoolean(KeyUtil.arg_onList) else false
+        val pageLimit = args.getInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
         suggestionListViewModel.load(
             sort = sort,
             page = mScrollListener.currentPage,
+            pageLimit = pageLimit,
+            type = type,
+            onList = onList,
             tags = getTopFavouriteTags(6)?.let { ArrayList(it) },
             genres = getTopFavouriteGenres(4)?.let { ArrayList(it) },
             isAdult = isAdult,

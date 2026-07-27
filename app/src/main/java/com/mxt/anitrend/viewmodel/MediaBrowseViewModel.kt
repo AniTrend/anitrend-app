@@ -3,6 +3,7 @@ package com.mxt.anitrend.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mxt.anitrend.graphql.generated.MediaFormat
+import com.mxt.anitrend.graphql.generated.MediaSeason
 import com.mxt.anitrend.graphql.generated.MediaSort
 import com.mxt.anitrend.graphql.generated.MediaStatus
 import com.mxt.anitrend.graphql.generated.MediaType
@@ -48,6 +49,7 @@ class MediaBrowseViewModel(
         isAdult: Boolean?,
         format: String?,
         seasonYear: Int?,
+        season: MediaSeason? = null,
         startDateLike: String?,
         status: String?,
         genres: List<String>?,
@@ -66,6 +68,7 @@ class MediaBrowseViewModel(
                     page = page,
                     perPage = pageLimit,
                     seasonYear = seasonYear,
+                    season = season,
                     type = type,
                     format = formatEnum,
                     startDateLike = startDateLike,

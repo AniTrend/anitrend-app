@@ -76,6 +76,7 @@ class FeedListViewModel(
         isFollowing: Boolean?,
         type: ActivityType?,
         isMixed: Boolean?,
+        asHtml: Boolean = false,
     ) {
         viewModelScope.launch {
             _state.value = UiState.Loading
@@ -85,6 +86,7 @@ class FeedListViewModel(
                 isFollowing = isFollowing,
                 type = type,
                 isMixed = isMixed,
+                asHtml = asHtml,
             ).onSuccess { content ->
                 _state.value = UiState.Success(content)
             }.onFailure { throwable ->

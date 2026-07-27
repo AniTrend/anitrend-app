@@ -9,7 +9,6 @@ import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.repository.BrowseRepository
 import com.mxt.anitrend.repository.UserRepository
-import com.mxt.anitrend.util.KeyUtil
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,6 +41,9 @@ class SuggestionListViewModel(
     fun load(
         sort: String?,
         page: Int,
+        pageLimit: Int,
+        type: MediaType,
+        onList: Boolean?,
         tags: List<String?>?,
         genres: List<String?>?,
         isAdult: Boolean?,
@@ -53,9 +55,9 @@ class SuggestionListViewModel(
                     sort?.let { runCatching { MediaSort.valueOf(it) }.getOrNull()?.let { listOf(it) } }
                 browseRepository.getMediaBrowse(
                     page = page,
-                    perPage = KeyUtil.PAGING_LIMIT,
-                    type = MediaType.ANIME,
-                    onList = false,
+                    perPage = pageLimit,
+                    type = type,
+                    onList = onList,
                     sort = sortList,
                     tags = tags,
                     genres = genres,
