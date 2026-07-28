@@ -3,6 +3,7 @@ package com.mxt.anitrend.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mxt.anitrend.graphql.generated.MediaFormat
+import com.mxt.anitrend.graphql.generated.MediaSeason
 import com.mxt.anitrend.graphql.generated.MediaSort
 import com.mxt.anitrend.graphql.generated.MediaStatus
 import com.mxt.anitrend.graphql.generated.MediaType
@@ -44,6 +45,7 @@ class MediaBrowseViewModel(
         type: MediaType?,
         page: Int,
         pageLimit: Int,
+        season: String?,
         sort: String?,
         isAdult: Boolean?,
         format: String?,
@@ -58,10 +60,14 @@ class MediaBrowseViewModel(
             runCatching {
                 val sortList: List<MediaSort>? =
                     sort?.let { runCatching { MediaSort.valueOf(it) }.getOrNull()?.let { listOf(it) } }
+                val seasonEnum: MediaSeason? =
+                    season?.let { runCatching { MediaSeason.valueOf(it) }.getOrNull() }
                 val formatEnum: MediaFormat? =
                     format?.let { runCatching { MediaFormat.valueOf(it) }.getOrNull() }
                 val statusEnum: MediaStatus? =
                     status?.let { runCatching { MediaStatus.valueOf(it) }.getOrNull() }
+                val normalizedGenres = genres?.takeUnless { it.isEmpty() }
+                val normalizedTags = tags?.takeUnless { it.isEmpty() }
                 browseRepository.getMediaBrowse(
                     page = page,
                     perPage = pageLimit,
@@ -69,12 +75,13 @@ class MediaBrowseViewModel(
                     type = type,
                     format = formatEnum,
                     startDateLike = startDateLike,
+                    season = seasonEnum,
                     isAdult = isAdult,
                     sort = sortList,
                     onList = null,
                     status = statusEnum,
-                    genres = genres,
-                    tags = tags,
+                    genres = normalizedGenres,
+                    tags = normalizedTags,
                 ).getOrThrow()
             }.onSuccess { content ->
                 _state.value = UiState.Success(content)
