@@ -25,5 +25,4 @@
     <string name="pref_key_experimental_about_screen" translatable="false">_experimentalAboutScreen</string>
     <string name="pref_key_experimental_settings_screen" translatable="false">_experimentalSettingsScreen</string>
     <string name="pref_key_experimental_initial_screens" translatable="false">_experimentalInitialScreens</string>
-    <string name="pref_key_experimental_manage_library" translatable="false">_experimentalManageLibrary</string>
 </resources>

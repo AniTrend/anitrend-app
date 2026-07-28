@@ -767,4 +767,56 @@
     <string name="notification_media_deletion">Media Deletion</string>
     <string name="notification_media_data_change">Media Update</string>
     <string name="title_recommendations">Recommendations</string>
+
+    <!-- Manage list editor and validation strings -->
+    <!-- Confirmation message when removing a media list entry -->
+    <string name="dialog_remove_entry_message">Usunąć ten tytuł z listy?</string>
+    <!-- Form validation: progress value cannot be negative -->
+    <string name="validation_progress_negative">Postęp nie może być ujemny</string>
+    <!-- Form validation: repeat count cannot be negative -->
+    <string name="validation_repeat_negative">Liczba powtórzeń nie może być ujemna</string>
+    <!-- Inline warning when setting anime status to CURRENT while not yet aired -->
+    <string name="status_warning_not_aired">Ten tytuł nie został jeszcze wyemitowany</string>
+    <!-- Inline warning when setting manga status to CURRENT while not yet published -->
+    <string name="status_warning_not_published">Ten tytuł nie został jeszcze opublikowany</string>
+    <!-- Inline warning when setting anime status to COMPLETED while still airing -->
+    <string name="status_warning_still_airing">Ten tytuł jest wciąż emitowany</string>
+    <!-- Inline warning when setting manga status to COMPLETED while still publishing -->
+    <string name="status_warning_still_publishing">Ten tytuł jest wciąż publikowany</string>
+    <!-- Button text for removing a media list entry -->
+    <string name="action_remove">Usuń</string>
+    <!-- Section label for priority slider in manage list editor -->
+    <string name="dialog_title_priority">Priorytet (0-255)</string>
+    <!-- Switch label for hiding entry from status lists -->
+    <string name="dialog_title_hidden_from_status_lists">Ukryj z list statusu</string>
+    <!-- Section label for custom lists chips -->
+    <string name="dialog_title_custom_lists">Listy niestandardowe</string>
+    <!-- Section label for advanced scoring sliders -->
+    <string name="dialog_title_advanced_scores">Zaawansowane oceny</string>
+
+    <!-- Manage list editor: additional UI strings -->
+    <!-- Bottom sheet header subtitle when adding a new entry -->
+    <string name="sheet_title_add">Dodaj do listy</string>
+    <!-- Bottom sheet header subtitle when editing an existing entry -->
+    <string name="sheet_title_edit">Edytuj wpis listy</string>
+    <!-- Primary action button in manage list editor -->
+    <string name="action_save">Zapisz</string>
+    <!-- Primary action button text for new entries -->
+    <string name="action_add_to_list">Dodaj do listy</string>
+    <!-- Content description for decrement stepper button -->
+    <string name="action_decrement">Zmniejsz wartość</string>
+    <!-- Content description for increment stepper button -->
+    <string name="action_increment">Zwiększ wartość</string>
+    <!-- Supporting text under the "Hide from status lists" switch -->
+    <string name="hidden_from_status_lists_summary">Widoczne tylko na listach niestandardowych</string>
+    <!-- Section card title for status and score fields -->
+    <string name="section_status_score">Status &amp; ocena</string>
+    <!-- Section card title for progress fields -->
+    <string name="section_progress">Postęp</string>
+    <!-- Section card title for date fields -->
+    <string name="section_dates">Daty</string>
+    <!-- Section card title for privacy and priority fields -->
+    <string name="section_privacy_priority">Prywatność &amp; priorytet</string>
+    <!-- Section card title for notes field -->
+    <string name="section_notes">Notatki</string>
 </resources>

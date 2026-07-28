@@ -535,7 +535,7 @@ private val repositoryModule = module {
             coroutineScope = get(ApplicationScopeQualifier),
             ioDispatcher = get(IoDispatcherQualifier),
             mainDispatcher = get(MainDispatcherQualifier),
-            databaseHelper = get()
+            databaseHelper = get(),
         )
     }
 }

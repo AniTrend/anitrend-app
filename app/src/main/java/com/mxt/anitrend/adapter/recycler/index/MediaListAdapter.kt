@@ -95,6 +95,7 @@ class MediaListAdapter(
             mediaId: Long?,
             status: MediaListStatus?,
             score: Double?,
+            scoreRaw: Int?,
             progress: Int?,
             progressVolumes: Int?,
             repeat: Int?,
@@ -108,7 +109,7 @@ class MediaListAdapter(
             completedAt: FuzzyDateInput?,
             onResult: (Result<MediaList>) -> Unit,
         ) = coordinator.saveMediaListEntry(
-            id, mediaId, status, score, progress, progressVolumes, repeat, priority,
+            id, mediaId, status, score, scoreRaw, progress, progressVolumes, repeat, priority,
             private, hiddenFromStatusLists, customLists, advancedScores, notes,
             startedAt, completedAt, onResult,
         )

@@ -165,13 +165,6 @@
             app:summary="@string/pref_summary_experimental_initial_screens"
             />
 
-        <SwitchPreference
-            app:defaultValue="false"
-            app:key="@string/pref_key_experimental_manage_library"
-            app:title="@string/pref_title_experimental_manage_library"
-            app:summary="@string/pref_summary_experimental_manage_library"
-            />
-
     </PreferenceCategory>
 
     <PreferenceCategory

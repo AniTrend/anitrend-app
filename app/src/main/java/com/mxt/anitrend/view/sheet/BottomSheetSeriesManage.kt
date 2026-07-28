@@ -12,9 +12,11 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.slider.Slider
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
+import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.textview.MaterialTextView
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.view.editor.MarkdownInputEditor
@@ -26,7 +28,6 @@ import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.graphql.generated.FuzzyDateInput
 import com.mxt.anitrend.graphql.generated.MediaListStatus
 import com.mxt.anitrend.model.entity.anilist.MediaList
-import com.mxt.anitrend.model.entity.anilist.meta.CustomList
 import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.util.CompatUtil
@@ -38,16 +39,16 @@ import timber.log.Timber
 
 /**
  * M3 BottomSheetDialogFragment for managing media list entries.
- * Gated behind [com.mxt.anitrend.util.Settings.experimentalManageLibrary].
  *
  * Exposes all available [SaveMediaListEntry] fields including:
- * - status, score, progress, repeat, dates, private, notes
+ * - status, score, scoreRaw, progress, repeat, dates, private, notes
  * - priority (Slider 0-255), hiddenFromStatusLists (MaterialSwitch)
  * - customLists (ChipGroup), advancedScores (dynamic Sliders per category)
- * - Status-selection side effects: warning toasts and auto-fill on COMPLETED
+ * - Status-selection side effects: inline helper text and auto-fill on COMPLETED
  *
- * Not wired: scoreRaw (the generated mutation variable exists but the app's
- * data pipeline does not expose it through MediaListUtil or WidgetMutationCoordinator).
+ * The scoreRaw pipeline is wired through MediaList -> MediaListUtil ->
+ * WidgetMutationCoordinator -> BrowseRepository. No UI input populates it;
+ * the AniList API derives scoreRaw from score when not explicitly provided.
  */
 class BottomSheetSeriesManage : BottomSheetDialogFragment() {
 
@@ -76,7 +77,6 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
     private lateinit var notesEditor: MarkdownInputEditor
     private lateinit var saveButton: MaterialButton
     private lateinit var deleteButton: MaterialButton
-    private lateinit var deleteSpacer: View
 
     // Custom lists and advanced scores (dynamic, shown only when available)
     private lateinit var customListsContainer: ViewGroup
@@ -84,6 +84,22 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
     private lateinit var advancedScoresContainer: ViewGroup
     private lateinit var advancedScoresEntries: ViewGroup
     private val advancedScoreSliders = mutableListOf<Pair<String, Slider>>()
+
+    // Header / status / priority UX
+    private lateinit var subtitleView: MaterialTextView
+    private lateinit var statusLayout: TextInputLayout
+    private lateinit var statusWarning: MaterialTextView
+    private lateinit var priorityValue: MaterialTextView
+
+    private val statusIconMap =
+        mapOf(
+            KeyUtil.CURRENT to R.drawable.ic_remove_red_eye_white_18dp,
+            KeyUtil.PLANNING to R.drawable.ic_bookmark_white_24dp,
+            KeyUtil.COMPLETED to R.drawable.ic_done_all_grey_600_24dp,
+            KeyUtil.DROPPED to R.drawable.ic_delete_sweep_grey_600_24dp,
+            KeyUtil.PAUSED to R.drawable.ic_pause_white_18dp,
+            KeyUtil.REPEATING to R.drawable.ic_repeat_white_18dp,
+        )
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         mediaBase = arguments?.getParcelable(ARG_MEDIA_BASE) ?: error("Missing MediaBase argument")
@@ -140,11 +156,19 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
         saveButton = view.findViewById(R.id.sheet_manage_save)
         view.findViewById<MaterialButton>(R.id.sheet_manage_cancel).setOnClickListener { dismiss() }
         deleteButton = view.findViewById(R.id.sheet_manage_delete)
-        deleteSpacer = view.findViewById(R.id.sheet_manage_delete_spacer)
         customListsContainer = view.findViewById(R.id.sheet_manage_custom_lists_container)
         customListsChipGroup = view.findViewById(R.id.sheet_manage_custom_lists_chips)
         advancedScoresContainer = view.findViewById(R.id.sheet_manage_advanced_scores_container)
         advancedScoresEntries = view.findViewById(R.id.sheet_manage_advanced_scores_entries)
+
+        subtitleView = view.findViewById(R.id.sheet_manage_subtitle)
+        statusLayout = view.findViewById(R.id.sheet_manage_status_layout)
+        statusWarning = view.findViewById(R.id.sheet_manage_status_warning)
+        priorityValue = view.findViewById(R.id.sheet_manage_priority_value)
+
+        prioritySlider.addOnChangeListener { _, value, _ ->
+            updatePriorityValue(value)
+        }
     }
 
     private fun setupStatusDropdown() {
@@ -155,6 +179,8 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
         val currentStatus = mediaListModel.status ?: KeyUtil.PLANNING
         val statusIndex = mediaListStatuses.indexOf(currentStatus).coerceAtLeast(0)
         statusDropdown.setText(statusNames[statusIndex], false)
+        statusIconMap[currentStatus]?.let { icon -> statusLayout.setStartIconDrawable(icon) }
+        statusWarning.visibility = View.GONE
 
         statusDropdown.setOnItemClickListener { _, _, position, _ ->
             handleStatusSelected(position)
@@ -162,74 +188,32 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
     }
 
     private fun handleStatusSelected(statusIndex: Int) {
-        if (statusIndex < 0 || statusIndex >= mediaListStatuses.size) return
-        val newStatus = mediaListStatuses[statusIndex]
-        val mediaStatus = mediaBase.status
+        val result = computeStatusSelectionEffects(
+            statusIndex,
+            mediaListStatuses,
+            mediaBase,
+            isAnime,
+        ) ?: return
 
-        if (isAnime) {
-            when (newStatus) {
-                KeyUtil.CURRENT -> {
-                    if (CompatUtil.equals(mediaStatus, KeyUtil.NOT_YET_RELEASED)) {
-                        NotifyUtil.makeText(
-                            requireContext(), R.string.warning_anime_not_airing, Toast.LENGTH_LONG,
-                        ).show()
-                    }
-                }
-                KeyUtil.COMPLETED -> {
-                    if (!CompatUtil.equals(mediaStatus, KeyUtil.FINISHED)) {
-                        NotifyUtil.makeText(
-                            requireContext(), R.string.warning_anime_is_airing, Toast.LENGTH_LONG,
-                        ).show()
-                    } else {
-                        val total = mediaBase.episodes
-                        mediaListModel.progress = total
-                        progressWidget.setProgressCurrent(total)
-                    }
-                }
-                KeyUtil.PLANNING -> { /* no side effect */ }
-                else -> {
-                    if (CompatUtil.equals(mediaStatus, KeyUtil.NOT_YET_RELEASED)) {
-                        NotifyUtil.makeText(
-                            requireContext(), R.string.warning_anime_not_airing, Toast.LENGTH_LONG,
-                        ).show()
-                    }
-                }
-            }
-        } else {
-            when (newStatus) {
-                KeyUtil.CURRENT -> {
-                    if (CompatUtil.equals(mediaStatus, KeyUtil.NOT_YET_RELEASED)) {
-                        NotifyUtil.makeText(
-                            requireContext(), R.string.warning_manga_not_publishing, Toast.LENGTH_LONG,
-                        ).show()
-                    }
-                }
-                KeyUtil.COMPLETED -> {
-                    if (!CompatUtil.equals(mediaStatus, KeyUtil.FINISHED)) {
-                        NotifyUtil.makeText(
-                            requireContext(), R.string.warning_manga_publishing, Toast.LENGTH_LONG,
-                        ).show()
-                    } else {
-                        val chaptersTotal = mediaBase.chapters
-                        mediaListModel.progress = chaptersTotal
-                        progressWidget.setProgressCurrent(chaptersTotal)
-                        val volumesTotal = mediaBase.volumes
-                        if (volumesTotal > 0) {
-                            mediaListModel.progressVolumes = volumesTotal
-                            volumesWidget.setProgressCurrent(volumesTotal)
-                        }
-                    }
-                }
-                KeyUtil.PLANNING -> { /* no side effect */ }
-                else -> {
-                    if (CompatUtil.equals(mediaStatus, KeyUtil.NOT_YET_RELEASED)) {
-                        NotifyUtil.makeText(
-                            requireContext(), R.string.warning_manga_not_publishing, Toast.LENGTH_LONG,
-                        ).show()
-                    }
-                }
-            }
+        statusIconMap[result.newStatus]?.let { icon -> statusLayout.setStartIconDrawable(icon) }
+        statusWarning.visibility = View.GONE
+
+        if (result.warningResId != null) {
+            showStatusWarning(result.warningResId)
         }
+        result.autoFillProgress?.let { total ->
+            mediaListModel.progress = total
+            progressWidget.setProgressCurrent(total)
+        }
+        result.autoFillVolumes?.let { volumesTotal ->
+            mediaListModel.progressVolumes = volumesTotal
+            volumesWidget.setProgressCurrent(volumesTotal)
+        }
+    }
+
+    private fun showStatusWarning(messageRes: Int) {
+        statusWarning.text = getString(messageRes)
+        statusWarning.visibility = View.VISIBLE
     }
 
     private fun configureForMediaType() {
@@ -284,9 +268,11 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
 
         // Priority (NEW) -- clamp to slider range to avoid crash on out-of-range API values
         prioritySlider.value = model.priority.toFloat().coerceIn(0f, 255f)
+        updatePriorityValue(prioritySlider.value)
 
-        // Notes
-        notesEditor.setText(model.notes)
+        // Notes -- decode HTML entities to avoid double-encoding.
+        // The server may return HTML-encoded notes, and formattedText encodes again.
+        notesEditor.setText(decodeNotesIfEncoded(model.notes))
 
         // Custom lists and advanced scores (NEW)
         populateCustomListsAndAdvancedScores()
@@ -336,7 +322,7 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
                 if (category.isEmpty()) continue
                 val label = MaterialTextView(requireContext()).apply {
                     text = category
-                    setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_LabelMedium)
+                    setTextAppearance(R.style.TextAppearance_AniTrend_LabelMedium)
                     layoutParams = ViewGroup.MarginLayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -366,18 +352,29 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
     private fun setupButtons() {
         val isNewEntry = mediaBase.mediaListEntry == null
 
-        saveButton.text = getString(if (isNewEntry) R.string.Add else R.string.Update)
+        subtitleView.text = getString(if (isNewEntry) R.string.sheet_title_add else R.string.sheet_title_edit)
+        saveButton.text = getString(if (isNewEntry) R.string.action_add_to_list else R.string.action_save)
+        deleteButton.text = getString(R.string.action_remove)
 
         if (isNewEntry) {
             deleteButton.visibility = View.GONE
-            deleteSpacer.visibility = View.GONE
         } else {
             deleteButton.visibility = View.VISIBLE
-            deleteSpacer.visibility = View.VISIBLE
-            deleteButton.setOnClickListener { handleDelete() }
+            deleteButton.setOnClickListener {
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(R.string.action_remove)
+                    .setMessage(R.string.dialog_remove_entry_message)
+                    .setPositiveButton(R.string.action_remove) { _, _ -> handleDelete() }
+                    .setNegativeButton(R.string.Cancel, null)
+                    .show()
+            }
         }
 
         saveButton.setOnClickListener { handleSave() }
+    }
+
+    private fun updatePriorityValue(value: Float) {
+        priorityValue.text = getString(R.string.priority_value, value.toInt())
     }
 
     private fun handleSave() {
@@ -385,35 +382,72 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
         val statusNames = CompatUtil.getStringList(requireContext(), R.array.media_list_status)
         val selectedStatusIndex = statusNames.indexOf(statusDropdown.text.toString()).coerceAtLeast(0)
 
-        // Update model from M3 views
-        model.progress = progressWidget.progressCurrent
-        model.repeat = repeatWidget.progressCurrent
-        model.score = scoreWidget.scoreCurrent
-        if (!isAnime) {
-            model.progressVolumes = volumesWidget.progressCurrent
+        // Read widget values (view layer)
+        val progress = progressWidget.progressCurrent
+        val repeat = repeatWidget.progressCurrent
+        val score = scoreWidget.scoreCurrent
+        val progressVolumes = if (!isAnime) volumesWidget.progressCurrent else 0
+        val startedAt = startedAtWidget.date
+        val completedAt = completedAtWidget.date
+        val isHidden = privateSwitch.isChecked
+        val isHiddenFromStatusLists = hiddenFromStatusSwitch.isChecked
+        val priority = prioritySlider.value.toInt()
+        val notes = notesEditor.formattedText
+
+        // Form validation (extracted)
+        val validation = validateManageForm(progress, repeat)
+        if (!validation.isValid) {
+            context?.let { safeCtx ->
+                NotifyUtil.makeText(
+                    safeCtx,
+                    validation.errorResId ?: R.string.text_error_request,
+                    R.drawable.ic_warning_white_18dp,
+                    Toast.LENGTH_SHORT,
+                ).show()
+            }
+            return
         }
-        model.startedAt = startedAtWidget.date
-        model.completedAt = completedAtWidget.date
-        model.isHidden = privateSwitch.isChecked
-        model.isHiddenFromStatusLists = hiddenFromStatusSwitch.isChecked
-        model.priority = prioritySlider.value.toInt()
-        model.notes = notesEditor.formattedText
-        model.status = mediaListStatuses[selectedStatusIndex]
 
         // Collect advanced scores from sliders
-        if (advancedScoresContainer.visibility == View.VISIBLE && advancedScoreSliders.isNotEmpty()) {
-            model.advancedScores = advancedScoreSliders.associate { (category, slider) ->
-                category to slider.value
+        val collectedAdvancedScores: Map<String, Float>? =
+            if (advancedScoresContainer.visibility == View.VISIBLE && advancedScoreSliders.isNotEmpty()) {
+                advancedScoreSliders.associate { (category, slider) ->
+                    category to slider.value
+                }
+            } else {
+                null
             }
-        }
+
+        // Build model from form (extracted)
+        buildMediaListFromForm(
+            model = model,
+            statusIndex = selectedStatusIndex,
+            statuses = mediaListStatuses,
+            progress = progress,
+            repeat = repeat,
+            score = score,
+            progressVolumes = progressVolumes,
+            isAnime = isAnime,
+            startedAt = startedAt,
+            completedAt = completedAt,
+            isHidden = isHidden,
+            isHiddenFromStatusLists = isHiddenFromStatusLists,
+            priority = priority,
+            notes = notes,
+            advancedScores = collectedAdvancedScores,
+        )
 
         val scoreFmt = resolveScoreFormat()
         val params = MediaListUtil.getMediaListParams(model, scoreFmt)
 
-        // Build enabled custom list names directly from chips to distinguish
-        // "all unchecked" (empty list = clear all) from "no custom lists UI
-        // shown" (null = don't update). This bypasses the stringListValue
-        // empty-to-null conversion that would silently preserve existing lists.
+        // Extract scoreRaw from params
+        val scoreRawFromParams = if (params.containsKey(KeyUtil.arg_listScore_raw)) {
+            params.intValue(KeyUtil.arg_listScore_raw)
+        } else {
+            null
+        }
+
+        // Build enabled custom list names directly from chips
         val enabledCustomListNames: List<String?>? =
             if (customListsContainer.visibility == View.VISIBLE && customListsChipGroup.childCount > 0) {
                 (0 until customListsChipGroup.childCount)
@@ -425,7 +459,8 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
                 params.stringListValue(KeyUtil.arg_listCustom)
             }
 
-        val progressDialog = NotifyUtil.createProgressDialog(requireContext(), R.string.text_processing_request)
+        val ctx = context ?: return
+        val progressDialog = NotifyUtil.createProgressDialog(ctx, R.string.text_processing_request)
         progressDialog.show()
 
         koinOf<WidgetMutationCoordinator>().saveMediaListEntry(
@@ -433,6 +468,7 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
             mediaId = params.longValue(KeyUtil.arg_mediaId),
             status = params.enumValue<MediaListStatus>(KeyUtil.arg_listStatus),
             score = params.doubleValue(KeyUtil.arg_listScore),
+            scoreRaw = scoreRawFromParams,
             progress = params.intValue(KeyUtil.arg_listProgress),
             progressVolumes = params.intValue(KeyUtil.arg_listProgressVolumes),
             repeat = params.intValue(KeyUtil.arg_listRepeat),
@@ -447,62 +483,86 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
         ) { result ->
             try {
                 progressDialog.dismiss()
+
+                // Lifecycle guard
+                if (!isAdded) return@saveMediaListEntry
+
                 result
-                    .onSuccess {
-                        NotifyUtil
-                            .makeText(
-                                requireContext(),
-                                getString(R.string.text_changes_saved),
-                                R.drawable.ic_check_circle_white_24dp,
-                                Toast.LENGTH_SHORT,
-                            ).show()
+                    .onSuccess { savedEntry ->
+                        // Update model from save response
+                        savedEntry.media = model.media
+                        mediaListModel = savedEntry
+                        mediaBase.mediaListEntry = savedEntry
+
+                        context?.let { safeCtx ->
+                            NotifyUtil
+                                .makeText(
+                                    safeCtx,
+                                    getString(R.string.text_changes_saved),
+                                    R.drawable.ic_check_circle_white_24dp,
+                                    Toast.LENGTH_SHORT,
+                                ).show()
+                        }
                         dismiss()
                     }.onFailure { throwable ->
                         Timber.e(throwable)
-                        NotifyUtil
-                            .makeText(
-                                requireContext(),
-                                getString(R.string.text_error_request),
-                                R.drawable.ic_warning_white_18dp,
-                                Toast.LENGTH_SHORT,
-                            ).show()
+                        context?.let { safeCtx ->
+                            NotifyUtil
+                                .makeText(
+                                    safeCtx,
+                                    getString(R.string.text_error_request),
+                                    R.drawable.ic_warning_white_18dp,
+                                    Toast.LENGTH_SHORT,
+                                ).show()
+                        }
                     }
             } catch (e: Exception) {
+                progressDialog.dismiss()
                 Timber.e(e)
             }
         }
     }
 
     private fun handleDelete() {
-        val progressDialog = NotifyUtil.createProgressDialog(requireContext(), R.string.text_processing_request)
+        val ctx = context ?: return
+        val progressDialog = NotifyUtil.createProgressDialog(ctx, R.string.text_processing_request)
         progressDialog.show()
 
         koinOf<WidgetMutationCoordinator>().deleteMediaListEntry(mediaListModel.id) { result ->
             try {
                 progressDialog.dismiss()
+
+                // Lifecycle guard (task 2)
+                if (!isAdded) return@deleteMediaListEntry
+
                 result
                     .onSuccess { deleteState ->
                         if (deleteState.isDeleted) {
-                            NotifyUtil
-                                .makeText(
-                                    requireContext(),
-                                    getString(R.string.text_changes_saved),
-                                    R.drawable.ic_check_circle_white_24dp,
-                                    Toast.LENGTH_SHORT,
-                                ).show()
+                            context?.let { safeCtx ->
+                                NotifyUtil
+                                    .makeText(
+                                        safeCtx,
+                                        getString(R.string.text_changes_saved),
+                                        R.drawable.ic_check_circle_white_24dp,
+                                        Toast.LENGTH_SHORT,
+                                    ).show()
+                            }
                             dismiss()
                         }
                     }.onFailure { throwable ->
                         Timber.w(throwable)
-                        NotifyUtil
-                            .makeText(
-                                requireContext(),
-                                getString(R.string.text_error_request),
-                                R.drawable.ic_warning_white_18dp,
-                                Toast.LENGTH_SHORT,
-                            ).show()
+                        context?.let { safeCtx ->
+                            NotifyUtil
+                                .makeText(
+                                    safeCtx,
+                                    getString(R.string.text_error_request),
+                                    R.drawable.ic_warning_white_18dp,
+                                    Toast.LENGTH_SHORT,
+                                ).show()
+                        }
                     }
             } catch (e: Exception) {
+                progressDialog.dismiss()
                 Timber.e(e)
             }
         }
@@ -512,14 +572,12 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
      * Resolves the user's score format from the current user's media list options.
      * Falls back to [KeyUtil.POINT_100] if the user data cannot be resolved.
      */
-    private fun resolveScoreFormat(): String {
-        return runCatching {
-            koinOf<WidgetMutationCoordinator>().databaseHelper.currentUser?.mediaListOptions?.scoreFormat
-        }.getOrNull() ?: KeyUtil.POINT_100
-    }
+    private fun resolveScoreFormat(): String = runCatching {
+        koinOf<WidgetMutationCoordinator>().databaseHelper.currentUser?.mediaListOptions?.scoreFormat
+    }.getOrNull() ?: KeyUtil.POINT_100
 
     // ----------------------------------------------------------------------------
-    // Bundle extraction helpers (mirrored from MediaDialogUtil)
+    // Bundle extraction helpers (used by handleSave)
     // ----------------------------------------------------------------------------
 
     @Suppress("DEPRECATION")
@@ -543,9 +601,7 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
     }
 
     @Suppress("DEPRECATION")
-    private fun Bundle.stringValue(key: String): String? {
-        return if (containsKey(key)) get(key)?.toString() else null
-    }
+    private fun Bundle.stringValue(key: String): String? = if (containsKey(key)) get(key)?.toString() else null
 
     @Suppress("DEPRECATION")
     private fun Bundle.boolValue(key: String): Boolean? {
@@ -617,11 +673,10 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
         private const val TAG = "BtmSheetSeriesManage"
         private const val ARG_MEDIA_BASE = "arg_media_base"
 
-        fun newInstance(mediaBase: MediaBase): BottomSheetSeriesManage =
-            BottomSheetSeriesManage().apply {
-                arguments = Bundle().apply {
-                    putParcelable(ARG_MEDIA_BASE, mediaBase)
-                }
+        fun newInstance(mediaBase: MediaBase): BottomSheetSeriesManage = BottomSheetSeriesManage().apply {
+            arguments = Bundle().apply {
+                putParcelable(ARG_MEDIA_BASE, mediaBase)
             }
+        }
     }
 }

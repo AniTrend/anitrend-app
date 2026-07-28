@@ -51,7 +51,7 @@ constructor(
      */
     override fun onInit() {
         binding = WidgetProgressBinding.inflate(context.getLayoutInflater(), this, true)
-        binding.progressCurrent.setTextColor(context.getCompatColorAttr(R.attr.contentColor))
+        binding.progressCurrent.setTextColor(context.getCompatColorAttr(R.attr.colorOnSurface))
         binding.progressMaximum.visibility = GONE
         binding.progressDecrement.setOnClickListener(this)
         binding.progressIncrement.setOnClickListener(this)
@@ -106,7 +106,7 @@ constructor(
         if (boundCheck(delta)) {
             progressCurrent = delta
             binding.progressCurrent.setText(progressCurrent.toString())
-            binding.progressCurrent.setSelection(binding.progressCurrent.text.length)
+            binding.progressCurrent.setSelection(binding.progressCurrent.text?.length ?: 0)
         }
     }
 

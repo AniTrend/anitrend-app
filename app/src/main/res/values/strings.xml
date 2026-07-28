@@ -283,6 +283,9 @@
 
     <string name="dialog_confirm_delete">Confirm Delete!</string>
     <string name="dialog_delete_message">Are you sure you want to proceed with this action? There will be no undoing after the request is sent!</string>
+    <string name="dialog_remove_entry_message">Remove this title from your list?</string>
+    <string name="validation_progress_negative">Progress cannot be negative</string>
+    <string name="validation_repeat_negative">Repeat count cannot be negative</string>
 
     <string name="title_bottom_sheet_likes">Total Likes: %d</string>
 
@@ -291,18 +294,6 @@
     <string name="info_login_req">Please sign in to access this feature!</string>
     <string name="button_try_again">Try Again</string>
     <string name="try_again">@string/button_try_again</string>
-
-    <string name="dialog_add_title">
-        <![CDATA[
-        <small>Add: %s</small>
-        ]]>
-    </string>
-
-    <string name="dialog_edit_title">
-        <![CDATA[
-        <small>Update: %s</small>
-        ]]>
-    </string>
 
     <string name="title_view_likes">View Likes</string>
     <string name="input_empty_warning">Input cannot be empty!</string>
@@ -556,12 +547,31 @@
     <string name="dialog_title_score">Score</string>
     <string name="dialog_title_private">Private</string>
     <string name="dialog_title_increment_episodes">Increment Episodes</string>
-    <string name="dialog_hint_enter_your_notes">Enter your notes</string>
+    <string name="dialog_hint_enter_your_notes">Add a note...</string>
     <string name="dialog_title_notes">Notes</string>
-    <string name="dialog_title_priority">Priority</string>
+    <string name="dialog_title_priority">Priority (0-255)</string>
     <string name="dialog_title_hidden_from_status_lists">Hide from status lists</string>
     <string name="dialog_title_custom_lists">Custom Lists</string>
     <string name="dialog_title_advanced_scores">Advanced Scores</string>
+
+    <string name="sheet_title_add">Add to list</string>
+    <string name="sheet_title_edit">Edit list entry</string>
+    <string name="action_save">Save</string>
+    <string name="action_add_to_list">Add to list</string>
+    <string name="action_remove">Remove</string>
+    <string name="action_decrement">Decrease value</string>
+    <string name="action_increment">Increase value</string>
+    <string name="priority_value">%d</string>
+    <string name="hidden_from_status_lists_summary">Only visible in custom lists</string>
+    <string name="status_warning_not_aired">This title has not aired yet</string>
+    <string name="status_warning_not_published">This title has not been published yet</string>
+    <string name="status_warning_still_airing">This title is still airing</string>
+    <string name="status_warning_still_publishing">This title is still publishing</string>
+    <string name="section_status_score">Status &amp; score</string>
+    <string name="section_progress">Progress</string>
+    <string name="section_dates">Dates</string>
+    <string name="section_privacy_priority">Privacy &amp; priority</string>
+    <string name="section_notes">Notes</string>
 
     <string name="dialog_title_volumes_read">Volumes Read</string>
     <string name="dialog_title_chapters_read">Chapters Read</string>
@@ -799,9 +809,6 @@
 
     <string name="pref_title_experimental_initial_screens">Experimental startup screens</string>
     <string name="pref_summary_experimental_initial_screens">Consolidates startup screens and presents changelogs as a destination instead of a dialog</string>
-
-    <string name="pref_title_experimental_manage_library">Experimental manage library</string>
-    <string name="pref_summary_experimental_manage_library">Redesigns the manage library dialog with Material 3 components and expanded customization</string>
 
     <string name="pref_header_accessibility">Accessibility</string>
     <string name="pref_header_accessibility_summary">Adjust display for accessibility needs</string>

@@ -1,333 +1,486 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:fillViewport="true">
+    android:layout_height="match_parent"
+    android:background="?attr/colorSurfaceContainerLow"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+        android:id="@+id/sheet_manage_drag_handle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingTop="@dimen/sheet_inline_spacing" />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/sheet_manage_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/xl_margin"
+            android:paddingTop="@dimen/xl_margin"
+            android:paddingBottom="@dimen/lg_margin">
+
+            <!-- Header -->
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/sheet_manage_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textAppearance="?attr/textAppearanceTitleLarge"
+                android:textColor="?attr/colorOnSurface"
+                tools:text="Series Title" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/sheet_manage_subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sm_margin"
+                android:textAlignment="center"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                tools:text="Add to list" />
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/xl_margin" />
+
+            <!-- Status & Score -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/sheet_manage_status_score_card"
+                style="@style/Widget.AniTrend.ManageSheet.SectionCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/sheet_section_margin">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/sheet_field_margin"
+                        android:text="@string/section_status_score"
+                        android:textAppearance="@style/Widget.AniTrend.ManageSheet.SectionLabel" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/sheet_manage_status_layout"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/dialog_title_status"
+                        app:startIconDrawable="@drawable/ic_remove_red_eye_white_18dp"
+                        app:startIconTint="?attr/colorOnSurfaceVariant">
+
+                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                            android:id="@+id/sheet_manage_status"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="none" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/sheet_manage_status_warning"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/sheet_inline_spacing"
+                        android:textAppearance="?attr/textAppearanceBodySmall"
+                        android:textColor="?attr/colorError"
+                        android:visibility="gone"
+                        tools:text="This title has not aired yet"
+                        tools:visibility="visible" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/sheet_field_margin"
+                        android:text="@string/dialog_title_score"
+                        android:textAppearance="@style/Widget.AniTrend.ManageSheet.FieldLabel" />
+
+                    <com.mxt.anitrend.base.custom.view.widget.ScoreWidget
+                        android:id="@+id/sheet_manage_score"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/sheet_inline_spacing" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Progress -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/sheet_manage_progress_card"
+                style="@style/Widget.AniTrend.ManageSheet.SectionCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/sheet_section_margin">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/sheet_field_margin"
+                        android:text="@string/section_progress"
+                        android:textAppearance="@style/Widget.AniTrend.ManageSheet.SectionLabel" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/sheet_manage_progress_label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/dialog_title_episodes"
+                        android:textAppearance="@style/Widget.AniTrend.ManageSheet.FieldLabel" />
+
+                    <com.mxt.anitrend.base.custom.view.widget.ProgressWidget
+                        android:id="@+id/sheet_manage_progress"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/sheet_inline_spacing" />
+
+                    <LinearLayout
+                        android:id="@+id/sheet_manage_volumes_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/sheet_field_margin"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/dialog_title_volumes_read"
+                            android:textAppearance="@style/Widget.AniTrend.ManageSheet.FieldLabel" />
+
+                        <com.mxt.anitrend.base.custom.view.widget.ProgressWidget
+                            android:id="@+id/sheet_manage_volumes"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/sheet_inline_spacing" />
+                    </LinearLayout>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/sheet_manage_repeat_label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/sheet_field_margin"
+                        android:text="@string/dialog_title_rewatched"
+                        android:textAppearance="@style/Widget.AniTrend.ManageSheet.FieldLabel" />
+
+                    <com.mxt.anitrend.base.custom.view.widget.ProgressWidget
+                        android:id="@+id/sheet_manage_repeat"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/sheet_inline_spacing" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Dates -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/sheet_manage_dates_card"
+                style="@style/Widget.AniTrend.ManageSheet.SectionCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/sheet_section_margin">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/sheet_field_margin"
+                        android:text="@string/section_dates"
+                        android:textAppearance="@style/Widget.AniTrend.ManageSheet.SectionLabel" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/dialog_title_started_at"
+                                android:textAppearance="@style/Widget.AniTrend.ManageSheet.FieldLabel" />
+
+                            <com.mxt.anitrend.base.custom.view.widget.FuzzyDateWidget
+                                android:id="@+id/sheet_manage_started_at"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/sheet_inline_spacing" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/sheet_field_margin"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <com.google.android.material.textview.MaterialTextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/dialog_title_completed_at"
+                                android:textAppearance="@style/Widget.AniTrend.ManageSheet.FieldLabel" />
+
+                            <com.mxt.anitrend.base.custom.view.widget.FuzzyDateWidget
+                                android:id="@+id/sheet_manage_completed_at"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/sheet_inline_spacing" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Privacy & Priority -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/sheet_manage_privacy_priority_card"
+                style="@style/Widget.AniTrend.ManageSheet.SectionCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/sheet_section_margin">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/sheet_field_margin"
+                        android:text="@string/section_privacy_priority"
+                        android:textAppearance="@style/Widget.AniTrend.ManageSheet.SectionLabel" />
+
+                    <com.google.android.material.materialswitch.MaterialSwitch
+                        android:id="@+id/sheet_manage_private"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/dialog_title_private" />
+
+                    <com.google.android.material.materialswitch.MaterialSwitch
+                        android:id="@+id/sheet_manage_hidden_from_status"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/dialog_title_hidden_from_status_lists" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/xl_margin"
+                        android:layout_marginBottom="@dimen/sheet_field_margin"
+                        android:text="@string/hidden_from_status_lists_summary"
+                        android:textAppearance="?attr/textAppearanceBodySmall"
+                        android:textColor="?attr/colorOnSurfaceVariant" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/dialog_title_priority"
+                        android:textAppearance="@style/Widget.AniTrend.ManageSheet.FieldLabel" />
+
+                    <com.google.android.material.slider.Slider
+                        android:id="@+id/sheet_manage_priority"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/sheet_inline_spacing"
+                        android:stepSize="1"
+                        android:valueFrom="0"
+                        android:valueTo="255" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/sheet_manage_priority_value"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="textEnd"
+                        android:textAppearance="?attr/textAppearanceBodySmall"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        tools:text="0" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Notes -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/sheet_manage_notes_card"
+                style="@style/Widget.AniTrend.ManageSheet.SectionCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/sheet_section_margin">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/sheet_field_margin"
+                        android:text="@string/section_notes"
+                        android:textAppearance="@style/Widget.AniTrend.ManageSheet.SectionLabel" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/sheet_manage_notes_layout"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/dialog_hint_enter_your_notes"
+                        app:boxStrokeColor="?attr/colorOutline">
+
+                        <com.mxt.anitrend.base.custom.view.editor.MarkdownInputEditor
+                            android:id="@+id/sheet_manage_notes"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textMultiLine|textCapSentences|textAutoComplete|textAutoCorrect"
+                            android:textAppearance="?attr/textAppearanceBodyMedium" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Custom Lists (dynamic) -->
+            <LinearLayout
+                android:id="@+id/sheet_manage_custom_lists_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/Widget.AniTrend.ManageSheet.SectionCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/sheet_section_margin">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/sheet_field_margin"
+                            android:text="@string/dialog_title_custom_lists"
+                            android:textAppearance="@style/Widget.AniTrend.ManageSheet.SectionLabel" />
+
+                        <com.google.android.material.chip.ChipGroup
+                            android:id="@+id/sheet_manage_custom_lists_chips"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:singleSelection="false" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <!-- Advanced Scores (dynamic) -->
+            <LinearLayout
+                android:id="@+id/sheet_manage_advanced_scores_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/Widget.AniTrend.ManageSheet.SectionCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/sheet_section_margin">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/sheet_field_margin"
+                            android:text="@string/dialog_title_advanced_scores"
+                            android:textAppearance="@style/Widget.AniTrend.ManageSheet.SectionLabel" />
+
+                        <LinearLayout
+                            android:id="@+id/sheet_manage_advanced_scores_entries"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <!-- Sticky action bar -->
+    <LinearLayout
+        android:id="@+id/sheet_manage_action_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorSurfaceContainerLow"
         android:orientation="vertical"
         android:padding="@dimen/xl_margin">
 
-        <!-- Title -->
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/sheet_manage_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?attr/textAppearanceTitleMedium" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/lg_margin" />
-
-        <!-- Status Section -->
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/dialog_title_status"
-            android:textAppearance="?attr/textAppearanceLabelMedium"
-            app:drawableStartCompat="@drawable/ic_remove_red_eye_white_18dp"
-            app:drawableTint="?attr/colorOnSurfaceVariant" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/sheet_manage_status_layout"
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/md_margin">
-
-            <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                android:id="@+id/sheet_manage_status"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="none" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/lg_margin" />
-
-        <!-- Score Section -->
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/dialog_title_score"
-            android:textAppearance="?attr/textAppearanceLabelMedium"
-            app:drawableTint="?attr/colorOnSurfaceVariant" />
-
-        <com.mxt.anitrend.base.custom.view.widget.ScoreWidget
-            android:id="@+id/sheet_manage_score"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/md_margin" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/lg_margin" />
-
-        <!-- Progress Section (Episodes / Chapters) -->
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/sheet_manage_progress_label"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/dialog_title_episodes"
-            android:textAppearance="?attr/textAppearanceLabelMedium"
-            app:drawableTint="?attr/colorOnSurfaceVariant" />
-
-        <com.mxt.anitrend.base.custom.view.widget.ProgressWidget
-            android:id="@+id/sheet_manage_progress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/md_margin" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/lg_margin" />
-
-        <!-- Volumes Section (Manga only, hidden by default) -->
-        <LinearLayout
-            android:id="@+id/sheet_manage_volumes_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <com.google.android.material.textview.MaterialTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/dialog_title_volumes_read"
-                android:textAppearance="?attr/textAppearanceLabelMedium"
-                app:drawableTint="?attr/colorOnSurfaceVariant" />
-
-            <com.mxt.anitrend.base.custom.view.widget.ProgressWidget
-                android:id="@+id/sheet_manage_volumes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/md_margin" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/lg_margin" />
-        </LinearLayout>
-
-        <!-- Repeat Section (Rewatched / Reread) -->
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/sheet_manage_repeat_label"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/dialog_title_rewatched"
-            android:textAppearance="?attr/textAppearanceLabelMedium"
-            app:drawableTint="?attr/colorOnSurfaceVariant" />
-
-        <com.mxt.anitrend.base.custom.view.widget.ProgressWidget
-            android:id="@+id/sheet_manage_repeat"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/md_margin" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/lg_margin" />
-
-        <!-- Started At Section -->
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/dialog_title_started_at"
-            android:textAppearance="?attr/textAppearanceLabelMedium"
-            app:drawableTint="?attr/colorOnSurfaceVariant" />
-
-        <com.mxt.anitrend.base.custom.view.widget.FuzzyDateWidget
-            android:id="@+id/sheet_manage_started_at"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/md_margin" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/lg_margin" />
-
-        <!-- Completed At Section -->
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/dialog_title_completed_at"
-            android:textAppearance="?attr/textAppearanceLabelMedium"
-            app:drawableTint="?attr/colorOnSurfaceVariant" />
-
-        <com.mxt.anitrend.base.custom.view.widget.FuzzyDateWidget
-            android:id="@+id/sheet_manage_completed_at"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/md_margin" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/xl_margin" />
-
-        <!-- Privacy Section -->
-        <com.google.android.material.materialswitch.MaterialSwitch
-            android:id="@+id/sheet_manage_private"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/dialog_title_private" />
-
-        <com.google.android.material.materialswitch.MaterialSwitch
-            android:id="@+id/sheet_manage_hidden_from_status"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/dialog_title_hidden_from_status_lists" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/lg_margin" />
-
-        <!-- Priority Section (NEW) -->
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/dialog_title_priority"
-            android:textAppearance="?attr/textAppearanceLabelMedium"
-            app:drawableTint="?attr/colorOnSurfaceVariant" />
-
-        <com.google.android.material.slider.Slider
-            android:id="@+id/sheet_manage_priority"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/md_margin"
-            android:stepSize="1"
-            android:valueFrom="0"
-            android:valueTo="255" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/lg_margin" />
-
-        <!-- Custom Lists Section (hidden by default, shown when available) -->
-        <LinearLayout
-            android:id="@+id/sheet_manage_custom_lists_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <com.google.android.material.textview.MaterialTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/dialog_title_custom_lists"
-                android:textAppearance="?attr/textAppearanceLabelMedium"
-                app:drawableTint="?attr/colorOnSurfaceVariant" />
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/sheet_manage_custom_lists_chips"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/md_margin"
-                app:singleSelection="false" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/lg_margin" />
-        </LinearLayout>
-
-        <!-- Advanced Scores Section (hidden by default, shown when available) -->
-        <LinearLayout
-            android:id="@+id/sheet_manage_advanced_scores_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <com.google.android.material.textview.MaterialTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/dialog_title_advanced_scores"
-                android:textAppearance="?attr/textAppearanceLabelMedium"
-                app:drawableTint="?attr/colorOnSurfaceVariant" />
-
-            <LinearLayout
-                android:id="@+id/sheet_manage_advanced_scores_entries"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/md_margin"
-                android:orientation="vertical" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/lg_margin" />
-        </LinearLayout>
-
-        <!-- Notes Section -->
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/dialog_title_notes"
-            android:textAppearance="?attr/textAppearanceLabelMedium"
-            app:drawableTint="?attr/colorOnSurfaceVariant" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/sheet_manage_notes_layout"
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/md_margin"
-            android:hint="@string/dialog_hint_enter_your_notes">
-
-            <com.mxt.anitrend.base.custom.view.editor.MarkdownInputEditor
-                android:id="@+id/sheet_manage_notes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textMultiLine|textCapSentences|textAutoComplete|textAutoCorrect"
-                android:textSize="@dimen/subtitle_text_size" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/xl_margin" />
-
-        <!-- Action Buttons -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/sheet_manage_delete"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/Delete"
-                android:visibility="gone" />
-
-            <View
-                android:id="@+id/sheet_manage_delete_spacer"
-                android:layout_width="@dimen/lg_margin"
-                android:layout_height="0dp"
-                android:visibility="gone" />
-
-            <com.google.android.material.button.MaterialButton
                 android:id="@+id/sheet_manage_cancel"
-                style="@style/Widget.Material3.Button.OutlinedButton"
+                style="@style/Widget.Material3.Button.TextButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/Cancel" />
 
-            <View
-                android:layout_width="@dimen/lg_margin"
-                android:layout_height="0dp" />
-
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/sheet_manage_save"
-                style="@style/Widget.Material3.Button"
+                android:id="@+id/sheet_manage_delete"
+                style="@style/Widget.Material3.Button.TextButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/lg_margin"
                 android:layout_weight="1"
-                android:text="@string/Add" />
+                android:text="@string/action_remove"
+                android:textColor="?attr/colorError"
+                android:visibility="gone" />
         </LinearLayout>
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/sheet_manage_save"
+            style="@style/Widget.Material3.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/lg_margin"
+            android:text="@string/Add" />
+
     </LinearLayout>
-</ScrollView>
+
+</LinearLayout>

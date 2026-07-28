@@ -353,4 +353,20 @@
         <item name="android:paddingRight">@dimen/search_icon_padding</item>
     </style>
 
+    <!-- Manage sheet section styles -->
+    <style name="Widget.AniTrend.ManageSheet.SectionCard" parent="Widget.Material3.CardView.Filled">
+        <item name="cardBackgroundColor">?attr/colorSurfaceContainer</item>
+        <item name="cardElevation">0dp</item>
+        <item name="contentPadding">@dimen/sheet_card_padding</item>
+        <item name="strokeWidth">0dp</item>
+    </style>
+
+    <style name="Widget.AniTrend.ManageSheet.SectionLabel" parent="TextAppearance.Material3.TitleSmall">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="Widget.AniTrend.ManageSheet.FieldLabel" parent="TextAppearance.Material3.LabelMedium">
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+    </style>
+
 </resources>

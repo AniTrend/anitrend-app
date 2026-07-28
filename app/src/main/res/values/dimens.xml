@@ -66,6 +66,12 @@
     <!-- Match Parent -->
     <dimen name="bottom_sheet_width">0dp</dimen>
 
+    <!-- Manage sheet spacing -->
+    <dimen name="sheet_section_margin">16dp</dimen>
+    <dimen name="sheet_field_margin">12dp</dimen>
+    <dimen name="sheet_card_padding">16dp</dimen>
+    <dimen name="sheet_inline_spacing">4dp</dimen>
+
     <dimen name="search_icon_padding">12dp</dimen>
     <dimen name="search_view_text_padding">0dp</dimen>
 </resources>

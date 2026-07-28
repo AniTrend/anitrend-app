@@ -9,6 +9,7 @@ fragment MediaListFragment on MediaList {
   priority
   private
   hiddenFromStatusLists
+  advancedScores
   customLists(asArray: true)
   notes
   startedAt {

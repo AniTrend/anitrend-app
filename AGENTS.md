@@ -59,3 +59,9 @@
 
 ### Reference
 - See `docs/superpowers/specs/2026-07-19-viewmodel-first-architecture-modernization-design.md` for the full design spec, migration strategy, and `LoggingActivity` refactor target.
+
+## Material 3 design system
+- `@DESIGN.md` is the app-wide M3 design system. It defines color tokens, typography hierarchy, spacing scale, component specs (bottom sheets, dialogs, cards, buttons, text fields, switches, sliders, chips, lists, navigation, custom views, loading), motion and feedback rules, and do's and don'ts.
+- Consult `@DESIGN.md` before any UI/UX work: new screens, layout changes, component selection, styling, spacing, color usage, typography choices, dialog or sheet design, custom view creation, or any visual refactor.
+- The manage list editor (`BottomSheetSeriesManage`) is the reference implementation of this design language. Future design passes must carry the same philosophy across the whole app.
+- When a design decision changes (new component pattern, revised token usage, updated spacing convention), update `@DESIGN.md` in the same PR so it stays the source of truth.
