@@ -66,9 +66,6 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
                 if (!containsKey(KeyUtil.arg_page_limit)) {
                     putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
                 }
-                if (!containsKey(KeyUtil.arg_asHtml)) {
-                    putBoolean(KeyUtil.arg_asHtml, false)
-                }
             }
         mediaBrowseUtil = arguments?.parcelable(KeyUtil.arg_media_util)
 
@@ -311,34 +308,62 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
                 requestArgs.takeIf { it.containsKey(KeyUtil.arg_isAdult) }?.getBoolean(KeyUtil.arg_isAdult)
             }
 
-        var format: String? = null
-        var seasonYear: Int? = null
-        var startDateLike: String? = null
-        var status: String? = null
-        var genres: List<String>? = null
-        var tags: List<String>? = null
-        var sort: String? = null
+        // Bundle values are explicit caller intent. Settings only provide fallback defaults
+        // when filtering is enabled and the caller did not provide that query value.
+        val season =
+            requestArgs.takeIf { it.containsKey(KeyUtil.arg_season) }?.getString(KeyUtil.arg_season)
+        var format =
+            requestArgs.takeIf { it.containsKey(KeyUtil.arg_format) }?.getString(KeyUtil.arg_format)
+        var seasonYear =
+            requestArgs.takeIf { it.containsKey(KeyUtil.arg_seasonYear) }?.getInt(KeyUtil.arg_seasonYear)
+        var startDateLike =
+            requestArgs.takeIf { it.containsKey(KeyUtil.arg_startDateLike) }?.getString(KeyUtil.arg_startDateLike)
+        var status =
+            requestArgs.takeIf { it.containsKey(KeyUtil.arg_status) }?.getString(KeyUtil.arg_status)
+        var genres: List<String>? =
+            requestArgs.takeIf { it.containsKey(KeyUtil.arg_genres) }?.getStringArrayList(KeyUtil.arg_genres)
+        var tags: List<String>? =
+            requestArgs.takeIf { it.containsKey(KeyUtil.arg_tags) }?.getStringArrayList(KeyUtil.arg_tags)
+        var sort =
+            requestArgs.takeIf { it.containsKey(KeyUtil.arg_sort) }?.getString(KeyUtil.arg_sort)
 
         if (isFilterableEnabled) {
             if (mediaBrowseUtil?.isBasicFilter != true) {
                 if (CompatUtil.equals(requestArgs.getString(KeyUtil.arg_mediaType), KeyUtil.MANGA)) {
-                    startDateLike = String.format(Locale.getDefault(), "%d%%", settings.seasonYear)
-                    format = settings.mangaFormat
+                    if (!requestArgs.containsKey(KeyUtil.arg_startDateLike)) {
+                        startDateLike = String.format(Locale.getDefault(), "%d%%", settings.seasonYear)
+                    }
+                    if (!requestArgs.containsKey(KeyUtil.arg_format)) {
+                        format = settings.mangaFormat
+                    }
                 } else {
-                    seasonYear = settings.seasonYear
-                    format = settings.animeFormat
+                    if (!requestArgs.containsKey(KeyUtil.arg_seasonYear)) {
+                        seasonYear = settings.seasonYear
+                    }
+                    if (!requestArgs.containsKey(KeyUtil.arg_format)) {
+                        format = settings.animeFormat
+                    }
                 }
-                status = settings.mediaStatus
-                genres = ArrayList(GenreTagUtil.getMappedValues(settings.selectedGenres).orEmpty())
-                tags = ArrayList(GenreTagUtil.getMappedValues(settings.selectedTags).orEmpty())
+                if (!requestArgs.containsKey(KeyUtil.arg_status)) {
+                    status = settings.mediaStatus
+                }
+                if (!requestArgs.containsKey(KeyUtil.arg_genres)) {
+                    genres = ArrayList(GenreTagUtil.getMappedValues(settings.selectedGenres).orEmpty())
+                }
+                if (!requestArgs.containsKey(KeyUtil.arg_tags)) {
+                    tags = ArrayList(GenreTagUtil.getMappedValues(settings.selectedTags).orEmpty())
+                }
             }
-            sort = settings.mediaSort + settings.sortOrder
+            if (!requestArgs.containsKey(KeyUtil.arg_sort)) {
+                sort = settings.mediaSort + settings.sortOrder
+            }
         }
 
         mediaBrowseViewModel.load(
             type = type,
             page = mScrollListener.currentPage,
             pageLimit = requestArgs.getInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT),
+            season = season,
             sort = sort,
             isAdult = isAdult,
             format = format,
@@ -348,44 +373,6 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
             genres = genres,
             tags = tags,
         )
-    }
-
-    protected fun Bundle.applyAdultContentPreference(
-        displayAdultContent: Boolean,
-        configuredValue: Boolean? = null,
-    ) {
-        if (!displayAdultContent) {
-            putBoolean(KeyUtil.arg_isAdult, false)
-        } else if (configuredValue != null) {
-            putBoolean(KeyUtil.arg_isAdult, configuredValue)
-        } else {
-            remove(KeyUtil.arg_isAdult)
-        }
-    }
-
-    protected fun Bundle.putQueryValue(
-        key: String,
-        value: Any?,
-    ) {
-        when (value) {
-            null -> remove(key)
-            is Boolean -> putBoolean(key, value)
-            is Int -> putInt(key, value)
-            is Long -> putLong(key, value)
-            is Number -> putInt(key, value.toInt())
-            else -> putString(key, value.toString())
-        }
-    }
-
-    protected fun Bundle.putQueryStringList(
-        key: String,
-        value: Any?,
-    ) {
-        when (value) {
-            is Iterable<*> -> putStringArrayList(key, ArrayList(value.mapNotNull { it?.toString() }))
-            null -> remove(key)
-            else -> putStringArrayList(key, arrayListOf(value.toString()))
-        }
     }
 
     /** No-op: StateFlow collector above handles the response. */
