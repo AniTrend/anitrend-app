@@ -39,6 +39,21 @@ abstract class FragmentBaseList<M, C> :
 
     protected var query: String? = null
 
+    /**
+     * Applies a search query for in-memory filtering on this fragment's adapter.
+     * Safe to call before [mAdapter] is initialized. Fragments where [isPager] is true
+     * or the adapter has no items will be silently skipped.
+     *
+     * @param searchQuery The query string to filter by, or null/empty to clear the filter.
+     */
+    fun applySearchQuery(searchQuery: String?) {
+        this.query = searchQuery
+        if (!isPager && ::mAdapter.isInitialized && mAdapter.itemCount > 0) {
+            val filterQuery = if (searchQuery.isNullOrEmpty()) "" else searchQuery
+            mAdapter.filter?.filter(filterQuery)
+        }
+    }
+
     protected var isLimit: Boolean = false
 
     protected lateinit var mAdapter: RecyclerViewAdapter<M>

@@ -188,6 +188,9 @@
             android:label="@string/nav_about"
             android:launchMode="singleTop" />
         <activity
+            android:name=".view.activity.base.ChangelogActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.activity.base.LoggingActivity"
             android:exported="true"
             android:label="@string/title_activity_logging"

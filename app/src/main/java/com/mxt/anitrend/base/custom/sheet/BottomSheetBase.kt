@@ -10,6 +10,7 @@ import androidx.lifecycle.Lifecycle
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mxt.anitrend.R
+import com.mxt.anitrend.base.custom.view.search.MaterialSearchView
 import com.mxt.anitrend.base.custom.view.text.SingleLineTextView
 import com.mxt.anitrend.base.interfaces.event.BottomSheetChoice
 import com.mxt.anitrend.base.interfaces.event.BottomSheetListener
@@ -35,6 +36,7 @@ abstract class BottomSheetBase<T> :
     protected var toolbarTitle: SingleLineTextView? = null
     protected var toolbarState: AppCompatImageView? = null
     protected var toolbarSearch: AppCompatImageView? = null
+    protected var searchView: MaterialSearchView? = null
 
     protected var mSearchDelegate: ISearchDelegate? = null
 
@@ -106,6 +108,27 @@ abstract class BottomSheetBase<T> :
             }
         }
         toolbarSearch?.setImageDrawable(ctx?.getCompatTintedDrawable(R.drawable.ic_search_grey_600_24dp))
+        toolbarSearch?.setOnClickListener {
+            searchView?.showSearch()
+        }
+        searchView?.setOnQueryTextListener(object : MaterialSearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                mSearchDelegate?.onSearchSubmitted(query)
+                return true
+            }
+            override fun onQueryTextChange(newText: String?): Boolean {
+                mSearchDelegate?.onQueryChanged(newText)
+                return false
+            }
+        })
+        searchView?.setOnSearchViewListener(object : MaterialSearchView.SearchViewListener {
+            override fun onSearchViewShown() {
+                mSearchDelegate?.onSearchShown()
+            }
+            override fun onSearchViewClosed() {
+                mSearchDelegate?.onSearchClosed()
+            }
+        })
     }
 
     override fun onStop() {

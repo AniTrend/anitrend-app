@@ -526,7 +526,18 @@ private val repositoryModule = module {
     single { FeedRepository(feedService = get()) }
     single { BaseRepository(baseService = get(), boxQuery = get()) }
     single { CrunchyrollRepository(feedService = get(named("crunchyrollFeed")), crunchyrollService = get(named("crunchyroll"))) }
-    single { WidgetMutationCoordinator(baseRepository = get(), browseRepository = get(), userRepository = get(), feedRepository = get(), coroutineScope = get(), ioDispatcher = get(IoDispatcherQualifier), mainDispatcher = get(MainDispatcherQualifier), databaseHelper = get()) }
+    single {
+        WidgetMutationCoordinator(
+            baseRepository = get(),
+            browseRepository = get(),
+            userRepository = get(),
+            feedRepository = get(),
+            coroutineScope = get(ApplicationScopeQualifier),
+            ioDispatcher = get(IoDispatcherQualifier),
+            mainDispatcher = get(MainDispatcherQualifier),
+            databaseHelper = get()
+        )
+    }
 }
 
 private val mediaFeatureModule = module {

@@ -21,6 +21,9 @@ import com.google.android.material.color.MaterialColors
 import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.R
 import com.mxt.anitrend.util.DialogUtil
+import com.mxt.anitrend.util.Settings
+import com.mxt.anitrend.view.activity.base.ChangelogActivity
+import org.koin.android.ext.android.inject
 
 /**
  * Created by max on 2018/03/04.
@@ -29,11 +32,111 @@ import com.mxt.anitrend.util.DialogUtil
 
 class AboutFragment : Fragment() {
 
+    private val settings by inject<Settings>()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
+        if (settings.experimentalAboutScreen) {
+            return createM3View(inflater, container)
+        }
+        return createLegacyView()
+    }
+
+    // ── Material 3 redesigned layout ──────────────────────────────────
+
+    private fun createM3View(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+    ): View {
+        val view = inflater.inflate(R.layout.fragment_about_m3, container, false)
+
+        // Set version text
+        val versionText = view.findViewById<TextView>(R.id.about_version_text)
+        versionText?.text = getString(
+            R.string.text_about_application_version,
+            BuildConfig.versionName,
+        )
+
+        val versionView = view.findViewById<TextView>(R.id.about_version)
+        versionView?.text = getString(
+            R.string.text_about_application_version,
+            BuildConfig.versionName,
+        )
+
+        // Wire click listeners (preserve exact same actions as legacy)
+        view.findViewById<View>(R.id.about_rate_play_store)?.setOnClickListener {
+            startActivity(
+                Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.mxt.anitrend")),
+            )
+        }
+
+        view.findViewById<View>(R.id.about_follow_twitter)?.setOnClickListener {
+            startActivity(
+                Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/anitrend_app")),
+            )
+        }
+
+        view.findViewById<View>(R.id.about_github)?.setOnClickListener {
+            startActivity(
+                Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/AniTrend")),
+            )
+        }
+
+        view.findViewById<View>(R.id.about_website)?.setOnClickListener {
+            startActivity(
+                Intent(Intent.ACTION_VIEW, Uri.parse("https://anitrend.co")),
+            )
+        }
+
+        view.findViewById<View>(R.id.about_whats_new)?.setOnClickListener {
+            if (settings.experimentalInitialScreens) {
+                val intent = Intent(requireContext(), ChangelogActivity::class.java)
+                startActivity(intent)
+            } else {
+                DialogUtil.createChangeLog(requireContext())
+            }
+        }
+
+        view.findViewById<View>(R.id.about_faq)?.setOnClickListener {
+            startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse("https://anitrend.gitbook.io/project/faq"),
+                ),
+            )
+        }
+
+        view.findViewById<View>(R.id.about_terms)?.setOnClickListener {
+            startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse(
+                        "https://github.com/AniTrend/anitrend-app/blob/develop/TERMS_OF_SERVICE.md",
+                    ),
+                ),
+            )
+        }
+
+        view.findViewById<View>(R.id.about_code_of_conduct)?.setOnClickListener {
+            startActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse(
+                        "https://github.com/AniTrend/anitrend-app/blob/develop/CODE_OF_CONDUCT.md",
+                    ),
+                ),
+            )
+        }
+
+        return view
+    }
+
+    // ── Legacy programmatic layout (preserved as fallback) ────────────
+
+    private fun createLegacyView(): View {
         val context = requireContext()
         return ScrollView(context).apply {
             layoutParams = ViewGroup.LayoutParams(
@@ -124,7 +227,12 @@ class AboutFragment : Fragment() {
                             R.drawable.ic_fiber_new_white_24dp,
                             getString(R.string.text_what_is_new),
                         ) {
-                            DialogUtil.createChangeLog(requireContext())
+                            if (settings.experimentalInitialScreens) {
+                                val intent = Intent(requireContext(), ChangelogActivity::class.java)
+                                startActivity(intent)
+                            } else {
+                                DialogUtil.createChangeLog(requireContext())
+                            }
                         },
                     )
                     addView(

@@ -350,6 +350,38 @@ class Settings(
             }
         }
 
+    var experimentalAboutScreen: Boolean
+        get() = getBoolean(_experimentalAboutScreen, false)
+        set(enabled) {
+            edit {
+                putBoolean(_experimentalAboutScreen, enabled)
+            }
+        }
+
+    var experimentalSettingsScreen: Boolean
+        get() = getBoolean(_experimentalSettingsScreen, false)
+        set(enabled) {
+            edit {
+                putBoolean(_experimentalSettingsScreen, enabled)
+            }
+        }
+
+    var experimentalInitialScreens: Boolean
+        get() = getBoolean(_experimentalInitialScreens, false)
+        set(enabled) {
+            edit {
+                putBoolean(_experimentalInitialScreens, enabled)
+            }
+        }
+
+    var experimentalManageLibrary: Boolean
+        get() = getBoolean(_experimentalManageLibrary, false)
+        set(enabled) {
+            edit {
+                putBoolean(_experimentalManageLibrary, enabled)
+            }
+        }
+
     var lastUserSyncTime: Long
         get() = getLong(_lastUserSyncTime, 0)
         set(value) {
@@ -405,6 +437,10 @@ class Settings(
         private const val _reviewSort = "_reviewSort"
         private const val _staffSort = "_staffSort"
         private const val _experimentalMarkdown = "_experimentalMarkdown"
+        private const val _experimentalAboutScreen = "_experimentalAboutScreen"
+        private const val _experimentalSettingsScreen = "_experimentalSettingsScreen"
+        private const val _experimentalInitialScreens = "_experimentalInitialScreens"
+        private const val _experimentalManageLibrary = "_experimentalManageLibrary"
         private const val _lastUserSyncTime = "_lastUserSyncTime"
     }
 }

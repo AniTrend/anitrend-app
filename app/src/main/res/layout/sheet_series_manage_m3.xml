@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/xl_margin">
+
+        <!-- Title -->
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/sheet_manage_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceTitleMedium" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/lg_margin" />
+
+        <!-- Status Section -->
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dialog_title_status"
+            android:textAppearance="?attr/textAppearanceLabelMedium"
+            app:drawableStartCompat="@drawable/ic_remove_red_eye_white_18dp"
+            app:drawableTint="?attr/colorOnSurfaceVariant" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/sheet_manage_status_layout"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/md_margin">
+
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/sheet_manage_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/lg_margin" />
+
+        <!-- Score Section -->
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dialog_title_score"
+            android:textAppearance="?attr/textAppearanceLabelMedium"
+            app:drawableTint="?attr/colorOnSurfaceVariant" />
+
+        <com.mxt.anitrend.base.custom.view.widget.ScoreWidget
+            android:id="@+id/sheet_manage_score"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/md_margin" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/lg_margin" />
+
+        <!-- Progress Section (Episodes / Chapters) -->
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/sheet_manage_progress_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dialog_title_episodes"
+            android:textAppearance="?attr/textAppearanceLabelMedium"
+            app:drawableTint="?attr/colorOnSurfaceVariant" />
+
+        <com.mxt.anitrend.base.custom.view.widget.ProgressWidget
+            android:id="@+id/sheet_manage_progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/md_margin" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/lg_margin" />
+
+        <!-- Volumes Section (Manga only, hidden by default) -->
+        <LinearLayout
+            android:id="@+id/sheet_manage_volumes_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/dialog_title_volumes_read"
+                android:textAppearance="?attr/textAppearanceLabelMedium"
+                app:drawableTint="?attr/colorOnSurfaceVariant" />
+
+            <com.mxt.anitrend.base.custom.view.widget.ProgressWidget
+                android:id="@+id/sheet_manage_volumes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/md_margin" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/lg_margin" />
+        </LinearLayout>
+
+        <!-- Repeat Section (Rewatched / Reread) -->
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/sheet_manage_repeat_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dialog_title_rewatched"
+            android:textAppearance="?attr/textAppearanceLabelMedium"
+            app:drawableTint="?attr/colorOnSurfaceVariant" />
+
+        <com.mxt.anitrend.base.custom.view.widget.ProgressWidget
+            android:id="@+id/sheet_manage_repeat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/md_margin" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/lg_margin" />
+
+        <!-- Started At Section -->
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dialog_title_started_at"
+            android:textAppearance="?attr/textAppearanceLabelMedium"
+            app:drawableTint="?attr/colorOnSurfaceVariant" />
+
+        <com.mxt.anitrend.base.custom.view.widget.FuzzyDateWidget
+            android:id="@+id/sheet_manage_started_at"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/md_margin" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/lg_margin" />
+
+        <!-- Completed At Section -->
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dialog_title_completed_at"
+            android:textAppearance="?attr/textAppearanceLabelMedium"
+            app:drawableTint="?attr/colorOnSurfaceVariant" />
+
+        <com.mxt.anitrend.base.custom.view.widget.FuzzyDateWidget
+            android:id="@+id/sheet_manage_completed_at"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/md_margin" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/xl_margin" />
+
+        <!-- Privacy Section -->
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/sheet_manage_private"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dialog_title_private" />
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/sheet_manage_hidden_from_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dialog_title_hidden_from_status_lists" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/lg_margin" />
+
+        <!-- Priority Section (NEW) -->
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dialog_title_priority"
+            android:textAppearance="?attr/textAppearanceLabelMedium"
+            app:drawableTint="?attr/colorOnSurfaceVariant" />
+
+        <com.google.android.material.slider.Slider
+            android:id="@+id/sheet_manage_priority"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/md_margin"
+            android:stepSize="1"
+            android:valueFrom="0"
+            android:valueTo="255" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/lg_margin" />
+
+        <!-- Custom Lists Section (hidden by default, shown when available) -->
+        <LinearLayout
+            android:id="@+id/sheet_manage_custom_lists_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/dialog_title_custom_lists"
+                android:textAppearance="?attr/textAppearanceLabelMedium"
+                app:drawableTint="?attr/colorOnSurfaceVariant" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/sheet_manage_custom_lists_chips"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/md_margin"
+                app:singleSelection="false" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/lg_margin" />
+        </LinearLayout>
+
+        <!-- Advanced Scores Section (hidden by default, shown when available) -->
+        <LinearLayout
+            android:id="@+id/sheet_manage_advanced_scores_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/dialog_title_advanced_scores"
+                android:textAppearance="?attr/textAppearanceLabelMedium"
+                app:drawableTint="?attr/colorOnSurfaceVariant" />
+
+            <LinearLayout
+                android:id="@+id/sheet_manage_advanced_scores_entries"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/md_margin"
+                android:orientation="vertical" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/lg_margin" />
+        </LinearLayout>
+
+        <!-- Notes Section -->
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/dialog_title_notes"
+            android:textAppearance="?attr/textAppearanceLabelMedium"
+            app:drawableTint="?attr/colorOnSurfaceVariant" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/sheet_manage_notes_layout"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/md_margin"
+            android:hint="@string/dialog_hint_enter_your_notes">
+
+            <com.mxt.anitrend.base.custom.view.editor.MarkdownInputEditor
+                android:id="@+id/sheet_manage_notes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine|textCapSentences|textAutoComplete|textAutoCorrect"
+                android:textSize="@dimen/subtitle_text_size" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/xl_margin" />
+
+        <!-- Action Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/sheet_manage_delete"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/Delete"
+                android:visibility="gone" />
+
+            <View
+                android:id="@+id/sheet_manage_delete_spacer"
+                android:layout_width="@dimen/lg_margin"
+                android:layout_height="0dp"
+                android:visibility="gone" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/sheet_manage_cancel"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/Cancel" />
+
+            <View
+                android:layout_width="@dimen/lg_margin"
+                android:layout_height="0dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/sheet_manage_save"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/Add" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

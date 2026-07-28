@@ -37,6 +37,7 @@ import com.mxt.anitrend.analytics.contract.ISupportAnalytics
 import com.mxt.anitrend.base.custom.activity.checkUpdate
 import com.mxt.anitrend.base.custom.activity.launchUpdateWorker
 import com.mxt.anitrend.base.custom.async.WebTokenRequest
+import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
 import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
 import com.mxt.anitrend.base.custom.view.image.AvatarIndicatorView
@@ -44,6 +45,7 @@ import com.mxt.anitrend.base.custom.view.image.HeaderImageView
 import com.mxt.anitrend.base.custom.view.search.MaterialSearchView
 import com.mxt.anitrend.base.interfaces.dao.BoxQuery
 import com.mxt.anitrend.base.interfaces.event.BottomSheetChoice
+import com.mxt.anitrend.base.interfaces.event.ISearchDelegate
 import com.mxt.anitrend.databinding.ActivityMainBinding
 import com.mxt.anitrend.extension.LAZY_MODE_UNSAFE
 import com.mxt.anitrend.extension.applyConfiguredTheme
@@ -59,6 +61,7 @@ import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.date.DateUtil
 import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.view.activity.base.AboutActivity
+import com.mxt.anitrend.view.activity.base.ChangelogActivity
 import com.mxt.anitrend.view.activity.base.LoggingActivity
 import com.mxt.anitrend.view.activity.base.SettingsActivity
 import com.mxt.anitrend.view.activity.detail.ProfileActivity
@@ -174,8 +177,9 @@ class MainActivity :
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         searchView = binding.appBarMain.customToolbar.searchView
-        val searchDelegate = object : com.mxt.anitrend.base.interfaces.event.ISearchDelegate {
+        val searchDelegate = object : ISearchDelegate {
             override fun onQueryChanged(query: String?) {
+                applySearchToAllListFragments(query)
             }
 
             override fun onSearchSubmitted(query: String?) {
@@ -192,6 +196,7 @@ class MainActivity :
             }
 
             override fun onSearchClosed() {
+                applySearchToAllListFragments(null)
             }
         }
         searchView?.apply {
@@ -548,6 +553,12 @@ class MainActivity :
         tabMediator?.attach()
     }
 
+    private fun applySearchToAllListFragments(query: String?) {
+        supportFragmentManager.fragments
+            .filterIsInstance<FragmentBaseList<*, *>>()
+            .forEach { it.applySearchQuery(query) }
+    }
+
     /**
      * Called for each of the requested permissions as they are granted
      *
@@ -602,7 +613,12 @@ class MainActivity :
             return
         }
         if (settings.isUpdated) {
-            DialogUtil.createChangeLog(this)
+            if (settings.experimentalInitialScreens) {
+                val intent = Intent(this, ChangelogActivity::class.java)
+                startActivity(intent)
+            } else {
+                DialogUtil.createChangeLog(this)
+            }
             settings.setUpdated()
         }
     }

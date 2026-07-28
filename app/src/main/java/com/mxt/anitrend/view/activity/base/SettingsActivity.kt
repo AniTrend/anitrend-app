@@ -58,7 +58,13 @@ class SettingsActivity : AppCompatActivity() {
             savedInstanceState: Bundle?,
             rootKey: String?,
         ) {
-            setPreferencesFromResource(R.xml.root_preferences, rootKey)
+            val resId =
+                if (settings.experimentalSettingsScreen) {
+                    R.xml.root_preferences_experimental
+                } else {
+                    R.xml.root_preferences
+                }
+            setPreferencesFromResource(resId, rootKey)
             findPreference<PreferenceCategory>(getString(R.string.pref_key_privacy))?.isVisible =
                 FirebaseApp.getApps(requireContext()).isNotEmpty()
         }
@@ -88,6 +94,10 @@ class SettingsActivity : AppCompatActivity() {
             activity?.apply {
                 when (key) {
                     getString(R.string.pref_key_experimental_markdown),
+                    getString(R.string.pref_key_experimental_about_screen),
+                    getString(R.string.pref_key_experimental_settings_screen),
+                    getString(R.string.pref_key_experimental_initial_screens),
+                    getString(R.string.pref_key_experimental_manage_library),
                     getString(R.string.pref_key_display_adult_content),
                     getString(R.string.pref_key_crash_reports),
                     getString(R.string.pref_key_usage_analytics),

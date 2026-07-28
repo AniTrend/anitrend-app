@@ -5,12 +5,14 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.text.HtmlCompat
+import androidx.fragment.app.FragmentActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.view.widget.CustomSeriesAnimeManage
 import com.mxt.anitrend.base.custom.view.widget.CustomSeriesManageBase
 import com.mxt.anitrend.base.custom.view.widget.CustomSeriesMangaManage
 import com.mxt.anitrend.coordinator.WidgetMutationCoordinator
+import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.extension.getCompatTintedDrawable
 import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.graphql.generated.FuzzyDateInput
@@ -21,6 +23,8 @@ import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
+import com.mxt.anitrend.util.Settings
+import com.mxt.anitrend.view.sheet.BottomSheetSeriesManage
 import timber.log.Timber
 
 /**
@@ -29,6 +33,7 @@ import timber.log.Timber
  */
 internal object MediaDialogUtil {
     private val tagName = MediaDialogUtil::class.java.simpleName
+    private const val TAG_MANAGE_SHEET = "media_manage_sheet"
 
     /**
      * General series managing template dialog builder which sets the text and icon based on the criteria,
@@ -39,6 +44,29 @@ internal object MediaDialogUtil {
      */
     @JvmStatic
     fun createSeriesManage(
+        context: Context,
+        mediaBase: MediaBase,
+    ) {
+        val settings = KoinExt.get(Settings::class.java)
+
+        if (settings.experimentalManageLibrary) {
+            // Show the M3 bottom sheet when the experimental flag is enabled
+            val activity = context as? FragmentActivity ?: run {
+                Timber.tag(tagName).e("Cannot show BottomSheetSeriesManage: context is not a FragmentActivity")
+                // Fall back to the legacy dialog
+                showLegacyDialog(context, mediaBase)
+                return
+            }
+            val sheet = BottomSheetSeriesManage.newInstance(mediaBase)
+            sheet.show(activity.supportFragmentManager, TAG_MANAGE_SHEET)
+            return
+        }
+
+        // Legacy AlertDialog path
+        showLegacyDialog(context, mediaBase)
+    }
+
+    private fun showLegacyDialog(
         context: Context,
         mediaBase: MediaBase,
     ) {

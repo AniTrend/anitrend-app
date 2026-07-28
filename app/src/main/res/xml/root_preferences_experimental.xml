@@ -48,6 +48,60 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        app:summary="@string/pref_header_appearance_summary"
+        app:title="@string/pref_header_appearance"
+        app:icon="@drawable/ic_format_color_fill_grey_600_24dp">
+
+        <Preference
+            app:enabled="false"
+            app:key="pref_key_placeholder_accent_color"
+            app:title="@string/pref_title_accent_color"
+            app:summary="@string/pref_summary_placeholder" />
+
+        <Preference
+            app:enabled="false"
+            app:key="pref_key_placeholder_font_scale"
+            app:title="@string/pref_title_font_scale"
+            app:summary="@string/pref_summary_placeholder" />
+
+        <Preference
+            app:enabled="false"
+            app:key="pref_key_placeholder_list_density"
+            app:title="@string/pref_title_list_density"
+            app:summary="@string/pref_summary_placeholder" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:summary="@string/pref_header_content_summary"
+        app:title="@string/pref_header_content"
+        app:icon="@drawable/ic_movie_grey_600_24dp">
+
+        <Preference
+            app:enabled="false"
+            app:key="pref_key_placeholder_autoplay"
+            app:title="@string/pref_title_autoplay"
+            app:summary="@string/pref_summary_placeholder" />
+
+        <Preference
+            app:enabled="false"
+            app:key="pref_key_placeholder_spoiler_behavior"
+            app:title="@string/pref_title_spoiler_behavior"
+            app:summary="@string/pref_summary_placeholder" />
+
+        <Preference
+            app:enabled="false"
+            app:key="pref_key_placeholder_title_language"
+            app:title="@string/pref_title_title_language"
+            app:summary="@string/pref_summary_placeholder" />
+
+        <Preference
+            app:enabled="false"
+            app:key="pref_key_placeholder_score_format"
+            app:title="@string/pref_title_score_format"
+            app:summary="@string/pref_summary_placeholder" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
         app:summary="@string/pref_header_general_summary"
         app:title="@string/pref_header_general"
         app:icon="@drawable/ic_touch_app_grey_600_24dp">
@@ -180,5 +234,23 @@
             app:summaryOn="@string/pref_usage_analytics_summary_on"
             app:key="@string/pref_key_usage_analytics" />
 
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:summary="@string/pref_header_accessibility_summary"
+        app:title="@string/pref_header_accessibility"
+        app:icon="@drawable/ic_help_grey_600_24dp">
+
+        <Preference
+            app:enabled="false"
+            app:key="pref_key_placeholder_reduce_motion"
+            app:title="@string/pref_title_reduce_motion"
+            app:summary="@string/pref_summary_placeholder" />
+
+        <Preference
+            app:enabled="false"
+            app:key="pref_key_placeholder_high_contrast"
+            app:title="@string/pref_title_high_contrast"
+            app:summary="@string/pref_summary_placeholder" />
     </PreferenceCategory>
 </PreferenceScreen>
