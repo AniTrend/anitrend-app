@@ -85,6 +85,7 @@ constructor(
     }
 
     fun setModel(model: List<UserBase>?) {
+        recycled = false
         this.model = model?.toMutableList()
         setIconType()
     }

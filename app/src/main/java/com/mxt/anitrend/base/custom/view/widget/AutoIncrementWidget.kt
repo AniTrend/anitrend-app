@@ -122,6 +122,7 @@ constructor(
         model: MediaList,
         currentUser: String?,
     ) {
+        recycled = false
         this.model = model
         this.currentUser = currentUser
         status = model.status

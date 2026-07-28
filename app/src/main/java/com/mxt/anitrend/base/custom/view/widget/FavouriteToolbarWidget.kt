@@ -100,6 +100,7 @@ constructor(
     }
 
     fun setModel(staffBase: StaffBase) {
+        recycled = false
         this.staffBase = staffBase
         setIconType()
         clearIds()
@@ -108,6 +109,7 @@ constructor(
     }
 
     fun setModel(characterBase: CharacterBase) {
+        recycled = false
         this.characterBase = characterBase
         setIconType()
         clearIds()
@@ -116,6 +118,7 @@ constructor(
     }
 
     fun setModel(studioBase: StudioBase) {
+        recycled = false
         this.studioBase = studioBase
         setIconType()
         clearIds()
@@ -124,6 +127,7 @@ constructor(
     }
 
     fun setModel(mediaBase: MediaBase) {
+        recycled = false
         this.mediaBase = mediaBase
         setIconType()
         clearIds()
