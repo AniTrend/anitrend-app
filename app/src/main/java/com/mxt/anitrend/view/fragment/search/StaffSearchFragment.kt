@@ -11,7 +11,6 @@ import com.mxt.anitrend.adapter.recycler.index.StaffAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
 import com.mxt.anitrend.model.entity.base.StaffBase
 import com.mxt.anitrend.model.entity.container.body.PageContainer
-import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.view.activity.detail.StaffActivity
@@ -22,7 +21,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 /**
  * Created by max on 2017/12/20.
  */
-class StaffSearchFragment : FragmentBaseList<StaffBase, PageContainer<StaffBase>, BasePresenter>() {
+class StaffSearchFragment : FragmentBaseList<StaffBase, PageContainer<StaffBase>>() {
     private var searchQuery: String? = null
 
     private val staffSearchViewModel: StaffSearchViewModel by viewModel()

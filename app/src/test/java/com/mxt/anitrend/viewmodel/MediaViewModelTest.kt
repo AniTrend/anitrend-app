@@ -1,8 +1,8 @@
 package com.mxt.anitrend.viewmodel
 
-import com.mxt.anitrend.model.api.retro.anilist.MediaModel
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.repository.BaseRepository
+import com.mxt.anitrend.repository.MediaRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -20,13 +20,13 @@ import org.mockito.Mockito.mock
 class MediaViewModelTest {
 
     private val testDispatcher = UnconfinedTestDispatcher()
-    private lateinit var service: MediaModel
+    private lateinit var mediaRepository: MediaRepository
     private lateinit var baseRepository: BaseRepository
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
-        service = mock(MediaModel::class.java)
+        mediaRepository = mock(MediaRepository::class.java)
         baseRepository = mock(BaseRepository::class.java)
     }
 
@@ -64,7 +64,7 @@ class MediaViewModelTest {
 
     @Test
     fun `initial state is Loading`() = runTest {
-        val vm = MediaViewModel(mediaService = service, baseRepository = baseRepository, ioDispatcher = testDispatcher)
+        val vm = MediaViewModel(mediaRepository = mediaRepository, baseRepository = baseRepository, ioDispatcher = testDispatcher)
         assertTrue(vm.state.value is MediaViewModel.UiState.Loading)
     }
 

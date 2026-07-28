@@ -2,27 +2,20 @@ package com.mxt.anitrend.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.anitrend.retrofit.graphql.model.attribute.GraphError
-import com.mxt.anitrend.graphql.generated.MediaStaff
 import com.mxt.anitrend.graphql.generated.MediaType
-import com.mxt.anitrend.model.api.retro.anilist.MediaModel
 import com.mxt.anitrend.model.entity.anilist.edge.StaffEdge
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.container.body.EdgeContainer
+import com.mxt.anitrend.repository.MediaRepository
 import com.mxt.anitrend.util.KeyUtil
-import com.mxt.anitrend.util.graphql.apiError
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class MediaStaffViewModel(
-    private val mediaService: MediaModel,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val mediaRepository: MediaRepository,
 ) : ViewModel() {
 
     sealed interface UiState {
@@ -41,31 +34,13 @@ class MediaStaffViewModel(
         viewModelScope.launch {
             _state.value = UiState.Loading
             runCatching {
-                withContext(ioDispatcher) {
-                    val request = MediaStaff.request(
-                        id = mediaId.toInt(),
-                        type = type,
-                        page = page,
-                        perPage = KeyUtil.PAGING_LIMIT,
-                        isAdult = isAdult,
-                    )
-                    val response = mediaService.getMediaStaff(request).execute()
-                    if (response.isSuccessful) {
-                        val body = response.body()
-                            ?: throw IllegalStateException("Empty response body")
-                        val graphErrors: List<GraphError>? = body.errors
-                        if (!graphErrors.isNullOrEmpty()) {
-                            throw RuntimeException(
-                                graphErrors.first().message
-                                    ?: "GraphQL error",
-                            )
-                        }
-                        body.data?.result
-                            ?: throw IllegalStateException("Empty response body")
-                    } else {
-                        throw RuntimeException(response.apiError())
-                    }
-                }
+                mediaRepository.getMediaStaff(
+                    id = mediaId,
+                    type = type,
+                    isAdult = isAdult,
+                    page = page,
+                    perPage = KeyUtil.PAGING_LIMIT,
+                ).getOrThrow()
             }.onSuccess { content ->
                 _state.value = UiState.Success(content)
             }.onFailure { throwable ->

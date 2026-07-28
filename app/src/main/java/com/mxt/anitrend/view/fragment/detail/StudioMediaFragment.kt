@@ -16,7 +16,6 @@ import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
-import com.mxt.anitrend.presenter.fragment.MediaPresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
@@ -30,7 +29,7 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class StudioMediaFragment : FragmentBaseList<MediaBase, ConnectionContainer<PageContainer<MediaBase>>, MediaPresenter>() {
+class StudioMediaFragment : FragmentBaseList<MediaBase, ConnectionContainer<PageContainer<MediaBase>>>() {
     private var id: Long = 0
 
     private val settings: Settings by inject()
@@ -158,7 +157,7 @@ class StudioMediaFragment : FragmentBaseList<MediaBase, ConnectionContainer<Page
 
     /**
      * No-op: the direct ViewModel collection in [observeMediaViewModel] replaces the
-     * legacy [com.mxt.anitrend.base.custom.viewmodel.ViewModelBase] observer path.
+     * legacy observer path.
      */
     override fun onChanged(value: ConnectionContainer<PageContainer<MediaBase>>?) = Unit
 

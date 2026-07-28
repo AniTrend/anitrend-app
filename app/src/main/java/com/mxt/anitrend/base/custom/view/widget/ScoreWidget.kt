@@ -91,7 +91,7 @@ constructor(
             } else {
                 binding.progressCurrent.setText(String.format(Locale.getDefault(), "%d", scoreCurrent.toInt()))
             }
-            binding.progressCurrent.setSelection(binding.progressCurrent.text.length)
+            binding.progressCurrent.setSelection(binding.progressCurrent.text?.length ?: 0)
         }
     }
 

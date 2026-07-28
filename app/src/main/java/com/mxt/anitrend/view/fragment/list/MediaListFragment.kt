@@ -19,7 +19,6 @@ import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.model.entity.anilist.MediaList
 import com.mxt.anitrend.model.entity.anilist.MediaListCollection
 import com.mxt.anitrend.model.entity.container.body.PageContainer
-import com.mxt.anitrend.presenter.fragment.MediaPresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
@@ -39,7 +38,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * Created by max on 2017/12/18.
  * media list fragment
  */
-open class MediaListFragment : FragmentBaseList<MediaList, PageContainer<MediaListCollection>, MediaPresenter>() {
+open class MediaListFragment : FragmentBaseList<MediaList, PageContainer<MediaListCollection>>() {
 
     protected var userId: Long = 0
     protected var userName: String? = null

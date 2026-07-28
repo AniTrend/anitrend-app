@@ -15,7 +15,6 @@ import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.model.entity.group.RecyclerItem
-import com.mxt.anitrend.presenter.fragment.MediaPresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
@@ -31,7 +30,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * Created by max on 2018/01/27.
  * Shared fragment between media for staff and character
  */
-class MediaFormatFragment : FragmentBaseList<RecyclerItem, ConnectionContainer<PageContainer<MediaBase>>, MediaPresenter>() {
+class MediaFormatFragment : FragmentBaseList<RecyclerItem, ConnectionContainer<PageContainer<MediaBase>>>() {
     private var id: Long = 0
 
     @KeyUtil.RequestType

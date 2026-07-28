@@ -1,11 +1,7 @@
 package com.mxt.anitrend.viewmodel
 
-import co.anitrend.retrofit.graphql.model.attribute.GraphError
-import com.mxt.anitrend.graphql.generated.CurrentUser
-import com.mxt.anitrend.model.api.retro.anilist.UserModel
 import com.mxt.anitrend.model.entity.anilist.User
-import com.mxt.anitrend.model.entity.container.body.AniListContainer
-import com.mxt.anitrend.model.entity.container.body.DataContainer
+import com.mxt.anitrend.repository.UserRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -17,22 +13,19 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import org.mockito.Mockito.doReturn
 import org.mockito.Mockito.mock
-import org.mockito.Mockito.`when`
-import retrofit2.Call
-import retrofit2.Response
-import java.io.IOException
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class MainViewModelTest {
 
     private val testDispatcher = UnconfinedTestDispatcher()
-    private lateinit var service: UserModel
+    private lateinit var userRepository: UserRepository
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
-        service = mock(UserModel::class.java)
+        userRepository = mock(UserRepository::class.java)
     }
 
     @After
@@ -69,25 +62,19 @@ class MainViewModelTest {
 
     @Test
     fun `initial state is Loading`() = runTest {
-        val vm = MainViewModel(userService = service, ioDispatcher = testDispatcher)
+        val vm = MainViewModel(userRepository = userRepository)
         assertTrue(vm.state.value is MainViewModel.UiState.Loading)
     }
 
     @Test
-    fun `loadCurrentUser emits Success on successful response`() = runTest {
-        @Suppress("UNCHECKED_CAST")
-        val call = mock(Call::class.java) as Call<AniListContainer<User>>
+    fun `loadCurrentUser emits Success from repository result`() = runTest {
         val user = User().apply {
             id = 1L
             name = "MainUser"
         }
-        val container = AniListContainer(data = DataContainer(result = user), errors = null)
-        val request = CurrentUser.request(asHtml = false)
+        doReturn(Result.success(user)).`when`(userRepository).getCurrentUser(asHtml = false)
 
-        `when`(service.getCurrentUser(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(Response.success(container))
-
-        val vm = MainViewModel(userService = service, ioDispatcher = testDispatcher)
+        val vm = MainViewModel(userRepository = userRepository)
         vm.loadCurrentUser()
 
         val state = vm.state.value as MainViewModel.UiState.Success
@@ -96,34 +83,12 @@ class MainViewModelTest {
     }
 
     @Test
-    fun `loadCurrentUser emits Error on GraphQL error`() = runTest {
-        @Suppress("UNCHECKED_CAST")
-        val call = mock(Call::class.java) as Call<AniListContainer<User>>
-        val graphError = mock(GraphError::class.java)
-        val container = AniListContainer<User>(data = null, errors = listOf(graphError))
-        val request = CurrentUser.request(asHtml = false)
+    fun `loadCurrentUser emits Error from repository failure`() = runTest {
+        doReturn(Result.failure<User>(RuntimeException("Network failed")))
+            .`when`(userRepository)
+            .getCurrentUser(asHtml = false)
 
-        `when`(graphError.message).thenReturn("User not found")
-        `when`(service.getCurrentUser(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(Response.success(container))
-
-        val vm = MainViewModel(userService = service, ioDispatcher = testDispatcher)
-        vm.loadCurrentUser()
-
-        val state = vm.state.value as MainViewModel.UiState.Error
-        assertEquals("User not found", state.message)
-    }
-
-    @Test
-    fun `loadCurrentUser emits Error on request failure`() = runTest {
-        @Suppress("UNCHECKED_CAST")
-        val call = mock(Call::class.java) as Call<AniListContainer<User>>
-        val request = CurrentUser.request(asHtml = false)
-
-        `when`(service.getCurrentUser(request)).thenReturn(call)
-        `when`(call.execute()).thenThrow(IOException("Network failed"))
-
-        val vm = MainViewModel(userService = service, ioDispatcher = testDispatcher)
+        val vm = MainViewModel(userRepository = userRepository)
         vm.loadCurrentUser()
 
         val state = vm.state.value as MainViewModel.UiState.Error

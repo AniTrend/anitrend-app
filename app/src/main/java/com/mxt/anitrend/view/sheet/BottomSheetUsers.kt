@@ -64,6 +64,7 @@ class BottomSheetUsers :
         binding = BottomSheetListBinding.inflate(layoutInflater)
         dialog.setContentView(requireNotNull(binding).root)
         bindToolbarViews(requireNotNull(binding).root)
+        searchView = binding?.customSheetToolbar?.searchView
         stateLayout = binding?.stateLayout
         recyclerView = binding?.recyclerView
         createBottomSheetBehavior(requireNotNull(binding).root)

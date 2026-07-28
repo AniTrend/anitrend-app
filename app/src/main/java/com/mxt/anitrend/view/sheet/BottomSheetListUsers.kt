@@ -16,7 +16,6 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter
 import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
 import com.mxt.anitrend.base.custom.view.container.CustomSwipeRefreshLayout
-import com.mxt.anitrend.base.custom.view.search.MaterialSearchView
 import com.mxt.anitrend.base.interfaces.event.ISearchDelegate
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener
 import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener
@@ -56,8 +55,6 @@ class BottomSheetListUsers :
 
     @KeyUtil.RequestType
     private var requestType: Int = 0
-
-    private var searchView: MaterialSearchView? = null
 
     private val mutationCoordinator by inject<WidgetMutationCoordinator>()
 

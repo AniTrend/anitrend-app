@@ -18,7 +18,6 @@ import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.model.entity.anilist.Review
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.container.body.PageContainer
-import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
@@ -37,7 +36,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * Created by max on 2017/10/30.
  * Media review browse
  */
-class BrowseReviewFragment : FragmentBaseList<Review, PageContainer<Review>, BasePresenter>() {
+class BrowseReviewFragment : FragmentBaseList<Review, PageContainer<Review>>() {
     @KeyUtil.MediaType
     private var mediaType: String? = null
 

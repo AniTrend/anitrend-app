@@ -22,4 +22,7 @@
     <string name="pref_key_clear_notification_on_dismiss" translatable="false">clear_notification_on_dismiss</string>
 
     <string name="pref_key_experimental_markdown" translatable="false">_experimentalMarkdown</string>
+    <string name="pref_key_experimental_about_screen" translatable="false">_experimentalAboutScreen</string>
+    <string name="pref_key_experimental_settings_screen" translatable="false">_experimentalSettingsScreen</string>
+    <string name="pref_key_experimental_initial_screens" translatable="false">_experimentalInitialScreens</string>
 </resources>

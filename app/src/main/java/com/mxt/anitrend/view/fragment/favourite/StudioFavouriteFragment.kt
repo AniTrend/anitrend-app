@@ -11,7 +11,6 @@ import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
 import com.mxt.anitrend.model.entity.anilist.Favourite
 import com.mxt.anitrend.model.entity.base.StudioBase
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
-import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.view.activity.detail.StudioActivity
 import com.mxt.anitrend.viewmodel.StudioFavouritesViewModel
@@ -22,7 +21,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * Created by max on 2018/03/25.
  * StudioFavouriteFragment
  */
-class StudioFavouriteFragment : FragmentBaseList<StudioBase, ConnectionContainer<Favourite>, BasePresenter>() {
+class StudioFavouriteFragment : FragmentBaseList<StudioBase, ConnectionContainer<Favourite>>() {
     private var userId: Long = 0
 
     private val studioFavouritesViewModel: StudioFavouritesViewModel by viewModel()

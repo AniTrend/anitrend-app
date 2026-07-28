@@ -1,6 +1,5 @@
 package com.mxt.anitrend.viewmodel
 
-import com.mxt.anitrend.model.api.retro.anilist.UserModel
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.repository.UserRepository
 import kotlinx.coroutines.Dispatchers
@@ -14,19 +13,20 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import org.mockito.Mockito.doReturn
 import org.mockito.Mockito.mock
+import org.mockito.Mockito.times
+import org.mockito.Mockito.verify
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ProfileViewModelTest {
 
     private val testDispatcher = UnconfinedTestDispatcher()
-    private lateinit var service: UserModel
     private lateinit var userRepository: UserRepository
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
-        service = mock(UserModel::class.java)
         userRepository = mock(UserRepository::class.java)
     }
 
@@ -64,8 +64,49 @@ class ProfileViewModelTest {
 
     @Test
     fun `initial state is Loading`() = runTest {
-        val vm = ProfileViewModel(userService = service, userRepository = userRepository, ioDispatcher = testDispatcher)
+        val vm = ProfileViewModel(userRepository = userRepository, ioDispatcher = testDispatcher)
         assertTrue(vm.state.value is ProfileViewModel.UiState.Loading)
+    }
+
+    @Test
+    fun `load emits Success from repository result`() = runTest {
+        val user = UserBase().apply { id = 1L }
+        doReturn(Result.success(user))
+            .`when`(userRepository)
+            .getUserBase(id = 1L, userName = "profile")
+        val vm = ProfileViewModel(userRepository = userRepository, ioDispatcher = testDispatcher)
+
+        vm.load(userId = 1L, userName = "profile")
+
+        val state = vm.state.value as ProfileViewModel.UiState.Success
+        assertEquals(1L, state.user.id)
+    }
+
+    @Test
+    fun `load emits Error from repository failure`() = runTest {
+        doReturn(Result.failure<UserBase>(RuntimeException("Profile failed")))
+            .`when`(userRepository)
+            .getUserBase(id = null, userName = "profile")
+        val vm = ProfileViewModel(userRepository = userRepository, ioDispatcher = testDispatcher)
+
+        vm.load(userId = 0L, userName = "profile")
+
+        val state = vm.state.value as ProfileViewModel.UiState.Error
+        assertEquals("Profile failed", state.message)
+    }
+
+    @Test
+    fun `load skips after first success`() = runTest {
+        val user = UserBase().apply { id = 1L }
+        doReturn(Result.success(user))
+            .`when`(userRepository)
+            .getUserBase(id = 1L, userName = null)
+        val vm = ProfileViewModel(userRepository = userRepository, ioDispatcher = testDispatcher)
+
+        vm.load(userId = 1L, userName = null)
+        vm.load(userId = 1L, userName = null)
+
+        verify(userRepository, times(1)).getUserBase(id = 1L, userName = null)
     }
 
     // ── GraphQL error message extraction ──

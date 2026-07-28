@@ -20,30 +20,32 @@ import com.mxt.anitrend.databinding.FragmentListBinding
 import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.extension.parcelableArrayList
 import com.mxt.anitrend.model.entity.anilist.ExternalLink
-import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.crunchy.Channel
 import com.mxt.anitrend.model.entity.crunchy.Episode
 import com.mxt.anitrend.model.entity.crunchy.Rss
-import com.mxt.anitrend.presenter.widget.WidgetPresenter
+import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.collection.EpisodeUtil
 import com.mxt.anitrend.widget.ProgressLayout
+import org.koin.android.ext.android.inject
 import timber.log.Timber
 
 /**
  * Created by max on 2017/11/04.
  */
 abstract class FragmentChannelBase :
-    FragmentBase<Channel, WidgetPresenter<ConnectionContainer<List<ExternalLink>>>, Rss>(),
+    FragmentBase<Channel, Rss>(),
     RecyclerLoadListener,
     CustomSwipeRefreshLayout.OnRefreshAndLoadListener,
     SharedPreferences.OnSharedPreferenceChangeListener {
     protected lateinit var swipeRefreshLayout: CustomSwipeRefreshLayout
     protected lateinit var recyclerView: StatefulRecyclerView
     protected lateinit var stateLayout: ProgressLayout
+
+    protected val presenter by inject<BasePresenter>()
 
     private var binding: FragmentListBinding? = null
 

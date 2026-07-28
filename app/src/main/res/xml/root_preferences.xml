@@ -52,13 +52,6 @@
         app:title="@string/pref_header_general"
         app:icon="@drawable/ic_touch_app_grey_600_24dp">
 
-        <SwitchPreference
-            app:defaultValue="false"
-            app:key="@string/pref_key_experimental_markdown"
-            app:title="@string/pref_title_experimental_markdown"
-            app:summary="@string/pref_summary_experimental_markdown"
-            />
-
         <ListPreference
             app:defaultValue="3"
             app:entries="@array/pref_titles_menu_entries"
@@ -82,6 +75,41 @@
             app:summary="@string/pref_summary_display_adult_content"
             app:title="@string/pref_title_display_adult_content"
             app:isPreferenceVisible="@bool/display_adult_content_pref" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:summary="@string/pref_header_experimental_summary"
+        app:title="@string/pref_header_experimental"
+        app:icon="@drawable/ic_build_grey_600_24dp">
+
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="@string/pref_key_experimental_markdown"
+            app:title="@string/pref_title_experimental_markdown"
+            app:summary="@string/pref_summary_experimental_markdown"
+            />
+
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="@string/pref_key_experimental_about_screen"
+            app:title="@string/pref_title_experimental_about_screen"
+            app:summary="@string/pref_summary_experimental_about_screen"
+            />
+
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="@string/pref_key_experimental_settings_screen"
+            app:title="@string/pref_title_experimental_settings_screen"
+            app:summary="@string/pref_summary_experimental_settings_screen"
+            />
+
+        <SwitchPreference
+            app:defaultValue="false"
+            app:key="@string/pref_key_experimental_initial_screens"
+            app:title="@string/pref_title_experimental_initial_screens"
+            app:summary="@string/pref_summary_experimental_initial_screens"
+            />
 
     </PreferenceCategory>
 

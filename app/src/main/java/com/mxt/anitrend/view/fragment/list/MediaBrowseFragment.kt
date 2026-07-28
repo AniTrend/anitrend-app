@@ -19,7 +19,6 @@ import com.mxt.anitrend.model.entity.anilist.Genre
 import com.mxt.anitrend.model.entity.anilist.MediaTag
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.container.body.PageContainer
-import com.mxt.anitrend.presenter.fragment.MediaPresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
@@ -42,7 +41,7 @@ import java.util.Locale
  * Created by max on 2018/02/03.
  * Multi purpose media browse fragment
  */
-open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<MediaBase>, MediaPresenter>() {
+open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<MediaBase>>() {
     protected lateinit var requestArgs: Bundle
     private var mediaBrowseUtil: MediaBrowseUtil? = null
 
@@ -321,9 +320,9 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
             requestArgs.takeIf { it.containsKey(KeyUtil.arg_startDateLike) }?.getString(KeyUtil.arg_startDateLike)
         var status =
             requestArgs.takeIf { it.containsKey(KeyUtil.arg_status) }?.getString(KeyUtil.arg_status)
-        var genres: List<String?>? =
+        var genres: List<String>? =
             requestArgs.takeIf { it.containsKey(KeyUtil.arg_genres) }?.getStringArrayList(KeyUtil.arg_genres)
-        var tags: List<String?>? =
+        var tags: List<String>? =
             requestArgs.takeIf { it.containsKey(KeyUtil.arg_tags) }?.getStringArrayList(KeyUtil.arg_tags)
         var sort =
             requestArgs.takeIf { it.containsKey(KeyUtil.arg_sort) }?.getString(KeyUtil.arg_sort)

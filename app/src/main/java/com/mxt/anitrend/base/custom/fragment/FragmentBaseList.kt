@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.mxt.anitrend.R
-import com.mxt.anitrend.base.custom.presenter.CommonPresenter
 import com.mxt.anitrend.base.custom.recycler.RecyclerScrollListener
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter
 import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView
@@ -27,8 +26,8 @@ import com.mxt.anitrend.widget.ProgressLayout
  * Created by max on 2017/09/12.
  * Abstract fragment list base class
  */
-abstract class FragmentBaseList<M, C, P : CommonPresenter> :
-    FragmentBase<M, P, C>(),
+abstract class FragmentBaseList<M, C> :
+    FragmentBase<M, C>(),
     RecyclerLoadListener,
     CustomSwipeRefreshLayout.OnRefreshAndLoadListener,
     SharedPreferences.OnSharedPreferenceChangeListener {
@@ -39,6 +38,21 @@ abstract class FragmentBaseList<M, C, P : CommonPresenter> :
     private var binding: FragmentListBinding? = null
 
     protected var query: String? = null
+
+    /**
+     * Applies a search query for in-memory filtering on this fragment's adapter.
+     * Safe to call before [mAdapter] is initialized. Fragments where [isPager] is true
+     * or the adapter has no items will be silently skipped.
+     *
+     * @param searchQuery The query string to filter by, or null/empty to clear the filter.
+     */
+    fun applySearchQuery(searchQuery: String?) {
+        this.query = searchQuery
+        if (!isPager && ::mAdapter.isInitialized && mAdapter.itemCount > 0) {
+            val filterQuery = if (searchQuery.isNullOrEmpty()) "" else searchQuery
+            mAdapter.filter?.filter(filterQuery)
+        }
+    }
 
     protected var isLimit: Boolean = false
 

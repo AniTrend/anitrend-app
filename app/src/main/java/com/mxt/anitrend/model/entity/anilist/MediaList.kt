@@ -21,6 +21,7 @@ class MediaList() :
 
     @KeyUtil.MediaListStatus var status: String? = null
     var score: Float = 0f
+    var scoreRaw: Int? = null
     var progress: Int = 0
     var progressVolumes: Int = 0
     var repeat: Int = 0
@@ -44,6 +45,7 @@ class MediaList() :
         mediaId = parcel.readLong()
         status = parcel.readString()
         score = parcel.readFloat()
+        scoreRaw = parcel.readValue(Int::class.java.classLoader) as? Int
         progress = parcel.readInt()
         progressVolumes = parcel.readInt()
         repeat = parcel.readInt()
@@ -69,6 +71,7 @@ class MediaList() :
         dest.writeLong(mediaId)
         dest.writeString(status)
         dest.writeFloat(score)
+        dest.writeValue(scoreRaw)
         dest.writeInt(progress)
         dest.writeInt(progressVolumes)
         dest.writeInt(repeat)

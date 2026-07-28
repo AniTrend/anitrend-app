@@ -2,11 +2,8 @@ package com.mxt.anitrend.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.anitrend.retrofit.graphql.model.attribute.GraphError
-import com.mxt.anitrend.graphql.generated.StaffBase
-import com.mxt.anitrend.model.api.retro.anilist.StaffModel
 import com.mxt.anitrend.repository.BaseRepository
-import com.mxt.anitrend.util.graphql.apiError
+import com.mxt.anitrend.repository.StaffRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +14,7 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class StaffViewModel(
-    private val staffService: StaffModel,
+    private val staffRepository: StaffRepository,
     private val baseRepository: BaseRepository,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : ViewModel() {
@@ -42,25 +39,7 @@ class StaffViewModel(
         viewModelScope.launch {
             _state.value = UiState.Loading
             runCatching {
-                withContext(ioDispatcher) {
-                    val request = StaffBase.request(staffId.toInt())
-                    val response = staffService.getStaffBase(request).execute()
-                    if (response.isSuccessful) {
-                        val body = response.body()
-                            ?: throw IllegalStateException("Empty response body")
-                        val graphErrors: List<GraphError>? = body.errors
-                        if (!graphErrors.isNullOrEmpty()) {
-                            throw RuntimeException(
-                                graphErrors.first().message
-                                    ?: "GraphQL error",
-                            )
-                        }
-                        body.data?.result
-                            ?: throw IllegalStateException("Empty response body")
-                    } else {
-                        throw RuntimeException(response.apiError())
-                    }
-                }
+                staffRepository.getStaffBase(id = staffId).getOrThrow()
             }.onSuccess { staff ->
                 _state.value = UiState.Success(staff)
                 loadedOnce = true

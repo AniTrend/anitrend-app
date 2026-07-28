@@ -1,14 +1,10 @@
 package com.mxt.anitrend.initializer
 
 import android.content.Context
-import android.content.Intent
-import android.os.Build
 import androidx.startup.Initializer
-import com.google.android.gms.security.ProviderInstaller
 import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.initializer.logger.TimberInitializer
 import org.greenrobot.eventbus.EventBus
-import timber.log.Timber
 
 class ApplicationInitializer : Initializer<Unit> {
     /**
@@ -17,29 +13,6 @@ class ApplicationInitializer : Initializer<Unit> {
      * @param context The application context.
      */
     override fun create(context: Context) {
-        runCatching {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                val installerListener =
-                    object : ProviderInstaller.ProviderInstallListener {
-                        override fun onProviderInstalled() {
-                            Timber.i("Provider installed successfully")
-                        }
-
-                        override fun onProviderInstallFailed(
-                            code: Int,
-                            intent: Intent?,
-                        ) {
-                            Timber.e("Provider installer failed to patch device -> code: $code, intent: $intent")
-                        }
-                    }
-
-                ProviderInstaller.installIfNeededAsync(
-                    context,
-                    installerListener,
-                )
-            }
-        }.exceptionOrNull()?.printStackTrace()
-
         EventBus
             .builder()
             .logNoSubscriberMessages(BuildConfig.DEBUG)

@@ -4,12 +4,6 @@ import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
-import com.mxt.anitrend.graphql.generated.CurrentUser
-import com.mxt.anitrend.graphql.generated.UserNotifications
-import com.mxt.anitrend.model.api.retro.anilist.UserModel
-import com.mxt.anitrend.model.entity.anilist.Notification
-import com.mxt.anitrend.model.entity.anilist.User
-import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.repository.UserMutation
 import com.mxt.anitrend.repository.UserRepository
@@ -24,7 +18,6 @@ class NotificationWorker(
     workerParams: WorkerParameters,
     private val presenter: BasePresenter,
     private val notificationUtil: NotificationUtil,
-    private val userService: UserModel,
     private val userRepository: UserRepository,
 ) : CoroutineWorker(context, workerParams) {
 
@@ -48,11 +41,15 @@ class NotificationWorker(
     override suspend fun doWork(): Result {
         if (presenter.settings.isAuthenticated) {
             try {
-                requestUser()?.apply {
-                    if (unreadNotificationCount != 0) {
-                        userRepository.emitMutationEvent(UserMutation.CurrentUserUpdated(this))
-                        requestNotifications(this)
-                    }
+                val user = userRepository.getCurrentUser(asHtml = false).getOrThrow()
+                userRepository.saveCurrentUser(user)
+
+                if (user.unreadNotificationCount != 0) {
+                    userRepository.emitMutationEvent(UserMutation.CurrentUserUpdated(user))
+                    val notificationsContainer = userRepository
+                        .getUserNotifications(resetNotificationCount = false)
+                        .getOrThrow()
+                    notificationUtil.createNotification(user, notificationsContainer)
                 }
                 return Result.success()
             } catch (e: Exception) {
@@ -61,36 +58,5 @@ class NotificationWorker(
             return Result.retry()
         }
         return Result.failure()
-    }
-
-    private fun requestUser(): User? {
-        val response =
-            userService
-                .getCurrentUser(
-                    CurrentUser.request(asHtml = false),
-                ).execute()
-        if (!response.isSuccessful) {
-            return null
-        }
-        return unwrapBody<User>(response.body())?.let {
-            presenter.database.currentUser = it
-            it
-        }
-    }
-
-    private fun requestNotifications(user: User) {
-        val response =
-            userService
-                .getUserNotifications(
-                    UserNotifications.request(resetNotificationCount = false),
-                ).execute()
-        if (!response.isSuccessful) {
-            return
-        }
-        val notificationsContainer = unwrapBody<PageContainer<Notification>>(response.body())
-
-        if (user.unreadNotificationCount > 0 && notificationsContainer != null) {
-            notificationUtil.createNotification(user, notificationsContainer)
-        }
     }
 }

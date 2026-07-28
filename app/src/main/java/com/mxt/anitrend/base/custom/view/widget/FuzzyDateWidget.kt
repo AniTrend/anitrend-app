@@ -47,7 +47,7 @@ constructor(
 
     override fun onInit() {
         binding = WidgetFuzzyDateBinding.inflate(context.getLayoutInflater(), this, true)
-        binding.fuzzyDateView.setOnClickListener(this)
+        binding.fuzzyDateInputLayout.setOnClickListener(this)
     }
 
     fun setDate(fuzzyDate: FuzzyDate?) {
@@ -57,31 +57,24 @@ constructor(
 
     private fun updateDate() {
         val convertedDate = DateUtil.convertDate(fuzzyDate)
-        binding.fuzzyDateText.text = convertedDate
+        binding.fuzzyDateText.setText(convertedDate)
     }
 
     override fun onViewRecycled() = Unit
 
     override fun onClick(v: View) {
-        val datePickerDialog =
-            if (fuzzyDate?.isValidDate == true) {
-                DatePickerDialog(
-                    context,
-                    this,
-                    fuzzyDate?.year ?: 0,
-                    (fuzzyDate?.month ?: 1) - 1,
-                    fuzzyDate?.day ?: 0,
-                )
-            } else {
-                val calendar = Calendar.getInstance()
-                DatePickerDialog(
-                    context,
-                    this,
-                    calendar.get(Calendar.YEAR),
-                    calendar.get(Calendar.MONTH),
-                    calendar.get(Calendar.DAY_OF_MONTH),
-                )
-            }
+        val calendar = Calendar.getInstance()
+        val seedYear = fuzzyDate?.year?.takeIf { it > 0 } ?: calendar.get(Calendar.YEAR)
+        val seedMonth = (fuzzyDate?.month?.takeIf { it in 1..12 } ?: (calendar.get(Calendar.MONTH) + 1)) - 1
+        val seedDay = fuzzyDate?.day?.takeIf { it in 1..31 } ?: calendar.get(Calendar.DAY_OF_MONTH)
+
+        val datePickerDialog = DatePickerDialog(
+            context,
+            this,
+            seedYear,
+            seedMonth,
+            seedDay,
+        )
         datePickerDialog.setButton(
             DialogInterface.BUTTON_NEUTRAL,
             context.getText(R.string.dialog_button_clear),

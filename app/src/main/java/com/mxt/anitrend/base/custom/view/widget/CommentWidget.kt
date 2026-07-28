@@ -6,7 +6,7 @@ import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.view.text.SingleLineTextView
 import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.extension.getCompatTintedDrawable
-import com.mxt.anitrend.presenter.widget.WidgetPresenter
+import com.mxt.anitrend.util.WidgetState
 
 /**
  * Created by max on 2017/11/07.
@@ -42,7 +42,7 @@ constructor(
     }
 
     fun setReplyCount(replyCount: Int) {
-        text = WidgetPresenter.convertToText(replyCount)
+        text = WidgetState.convertToText(replyCount)
     }
 
     /**

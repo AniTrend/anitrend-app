@@ -14,27 +14,32 @@ import com.mxt.anitrend.repository.BaseRepository
 import com.mxt.anitrend.repository.BrowseRepository
 import com.mxt.anitrend.repository.FeedRepository
 import com.mxt.anitrend.repository.UserRepository
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class WidgetMutationCoordinator(
     private val baseRepository: BaseRepository,
     private val browseRepository: BrowseRepository,
     private val userRepository: UserRepository,
     private val feedRepository: FeedRepository,
+    private val coroutineScope: CoroutineScope,
+    private val ioDispatcher: CoroutineDispatcher,
+    private val mainDispatcher: CoroutineDispatcher,
     val databaseHelper: DatabaseHelper,
 ) {
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
 
     fun toggleLike(
         id: Long,
         type: LikeableType,
         onResult: (Result<List<UserBase>>) -> Unit,
     ) {
-        scope.launch {
-            onResult(baseRepository.toggleLike(id, type))
+        coroutineScope.launch(ioDispatcher) {
+            val result = baseRepository.toggleLike(id, type)
+            withContext(mainDispatcher) {
+                onResult(result)
+            }
         }
     }
 
@@ -43,8 +48,11 @@ class WidgetMutationCoordinator(
         rating: ReviewRating?,
         onResult: (Result<Review>) -> Unit,
     ) {
-        scope.launch {
-            onResult(browseRepository.rateReview(id, rating))
+        coroutineScope.launch(ioDispatcher) {
+            val result = browseRepository.rateReview(id, rating)
+            withContext(mainDispatcher) {
+                onResult(result)
+            }
         }
     }
 
@@ -52,8 +60,11 @@ class WidgetMutationCoordinator(
         userId: Long,
         onResult: (Result<UserBase>) -> Unit,
     ) {
-        scope.launch {
-            onResult(userRepository.toggleFollow(userId))
+        coroutineScope.launch(ioDispatcher) {
+            val result = userRepository.toggleFollow(userId)
+            withContext(mainDispatcher) {
+                onResult(result)
+            }
         }
     }
 
@@ -61,8 +72,11 @@ class WidgetMutationCoordinator(
         id: Long,
         onResult: (Result<DeleteState>) -> Unit,
     ) {
-        scope.launch {
-            onResult(feedRepository.deleteActivity(id))
+        coroutineScope.launch(ioDispatcher) {
+            val result = feedRepository.deleteActivity(id)
+            withContext(mainDispatcher) {
+                onResult(result)
+            }
         }
     }
 
@@ -70,8 +84,23 @@ class WidgetMutationCoordinator(
         id: Long,
         onResult: (Result<DeleteState>) -> Unit,
     ) {
-        scope.launch {
-            onResult(feedRepository.deleteActivityReply(id))
+        coroutineScope.launch(ioDispatcher) {
+            val result = feedRepository.deleteActivityReply(id)
+            withContext(mainDispatcher) {
+                onResult(result)
+            }
+        }
+    }
+
+    fun deleteMediaListEntry(
+        id: Long,
+        onResult: (Result<DeleteState>) -> Unit,
+    ) {
+        coroutineScope.launch(ioDispatcher) {
+            val result = browseRepository.deleteMediaListEntry(id)
+            withContext(mainDispatcher) {
+                onResult(result)
+            }
         }
     }
 
@@ -81,6 +110,7 @@ class WidgetMutationCoordinator(
         mediaId: Long?,
         status: MediaListStatus?,
         score: Double?,
+        scoreRaw: Int? = null,
         progress: Int?,
         progressVolumes: Int?,
         repeat: Int?,
@@ -94,17 +124,18 @@ class WidgetMutationCoordinator(
         completedAt: FuzzyDateInput?,
         onResult: (Result<MediaList>) -> Unit,
     ) {
-        val scoreFormat = runCatching {
-            databaseHelper.currentUser?.mediaListOptions?.scoreFormat?.let {
-                ScoreFormat.valueOf(it)
-            }
-        }.getOrNull() ?: ScoreFormat.POINT_100
+        coroutineScope.launch(ioDispatcher) {
+            val scoreFormat = runCatching {
+                databaseHelper.currentUser?.mediaListOptions?.scoreFormat?.let {
+                    ScoreFormat.valueOf(it)
+                }
+            }.getOrNull() ?: ScoreFormat.POINT_100
 
-        scope.launch {
-            browseRepository.saveMediaListEntry(
+            val result = browseRepository.saveMediaListEntry(
                 id = id,
                 mediaId = mediaId,
                 status = status,
+                scoreRaw = scoreRaw,
                 score = score,
                 progress = progress,
                 progressVolumes = progressVolumes,
@@ -118,7 +149,10 @@ class WidgetMutationCoordinator(
                 scoreFormat = scoreFormat,
                 startedAt = startedAt,
                 completedAt = completedAt,
-            ).let { onResult(it) }
+            )
+            withContext(mainDispatcher) {
+                onResult(result)
+            }
         }
     }
 }

@@ -1,8 +1,8 @@
 package com.mxt.anitrend.viewmodel
 
-import com.mxt.anitrend.model.api.retro.anilist.StaffModel
 import com.mxt.anitrend.model.entity.base.StaffBase
 import com.mxt.anitrend.repository.BaseRepository
+import com.mxt.anitrend.repository.StaffRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -14,19 +14,20 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import org.mockito.Mockito.doReturn
 import org.mockito.Mockito.mock
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class StaffViewModelTest {
 
     private val testDispatcher = UnconfinedTestDispatcher()
-    private lateinit var service: StaffModel
+    private lateinit var staffRepository: StaffRepository
     private lateinit var baseRepository: BaseRepository
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
-        service = mock(StaffModel::class.java)
+        staffRepository = mock(StaffRepository::class.java)
         baseRepository = mock(BaseRepository::class.java)
     }
 
@@ -64,8 +65,33 @@ class StaffViewModelTest {
 
     @Test
     fun `initial state is Loading`() = runTest {
-        val vm = StaffViewModel(staffService = service, baseRepository = baseRepository, ioDispatcher = testDispatcher)
+        val vm = StaffViewModel(staffRepository = staffRepository, baseRepository = baseRepository, ioDispatcher = testDispatcher)
         assertTrue(vm.state.value is StaffViewModel.UiState.Loading)
+    }
+
+    @Test
+    fun `load emits Success from repository result`() = runTest {
+        val staff = StaffBase().apply { id = 1L }
+        doReturn(Result.success(staff)).`when`(staffRepository).getStaffBase(id = 1L)
+        val vm = StaffViewModel(staffRepository = staffRepository, baseRepository = baseRepository, ioDispatcher = testDispatcher)
+
+        vm.load(1L)
+
+        val state = vm.state.value as StaffViewModel.UiState.Success
+        assertEquals(1L, state.staff.id)
+    }
+
+    @Test
+    fun `load emits Error from repository failure`() = runTest {
+        doReturn(Result.failure<StaffBase>(RuntimeException("Staff failed")))
+            .`when`(staffRepository)
+            .getStaffBase(id = 1L)
+        val vm = StaffViewModel(staffRepository = staffRepository, baseRepository = baseRepository, ioDispatcher = testDispatcher)
+
+        vm.load(1L)
+
+        val state = vm.state.value as StaffViewModel.UiState.Error
+        assertEquals("Staff failed", state.message)
     }
 
     // ── GraphQL error message extraction ──

@@ -19,7 +19,7 @@ class AnalyticsLogging(
     settings: Settings,
 ) : Timber.Tree(),
     ISupportAnalytics {
-    private val analytics by lazy(LazyThreadSafetyMode.NONE) {
+    private val analytics by lazy {
         FirebaseApp.getApps(context).let {
             if (it.isNotEmpty()) {
                 FirebaseAnalytics.getInstance(context).apply {
@@ -33,13 +33,11 @@ class AnalyticsLogging(
         }
     }
 
-    private val crashlytics by lazy(LazyThreadSafetyMode.NONE) {
+    private val crashlytics by lazy {
         FirebaseApp.getApps(context).let {
             if (it.isNotEmpty()) {
                 FirebaseCrashlytics.getInstance().apply {
-                    setCrashlyticsCollectionEnabled(
-                        settings.isCrashReportsEnabled,
-                    )
+                    isCrashlyticsCollectionEnabled = settings.isCrashReportsEnabled
                 }
             } else {
                 null

@@ -16,15 +16,15 @@ import com.mxt.anitrend.base.custom.async.WebTokenRequest
 import com.mxt.anitrend.base.interfaces.dao.BoxQuery
 import com.mxt.anitrend.binding.basicText
 import com.mxt.anitrend.databinding.ActivityLoginBinding
-import com.mxt.anitrend.model.api.retro.WebFactory
+import com.mxt.anitrend.model.api.retro.ServiceFactory
 import com.mxt.anitrend.model.entity.anilist.User
-import com.mxt.anitrend.presenter.widget.WidgetPresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.JobSchedulerUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.ShortcutUtil
+import com.mxt.anitrend.util.WidgetState
 import com.mxt.anitrend.viewmodel.LoginAuthState
 import com.mxt.anitrend.viewmodel.LoginAuthViewModel
 import com.mxt.anitrend.viewmodel.LoginUserViewModel
@@ -186,10 +186,10 @@ class LoginActivity :
 
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.auth_sign_in -> if (binding.widgetFlipper.displayedChild == WidgetPresenter.CONTENT_STATE) {
+            R.id.auth_sign_in -> if (binding.widgetFlipper.displayedChild == WidgetState.CONTENT_STATE) {
                 binding.widgetFlipper.showNext()
                 try {
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(WebFactory.API_AUTH_LINK)))
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(ServiceFactory.API_AUTH_LINK)))
                 } catch (e: Exception) {
                     Timber.e(e)
                     NotifyUtil.makeText(this, R.string.text_unknown_error, Toast.LENGTH_SHORT).show()
@@ -197,7 +197,7 @@ class LoginActivity :
             } else {
                 NotifyUtil.makeText(this, R.string.busy_please_wait, Toast.LENGTH_SHORT).show()
             }
-            R.id.container -> if (binding.widgetFlipper.displayedChild != WidgetPresenter.LOADING_STATE) {
+            R.id.container -> if (binding.widgetFlipper.displayedChild != WidgetState.LOADING_STATE) {
                 finish()
             } else {
                 NotifyUtil.makeText(this, R.string.busy_please_wait, Toast.LENGTH_SHORT).show()
@@ -216,7 +216,7 @@ class LoginActivity :
     private fun checkNewIntent(intent: Intent?) {
         if (intent != null && intent.data != null) {
             if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
-                if (binding.widgetFlipper.displayedChild == WidgetPresenter.CONTENT_STATE) {
+                if (binding.widgetFlipper.displayedChild == WidgetState.CONTENT_STATE) {
                     binding.widgetFlipper.showNext()
                 }
                 authViewModel.authenticate(intent.data.toString())

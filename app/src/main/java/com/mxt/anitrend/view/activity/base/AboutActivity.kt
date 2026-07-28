@@ -1,6 +1,7 @@
 package com.mxt.anitrend.view.activity.base
 
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.mxt.anitrend.R
@@ -35,5 +36,13 @@ class AboutActivity : AppCompatActivity() {
             .beginTransaction()
             .replace(R.id.content_frame, fragment, AboutFragment::class.java.simpleName)
             .commit()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            onBackPressedDispatcher.onBackPressed()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

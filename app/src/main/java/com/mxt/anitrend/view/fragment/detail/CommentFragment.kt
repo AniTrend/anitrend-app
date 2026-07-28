@@ -7,7 +7,9 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.detail.CommentAdapter
 import com.mxt.anitrend.adapter.recycler.index.FeedAdapter
@@ -17,20 +19,26 @@ import com.mxt.anitrend.base.interfaces.event.ItemClickListener
 import com.mxt.anitrend.coordinator.WidgetMutationCoordinator
 import com.mxt.anitrend.extension.hideKeyboard
 import com.mxt.anitrend.extension.parcelable
+import com.mxt.anitrend.graphql.generated.LikeableType
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.anilist.FeedReply
+import com.mxt.anitrend.repository.BaseMutation
+import com.mxt.anitrend.repository.BaseRepository
+import com.mxt.anitrend.repository.FeedMutation
 import com.mxt.anitrend.repository.FeedRepository
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.media.MediaActionUtil
+import com.mxt.anitrend.view.activity.detail.CommentActivity
 import com.mxt.anitrend.view.activity.detail.MediaActivity
 import com.mxt.anitrend.view.activity.detail.ProfileActivity
 import com.mxt.anitrend.view.sheet.BottomSheetGiphy
 import com.mxt.anitrend.view.sheet.BottomSheetUsers
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
+import timber.log.Timber
 
 /**
  * Created by max on 2017/11/16.
@@ -40,6 +48,8 @@ class CommentFragment : FragmentBaseComment() {
     private lateinit var feedAdapter: FeedAdapter
 
     private val mutationCoordinator by inject<WidgetMutationCoordinator>()
+
+    private val baseRepository: BaseRepository by inject()
 
     private val feedRepository: FeedRepository by inject()
 
@@ -147,7 +157,9 @@ class CommentFragment : FragmentBaseComment() {
                                 activityId = feedList?.id ?: 0,
                                 text = text,
                                 asHtml = false,
-                            ).isSuccess
+                            ).onSuccess { reply ->
+                                appendReply(reply)
+                            }.isSuccess
                         }
                         KeyUtil.MUT_SAVE_TEXT_FEED -> {
                             feedRepository.saveTextActivity(
@@ -165,6 +177,21 @@ class CommentFragment : FragmentBaseComment() {
         super.onStart()
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    feedRepository.mutationEvents.collect(::handleFeedMutation)
+                }
+                launch {
+                    baseRepository.mutationEvents.collect(::handleBaseMutation)
+                }
+            }
+        }
+    }
+
     override fun updateUI() {
         injectAdapter()
     }
@@ -176,12 +203,15 @@ class CommentFragment : FragmentBaseComment() {
             initExtraComponents()
         }
 
-        val ctx = context ?: return
-        viewModel?.params?.apply {
-            putLong(KeyUtil.arg_id, userActivityId)
-            putBoolean(KeyUtil.arg_asHtml, false)
+        lifecycleScope.launch {
+            feedRepository
+                .getFeedListReply(id = userActivityId, asHtml = false)
+                .onSuccess(::onChanged)
+                .onFailure { throwable ->
+                    Timber.e(throwable)
+                    showError(throwable.message ?: getString(R.string.text_error_request))
+                }
         }
-        viewModel?.requestData(KeyUtil.FEED_LIST_REPLY_REQ, ctx)
     }
 
     override fun onBackPress(): Boolean {
@@ -195,8 +225,8 @@ class CommentFragment : FragmentBaseComment() {
         val feedList = feedList ?: return
         composerWidget.setModel(feedList, KeyUtil.MUT_SAVE_FEED_REPLY)
 
-        if (feedAdapter.itemCount < 1) {
-            feedAdapter.onItemsInserted(listOf(feedList))
+        feedAdapter.onItemsInserted(listOf(feedList))
+        if (feedAdapter.clickListener == null) {
             feedAdapter.setClickListener(
                 object : ItemClickListener<FeedList> {
                     override fun onItemClick(
@@ -315,6 +345,7 @@ class CommentFragment : FragmentBaseComment() {
         if (value != null) {
             feedList = value
             initExtraComponents()
+            publishUpdatedFeedResult()
         } else {
             activity?.let {
                 NotifyUtil.createAlerter(
@@ -383,4 +414,81 @@ class CommentFragment : FragmentBaseComment() {
         target: View,
         data: IndexedValue<FeedReply>,
     ) = Unit
+
+    private fun handleFeedMutation(event: FeedMutation) {
+        when (event) {
+            is FeedMutation.FeedSaved -> {
+                val currentFeed = feedList ?: return
+                if (currentFeed.id == event.feed.id) {
+                    event.feed.replies = currentFeed.replies
+                    feedList = event.feed
+                    initExtraComponents()
+                    publishUpdatedFeedResult()
+                }
+            }
+            is FeedMutation.ReplyDeleted -> {
+                val currentFeed = feedList ?: return
+                val replies = currentFeed.replies.orEmpty()
+                if (replies.any { it.id == event.id }) {
+                    val updatedReplies = replies.filterNot { it.id == event.id }
+                    currentFeed.replies = updatedReplies
+                    currentFeed.replyCount = updatedReplies.size
+                    mAdapter.onItemsInserted(updatedReplies)
+                    initExtraComponents()
+                    publishUpdatedFeedResult()
+                }
+            }
+            else -> Unit
+        }
+    }
+
+    private fun handleBaseMutation(event: BaseMutation) {
+        when (event) {
+            is BaseMutation.LikeToggled -> {
+                when (event.targetType) {
+                    LikeableType.ACTIVITY -> {
+                        val currentFeed = feedList ?: return
+                        if (currentFeed.id == event.targetId) {
+                            currentFeed.likes = event.users
+                            initExtraComponents()
+                            publishUpdatedFeedResult()
+                        }
+                    }
+                    LikeableType.ACTIVITY_REPLY -> {
+                        val currentFeed = feedList ?: return
+                        val replies = currentFeed.replies.orEmpty().toMutableList()
+                        val index = replies.indexOfFirst { it.id == event.targetId }
+                        if (index >= 0) {
+                            replies[index].likes = event.users
+                            currentFeed.replies = replies
+                            mAdapter.onItemsInserted(replies)
+                        }
+                    }
+                    else -> Unit
+                }
+            }
+            else -> Unit
+        }
+    }
+
+    private fun appendReply(reply: FeedReply) {
+        val currentFeed = feedList ?: return
+        val replies = currentFeed.replies.orEmpty().toMutableList()
+        val index = replies.indexOfFirst { it.id == reply.id }
+        if (index >= 0) {
+            replies[index] = reply
+        } else {
+            replies.add(reply)
+        }
+        currentFeed.replies = replies
+        currentFeed.replyCount = replies.size
+        mAdapter.onItemsInserted(replies)
+        initExtraComponents()
+        publishUpdatedFeedResult()
+    }
+
+    private fun publishUpdatedFeedResult() {
+        val currentFeed = feedList ?: return
+        (activity as? CommentActivity)?.updateResult(currentFeed)
+    }
 }

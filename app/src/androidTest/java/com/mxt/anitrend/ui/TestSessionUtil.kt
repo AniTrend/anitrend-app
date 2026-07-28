@@ -2,6 +2,7 @@ package com.mxt.anitrend.ui
 
 import android.content.Context
 import com.mxt.anitrend.data.DatabaseHelper
+import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.model.entity.anilist.WebToken
 import com.mxt.anitrend.model.entity.base.AuthBase
 import com.mxt.anitrend.util.Settings
@@ -14,7 +15,7 @@ object TestSessionUtil {
         val settings = Settings(context)
         settings.isAuthenticated = authenticated
         settings.isFreshInstall = false
-        val database = DatabaseHelper()
+        val database = KoinExt.get(DatabaseHelper::class.java)
         if (authenticated) {
             val token =
                 WebToken(

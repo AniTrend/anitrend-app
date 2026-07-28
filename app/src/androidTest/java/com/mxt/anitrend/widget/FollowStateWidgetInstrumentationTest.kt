@@ -11,24 +11,22 @@ import com.google.android.material.button.MaterialButton
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.view.widget.FollowStateWidget
 import com.mxt.anitrend.data.DatabaseHelper
+import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.model.entity.base.UserBase
-import com.mxt.anitrend.presenter.widget.WidgetPresenter
 import com.mxt.anitrend.util.Settings
-import okhttp3.Request
-import okio.Timeout
+import com.mxt.anitrend.util.WidgetState
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
-import retrofit2.Response
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
 class FollowStateWidgetInstrumentationTest {
     @Test
-    fun onResponse_togglesFollowStateAndResetsLoadingSpinner() {
-        val database = DatabaseHelper()
+    fun listenerSuccess_togglesFollowStateAndResetsLoadingSpinner() {
+        val database = KoinExt.get(DatabaseHelper::class.java)
         ActivityScenario.launch(ProgressLayoutTestActivity::class.java).use { scenario ->
             Settings(androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().targetContext).isAuthenticated = true
             database.currentUser = User().apply {
@@ -46,37 +44,35 @@ class FollowStateWidgetInstrumentationTest {
 
                 val widget = FollowStateWidget(activity)
                 container.addView(widget)
+                widget.setCurrentUser(
+                    UserBase(name = "current-user").apply {
+                        id = 1L
+                    },
+                )
                 widget.setUserModel(targetUser)
+                widget.setListener(
+                    object : FollowStateWidget.Listener {
+                        override fun onToggleFollow(
+                            userId: Long,
+                            onResult: (Result<UserBase>) -> Unit,
+                        ) {
+                            assertEquals(2L, userId)
+                            onResult(Result.success(targetUser))
+                        }
+                    },
+                )
 
                 val flipper = widget.findViewById<ViewFlipper>(R.id.widget_flipper)
-                flipper.displayedChild = WidgetPresenter.LOADING_STATE
-                widget.onResponse(call = NoOpUserBaseCall(), response = Response.success(targetUser))
+                flipper.displayedChild = WidgetState.LOADING_STATE
+                flipper.performClick()
 
                 val label = widget.findViewById<MaterialButton>(R.id.button_state_text)
                 assertTrue(targetUser.isFollowing)
                 assertEquals(activity.getString(R.string.following), label.text.toString())
-                assertEquals(WidgetPresenter.CONTENT_STATE, flipper.displayedChild)
+                assertEquals(WidgetState.CONTENT_STATE, flipper.displayedChild)
             }
         }
         database.invalidateBoxStores()
         Settings(androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().targetContext).isAuthenticated = false
     }
-}
-
-private class NoOpUserBaseCall : retrofit2.Call<UserBase> {
-    override fun execute(): Response<UserBase> = throw UnsupportedOperationException()
-
-    override fun enqueue(callback: retrofit2.Callback<UserBase>) = Unit
-
-    override fun isExecuted(): Boolean = false
-
-    override fun cancel() = Unit
-
-    override fun isCanceled(): Boolean = false
-
-    override fun clone(): retrofit2.Call<UserBase> = NoOpUserBaseCall()
-
-    override fun request(): Request = Request.Builder().url("https://example.com").build()
-
-    override fun timeout(): Timeout = Timeout.NONE
 }

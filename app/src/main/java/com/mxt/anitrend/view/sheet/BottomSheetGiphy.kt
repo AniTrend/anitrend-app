@@ -13,7 +13,6 @@ import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.detail.GiphyAdapter
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
 import com.mxt.anitrend.base.custom.sheet.BottomSheetGiphyList
-import com.mxt.anitrend.base.custom.view.search.MaterialSearchView
 import com.mxt.anitrend.base.interfaces.event.ISearchDelegate
 import com.mxt.anitrend.databinding.BottomSheetListBinding
 import com.mxt.anitrend.extension.KoinExt
@@ -29,7 +28,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class BottomSheetGiphy : BottomSheetGiphyList() {
     private var binding: BottomSheetListBinding? = null
-    private var searchView: MaterialSearchView? = null
 
     var onGiphySelected: ((Giphy) -> Unit)? = null
 
@@ -84,12 +82,11 @@ class BottomSheetGiphy : BottomSheetGiphyList() {
         createBottomSheetBehavior(requireNotNull(binding).root)
         searchView = binding?.customSheetToolbar?.searchView
         mLayoutManager = StaggeredGridLayoutManager(mColumnSize, StaggeredGridLayoutManager.VERTICAL)
+        setupSearchDelegate()
         return dialog
     }
 
-    override fun updateUI() {
-        toolbarTitle?.text = getString(mTitle)
-        toolbarSearch?.visibility = View.VISIBLE
+    private fun setupSearchDelegate() {
         mSearchDelegate = object : ISearchDelegate {
             override fun onQueryChanged(query: String?) {
                 searchQuery = query
@@ -108,6 +105,11 @@ class BottomSheetGiphy : BottomSheetGiphyList() {
                 }
             }
         }
+    }
+
+    override fun updateUI() {
+        toolbarTitle?.text = getString(mTitle)
+        toolbarSearch?.visibility = View.VISIBLE
         injectAdapter()
         val settings = KoinExt.get(Settings::class.java)
         if (settings.shouldShowTipFor(KeyUtil.KEY_GIPHY_TIP)) {

@@ -766,4 +766,56 @@
     <string name="notification_media_deletion">Media Deletion</string>
     <string name="notification_media_data_change">Media Update</string>
     <string name="title_recommendations">Recommendations</string>
+
+    <!-- Manage list editor and validation strings -->
+    <!-- Confirmation message when removing a media list entry -->
+    <string name="dialog_remove_entry_message">Ta bort denna titel från din lista?</string>
+    <!-- Form validation: progress value cannot be negative -->
+    <string name="validation_progress_negative">Framsteg kan inte vara negativt</string>
+    <!-- Form validation: repeat count cannot be negative -->
+    <string name="validation_repeat_negative">Antal repetitioner kan inte vara negativt</string>
+    <!-- Inline warning when setting anime status to CURRENT while not yet aired -->
+    <string name="status_warning_not_aired">Denna titel har inte sänts än</string>
+    <!-- Inline warning when setting manga status to CURRENT while not yet published -->
+    <string name="status_warning_not_published">Denna titel har inte publicerats än</string>
+    <!-- Inline warning when setting anime status to COMPLETED while still airing -->
+    <string name="status_warning_still_airing">Denna titel sänds fortfarande</string>
+    <!-- Inline warning when setting manga status to COMPLETED while still publishing -->
+    <string name="status_warning_still_publishing">Denna titel publiceras fortfarande</string>
+    <!-- Button text for removing a media list entry -->
+    <string name="action_remove">Ta bort</string>
+    <!-- Section label for priority slider in manage list editor -->
+    <string name="dialog_title_priority">Prioritet (0-255)</string>
+    <!-- Switch label for hiding entry from status lists -->
+    <string name="dialog_title_hidden_from_status_lists">Dölj från statuslistor</string>
+    <!-- Section label for custom lists chips -->
+    <string name="dialog_title_custom_lists">Anpassade listor</string>
+    <!-- Section label for advanced scoring sliders -->
+    <string name="dialog_title_advanced_scores">Avancerade poäng</string>
+
+    <!-- Manage list editor: additional UI strings -->
+    <!-- Bottom sheet header subtitle when adding a new entry -->
+    <string name="sheet_title_add">Lägg till i lista</string>
+    <!-- Bottom sheet header subtitle when editing an existing entry -->
+    <string name="sheet_title_edit">Redigera listpost</string>
+    <!-- Primary action button in manage list editor -->
+    <string name="action_save">Spara</string>
+    <!-- Primary action button text for new entries -->
+    <string name="action_add_to_list">Lägg till i lista</string>
+    <!-- Content description for decrement stepper button -->
+    <string name="action_decrement">Minska värde</string>
+    <!-- Content description for increment stepper button -->
+    <string name="action_increment">Öka värde</string>
+    <!-- Supporting text under the "Hide from status lists" switch -->
+    <string name="hidden_from_status_lists_summary">Endast synlig i anpassade listor</string>
+    <!-- Section card title for status and score fields -->
+    <string name="section_status_score">Status &amp; poäng</string>
+    <!-- Section card title for progress fields -->
+    <string name="section_progress">Framsteg</string>
+    <!-- Section card title for date fields -->
+    <string name="section_dates">Datum</string>
+    <!-- Section card title for privacy and priority fields -->
+    <string name="section_privacy_priority">Integritet &amp; prioritet</string>
+    <!-- Section card title for notes field -->
+    <string name="section_notes">Anteckningar</string>
 </resources>

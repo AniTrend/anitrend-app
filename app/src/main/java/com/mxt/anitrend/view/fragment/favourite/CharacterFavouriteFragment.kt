@@ -13,7 +13,6 @@ import com.mxt.anitrend.model.entity.anilist.Favourite
 import com.mxt.anitrend.model.entity.base.CharacterBase
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.group.RecyclerItem
-import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.collection.GroupingUtil
@@ -26,7 +25,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * Created by max on 2018/03/25.
  * CharacterFavouriteFragment
  */
-class CharacterFavouriteFragment : FragmentBaseList<RecyclerItem, ConnectionContainer<Favourite>, BasePresenter>() {
+class CharacterFavouriteFragment : FragmentBaseList<RecyclerItem, ConnectionContainer<Favourite>>() {
     private var userId: Long = 0
 
     private val characterFavouritesViewModel: CharacterFavouritesViewModel by viewModel()

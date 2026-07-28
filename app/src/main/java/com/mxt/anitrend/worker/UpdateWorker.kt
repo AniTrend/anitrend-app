@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import com.mxt.anitrend.model.api.retro.base.RepositoryModel
+import com.mxt.anitrend.model.api.retro.base.RepositoryService
 import com.mxt.anitrend.model.entity.base.VersionBase
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.KeyUtil
@@ -16,7 +16,7 @@ class UpdateWorker(
     context: Context,
     workerParams: WorkerParameters,
     private val presenter: BasePresenter,
-    private val repositoryService: RepositoryModel,
+    private val repositoryService: RepositoryService,
 ) : CoroutineWorker(context, workerParams) {
 
     private fun shouldCheckForUpdate(): Boolean {

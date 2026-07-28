@@ -9,7 +9,7 @@ import com.mxt.anitrend.graphql.generated.FeedMessage
 import com.mxt.anitrend.graphql.generated.SaveActivityReply
 import com.mxt.anitrend.graphql.generated.SaveMessageActivity
 import com.mxt.anitrend.graphql.generated.SaveTextActivity
-import com.mxt.anitrend.model.api.retro.anilist.FeedModel
+import com.mxt.anitrend.model.api.retro.anilist.FeedService
 import com.mxt.anitrend.model.entity.anilist.FeedReply
 import com.mxt.anitrend.model.entity.anilist.meta.DeleteState
 import com.mxt.anitrend.model.entity.container.body.PageContainer
@@ -22,12 +22,15 @@ import com.mxt.anitrend.model.entity.anilist.FeedList as FeedListEntity
 sealed class FeedMutation {
     data class FeedSaved(val feed: FeedListEntity) : FeedMutation()
     data class FeedDeleted(val id: Long) : FeedMutation()
-    data class ReplySaved(val reply: FeedReply) : FeedMutation()
+    data class ReplySaved(
+        val reply: FeedReply,
+        val activityId: Long,
+    ) : FeedMutation()
     data class ReplyDeleted(val id: Long) : FeedMutation()
 }
 
 class FeedRepository(
-    private val feedService: FeedModel,
+    private val feedService: FeedService,
     ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : AbstractRepository<FeedMutation>(ioDispatcher) {
 
@@ -118,7 +121,12 @@ class FeedRepository(
             val response = feedService.saveActivityReply(request).execute()
             if (response.isSuccessful) {
                 val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
-                _mutationEvents.emit(FeedMutation.ReplySaved(result))
+                _mutationEvents.emit(
+                    FeedMutation.ReplySaved(
+                        reply = result,
+                        activityId = activityId,
+                    ),
+                )
                 result
             } else {
                 throw RuntimeException(response.apiError())

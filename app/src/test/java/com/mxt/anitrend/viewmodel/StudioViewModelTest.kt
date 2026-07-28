@@ -1,8 +1,8 @@
 package com.mxt.anitrend.viewmodel
 
-import com.mxt.anitrend.model.api.retro.anilist.StudioModel
 import com.mxt.anitrend.model.entity.base.StudioBase
 import com.mxt.anitrend.repository.BaseRepository
+import com.mxt.anitrend.repository.StudioRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -14,19 +14,20 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import org.mockito.Mockito.doReturn
 import org.mockito.Mockito.mock
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class StudioViewModelTest {
 
     private val testDispatcher = UnconfinedTestDispatcher()
-    private lateinit var service: StudioModel
+    private lateinit var studioRepository: StudioRepository
     private lateinit var baseRepository: BaseRepository
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
-        service = mock(StudioModel::class.java)
+        studioRepository = mock(StudioRepository::class.java)
         baseRepository = mock(BaseRepository::class.java)
     }
 
@@ -64,8 +65,33 @@ class StudioViewModelTest {
 
     @Test
     fun `initial state is Loading`() = runTest {
-        val vm = StudioViewModel(studioService = service, baseRepository = baseRepository, ioDispatcher = testDispatcher)
+        val vm = StudioViewModel(studioRepository = studioRepository, baseRepository = baseRepository, ioDispatcher = testDispatcher)
         assertTrue(vm.state.value is StudioViewModel.UiState.Loading)
+    }
+
+    @Test
+    fun `load emits Success from repository result`() = runTest {
+        val studio = StudioBase().apply { id = 1L }
+        doReturn(Result.success(studio)).`when`(studioRepository).getStudioBase(id = 1L)
+        val vm = StudioViewModel(studioRepository = studioRepository, baseRepository = baseRepository, ioDispatcher = testDispatcher)
+
+        vm.load(1L)
+
+        val state = vm.state.value as StudioViewModel.UiState.Success
+        assertEquals(1L, state.studio.id)
+    }
+
+    @Test
+    fun `load emits Error from repository failure`() = runTest {
+        doReturn(Result.failure<StudioBase>(RuntimeException("Studio failed")))
+            .`when`(studioRepository)
+            .getStudioBase(id = 1L)
+        val vm = StudioViewModel(studioRepository = studioRepository, baseRepository = baseRepository, ioDispatcher = testDispatcher)
+
+        vm.load(1L)
+
+        val state = vm.state.value as StudioViewModel.UiState.Error
+        assertEquals("Studio failed", state.message)
     }
 
     // ── GraphQL error message extraction ──

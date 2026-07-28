@@ -1,7 +1,7 @@
 package com.mxt.anitrend.viewmodel
 
 import com.mxt.anitrend.BuildConfig
-import com.mxt.anitrend.model.api.retro.base.GiphyModel
+import com.mxt.anitrend.model.api.retro.base.GiphyService
 import com.mxt.anitrend.model.entity.giphy.GiphyContainer
 import com.mxt.anitrend.util.KeyUtil
 import kotlinx.coroutines.Dispatchers
@@ -25,12 +25,12 @@ import java.io.IOException
 class GiphyViewModelTest {
 
     private val testDispatcher = UnconfinedTestDispatcher()
-    private lateinit var service: GiphyModel
+    private lateinit var service: GiphyService
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
-        service = mock(GiphyModel::class.java)
+        service = mock(GiphyService::class.java)
     }
 
     @After

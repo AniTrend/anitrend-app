@@ -15,7 +15,6 @@ import com.mxt.anitrend.model.entity.base.CharacterStaffBase
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.container.body.EdgeContainer
 import com.mxt.anitrend.model.entity.group.RecyclerItem
-import com.mxt.anitrend.presenter.fragment.MediaPresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.collection.GroupingUtil
@@ -28,7 +27,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * Created by LuK1337 on 2021/05/05.
  * MediaAnimeRoleFragment
  */
-class MediaAnimeRoleFragment : FragmentBaseList<RecyclerItem, ConnectionContainer<EdgeContainer<MediaEdge>>, MediaPresenter>() {
+class MediaAnimeRoleFragment : FragmentBaseList<RecyclerItem, ConnectionContainer<EdgeContainer<MediaEdge>>>() {
     private var id: Long = 0
     private var onList: Boolean? = null
 

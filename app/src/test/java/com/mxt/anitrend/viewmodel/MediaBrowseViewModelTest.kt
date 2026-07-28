@@ -8,6 +8,7 @@ import com.mxt.anitrend.repository.BaseRepository
 import com.mxt.anitrend.repository.BrowseRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -33,6 +34,7 @@ class MediaBrowseViewModelTest {
         val baseRepository = mock(BaseRepository::class.java)
         val browseRepository = mock(BrowseRepository::class.java)
         val pageContainer = PageContainer<MediaBase>()
+        `when`(browseRepository.mutationEvents).thenReturn(MutableSharedFlow())
 
         `when`(
             browseRepository.getMediaBrowse(
@@ -96,6 +98,7 @@ class MediaBrowseViewModelTest {
         val baseRepository = mock(BaseRepository::class.java)
         val browseRepository = mock(BrowseRepository::class.java)
         val pageContainer = PageContainer<MediaBase>()
+        `when`(browseRepository.mutationEvents).thenReturn(MutableSharedFlow())
 
         `when`(
             browseRepository.getMediaBrowse(

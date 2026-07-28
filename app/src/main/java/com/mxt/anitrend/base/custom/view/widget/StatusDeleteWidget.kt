@@ -71,6 +71,7 @@ constructor(
         feedList: FeedList,
         @KeyUtil.RequestType requestType: Int,
     ) {
+        recycled = false
         this.requestType = requestType
         this.feedList = feedList
     }
@@ -79,6 +80,7 @@ constructor(
         feedReply: FeedReply,
         @KeyUtil.RequestType requestType: Int,
     ) {
+        recycled = false
         this.requestType = requestType
         this.feedReply = feedReply
     }

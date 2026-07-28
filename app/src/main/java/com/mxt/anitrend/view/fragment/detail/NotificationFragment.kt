@@ -20,7 +20,6 @@ import com.mxt.anitrend.model.entity.anilist.Notification
 import com.mxt.anitrend.model.entity.base.NotificationHistory
 import com.mxt.anitrend.model.entity.base.NotificationHistory_
 import com.mxt.anitrend.model.entity.container.body.PageContainer
-import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
@@ -39,7 +38,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * NotificationFragment
  */
 
-class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notification>, BasePresenter>() {
+class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notification>>() {
 
     private val settings: Settings by inject()
     private val databaseHelper by inject<DatabaseHelper>()
