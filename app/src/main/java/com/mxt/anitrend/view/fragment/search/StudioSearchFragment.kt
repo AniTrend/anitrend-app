@@ -10,7 +10,6 @@ import com.mxt.anitrend.adapter.recycler.index.StudioAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
 import com.mxt.anitrend.model.entity.base.StudioBase
 import com.mxt.anitrend.model.entity.container.body.PageContainer
-import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.view.activity.detail.StudioActivity
 import com.mxt.anitrend.viewmodel.StudioSearchViewModel
@@ -21,7 +20,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * Created by max on 2017/12/20.
  * studio search fragment
  */
-class StudioSearchFragment : FragmentBaseList<StudioBase, PageContainer<StudioBase>, BasePresenter>() {
+class StudioSearchFragment : FragmentBaseList<StudioBase, PageContainer<StudioBase>>() {
     private var searchQuery: String? = null
 
     private val studioSearchViewModel: StudioSearchViewModel by viewModel()

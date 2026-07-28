@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 abstract class AbstractRepository<T : Any>(
     protected val ioDispatcher: CoroutineDispatcher,
 ) {
-    protected val _mutationEvents = MutableSharedFlow<T>(replay = 1, extraBufferCapacity = 64)
+    protected val _mutationEvents = MutableSharedFlow<T>(replay = 0, extraBufferCapacity = 64)
     val mutationEvents: SharedFlow<T> = _mutationEvents.asSharedFlow()
 
     fun emitMutationEvent(event: T) {

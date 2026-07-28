@@ -3,18 +3,17 @@ package com.mxt.anitrend.view.fragment.list
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
 import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.EpisodeAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentChannelBase
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.model.entity.anilist.ExternalLink
+import com.mxt.anitrend.repository.CrunchyrollRepository
 import com.mxt.anitrend.repository.MediaRepository
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.collection.EpisodeUtil
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -27,8 +26,8 @@ import timber.log.Timber
 class WatchListFragment :
     FragmentChannelBase(),
     KoinComponent {
-    private val fragmentScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     private val mediaRepository: MediaRepository by inject()
+    private val crunchyrollRepository: CrunchyrollRepository by inject()
 
     private var mediaId: Long = 0
 
@@ -85,15 +84,34 @@ class WatchListFragment :
     }
 
     override fun makeRequest() {
-        val context = context ?: return
         if (externalLinks != null) {
             val feed = targetLink != null && targetLink?.startsWith(BuildConfig.FEEDS_LINK) == true
-            val bundle = viewModel?.params ?: Bundle.EMPTY
-            bundle.putString(KeyUtil.arg_search, targetLink)
-            bundle.putBoolean(KeyUtil.arg_feed, feed)
-            viewModel?.requestData(getRequestMode(feed), context)
+            val link = targetLink
+            if (link == null) {
+                showEmpty(getString(R.string.waring_missing_episode_links))
+                return
+            }
+            viewLifecycleOwner.lifecycleScope.launch {
+                val result = when {
+                    feed && isPopular -> crunchyrollRepository.getPopularFeed()
+                    feed -> crunchyrollRepository.getLatestFeed()
+                    else -> crunchyrollRepository.getRss(link)
+                }
+                result
+                    .onSuccess { rss ->
+                        if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
+                            onChanged(rss)
+                        }
+                    }
+                    .onFailure { throwable ->
+                        if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
+                            Timber.e(throwable)
+                            showEmpty(throwable.message ?: getString(R.string.layout_empty_response))
+                        }
+                    }
+            }
         } else {
-            fragmentScope.launch {
+            viewLifecycleOwner.lifecycleScope.launch {
                 val isAdult = if (presenter.settings.displayAdultContent) null else false
                 val mediaType = mediaType?.let { MediaType.valueOf(it) }
                 mediaRepository.getMediaEpisodes(id = mediaId, type = mediaType, isAdult = isAdult)
@@ -120,16 +138,5 @@ class WatchListFragment :
                     }
             }
         }
-    }
-
-    @KeyUtil.RequestType
-    private fun getRequestMode(feed: Boolean): Int = if (feed) {
-        if (isPopular) {
-            KeyUtil.EPISODE_POPULAR_REQ
-        } else {
-            KeyUtil.EPISODE_LATEST_REQ
-        }
-    } else {
-        KeyUtil.EPISODE_FEED_REQ
     }
 }

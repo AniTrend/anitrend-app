@@ -5,7 +5,7 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
-import android.widget.ProgressBar
+import android.widget.Space
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.ColorRes
@@ -13,7 +13,9 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentActivity
+import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textview.MaterialTextView
 import com.mxt.anitrend.R
 import com.mxt.anitrend.binding.setImage
 import com.mxt.anitrend.databinding.CustomAuthToastBinding
@@ -204,12 +206,21 @@ object NotifyUtil {
                 CompatUtil.dipToPx(16f),
             )
             addView(
-                ProgressBar(context).apply {
+                CircularProgressIndicator(context).apply {
                     isIndeterminate = true
+                    indicatorSize = CompatUtil.dipToPx(14f)
                 },
             )
             addView(
-                TextView(context).apply {
+                Space(context).apply {
+                    layoutParams = LinearLayout.LayoutParams(
+                        CompatUtil.dipToPx(16f),
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                    )
+                },
+            )
+            addView(
+                MaterialTextView(context).apply {
                     text = context.getString(stringRes)
                     setPadding(CompatUtil.dipToPx(16f), 0, 0, 0)
                     gravity = Gravity.CENTER_VERTICAL

@@ -1,8 +1,6 @@
 package com.mxt.anitrend.base.custom.view.widget
 
-import android.annotation.TargetApi
 import android.content.Context
-import android.os.Build
 import android.util.AttributeSet
 import android.view.View
 import android.widget.LinearLayout
@@ -44,6 +42,7 @@ constructor(
             mediaId: Long?,
             status: MediaListStatus?,
             score: Double?,
+            scoreRaw: Int? = null,
             progress: Int?,
             progressVolumes: Int?,
             repeat: Int?,
@@ -67,7 +66,6 @@ constructor(
 
     private var currentUser: String? = null
     private var currentUserFull: UserBase? = null
-    private val tagName = AutoIncrementWidget::class.java.simpleName
     private var listener: Listener? = null
     private var recycled = false
 
@@ -82,14 +80,6 @@ constructor(
     init {
         onInit()
     }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    constructor(
-        context: Context,
-        attrs: AttributeSet?,
-        defStyleAttr: Int,
-        defStyleRes: Int,
-    ) : this(context, attrs, defStyleAttr)
 
     override fun onInit() {
         binding = WidgetAutoIncrementerBinding.inflate(context.getLayoutInflater(), this, true)
@@ -133,6 +123,7 @@ constructor(
         model: MediaList,
         currentUser: String?,
     ) {
+        recycled = false
         this.model = model
         this.currentUser = currentUser
         status = model.status
@@ -173,6 +164,7 @@ constructor(
             mediaId = currentModel.mediaId,
             status = currentModel.status?.let { runCatching { MediaListStatus.valueOf(it) }.getOrNull() },
             score = currentModel.score.toDouble(),
+            scoreRaw = currentModel.scoreRaw,
             progress = currentModel.progress,
             progressVolumes = currentModel.progressVolumes,
             repeat = currentModel.repeat,

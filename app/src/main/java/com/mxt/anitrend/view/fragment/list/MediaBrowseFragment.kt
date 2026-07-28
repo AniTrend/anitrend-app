@@ -19,7 +19,6 @@ import com.mxt.anitrend.model.entity.anilist.Genre
 import com.mxt.anitrend.model.entity.anilist.MediaTag
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.container.body.PageContainer
-import com.mxt.anitrend.presenter.fragment.MediaPresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
@@ -42,7 +41,7 @@ import java.util.Locale
  * Created by max on 2018/02/03.
  * Multi purpose media browse fragment
  */
-open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<MediaBase>, MediaPresenter>() {
+open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<MediaBase>>() {
     protected lateinit var requestArgs: Bundle
     private var mediaBrowseUtil: MediaBrowseUtil? = null
 
@@ -316,8 +315,8 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
         var seasonYear: Int? = null
         var startDateLike: String? = null
         var status: String? = null
-        var genres: List<String?>? = null
-        var tags: List<String?>? = null
+        var genres: List<String>? = null
+        var tags: List<String>? = null
         var sort: String? = null
 
         if (isFilterableEnabled) {

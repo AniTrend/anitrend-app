@@ -1,31 +1,20 @@
 package com.mxt.anitrend.worker
 
 import android.content.Context
+import androidx.work.CoroutineWorker
 import androidx.work.ListenableWorker
-import androidx.work.Worker
 import androidx.work.WorkerParameters
-import com.mxt.anitrend.graphql.generated.CurrentUser
-import com.mxt.anitrend.graphql.generated.UserNotifications
-import com.mxt.anitrend.model.api.retro.anilist.UserModel
-import com.mxt.anitrend.model.entity.anilist.Notification
-import com.mxt.anitrend.model.entity.anilist.User
-import com.mxt.anitrend.model.entity.base.NotificationHistory
-import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.repository.UserMutation
 import com.mxt.anitrend.repository.UserRepository
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import timber.log.Timber
 
 class ClearNotificationWorker(
     context: Context,
     workerParams: WorkerParameters,
-) : Worker(context, workerParams),
-    KoinComponent {
-    private val presenter by inject<BasePresenter>()
-    private val userEndpoint: UserModel by inject()
-    private val userRepository: UserRepository by inject()
+    private val presenter: BasePresenter,
+    private val userRepository: UserRepository,
+) : CoroutineWorker(context, workerParams) {
 
     /**
      * Override this method to do your actual background processing.  This method is called on a
@@ -44,17 +33,19 @@ class ClearNotificationWorker(
      * dependent work will not execute if you use
      * [Result.failure]
      */
-    override fun doWork(): Result {
+    override suspend fun doWork(): Result {
         if (presenter.settings.isAuthenticated) {
             try {
-                requestUser()?.apply {
-                    if (unreadNotificationCount != 0) {
-                        userRepository.emitMutationEvent(UserMutation.CurrentUserUpdated(this))
-                        return when (clearNotifications()) {
-                            true -> Result.success()
-                            else -> Result.failure()
-                        }
-                    }
+                val user = userRepository.getCurrentUser(asHtml = false).getOrThrow()
+                userRepository.saveCurrentUser(user)
+
+                if (user.unreadNotificationCount != 0) {
+                    userRepository.emitMutationEvent(UserMutation.CurrentUserUpdated(user))
+                    val notifications = userRepository
+                        .getUserNotifications(resetNotificationCount = true)
+                        .getOrThrow()
+                    userRepository.saveNotificationHistory(notifications)
+                    return Result.success()
                 }
             } catch (e: Exception) {
                 Timber.e(e)
@@ -62,45 +53,5 @@ class ClearNotificationWorker(
             return Result.retry()
         }
         return Result.failure()
-    }
-
-    private fun requestUser(): User? {
-        val result =
-            userEndpoint
-                .getCurrentUser(
-                    CurrentUser.request(asHtml = false),
-                ).execute()
-        if (!result.isSuccessful) {
-            return null
-        }
-        val user = unwrapBody<User>(result.body())
-        user?.also {
-            presenter.database.currentUser = it
-        }
-        return user
-    }
-
-    private fun clearNotifications(): Boolean {
-        val result =
-            userEndpoint
-                .getUserNotifications(
-                    UserNotifications.request(resetNotificationCount = true),
-                ).execute()
-
-        if (result.isSuccessful) {
-            val notifications = unwrapBody<PageContainer<Notification>>(result.body())
-            if (notifications != null) {
-                val notificationHistories =
-                    notifications.pageData
-                        .map { notification -> NotificationHistory(notification.id) }
-
-                presenter.database
-                    .getBoxStore(NotificationHistory::class.java)
-                    .put(notificationHistories)
-            }
-            return true
-        }
-
-        return false
     }
 }

@@ -3,7 +3,7 @@ package com.mxt.anitrend.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mxt.anitrend.BuildConfig
-import com.mxt.anitrend.model.api.retro.base.GiphyModel
+import com.mxt.anitrend.model.api.retro.base.GiphyService
 import com.mxt.anitrend.model.entity.giphy.GiphyContainer
 import com.mxt.anitrend.util.KeyUtil
 import kotlinx.coroutines.CoroutineDispatcher
@@ -16,7 +16,7 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class GiphyViewModel(
-    private val giphyService: GiphyModel,
+    private val giphyService: GiphyService,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : ViewModel() {
 

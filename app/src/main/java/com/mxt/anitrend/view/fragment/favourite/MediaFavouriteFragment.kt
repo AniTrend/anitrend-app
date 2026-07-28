@@ -13,7 +13,6 @@ import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
 import com.mxt.anitrend.model.entity.anilist.Favourite
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
-import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
@@ -29,7 +28,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * Created by max on 2018/03/25.
  * MediaFavouriteFragment
  */
-class MediaFavouriteFragment : FragmentBaseList<MediaBase, ConnectionContainer<Favourite>, BasePresenter>() {
+class MediaFavouriteFragment : FragmentBaseList<MediaBase, ConnectionContainer<Favourite>>() {
     private var userId: Long = 0
 
     @KeyUtil.MediaType

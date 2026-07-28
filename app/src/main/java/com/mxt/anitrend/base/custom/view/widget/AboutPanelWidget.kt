@@ -15,9 +15,9 @@ import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
 import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.databinding.WidgetProfileAboutPanelBinding
 import com.mxt.anitrend.model.entity.container.attribute.PageInfo
-import com.mxt.anitrend.presenter.widget.WidgetPresenter
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
+import com.mxt.anitrend.util.WidgetState
 import com.mxt.anitrend.util.date.DateUtil
 import com.mxt.anitrend.view.activity.detail.FavouriteActivity
 import com.mxt.anitrend.view.sheet.BottomSheetListUsers
@@ -90,15 +90,15 @@ constructor(
     ) {
         if (followersTotal != null) {
             binding.userFollowersCount.text =
-                WidgetPresenter.valueFormatter(followersTotal)
+                WidgetState.valueFormatter(followersTotal)
         }
         if (followingTotal != null) {
             binding.userFollowingCount.text =
-                WidgetPresenter.valueFormatter(followingTotal)
+                WidgetState.valueFormatter(followingTotal)
         }
         if (favouritesTotal != null) {
             binding.userFavouritesCount.text =
-                WidgetPresenter.valueFormatter(favouritesTotal)
+                WidgetState.valueFormatter(favouritesTotal)
         }
     }
 

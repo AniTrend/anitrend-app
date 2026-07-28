@@ -1,18 +1,23 @@
 package com.mxt.anitrend.repository
 
+import co.anitrend.retrofit.graphql.model.body.GraphContainer
 import com.mxt.anitrend.graphql.generated.CharacterActors
 import com.mxt.anitrend.graphql.generated.CharacterBase
+import com.mxt.anitrend.graphql.generated.CharacterBaseData
 import com.mxt.anitrend.graphql.generated.CharacterMedia
 import com.mxt.anitrend.graphql.generated.CharacterOverview
+import com.mxt.anitrend.graphql.generated.CharacterOverviewData
 import com.mxt.anitrend.graphql.generated.MediaSort
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.graphql.generated.StaffSort
-import com.mxt.anitrend.model.api.retro.anilist.CharacterModel
+import com.mxt.anitrend.model.api.retro.anilist.CharacterService
 import com.mxt.anitrend.model.entity.anilist.MediaCharacter
 import com.mxt.anitrend.model.entity.anilist.edge.MediaEdge
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.container.body.EdgeContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
+import com.mxt.anitrend.repository.mapper.toCharacterEntity
+import com.mxt.anitrend.repository.mapper.toMediaCharacterEntity
 import com.mxt.anitrend.util.graphql.apiError
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -26,7 +31,7 @@ sealed class CharacterMutation {
 }
 
 class CharacterRepository(
-    private val characterService: CharacterModel,
+    private val characterService: CharacterService,
     ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : AbstractRepository<CharacterMutation>(ioDispatcher) {
 
@@ -35,11 +40,19 @@ class CharacterRepository(
             val request = CharacterBase.request(id = id.toInt())
             val response = characterService.getCharacterBase(request).execute()
             if (response.isSuccessful) {
-                handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                handleCharacterBase(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
                 throw RuntimeException(response.apiError())
             }
         }
+    }
+
+    private fun handleCharacterBase(body: GraphContainer<CharacterBaseData>): CharacterEntity {
+        val graphErrors = body.errors
+        if (!graphErrors.isNullOrEmpty()) {
+            throw RuntimeException(graphErrors.first().message ?: "GraphQL error")
+        }
+        return body.data?.toCharacterEntity() ?: throw IllegalStateException("Empty response body")
     }
 
     suspend fun getCharacterOverview(id: Long, asHtml: Boolean = false): Result<MediaCharacter> = withContext(ioDispatcher) {
@@ -47,11 +60,19 @@ class CharacterRepository(
             val request = CharacterOverview.request(id = id.toInt(), asHtml = asHtml)
             val response = characterService.getCharacterOverview(request).execute()
             if (response.isSuccessful) {
-                handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                handleCharacterOverview(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
                 throw RuntimeException(response.apiError())
             }
         }
+    }
+
+    private fun handleCharacterOverview(body: GraphContainer<CharacterOverviewData>): MediaCharacter {
+        val graphErrors = body.errors
+        if (!graphErrors.isNullOrEmpty()) {
+            throw RuntimeException(graphErrors.first().message ?: "GraphQL error")
+        }
+        return body.data?.toMediaCharacterEntity() ?: throw IllegalStateException("Empty response body")
     }
 
     suspend fun getCharacterMedia(

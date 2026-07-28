@@ -3,7 +3,10 @@ package com.mxt.anitrend.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mxt.anitrend.graphql.generated.ActivityType
+import com.mxt.anitrend.graphql.generated.LikeableType
 import com.mxt.anitrend.model.entity.container.body.PageContainer
+import com.mxt.anitrend.repository.BaseMutation
+import com.mxt.anitrend.repository.BaseRepository
 import com.mxt.anitrend.repository.FeedMutation
 import com.mxt.anitrend.repository.FeedRepository
 import kotlinx.coroutines.CoroutineDispatcher
@@ -17,6 +20,7 @@ import com.mxt.anitrend.model.entity.anilist.FeedList as FeedListEntity
 
 class FeedListViewModel(
     private val feedRepository: FeedRepository,
+    private val baseRepository: BaseRepository,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : ViewModel() {
 
@@ -24,6 +28,7 @@ class FeedListViewModel(
         data object Loading : UiState
         data class Success(
             val content: PageContainer<com.mxt.anitrend.model.entity.anilist.FeedList>,
+            val replaceExisting: Boolean = false,
         ) : UiState
         data class Error(val message: String) : UiState
     }
@@ -36,35 +41,42 @@ class FeedListViewModel(
             feedRepository.mutationEvents.collect { event ->
                 when (event) {
                     is FeedMutation.FeedSaved -> {
-                        val current = _state.value
-                        if (current is UiState.Success) {
-                            val items = current.content.pageData.toMutableList()
-                            val index = items.indexOfFirst { it.id == event.feed.id }
-                            if (index >= 0) items[index] = event.feed else items.add(0, event.feed)
-                            _state.value = current.copy(
-                                content = PageContainer<FeedListEntity>().apply {
-                                    if (current.content.hasPageInfo()) pageInfo = current.content.pageInfo
-                                    pageData = items
-                                },
-                            )
-                        }
+                        upsertFeed(event.feed)
                     }
                     is FeedMutation.FeedDeleted -> {
-                        val current = _state.value
-                        if (current is UiState.Success) {
-                            val items = current.content.pageData.filter { it.id != event.id }
-                            _state.value = current.copy(
-                                content = PageContainer<FeedListEntity>().apply {
-                                    if (current.content.hasPageInfo()) pageInfo = current.content.pageInfo
-                                    pageData = items
-                                },
-                            )
+                        replaceCurrentPage { items ->
+                            items.removeAll { it.id == event.id }
                         }
                     }
                     else -> { /* ignore reply events - not relevant to feed list */ }
                 }
             }
         }
+
+        viewModelScope.launch {
+            baseRepository.mutationEvents.collect { event ->
+                when (event) {
+                    is BaseMutation.LikeToggled -> {
+                        if (event.targetType == LikeableType.ACTIVITY) {
+                            replaceCurrentPage { items ->
+                                val index = items.indexOfFirst { it.id == event.targetId }
+                                if (index >= 0) {
+                                    items[index].likes = event.users
+                                    true
+                                } else {
+                                    false
+                                }
+                            }
+                        }
+                    }
+                    else -> Unit
+                }
+            }
+        }
+    }
+
+    fun applyReturnedFeed(feed: FeedListEntity) {
+        upsertFeed(feed, addIfMissing = false)
     }
 
     /**
@@ -86,7 +98,7 @@ class FeedListViewModel(
                 type = type,
                 isMixed = isMixed,
             ).onSuccess { content ->
-                _state.value = UiState.Success(content)
+                _state.value = UiState.Success(content = content)
             }.onFailure { throwable ->
                 Timber.e(throwable, "FeedListViewModel load failed")
                 _state.value = UiState.Error(
@@ -94,5 +106,42 @@ class FeedListViewModel(
                 )
             }
         }
+    }
+
+    private fun upsertFeed(
+        feed: FeedListEntity,
+        addIfMissing: Boolean = true,
+    ) {
+        replaceCurrentPage { items ->
+            val index = items.indexOfFirst { it.id == feed.id }
+            when {
+                index >= 0 -> {
+                    items[index] = feed
+                    true
+                }
+                addIfMissing -> {
+                    items.add(0, feed)
+                    true
+                }
+                else -> false
+            }
+        }
+    }
+
+    private fun replaceCurrentPage(update: (MutableList<FeedListEntity>) -> Boolean) {
+        val current = _state.value as? UiState.Success ?: return
+        val items = current.content.pageData.toMutableList()
+        if (!update(items)) {
+            return
+        }
+        _state.value = current.copy(
+            content = PageContainer<FeedListEntity>().apply {
+                if (current.content.hasPageInfo()) {
+                    pageInfo = current.content.pageInfo
+                }
+                pageData = items
+            },
+            replaceExisting = true,
+        )
     }
 }

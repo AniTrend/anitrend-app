@@ -2,7 +2,6 @@ package com.mxt.anitrend.util.media
 
 import android.os.Bundle
 import com.mxt.anitrend.base.custom.view.widget.AutoIncrementWidget
-import com.mxt.anitrend.base.custom.view.widget.CustomSeriesManageBase
 import com.mxt.anitrend.model.entity.anilist.MediaList
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
@@ -12,8 +11,8 @@ object MediaListUtil {
 
     /**
      * Creates query variables for updating the status of the current users lists, use cases
-     * @see CustomSeriesManageBase.persistChanges
      * @see AutoIncrementWidget.updateModelState
+     * @see BottomSheetSeriesManage.handleSave
      * @param model the current media list item
      */
     fun getMediaListParams(model: MediaList, @KeyUtil.ScoreFormat scoreFormat: String): Bundle = Bundle().apply {
@@ -24,6 +23,7 @@ object MediaListUtil {
         putLong(KeyUtil.arg_mediaId, model.mediaId)
         putString(KeyUtil.arg_listStatus, model.status)
         putDouble(KeyUtil.arg_listScore, model.score.toDouble())
+        model.scoreRaw?.let { putInt(KeyUtil.arg_listScore_raw, it) }
         putString(KeyUtil.arg_listNotes, model.notes)
         putBoolean(KeyUtil.arg_listPrivate, model.isHidden)
         putInt(KeyUtil.arg_listPriority, model.priority)

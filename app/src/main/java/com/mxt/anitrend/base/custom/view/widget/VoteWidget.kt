@@ -149,6 +149,7 @@ constructor(
     override fun onViewRecycled() {
         recycled = true
         listener = null
+        resetFlipperState()
         model = null
     }
 
@@ -166,6 +167,7 @@ constructor(
         model: Review,
         @ColorRes colorStyle: Int,
     ) {
+        recycled = false
         this.model = model
         this.colorStyle = colorStyle
         resetFlipperState()

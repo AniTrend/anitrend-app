@@ -2,6 +2,7 @@ package com.mxt.anitrend.view.activity.detail
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.mxt.anitrend.R
 import com.mxt.anitrend.databinding.ActivityFrameGenericBinding
@@ -38,6 +39,19 @@ class NotificationActivity : AppCompatActivity() {
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
+        navigateBack()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            navigateBack()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    @Suppress("DEPRECATION")
+    private fun navigateBack() {
         if (isTaskRoot) {
             startActivity(Intent(this, MainActivity::class.java))
         }

@@ -47,7 +47,7 @@ constructor(
 
     override fun onInit() {
         binding = WidgetFuzzyDateBinding.inflate(context.getLayoutInflater(), this, true)
-        binding.fuzzyDateView.setOnClickListener(this)
+        binding.fuzzyDateInputLayout.setOnClickListener(this)
     }
 
     fun setDate(fuzzyDate: FuzzyDate?) {
@@ -57,7 +57,7 @@ constructor(
 
     private fun updateDate() {
         val convertedDate = DateUtil.convertDate(fuzzyDate)
-        binding.fuzzyDateText.text = convertedDate
+        binding.fuzzyDateText.setText(convertedDate)
     }
 
     override fun onViewRecycled() = Unit

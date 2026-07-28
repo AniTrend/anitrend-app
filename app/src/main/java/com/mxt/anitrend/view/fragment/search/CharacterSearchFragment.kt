@@ -12,7 +12,6 @@ import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
 import com.mxt.anitrend.model.entity.base.CharacterBase
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.model.entity.group.RecyclerItem
-import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.collection.GroupingUtil
@@ -24,7 +23,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 /**
  * Created by max on 2017/12/20.
  */
-class CharacterSearchFragment : FragmentBaseList<RecyclerItem, PageContainer<CharacterBase>, BasePresenter>() {
+class CharacterSearchFragment : FragmentBaseList<RecyclerItem, PageContainer<CharacterBase>>() {
     private var searchQuery: String? = null
 
     private val characterSearchViewModel: CharacterSearchViewModel by viewModel()

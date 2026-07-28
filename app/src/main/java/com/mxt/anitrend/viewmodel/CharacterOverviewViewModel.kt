@@ -2,11 +2,8 @@ package com.mxt.anitrend.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.anitrend.retrofit.graphql.model.attribute.GraphError
-import com.mxt.anitrend.graphql.generated.CharacterOverview
-import com.mxt.anitrend.model.api.retro.anilist.CharacterModel
 import com.mxt.anitrend.model.entity.anilist.MediaCharacter
-import com.mxt.anitrend.util.graphql.apiError
+import com.mxt.anitrend.repository.CharacterRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +14,7 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class CharacterOverviewViewModel(
-    private val characterService: CharacterModel,
+    private val characterRepository: CharacterRepository,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : ViewModel() {
 
@@ -43,23 +40,7 @@ class CharacterOverviewViewModel(
             _state.value = UiState.Loading
             runCatching {
                 withContext(ioDispatcher) {
-                    val request = CharacterOverview.request(characterId.toInt(), asHtml = false)
-                    val response = characterService.getCharacterOverview(request).execute()
-                    if (response.isSuccessful) {
-                        val body = response.body()
-                            ?: throw IllegalStateException("Empty response body")
-                        val graphErrors: List<GraphError>? = body.errors
-                        if (!graphErrors.isNullOrEmpty()) {
-                            throw RuntimeException(
-                                graphErrors.first().message
-                                    ?: "GraphQL error",
-                            )
-                        }
-                        body.data?.result
-                            ?: throw IllegalStateException("Empty response body")
-                    } else {
-                        throw RuntimeException(response.apiError())
-                    }
+                    characterRepository.getCharacterOverview(characterId).getOrThrow()
                 }
             }.onSuccess { character ->
                 _state.value = UiState.Success(character)

@@ -1,11 +1,8 @@
 package com.mxt.anitrend.viewmodel
 
-import com.mxt.anitrend.graphql.generated.StaffOverview
-import com.mxt.anitrend.model.api.retro.anilist.StaffModel
 import com.mxt.anitrend.model.entity.anilist.meta.TitleBase
 import com.mxt.anitrend.model.entity.base.StaffBase
-import com.mxt.anitrend.model.entity.container.body.AniListContainer
-import com.mxt.anitrend.model.entity.container.body.DataContainer
+import com.mxt.anitrend.repository.StaffRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -17,22 +14,19 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import org.mockito.Mockito.doReturn
 import org.mockito.Mockito.mock
-import org.mockito.Mockito.`when`
-import retrofit2.Call
-import retrofit2.Response
-import java.io.IOException
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class StaffOverviewViewModelTest {
 
     private val testDispatcher = UnconfinedTestDispatcher()
-    private lateinit var service: StaffModel
+    private lateinit var staffRepository: StaffRepository
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
-        service = mock(StaffModel::class.java)
+        staffRepository = mock(StaffRepository::class.java)
     }
 
     @After
@@ -70,30 +64,24 @@ class StaffOverviewViewModelTest {
     @Test
     fun `initial state is Loading`() = runTest {
         val vm = StaffOverviewViewModel(
-            staffService = service,
-            ioDispatcher = testDispatcher,
+            staffRepository = staffRepository,
         )
         assertTrue(vm.state.value is StaffOverviewViewModel.UiState.Loading)
     }
 
     @Test
-    fun `load emits Success on successful response`() = runTest {
-        @Suppress("UNCHECKED_CAST")
-        val call = mock(Call::class.java) as Call<AniListContainer<StaffBase>>
+    fun `load emits Success from repository result`() = runTest {
         val title = TitleBase("Test", "Staff", null, null)
         val staff = StaffBase().apply {
             id = 1L
             name = title
         }
-        val container = AniListContainer(data = DataContainer(result = staff), errors = null)
-        val request = StaffOverview.request(1, asHtml = false)
-
-        `when`(service.getStaffOverview(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(Response.success(container))
+        doReturn(Result.success(staff))
+            .`when`(staffRepository)
+            .getStaffOverview(id = 1L, asHtml = false)
 
         val vm = StaffOverviewViewModel(
-            staffService = service,
-            ioDispatcher = testDispatcher,
+            staffRepository = staffRepository,
         )
 
         vm.load(1L)
@@ -104,17 +92,13 @@ class StaffOverviewViewModelTest {
     }
 
     @Test
-    fun `load emits Error on request failure`() = runTest {
-        @Suppress("UNCHECKED_CAST")
-        val call = mock(Call::class.java) as Call<AniListContainer<StaffBase>>
-        val request = StaffOverview.request(1, asHtml = false)
-
-        `when`(service.getStaffOverview(request)).thenReturn(call)
-        `when`(call.execute()).thenThrow(IOException("Network failed"))
+    fun `load emits Error from repository failure`() = runTest {
+        doReturn(Result.failure<StaffBase>(RuntimeException("Network failed")))
+            .`when`(staffRepository)
+            .getStaffOverview(id = 1L, asHtml = false)
 
         val vm = StaffOverviewViewModel(
-            staffService = service,
-            ioDispatcher = testDispatcher,
+            staffRepository = staffRepository,
         )
 
         vm.load(1L)

@@ -3,7 +3,9 @@ package com.mxt.anitrend.koin
 import android.app.NotificationManager
 import android.content.Context
 import android.webkit.WebSettings
+import co.anitrend.retrofit.graphql.converter.GraphConverter
 import co.anitrend.retrofit.graphql.model.GraphQLDocumentRegistry
+import co.anitrend.retrofit.graphql.serialization.kotlinx.KotlinxGraphQLJson
 import co.anitrend.support.markdown.center.CenterPlugin
 import co.anitrend.support.markdown.core.CorePlugin
 import co.anitrend.support.markdown.ephasis.EmphasisPlugin
@@ -32,30 +34,32 @@ import com.mxt.anitrend.base.plugin.image.ImageConfigurationPlugin
 import com.mxt.anitrend.base.plugin.text.TextConfigurationPlugin
 import com.mxt.anitrend.coordinator.WidgetMutationCoordinator
 import com.mxt.anitrend.data.DatabaseHelper
+import com.mxt.anitrend.extension.logFile
 import com.mxt.anitrend.graphql.generated.GeneratedGraphQLRegistry
 import com.mxt.anitrend.model.api.converter.AniGraphConverter
 import com.mxt.anitrend.model.api.interceptor.AuthInterceptor
 import com.mxt.anitrend.model.api.interceptor.CacheInterceptor
 import com.mxt.anitrend.model.api.interceptor.ClientInterceptor
 import com.mxt.anitrend.model.api.interceptor.NetworkCacheInterceptor
-import com.mxt.anitrend.model.api.retro.WebFactory
-import com.mxt.anitrend.model.api.retro.anilist.BaseModel
-import com.mxt.anitrend.model.api.retro.anilist.BrowseModel
-import com.mxt.anitrend.model.api.retro.anilist.CharacterModel
-import com.mxt.anitrend.model.api.retro.anilist.FeedModel
-import com.mxt.anitrend.model.api.retro.anilist.MediaModel
-import com.mxt.anitrend.model.api.retro.anilist.SearchModel
-import com.mxt.anitrend.model.api.retro.anilist.StaffModel
-import com.mxt.anitrend.model.api.retro.anilist.StudioModel
-import com.mxt.anitrend.model.api.retro.anilist.UserModel
-import com.mxt.anitrend.model.api.retro.base.GiphyModel
-import com.mxt.anitrend.model.api.retro.base.RepositoryModel
+import com.mxt.anitrend.model.api.retro.ServiceFactory
+import com.mxt.anitrend.model.api.retro.anilist.BaseService
+import com.mxt.anitrend.model.api.retro.anilist.BrowseService
+import com.mxt.anitrend.model.api.retro.anilist.CharacterService
+import com.mxt.anitrend.model.api.retro.anilist.FeedService
+import com.mxt.anitrend.model.api.retro.anilist.MediaService
+import com.mxt.anitrend.model.api.retro.anilist.SearchService
+import com.mxt.anitrend.model.api.retro.anilist.StaffService
+import com.mxt.anitrend.model.api.retro.anilist.StudioService
+import com.mxt.anitrend.model.api.retro.anilist.UserService
+import com.mxt.anitrend.model.api.retro.base.GiphyService
+import com.mxt.anitrend.model.api.retro.base.RepositoryService
+import com.mxt.anitrend.model.api.retro.crunchy.EpisodeService
 import com.mxt.anitrend.model.entity.MyObjectBox
 import com.mxt.anitrend.presenter.base.BasePresenter
-import com.mxt.anitrend.presenter.widget.WidgetPresenter
 import com.mxt.anitrend.repository.BaseRepository
 import com.mxt.anitrend.repository.BrowseRepository
 import com.mxt.anitrend.repository.CharacterRepository
+import com.mxt.anitrend.repository.CrunchyrollRepository
 import com.mxt.anitrend.repository.FeedRepository
 import com.mxt.anitrend.repository.MediaRepository
 import com.mxt.anitrend.repository.SearchRepository
@@ -126,6 +130,13 @@ import io.noties.markwon.image.glide.GlideImagesPlugin
 import io.noties.markwon.linkify.LinkifyPlugin
 import io.wax911.emojify.EmojiManager
 import io.wax911.emojify.serializer.gson.GsonDeserializer
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
@@ -134,14 +145,42 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.bind
 import org.koin.dsl.module
+import org.koin.dsl.onClose
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 import timber.log.Timber
 import java.io.File
 import java.util.concurrent.TimeUnit
 
-private val coreModule = module {
+private val coroutineModule = module {
+    single<CoroutineDispatcher>(DefaultDispatcherQualifier) {
+        Dispatchers.Default
+    }
+    single<CoroutineDispatcher>(MainDispatcherQualifier) {
+        Dispatchers.Main
+    }
+    single<CoroutineDispatcher>(IoDispatcherQualifier) {
+        Dispatchers.IO
+    }
+    single<CoroutineDispatcher>(UnconfinedDispatcherQualifier) {
+        Dispatchers.Unconfined
+    }
+    single<CoroutineScope>(
+        qualifier = ApplicationScopeQualifier,
+        createdAtStart = true,
+    ) {
+        CoroutineScope(
+            SupervisorJob() +
+                get<CoroutineDispatcher>(DefaultDispatcherQualifier) +
+                CoroutineName("ApplicationScope"),
+        )
+    } onClose { scope ->
+        scope?.cancel()
+    }
+}
 
+private val coreModule = module {
     single {
         DatabaseHelper(
             store = MyObjectBox.builder()
@@ -245,7 +284,6 @@ private val workerModule = module {
             workerParams = scope.get(),
             presenter = get(),
             notificationUtil = get(),
-            userService = get(),
             userRepository = get(),
         )
     }
@@ -253,6 +291,8 @@ private val workerModule = module {
         ClearNotificationWorker(
             context = androidContext(),
             workerParams = scope.get(),
+            presenter = get(),
+            userRepository = get(),
         )
     }
     worker { scope ->
@@ -260,7 +300,7 @@ private val workerModule = module {
             context = androidContext(),
             workerParams = scope.get(),
             presenter = get(),
-            baseService = get(),
+            baseRepository = get(),
         )
     }
     worker { scope ->
@@ -268,7 +308,7 @@ private val workerModule = module {
             context = androidContext(),
             workerParams = scope.get(),
             presenter = get(),
-            baseService = get(),
+            baseRepository = get(),
         )
     }
     worker { scope ->
@@ -284,9 +324,6 @@ private val workerModule = module {
 private val presenterModule = module {
     factory {
         BasePresenter(context = androidContext(), boxQuery = get(), settings = get())
-    }
-    factory {
-        WidgetPresenter<Any>(context = androidContext(), boxQuery = get(), settings = get())
     }
 }
 
@@ -325,6 +362,17 @@ private val networkModule = module {
             .create()
         AniGraphConverter(
             gson = gson,
+            json = KotlinxGraphQLJson(),
+            registry = get(),
+        )
+    }
+    single {
+        GraphConverter.create(
+            json = KotlinxGraphQLJson(
+                json = Json {
+                    ignoreUnknownKeys = !BuildConfig.DEBUG
+                },
+            ),
             registry = get(),
         )
     }
@@ -357,6 +405,7 @@ private val retrofitModule = module {
         WebTokenRequest.getToken(androidContext())
         Retrofit.Builder()
             .client(get<OkHttpClient>(named("anilist")))
+            // .addConverterFactory(get<GraphConverter>())
             .addConverterFactory(get<AniGraphConverter>())
             .baseUrl(BuildConfig.API_LINK)
             .build()
@@ -389,6 +438,42 @@ private val retrofitModule = module {
             .build()
     }
 
+    single<OkHttpClient>(named("crunchyroll")) {
+        val ctx = androidContext()
+        val builder = OkHttpClient.Builder()
+            .readTimeout(35, TimeUnit.SECONDS)
+            .connectTimeout(35, TimeUnit.SECONDS)
+            .retryOnConnectionFailure(true)
+        if (BuildConfig.DEBUG) {
+            builder.addInterceptor(
+                HttpLoggingInterceptor { Timber.v(it) }
+                    .setLevel(HttpLoggingInterceptor.Level.HEADERS),
+            )
+        }
+        builder.addInterceptor(CacheInterceptor(ctx, true))
+        builder.addNetworkInterceptor(NetworkCacheInterceptor(ctx, true))
+        builder.cache(cacheProvider(ctx))
+        builder.build()
+    }
+
+    single<Retrofit>(named("crunchyrollFeed")) {
+        @Suppress("DEPRECATION")
+        Retrofit.Builder()
+            .client(get<OkHttpClient>(named("crunchyroll")))
+            .addConverterFactory(SimpleXmlConverterFactory.createNonStrict())
+            .baseUrl(BuildConfig.FEEDS_LINK)
+            .build()
+    }
+
+    single<Retrofit>(named("crunchyroll")) {
+        @Suppress("DEPRECATION")
+        Retrofit.Builder()
+            .client(get<OkHttpClient>(named("crunchyroll")))
+            .addConverterFactory(SimpleXmlConverterFactory.createNonStrict())
+            .baseUrl(BuildConfig.CRUNCHY_LINK)
+            .build()
+    }
+
     single<OkHttpClient>(named("repository")) {
         val builder = OkHttpClient.Builder()
             .readTimeout(35, TimeUnit.SECONDS)
@@ -411,21 +496,23 @@ private val retrofitModule = module {
             .build()
     }
 
-    single<Gson>(named("api")) { WebFactory.gson }
+    single<Gson>(named("api")) { ServiceFactory.gson }
 }
 
 private val serviceModule = module {
-    single<MediaModel> { get<Retrofit>(named("anilist")).create(MediaModel::class.java) }
-    single<UserModel> { get<Retrofit>(named("anilist")).create(UserModel::class.java) }
-    single<BrowseModel> { get<Retrofit>(named("anilist")).create(BrowseModel::class.java) }
-    single<SearchModel> { get<Retrofit>(named("anilist")).create(SearchModel::class.java) }
-    single<StaffModel> { get<Retrofit>(named("anilist")).create(StaffModel::class.java) }
-    single<CharacterModel> { get<Retrofit>(named("anilist")).create(CharacterModel::class.java) }
-    single<FeedModel> { get<Retrofit>(named("anilist")).create(FeedModel::class.java) }
-    single<StudioModel> { get<Retrofit>(named("anilist")).create(StudioModel::class.java) }
-    single<GiphyModel> { get<Retrofit>(named("giphy")).create(GiphyModel::class.java) }
-    single<BaseModel> { get<Retrofit>(named("anilist")).create(BaseModel::class.java) }
-    single<RepositoryModel> { get<Retrofit>(named("repository")).create(RepositoryModel::class.java) }
+    single<MediaService> { get<Retrofit>(named("anilist")).create(MediaService::class.java) }
+    single<UserService> { get<Retrofit>(named("anilist")).create(UserService::class.java) }
+    single<BrowseService> { get<Retrofit>(named("anilist")).create(BrowseService::class.java) }
+    single<SearchService> { get<Retrofit>(named("anilist")).create(SearchService::class.java) }
+    single<StaffService> { get<Retrofit>(named("anilist")).create(StaffService::class.java) }
+    single<CharacterService> { get<Retrofit>(named("anilist")).create(CharacterService::class.java) }
+    single<FeedService> { get<Retrofit>(named("anilist")).create(FeedService::class.java) }
+    single<StudioService> { get<Retrofit>(named("anilist")).create(StudioService::class.java) }
+    single<GiphyService> { get<Retrofit>(named("giphy")).create(GiphyService::class.java) }
+    single<BaseService> { get<Retrofit>(named("anilist")).create(BaseService::class.java) }
+    single<RepositoryService> { get<Retrofit>(named("repository")).create(RepositoryService::class.java) }
+    single<EpisodeService>(named("crunchyrollFeed")) { get<Retrofit>(named("crunchyrollFeed")).create(EpisodeService::class.java) }
+    single<EpisodeService>(named("crunchyroll")) { get<Retrofit>(named("crunchyroll")).create(EpisodeService::class.java) }
 }
 
 private val repositoryModule = module {
@@ -438,65 +525,77 @@ private val repositoryModule = module {
     single { SearchRepository(searchService = get()) }
     single { FeedRepository(feedService = get()) }
     single { BaseRepository(baseService = get(), boxQuery = get()) }
-    single { WidgetMutationCoordinator(baseRepository = get(), browseRepository = get(), userRepository = get(), feedRepository = get(), databaseHelper = get()) }
+    single { CrunchyrollRepository(feedService = get(named("crunchyrollFeed")), crunchyrollService = get(named("crunchyroll"))) }
+    single {
+        WidgetMutationCoordinator(
+            baseRepository = get(),
+            browseRepository = get(),
+            userRepository = get(),
+            feedRepository = get(),
+            coroutineScope = get(ApplicationScopeQualifier),
+            ioDispatcher = get(IoDispatcherQualifier),
+            mainDispatcher = get(MainDispatcherQualifier),
+            databaseHelper = get(),
+        )
+    }
 }
 
 private val mediaFeatureModule = module {
-    viewModel { AiringListViewModel(browseService = get()) }
-    viewModel { BrowseReviewViewModel(browseService = get()) }
+    viewModel { AiringListViewModel(browseRepository = get()) }
+    viewModel { BrowseReviewViewModel(browseRepository = get()) }
     viewModel { MediaBrowseViewModel(baseRepository = get(), browseRepository = get()) }
-    viewModel { MediaLatestViewModel(browseService = get()) }
+    viewModel { MediaLatestViewModel(browseRepository = get()) }
     viewModel { MediaListViewModel(browseRepository = get(), userRepository = get(), settings = get()) }
-    viewModel { ReviewViewModel(browseService = get()) }
+    viewModel { ReviewViewModel(browseRepository = get()) }
     viewModel { SuggestionListViewModel(userRepository = get(), browseRepository = get()) }
-    viewModel { MediaCharacterViewModel(mediaService = get()) }
-    viewModel { MediaFeedViewModel(mediaService = get()) }
+    viewModel { MediaCharacterViewModel(mediaRepository = get()) }
+    viewModel { MediaFeedViewModel(mediaRepository = get(), baseRepository = get()) }
     viewModel { MediaOverviewViewModel(repository = get(), settings = get<Settings>()) }
-    viewModel { MediaRecommendationsViewModel(mediaService = get()) }
-    viewModel { MediaRelationViewModel(mediaService = get()) }
-    viewModel { MediaStaffViewModel(mediaService = get()) }
-    viewModel { MediaStatsViewModel(mediaService = get()) }
-    viewModel { MediaViewModel(mediaService = get(), baseRepository = get()) }
-    viewModel { MediaSearchViewModel(searchService = get()) }
-    viewModel { MediaFavouritesViewModel(userService = get()) }
+    viewModel { MediaRecommendationsViewModel(mediaRepository = get()) }
+    viewModel { MediaRelationViewModel(mediaRepository = get()) }
+    viewModel { MediaStaffViewModel(mediaRepository = get()) }
+    viewModel { MediaStatsViewModel(mediaRepository = get()) }
+    viewModel { MediaViewModel(mediaRepository = get(), baseRepository = get()) }
+    viewModel { MediaSearchViewModel(searchRepository = get()) }
+    viewModel { MediaFavouritesViewModel(userRepository = get()) }
 }
 
 private val userFeatureModule = module {
-    viewModel { MainViewModel(userService = get()) }
-    viewModel { UserOverviewViewModel(userService = get()) }
-    viewModel { UserFeedViewModel(feedRepository = get()) }
-    viewModel { UserListViewModel(userService = get()) }
-    viewModel { UserSearchViewModel(searchService = get()) }
-    viewModel { NotificationViewModel(userService = get()) }
-    viewModel { ProfileViewModel(userService = get(), userRepository = get()) }
-    viewModel { FeedListViewModel(feedRepository = get()) }
-    viewModel { MessageFeedViewModel(feedRepository = get()) }
-    viewModel { LoginUserViewModel(userService = get()) }
+    viewModel { MainViewModel(userRepository = get()) }
+    viewModel { UserOverviewViewModel(userRepository = get()) }
+    viewModel { UserFeedViewModel(feedRepository = get(), baseRepository = get()) }
+    viewModel { UserListViewModel(userRepository = get()) }
+    viewModel { UserSearchViewModel(searchRepository = get()) }
+    viewModel { NotificationViewModel(userRepository = get()) }
+    viewModel { ProfileViewModel(userRepository = get()) }
+    viewModel { FeedListViewModel(feedRepository = get(), baseRepository = get()) }
+    viewModel { MessageFeedViewModel(feedRepository = get(), baseRepository = get()) }
+    viewModel { LoginUserViewModel(userRepository = get()) }
 }
 
 private val characterFeatureModule = module {
-    viewModel { CharacterViewModel(characterService = get(), baseRepository = get()) }
-    viewModel { CharacterOverviewViewModel(characterService = get()) }
-    viewModel { CharacterActorsViewModel(characterService = get()) }
-    viewModel { CharacterSearchViewModel(searchService = get()) }
-    viewModel { CharacterFavouritesViewModel(userService = get()) }
+    viewModel { CharacterViewModel(characterRepository = get(), baseRepository = get()) }
+    viewModel { CharacterOverviewViewModel(characterRepository = get()) }
+    viewModel { CharacterActorsViewModel(characterRepository = get()) }
+    viewModel { CharacterSearchViewModel(searchRepository = get()) }
+    viewModel { CharacterFavouritesViewModel(userRepository = get()) }
 }
 
 private val staffFeatureModule = module {
-    viewModel { StaffViewModel(staffService = get(), baseRepository = get()) }
-    viewModel { StaffOverviewViewModel(staffService = get()) }
-    viewModel { StaffSearchViewModel(searchService = get()) }
-    viewModel { StaffFavouritesViewModel(userService = get()) }
-    viewModel { MediaStaffRoleViewModel(staffService = get()) }
-    viewModel { MediaAnimeRoleViewModel(staffService = get()) }
+    viewModel { StaffViewModel(staffRepository = get(), baseRepository = get()) }
+    viewModel { StaffOverviewViewModel(staffRepository = get()) }
+    viewModel { StaffSearchViewModel(searchRepository = get()) }
+    viewModel { StaffFavouritesViewModel(userRepository = get()) }
+    viewModel { MediaStaffRoleViewModel(staffRepository = get()) }
+    viewModel { MediaAnimeRoleViewModel(staffRepository = get()) }
     viewModel { MediaFormatViewModel(characterRepository = get(), staffRepository = get()) }
 }
 
 private val studioFeatureModule = module {
-    viewModel { StudioViewModel(studioService = get(), baseRepository = get()) }
-    viewModel { StudioMediaViewModel(studioService = get()) }
-    viewModel { StudioSearchViewModel(searchService = get()) }
-    viewModel { StudioFavouritesViewModel(userService = get()) }
+    viewModel { StudioViewModel(studioRepository = get(), baseRepository = get()) }
+    viewModel { StudioMediaViewModel(studioRepository = get()) }
+    viewModel { StudioSearchViewModel(searchRepository = get()) }
+    viewModel { StudioFavouritesViewModel(userRepository = get()) }
 }
 
 private val utilityFeatureModule = module {
@@ -509,7 +608,7 @@ private val utilityFeatureModule = module {
         )
     }
     factory<File>(named("logFile")) {
-        File(androidContext().filesDir, "timber.log")
+        androidContext().logFile()
     }
     factory<MetadataProvider> {
         {
@@ -523,19 +622,22 @@ private val utilityFeatureModule = module {
     }
 }
 
-val appModules = listOf(
-    coreModule,
-    widgetModule,
-    workerModule,
-    presenterModule,
-    networkModule,
-    retrofitModule,
-    serviceModule,
-    repositoryModule,
-    mediaFeatureModule,
-    userFeatureModule,
-    characterFeatureModule,
-    staffFeatureModule,
-    studioFeatureModule,
-    utilityFeatureModule,
-)
+val appModules = module {
+    includes(
+        coroutineModule,
+        coreModule,
+        widgetModule,
+        workerModule,
+        presenterModule,
+        networkModule,
+        retrofitModule,
+        serviceModule,
+        repositoryModule,
+        mediaFeatureModule,
+        userFeatureModule,
+        characterFeatureModule,
+        staffFeatureModule,
+        studioFeatureModule,
+        utilityFeatureModule,
+    )
+}

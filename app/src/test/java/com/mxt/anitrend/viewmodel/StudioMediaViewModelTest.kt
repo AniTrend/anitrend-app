@@ -1,14 +1,10 @@
 package com.mxt.anitrend.viewmodel
 
-import co.anitrend.retrofit.graphql.model.attribute.GraphError
 import com.mxt.anitrend.graphql.generated.MediaSort
-import com.mxt.anitrend.graphql.generated.StudioMedia
-import com.mxt.anitrend.model.api.retro.anilist.StudioModel
 import com.mxt.anitrend.model.entity.base.MediaBase
-import com.mxt.anitrend.model.entity.container.body.AniListContainer
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
-import com.mxt.anitrend.model.entity.container.body.DataContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
+import com.mxt.anitrend.repository.StudioRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -17,25 +13,23 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import org.mockito.Mockito.doReturn
 import org.mockito.Mockito.mock
-import org.mockito.Mockito.`when`
-import retrofit2.Call
-import retrofit2.Response
-import java.io.IOException
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class StudioMediaViewModelTest {
 
     private val testDispatcher = UnconfinedTestDispatcher()
-    private lateinit var service: StudioModel
+    private lateinit var studioRepository: StudioRepository
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
-        service = mock(StudioModel::class.java)
+        studioRepository = mock(StudioRepository::class.java)
     }
 
     @After
@@ -72,47 +66,39 @@ class StudioMediaViewModelTest {
     @Test
     fun `initial state is Loading`() = runTest {
         val vm = StudioMediaViewModel(
-            studioService = service,
-            ioDispatcher = testDispatcher,
+            studioRepository = studioRepository,
         )
         assertTrue(vm.state.value is StudioMediaViewModel.UiState.Loading)
     }
 
     @Test
-    fun `load emits Success on successful response`() = runTest {
-        @Suppress("UNCHECKED_CAST")
-        val call = mock(Call::class.java) as Call<AniListContainer<ConnectionContainer<PageContainer<MediaBase>>>>
-        val pageContainer = PageContainer<MediaBase>().apply { pageData = emptyList() }
-        val result = ConnectionContainer<PageContainer<MediaBase>>().apply { connection = pageContainer }
-        val container = AniListContainer(data = DataContainer(result = result), errors = null)
-        val request = StudioMedia.request(id = 1, page = 1, perPage = 50, sort = listOf(MediaSort.POPULARITY_DESC))
-
-        `when`(service.getStudioMedia(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(Response.success(container))
+    fun `load emits Success from repository result`() = runTest {
+        val pageContainer = PageContainer<MediaBase>()
+        val container = ConnectionContainer<PageContainer<MediaBase>>().apply {
+            connection = pageContainer
+        }
+        doReturn(Result.success(container))
+            .`when`(studioRepository)
+            .getStudioMedia(id = 1L, page = 1, perPage = 50, sort = listOf(MediaSort.POPULARITY_DESC))
 
         val vm = StudioMediaViewModel(
-            studioService = service,
-            ioDispatcher = testDispatcher,
+            studioRepository = studioRepository,
         )
 
         vm.load(studioId = 1L, page = 1, perPage = 50, sort = "POPULARITY_DESC")
 
         val state = vm.state.value as StudioMediaViewModel.UiState.Success
-        assertEquals(result, state.container)
+        assertSame(container, state.container)
     }
 
     @Test
-    fun `load emits Error on request failure`() = runTest {
-        @Suppress("UNCHECKED_CAST")
-        val call = mock(Call::class.java) as Call<AniListContainer<ConnectionContainer<PageContainer<MediaBase>>>>
-        val request = StudioMedia.request(id = 1, page = 1, perPage = 50, sort = listOf(MediaSort.POPULARITY))
-
-        `when`(service.getStudioMedia(request)).thenReturn(call)
-        `when`(call.execute()).thenThrow(IOException("Network failed"))
+    fun `load emits Error from repository failure`() = runTest {
+        doReturn(Result.failure<ConnectionContainer<PageContainer<MediaBase>>>(RuntimeException("Network failed")))
+            .`when`(studioRepository)
+            .getStudioMedia(id = 1L, page = 1, perPage = 50, sort = listOf(MediaSort.POPULARITY))
 
         val vm = StudioMediaViewModel(
-            studioService = service,
-            ioDispatcher = testDispatcher,
+            studioRepository = studioRepository,
         )
 
         vm.load(studioId = 1L, page = 1, perPage = 50, sort = null)
@@ -122,33 +108,9 @@ class StudioMediaViewModelTest {
     }
 
     @Test
-    fun `load emits Error on GraphQL errors`() = runTest {
-        @Suppress("UNCHECKED_CAST")
-        val call = mock(Call::class.java) as Call<AniListContainer<ConnectionContainer<PageContainer<MediaBase>>>>
-        val error = mock(GraphError::class.java)
-        val container = AniListContainer<ConnectionContainer<PageContainer<MediaBase>>>(data = null, errors = listOf(error))
-        val request = StudioMedia.request(id = 1, page = 1, perPage = 50, sort = listOf(MediaSort.POPULARITY))
-
-        `when`(error.message).thenReturn("Studio media failed")
-        `when`(service.getStudioMedia(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(Response.success(container))
-
-        val vm = StudioMediaViewModel(
-            studioService = service,
-            ioDispatcher = testDispatcher,
-        )
-
-        vm.load(studioId = 1L, page = 1, perPage = 50, sort = null)
-
-        val state = vm.state.value as StudioMediaViewModel.UiState.Error
-        assertEquals("Studio media failed", state.message)
-    }
-
-    @Test
     fun `resolveMediaSort falls back for null and invalid values`() = runTest {
         val vm = StudioMediaViewModel(
-            studioService = service,
-            ioDispatcher = testDispatcher,
+            studioRepository = studioRepository,
         )
 
         assertEquals(listOf(MediaSort.POPULARITY), vm.resolveMediaSort(null))

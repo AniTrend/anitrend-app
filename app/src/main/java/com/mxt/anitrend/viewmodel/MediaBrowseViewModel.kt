@@ -11,6 +11,7 @@ import com.mxt.anitrend.model.entity.anilist.MediaTag
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.repository.BaseRepository
+import com.mxt.anitrend.repository.BrowseMutation
 import com.mxt.anitrend.repository.BrowseRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -39,6 +40,31 @@ class MediaBrowseViewModel(
 
     private val _state = MutableStateFlow<UiState>(UiState.Loading)
     val state: StateFlow<UiState> = _state.asStateFlow()
+    private val loadedMedia = linkedMapOf<Long, MediaBase>()
+
+    init {
+        viewModelScope.launch {
+            browseRepository.mutationEvents.collect { event ->
+                when (event) {
+                    is BrowseMutation.MediaListSaved -> {
+                        loadedMedia[event.entry.mediaId]?.let { media ->
+                            media.mediaListEntry = event.entry
+                            emitUpdatedMedia()
+                        }
+                    }
+                    is BrowseMutation.MediaListDeleted -> {
+                        loadedMedia.values.firstOrNull { media ->
+                            media.mediaListEntry?.id == event.id
+                        }?.let { media ->
+                            media.mediaListEntry = null
+                            emitUpdatedMedia()
+                        }
+                    }
+                    else -> Unit
+                }
+            }
+        }
+    }
 
     fun load(
         type: MediaType?,
@@ -50,14 +76,14 @@ class MediaBrowseViewModel(
         seasonYear: Int?,
         startDateLike: String?,
         status: String?,
-        genres: List<String?>?,
-        tags: List<String?>?,
+        genres: List<String>?,
+        tags: List<String>?,
     ) {
         viewModelScope.launch {
             _state.value = UiState.Loading
             runCatching {
                 val sortList: List<MediaSort>? =
-                    sort?.let { runCatching { MediaSort.valueOf(it) }.getOrNull()?.let { listOf(it) } }
+                    sort?.let { sortName -> runCatching { MediaSort.valueOf(sortName) }.getOrNull()?.let { listOf(it) } }
                 val formatEnum: MediaFormat? =
                     format?.let { runCatching { MediaFormat.valueOf(it) }.getOrNull() }
                 val statusEnum: MediaStatus? =
@@ -73,10 +99,11 @@ class MediaBrowseViewModel(
                     sort = sortList,
                     onList = null,
                     status = statusEnum,
-                    genres = genres,
-                    tags = tags,
+                    genres = genres?.ifEmpty { null },
+                    tags = tags?.ifEmpty { null },
                 ).getOrThrow()
             }.onSuccess { content ->
+                trackMedia(page, content.pageData)
                 _state.value = UiState.Success(content)
             }.onFailure { throwable ->
                 Timber.e(throwable, "MediaBrowseViewModel load failed")
@@ -84,6 +111,39 @@ class MediaBrowseViewModel(
                     throwable.message ?: "Failed to browse media",
                 )
             }
+        }
+    }
+
+    private fun trackMedia(
+        page: Int,
+        media: List<MediaBase>,
+    ) {
+        if (page <= 1) {
+            loadedMedia.clear()
+        }
+        media.forEach { item ->
+            loadedMedia[item.id] = item
+        }
+    }
+
+    private fun emitUpdatedMedia() {
+        val current = _state.value as? UiState.Success ?: return
+        val updatedMedia = current.content.pageData.toList()
+        _state.value = UiState.Success(
+            PageContainer<MediaBase>().apply {
+                if (current.content.hasPageInfo()) {
+                    pageInfo = current.content.pageInfo
+                }
+                pageData = updatedMedia
+            },
+        )
+        trackAllMedia(updatedMedia)
+    }
+
+    private fun trackAllMedia(media: List<MediaBase>) {
+        loadedMedia.clear()
+        media.forEach { item ->
+            loadedMedia[item.id] = item
         }
     }
 }

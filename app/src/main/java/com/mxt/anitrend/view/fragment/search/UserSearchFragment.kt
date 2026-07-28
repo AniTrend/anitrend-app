@@ -12,7 +12,6 @@ import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
 import com.mxt.anitrend.coordinator.WidgetMutationCoordinator
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.model.entity.container.body.PageContainer
-import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.view.activity.detail.ProfileActivity
@@ -24,7 +23,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 /**
  * Created by max on 2017/12/20.
  */
-class UserSearchFragment : FragmentBaseList<UserBase, PageContainer<UserBase>, BasePresenter>() {
+class UserSearchFragment : FragmentBaseList<UserBase, PageContainer<UserBase>>() {
     private var searchQuery: String? = null
 
     private val mutationCoordinator by inject<WidgetMutationCoordinator>()

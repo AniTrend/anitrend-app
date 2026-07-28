@@ -5,19 +5,17 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
 import com.mxt.anitrend.R
+import com.mxt.anitrend.base.interfaces.dao.BoxQuery
 import com.mxt.anitrend.base.interfaces.event.LifecycleListener
-import com.mxt.anitrend.base.interfaces.event.RetroCallback
-import com.mxt.anitrend.model.entity.anilist.meta.MediaListOptions
+import com.mxt.anitrend.graphql.generated.ScoreFormat
 import com.mxt.anitrend.model.entity.base.MediaBase
-import com.mxt.anitrend.presenter.widget.WidgetPresenter
-import com.mxt.anitrend.util.KeyUtil
+import com.mxt.anitrend.repository.BrowseRepository
 import com.mxt.anitrend.util.NotifyUtil
-import com.mxt.anitrend.util.graphql.apiError
+import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import retrofit2.Call
-import retrofit2.Response
 import timber.log.Timber
 
 /**
@@ -27,11 +25,11 @@ import timber.log.Timber
  */
 class MediaActionUtil private constructor(
     private val context: FragmentActivity,
-) : RetroCallback<MediaBase>,
-    LifecycleListener,
+) : LifecycleListener,
     KoinComponent {
     private var progressDialog: AlertDialog? = null
-    private val presenter by inject<WidgetPresenter<MediaBase>>()
+    private val browseRepository by inject<BrowseRepository>()
+    private val databaseHelper by inject<BoxQuery>()
     private val lifecycle: Lifecycle = context.lifecycle
     private var mediaId: Long = 0
 
@@ -41,18 +39,21 @@ class MediaActionUtil private constructor(
 
     private fun actionPicker() {
         val currentUser =
-            presenter.database.currentUser ?: run {
+            databaseHelper.currentUser ?: run {
                 dismissProgress()
                 NotifyUtil.makeText(context, R.string.text_error_request, Toast.LENGTH_SHORT).show()
                 return
             }
-        val mediaListOptions: MediaListOptions = currentUser.mediaListOptions
+        val scoreFormat =
+            runCatching { ScoreFormat.valueOf(currentUser.mediaListOptions.scoreFormat) }
+                .getOrNull() ?: ScoreFormat.POINT_100
 
-        presenter.params.apply {
-            putLong(KeyUtil.arg_id, mediaId)
-            putString(KeyUtil.arg_scoreFormat, mediaListOptions.scoreFormat)
+        context.lifecycleScope.launch {
+            browseRepository
+                .getMediaWithList(id = mediaId, scoreFormat = scoreFormat)
+                .onSuccess(::handleMediaWithList)
+                .onFailure(::handleMediaWithListFailure)
         }
-        presenter.requestData(KeyUtil.MEDIA_WITH_LIST_REQ, context, this)
     }
 
     private fun dismissProgress() {
@@ -73,26 +74,14 @@ class MediaActionUtil private constructor(
         }
     }
 
-    override fun onResponse(
-        call: Call<MediaBase>,
-        response: Response<MediaBase>,
-    ) {
+    private fun handleMediaWithList(mediaBase: MediaBase) {
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
-            val mediaBase = response.body()
-            if (response.isSuccessful && mediaBase != null) {
-                showActionDialog(mediaBase)
-            } else {
-                Timber.w(response.apiError())
-                NotifyUtil.makeText(context, R.string.text_error_request, Toast.LENGTH_SHORT).show()
-            }
+            showActionDialog(mediaBase)
             dismissProgress()
         }
     }
 
-    override fun onFailure(
-        call: Call<MediaBase>,
-        throwable: Throwable,
-    ) {
+    private fun handleMediaWithListFailure(throwable: Throwable) {
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
             dismissProgress()
             Timber.e(throwable)
@@ -101,17 +90,12 @@ class MediaActionUtil private constructor(
         }
     }
 
-    override fun onPause(changeListener: SharedPreferences.OnSharedPreferenceChangeListener?) {
-        presenter.onPause(changeListener)
-    }
+    override fun onPause(changeListener: SharedPreferences.OnSharedPreferenceChangeListener?) = Unit
 
-    override fun onResume(changeListener: SharedPreferences.OnSharedPreferenceChangeListener?) {
-        presenter.onResume(changeListener)
-    }
+    override fun onResume(changeListener: SharedPreferences.OnSharedPreferenceChangeListener?) = Unit
 
     override fun onDestroy() {
         progressDialog?.dismiss()
-        presenter.onDestroy()
     }
 
     class Builder {

@@ -23,7 +23,7 @@ import com.mxt.anitrend.graphql.generated.SaveMediaListEntry
 import com.mxt.anitrend.graphql.generated.SaveReview
 import com.mxt.anitrend.graphql.generated.ScoreFormat
 import com.mxt.anitrend.graphql.generated.UpdateMediaListEntries
-import com.mxt.anitrend.model.api.retro.anilist.BrowseModel
+import com.mxt.anitrend.model.api.retro.anilist.BrowseService
 import com.mxt.anitrend.model.entity.anilist.Review
 import com.mxt.anitrend.model.entity.anilist.meta.DeleteState
 import com.mxt.anitrend.model.entity.container.body.PageContainer
@@ -44,7 +44,7 @@ sealed class BrowseMutation {
 }
 
 class BrowseRepository(
-    private val browseService: BrowseModel,
+    private val browseService: BrowseService,
     ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : AbstractRepository<BrowseMutation>(ioDispatcher) {
 
@@ -245,7 +245,7 @@ class BrowseRepository(
                 id = id, mediaId = mediaId?.toInt(), status = status,
                 scoreRaw = scoreRaw, score = score, progress = progress,
                 progressVolumes = progressVolumes, repeat = repeat,
-                priority = priority, private = private,
+                priority = priority, privateValue = private,
                 hiddenFromStatusLists = hiddenFromStatusLists,
                 customLists = customLists, advancedScores = advancedScores,
                 notes = notes, scoreFormat = scoreFormat,
@@ -307,7 +307,7 @@ class BrowseRepository(
         asHtml: Boolean = false,
     ): Result<Review> = withContext(ioDispatcher) {
         runCatching {
-            val request = SaveReview.request(id = id, mediaId = mediaId.toInt(), body = body, summary = summary, score = score, private = private, asHtml = asHtml)
+            val request = SaveReview.request(id = id, mediaId = mediaId.toInt(), body = body, summary = summary, score = score, privateValue = private, asHtml = asHtml)
             val response = browseService.saveReview(request).execute()
             if (response.isSuccessful) {
                 val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))

@@ -12,7 +12,6 @@ import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
 import com.mxt.anitrend.model.entity.anilist.Favourite
 import com.mxt.anitrend.model.entity.base.StaffBase
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
-import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.view.activity.detail.StaffActivity
@@ -24,7 +23,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * Created by max on 2018/03/25.
  * StaffFavouriteFragment
  */
-class StaffFavouriteFragment : FragmentBaseList<StaffBase, ConnectionContainer<Favourite>, BasePresenter>() {
+class StaffFavouriteFragment : FragmentBaseList<StaffBase, ConnectionContainer<Favourite>>() {
     private var userId: Long = 0
 
     private val staffFavouritesViewModel: StaffFavouritesViewModel by viewModel()

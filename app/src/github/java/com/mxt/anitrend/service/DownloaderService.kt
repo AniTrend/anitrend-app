@@ -7,14 +7,14 @@ import android.net.Uri
 import android.webkit.MimeTypeMap
 import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.R
-import com.mxt.anitrend.model.api.retro.base.RepositoryModel
+import com.mxt.anitrend.model.api.retro.base.RepositoryService
 import com.mxt.anitrend.model.entity.base.VersionBase
 import java.io.File
 
 object DownloaderService {
     /**
      * Handles downloading of new version of AniTrend
-     * @see RepositoryModel.DOWNLOAD_LINK
+     * @see RepositoryService.DOWNLOAD_LINK
      */
     fun downloadNewVersion(
         context: Context?,
@@ -29,7 +29,7 @@ object DownloaderService {
         val downloadLink =
             Uri.parse(
                 String.format(
-                    RepositoryModel.DOWNLOAD_LINK,
+                    RepositoryService.DOWNLOAD_LINK,
                     versionBase.version,
                     versionSuffix,
                 ),
@@ -41,7 +41,7 @@ object DownloaderService {
             val destinationFile = File(context.externalCacheDir, title)
             val destinationUri = Uri.fromFile(destinationFile)
             request.setTitle(title)
-            val ext = MimeTypeMap.getFileExtensionFromUrl(RepositoryModel.DOWNLOAD_LINK)
+            val ext = MimeTypeMap.getFileExtensionFromUrl(RepositoryService.DOWNLOAD_LINK)
             request.setMimeType(MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext))
             request.setDescription(context.getString(R.string.text_downloading_update))
             request.setDestinationUri(destinationUri)

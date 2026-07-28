@@ -6,13 +6,14 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 import com.mxt.anitrend.R
+import com.mxt.anitrend.base.interfaces.dao.BoxQuery
 import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.binding.setImage
 import com.mxt.anitrend.databinding.WidgetAvatarIndicatorBinding
 import com.mxt.anitrend.extension.getLayoutInflater
 import com.mxt.anitrend.model.entity.anilist.User
-import com.mxt.anitrend.presenter.widget.WidgetPresenter
 import com.mxt.anitrend.util.KeyUtil
+import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.view.activity.detail.NotificationActivity
 import com.mxt.anitrend.view.activity.detail.ProfileActivity
 import com.mxt.anitrend.view.activity.index.LoginActivity
@@ -45,10 +46,11 @@ class AvatarIndicatorView :
         onInit()
     }
 
-    private val presenter: WidgetPresenter<Any> by inject()
+    private val boxQuery: BoxQuery by inject()
+    private val settings: Settings by inject()
 
     private val currentUser: User?
-        get() = presenter.database.currentUser
+        get() = boxQuery.currentUser
 
     private lateinit var binding: WidgetAvatarIndicatorBinding
 
@@ -59,7 +61,7 @@ class AvatarIndicatorView :
     }
 
     private fun checkLastSyncTime() {
-        if (presenter.settings.isAuthenticated == true) {
+        if (settings.isAuthenticated == true) {
             if (currentUser != null) {
                 binding.userAvatar.setImage(currentUser?.avatar)
                 if ((currentUser?.unreadNotificationCount ?: 0) > 0) {
@@ -74,9 +76,7 @@ class AvatarIndicatorView :
         }
     }
 
-    override fun onViewRecycled() {
-        presenter.onDestroy()
-    }
+    override fun onViewRecycled() = Unit
 
     private fun showNotificationWidget() {
         binding.notificationCount.visibility = View.VISIBLE
@@ -89,7 +89,7 @@ class AvatarIndicatorView :
     }
 
     override fun onClick(view: View) {
-        if (presenter.settings.isAuthenticated && currentUser != null) {
+        if (settings.isAuthenticated && currentUser != null) {
             if (view.id == R.id.user_avatar) {
                 val intent: Intent
                 if ((currentUser?.unreadNotificationCount ?: 0) > 0) {

@@ -6,7 +6,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.model.entity.anilist.FeedList
-import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.view.fragment.list.FeedListFragment
 import com.mxt.anitrend.viewmodel.MediaFeedViewModel
@@ -53,7 +52,7 @@ class MediaFeedFragment : FeedListFragment() {
                             // Loading is handled by swipeRefreshLayout in the base class
                         }
                         is MediaFeedViewModel.UiState.Success -> {
-                            handleSuccess(state.content)
+                            handleSuccess(state.content, state.replaceExisting)
                         }
                         is MediaFeedViewModel.UiState.Error -> {
                             showError(state.message)
@@ -74,19 +73,7 @@ class MediaFeedFragment : FeedListFragment() {
         )
     }
 
-    private fun handleSuccess(value: PageContainer<FeedList>) {
-        if (value.hasPageInfo()) {
-            setPageInfo(value.pageInfo)
-        }
-        if (!value.isEmpty) {
-            val filtered = value.pageData.filter { !it.type.isNullOrBlank() }
-            mScrollListener.getPageInfo()?.perPage = filtered.size
-            onPostProcessed(filtered)
-        } else {
-            onPostProcessed(emptyList())
-        }
-        if (mAdapter.itemCount < 1) {
-            onPostProcessed(null)
-        }
+    override fun applyUpdatedFeedResult(feed: FeedList) {
+        mediaFeedViewModel.applyReturnedFeed(feed)
     }
 }

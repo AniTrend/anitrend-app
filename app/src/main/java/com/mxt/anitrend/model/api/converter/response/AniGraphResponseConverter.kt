@@ -1,48 +1,15 @@
 package com.mxt.anitrend.model.api.converter.response
 
-import co.anitrend.retrofit.graphql.converter.response.GraphResponseConverter
 import com.google.gson.Gson
-import com.mxt.anitrend.model.entity.container.body.AniListContainer
 import okhttp3.ResponseBody
-import timber.log.Timber
+import retrofit2.Converter
 import java.lang.reflect.Type
 
 class AniGraphResponseConverter<T>(
-    type: Type?,
-    gson: Gson,
-) : GraphResponseConverter<T>(type, gson) {
-    /**
-     * Converter contains logic on how to handle responses, since GraphQL responses follow
-     * the JsonAPI spec it makes sense to wrap our base query response data and errors response
-     * in here, the logic remains open to the implementation
-     * <br></br>
-     *
-     * @param responseBody The retrofit response body received from the network
-     * @return The type declared in the Call of the request
-     */
-    override fun convert(responseBody: ResponseBody): T? {
-        var targetResult: T? = null
-        var jsonResponse: String? = null
-        try {
-            responseBody.use {
-                jsonResponse = it.string()
-            }
-            val container =
-                gson.fromJson<AniListContainer<T?>>(
-                    jsonResponse,
-                    type,
-                )
-            if (container?.data != null) {
-                val dataContainer = container.data
-                targetResult = dataContainer.result
-            } else {
-                container?.errors?.forEach {
-                    Timber.e(it.message)
-                }
-            }
-        } catch (e: Exception) {
-            Timber.e(e, jsonResponse ?: "Json response is null")
-        }
-        return targetResult
+    private val type: Type,
+    private val gson: Gson,
+) : Converter<ResponseBody, T> {
+    override fun convert(responseBody: ResponseBody): T? = responseBody.use {
+        gson.fromJson(it.string(), type)
     }
 }

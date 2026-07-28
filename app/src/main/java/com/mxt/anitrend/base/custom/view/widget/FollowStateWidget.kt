@@ -63,6 +63,7 @@ constructor(
     }
 
     fun setUserModel(model: UserBase) {
+        recycled = false
         this.model = model
         if (currentUser != null) {
             if (!isCurrentUser(model)) {

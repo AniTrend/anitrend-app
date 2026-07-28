@@ -8,7 +8,7 @@ import com.mxt.anitrend.base.interfaces.dao.BoxQuery
 import com.mxt.anitrend.data.DatabaseHelper
 import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.extension.koinOf
-import com.mxt.anitrend.model.api.retro.WebFactory
+import com.mxt.anitrend.model.api.retro.ServiceFactory
 import com.mxt.anitrend.model.entity.anilist.WebToken
 import com.mxt.anitrend.model.entity.base.AuthBase
 import com.mxt.anitrend.presenter.base.BasePresenter
@@ -43,7 +43,7 @@ object WebTokenRequest {
         presenter.settings.lastDismissedNotificationId = -1
         presenter.database.invalidateBoxStores()
         KoinExt.get(JobSchedulerUtil::class.java).cancelNotificationJob(context)
-        WebFactory.invalidate()
+        ServiceFactory.invalidate()
         token = null
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             ShortcutUtil.removeAllDynamicShortcuts(context)
@@ -66,7 +66,7 @@ object WebTokenRequest {
                 Timber.e("Token had an invalid instance from context: %s", context)
                 return
             }
-            val response = WebFactory.requestCodeTokenSync(authCode)
+            val response = ServiceFactory.requestCodeTokenSync(authCode)
             if (response != null) {
                 createNewTokenReference(response)
                 boxQuery.webToken = response
@@ -131,6 +131,6 @@ object WebTokenRequest {
     @Suppress("DEPRECATION")
     private class AuthenticationCodeAsync : AsyncTask<String, Void, WebToken>() {
         @Deprecated("Deprecated in Java")
-        override fun doInBackground(vararg codes: String): WebToken? = WebFactory.requestCodeTokenSync(codes[0])
+        override fun doInBackground(vararg codes: String): WebToken? = ServiceFactory.requestCodeTokenSync(codes[0])
     }
 }
