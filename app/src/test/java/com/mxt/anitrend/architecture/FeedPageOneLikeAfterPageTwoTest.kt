@@ -55,7 +55,7 @@ class FeedPageOneLikeAfterPageTwoTest {
     }
 
     @Test
-    fun `given page one then page two when page one like toggles then current state cannot reduce it`() = runTest {
+    fun `given page one then page two when page one like toggles then accumulated state reduces it`() = runTest {
         doReturn(Result.success(pageOf(feed(id = 1L), feed(id = 2L))))
             .`when`(feedRepository)
             .getFeedList(
@@ -116,10 +116,9 @@ class FeedPageOneLikeAfterPageTwoTest {
         advanceUntilIdle()
 
         val state = viewModel.state.value as FeedListViewModel.UiState.Success
-        assertEquals(listOf(3L, 4L), state.content.pageData.map { it.id })
-        assertTrue(state.content.pageData.none { it.id == 1L })
-        // Defect baseline: the reducer only searches the current page, so page-one items
-        // become invisible after page two replaces ViewModel state. Fix: Phase 5.
+        assertEquals(listOf(1L, 2L, 3L, 4L), state.content.pageData.map { it.id })
+        assertEquals(newLikes, state.content.pageData.first { it.id == 1L }.likes)
+        assertTrue(state.loadedPages.containsAll(setOf(1, 2)))
     }
 
     private fun pageOf(vararg feeds: FeedList) = PageContainer<FeedList>().apply {

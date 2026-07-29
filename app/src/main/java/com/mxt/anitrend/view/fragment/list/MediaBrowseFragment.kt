@@ -101,7 +101,7 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
                             // Loading is handled by swipeRefreshLayout in the base class
                         }
                         is MediaBrowseViewModel.UiState.Success -> {
-                            handleSuccess(state.content)
+                            handleSuccess(state.content, state.replaceExisting)
                         }
                         is MediaBrowseViewModel.UiState.Error -> {
                             showError(state.message)
@@ -378,14 +378,27 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
     /** No-op: StateFlow collector above handles the response. */
     override fun onChanged(value: PageContainer<MediaBase>?) = Unit
 
-    private fun handleSuccess(value: PageContainer<MediaBase>) {
+    private fun handleSuccess(
+        value: PageContainer<MediaBase>,
+        replaceExisting: Boolean,
+    ) {
         if (value.hasPageInfo()) {
             setPageInfo(value.pageInfo)
         }
         if (!value.isEmpty) {
-            onPostProcessed(value.pageData)
+            if (replaceExisting) {
+                mAdapter.onItemsInserted(value.pageData)
+                updateUI()
+            } else {
+                onPostProcessed(value.pageData)
+            }
         } else {
-            onPostProcessed(emptyList())
+            if (replaceExisting) {
+                mAdapter.onItemsInserted(emptyList())
+                updateUI()
+            } else {
+                onPostProcessed(emptyList())
+            }
         }
         if (mAdapter.itemCount < 1) {
             onPostProcessed(null)

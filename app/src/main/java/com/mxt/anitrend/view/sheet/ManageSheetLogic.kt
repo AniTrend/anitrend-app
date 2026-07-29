@@ -1,6 +1,6 @@
 package com.mxt.anitrend.view.sheet
 
-import com.mxt.anitrend.model.entity.anilist.MediaList
+import com.mxt.anitrend.domain.model.MediaListDraft
 import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.util.CompatUtil
@@ -203,12 +203,12 @@ fun decodeNotesIfEncoded(notes: String?): String? {
 // ----------------------------------------------------------------------------
 
 /**
- * Builds a [MediaList] from the manage-sheet form inputs.
+ * Builds a [MediaListDraft] from the manage-sheet form inputs.
  *
- * Mutates and returns the provided [model]. Does NOT perform validation;
+ * Returns a new draft value and leaves the committed model untouched. Does NOT perform validation;
  * call [validateManageForm] before calling this.
  *
- * @param model the current media list model (mutated in place)
+ * @param draft the current editable draft state
  * @param statusIndex index into [statuses]
  * @param statuses ordered array of status strings
  * @param progress progress value from widget
@@ -223,11 +223,11 @@ fun decodeNotesIfEncoded(notes: String?): String? {
  * @param priority priority slider value
  * @param notes formatted notes text
  * @param advancedScores collected advanced scores map (category -> value)
- * @return the mutated model (same instance)
+ * @return the updated draft value
  */
 @Suppress("LongParameterList")
 fun buildMediaListFromForm(
-    model: MediaList,
+    draft: MediaListDraft,
     statusIndex: Int,
     statuses: Array<String>,
     progress: Int,
@@ -242,22 +242,17 @@ fun buildMediaListFromForm(
     priority: Int,
     notes: String?,
     advancedScores: Map<String, Float>?,
-): MediaList {
-    model.progress = progress
-    model.repeat = repeat
-    model.score = score
-    if (!isAnime) {
-        model.progressVolumes = progressVolumes
-    }
-    model.startedAt = startedAt
-    model.completedAt = completedAt
-    model.isHidden = isHidden
-    model.isHiddenFromStatusLists = isHiddenFromStatusLists
-    model.priority = priority
-    model.notes = notes
-    model.status = statuses[statusIndex]
-    if (advancedScores != null) {
-        model.advancedScores = advancedScores
-    }
-    return model
-}
+): MediaListDraft = draft.copy(
+    status = statuses[statusIndex],
+    score = score,
+    progress = progress,
+    progressVolumes = if (isAnime) draft.progressVolumes else progressVolumes,
+    repeat = repeat,
+    priority = priority,
+    isHidden = isHidden,
+    isHiddenFromStatusLists = isHiddenFromStatusLists,
+    notes = notes,
+    advancedScores = advancedScores ?: draft.advancedScores,
+    startedAt = startedAt,
+    completedAt = completedAt,
+)

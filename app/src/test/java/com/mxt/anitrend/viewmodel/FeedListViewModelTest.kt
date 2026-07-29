@@ -66,6 +66,8 @@ class FeedListViewModelTest {
         val state = viewModel.state.value as FeedListViewModel.UiState.Success
         assertTrue(state.replaceExisting)
         assertEquals(listOf(2L, 1L), state.content.pageData.map { it.id })
+        assertEquals(listOf(2L, 1L), state.items.map { it.id })
+        assertEquals(setOf(1), state.loadedPages)
         assertSame(inserted, state.content.pageData.first())
     }
 
@@ -81,6 +83,7 @@ class FeedListViewModelTest {
         val state = viewModel.state.value as FeedListViewModel.UiState.Success
         assertTrue(state.replaceExisting)
         assertEquals(listOf(1L), state.content.pageData.map { it.id })
+        assertEquals(setOf(1), state.loadedPages)
     }
 
     @Test
@@ -96,6 +99,7 @@ class FeedListViewModelTest {
         val state = viewModel.state.value as FeedListViewModel.UiState.Success
         assertTrue(state.replaceExisting)
         assertEquals(listOf(5L, 6L), state.content.pageData.map { it.id })
+        assertEquals(listOf(5L, 6L), state.items.map { it.id })
         assertSame(updated, state.content.pageData.first())
     }
 
@@ -117,6 +121,7 @@ class FeedListViewModelTest {
         val state = viewModel.state.value as FeedListViewModel.UiState.Success
         assertTrue(state.replaceExisting)
         assertSame(likes, state.content.pageData.first().likes)
+        assertEquals(1, state.items.first().likeCount)
     }
 
     @Test
@@ -153,6 +158,7 @@ class FeedListViewModelTest {
         var state = viewModel.state.value as FeedListViewModel.UiState.Success
         assertTrue(state.replaceExisting)
         assertEquals(listOf(3L), state.content.pageData.map { it.id })
+        assertEquals(setOf(1), state.loadedPages)
         assertSame(updated, state.content.pageData.first())
 
         viewModel.applyReturnedFeed(missing)

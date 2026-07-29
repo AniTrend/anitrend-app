@@ -17,6 +17,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * Media feed list fragment for media types, both anime and manga
  */
 class MediaFeedFragment : FeedListFragment() {
+    override val useStateListAdapter: Boolean = false
 
     private val mediaFeedViewModel: MediaFeedViewModel by viewModel()
 
@@ -52,7 +53,7 @@ class MediaFeedFragment : FeedListFragment() {
                             // Loading is handled by swipeRefreshLayout in the base class
                         }
                         is MediaFeedViewModel.UiState.Success -> {
-                            handleSuccess(state.content, state.replaceExisting)
+                            handleSuccess(state.content, replaceExisting = state.replaceExisting)
                         }
                         is MediaFeedViewModel.UiState.Error -> {
                             showError(state.message)

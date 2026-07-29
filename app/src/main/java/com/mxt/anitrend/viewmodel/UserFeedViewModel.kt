@@ -2,8 +2,11 @@ package com.mxt.anitrend.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mxt.anitrend.domain.model.FeedItemUiModel
+import com.mxt.anitrend.domain.model.toFeedItemUiModel
 import com.mxt.anitrend.graphql.generated.ActivityType
 import com.mxt.anitrend.graphql.generated.LikeableType
+import com.mxt.anitrend.model.entity.container.attribute.PageInfo
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.repository.BaseMutation
 import com.mxt.anitrend.repository.BaseRepository
@@ -28,6 +31,8 @@ class UserFeedViewModel(
         data object Loading : UiState
         data class Success(
             val content: PageContainer<com.mxt.anitrend.model.entity.anilist.FeedList>,
+            val items: List<FeedItemUiModel>,
+            val loadedPages: Set<Int>,
             val replaceExisting: Boolean = false,
         ) : UiState
         data class Error(val message: String) : UiState
@@ -36,6 +41,10 @@ class UserFeedViewModel(
     private val _state =
         MutableStateFlow<UiState>(UiState.Loading)
     val state: StateFlow<UiState> = _state.asStateFlow()
+    private val loadedFeeds = mutableListOf<FeedListEntity>()
+    private val loadedPages = linkedSetOf<Int>()
+    private var currentPageInfo: PageInfo? = null
+    private var requestGeneration: Int = 0
 
     init {
         viewModelScope.launch {
@@ -45,7 +54,7 @@ class UserFeedViewModel(
                         upsertFeed(event.feed)
                     }
                     is FeedMutation.FeedDeleted -> {
-                        replaceCurrentPage { items ->
+                        replaceLoadedFeeds { items ->
                             items.removeAll { it.id == event.id }
                         }
                     }
@@ -59,7 +68,7 @@ class UserFeedViewModel(
                 when (event) {
                     is BaseMutation.LikeToggled -> {
                         if (event.targetType == LikeableType.ACTIVITY) {
-                            replaceCurrentPage { items ->
+                            replaceLoadedFeeds { items ->
                                 val index = items.indexOfFirst { it.id == event.targetId }
                                 if (index >= 0) {
                                     items[index].likes = event.users
@@ -80,44 +89,11 @@ class UserFeedViewModel(
         upsertFeed(feed, addIfMissing = false)
     }
 
-    /**
-     * Loads user feed. Repeatable for pagination; no loadedOnce guard.
-     * Only dispatches a request when [userId] > 0.
-     */
-    fun load(
-        userId: Int?,
-        page: Int,
-        pageLimit: Int,
-        isFollowing: Boolean?,
-        type: ActivityType?,
-        isMixed: Boolean?,
-    ) {
-        if (userId == null || userId <= 0) return
-        viewModelScope.launch {
-            _state.value = UiState.Loading
-            feedRepository.getFeedList(
-                userId = userId.toLong(),
-                page = page,
-                perPage = pageLimit,
-                isFollowing = isFollowing,
-                type = type,
-                isMixed = isMixed,
-            ).onSuccess { content ->
-                _state.value = UiState.Success(content = content)
-            }.onFailure { throwable ->
-                Timber.e(throwable, "UserFeedViewModel load failed")
-                _state.value = UiState.Error(
-                    throwable.message ?: "Failed to load user feed",
-                )
-            }
-        }
-    }
-
     private fun upsertFeed(
         feed: FeedListEntity,
         addIfMissing: Boolean = true,
     ) {
-        replaceCurrentPage { items ->
+        replaceLoadedFeeds { items ->
             val index = items.indexOfFirst { it.id == feed.id }
             when {
                 index >= 0 -> {
@@ -133,20 +109,107 @@ class UserFeedViewModel(
         }
     }
 
-    private fun replaceCurrentPage(update: (MutableList<FeedListEntity>) -> Boolean) {
-        val current = _state.value as? UiState.Success ?: return
-        val items = current.content.pageData.toMutableList()
+    private fun emitSuccess(replaceExisting: Boolean) {
+        _state.value = UiState.Success(
+            content = PageContainer<FeedListEntity>().apply {
+                currentPageInfo?.let { pageInfo = it }
+                pageData = loadedFeeds.toList()
+            },
+            items = loadedFeeds.map { it.toFeedItemUiModel() },
+            loadedPages = loadedPages.toSet(),
+            replaceExisting = replaceExisting,
+        )
+    }
+
+    private fun mergePage(
+        page: Int,
+        content: PageContainer<FeedListEntity>,
+    ) {
+        if (page <= 1) {
+            loadedFeeds.clear()
+            loadedPages.clear()
+        }
+
+        content.pageData.forEach { feed ->
+            val index = loadedFeeds.indexOfFirst { it.id == feed.id }
+            if (index >= 0) {
+                loadedFeeds[index] = feed
+            } else {
+                loadedFeeds.add(feed)
+            }
+        }
+
+        loadedPages.add(page)
+        currentPageInfo = if (content.hasPageInfo()) content.pageInfo else null
+        emitSuccess(replaceExisting = page <= 1)
+    }
+
+    internal fun createRequestGenerationForTest(page: Int): Int =
+        if (page <= 1) ++requestGeneration else requestGeneration
+
+    internal fun applyLoadResultForTest(
+        page: Int,
+        generation: Int,
+        content: PageContainer<FeedListEntity>,
+    ) {
+        if (generation != requestGeneration) {
+            return
+        }
+        mergePage(page = page, content = content)
+    }
+
+    private fun replaceLoadedFeeds(update: (MutableList<FeedListEntity>) -> Boolean) {
+        if (loadedFeeds.isEmpty()) {
+            return
+        }
+        val items = loadedFeeds.toMutableList()
         if (!update(items)) {
             return
         }
-        _state.value = current.copy(
-            content = PageContainer<FeedListEntity>().apply {
-                if (current.content.hasPageInfo()) {
-                    pageInfo = current.content.pageInfo
+        loadedFeeds.clear()
+        loadedFeeds.addAll(items)
+        emitSuccess(replaceExisting = true)
+    }
+
+    /**
+     * Loads user feed. Repeatable for pagination; no loadedOnce guard.
+     * Only dispatches a request when [userId] > 0.
+     */
+    fun load(
+        userId: Int?,
+        page: Int,
+        pageLimit: Int,
+        isFollowing: Boolean?,
+        type: ActivityType?,
+        isMixed: Boolean?,
+    ) {
+        if (userId == null || userId <= 0) return
+        val generation = createRequestGenerationForTest(page)
+        if (page <= 1 && loadedFeeds.isEmpty()) {
+            _state.value = UiState.Loading
+        }
+        viewModelScope.launch {
+            feedRepository.getFeedList(
+                userId = userId.toLong(),
+                page = page,
+                perPage = pageLimit,
+                isFollowing = isFollowing,
+                type = type,
+                isMixed = isMixed,
+            ).onSuccess { content ->
+                if (generation != requestGeneration) {
+                    return@onSuccess
                 }
-                pageData = items
-            },
-            replaceExisting = true,
-        )
+                applyLoadResultForTest(page = page, generation = generation, content = content)
+            }.onFailure { throwable ->
+                if (generation != requestGeneration) {
+                    return@onFailure
+                }
+                Timber.e(throwable, "UserFeedViewModel load failed")
+                _state.value = UiState.Error(
+                    throwable.message ?: "Failed to load user feed",
+                )
+            }
+        }
     }
 }

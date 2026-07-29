@@ -19,25 +19,26 @@ import com.google.android.material.slider.Slider
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.textview.MaterialTextView
+import androidx.core.view.isNotEmpty
+import androidx.core.view.isVisible
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.view.editor.MarkdownInputEditor
 import com.mxt.anitrend.base.custom.view.widget.FuzzyDateWidget
 import com.mxt.anitrend.base.custom.view.widget.ProgressWidget
 import com.mxt.anitrend.base.custom.view.widget.ScoreWidget
 import com.mxt.anitrend.coordinator.WidgetMutationCoordinator
-import com.mxt.anitrend.graphql.generated.FuzzyDateInput
-import com.mxt.anitrend.graphql.generated.MediaListStatus
+import com.mxt.anitrend.coordinator.saveMediaListEntry
+import com.mxt.anitrend.domain.model.MediaListDraft
+import com.mxt.anitrend.domain.model.createEditableMediaList
+import com.mxt.anitrend.domain.model.toDraft
+import com.mxt.anitrend.domain.model.toSaveMediaListEntryCommand
 import com.mxt.anitrend.model.entity.anilist.MediaList
-import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
-import com.mxt.anitrend.util.media.MediaListUtil
 import com.mxt.anitrend.util.media.MediaUtil
 import timber.log.Timber
-import androidx.core.view.isVisible
-import androidx.core.view.isNotEmpty
 import org.koin.android.ext.android.inject
 
 /**
@@ -62,7 +63,9 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
 
     private lateinit var mediaBase: MediaBase
     private lateinit var mediaListModel: MediaList
+    private lateinit var mediaListDraft: MediaListDraft
     private var isAnime: Boolean = true
+    private var isSaving: Boolean = false
 
     // M3 views
     private lateinit var titleView: MaterialTextView
@@ -133,13 +136,8 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
     }
 
     private fun initModel() {
-        mediaListModel =
-            mediaBase.mediaListEntry?.apply {
-                if (media.id == 0L) media = mediaBase
-            } ?: MediaList().apply {
-                mediaId = mediaBase.id
-                media = mediaBase
-            }
+        mediaListModel = createEditableMediaList(mediaBase.mediaListEntry, mediaBase)
+        mediaListDraft = mediaListModel.toDraft()
     }
 
     private fun bindViews(view: View) {
@@ -181,7 +179,7 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, statusNames)
         statusDropdown.setAdapter(adapter)
 
-        val currentStatus = mediaListModel.status ?: KeyUtil.PLANNING
+        val currentStatus = mediaListDraft.status ?: KeyUtil.PLANNING
         val statusIndex = mediaListStatuses.indexOf(currentStatus).coerceAtLeast(0)
         statusDropdown.setText(statusNames[statusIndex], false)
         statusIconMap[currentStatus]?.let { icon -> statusLayout.setStartIconDrawable(icon) }
@@ -203,17 +201,20 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
         statusIconMap[result.newStatus]?.let { icon -> statusLayout.setStartIconDrawable(icon) }
         statusWarning.visibility = View.GONE
 
+        var updatedDraft = mediaListDraft.copy(status = result.newStatus)
+
         if (result.warningResId != null) {
             showStatusWarning(result.warningResId)
         }
         result.autoFillProgress?.let { total ->
-            mediaListModel.progress = total
+            updatedDraft = updatedDraft.copy(progress = total)
             progressWidget.setProgressCurrent(total)
         }
         result.autoFillVolumes?.let { volumesTotal ->
-            mediaListModel.progressVolumes = volumesTotal
+            updatedDraft = updatedDraft.copy(progressVolumes = volumesTotal)
             volumesWidget.setProgressCurrent(volumesTotal)
         }
+        mediaListDraft = updatedDraft
     }
 
     private fun showStatusWarning(messageRes: Int) {
@@ -234,10 +235,10 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
     }
 
     private fun populateFromModel() {
-        val model = mediaListModel
-        val media = model.media
+        val model = mediaListDraft
+        val media = mediaListModel.media
 
-        titleView.text = MediaUtil.getMediaListTitle(model)
+        titleView.text = MediaUtil.getMediaListTitle(mediaListModel)
 
         // Score
         val scoreFmt = resolveScoreFormat()
@@ -284,7 +285,8 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
     }
 
     private fun populateCustomListsAndAdvancedScores() {
-        val model = mediaListModel
+        val committedModel = mediaListModel
+        val draft = mediaListDraft
         val mediaListOptions = runCatching {
             coordinator.databaseHelper.currentUser?.mediaListOptions
         }.getOrNull() ?: return
@@ -300,7 +302,7 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
             customListsContainer.visibility = View.VISIBLE
             customListsChipGroup.removeAllViews()
 
-            val existingCustomLists = model.customLists.orEmpty()
+            val existingCustomLists = committedModel.customLists.orEmpty()
             for (listName in availableCustomLists) {
                 if (listName.isEmpty()) continue
                 val isEnabled = existingCustomLists.any { it.name == listName && it.isEnabled }
@@ -326,7 +328,7 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
             advancedScoresEntries.removeAllViews()
             advancedScoreSliders.clear()
 
-            val existingScores = model.advancedScores ?: emptyMap()
+            val existingScores = draft.advancedScores ?: emptyMap()
             val topMargin = CompatUtil.dipToPx(4f)
             for (category in advancedScoringCategories) {
                 if (category.isEmpty()) continue
@@ -371,6 +373,7 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
         } else {
             deleteButton.visibility = View.VISIBLE
             deleteButton.setOnClickListener {
+                if (isSaving) return@setOnClickListener
                 MaterialAlertDialogBuilder(requireContext())
                     .setTitle(R.string.action_remove)
                     .setMessage(R.string.dialog_remove_entry_message)
@@ -388,7 +391,10 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
     }
 
     private fun handleSave() {
-        val model = mediaListModel
+        if (isSaving) {
+            return
+        }
+
         val statusNames = CompatUtil.getStringList(requireContext(), R.array.media_list_status)
         val selectedStatusIndex = statusNames.indexOf(statusDropdown.text.toString()).coerceAtLeast(0)
 
@@ -428,9 +434,8 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
                 null
             }
 
-        // Build model from form (extracted)
-        buildMediaListFromForm(
-            model = model,
+        mediaListDraft = buildMediaListFromForm(
+            draft = mediaListDraft,
             statusIndex = selectedStatusIndex,
             statuses = mediaListStatuses,
             progress = progress,
@@ -447,16 +452,6 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
             advancedScores = collectedAdvancedScores,
         )
 
-        val scoreFmt = resolveScoreFormat()
-        val params = MediaListUtil.getMediaListParams(model, scoreFmt)
-
-        // Extract scoreRaw from params
-        val scoreRawFromParams = if (params.containsKey(KeyUtil.arg_listScore_raw)) {
-            params.intValue(KeyUtil.arg_listScore_raw)
-        } else {
-            null
-        }
-
         // Build enabled custom list names directly from chips
         val enabledCustomListNames: List<String?>? =
             if (customListsContainer.isVisible && customListsChipGroup.isNotEmpty()) {
@@ -466,42 +461,31 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
                     .mapNotNull { it.text?.toString()?.takeIf(String::isNotEmpty) }
                     .takeIf { it.isNotEmpty() }
             } else {
-                params.stringListValue(KeyUtil.arg_listCustom)
+                mediaListModel.customLists
+                    ?.filter { it.isEnabled }
+                    ?.mapNotNull { it.name?.takeIf(String::isNotEmpty) }
+                    ?.takeIf { it.isNotEmpty() }
             }
+
+        val command = mediaListDraft.toSaveMediaListEntryCommand(mediaListModel, enabledCustomListNames)
 
         val ctx = context ?: return
         val progressDialog = NotifyUtil.createProgressDialog(ctx, R.string.text_processing_request)
+        setSavingState(true)
         progressDialog.show()
 
-        coordinator.saveMediaListEntry(
-            id = params.intValue(KeyUtil.arg_id),
-            mediaId = params.longValue(KeyUtil.arg_mediaId),
-            status = params.enumValue<MediaListStatus>(KeyUtil.arg_listStatus),
-            score = params.doubleValue(KeyUtil.arg_listScore),
-            scoreRaw = scoreRawFromParams,
-            progress = params.intValue(KeyUtil.arg_listProgress),
-            progressVolumes = params.intValue(KeyUtil.arg_listProgressVolumes),
-            repeat = params.intValue(KeyUtil.arg_listRepeat),
-            priority = params.intValue(KeyUtil.arg_listPriority),
-            private = params.boolValue(KeyUtil.arg_listPrivate) ?: false,
-            hiddenFromStatusLists = params.boolValue(KeyUtil.arg_listHiddenFromStatusLists) ?: false,
-            customLists = enabledCustomListNames,
-            advancedScores = params.doubleListValue(KeyUtil.arg_listAdvancedScore),
-            notes = params.stringValue(KeyUtil.arg_listNotes),
-            startedAt = params.fuzzyDateInputValue(KeyUtil.arg_startedAt),
-            completedAt = params.fuzzyDateInputValue(KeyUtil.arg_completedAt),
-        ) { result ->
+        coordinator.saveMediaListEntry(command) { result ->
             try {
                 progressDialog.dismiss()
+                setSavingState(false)
 
-                // Lifecycle guard
                 if (!isAdded) return@saveMediaListEntry
 
                 result
                     .onSuccess { savedEntry ->
-                        // Update model from save response
-                        savedEntry.media = model.media
+                        savedEntry.media = mediaListModel.media
                         mediaListModel = savedEntry
+                        mediaListDraft = savedEntry.toDraft()
                         mediaBase.mediaListEntry = savedEntry
 
                         context?.let { safeCtx ->
@@ -528,12 +512,17 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
                     }
             } catch (e: Exception) {
                 progressDialog.dismiss()
+                setSavingState(false)
                 Timber.e(e)
             }
         }
     }
 
     private fun handleDelete() {
+        if (isSaving) {
+            return
+        }
+
         val ctx = context ?: return
         val progressDialog = NotifyUtil.createProgressDialog(ctx, R.string.text_processing_request)
         progressDialog.show()
@@ -578,6 +567,12 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
         }
     }
 
+    private fun setSavingState(isSaving: Boolean) {
+        this.isSaving = isSaving
+        saveButton.isEnabled = !isSaving
+        deleteButton.isEnabled = !isSaving
+    }
+
     /**
      * Resolves the user's score format from the current user's media list options.
      * Falls back to [KeyUtil.POINT_100] if the user data cannot be resolved.
@@ -586,101 +581,7 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
         coordinator.databaseHelper.currentUser?.mediaListOptions?.scoreFormat
     }.getOrNull() ?: KeyUtil.POINT_100
 
-    // ----------------------------------------------------------------------------
-    // Bundle extraction helpers (used by handleSave)
-    // ----------------------------------------------------------------------------
-
-    @Suppress("DEPRECATION")
-    private fun Bundle.intValue(key: String): Int? {
-        val raw = if (containsKey(key)) get(key) else null
-        return when (raw) {
-            is Number -> raw.toInt()
-            is String -> raw.toIntOrNull()
-            else -> null
-        }
-    }
-
-    @Suppress("DEPRECATION")
-    private fun Bundle.longValue(key: String): Long? {
-        val raw = if (containsKey(key)) get(key) else null
-        return when (raw) {
-            is Number -> raw.toLong()
-            is String -> raw.toLongOrNull()
-            else -> null
-        }
-    }
-
-    @Suppress("DEPRECATION")
-    private fun Bundle.stringValue(key: String): String? = if (containsKey(key)) get(key)?.toString() else null
-
-    @Suppress("DEPRECATION")
-    private fun Bundle.boolValue(key: String): Boolean? {
-        val raw = if (containsKey(key)) get(key) else null
-        return when (raw) {
-            is Boolean -> raw
-            is String -> raw.toBooleanStrictOrNull()
-            else -> null
-        }
-    }
-
-    @Suppress("DEPRECATION")
-    private fun Bundle.doubleValue(key: String): Double? {
-        val raw = if (containsKey(key)) get(key) else null
-        return when (raw) {
-            is Number -> raw.toDouble()
-            is String -> raw.toDoubleOrNull()
-            else -> null
-        }
-    }
-
-    @Suppress("DEPRECATION")
-    private fun Bundle.stringListValue(key: String): List<String?>? {
-        val raw = if (containsKey(key)) get(key) else null
-        return when (raw) {
-            is Iterable<*> -> raw.map { it?.toString() }.takeIf { it.isNotEmpty() }
-            is Array<*> -> raw.map { it?.toString() }.takeIf { it.isNotEmpty() }
-            else -> raw?.toString()?.let(::listOf)
-        }
-    }
-
-    @Suppress("DEPRECATION")
-    private fun Bundle.doubleListValue(key: String): List<Double?>? {
-        val raw = if (containsKey(key)) get(key) else null
-        return when (raw) {
-            is Iterable<*> ->
-                raw.mapNotNull { v ->
-                    when (v) {
-                        is Number -> v.toDouble()
-                        is String -> v.toDoubleOrNull()
-                        else -> null
-                    }
-                }.takeIf { it.isNotEmpty() }
-            is DoubleArray -> raw.toList().takeIf { it.isNotEmpty() }
-            is FloatArray -> raw.map { it.toDouble() }.takeIf { it.isNotEmpty() }
-            else -> doubleValue(key)?.let(::listOf)
-        }
-    }
-
-    @Suppress("DEPRECATION")
-    private fun Bundle.fuzzyDateInputValue(key: String): FuzzyDateInput? {
-        val raw = if (containsKey(key)) get(key) else null
-        return when (raw) {
-            is FuzzyDateInput -> raw
-            is FuzzyDate -> raw.takeIf { it.isValidDate }?.let { d -> FuzzyDateInput(d.day, d.month, d.year) }
-            else -> null
-        }
-    }
-
-    private inline fun <reified T : Enum<T>> Bundle.enumValue(key: String): T? {
-        val raw = if (containsKey(key)) get(key) else null
-        val enumName = raw?.toString() ?: return null
-        return runCatching { enumValueOf<T>(enumName) }
-            .onFailure { Timber.tag(TAG).w(it, "Unknown %s value: %s", T::class.java.simpleName, enumName) }
-            .getOrNull()
-    }
-
     companion object {
-        private const val TAG = "BtmSheetSeriesManage"
         private const val ARG_MEDIA_BASE = "arg_media_base"
 
         fun newInstance(mediaBase: MediaBase): BottomSheetSeriesManage = BottomSheetSeriesManage().apply {

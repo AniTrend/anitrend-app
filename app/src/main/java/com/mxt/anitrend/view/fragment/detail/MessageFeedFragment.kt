@@ -23,6 +23,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * MessageFeedFragment
  */
 class MessageFeedFragment : FeedListFragment() {
+    override val useStateListAdapter: Boolean = false
+
     private var userId: Long = 0
 
     @KeyUtil.MessageType
@@ -68,7 +70,7 @@ class MessageFeedFragment : FeedListFragment() {
                             // Loading is handled by swipeRefreshLayout in the base class
                         }
                         is MessageFeedViewModel.UiState.Success -> {
-                            handleSuccess(state.content, state.replaceExisting)
+                            handleSuccess(state.content, replaceExisting = state.replaceExisting)
                         }
                         is MessageFeedViewModel.UiState.Error -> {
                             showError(state.message)

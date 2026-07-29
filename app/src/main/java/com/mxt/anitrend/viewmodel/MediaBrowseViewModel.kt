@@ -10,6 +10,7 @@ import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.model.entity.anilist.Genre
 import com.mxt.anitrend.model.entity.anilist.MediaTag
 import com.mxt.anitrend.model.entity.base.MediaBase
+import com.mxt.anitrend.model.entity.container.attribute.PageInfo
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.repository.BaseRepository
 import com.mxt.anitrend.repository.BrowseMutation
@@ -30,7 +31,11 @@ class MediaBrowseViewModel(
 
     sealed interface UiState {
         data object Loading : UiState
-        data class Success(val content: PageContainer<MediaBase>) : UiState
+        data class Success(
+            val content: PageContainer<MediaBase>,
+            val loadedPages: Set<Int>,
+            val replaceExisting: Boolean = false,
+        ) : UiState
         data class Error(val message: String) : UiState
     }
 
@@ -42,6 +47,9 @@ class MediaBrowseViewModel(
     private val _state = MutableStateFlow<UiState>(UiState.Loading)
     val state: StateFlow<UiState> = _state.asStateFlow()
     private val loadedMedia = linkedMapOf<Long, MediaBase>()
+    private val loadedPages = linkedSetOf<Int>()
+    private var currentPageInfo: PageInfo? = null
+    private var requestGeneration: Int = 0
 
     init {
         viewModelScope.launch {
@@ -81,8 +89,11 @@ class MediaBrowseViewModel(
         genres: List<String>?,
         tags: List<String>?,
     ) {
-        viewModelScope.launch {
+        val generation = if (page <= 1) ++requestGeneration else requestGeneration
+        if (page <= 1 && loadedMedia.isEmpty()) {
             _state.value = UiState.Loading
+        }
+        viewModelScope.launch {
             runCatching {
                 val sortList: List<MediaSort>? =
                     sort?.let { sortName -> runCatching { MediaSort.valueOf(sortName) }.getOrNull()?.let { listOf(it) } }
@@ -110,9 +121,16 @@ class MediaBrowseViewModel(
                     tags = normalizedTags,
                 ).getOrThrow()
             }.onSuccess { content ->
+                if (generation != requestGeneration) {
+                    return@onSuccess
+                }
                 trackMedia(page, content.pageData)
-                _state.value = UiState.Success(content)
+                currentPageInfo = if (content.hasPageInfo()) content.pageInfo else null
+                emitUpdatedMedia(replaceExisting = true)
             }.onFailure { throwable ->
+                if (generation != requestGeneration) {
+                    return@onFailure
+                }
                 Timber.e(throwable, "MediaBrowseViewModel load failed")
                 _state.value = UiState.Error(
                     throwable.message ?: "Failed to browse media",
@@ -127,30 +145,23 @@ class MediaBrowseViewModel(
     ) {
         if (page <= 1) {
             loadedMedia.clear()
+            loadedPages.clear()
         }
         media.forEach { item ->
             loadedMedia[item.id] = item
         }
+        loadedPages.add(page)
     }
 
-    private fun emitUpdatedMedia() {
-        val current = _state.value as? UiState.Success ?: return
-        val updatedMedia = current.content.pageData.toList()
+    private fun emitUpdatedMedia(replaceExisting: Boolean = true) {
+        val updatedMedia = loadedMedia.values.toList()
         _state.value = UiState.Success(
             PageContainer<MediaBase>().apply {
-                if (current.content.hasPageInfo()) {
-                    pageInfo = current.content.pageInfo
-                }
+                currentPageInfo?.let { pageInfo = it }
                 pageData = updatedMedia
             },
+            loadedPages = loadedPages.toSet(),
+            replaceExisting = replaceExisting,
         )
-        trackAllMedia(updatedMedia)
-    }
-
-    private fun trackAllMedia(media: List<MediaBase>) {
-        loadedMedia.clear()
-        media.forEach { item ->
-            loadedMedia[item.id] = item
-        }
     }
 }

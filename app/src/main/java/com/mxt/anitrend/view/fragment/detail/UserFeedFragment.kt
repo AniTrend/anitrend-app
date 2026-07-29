@@ -29,6 +29,9 @@ class UserFeedFragment : FeedListFragment() {
 
     private val userFeedViewModel: UserFeedViewModel by viewModel()
 
+    override fun currentRenderedFeeds(): List<FeedList> =
+        (userFeedViewModel.state.value as? UserFeedViewModel.UiState.Success)?.content?.pageData.orEmpty()
+
     companion object {
         @JvmStatic
         fun newInstance(params: Bundle): UserFeedFragment {
@@ -63,7 +66,7 @@ class UserFeedFragment : FeedListFragment() {
                             // Loading is handled by swipeRefreshLayout in the base class
                         }
                         is UserFeedViewModel.UiState.Success -> {
-                            handleSuccess(state.content, state.replaceExisting)
+                            handleSuccess(state.content, state.items, state.replaceExisting)
                         }
                         is UserFeedViewModel.UiState.Error -> {
                             showError(state.message)
