@@ -129,14 +129,14 @@ class UserFeedViewModelAccumulatedPagesTest {
     fun `older refresh response cannot overwrite newer user feed refresh`() = runTest {
         val viewModel = createViewModel()
 
-        val olderGeneration = viewModel.createRequestGenerationForTest(page = 1)
-        val newerGeneration = viewModel.createRequestGenerationForTest(page = 1)
-        viewModel.applyLoadResultForTest(
+        val olderGeneration = viewModel.beginRequestGeneration(page = 1)
+        val newerGeneration = viewModel.beginRequestGeneration(page = 1)
+        viewModel.applyLoadResult(
             page = 1,
             generation = newerGeneration,
             content = pageOf(feed(id = 20L, text = "new")),
         )
-        viewModel.applyLoadResultForTest(
+        viewModel.applyLoadResult(
             page = 1,
             generation = olderGeneration,
             content = pageOf(feed(id = 10L, text = "old")),

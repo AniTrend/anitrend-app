@@ -71,6 +71,22 @@ class FeedListViewModelAccumulatedPagesTest {
     }
 
     @Test
+    fun `duplicate IDs across pages are merged into one rendered item`() = runTest {
+        stubPage(1, feed(id = 1L, text = "first"))
+        stubPage(2, feed(id = 1L, text = "updated"), feed(id = 2L))
+        val viewModel = createViewModel()
+
+        viewModel.load(page = 1, pageLimit = 20, isFollowing = null, type = null, isMixed = null)
+        viewModel.load(page = 2, pageLimit = 20, isFollowing = null, type = null, isMixed = null)
+        advanceUntilIdle()
+
+        val state = viewModel.state.value as FeedListViewModel.UiState.Success
+        assertEquals(listOf(1L, 2L), state.content.pageData.map { it.id })
+        assertEquals(1, state.content.pageData.count { it.id == 1L })
+        assertEquals("updated", state.content.pageData.first { it.id == 1L }.text)
+    }
+
+    @Test
     fun `mutation updates item from previously loaded page`() = runTest {
         val original = feed(id = 1L, text = "before")
         val updated = feed(id = 1L, text = "after")
@@ -122,14 +138,14 @@ class FeedListViewModelAccumulatedPagesTest {
     fun `older refresh response cannot overwrite newer refresh`() = runTest {
         val viewModel = createViewModel()
 
-        val olderGeneration = viewModel.createRequestGenerationForTest(page = 1)
-        val newerGeneration = viewModel.createRequestGenerationForTest(page = 1)
-        viewModel.applyLoadResultForTest(
+        val olderGeneration = viewModel.beginRequestGeneration(page = 1)
+        val newerGeneration = viewModel.beginRequestGeneration(page = 1)
+        viewModel.applyLoadResult(
             page = 1,
             generation = newerGeneration,
             content = pageOf(feed(id = 20L, text = "new")),
         )
-        viewModel.applyLoadResultForTest(
+        viewModel.applyLoadResult(
             page = 1,
             generation = olderGeneration,
             content = pageOf(feed(id = 10L, text = "old")),

@@ -144,10 +144,10 @@ class UserFeedViewModel(
         emitSuccess(replaceExisting = page <= 1)
     }
 
-    internal fun createRequestGenerationForTest(page: Int): Int =
+    internal fun beginRequestGeneration(page: Int): Int =
         if (page <= 1) ++requestGeneration else requestGeneration
 
-    internal fun applyLoadResultForTest(
+    internal fun applyLoadResult(
         page: Int,
         generation: Int,
         content: PageContainer<FeedListEntity>,
@@ -184,7 +184,7 @@ class UserFeedViewModel(
         isMixed: Boolean?,
     ) {
         if (userId == null || userId <= 0) return
-        val generation = createRequestGenerationForTest(page)
+        val generation = beginRequestGeneration(page)
         if (page <= 1 && loadedFeeds.isEmpty()) {
             _state.value = UiState.Loading
         }
@@ -200,7 +200,7 @@ class UserFeedViewModel(
                 if (generation != requestGeneration) {
                     return@onSuccess
                 }
-                applyLoadResultForTest(page = page, generation = generation, content = content)
+                applyLoadResult(page = page, generation = generation, content = content)
             }.onFailure { throwable ->
                 if (generation != requestGeneration) {
                     return@onFailure

@@ -8,16 +8,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder
 import java.util.ArrayList
-import org.junit.Ignore
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
+import org.junit.Ignore
 import org.junit.Test
 import org.mockito.Mockito.doReturn
 import org.mockito.Mockito.mock
 
 class RecyclerViewAdapterOnItemRangeChangedTest {
 
-    @Ignore("Legacy RecyclerViewAdapter behavior is outside Phase 2 scope")
+    @Ignore("Requires instrumentation: RecyclerView observer notification needs a live layout manager. Remove when RecyclerViewAdapter is deprecated or Phase 5 completes")
     @Test
     fun `full swap change notifies dataset change for smaller replacement`() {
         val context = mock(Context::class.java)
