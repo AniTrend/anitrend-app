@@ -1,5 +1,6 @@
 package com.mxt.anitrend.viewmodel
 
+import com.mxt.anitrend.data.store.medialist.MediaListQueryKey
 import com.mxt.anitrend.fixture.MediaListFixtures.aMediaList
 import com.mxt.anitrend.graphql.generated.MediaListSort
 import com.mxt.anitrend.graphql.generated.MediaListStatus
@@ -87,6 +88,14 @@ class MediaListViewModelTest {
                 sort = listOf(MediaListSort.PROGRESS_DESC),
                 statusIn = listOf(MediaListStatus.CURRENT),
                 scoreFormat = ScoreFormat.POINT_100,
+                commitToStore = true,
+                queryKey = MediaListQueryKey(
+                    userId = 42L,
+                    userName = null,
+                    mediaType = MediaType.ANIME,
+                    statuses = setOf(MediaListStatus.CURRENT),
+                    sort = MediaListSort.PROGRESS_DESC,
+                ),
             )
 
         val vm = MediaListViewModel(
@@ -111,6 +120,14 @@ class MediaListViewModelTest {
             sort = listOf(MediaListSort.PROGRESS_DESC),
             statusIn = listOf(MediaListStatus.CURRENT),
             scoreFormat = ScoreFormat.POINT_100,
+            commitToStore = true,
+            queryKey = MediaListQueryKey(
+                userId = 42L,
+                userName = null,
+                mediaType = MediaType.ANIME,
+                statuses = setOf(MediaListStatus.CURRENT),
+                sort = MediaListSort.PROGRESS_DESC,
+            ),
         )
     }
 
@@ -128,6 +145,14 @@ class MediaListViewModelTest {
                 sort = listOf(MediaListSort.PROGRESS_DESC),
                 statusIn = listOf(MediaListStatus.CURRENT),
                 scoreFormat = ScoreFormat.POINT_100,
+                commitToStore = true,
+                queryKey = MediaListQueryKey(
+                    userId = 42L,
+                    userName = null,
+                    mediaType = MediaType.ANIME,
+                    statuses = setOf(MediaListStatus.CURRENT),
+                    sort = MediaListSort.PROGRESS_DESC,
+                ),
             )
 
         val vm = MediaListViewModel(

@@ -24,6 +24,8 @@ import com.mxt.anitrend.graphql.generated.SaveReview
 import com.mxt.anitrend.graphql.generated.ScoreFormat
 import com.mxt.anitrend.graphql.generated.UpdateMediaListEntries
 import com.mxt.anitrend.data.mapper.toMediaListRecord
+import com.mxt.anitrend.data.mapper.toPageInfoRecord
+import com.mxt.anitrend.data.store.medialist.MediaListQueryKey
 import com.mxt.anitrend.data.store.medialist.MediaListStore
 import com.mxt.anitrend.data.store.medialist.MediaListStoreChange
 import com.mxt.anitrend.model.api.retro.anilist.BrowseService
@@ -60,6 +62,8 @@ class BrowseRepository(
         sort: List<MediaListSort>? = null,
         statusIn: List<MediaListStatus>? = null,
         scoreFormat: ScoreFormat = ScoreFormat.POINT_100,
+        commitToStore: Boolean = true,
+        queryKey: MediaListQueryKey? = null,
     ): Result<PageContainer<MediaListCollectionEntity>> = withContext(ioDispatcher) {
         runCatching {
             val request = MediaListCollection.request(
@@ -73,7 +77,26 @@ class BrowseRepository(
             )
             val response = browseService.getMediaListCollection(request).execute()
             if (response.isSuccessful) {
-                handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                val resolvedQueryKey = queryKey ?: MediaListQueryKey(
+                    userId = userId,
+                    userName = userName,
+                    mediaType = type,
+                    statuses = statusIn.orEmpty().toSet(),
+                    sort = sort?.firstOrNull(),
+                )
+
+                if (commitToStore && queryKey != null && mediaListStore != null) {
+                    mediaListStore.apply(
+                        MediaListStoreChange.CollectionLoaded(
+                            queryKey = resolvedQueryKey,
+                            entries = result.pageData.flatMap { it.entries.orEmpty() }.map { it.toMediaListRecord(revision = 0L) },
+                            pageInfo = result.takeIf { it.hasPageInfo() }?.pageInfo?.toPageInfoRecord(),
+                        ),
+                    )
+                }
+
+                result
             } else {
                 throw RuntimeException(response.apiError())
             }

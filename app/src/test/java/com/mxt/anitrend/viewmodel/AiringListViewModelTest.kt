@@ -1,5 +1,6 @@
 package com.mxt.anitrend.viewmodel
 
+import com.mxt.anitrend.data.store.medialist.MediaListQueryKey
 import com.mxt.anitrend.graphql.generated.MediaListSort
 import com.mxt.anitrend.graphql.generated.MediaListStatus
 import com.mxt.anitrend.graphql.generated.MediaType
@@ -64,6 +65,14 @@ class AiringListViewModelTest {
                 sort = listOf(MediaListSort.UPDATED_TIME_DESC),
                 statusIn = listOf(MediaListStatus.CURRENT),
                 scoreFormat = ScoreFormat.POINT_10,
+                commitToStore = true,
+                queryKey = MediaListQueryKey(
+                    userId = 10L,
+                    userName = null,
+                    mediaType = MediaType.ANIME,
+                    statuses = setOf(MediaListStatus.CURRENT),
+                    sort = MediaListSort.UPDATED_TIME_DESC,
+                ),
             )
         val vm = AiringListViewModel(browseRepository = browseRepository)
 
@@ -84,6 +93,14 @@ class AiringListViewModelTest {
             sort = listOf(MediaListSort.UPDATED_TIME_DESC),
             statusIn = listOf(MediaListStatus.CURRENT),
             scoreFormat = ScoreFormat.POINT_10,
+            commitToStore = true,
+            queryKey = MediaListQueryKey(
+                userId = 10L,
+                userName = null,
+                mediaType = MediaType.ANIME,
+                statuses = setOf(MediaListStatus.CURRENT),
+                sort = MediaListSort.UPDATED_TIME_DESC,
+            ),
         )
     }
 
@@ -99,6 +116,14 @@ class AiringListViewModelTest {
                 sort = null,
                 statusIn = null,
                 scoreFormat = ScoreFormat.POINT_100,
+                commitToStore = true,
+                queryKey = MediaListQueryKey(
+                    userId = 11L,
+                    userName = null,
+                    mediaType = MediaType.MANGA,
+                    statuses = emptySet(),
+                    sort = null,
+                ),
             )
         val vm = AiringListViewModel(browseRepository = browseRepository)
 
@@ -119,6 +144,14 @@ class AiringListViewModelTest {
             sort = null,
             statusIn = null,
             scoreFormat = ScoreFormat.POINT_100,
+            commitToStore = true,
+            queryKey = MediaListQueryKey(
+                userId = 11L,
+                userName = null,
+                mediaType = MediaType.MANGA,
+                statuses = emptySet(),
+                sort = null,
+            ),
         )
     }
 
@@ -133,6 +166,14 @@ class AiringListViewModelTest {
                 sort = null,
                 statusIn = null,
                 scoreFormat = ScoreFormat.POINT_100,
+                commitToStore = true,
+                queryKey = MediaListQueryKey(
+                    userId = 10L,
+                    userName = null,
+                    mediaType = MediaType.ANIME,
+                    statuses = emptySet(),
+                    sort = null,
+                ),
             )
         val vm = AiringListViewModel(browseRepository = browseRepository)
 
@@ -171,6 +212,14 @@ class AiringListViewModelTest {
                 sort = listOf(MediaListSort.UPDATED_TIME_DESC),
                 statusIn = listOf(MediaListStatus.CURRENT),
                 scoreFormat = ScoreFormat.POINT_10,
+                commitToStore = true,
+                queryKey = MediaListQueryKey(
+                    userId = 10L,
+                    userName = null,
+                    mediaType = MediaType.ANIME,
+                    statuses = setOf(MediaListStatus.CURRENT),
+                    sort = MediaListSort.UPDATED_TIME_DESC,
+                ),
             )
 
         val vm = AiringListViewModel(browseRepository = browseRepository)
@@ -196,6 +245,14 @@ class AiringListViewModelTest {
             sort = listOf(MediaListSort.UPDATED_TIME_DESC),
             statusIn = listOf(MediaListStatus.CURRENT),
             scoreFormat = ScoreFormat.POINT_10,
+            commitToStore = true,
+            queryKey = MediaListQueryKey(
+                userId = 10L,
+                userName = null,
+                mediaType = MediaType.ANIME,
+                statuses = setOf(MediaListStatus.CURRENT),
+                sort = MediaListSort.UPDATED_TIME_DESC,
+            ),
         )
     }
 

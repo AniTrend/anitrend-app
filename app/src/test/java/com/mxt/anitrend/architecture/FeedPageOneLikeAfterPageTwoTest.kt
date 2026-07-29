@@ -1,5 +1,7 @@
 package com.mxt.anitrend.architecture
 
+import com.mxt.anitrend.data.store.feed.FeedQueryKey
+import com.mxt.anitrend.data.store.feed.FeedScope
 import com.mxt.anitrend.graphql.generated.LikeableType
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.base.UserBase
@@ -67,6 +69,15 @@ class FeedPageOneLikeAfterPageTwoTest {
                 type = null,
                 isMixed = null,
                 asHtml = false,
+                commitToStore = true,
+                queryKey = FeedQueryKey(
+                    scope = FeedScope.GLOBAL,
+                    userId = null,
+                    mediaId = null,
+                    activityType = null,
+                    isFollowing = null,
+                    isMixed = null,
+                ),
             )
         doReturn(Result.success(pageOf(feed(id = 3L), feed(id = 4L))))
             .`when`(feedRepository)
@@ -79,6 +90,15 @@ class FeedPageOneLikeAfterPageTwoTest {
                 type = null,
                 isMixed = null,
                 asHtml = false,
+                commitToStore = true,
+                queryKey = FeedQueryKey(
+                    scope = FeedScope.GLOBAL,
+                    userId = null,
+                    mediaId = null,
+                    activityType = null,
+                    isFollowing = null,
+                    isMixed = null,
+                ),
             )
 
         val viewModel = FeedListViewModel(

@@ -147,6 +147,26 @@ class FeedStoreTest {
     }
 
     @Test
+    fun `reply likes replaced updates likes and rejects stale revision`() = runTest {
+        val store = InMemoryFeedStore()
+        store.apply(FeedStoreChange.FeedUpserted(createFeed(id = 1L, revision = 1L)))
+        store.apply(FeedStoreChange.ReplyUpserted(feedId = 1L, reply = createReply(id = 10L, activityId = 1L, revision = 2L)))
+
+        val newLikes = listOf(UserSummaryRecord(id = 99L, name = "user99", avatar = null, siteUrl = null))
+        store.apply(FeedStoreChange.ReplyLikesReplaced(feedId = 1L, replyId = 10L, likes = newLikes, revision = 3L))
+
+        val state = store.state.value
+        assertEquals(newLikes, state.repliesById.getValue(10L).likes)
+        assertEquals(3L, state.repliesById.getValue(10L).revision)
+
+        val staleLikes = listOf(UserSummaryRecord(id = 88L, name = "user88", avatar = null, siteUrl = null))
+        store.apply(FeedStoreChange.ReplyLikesReplaced(feedId = 1L, replyId = 10L, likes = staleLikes, revision = 2L))
+
+        assertEquals(newLikes, store.state.value.repliesById.getValue(10L).likes)
+        assertEquals(3L, store.state.value.repliesById.getValue(10L).revision)
+    }
+
+    @Test
     fun `two concurrent updates cannot produce an invalid store`() = runTest(StandardTestDispatcher()) {
         val store = InMemoryFeedStore()
         store.apply(FeedStoreChange.FeedUpserted(createFeed(id = 1L, revision = 1L)))

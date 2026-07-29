@@ -2,6 +2,7 @@ package com.mxt.anitrend.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mxt.anitrend.data.store.medialist.MediaListQueryKey
 import com.mxt.anitrend.graphql.generated.MediaListSort
 import com.mxt.anitrend.graphql.generated.MediaListStatus
 import com.mxt.anitrend.graphql.generated.MediaType
@@ -98,6 +99,13 @@ class MediaListViewModel(
                     val statusList: List<MediaListStatus>? =
                         statusIn?.let { runCatching { listOf(MediaListStatus.valueOf(it)) }.getOrNull() }
                     val type: MediaType? = mediaType?.let { runCatching { MediaType.valueOf(it) }.getOrNull() }
+                    val queryKey = MediaListQueryKey(
+                        userId = if (userId != 0L) userId else null,
+                        userName = if (userId == 0L) userName else null,
+                        mediaType = type,
+                        statuses = statusList.orEmpty().toSet(),
+                        sort = sort?.firstOrNull(),
+                    )
                     val scoreFormat: ScoreFormat =
                         userRepository.cachedCurrentUser?.mediaListOptions?.let { options ->
                             runCatching { ScoreFormat.valueOf(options.scoreFormat) }.getOrNull()
@@ -110,6 +118,7 @@ class MediaListViewModel(
                         sort = sort,
                         statusIn = statusList,
                         scoreFormat = scoreFormat,
+                        queryKey = queryKey,
                     )
                     result.getOrThrow()
                 }

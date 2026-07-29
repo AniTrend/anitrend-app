@@ -2,6 +2,7 @@ package com.mxt.anitrend.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mxt.anitrend.data.store.medialist.MediaListQueryKey
 import com.mxt.anitrend.graphql.generated.MediaListSort
 import com.mxt.anitrend.graphql.generated.MediaListStatus
 import com.mxt.anitrend.graphql.generated.MediaType
@@ -68,6 +69,13 @@ class AiringListViewModel(
             runCatching {
                 val sortList = sort?.let { runCatching { MediaListSort.valueOf(it) }.getOrNull()?.let(::listOf) }
                 val statusList = statusIn?.let { runCatching { MediaListStatus.valueOf(it) }.getOrNull()?.let(::listOf) }
+                val queryKey = MediaListQueryKey(
+                    userId = userId.toLong(),
+                    userName = null,
+                    mediaType = type,
+                    statuses = statusList.orEmpty().toSet(),
+                    sort = sortList?.firstOrNull(),
+                )
                 browseRepository.getMediaListCollection(
                     userId = userId.toLong(),
                     type = type,
@@ -75,6 +83,7 @@ class AiringListViewModel(
                     sort = sortList,
                     statusIn = statusList,
                     scoreFormat = scoreFormat ?: ScoreFormat.POINT_100,
+                    queryKey = queryKey,
                 ).getOrThrow()
             }.onSuccess { content ->
                 _state.value = UiState.Success(content)

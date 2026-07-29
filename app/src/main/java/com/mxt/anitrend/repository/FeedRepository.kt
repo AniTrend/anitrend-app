@@ -10,7 +10,10 @@ import com.mxt.anitrend.graphql.generated.SaveActivityReply
 import com.mxt.anitrend.graphql.generated.SaveMessageActivity
 import com.mxt.anitrend.graphql.generated.SaveTextActivity
 import com.mxt.anitrend.data.mapper.toFeedRecord
+import com.mxt.anitrend.data.mapper.toPageInfoRecord
 import com.mxt.anitrend.data.mapper.toFeedReplyRecord
+import com.mxt.anitrend.data.store.feed.FeedQueryKey
+import com.mxt.anitrend.data.store.feed.FeedScope
 import com.mxt.anitrend.data.store.feed.FeedStore
 import com.mxt.anitrend.data.store.feed.FeedStoreChange
 import com.mxt.anitrend.model.api.retro.anilist.FeedService
@@ -48,12 +51,40 @@ class FeedRepository(
         type: ActivityType? = null,
         isMixed: Boolean? = null,
         asHtml: Boolean = false,
+        commitToStore: Boolean = true,
+        queryKey: FeedQueryKey? = null,
     ): Result<PageContainer<FeedListEntity>> = withContext(ioDispatcher) {
         runCatching {
             val request = FeedList.request(page = page, perPage = perPage, id = id?.toInt(), isFollowing = isFollowing, userId = userId?.toInt(), type = type, isMixed = isMixed, asHtml = asHtml)
             val response = feedService.getFeedList(request).execute()
             if (response.isSuccessful) {
-                handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                val pageInfo = result.takeIf { it.hasPageInfo() }?.pageInfo?.toPageInfoRecord()
+                val resolvedQueryKey = queryKey ?: FeedQueryKey(
+                    scope = when {
+                        id != null -> FeedScope.MEDIA
+                        userId != null -> FeedScope.USER
+                        else -> FeedScope.GLOBAL
+                    },
+                    userId = userId,
+                    mediaId = id,
+                    activityType = type,
+                    isFollowing = isFollowing,
+                    isMixed = isMixed,
+                )
+
+                if (commitToStore && queryKey != null && feedStore != null) {
+                    feedStore.apply(
+                        FeedStoreChange.PageLoaded(
+                            queryKey = resolvedQueryKey,
+                            page = pageInfo?.currentPage ?: page ?: 1,
+                            feeds = result.pageData.map { it.toFeedRecord(revision = 0L) },
+                            pageInfo = pageInfo,
+                        ),
+                    )
+                }
+
+                result
             } else {
                 throw RuntimeException(response.apiError())
             }

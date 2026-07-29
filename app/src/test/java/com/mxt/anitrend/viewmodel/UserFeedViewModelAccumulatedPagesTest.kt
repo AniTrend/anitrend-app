@@ -1,5 +1,7 @@
 package com.mxt.anitrend.viewmodel
 
+import com.mxt.anitrend.data.store.feed.FeedQueryKey
+import com.mxt.anitrend.data.store.feed.FeedScope
 import com.mxt.anitrend.graphql.generated.LikeableType
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.base.UserBase
@@ -111,6 +113,15 @@ class UserFeedViewModelAccumulatedPagesTest {
             type = null,
             isMixed = null,
             asHtml = false,
+            commitToStore = true,
+            queryKey = FeedQueryKey(
+                scope = FeedScope.USER,
+                userId = 99L,
+                mediaId = null,
+                activityType = null,
+                isFollowing = null,
+                isMixed = null,
+            ),
         )
         stubPage(2, feed(id = 3L), feed(id = 4L))
         val viewModel = createViewModel()
@@ -168,6 +179,15 @@ class UserFeedViewModelAccumulatedPagesTest {
                 type = null,
                 isMixed = null,
                 asHtml = false,
+                commitToStore = true,
+                queryKey = FeedQueryKey(
+                    scope = FeedScope.USER,
+                    userId = 99L,
+                    mediaId = null,
+                    activityType = null,
+                    isFollowing = null,
+                    isMixed = null,
+                ),
             )
     }
 

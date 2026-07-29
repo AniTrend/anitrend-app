@@ -1,5 +1,7 @@
 package com.mxt.anitrend.architecture
 
+import com.mxt.anitrend.data.store.feed.FeedQueryKey
+import com.mxt.anitrend.data.store.feed.FeedScope
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.repository.BaseMutation
@@ -70,6 +72,15 @@ class CommentDetailReplyCountDivergenceTest {
                 type = null,
                 isMixed = null,
                 asHtml = false,
+                commitToStore = true,
+                queryKey = FeedQueryKey(
+                    scope = FeedScope.GLOBAL,
+                    userId = null,
+                    mediaId = null,
+                    activityType = null,
+                    isFollowing = null,
+                    isMixed = null,
+                ),
             )
 
         val viewModel = FeedListViewModel(

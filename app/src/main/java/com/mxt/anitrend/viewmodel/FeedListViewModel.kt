@@ -2,6 +2,8 @@ package com.mxt.anitrend.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mxt.anitrend.data.store.feed.FeedQueryKey
+import com.mxt.anitrend.data.store.feed.FeedScope
 import com.mxt.anitrend.domain.model.FeedItemUiModel
 import com.mxt.anitrend.domain.model.toFeedItemUiModel
 import com.mxt.anitrend.graphql.generated.ActivityType
@@ -180,6 +182,14 @@ class FeedListViewModel(
         type: ActivityType?,
         isMixed: Boolean?,
     ) {
+        val queryKey = FeedQueryKey(
+            scope = FeedScope.GLOBAL,
+            userId = null,
+            mediaId = null,
+            activityType = type,
+            isFollowing = isFollowing,
+            isMixed = isMixed,
+        )
         val generation = beginRequestGeneration(page)
         if (page <= 1 && loadedFeeds.isEmpty()) {
             _state.value = UiState.Loading
@@ -191,6 +201,7 @@ class FeedListViewModel(
                 isFollowing = isFollowing,
                 type = type,
                 isMixed = isMixed,
+                queryKey = queryKey,
             ).onSuccess { content ->
                 if (generation != requestGeneration) {
                     return@onSuccess
