@@ -1,10 +1,8 @@
 package com.mxt.anitrend.base.custom.view.widget
 
-import android.annotation.TargetApi
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.DialogInterface
-import android.os.Build
 import android.util.AttributeSet
 import android.view.View
 import android.widget.DatePicker
@@ -37,17 +35,13 @@ constructor(
         onInit()
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    constructor(
-        context: Context,
-        attrs: AttributeSet?,
-        defStyleAttr: Int,
-        defStyleRes: Int,
-    ) : this(context, attrs, defStyleAttr)
-
     override fun onInit() {
         binding = WidgetFuzzyDateBinding.inflate(context.getLayoutInflater(), this, true)
+        isClickable = true
+        isFocusable = true
+        setOnClickListener(this)
         binding.fuzzyDateInputLayout.setOnClickListener(this)
+        binding.fuzzyDateText.setOnClickListener(this)
     }
 
     fun setDate(fuzzyDate: FuzzyDate?) {

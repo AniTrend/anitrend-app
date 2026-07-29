@@ -14,6 +14,12 @@
   ~ limitations under the License.
   -->
 
+<!--
+  Superseded by SettingsActivity.MaterialSettingsFragment.buildSections().
+  Kept as a reference map for the experimental M3 settings structure while the
+  legacy PreferenceFragment fallback still uses root_preferences.xml.
+-->
+
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory

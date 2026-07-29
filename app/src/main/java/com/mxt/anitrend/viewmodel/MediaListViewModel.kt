@@ -56,10 +56,14 @@ class MediaListViewModel(
     init {
         viewModelScope.launch {
             browseRepository.mutationEvents.collect { event ->
-                if (currentItems.isNotEmpty() &&
-                    (event is BrowseMutation.MediaListSaved || event is BrowseMutation.MediaListDeleted)
-                ) {
-                    load(lastUserId, lastUserName, lastMediaType, lastStatusIn)
+                when (event) {
+                    is BrowseMutation.MediaListSaved -> onMediaListSaved(event.entry)
+                    is BrowseMutation.MediaListDeleted -> {
+                        if (currentItems.isNotEmpty()) {
+                            load(lastUserId, lastUserName, lastMediaType, lastStatusIn)
+                        }
+                    }
+                    else -> Unit
                 }
             }
         }
@@ -116,19 +120,7 @@ class MediaListViewModel(
                 } else {
                     emptyList()
                 }
-                val mediaListSort = settings.mediaListSort ?: KeyUtil.PROGRESS
-                val sorted = if (MediaListUtil.isTitleSort(mediaListSort)) {
-                    sortMediaListByTitle(entries, settings.sortOrder)
-                } else {
-                    entries
-                }
-                currentItems = sorted
-                currentPageInfo = pageInfo
-                _state.value = UiState.Success(
-                    items = sorted,
-                    pageInfo = pageInfo,
-                    isEmpty = content.isEmpty,
-                )
+                emitSuccess(entries, pageInfo, content.isEmpty)
             }.onFailure { throwable ->
                 Timber.e(throwable, "MediaListViewModel load failed")
                 _state.value = UiState.Error(
@@ -165,6 +157,82 @@ class MediaListViewModel(
             userName?.let { userRepository.cachedCurrentUser?.name == it }
                 ?: (userId != 0L && userRepository.cachedCurrentUser?.id == userId)
             )
+
+    internal fun onMediaListSaved(entry: MediaList) {
+        val current = _state.value as? UiState.Success ?: return
+        val existingIndex = currentItems.indexOfFirst { item ->
+            item.id == entry.id || item.mediaId == entry.mediaId
+        }
+        val matchesFilters = matchesLoadedFilters(entry)
+        if (existingIndex == -1 && !matchesFilters) {
+            return
+        }
+
+        val updatedItems = currentItems.toMutableList()
+        when {
+            existingIndex >= 0 && matchesFilters -> updatedItems[existingIndex].mergeFrom(entry)
+            existingIndex >= 0 -> updatedItems.removeAt(existingIndex)
+            matchesFilters -> updatedItems.add(entry)
+        }
+
+        emitSuccess(
+            items = updatedItems,
+            pageInfo = current.pageInfo,
+            isEmpty = updatedItems.isEmpty(),
+        )
+    }
+
+    private fun matchesLoadedFilters(entry: MediaList): Boolean {
+        val loadedMediaType = lastMediaType
+        val loadedStatusIn = lastStatusIn
+        val matchesMediaType =
+            loadedMediaType?.let { CompatUtil.equals(entry.media.type, it) } ?: true
+        val matchesStatus =
+            loadedStatusIn?.let { CompatUtil.equals(entry.status, it) } ?: true
+        return matchesMediaType && matchesStatus
+    }
+
+    private fun emitSuccess(
+        items: List<MediaList>,
+        pageInfo: PageInfo?,
+        isEmpty: Boolean,
+    ) {
+        val mediaListSort = settings.mediaListSort ?: KeyUtil.PROGRESS
+        val sorted = if (MediaListUtil.isTitleSort(mediaListSort)) {
+            sortMediaListByTitle(items, settings.sortOrder)
+        } else {
+            items
+        }
+        currentItems = sorted
+        currentPageInfo = pageInfo
+        _state.value = UiState.Success(
+            items = sorted,
+            pageInfo = pageInfo,
+            isEmpty = isEmpty,
+        )
+    }
+
+    private fun MediaList.mergeFrom(entry: MediaList) {
+        id = entry.id
+        mediaId = entry.mediaId
+        status = entry.status
+        score = entry.score
+        scoreRaw = entry.scoreRaw
+        progress = entry.progress
+        progressVolumes = entry.progressVolumes
+        repeat = entry.repeat
+        priority = entry.priority
+        notes = entry.notes
+        isHidden = entry.isHidden
+        isHiddenFromStatusLists = entry.isHiddenFromStatusLists
+        advancedScores = entry.advancedScores
+        customLists = entry.customLists
+        startedAt = entry.startedAt
+        completedAt = entry.completedAt
+        updatedAt = entry.updatedAt
+        createdAt = entry.createdAt
+        media = entry.media
+    }
 
     companion object {
         fun sortMediaListByTitle(

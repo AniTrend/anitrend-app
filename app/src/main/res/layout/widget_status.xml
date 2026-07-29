@@ -6,32 +6,35 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-        <FrameLayout
-            android:visibility="gone"
-            android:id="@+id/widget_slide_holder"
+    <FrameLayout
+        android:id="@+id/widget_slide_holder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_feed_media_context"
+        android:clipToPadding="false"
+        android:descendantFocusability="afterDescendants"
+        android:padding="@dimen/lg_margin"
+        android:visibility="gone"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:visibility="visible">
+
+        <com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView
+            android:id="@+id/widget_status_recycler"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <com.mxt.anitrend.base.custom.view.text.PageIndicator
+            android:id="@+id/widget_status_indicator"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:descendantFocusability="afterDescendants"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:visibility="visible">
+            android:layout_gravity="top|end"
+            android:layout_marginTop="@dimen/lg_margin"
+            android:layout_marginEnd="@dimen/lg_margin"
+            tools:text="2 / 5" />
 
-            <com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView
-                android:id="@+id/widget_status_recycler"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+    </FrameLayout>
 
-            <com.mxt.anitrend.base.custom.view.text.PageIndicator
-                android:id="@+id/widget_status_indicator"
-                android:layout_gravity="top|end"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/lg_margin"
-                android:layout_marginEnd="@dimen/xl_margin"
-                tools:text="2 / 5" />
-
-        </FrameLayout>
-
-        <androidx.legacy.widget.Space
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/md_margin" />
-    </LinearLayout>
+    <androidx.legacy.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/md_margin" />
+</LinearLayout>

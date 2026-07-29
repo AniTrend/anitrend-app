@@ -3,158 +3,174 @@
 <com.mxt.anitrend.base.custom.view.container.CardViewBase xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:clickable="true"
-    android:focusable="true"
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/lg_margin"
-    android:foreground="?selectableItemBackground">
+    android:layout_marginHorizontal="@dimen/lg_margin"
+    android:layout_marginTop="@dimen/lg_margin"
+    app:cardBackgroundColor="?attr/colorSurfaceContainer"
+    app:cardElevation="0dp"
+    app:strokeColor="?attr/colorOutlineVariant"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.mxt.anitrend.base.custom.view.image.AvatarImageView
+                android:id="@+id/user_avatar"
+                android:layout_width="@dimen/avatar_ripple_radius"
+                android:layout_height="@dimen/avatar_ripple_radius"
+                tools:src="@drawable/ic_player" />
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <com.mxt.anitrend.base.custom.view.image.AvatarImageView
-                    android:id="@+id/user_avatar"
-                    android:layout_width="@dimen/avatar_ripple_radius"
-                    android:layout_height="@dimen/avatar_ripple_radius"
-                    tools:src="@drawable/ic_player" />
+                android:layout_marginStart="@dimen/lg_margin"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
                 <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
                     android:id="@+id/user_name"
-                    android:layout_marginStart="@dimen/lg_margin"
-                    android:layout_weight="1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:textStyle="bold"
                     tools:text="wax911" />
 
                 <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
                     android:id="@+id/feed_time"
-                    android:layout_weight="1.8"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center|end"
-                    android:textAlignment="viewEnd"
+                    android:layout_marginTop="@dimen/sm_margin"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                     tools:text="25 minutes ago" />
-
-            </LinearLayout>
-
-            <androidx.legacy.widget.Space
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/lg_margin" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:baselineAligned="false">
-
-                <RelativeLayout
-                    android:layout_weight="1"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:paddingStart="@dimen/md_margin"
-                    android:paddingEnd="@dimen/md_margin">
-
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <com.mxt.anitrend.base.custom.view.text.FeedHeadlineTextView
-                            android:id="@+id/feed_headline"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            tools:text="plans to read: Aggressive Restuko" />
-
-                        <androidx.legacy.widget.Space
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/xl_margin" />
-
-                        <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
-                            android:id="@+id/media_title_english"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            tools:text="Aggressive Restuko" />
-
-                        <androidx.legacy.widget.Space
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/lg_margin" />
-
-                        <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
-                            android:id="@+id/media_title_original"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textIsSelectable="true"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                            tools:text="アグレッシブ烈子"
-                            />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="bottom">
-
-                        <com.mxt.anitrend.base.custom.view.widget.UsersWidget
-                            android:id="@+id/widget_users"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:foreground="?selectableItemBackground" />
-
-                        <Space
-                            android:layout_width="0dp"
-                            android:layout_height="0dp"
-                            android:layout_weight="1" />
-
-                        <com.mxt.anitrend.base.custom.view.widget.FavouriteWidget
-                            android:id="@+id/widget_favourite"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-
-                        <com.mxt.anitrend.base.custom.view.widget.CommentWidget
-                            android:id="@+id/widget_comment"
-                            android:layout_marginStart="@dimen/lg_margin"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textStyle="bold"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:foreground="?selectableItemBackground"
-                            tools:text=" 2"/>
-
-                        <com.mxt.anitrend.base.custom.view.widget.StatusDeleteWidget
-                            android:id="@+id/widget_delete"
-                            android:layout_marginStart="@dimen/lg_margin"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-
-                    </LinearLayout>
-
-                </RelativeLayout>
-
-                <com.mxt.anitrend.base.custom.view.image.AspectImageView
-                    android:id="@+id/series_image"
-                    android:layout_width="@dimen/series_image_xs"
-                    android:layout_height="wrap_content"
-                    tools:src="@sample/gintama" />
-
             </LinearLayout>
 
         </LinearLayout>
 
-    </com.mxt.anitrend.base.custom.view.container.CardViewBase>
+        <androidx.legacy.widget.Space
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/mg_margin" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_feed_media_context"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="@dimen/lg_margin">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/mg_margin"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <com.mxt.anitrend.base.custom.view.text.FeedHeadlineTextView
+                    android:id="@+id/feed_headline"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="plans to read: Aggressive Restuko" />
+
+                <androidx.legacy.widget.Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/lg_margin" />
+
+                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:id="@+id/media_title_english"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    tools:text="Aggressive Restuko" />
+
+                <androidx.legacy.widget.Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/md_margin" />
+
+                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                    android:id="@+id/media_title_original"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                    android:textIsSelectable="true"
+                    tools:text="アグレッシブ烈子" />
+
+            </LinearLayout>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="@dimen/series_image_xs"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="?attr/colorSurfaceContainerHighest"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeColor="?attr/colorOutlineVariant"
+                app:strokeWidth="1dp">
+
+                <com.mxt.anitrend.base.custom.view.image.AspectImageView
+                    android:id="@+id/series_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:src="@sample/gintama" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+        <androidx.legacy.widget.Space
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/mg_margin" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.mxt.anitrend.base.custom.view.widget.UsersWidget
+                android:id="@+id/widget_users"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?selectableItemBackground" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <com.mxt.anitrend.base.custom.view.widget.FavouriteWidget
+                android:id="@+id/widget_favourite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <com.mxt.anitrend.base.custom.view.widget.CommentWidget
+                android:id="@+id/widget_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/lg_margin"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?selectableItemBackground"
+                android:textStyle="bold"
+                tools:text=" 2" />
+
+            <com.mxt.anitrend.base.custom.view.widget.StatusDeleteWidget
+                android:id="@+id/widget_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/lg_margin" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.mxt.anitrend.base.custom.view.container.CardViewBase>
