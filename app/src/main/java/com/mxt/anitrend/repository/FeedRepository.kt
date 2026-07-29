@@ -9,6 +9,10 @@ import com.mxt.anitrend.graphql.generated.FeedMessage
 import com.mxt.anitrend.graphql.generated.SaveActivityReply
 import com.mxt.anitrend.graphql.generated.SaveMessageActivity
 import com.mxt.anitrend.graphql.generated.SaveTextActivity
+import com.mxt.anitrend.data.mapper.toFeedRecord
+import com.mxt.anitrend.data.mapper.toFeedReplyRecord
+import com.mxt.anitrend.data.store.feed.FeedStore
+import com.mxt.anitrend.data.store.feed.FeedStoreChange
 import com.mxt.anitrend.model.api.retro.anilist.FeedService
 import com.mxt.anitrend.model.entity.anilist.FeedReply
 import com.mxt.anitrend.model.entity.anilist.meta.DeleteState
@@ -32,6 +36,7 @@ sealed class FeedMutation {
 class FeedRepository(
     private val feedService: FeedService,
     ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val feedStore: FeedStore? = null,
 ) : AbstractRepository<FeedMutation>(ioDispatcher) {
 
     suspend fun getFeedList(
@@ -87,12 +92,25 @@ class FeedRepository(
 
     // Mutation operations
 
-    suspend fun saveTextActivity(id: Long? = null, text: String?, asHtml: Boolean = false): Result<FeedListEntity> = withContext(ioDispatcher) {
+    suspend fun saveTextActivity(
+        id: Long? = null,
+        text: String?,
+        asHtml: Boolean = false,
+        commitToStore: Boolean = true,
+        revision: Long = 0L,
+    ): Result<FeedListEntity> = withContext(ioDispatcher) {
         runCatching {
             val request = SaveTextActivity.request(id = id?.toInt(), text = text, asHtml = asHtml)
             val response = feedService.saveTextActivity(request).execute()
             if (response.isSuccessful) {
                 val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                if (commitToStore) {
+                    feedStore?.apply(
+                        FeedStoreChange.FeedUpserted(
+                            feed = result.toFeedRecord(revision = revision),
+                        ),
+                    )
+                }
                 _mutationEvents.emit(FeedMutation.FeedSaved(result))
                 result
             } else {
@@ -101,12 +119,26 @@ class FeedRepository(
         }
     }
 
-    suspend fun saveMessageActivity(id: Long? = null, message: String?, recipientId: Long, asHtml: Boolean = false): Result<FeedListEntity> = withContext(ioDispatcher) {
+    suspend fun saveMessageActivity(
+        id: Long? = null,
+        message: String?,
+        recipientId: Long,
+        asHtml: Boolean = false,
+        commitToStore: Boolean = true,
+        revision: Long = 0L,
+    ): Result<FeedListEntity> = withContext(ioDispatcher) {
         runCatching {
             val request = SaveMessageActivity.request(id = id?.toInt(), message = message, recipientId = recipientId.toInt(), asHtml = asHtml)
             val response = feedService.saveMessageActivity(request).execute()
             if (response.isSuccessful) {
                 val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                if (commitToStore) {
+                    feedStore?.apply(
+                        FeedStoreChange.FeedUpserted(
+                            feed = result.toFeedRecord(revision = revision),
+                        ),
+                    )
+                }
                 _mutationEvents.emit(FeedMutation.FeedSaved(result))
                 result
             } else {
@@ -115,12 +147,27 @@ class FeedRepository(
         }
     }
 
-    suspend fun saveActivityReply(id: Long? = null, activityId: Long, text: String?, asHtml: Boolean = false): Result<FeedReply> = withContext(ioDispatcher) {
+    suspend fun saveActivityReply(
+        id: Long? = null,
+        activityId: Long,
+        text: String?,
+        asHtml: Boolean = false,
+        commitToStore: Boolean = true,
+        revision: Long = 0L,
+    ): Result<FeedReply> = withContext(ioDispatcher) {
         runCatching {
             val request = SaveActivityReply.request(id = id?.toInt(), activityId = activityId.toInt(), text = text, asHtml = asHtml)
             val response = feedService.saveActivityReply(request).execute()
             if (response.isSuccessful) {
                 val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                if (commitToStore) {
+                    feedStore?.apply(
+                        FeedStoreChange.ReplyUpserted(
+                            feedId = activityId,
+                            reply = result.toFeedReplyRecord(activityId = activityId, revision = revision),
+                        ),
+                    )
+                }
                 _mutationEvents.emit(
                     FeedMutation.ReplySaved(
                         reply = result,
@@ -134,12 +181,24 @@ class FeedRepository(
         }
     }
 
-    suspend fun deleteActivity(id: Long): Result<DeleteState> = withContext(ioDispatcher) {
+    suspend fun deleteActivity(
+        id: Long,
+        commitToStore: Boolean = true,
+        revision: Long = 0L,
+    ): Result<DeleteState> = withContext(ioDispatcher) {
         runCatching {
             val request = DeleteActivity.request(id = id.toInt())
             val response = feedService.deleteActivity(request).execute()
             if (response.isSuccessful) {
                 val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                if (commitToStore && result.isDeleted) {
+                    feedStore?.apply(
+                        FeedStoreChange.FeedDeleted(
+                            feedId = id,
+                            revision = revision,
+                        ),
+                    )
+                }
                 _mutationEvents.emit(FeedMutation.FeedDeleted(id))
                 result
             } else {
@@ -148,12 +207,29 @@ class FeedRepository(
         }
     }
 
-    suspend fun deleteActivityReply(id: Long): Result<DeleteState> = withContext(ioDispatcher) {
+    suspend fun deleteActivityReply(
+        id: Long,
+        feedId: Long? = null,
+        commitToStore: Boolean = true,
+        revision: Long = 0L,
+    ): Result<DeleteState> = withContext(ioDispatcher) {
         runCatching {
             val request = DeleteActivityReply.request(id = id.toInt())
             val response = feedService.deleteActivityReply(request).execute()
             if (response.isSuccessful) {
                 val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                if (commitToStore && result.isDeleted) {
+                    val parentFeedId = feedId ?: feedStore?.state?.value?.repliesById?.get(id)?.activityId
+                    if (parentFeedId != null) {
+                        feedStore?.apply(
+                            FeedStoreChange.ReplyDeleted(
+                                feedId = parentFeedId,
+                                replyId = id,
+                                revision = revision,
+                            ),
+                        )
+                    }
+                }
                 _mutationEvents.emit(FeedMutation.ReplyDeleted(id))
                 result
             } else {

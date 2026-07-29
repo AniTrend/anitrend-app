@@ -23,6 +23,9 @@ import com.mxt.anitrend.graphql.generated.SaveMediaListEntry
 import com.mxt.anitrend.graphql.generated.SaveReview
 import com.mxt.anitrend.graphql.generated.ScoreFormat
 import com.mxt.anitrend.graphql.generated.UpdateMediaListEntries
+import com.mxt.anitrend.data.mapper.toMediaListRecord
+import com.mxt.anitrend.data.store.medialist.MediaListStore
+import com.mxt.anitrend.data.store.medialist.MediaListStoreChange
 import com.mxt.anitrend.model.api.retro.anilist.BrowseService
 import com.mxt.anitrend.model.entity.anilist.Review
 import com.mxt.anitrend.model.entity.anilist.meta.DeleteState
@@ -46,6 +49,7 @@ sealed class BrowseMutation {
 class BrowseRepository(
     private val browseService: BrowseService,
     ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val mediaListStore: MediaListStore? = null,
 ) : AbstractRepository<BrowseMutation>(ioDispatcher) {
 
     suspend fun getMediaListCollection(
@@ -193,12 +197,27 @@ class BrowseRepository(
 
     // Mutation operations
 
-    suspend fun deleteMediaListEntry(id: Long): Result<DeleteState> = withContext(ioDispatcher) {
+    suspend fun deleteMediaListEntry(
+        id: Long,
+        mediaId: Long? = null,
+        commitToStore: Boolean = true,
+        revision: Long = 0L,
+    ): Result<DeleteState> = withContext(ioDispatcher) {
         runCatching {
             val request = DeleteMediaListEntry.request(id = id.toInt())
             val response = browseService.deleteMediaListEntry(request).execute()
             if (response.isSuccessful) {
                 val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                if (commitToStore && result.isDeleted) {
+                    val resolvedMediaId = mediaId ?: mediaListStore?.state?.value?.entriesById?.get(id)?.mediaId
+                    mediaListStore?.apply(
+                        MediaListStoreChange.EntryDeleted(
+                            entryId = id,
+                            mediaId = resolvedMediaId,
+                            revision = revision,
+                        ),
+                    )
+                }
                 _mutationEvents.emit(BrowseMutation.MediaListDeleted(id))
                 result
             } else {
@@ -239,6 +258,8 @@ class BrowseRepository(
         scoreFormat: ScoreFormat = ScoreFormat.POINT_100,
         startedAt: FuzzyDateInput? = null,
         completedAt: FuzzyDateInput? = null,
+        commitToStore: Boolean = true,
+        revision: Long = 0L,
     ): Result<MediaEntityList> = withContext(ioDispatcher) {
         runCatching {
             val request = SaveMediaListEntry.request(
@@ -254,6 +275,13 @@ class BrowseRepository(
             val response = browseService.saveMediaListEntry(request).execute()
             if (response.isSuccessful) {
                 val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                if (commitToStore) {
+                    mediaListStore?.apply(
+                        MediaListStoreChange.EntryUpserted(
+                            entry = result.toMediaListRecord(revision = revision),
+                        ),
+                    )
+                }
                 _mutationEvents.emit(BrowseMutation.MediaListSaved(result))
                 result
             } else {

@@ -34,6 +34,7 @@ import com.mxt.anitrend.base.plugin.image.ImageConfigurationPlugin
 import com.mxt.anitrend.base.plugin.text.TextConfigurationPlugin
 import com.mxt.anitrend.coordinator.WidgetMutationCoordinator
 import com.mxt.anitrend.data.DatabaseHelper
+import com.mxt.anitrend.data.store.mutation.RevisionProvider
 import com.mxt.anitrend.data.store.feed.FeedStore
 import com.mxt.anitrend.data.store.feed.InMemoryFeedStore
 import com.mxt.anitrend.data.store.medialist.InMemoryMediaListStore
@@ -46,6 +47,14 @@ import com.mxt.anitrend.data.store.mutation.MutationExecutor
 import com.mxt.anitrend.data.store.mutation.MutationRegistry
 import com.mxt.anitrend.data.store.mutation.OperationIdGenerator
 import com.mxt.anitrend.extension.logFile
+import com.mxt.anitrend.domain.feed.interactor.DeleteFeedInteractor
+import com.mxt.anitrend.domain.feed.interactor.DeleteReplyInteractor
+import com.mxt.anitrend.domain.feed.interactor.SaveFeedInteractor
+import com.mxt.anitrend.domain.feed.interactor.SaveReplyInteractor
+import com.mxt.anitrend.domain.like.interactor.ToggleLikeInteractor
+import com.mxt.anitrend.domain.medialist.interactor.DeleteMediaListEntryInteractor
+import com.mxt.anitrend.domain.medialist.interactor.IncrementMediaProgressInteractor
+import com.mxt.anitrend.domain.medialist.interactor.SaveMediaListEntryInteractor
 import com.mxt.anitrend.graphql.generated.GeneratedGraphQLRegistry
 import com.mxt.anitrend.model.api.converter.AniGraphConverter
 import com.mxt.anitrend.model.api.interceptor.AuthInterceptor
@@ -531,17 +540,18 @@ private val repositoryModule = module {
     single { UserRepository(userService = get(), boxQuery = get()) }
     single<FeedStore> { InMemoryFeedStore() }
     single<MediaListStore> { InMemoryMediaListStore() }
-    single { BrowseRepository(browseService = get()) }
+    single { BrowseRepository(browseService = get(), mediaListStore = get()) }
     single { CharacterRepository(characterService = get()) }
     single { StaffRepository(staffService = get()) }
     single { StudioRepository(studioService = get()) }
     single { SearchRepository(searchService = get()) }
-    single { FeedRepository(feedService = get()) }
-    single { BaseRepository(baseService = get(), boxQuery = get()) }
+    single { FeedRepository(feedService = get(), feedStore = get()) }
+    single { BaseRepository(baseService = get(), boxQuery = get(), feedStore = get()) }
     single { CrunchyrollRepository(feedService = get(named("crunchyrollFeed")), crunchyrollService = get(named("crunchyroll"))) }
     single { KeyedMutex(coroutineScope = get(ApplicationScopeQualifier)) }
     single<MutationRegistry> { DefaultMutationRegistry() }
     single<OperationIdGenerator> { DefaultOperationIdGenerator() }
+    single { RevisionProvider() }
     single<MutationExecutor> {
         DefaultMutationExecutor(
             keyedMutex = get(),
@@ -549,6 +559,14 @@ private val repositoryModule = module {
             operationIdGenerator = get(),
         )
     }
+    single { ToggleLikeInteractor(baseRepository = get(), mutationExecutor = get(), feedStore = get(), revisionProvider = get()) }
+    single { SaveFeedInteractor(feedRepository = get(), mutationExecutor = get(), feedStore = get(), revisionProvider = get()) }
+    single { DeleteFeedInteractor(feedRepository = get(), mutationExecutor = get(), feedStore = get(), revisionProvider = get()) }
+    single { SaveReplyInteractor(feedRepository = get(), mutationExecutor = get(), feedStore = get(), revisionProvider = get()) }
+    single { DeleteReplyInteractor(feedRepository = get(), mutationExecutor = get(), feedStore = get(), revisionProvider = get()) }
+    single { SaveMediaListEntryInteractor(browseRepository = get(), mutationExecutor = get(), mediaListStore = get(), revisionProvider = get()) }
+    single { DeleteMediaListEntryInteractor(browseRepository = get(), mutationExecutor = get(), mediaListStore = get(), revisionProvider = get()) }
+    single { IncrementMediaProgressInteractor(saveMediaListEntryInteractor = get()) }
     single {
         WidgetMutationCoordinator(
             baseRepository = get(),
