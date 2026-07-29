@@ -14,7 +14,6 @@ import com.mxt.anitrend.model.entity.container.body.EdgeContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.repository.BaseMutation
 import com.mxt.anitrend.repository.BaseRepository
-import com.mxt.anitrend.repository.BrowseMutation
 import com.mxt.anitrend.repository.BrowseRepository
 import com.mxt.anitrend.repository.MediaRepository
 import com.mxt.anitrend.util.KeyUtil

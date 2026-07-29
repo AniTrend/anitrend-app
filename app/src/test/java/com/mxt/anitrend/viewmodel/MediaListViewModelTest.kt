@@ -146,22 +146,20 @@ class MediaListViewModelTest {
         assertTrue(state.isEmpty)
     }
 
-    private fun pageContainer(vararg entries: MediaList): PageContainer<MediaListCollection> =
-        PageContainer<MediaListCollection>().apply {
-            pageData = listOf(
-                newMediaListCollection(
-                    status = KeyUtil.CURRENT,
-                    entries = entries.toList(),
-                ),
-            )
-        }
+    private fun pageContainer(vararg entries: MediaList): PageContainer<MediaListCollection> = PageContainer<MediaListCollection>().apply {
+        pageData = listOf(
+            newMediaListCollection(
+                status = KeyUtil.CURRENT,
+                entries = entries.toList(),
+            ),
+        )
+    }
 
     private fun newMediaListCollection(
         status: String,
         entries: List<MediaList>,
-    ): MediaListCollection =
-        mock(MediaListCollection::class.java).apply {
-            this.status = status
-            doReturn(entries).`when`(this).entries
-        }
+    ): MediaListCollection = mock(MediaListCollection::class.java).apply {
+        this.status = status
+        doReturn(entries).`when`(this).entries
+    }
 }

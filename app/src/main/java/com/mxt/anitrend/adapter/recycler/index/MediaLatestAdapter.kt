@@ -32,12 +32,11 @@ class MediaLatestAdapter(context: Context) : RecyclerViewAdapter<MediaBase>(cont
         R.id.custom_rating_widget,
     )
 
-    override fun onCreateViewHolder(parent: ViewGroup, @RecyclerViewType viewType: Int): RecyclerViewHolder<MediaBase> =
-        if (viewType == KeyUtil.RECYCLER_TYPE_ANIME) {
-            LatestAnimeViewHolder(AdapterLatestAnimeBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-        } else {
-            LatestMangaViewHolder(AdapterLatestMangaBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-        }
+    override fun onCreateViewHolder(parent: ViewGroup, @RecyclerViewType viewType: Int): RecyclerViewHolder<MediaBase> = if (viewType == KeyUtil.RECYCLER_TYPE_ANIME) {
+        LatestAnimeViewHolder(AdapterLatestAnimeBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+    } else {
+        LatestMangaViewHolder(AdapterLatestMangaBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+    }
 
     @RecyclerViewType
     override fun getItemViewType(position: Int): Int = if (data[position].type == KeyUtil.ANIME) {

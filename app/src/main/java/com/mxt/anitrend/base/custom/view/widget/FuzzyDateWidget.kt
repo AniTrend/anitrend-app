@@ -1,10 +1,8 @@
 package com.mxt.anitrend.base.custom.view.widget
 
-import android.annotation.TargetApi
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.DialogInterface
-import android.os.Build
 import android.util.AttributeSet
 import android.view.View
 import android.widget.DatePicker

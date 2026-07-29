@@ -199,22 +199,20 @@ class AiringListViewModelTest {
         )
     }
 
-    private fun pageContainer(entry: MediaList): PageContainer<MediaListCollection> =
-        PageContainer<MediaListCollection>().apply {
-            pageData = listOf(
-                newMediaListCollection(
-                    status = KeyUtil.CURRENT,
-                    entries = listOf(entry),
-                ),
-            )
-        }
+    private fun pageContainer(entry: MediaList): PageContainer<MediaListCollection> = PageContainer<MediaListCollection>().apply {
+        pageData = listOf(
+            newMediaListCollection(
+                status = KeyUtil.CURRENT,
+                entries = listOf(entry),
+            ),
+        )
+    }
 
     private fun newMediaListCollection(
         status: String,
         entries: List<MediaList>,
-    ): MediaListCollection =
-        mock(MediaListCollection::class.java).apply {
-            this.status = status
-            doReturn(entries).`when`(this).entries
-        }
+    ): MediaListCollection = mock(MediaListCollection::class.java).apply {
+        this.status = status
+        doReturn(entries).`when`(this).entries
+    }
 }

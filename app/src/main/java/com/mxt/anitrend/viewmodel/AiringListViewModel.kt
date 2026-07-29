@@ -157,14 +157,15 @@ class AiringListViewModel(
         entry: MediaList,
     ): Boolean = collection.status?.let { status ->
         entry.status?.let { entryStatus -> CompatUtil.equals(status, entryStatus) }
-    } ?: (lastStatusIn?.let { loadedStatus ->
-        entry.status?.let { entryStatus -> CompatUtil.equals(entryStatus, loadedStatus) }
-    } ?: true)
+    } ?: (
+        lastStatusIn?.let { loadedStatus ->
+            entry.status?.let { entryStatus -> CompatUtil.equals(entryStatus, loadedStatus) }
+        } ?: true
+        )
 
-    private fun MediaListCollection.copyWithEntries(entries: List<MediaList>): MediaListCollection =
-        apply {
-            setEntries(entries)
-        }
+    private fun MediaListCollection.copyWithEntries(entries: List<MediaList>): MediaListCollection = apply {
+        setEntries(entries)
+    }
 
     private fun MediaListCollection.setEntries(entries: List<MediaList>) {
         entriesField.set(this, entries)
