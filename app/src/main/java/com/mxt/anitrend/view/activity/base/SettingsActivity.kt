@@ -162,7 +162,7 @@ class SettingsActivity : AppCompatActivity() {
             val sectionHost = binding.settingsSections
             sectionHost.removeAllViews()
 
-            buildSections(
+            MaterialSettingsSections.build(
                 isFirebaseVisible = FirebaseApp.getApps(context).isNotEmpty(),
                 isUpdateChannelVisible = resources.getBoolean(R.bool.display_update_channel_pref),
                 isAdultContentVisible = resources.getBoolean(R.bool.display_adult_content_pref),
@@ -282,16 +282,6 @@ class SettingsActivity : AppCompatActivity() {
             val divider = layoutInflater.inflate(R.layout.item_settings_divider, container, false)
             container.addView(divider)
         }
-
-        private fun buildSections(
-            isFirebaseVisible: Boolean,
-            isUpdateChannelVisible: Boolean,
-            isAdultContentVisible: Boolean,
-        ): List<SettingsSection> = MaterialSettingsSections.build(
-            isFirebaseVisible = isFirebaseVisible,
-            isUpdateChannelVisible = isUpdateChannelVisible,
-            isAdultContentVisible = isAdultContentVisible,
-        )
     }
 
     private data class SettingsSection(
