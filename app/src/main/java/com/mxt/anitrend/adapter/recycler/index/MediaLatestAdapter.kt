@@ -20,6 +20,9 @@ import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.KeyUtil.RecyclerViewType
 
+/**
+ * Adapter for rendering the latest anime and manga media cards.
+ */
 class MediaLatestAdapter(context: Context) : RecyclerViewAdapter<MediaBase>(context) {
 
     private val cardInteractionIds = intArrayOf(
@@ -47,13 +50,18 @@ class MediaLatestAdapter(context: Context) : RecyclerViewAdapter<MediaBase>(cont
 
     override fun getFilter(): Filter? = null
 
+    /**
+     * View holder for the latest anime card layout.
+     */
     inner class LatestAnimeViewHolder(
         private val binding: AdapterLatestAnimeBinding,
     ) : RecyclerViewHolder<MediaBase>(binding.root) {
 
         init {
-            bindClickListeners(*cardInteractionIds)
-            bindLongClickListeners(*cardInteractionIds)
+            cardInteractionIds.forEach { viewId ->
+                bindClickListeners(viewId)
+                bindLongClickListeners(viewId)
+            }
         }
 
         override fun onBindViewHolder(model: MediaBase) {
@@ -76,13 +84,18 @@ class MediaLatestAdapter(context: Context) : RecyclerViewAdapter<MediaBase>(cont
         override fun onLongClick(v: View): Boolean = performLongClick(clickListener, data, itemView)
     }
 
+    /**
+     * View holder for the latest manga card layout.
+     */
     inner class LatestMangaViewHolder(
         private val binding: AdapterLatestMangaBinding,
     ) : RecyclerViewHolder<MediaBase>(binding.root) {
 
         init {
-            bindClickListeners(*cardInteractionIds)
-            bindLongClickListeners(*cardInteractionIds)
+            cardInteractionIds.forEach { viewId ->
+                bindClickListeners(viewId)
+                bindLongClickListeners(viewId)
+            }
         }
 
         override fun onBindViewHolder(model: MediaBase) {

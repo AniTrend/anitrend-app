@@ -104,6 +104,9 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Material 3 settings screen backed by the existing shared preference store.
+     */
     class MaterialSettingsFragment :
         Fragment(),
         SharedPreferences.OnSharedPreferenceChangeListener {
@@ -125,10 +128,6 @@ class SettingsActivity : AppCompatActivity() {
         ): View {
             binding = FragmentSettingsM3Binding.inflate(inflater, container, false)
             return binding!!.root
-        }
-
-        override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-            super.onViewCreated(view, savedInstanceState)
         }
 
         override fun onResume() {
@@ -288,179 +287,11 @@ class SettingsActivity : AppCompatActivity() {
             isFirebaseVisible: Boolean,
             isUpdateChannelVisible: Boolean,
             isAdultContentVisible: Boolean,
-        ): List<SettingsSection> = listOf(
-            SettingsSection(
-                titleRes = R.string.pref_header_customize,
-                summaryRes = R.string.pref_header_customize_summary,
-                rows = listOf(
-                    SettingsRow.Choice(
-                        keyRes = R.string.pref_key_app_theme,
-                        titleRes = R.string.pref_title_app_theme,
-                        entriesRes = R.array.pref_selected_theme_titles,
-                        valuesRes = R.array.pref_selected_theme_values,
-                        defaultValue = KeyUtil.THEME_LIGHT,
-                    ),
-                    SettingsRow.Choice(
-                        keyRes = R.string.pref_key_selected_language,
-                        titleRes = R.string.pref_title_language,
-                        summaryRes = R.string.pref_title_language_summary,
-                        entriesRes = R.array.pref_selected_language_titles,
-                        valuesRes = R.array.pref_selected_language_values,
-                        defaultValue = "en",
-                    ),
-                    SettingsRow.Choice(
-                        keyRes = R.string.pref_key_list_view_style,
-                        titleRes = R.string.pref_title_list_view_style,
-                        entriesRes = R.array.pref_selected_list_view_style_titles,
-                        valuesRes = R.array.pref_selected_list_view_style_values,
-                        defaultValue = "0",
-                    ),
-                ),
-            ),
-            SettingsSection(
-                titleRes = R.string.pref_header_appearance,
-                summaryRes = R.string.pref_header_appearance_summary,
-                rows = listOf(
-                    SettingsRow.Info(R.string.pref_title_accent_color, R.string.pref_summary_placeholder),
-                    SettingsRow.Info(R.string.pref_title_font_scale, R.string.pref_summary_placeholder),
-                    SettingsRow.Info(R.string.pref_title_list_density, R.string.pref_summary_placeholder),
-                ),
-            ),
-            SettingsSection(
-                titleRes = R.string.pref_header_content,
-                summaryRes = R.string.pref_header_content_summary,
-                rows = listOf(
-                    SettingsRow.Info(R.string.pref_title_autoplay, R.string.pref_summary_placeholder),
-                    SettingsRow.Info(R.string.pref_title_spoiler_behavior, R.string.pref_summary_placeholder),
-                    SettingsRow.Info(R.string.pref_title_title_language, R.string.pref_summary_placeholder),
-                    SettingsRow.Info(R.string.pref_title_score_format, R.string.pref_summary_placeholder),
-                ),
-            ),
-            SettingsSection(
-                titleRes = R.string.pref_header_general,
-                summaryRes = R.string.pref_header_general_summary,
-                rows = listOf(
-                    SettingsRow.Choice(
-                        keyRes = R.string.pref_key_startup_page,
-                        titleRes = R.string.pref_title_startup_page,
-                        entriesRes = R.array.pref_titles_menu_entries,
-                        valuesRes = R.array.pref_values_menu_entries,
-                        defaultValue = "3",
-                    ),
-                    SettingsRow.Choice(
-                        keyRes = R.string.pref_key_update_channel,
-                        titleRes = R.string.pref_title_update_channel,
-                        entriesRes = R.array.pref_titles_channel_entries,
-                        valuesRes = R.array.pref_values_channel_entries,
-                        defaultValue = "master",
-                        rowVisible = isUpdateChannelVisible,
-                    ),
-                    SettingsRow.Toggle(
-                        keyRes = R.string.pref_key_display_adult_content,
-                        titleRes = R.string.pref_title_display_adult_content,
-                        summaryRes = R.string.pref_summary_display_adult_content,
-                        defaultValue = false,
-                        rowVisible = isAdultContentVisible,
-                    ),
-                ),
-            ),
-            SettingsSection(
-                titleRes = R.string.pref_header_experimental,
-                summaryRes = R.string.pref_header_experimental_summary,
-                rows = listOf(
-                    SettingsRow.Toggle(
-                        keyRes = R.string.pref_key_experimental_markdown,
-                        titleRes = R.string.pref_title_experimental_markdown,
-                        summaryRes = R.string.pref_summary_experimental_markdown,
-                        defaultValue = false,
-                    ),
-                    SettingsRow.Toggle(
-                        keyRes = R.string.pref_key_experimental_about_screen,
-                        titleRes = R.string.pref_title_experimental_about_screen,
-                        summaryRes = R.string.pref_summary_experimental_about_screen,
-                        defaultValue = false,
-                    ),
-                    SettingsRow.Toggle(
-                        keyRes = R.string.pref_key_experimental_settings_screen,
-                        titleRes = R.string.pref_title_experimental_settings_screen,
-                        summaryRes = R.string.pref_summary_experimental_settings_screen,
-                        defaultValue = false,
-                    ),
-                    SettingsRow.Toggle(
-                        keyRes = R.string.pref_key_experimental_initial_screens,
-                        titleRes = R.string.pref_title_experimental_initial_screens,
-                        summaryRes = R.string.pref_summary_experimental_initial_screens,
-                        defaultValue = false,
-                    ),
-                ),
-            ),
-            SettingsSection(
-                titleRes = R.string.pref_header_notifications,
-                summaryRes = R.string.pref_header_notifications_summary,
-                rows = listOf(
-                    SettingsRow.Toggle(
-                        keyRes = R.string.pref_key_new_message_notifications,
-                        titleRes = R.string.pref_title_new_message_notifications,
-                        defaultValue = true,
-                    ),
-                    SettingsRow.Toggle(
-                        keyRes = R.string.pref_key_clear_notification_on_dismiss,
-                        titleRes = R.string.pref_title_clear_notification_on_dismiss,
-                        summaryRes = R.string.pref_summary_clear_notification_on_dismiss,
-                        defaultValue = false,
-                    ),
-                    SettingsRow.Toggle(
-                        keyRes = R.string.pref_key_notification_work_around,
-                        titleRes = R.string.pref_title_notification_work_around,
-                        summaryRes = R.string.pref_summary_notification_work_around,
-                        defaultValue = false,
-                        enabled = false,
-                    ),
-                ),
-            ),
-            SettingsSection(
-                titleRes = R.string.pref_header_data_sync,
-                summaryRes = R.string.pref_header_data_sync_summary,
-                rows = listOf(
-                    SettingsRow.Choice(
-                        keyRes = R.string.pref_key_sync_frequency,
-                        titleRes = R.string.pref_title_sync_frequency,
-                        entriesRes = R.array.pref_sync_frequency_titles,
-                        valuesRes = R.array.pref_sync_frequency_values,
-                        defaultValue = "15",
-                    ),
-                ),
-            ),
-            SettingsSection(
-                titleRes = R.string.pref_header_privacy,
-                summaryRes = R.string.pref_header_privacy_summary,
-                rows = listOf(
-                    SettingsRow.Toggle(
-                        keyRes = R.string.pref_key_crash_reports,
-                        titleRes = R.string.pref_title_crash_reports,
-                        summaryOnRes = R.string.pref_crash_reports_summary_on,
-                        summaryOffRes = R.string.pref_crash_reports_summary_off,
-                        defaultValue = true,
-                    ),
-                    SettingsRow.Toggle(
-                        keyRes = R.string.pref_key_usage_analytics,
-                        titleRes = R.string.pref_title_usage_analytics,
-                        summaryOnRes = R.string.pref_usage_analytics_summary_on,
-                        summaryOffRes = R.string.pref_usage_analytics_summary_off,
-                        defaultValue = false,
-                    ),
-                ),
-                visible = isFirebaseVisible,
-            ),
-            SettingsSection(
-                titleRes = R.string.pref_header_accessibility,
-                summaryRes = R.string.pref_header_accessibility_summary,
-                rows = listOf(
-                    SettingsRow.Info(R.string.pref_title_reduce_motion, R.string.pref_summary_placeholder),
-                    SettingsRow.Info(R.string.pref_title_high_contrast, R.string.pref_summary_placeholder),
-                ),
-            ),
-        ).filter { it.visible }
+        ): List<SettingsSection> = MaterialSettingsSections.build(
+            isFirebaseVisible = isFirebaseVisible,
+            isUpdateChannelVisible = isUpdateChannelVisible,
+            isAdultContentVisible = isAdultContentVisible,
+        )
     }
 
     private data class SettingsSection(
@@ -504,6 +335,208 @@ class SettingsActivity : AppCompatActivity() {
             val summaryRes: Int,
             val rowVisible: Boolean = true,
         ) : SettingsRow(rowVisible)
+    }
+
+    private object MaterialSettingsSections {
+
+        fun build(
+            isFirebaseVisible: Boolean,
+            isUpdateChannelVisible: Boolean,
+            isAdultContentVisible: Boolean,
+        ): List<SettingsSection> = listOf(
+            customizeSection(),
+            appearanceSection(),
+            contentSection(),
+            generalSection(isUpdateChannelVisible, isAdultContentVisible),
+            experimentalSection(),
+            notificationsSection(),
+            dataSyncSection(),
+            privacySection(isFirebaseVisible),
+            accessibilitySection(),
+        ).filter { it.visible }
+
+        private fun customizeSection() = SettingsSection(
+            titleRes = R.string.pref_header_customize,
+            summaryRes = R.string.pref_header_customize_summary,
+            rows = listOf(
+                SettingsRow.Choice(
+                    keyRes = R.string.pref_key_app_theme,
+                    titleRes = R.string.pref_title_app_theme,
+                    entriesRes = R.array.pref_selected_theme_titles,
+                    valuesRes = R.array.pref_selected_theme_values,
+                    defaultValue = KeyUtil.THEME_LIGHT,
+                ),
+                SettingsRow.Choice(
+                    keyRes = R.string.pref_key_selected_language,
+                    titleRes = R.string.pref_title_language,
+                    summaryRes = R.string.pref_title_language_summary,
+                    entriesRes = R.array.pref_selected_language_titles,
+                    valuesRes = R.array.pref_selected_language_values,
+                    defaultValue = "en",
+                ),
+                SettingsRow.Choice(
+                    keyRes = R.string.pref_key_list_view_style,
+                    titleRes = R.string.pref_title_list_view_style,
+                    entriesRes = R.array.pref_selected_list_view_style_titles,
+                    valuesRes = R.array.pref_selected_list_view_style_values,
+                    defaultValue = "0",
+                ),
+            ),
+        )
+
+        private fun appearanceSection() = SettingsSection(
+            titleRes = R.string.pref_header_appearance,
+            summaryRes = R.string.pref_header_appearance_summary,
+            rows = listOf(
+                SettingsRow.Info(R.string.pref_title_accent_color, R.string.pref_summary_placeholder),
+                SettingsRow.Info(R.string.pref_title_font_scale, R.string.pref_summary_placeholder),
+                SettingsRow.Info(R.string.pref_title_list_density, R.string.pref_summary_placeholder),
+            ),
+        )
+
+        private fun contentSection() = SettingsSection(
+            titleRes = R.string.pref_header_content,
+            summaryRes = R.string.pref_header_content_summary,
+            rows = listOf(
+                SettingsRow.Info(R.string.pref_title_autoplay, R.string.pref_summary_placeholder),
+                SettingsRow.Info(R.string.pref_title_spoiler_behavior, R.string.pref_summary_placeholder),
+                SettingsRow.Info(R.string.pref_title_title_language, R.string.pref_summary_placeholder),
+                SettingsRow.Info(R.string.pref_title_score_format, R.string.pref_summary_placeholder),
+            ),
+        )
+
+        private fun generalSection(
+            isUpdateChannelVisible: Boolean,
+            isAdultContentVisible: Boolean,
+        ) = SettingsSection(
+            titleRes = R.string.pref_header_general,
+            summaryRes = R.string.pref_header_general_summary,
+            rows = listOf(
+                SettingsRow.Choice(
+                    keyRes = R.string.pref_key_startup_page,
+                    titleRes = R.string.pref_title_startup_page,
+                    entriesRes = R.array.pref_titles_menu_entries,
+                    valuesRes = R.array.pref_values_menu_entries,
+                    defaultValue = "3",
+                ),
+                SettingsRow.Choice(
+                    keyRes = R.string.pref_key_update_channel,
+                    titleRes = R.string.pref_title_update_channel,
+                    entriesRes = R.array.pref_titles_channel_entries,
+                    valuesRes = R.array.pref_values_channel_entries,
+                    defaultValue = "master",
+                    rowVisible = isUpdateChannelVisible,
+                ),
+                SettingsRow.Toggle(
+                    keyRes = R.string.pref_key_display_adult_content,
+                    titleRes = R.string.pref_title_display_adult_content,
+                    summaryRes = R.string.pref_summary_display_adult_content,
+                    defaultValue = false,
+                    rowVisible = isAdultContentVisible,
+                ),
+            ),
+        )
+
+        private fun experimentalSection() = SettingsSection(
+            titleRes = R.string.pref_header_experimental,
+            summaryRes = R.string.pref_header_experimental_summary,
+            rows = listOf(
+                SettingsRow.Toggle(
+                    keyRes = R.string.pref_key_experimental_markdown,
+                    titleRes = R.string.pref_title_experimental_markdown,
+                    summaryRes = R.string.pref_summary_experimental_markdown,
+                    defaultValue = false,
+                ),
+                SettingsRow.Toggle(
+                    keyRes = R.string.pref_key_experimental_about_screen,
+                    titleRes = R.string.pref_title_experimental_about_screen,
+                    summaryRes = R.string.pref_summary_experimental_about_screen,
+                    defaultValue = false,
+                ),
+                SettingsRow.Toggle(
+                    keyRes = R.string.pref_key_experimental_settings_screen,
+                    titleRes = R.string.pref_title_experimental_settings_screen,
+                    summaryRes = R.string.pref_summary_experimental_settings_screen,
+                    defaultValue = false,
+                ),
+                SettingsRow.Toggle(
+                    keyRes = R.string.pref_key_experimental_initial_screens,
+                    titleRes = R.string.pref_title_experimental_initial_screens,
+                    summaryRes = R.string.pref_summary_experimental_initial_screens,
+                    defaultValue = false,
+                ),
+            ),
+        )
+
+        private fun notificationsSection() = SettingsSection(
+            titleRes = R.string.pref_header_notifications,
+            summaryRes = R.string.pref_header_notifications_summary,
+            rows = listOf(
+                SettingsRow.Toggle(
+                    keyRes = R.string.pref_key_new_message_notifications,
+                    titleRes = R.string.pref_title_new_message_notifications,
+                    defaultValue = true,
+                ),
+                SettingsRow.Toggle(
+                    keyRes = R.string.pref_key_clear_notification_on_dismiss,
+                    titleRes = R.string.pref_title_clear_notification_on_dismiss,
+                    summaryRes = R.string.pref_summary_clear_notification_on_dismiss,
+                    defaultValue = false,
+                ),
+                SettingsRow.Toggle(
+                    keyRes = R.string.pref_key_notification_work_around,
+                    titleRes = R.string.pref_title_notification_work_around,
+                    summaryRes = R.string.pref_summary_notification_work_around,
+                    defaultValue = false,
+                    enabled = false,
+                ),
+            ),
+        )
+
+        private fun dataSyncSection() = SettingsSection(
+            titleRes = R.string.pref_header_data_sync,
+            summaryRes = R.string.pref_header_data_sync_summary,
+            rows = listOf(
+                SettingsRow.Choice(
+                    keyRes = R.string.pref_key_sync_frequency,
+                    titleRes = R.string.pref_title_sync_frequency,
+                    entriesRes = R.array.pref_sync_frequency_titles,
+                    valuesRes = R.array.pref_sync_frequency_values,
+                    defaultValue = "15",
+                ),
+            ),
+        )
+
+        private fun privacySection(isFirebaseVisible: Boolean) = SettingsSection(
+            titleRes = R.string.pref_header_privacy,
+            summaryRes = R.string.pref_header_privacy_summary,
+            rows = listOf(
+                SettingsRow.Toggle(
+                    keyRes = R.string.pref_key_crash_reports,
+                    titleRes = R.string.pref_title_crash_reports,
+                    summaryOnRes = R.string.pref_crash_reports_summary_on,
+                    summaryOffRes = R.string.pref_crash_reports_summary_off,
+                    defaultValue = true,
+                ),
+                SettingsRow.Toggle(
+                    keyRes = R.string.pref_key_usage_analytics,
+                    titleRes = R.string.pref_title_usage_analytics,
+                    summaryOnRes = R.string.pref_usage_analytics_summary_on,
+                    summaryOffRes = R.string.pref_usage_analytics_summary_off,
+                    defaultValue = false,
+                ),
+            ),
+            visible = isFirebaseVisible,
+        )
+
+        private fun accessibilitySection() = SettingsSection(
+            titleRes = R.string.pref_header_accessibility,
+            summaryRes = R.string.pref_header_accessibility_summary,
+            rows = listOf(
+                SettingsRow.Info(R.string.pref_title_reduce_motion, R.string.pref_summary_placeholder),
+                SettingsRow.Info(R.string.pref_title_high_contrast, R.string.pref_summary_placeholder),
+            ),
+        )
     }
 }
 

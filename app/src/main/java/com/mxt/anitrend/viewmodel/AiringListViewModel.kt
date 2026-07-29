@@ -108,14 +108,14 @@ class AiringListViewModel(
         var didChange = false
         val updatedCollections = current.pageData.toMutableList()
 
-        current.pageData.forEachIndexed { index, collection ->
+        for ((index, collection) in current.pageData.withIndex()) {
             val existingEntries = collection.entries.orEmpty()
             val existingIndex = existingEntries.indexOfFirst { item ->
                 item.id == entry.id || item.mediaId == entry.mediaId
             }
 
             if (existingIndex == -1 && !matchesFilters) {
-                return@forEachIndexed
+                continue
             }
 
             val updatedEntries = existingEntries.toMutableList()
@@ -123,7 +123,7 @@ class AiringListViewModel(
                 existingIndex >= 0 && matchesFilters -> updatedEntries[existingIndex].mergeFrom(entry)
                 existingIndex >= 0 -> updatedEntries.removeAt(existingIndex)
                 matchesFilters && shouldAppendToCollection(collection, entry) -> updatedEntries.add(entry)
-                else -> return@forEachIndexed
+                else -> continue
             }
 
             updatedCollections[index] = collection.copyWithEntries(updatedEntries)
@@ -193,6 +193,7 @@ class AiringListViewModel(
         media = entry.media
     }
 
+    /** Reflection handle used to update collection entries in place. */
     companion object {
         private val entriesField =
             MediaListCollection::class.java.getDeclaredField("entries").apply {
