@@ -1,30 +1,17 @@
 package com.mxt.anitrend.view.activity.detail
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.mxt.anitrend.R
 import com.mxt.anitrend.databinding.ActivityFrameGenericBinding
 import com.mxt.anitrend.extension.KoinExt
-import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.util.IntentBundleUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.view.fragment.detail.CommentFragment
 
 class CommentActivity : AppCompatActivity() {
-
-    companion object {
-        const val extraUpdatedFeed = "extra_updated_feed"
-    }
-
-    fun updateResult(feed: FeedList) {
-        setResult(
-            RESULT_OK,
-            Intent().putExtra(extraUpdatedFeed, feed),
-        )
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Preserve configured theme (previously handled by ActivityBase.configureActivity).
@@ -45,6 +32,10 @@ class CommentActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.customToolbar.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        requireNotNull(intent.extras?.takeIf { it.containsKey(KeyUtil.arg_id) }) {
+            "CommentActivity requires ${KeyUtil.arg_id}"
+        }
 
         val fragment = CommentFragment.newInstance(intent.extras ?: Bundle.EMPTY)
         supportFragmentManager

@@ -53,6 +53,7 @@ class FeedRepository(
         asHtml: Boolean = false,
         commitToStore: Boolean = true,
         queryKey: FeedQueryKey? = null,
+        queryGeneration: Int = 0,
     ): Result<PageContainer<FeedListEntity>> = withContext(ioDispatcher) {
         runCatching {
             val request = FeedList.request(page = page, perPage = perPage, id = id?.toInt(), isFollowing = isFollowing, userId = userId?.toInt(), type = type, isMixed = isMixed, asHtml = asHtml)
@@ -78,6 +79,7 @@ class FeedRepository(
                         FeedStoreChange.PageLoaded(
                             queryKey = resolvedQueryKey,
                             page = pageInfo?.currentPage ?: page ?: 1,
+                            generation = queryGeneration,
                             feeds = result.pageData.map { it.toFeedRecord(revision = 0L) },
                             pageInfo = pageInfo,
                         ),
@@ -91,12 +93,31 @@ class FeedRepository(
         }
     }
 
-    suspend fun getFeedListReply(id: Long, asHtml: Boolean = false): Result<FeedListEntity> = withContext(ioDispatcher) {
+    suspend fun getFeedListReply(
+        id: Long,
+        asHtml: Boolean = false,
+        commitToStore: Boolean = true,
+        revision: Long = 0L,
+    ): Result<FeedListEntity> = withContext(ioDispatcher) {
         runCatching {
             val request = FeedListReply.request(id = id.toInt(), asHtml = asHtml)
             val response = feedService.getFeedListReply(request).execute()
             if (response.isSuccessful) {
-                handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body")).also { result ->
+                    if (commitToStore) {
+                        feedStore?.apply(
+                            FeedStoreChange.FeedDetailLoaded(
+                                feed = result.toFeedRecord(revision = revision),
+                                replies = result.replies.orEmpty().map { reply ->
+                                    reply.toFeedReplyRecord(
+                                        activityId = result.id,
+                                        revision = revision,
+                                    )
+                                },
+                            ),
+                        )
+                    }
+                }
             } else {
                 throw RuntimeException(response.apiError())
             }

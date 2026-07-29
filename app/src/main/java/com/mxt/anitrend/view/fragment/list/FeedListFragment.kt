@@ -1,6 +1,5 @@
 package com.mxt.anitrend.view.fragment.list
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.ActionMode
@@ -8,7 +7,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -19,7 +17,6 @@ import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
 import com.mxt.anitrend.coordinator.WidgetMutationCoordinator
 import com.mxt.anitrend.data.DatabaseHelper
 import com.mxt.anitrend.domain.model.FeedItemUiModel
-import com.mxt.anitrend.extension.parcelable
 import com.mxt.anitrend.graphql.generated.ActivityType
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.container.body.PageContainer
@@ -48,21 +45,12 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
     private val settings: Settings by inject()
 
     private val databaseHelper: DatabaseHelper by inject()
-
     private val mutationCoordinator by inject<WidgetMutationCoordinator>()
 
     private val feedListViewModel: FeedListViewModel by viewModel()
     private var feedListAdapter: FeedListAdapter? = null
 
     protected open val useStateListAdapter: Boolean = true
-
-    private val commentActivityLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode != Activity.RESULT_OK) {
-            return@registerForActivityResult
-        }
-        val updatedFeed = result.data?.extras?.parcelable<FeedList>(CommentActivity.extraUpdatedFeed) ?: return@registerForActivityResult
-        applyUpdatedFeedResult(updatedFeed)
-    }
 
     companion object {
         @JvmStatic
@@ -80,22 +68,16 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
         isPager = true
         isFeed = true
         mColumnSize = R.integer.single_list_x1
-        // TODO: CommentFragment, MessageFeedFragment, and MediaFeedFragment still use the
-        // legacy FeedAdapter path until their read/write migration phases are completed.
+        // TODO: MessageFeedFragment and MediaFeedFragment still use the legacy FeedAdapter
+        // path until their migration phases are completed.
         mAdapter = FeedAdapter(ctx, mutationCoordinator)
         if (useStateListAdapter) {
             feedListAdapter = FeedListAdapter(
                 experimentalMarkdown = settings.experimentalMarkdown,
                 currentUser = databaseHelper.currentUser,
                 resolveFeed = ::resolveCurrentFeed,
-                onToggleLikeAction = { id, type, onResult -> mutationCoordinator.toggleLike(id, type, onResult) },
-                onDeleteFeedAction = { feedId, requestType, onResult ->
-                    when (requestType) {
-                        KeyUtil.MUT_DELETE_FEED -> mutationCoordinator.deleteActivity(feedId, onResult)
-                        KeyUtil.MUT_DELETE_FEED_REPLY -> mutationCoordinator.deleteActivityReply(feedId, onResult)
-                        else -> onResult(Result.failure(IllegalStateException("Unknown request type: $requestType")))
-                    }
-                },
+                onToggleLikeAction = feedListViewModel::toggleLike,
+                onDeleteFeedAction = feedListViewModel::deleteFeed,
                 onOpenMedia = { target, feedId -> openFeedMedia(target, feedId) },
                 onOpenComments = ::openFeedComments,
                 onEditFeed = ::editFeed,
@@ -229,9 +211,7 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
         }
     }
 
-    protected open fun applyUpdatedFeedResult(feed: FeedList) {
-        feedListViewModel.applyReturnedFeed(feed)
-    }
+    protected open fun applyUpdatedFeedResult(feed: FeedList) = Unit
 
     protected fun handleSuccess(
         value: PageContainer<FeedList>,
@@ -305,13 +285,12 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
     }
 
     private fun openFeedComments(feedId: Long) {
-        val feed = resolveCurrentFeed(feedId) ?: return
         val host = activity ?: return
         val intent =
             Intent(host, CommentActivity::class.java).apply {
-                putExtra(KeyUtil.arg_model, feed)
+                putExtra(KeyUtil.arg_id, feedId)
             }
-        commentActivityLauncher.launch(intent)
+        startActivity(intent)
     }
 
     private fun editFeed(feedId: Long) {
@@ -402,9 +381,9 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
                 val host = activity ?: return
                 val intent =
                     Intent(host, CommentActivity::class.java).apply {
-                        putExtra(KeyUtil.arg_model, data.value)
+                        putExtra(KeyUtil.arg_id, data.value.id)
                     }
-                commentActivityLauncher.launch(intent)
+                startActivity(intent)
             }
             R.id.widget_edit -> {
                 mBottomSheet =

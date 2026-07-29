@@ -47,7 +47,7 @@ class FeedStoreTest {
         val feed = createFeed(id = 1L, revision = 1L)
         val reply = createReply(id = 20L, activityId = 1L, revision = 1L)
 
-        store.apply(FeedStoreChange.PageLoaded(queryKey, page = 1, feeds = listOf(feed), pageInfo = createPageInfo(1)))
+        store.apply(FeedStoreChange.PageLoaded(queryKey, page = 1, generation = 1, feeds = listOf(feed), pageInfo = createPageInfo(1)))
         store.apply(FeedStoreChange.ReplyUpserted(feedId = 1L, reply = reply))
         store.apply(FeedStoreChange.FeedDeleted(feedId = 1L, revision = 2L))
 
@@ -92,6 +92,7 @@ class FeedStoreTest {
             FeedStoreChange.PageLoaded(
                 queryKey = queryKey,
                 page = 1,
+                generation = 1,
                 feeds = listOf(createFeed(1L, 1L), createFeed(2L, 1L)),
                 pageInfo = createPageInfo(1),
             ),
@@ -101,6 +102,7 @@ class FeedStoreTest {
             FeedStoreChange.PageLoaded(
                 queryKey = queryKey,
                 page = 2,
+                generation = 1,
                 feeds = listOf(createFeed(3L, 1L), createFeed(4L, 1L)),
                 pageInfo = createPageInfo(2),
             ),
@@ -116,6 +118,7 @@ class FeedStoreTest {
             FeedStoreChange.PageLoaded(
                 queryKey = queryKey,
                 page = 1,
+                generation = 1,
                 feeds = listOf(createFeed(1L, 1L), createFeed(2L, 1L)),
                 pageInfo = createPageInfo(1),
             ),
@@ -125,6 +128,7 @@ class FeedStoreTest {
             FeedStoreChange.PageLoaded(
                 queryKey = queryKey,
                 page = 2,
+                generation = 1,
                 feeds = listOf(createFeed(2L, 2L), createFeed(3L, 1L)),
                 pageInfo = createPageInfo(2),
             ),
@@ -195,6 +199,7 @@ class FeedStoreTest {
     ): FeedRecord = FeedRecord(
         id = id,
         type = "TEXT",
+        status = "watched",
         text = text,
         createdAt = id * 100,
         user = createUser(id),

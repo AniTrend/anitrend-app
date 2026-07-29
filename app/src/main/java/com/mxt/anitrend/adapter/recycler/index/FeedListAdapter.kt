@@ -9,7 +9,9 @@ import com.bumptech.glide.Glide
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.shared.UnresolvedViewHolder
 import com.mxt.anitrend.base.custom.view.image.AspectImageView
+import com.mxt.anitrend.base.custom.view.widget.FavouriteWidgetState
 import com.mxt.anitrend.base.custom.view.widget.FavouriteWidget
+import com.mxt.anitrend.base.custom.view.widget.StatusDeleteWidgetState
 import com.mxt.anitrend.base.custom.view.widget.StatusDeleteWidget
 import com.mxt.anitrend.binding.richMarkDown
 import com.mxt.anitrend.binding.setImage
@@ -19,9 +21,7 @@ import com.mxt.anitrend.databinding.AdapterFeedStatusBinding
 import com.mxt.anitrend.databinding.CustomRecyclerUnresolvedBinding
 import com.mxt.anitrend.domain.model.FeedItemUiModel
 import com.mxt.anitrend.extension.getLayoutInflater
-import com.mxt.anitrend.graphql.generated.LikeableType
 import com.mxt.anitrend.model.entity.anilist.FeedList
-import com.mxt.anitrend.model.entity.anilist.meta.DeleteState
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.date.DateUtil
@@ -30,8 +30,8 @@ class FeedListAdapter(
     private val experimentalMarkdown: Boolean,
     private val currentUser: UserBase?,
     private val resolveFeed: (Long) -> FeedList?,
-    private val onToggleLikeAction: (Long, LikeableType, (Result<List<UserBase>>) -> Unit) -> Unit,
-    private val onDeleteFeedAction: (Long, Int, (Result<DeleteState>) -> Unit) -> Unit,
+    private val onToggleLikeAction: (Long) -> Unit,
+    private val onDeleteFeedAction: (Long) -> Unit,
     private val onOpenMedia: (View, Long) -> Unit,
     private val onOpenComments: (Long) -> Unit,
     private val onEditFeed: (Long) -> Unit,
@@ -46,24 +46,6 @@ class FeedListAdapter(
         const val FEED_LIST = 20
         const val FEED_PROGRESS = 21
     }
-
-    private val favouriteListener =
-        object : FavouriteWidget.Listener {
-            override fun onToggleLike(
-                id: Long,
-                type: LikeableType,
-                onResult: (Result<List<UserBase>>) -> Unit,
-            ) = onToggleLikeAction(id, type, onResult)
-        }
-
-    private val deleteListener =
-        object : StatusDeleteWidget.Listener {
-            override fun onDeleteFeed(
-                feedId: Long,
-                @KeyUtil.RequestType requestType: Int,
-                onResult: (Result<DeleteState>) -> Unit,
-            ) = onDeleteFeedAction(feedId, requestType, onResult)
-        }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -153,6 +135,14 @@ class FeedListAdapter(
             }
         }
 
+        protected fun canModify(feed: FeedList?): Boolean {
+            val currentUserId = currentUser?.id ?: return false
+            return when {
+                feed?.messenger?.id != null -> feed.messenger?.id == currentUserId
+                else -> feed?.user?.id == currentUserId
+            }
+        }
+
         override fun onClick(view: View) {
             val model = currentItem() ?: return
             val feed = resolveFeed(model.id)
@@ -198,25 +188,36 @@ class FeedListAdapter(
             binding.mediaTitleEnglish.text = feed?.media?.title?.english
             binding.mediaTitleOriginal.text = feed?.media?.title?.original
             AspectImageView.setImage(binding.seriesImage, feed?.media?.coverImage)
-            binding.widgetFavourite.setRequestParams(KeyUtil.ACTIVITY, model.id)
-            binding.widgetFavourite.setModel(feed?.likes)
-            binding.widgetFavourite.setCurrentUser(currentUser)
-            binding.widgetFavourite.setListener(favouriteListener)
+            binding.widgetFavourite.render(
+                FavouriteWidgetState(
+                    count = model.likeCount,
+                    isLiked = model.isLikedByCurrentUser || (currentUser != null && feed?.likes.orEmpty().any { it.id == currentUser.id }),
+                    isEnabled = !model.isLikePending,
+                    isLoading = model.isLikePending,
+                ),
+            )
+            binding.widgetFavourite.setOnToggleListener { onToggleLikeAction(model.id) }
             binding.widgetComment.setReplyCount(model.replyCount)
-            if (model.canDelete && feed != null) {
-                binding.widgetDelete.setModel(feed, KeyUtil.MUT_DELETE_FEED)
+            if (canModify(feed) && feed != null) {
+                binding.widgetDelete.render(
+                    StatusDeleteWidgetState(
+                        isEnabled = !model.isDeletePending,
+                        isLoading = model.isDeletePending,
+                    ),
+                )
                 binding.widgetDelete.visibility = View.VISIBLE
+                binding.widgetDelete.setOnDeleteListener { onDeleteFeedAction(model.id) }
             } else {
                 binding.widgetDelete.visibility = View.GONE
+                binding.widgetDelete.setOnDeleteListener(null)
             }
-            binding.widgetDelete.setListener(deleteListener)
         }
 
         fun recycle() {
             Glide.with(binding.root).clear(binding.userAvatar)
             Glide.with(binding.root).clear(binding.seriesImage)
-            binding.widgetFavourite.setListener(null)
-            binding.widgetDelete.setListener(null)
+            binding.widgetFavourite.setOnToggleListener(null)
+            binding.widgetDelete.setOnDeleteListener(null)
             binding.widgetFavourite.onViewRecycled()
             binding.widgetDelete.onViewRecycled()
         }
@@ -248,26 +249,37 @@ class FeedListAdapter(
                 binding.widgetStatus.visibility = View.GONE
             }
             binding.widgetStatusText.richMarkDown(model.body?.toString())
-            binding.widgetFavourite.setRequestParams(KeyUtil.ACTIVITY, model.id)
-            binding.widgetFavourite.setModel(feed?.likes)
-            binding.widgetFavourite.setCurrentUser(currentUser)
-            binding.widgetFavourite.setListener(favouriteListener)
+            binding.widgetFavourite.render(
+                FavouriteWidgetState(
+                    count = model.likeCount,
+                    isLiked = model.isLikedByCurrentUser || (currentUser != null && feed?.likes.orEmpty().any { it.id == currentUser.id }),
+                    isEnabled = !model.isLikePending,
+                    isLoading = model.isLikePending,
+                ),
+            )
+            binding.widgetFavourite.setOnToggleListener { onToggleLikeAction(model.id) }
             binding.widgetComment.setReplyCount(model.replyCount)
 
-            binding.widgetEdit.visibility = if (model.canEdit) View.VISIBLE else View.GONE
-            if (model.canDelete && feed != null) {
-                binding.widgetDelete.setModel(feed, KeyUtil.MUT_DELETE_FEED)
+            binding.widgetEdit.visibility = if (canModify(feed)) View.VISIBLE else View.GONE
+            if (canModify(feed) && feed != null) {
+                binding.widgetDelete.render(
+                    StatusDeleteWidgetState(
+                        isEnabled = !model.isDeletePending,
+                        isLoading = model.isDeletePending,
+                    ),
+                )
                 binding.widgetDelete.visibility = View.VISIBLE
+                binding.widgetDelete.setOnDeleteListener { onDeleteFeedAction(model.id) }
             } else {
                 binding.widgetDelete.visibility = View.GONE
+                binding.widgetDelete.setOnDeleteListener(null)
             }
-            binding.widgetDelete.setListener(deleteListener)
         }
 
         fun recycle() {
             Glide.with(binding.root).clear(binding.userAvatar)
-            binding.widgetFavourite.setListener(null)
-            binding.widgetDelete.setListener(null)
+            binding.widgetFavourite.setOnToggleListener(null)
+            binding.widgetDelete.setOnDeleteListener(null)
             binding.widgetFavourite.onViewRecycled()
             binding.widgetStatus.onViewRecycled()
             binding.widgetDelete.onViewRecycled()
@@ -302,27 +314,38 @@ class FeedListAdapter(
                 binding.widgetStatus.visibility = View.GONE
             }
             binding.widgetStatusText.richMarkDown(model.body?.toString())
-            binding.widgetFavourite.setRequestParams(KeyUtil.ACTIVITY, model.id)
-            binding.widgetFavourite.setModel(feed?.likes)
-            binding.widgetFavourite.setCurrentUser(currentUser)
-            binding.widgetFavourite.setListener(favouriteListener)
+            binding.widgetFavourite.render(
+                FavouriteWidgetState(
+                    count = model.likeCount,
+                    isLiked = model.isLikedByCurrentUser || (currentUser != null && feed?.likes.orEmpty().any { it.id == currentUser.id }),
+                    isEnabled = !model.isLikePending,
+                    isLoading = model.isLikePending,
+                ),
+            )
+            binding.widgetFavourite.setOnToggleListener { onToggleLikeAction(model.id) }
             binding.widgetComment.setReplyCount(model.replyCount)
 
-            binding.widgetEdit.visibility = if (model.canEdit) View.VISIBLE else View.GONE
-            if (model.canDelete && feed != null) {
-                binding.widgetDelete.setModel(feed, KeyUtil.MUT_DELETE_FEED)
+            binding.widgetEdit.visibility = if (canModify(feed)) View.VISIBLE else View.GONE
+            if (canModify(feed) && feed != null) {
+                binding.widgetDelete.render(
+                    StatusDeleteWidgetState(
+                        isEnabled = !model.isDeletePending,
+                        isLoading = model.isDeletePending,
+                    ),
+                )
                 binding.widgetDelete.visibility = View.VISIBLE
+                binding.widgetDelete.setOnDeleteListener { onDeleteFeedAction(model.id) }
             } else {
                 binding.widgetDelete.visibility = View.GONE
+                binding.widgetDelete.setOnDeleteListener(null)
             }
-            binding.widgetDelete.setListener(deleteListener)
         }
 
         fun recycle() {
             Glide.with(binding.root).clear(binding.messengerAvatar)
             Glide.with(binding.root).clear(binding.recipientAvatar)
-            binding.widgetFavourite.setListener(null)
-            binding.widgetDelete.setListener(null)
+            binding.widgetFavourite.setOnToggleListener(null)
+            binding.widgetDelete.setOnDeleteListener(null)
             binding.widgetFavourite.onViewRecycled()
             binding.widgetStatus.onViewRecycled()
             binding.widgetDelete.onViewRecycled()
@@ -348,19 +371,25 @@ class FeedListAdapter(
             binding.widgetUsers.visibility = View.GONE
             binding.widgetFavourite.visibility = View.GONE
             binding.widgetComment.setReplyCount(model.replyCount)
-            if (model.canDelete && feed != null) {
-                binding.widgetDelete.setModel(feed, KeyUtil.MUT_DELETE_FEED)
+            if (canModify(feed) && feed != null) {
+                binding.widgetDelete.render(
+                    StatusDeleteWidgetState(
+                        isEnabled = !model.isDeletePending,
+                        isLoading = model.isDeletePending,
+                    ),
+                )
                 binding.widgetDelete.visibility = View.VISIBLE
+                binding.widgetDelete.setOnDeleteListener { onDeleteFeedAction(model.id) }
             } else {
                 binding.widgetDelete.visibility = View.GONE
+                binding.widgetDelete.setOnDeleteListener(null)
             }
-            binding.widgetDelete.setListener(deleteListener)
         }
 
         fun recycle() {
             Glide.with(binding.root).clear(binding.userAvatar)
             Glide.with(binding.root).clear(binding.seriesImage)
-            binding.widgetDelete.setListener(null)
+            binding.widgetDelete.setOnDeleteListener(null)
             binding.widgetDelete.onViewRecycled()
         }
     }

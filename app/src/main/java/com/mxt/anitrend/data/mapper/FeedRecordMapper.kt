@@ -4,16 +4,21 @@ import com.mxt.anitrend.domain.feed.model.FeedRecord
 import com.mxt.anitrend.domain.feed.model.FeedReplyRecord
 import com.mxt.anitrend.domain.model.FuzzyDateRecord
 import com.mxt.anitrend.domain.model.MediaSummaryRecord
+import com.mxt.anitrend.domain.model.PageInfoRecord
 import com.mxt.anitrend.domain.model.UserSummaryRecord
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.anilist.FeedReply
+import com.mxt.anitrend.model.entity.anilist.meta.ImageBase
+import com.mxt.anitrend.model.entity.anilist.meta.MediaTitle
 import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.base.UserBase
+import com.mxt.anitrend.model.entity.container.attribute.PageInfo
 
 fun FeedList.toFeedRecord(revision: Long = 0L): FeedRecord = FeedRecord(
     id = id,
     type = type,
+    status = status,
     text = text,
     createdAt = createdAt,
     user = user?.toUserSummaryRecord(),
@@ -68,3 +73,65 @@ fun FuzzyDate.toFuzzyDateRecord(): FuzzyDateRecord = FuzzyDateRecord(
     month = month.takeIf { it != 0 },
     day = day.takeIf { it != 0 },
 )
+
+fun FeedRecord.toFeedList(replies: List<FeedReply> = emptyList()): FeedList = FeedList(
+    id = id,
+    replyCount = replyCount,
+    type = type,
+    status = status,
+    text = text,
+    createdAt = createdAt,
+    user = user?.toUserBase(),
+    media = media?.toMediaBase(),
+    messenger = messenger?.toUserBase(),
+    recipient = recipient?.toUserBase(),
+    likes = likes.map(UserSummaryRecord::toUserBase),
+    siteUrl = siteUrl,
+).apply {
+    this.replies = replies
+}
+
+fun FeedReplyRecord.toFeedReply(): FeedReply = FeedReply(
+    id = id,
+    text = reply,
+    createdAt = createdAt,
+    user = user?.toUserBase(),
+    likes = likes.map(UserSummaryRecord::toUserBase),
+)
+
+fun PageInfoRecord.toPageInfo(): PageInfo = PageInfo(
+    total = total ?: 0,
+    perPage = perPage ?: 0,
+    currentPage = currentPage ?: 0,
+    hasNextPageValue = hasNextPage,
+)
+
+fun UserSummaryRecord.toUserBase(): UserBase = UserBase(name = name).apply {
+    id = this@toUserBase.id
+    avatar = ImageBase(
+        extraLarge = this@toUserBase.avatar,
+        large = this@toUserBase.avatar,
+        medium = this@toUserBase.avatar,
+    )
+}
+
+fun MediaSummaryRecord.toMediaBase(): MediaBase = MediaBase().apply {
+    id = this@toMediaBase.id
+    title = MediaTitle(
+        romajiRaw = titleRomaji,
+        englishRaw = titleEnglish,
+        originalRaw = titleOriginal,
+        userPreferredRaw = titleRomaji ?: titleEnglish ?: titleOriginal,
+    )
+    coverImage = ImageBase(
+        extraLarge = this@toMediaBase.coverImage,
+        large = this@toMediaBase.coverImage,
+        medium = this@toMediaBase.coverImage,
+    )
+    type = this@toMediaBase.type
+    episodes = this@toMediaBase.episodes
+    chapters = this@toMediaBase.chapters
+    volumes = this@toMediaBase.volumes
+    status = this@toMediaBase.status
+    siteUrl = this@toMediaBase.siteUrl
+}

@@ -100,8 +100,4 @@ class UserFeedFragment : FeedListFragment() {
             userName?.let { userRepository.cachedCurrentUser?.name == it }
                 ?: (userId != 0L && userRepository.cachedCurrentUser?.id == userId)
             )
-
-    override fun applyUpdatedFeedResult(feed: FeedList) {
-        userFeedViewModel.applyReturnedFeed(feed)
-    }
 }

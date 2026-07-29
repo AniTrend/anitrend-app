@@ -22,6 +22,7 @@ class FeedRecordMapperTest {
 
         assertEquals(11L, record.id)
         assertEquals("TEXT", record.type)
+        assertEquals("watched", record.status)
         assertEquals("Hello world", record.text)
         assertEquals(1234L, record.createdAt)
         assertEquals(99L, record.user?.id)
@@ -102,6 +103,7 @@ class FeedRecordMapperTest {
         id = 11L,
         replyCount = 3,
         type = "TEXT",
+        status = "watched",
         text = "Hello world",
         createdAt = 1234L,
         user = createUser(99L, "alice"),

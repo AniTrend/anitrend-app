@@ -9,8 +9,14 @@ sealed interface FeedStoreChange {
     data class PageLoaded(
         val queryKey: FeedQueryKey,
         val page: Int,
+        val generation: Int,
         val feeds: List<FeedRecord>,
         val pageInfo: PageInfoRecord?,
+    ) : FeedStoreChange
+
+    data class FeedDetailLoaded(
+        val feed: FeedRecord,
+        val replies: List<FeedReplyRecord>,
     ) : FeedStoreChange
 
     data class FeedUpserted(

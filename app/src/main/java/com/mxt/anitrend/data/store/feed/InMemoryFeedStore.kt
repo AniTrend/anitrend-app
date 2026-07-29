@@ -26,6 +26,7 @@ class InMemoryFeedStore : FeedStore {
             val updatedState =
                 when (change) {
                     is FeedStoreChange.PageLoaded -> reducePageLoaded(change)
+                    is FeedStoreChange.FeedDetailLoaded -> reduceFeedDetailLoaded(change)
                     is FeedStoreChange.FeedUpserted -> reduceFeedUpserted(change.feed)
                     is FeedStoreChange.FeedDeleted -> reduceFeedDeleted(change.feedId, change.revision)
                     is FeedStoreChange.ReplyUpserted -> reduceReplyUpserted(change.feedId, change.reply)
@@ -58,11 +59,17 @@ class InMemoryFeedStore : FeedStore {
             FeedQueryResult(
                 feeds = snapshot?.orderedFeedIds.orEmpty().mapNotNull(currentState.feedsById::get),
                 pageInfo = snapshot?.pageInfo,
+                loadedPages = snapshot?.loadedPages.orEmpty(),
             )
         }.distinctUntilChanged()
 
     private fun reducePageLoaded(change: FeedStoreChange.PageLoaded): FeedStoreState {
         val currentState = mutableState.value
+        val existingSnapshot = currentState.queries[change.queryKey]
+        if (existingSnapshot != null && change.generation < existingSnapshot.generation) {
+            return currentState
+        }
+
         val feedsById = currentState.feedsById.toMutableMap()
         val acceptedIds = mutableListOf<Long>()
 
@@ -80,7 +87,6 @@ class InMemoryFeedStore : FeedStore {
             }
         }
 
-        val existingSnapshot = currentState.queries[change.queryKey]
         val orderedFeedIds =
             if (change.page <= 1) {
                 acceptedIds.distinct()
@@ -100,6 +106,7 @@ class InMemoryFeedStore : FeedStore {
                     orderedFeedIds = orderedFeedIds,
                     pageInfo = change.pageInfo,
                     loadedPages = loadedPages,
+                    generation = change.generation,
                     lastUpdatedAtMillis = System.currentTimeMillis(),
                 ),
             )
@@ -108,6 +115,54 @@ class InMemoryFeedStore : FeedStore {
         return currentState.copy(
             feedsById = feedsById,
             queries = queries,
+        )
+    }
+
+    private fun reduceFeedDetailLoaded(change: FeedStoreChange.FeedDetailLoaded): FeedStoreState {
+        val currentState = mutableState.value
+        val currentRevision = maxOf(
+            currentState.feedsById[change.feed.id]?.revision ?: Long.MIN_VALUE,
+            feedDeletionRevisions[change.feed.id] ?: Long.MIN_VALUE,
+        )
+        if (change.feed.revision < currentRevision) {
+            return currentState
+        }
+
+        feedDeletionRevisions.remove(change.feed.id)
+
+        val feedsById = currentState.feedsById.toMutableMap().apply {
+            put(change.feed.id, change.feed.copy(replyCount = change.feed.replyCount))
+        }
+
+        val previousReplyIds = currentState.replyIdsByFeedId[change.feed.id].orEmpty()
+        val repliesById = currentState.repliesById.toMutableMap().apply {
+            previousReplyIds.forEach(::remove)
+        }
+        val replyIds = mutableListOf<Long>()
+        change.replies.forEach { reply ->
+            val replyCurrentRevision = maxOf(
+                currentState.repliesById[reply.id]?.revision ?: Long.MIN_VALUE,
+                replyDeletionRevisions[reply.id] ?: Long.MIN_VALUE,
+            )
+            if (reply.revision >= replyCurrentRevision) {
+                replyDeletionRevisions.remove(reply.id)
+                repliesById[reply.id] = reply.copy(activityId = change.feed.id)
+                replyIds += reply.id
+            }
+        }
+
+        val replyIdsByFeedId = currentState.replyIdsByFeedId.toMutableMap().apply {
+            if (replyIds.isEmpty()) {
+                remove(change.feed.id)
+            } else {
+                put(change.feed.id, replyIds.distinct())
+            }
+        }
+
+        return currentState.copy(
+            feedsById = feedsById,
+            repliesById = repliesById,
+            replyIdsByFeedId = replyIdsByFeedId,
         )
     }
 

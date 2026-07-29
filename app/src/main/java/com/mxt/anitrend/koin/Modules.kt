@@ -98,6 +98,7 @@ import com.mxt.anitrend.viewmodel.CharacterFavouritesViewModel
 import com.mxt.anitrend.viewmodel.CharacterOverviewViewModel
 import com.mxt.anitrend.viewmodel.CharacterSearchViewModel
 import com.mxt.anitrend.viewmodel.CharacterViewModel
+import com.mxt.anitrend.viewmodel.CommentViewModel
 import com.mxt.anitrend.viewmodel.FeedListViewModel
 import com.mxt.anitrend.viewmodel.GiphyViewModel
 import com.mxt.anitrend.viewmodel.LoggingViewModel
@@ -604,12 +605,40 @@ private val mediaFeatureModule = module {
 private val userFeatureModule = module {
     viewModel { MainViewModel(userRepository = get()) }
     viewModel { UserOverviewViewModel(userRepository = get()) }
-    viewModel { UserFeedViewModel(feedRepository = get(), baseRepository = get()) }
+    viewModel {
+        UserFeedViewModel(
+            feedRepository = get(),
+            feedStore = get(),
+            mutationRegistry = get(),
+            toggleLikeInteractor = get(),
+            deleteFeedInteractor = get(),
+        )
+    }
     viewModel { UserListViewModel(userRepository = get()) }
     viewModel { UserSearchViewModel(searchRepository = get()) }
     viewModel { NotificationViewModel(userRepository = get()) }
     viewModel { ProfileViewModel(userRepository = get()) }
-    viewModel { FeedListViewModel(feedRepository = get(), baseRepository = get()) }
+    viewModel {
+        FeedListViewModel(
+            feedRepository = get(),
+            feedStore = get(),
+            mutationRegistry = get(),
+            toggleLikeInteractor = get(),
+            deleteFeedInteractor = get(),
+        )
+    }
+    viewModel {
+        CommentViewModel(
+            feedStore = get(),
+            feedRepository = get(),
+            mutationRegistry = get(),
+            toggleLikeInteractor = get(),
+            saveReplyInteractor = get(),
+            deleteReplyInteractor = get(),
+            deleteFeedInteractor = get(),
+            saveFeedInteractor = get(),
+        )
+    }
     viewModel { MessageFeedViewModel(feedRepository = get(), baseRepository = get()) }
     viewModel { LoginUserViewModel(userRepository = get()) }
 }

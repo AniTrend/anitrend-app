@@ -6,6 +6,7 @@ import com.mxt.anitrend.domain.model.UserSummaryRecord
 data class FeedRecord(
     val id: Long,
     val type: String?,
+    val status: String?,
     val text: String?,
     val createdAt: Long,
     val user: UserSummaryRecord?,

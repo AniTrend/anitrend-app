@@ -6,4 +6,5 @@ import com.mxt.anitrend.domain.model.PageInfoRecord
 data class FeedQueryResult(
     val feeds: List<FeedRecord>,
     val pageInfo: PageInfoRecord?,
+    val loadedPages: Set<Int>,
 )

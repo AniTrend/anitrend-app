@@ -6,5 +6,6 @@ data class FeedQuerySnapshot(
     val orderedFeedIds: List<Long>,
     val pageInfo: PageInfoRecord?,
     val loadedPages: Set<Int>,
+    val generation: Int,
     val lastUpdatedAtMillis: Long,
 )

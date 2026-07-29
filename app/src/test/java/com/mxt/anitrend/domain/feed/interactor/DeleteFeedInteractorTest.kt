@@ -75,6 +75,7 @@ class DeleteFeedInteractorTest {
     ): FeedRecord = FeedRecord(
         id = id,
         type = "TEXT",
+        status = "watched",
         text = "feed-$id",
         createdAt = 1L,
         user = null,
