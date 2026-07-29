@@ -2,6 +2,7 @@ package com.mxt.anitrend.viewmodel
 
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.model.entity.anilist.FeedList
+import com.mxt.anitrend.model.api.retro.anilist.BrowseService
 import com.mxt.anitrend.model.entity.anilist.Media
 import com.mxt.anitrend.model.entity.anilist.edge.CharacterEdge
 import com.mxt.anitrend.model.entity.anilist.edge.MediaEdge
@@ -13,6 +14,8 @@ import com.mxt.anitrend.model.entity.container.body.EdgeContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.repository.BaseMutation
 import com.mxt.anitrend.repository.BaseRepository
+import com.mxt.anitrend.repository.BrowseMutation
+import com.mxt.anitrend.repository.BrowseRepository
 import com.mxt.anitrend.repository.MediaRepository
 import com.mxt.anitrend.util.KeyUtil
 import kotlinx.coroutines.Dispatchers
@@ -28,6 +31,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.doReturn
 import org.mockito.Mockito.mock
+import org.mockito.Mockito.spy
 import org.mockito.Mockito.verify
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -36,12 +40,14 @@ class MediaDetailViewModelTest {
     private val testDispatcher = UnconfinedTestDispatcher()
     private lateinit var mediaRepository: MediaRepository
     private lateinit var baseRepository: BaseRepository
+    private lateinit var browseRepository: BrowseRepository
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
         mediaRepository = mock(MediaRepository::class.java)
         baseRepository = mock(BaseRepository::class.java)
+        browseRepository = spy(BrowseRepository(mock(BrowseService::class.java), testDispatcher))
         doReturn(MutableSharedFlow<BaseMutation>())
             .`when`(baseRepository)
             .mutationEvents
@@ -61,6 +67,7 @@ class MediaDetailViewModelTest {
         val viewModel = MediaViewModel(
             mediaRepository = mediaRepository,
             baseRepository = baseRepository,
+            browseRepository = browseRepository,
             ioDispatcher = testDispatcher,
         )
 

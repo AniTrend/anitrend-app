@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:fitsSystemWindows="true">
 
         <com.github.chrisbanes.photoview.PhotoView
@@ -22,14 +23,15 @@
             android:id="@+id/toolbar_preview_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:background="@color/toolbar_transparent"
+            android:background="@drawable/gradient_shadow_inverted"
             android:minHeight="?attr/actionBarSize"
-            android:theme="@style/ImagePreviewToolbar">
+            android:paddingHorizontal="@dimen/lg_margin"
+            android:theme="@style/ImagePreviewToolbar"
+            app:contentInsetStartWithNavigation="0dp"
+            app:titleMarginStart="0dp">
 
         </androidx.appcompat.widget.Toolbar>
 
-    </RelativeLayout>
+    </FrameLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

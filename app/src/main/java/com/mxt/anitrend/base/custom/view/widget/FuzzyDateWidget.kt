@@ -37,17 +37,13 @@ constructor(
         onInit()
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    constructor(
-        context: Context,
-        attrs: AttributeSet?,
-        defStyleAttr: Int,
-        defStyleRes: Int,
-    ) : this(context, attrs, defStyleAttr)
-
     override fun onInit() {
         binding = WidgetFuzzyDateBinding.inflate(context.getLayoutInflater(), this, true)
+        isClickable = true
+        isFocusable = true
+        setOnClickListener(this)
         binding.fuzzyDateInputLayout.setOnClickListener(this)
+        binding.fuzzyDateText.setOnClickListener(this)
     }
 
     fun setDate(fuzzyDate: FuzzyDate?) {

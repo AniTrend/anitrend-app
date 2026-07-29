@@ -12,14 +12,16 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:padding="@dimen/xl_margin">
+        android:paddingHorizontal="@dimen/spacing_xs"
+        android:paddingTop="@dimen/spacing_xs"
+        android:paddingBottom="@dimen/spacing_sm">
 
         <!-- App Icon -->
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/about_app_icon"
             android:layout_width="96dp"
             android:layout_height="96dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="@dimen/lg_margin"
             android:src="@mipmap/ic_launcher"
             app:shapeAppearanceOverlay="@style/ShapeAppearance.AniTrend.Circle" />
 
@@ -28,7 +30,8 @@
             android:id="@+id/about_app_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
+            android:layout_marginTop="@dimen/lg_margin"
+            android:layout_marginBottom="@dimen/md_margin"
             android:gravity="center"
             android:text="@string/app_name"
             android:textAppearance="?attr/textAppearanceTitleLarge" />
@@ -39,7 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
             android:textColor="?attr/colorOnSurfaceVariant"
             tools:text="Version 5.0.0" />
 
@@ -47,9 +50,9 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            app:cardBackgroundColor="?attr/colorSurfaceContainerLow"
-            app:cardCornerRadius="12dp"
+            android:layout_marginTop="@dimen/spacing_xs"
+            app:cardBackgroundColor="?attr/colorSurfaceContainer"
+            app:cardCornerRadius="20dp"
             app:cardElevation="0dp"
             app:strokeColor="?attr/colorOutlineVariant"
             app:strokeWidth="1dp">
@@ -58,14 +61,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingHorizontal="@dimen/xl_margin"
-                android:paddingVertical="@dimen/mg_margin">
+                android:paddingHorizontal="@dimen/spacing_xs"
+                android:paddingVertical="@dimen/spacing_xs">
 
                 <!-- Section Header -->
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
+                    android:layout_marginBottom="@dimen/md_margin"
                     android:text="@string/text_about_general_information"
                     android:textAppearance="?attr/textAppearanceTitleSmall"
                     android:textColor="?attr/colorPrimary" />
@@ -74,7 +77,7 @@
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
+                    android:layout_marginBottom="@dimen/lg_margin"
                     android:text="@string/app_description"
                     android:textAppearance="?attr/textAppearanceBodyMedium"
                     android:textColor="?attr/colorOnSurfaceVariant" />
@@ -85,6 +88,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
+                    android:minHeight="56dp"
                     android:paddingVertical="@dimen/lg_margin">
 
                     <androidx.appcompat.widget.AppCompatImageView
@@ -114,6 +118,7 @@
                     android:foreground="?attr/selectableItemBackground"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
+                    android:minHeight="56dp"
                     android:paddingVertical="@dimen/lg_margin">
 
                     <androidx.appcompat.widget.AppCompatImageView
@@ -130,6 +135,13 @@
                         android:layout_weight="1"
                         android:text="@string/text_about_rate_play_store"
                         android:textAppearance="?attr/textAppearanceBodyLarge" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_link_white_24dp"
+                        android:tint="?attr/colorOnSurfaceVariant" />
                 </LinearLayout>
 
                 <!-- Follow on Twitter -->
@@ -142,6 +154,7 @@
                     android:foreground="?attr/selectableItemBackground"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
+                    android:minHeight="56dp"
                     android:paddingVertical="@dimen/lg_margin">
 
                     <androidx.appcompat.widget.AppCompatImageView
@@ -158,6 +171,13 @@
                         android:layout_weight="1"
                         android:text="@string/text_about_follow_twitter"
                         android:textAppearance="?attr/textAppearanceBodyLarge" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_link_white_24dp"
+                        android:tint="?attr/colorOnSurfaceVariant" />
                 </LinearLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -167,8 +187,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/lg_margin"
-            app:cardBackgroundColor="?attr/colorSurfaceContainerLow"
-            app:cardCornerRadius="12dp"
+            app:cardBackgroundColor="?attr/colorSurfaceContainer"
+            app:cardCornerRadius="20dp"
             app:cardElevation="0dp"
             app:strokeColor="?attr/colorOutlineVariant"
             app:strokeWidth="1dp">
@@ -177,14 +197,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingHorizontal="@dimen/xl_margin"
-                android:paddingVertical="@dimen/mg_margin">
+                android:paddingHorizontal="@dimen/spacing_xs"
+                android:paddingVertical="@dimen/spacing_xs">
 
                 <!-- Section Header -->
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
+                    android:layout_marginBottom="@dimen/md_margin"
                     android:text="@string/text_about_additional_information"
                     android:textAppearance="?attr/textAppearanceTitleSmall"
                     android:textColor="?attr/colorPrimary" />
@@ -199,6 +219,7 @@
                     android:foreground="?attr/selectableItemBackground"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
+                    android:minHeight="56dp"
                     android:paddingVertical="@dimen/lg_margin">
 
                     <androidx.appcompat.widget.AppCompatImageView
@@ -215,6 +236,13 @@
                         android:layout_weight="1"
                         android:text="@string/text_about_github"
                         android:textAppearance="?attr/textAppearanceBodyLarge" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_link_white_24dp"
+                        android:tint="?attr/colorOnSurfaceVariant" />
                 </LinearLayout>
 
                 <!-- Website -->
@@ -227,6 +255,7 @@
                     android:foreground="?attr/selectableItemBackground"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
+                    android:minHeight="56dp"
                     android:paddingVertical="@dimen/lg_margin">
 
                     <androidx.appcompat.widget.AppCompatImageView
@@ -243,6 +272,13 @@
                         android:layout_weight="1"
                         android:text="@string/text_about_website"
                         android:textAppearance="?attr/textAppearanceBodyLarge" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_link_white_24dp"
+                        android:tint="?attr/colorOnSurfaceVariant" />
                 </LinearLayout>
 
                 <!-- What's New -->
@@ -255,6 +291,7 @@
                     android:foreground="?attr/selectableItemBackground"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
+                    android:minHeight="56dp"
                     android:paddingVertical="@dimen/lg_margin">
 
                     <androidx.appcompat.widget.AppCompatImageView
@@ -271,6 +308,13 @@
                         android:layout_weight="1"
                         android:text="@string/text_what_is_new"
                         android:textAppearance="?attr/textAppearanceBodyLarge" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_link_white_24dp"
+                        android:tint="?attr/colorOnSurfaceVariant" />
                 </LinearLayout>
 
                 <!-- FAQ -->
@@ -283,6 +327,7 @@
                     android:foreground="?attr/selectableItemBackground"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
+                    android:minHeight="56dp"
                     android:paddingVertical="@dimen/lg_margin">
 
                     <androidx.appcompat.widget.AppCompatImageView
@@ -299,6 +344,13 @@
                         android:layout_weight="1"
                         android:text="@string/text_about_frequently_asked_questions"
                         android:textAppearance="?attr/textAppearanceBodyLarge" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_link_white_24dp"
+                        android:tint="?attr/colorOnSurfaceVariant" />
                 </LinearLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -308,8 +360,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/lg_margin"
-            app:cardBackgroundColor="?attr/colorSurfaceContainerLow"
-            app:cardCornerRadius="12dp"
+            app:cardBackgroundColor="?attr/colorSurfaceContainer"
+            app:cardCornerRadius="20dp"
             app:cardElevation="0dp"
             app:strokeColor="?attr/colorOutlineVariant"
             app:strokeWidth="1dp">
@@ -318,14 +370,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingHorizontal="@dimen/xl_margin"
-                android:paddingVertical="@dimen/mg_margin">
+                android:paddingHorizontal="@dimen/spacing_xs"
+                android:paddingVertical="@dimen/spacing_xs">
 
                 <!-- Section Header -->
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
+                    android:layout_marginBottom="@dimen/md_margin"
                     android:text="@string/text_about_legal_information"
                     android:textAppearance="?attr/textAppearanceTitleSmall"
                     android:textColor="?attr/colorPrimary" />
@@ -340,6 +392,7 @@
                     android:foreground="?attr/selectableItemBackground"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
+                    android:minHeight="56dp"
                     android:paddingVertical="@dimen/lg_margin">
 
                     <androidx.appcompat.widget.AppCompatImageView
@@ -356,6 +409,13 @@
                         android:layout_weight="1"
                         android:text="@string/text_about_terms_and_conditions"
                         android:textAppearance="?attr/textAppearanceBodyLarge" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_link_white_24dp"
+                        android:tint="?attr/colorOnSurfaceVariant" />
                 </LinearLayout>
 
                 <!-- Code of Conduct -->
@@ -368,6 +428,7 @@
                     android:foreground="?attr/selectableItemBackground"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
+                    android:minHeight="56dp"
                     android:paddingVertical="@dimen/lg_margin">
 
                     <androidx.appcompat.widget.AppCompatImageView
@@ -384,6 +445,13 @@
                         android:layout_weight="1"
                         android:text="@string/text_about_code_of_conduct"
                         android:textAppearance="?attr/textAppearanceBodyLarge" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_link_white_24dp"
+                        android:tint="?attr/colorOnSurfaceVariant" />
                 </LinearLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>

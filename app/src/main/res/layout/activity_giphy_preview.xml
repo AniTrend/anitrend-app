@@ -5,27 +5,121 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?android:colorBackground"
     android:fitsSystemWindows="true">
 
     <com.github.chrisbanes.photoview.PhotoView
         android:id="@+id/preview_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:contentDescription="@null"
         tools:src="@drawable/reg_bg" />
 
-    <com.google.android.material.progressindicator.CircularProgressIndicator
-        android:id="@+id/preview_progress"
-        android:layout_width="@dimen/avatar_size"
-        android:layout_height="@dimen/avatar_size"
+    <FrameLayout
+        android:id="@+id/preview_loading_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/preview_progress"
+            android:layout_width="@dimen/avatar_size"
+            android:layout_height="@dimen/avatar_size"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            app:indicatorColor="?colorAccent" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/preview_top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/gradient_shadow_inverted"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="@dimen/xl_margin"
+        android:paddingTop="@dimen/xl_margin"
+        android:paddingBottom="@dimen/lg_margin">
+
+        <ImageButton
+            android:id="@+id/preview_close"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/Close"
+            android:padding="@dimen/lg_margin"
+            android:src="@drawable/ic_close_grey_600_24dp"
+            android:tint="@android:color/white" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/lg_margin"
+            android:layout_weight="1"
+            android:text="@string/title_giphy_preview"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/preview_status_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:indeterminate="true"
-        app:indicatorColor="?colorAccent"/>
+        android:layout_margin="@dimen/spacing_xs"
+        android:visibility="gone"
+        app:cardBackgroundColor="?attr/colorSurfaceContainerHigh"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="0dp"
+        app:strokeColor="?attr/colorOutlineVariant"
+        app:strokeWidth="1dp"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_xs">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/preview_status_icon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_broken_image_white_48dp"
+                android:tint="?attr/colorOnSurfaceVariant" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/preview_status_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/lg_margin"
+                android:text="@string/title_preview_unavailable"
+                android:textAppearance="?attr/textAppearanceTitleMedium"
+                android:textColor="?attr/colorOnSurface" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/preview_status_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/md_margin"
+                android:gravity="center"
+                android:text="@string/layout_empty_response"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                tools:text="No data to display" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
 
     <com.mxt.anitrend.base.custom.view.image.WideImageView
         android:id="@+id/preview_credits"
         android:layout_width="wrap_content"
-        android:layout_gravity="center_horizontal|bottom"
         android:layout_height="50dp"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="@dimen/spacing_xs"
+        android:background="@drawable/gradient_shadow"
+        android:paddingHorizontal="@dimen/xl_margin"
+        android:paddingVertical="@dimen/lg_margin"
         tools:src="@drawable/powered_by_giphy_dark"/>
 
 </FrameLayout>

@@ -2,6 +2,7 @@ package com.mxt.anitrend.view.sheet
 
 import android.app.Dialog
 import android.os.Bundle
+import android.view.ContextThemeWrapper
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
@@ -24,7 +25,6 @@ import com.mxt.anitrend.base.custom.view.widget.FuzzyDateWidget
 import com.mxt.anitrend.base.custom.view.widget.ProgressWidget
 import com.mxt.anitrend.base.custom.view.widget.ScoreWidget
 import com.mxt.anitrend.coordinator.WidgetMutationCoordinator
-import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.graphql.generated.FuzzyDateInput
 import com.mxt.anitrend.graphql.generated.MediaListStatus
 import com.mxt.anitrend.model.entity.anilist.MediaList
@@ -36,6 +36,9 @@ import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.media.MediaListUtil
 import com.mxt.anitrend.util.media.MediaUtil
 import timber.log.Timber
+import androidx.core.view.isVisible
+import androidx.core.view.isNotEmpty
+import org.koin.android.ext.android.inject
 
 /**
  * M3 BottomSheetDialogFragment for managing media list entries.
@@ -54,6 +57,8 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
 
     private val mediaListStatuses =
         arrayOf(KeyUtil.CURRENT, KeyUtil.PLANNING, KeyUtil.COMPLETED, KeyUtil.DROPPED, KeyUtil.PAUSED, KeyUtil.REPEATING)
+
+    private val coordinator by inject<WidgetMutationCoordinator>()
 
     private lateinit var mediaBase: MediaBase
     private lateinit var mediaListModel: MediaList
@@ -281,7 +286,7 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
     private fun populateCustomListsAndAdvancedScores() {
         val model = mediaListModel
         val mediaListOptions = runCatching {
-            koinOf<WidgetMutationCoordinator>().databaseHelper.currentUser?.mediaListOptions
+            coordinator.databaseHelper.currentUser?.mediaListOptions
         }.getOrNull() ?: return
 
         val typeOptions = (if (isAnime) mediaListOptions.animeList else mediaListOptions.mangaList) ?: return
@@ -299,10 +304,15 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
             for (listName in availableCustomLists) {
                 if (listName.isEmpty()) continue
                 val isEnabled = existingCustomLists.any { it.name == listName && it.isEnabled }
-                val chip = Chip(requireContext()).apply {
+                val chip = Chip(
+                    ContextThemeWrapper(requireContext(), R.style.Widget_AniTrend_ManageSheet_CustomListChip),
+                    null,
+                    com.google.android.material.R.attr.chipStyle,
+                ).apply {
                     text = listName
                     isChecked = isEnabled
                     isCheckable = true
+                    isCheckedIconVisible = true
                 }
                 customListsChipGroup.addView(chip)
             }
@@ -410,7 +420,7 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
 
         // Collect advanced scores from sliders
         val collectedAdvancedScores: Map<String, Float>? =
-            if (advancedScoresContainer.visibility == View.VISIBLE && advancedScoreSliders.isNotEmpty()) {
+            if (advancedScoresContainer.isVisible && advancedScoreSliders.isNotEmpty()) {
                 advancedScoreSliders.associate { (category, slider) ->
                     category to slider.value
                 }
@@ -449,7 +459,7 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
 
         // Build enabled custom list names directly from chips
         val enabledCustomListNames: List<String?>? =
-            if (customListsContainer.visibility == View.VISIBLE && customListsChipGroup.childCount > 0) {
+            if (customListsContainer.isVisible && customListsChipGroup.isNotEmpty()) {
                 (0 until customListsChipGroup.childCount)
                     .mapNotNull { customListsChipGroup.getChildAt(it) as? Chip }
                     .filter { it.isChecked }
@@ -463,7 +473,7 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
         val progressDialog = NotifyUtil.createProgressDialog(ctx, R.string.text_processing_request)
         progressDialog.show()
 
-        koinOf<WidgetMutationCoordinator>().saveMediaListEntry(
+        coordinator.saveMediaListEntry(
             id = params.intValue(KeyUtil.arg_id),
             mediaId = params.longValue(KeyUtil.arg_mediaId),
             status = params.enumValue<MediaListStatus>(KeyUtil.arg_listStatus),
@@ -528,7 +538,7 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
         val progressDialog = NotifyUtil.createProgressDialog(ctx, R.string.text_processing_request)
         progressDialog.show()
 
-        koinOf<WidgetMutationCoordinator>().deleteMediaListEntry(mediaListModel.id) { result ->
+        coordinator.deleteMediaListEntry(mediaListModel.id) { result ->
             try {
                 progressDialog.dismiss()
 
@@ -573,7 +583,7 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
      * Falls back to [KeyUtil.POINT_100] if the user data cannot be resolved.
      */
     private fun resolveScoreFormat(): String = runCatching {
-        koinOf<WidgetMutationCoordinator>().databaseHelper.currentUser?.mediaListOptions?.scoreFormat
+        coordinator.databaseHelper.currentUser?.mediaListOptions?.scoreFormat
     }.getOrNull() ?: KeyUtil.POINT_100
 
     // ----------------------------------------------------------------------------

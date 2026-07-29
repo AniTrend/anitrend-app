@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.repository.BaseRepository
+import com.mxt.anitrend.repository.BrowseMutation
+import com.mxt.anitrend.repository.BrowseRepository
 import com.mxt.anitrend.repository.MediaRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -17,6 +19,7 @@ import timber.log.Timber
 class MediaViewModel(
     private val mediaRepository: MediaRepository,
     private val baseRepository: BaseRepository,
+    private val browseRepository: BrowseRepository,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : ViewModel() {
 
@@ -30,6 +33,18 @@ class MediaViewModel(
     val state: StateFlow<UiState> = _state.asStateFlow()
 
     private var loadedOnce = false
+
+    init {
+        viewModelScope.launch {
+            browseRepository.mutationEvents.collect { event ->
+                when (event) {
+                    is BrowseMutation.MediaListSaved -> onMediaListSaved(event.entry)
+                    is BrowseMutation.MediaListDeleted -> onMediaListDeleted(event.id)
+                    else -> Unit
+                }
+            }
+        }
+    }
 
     /**
      * Loads the media by its AniList ID. Safe to call multiple times -- skips
@@ -80,5 +95,23 @@ class MediaViewModel(
         studioId: Int?,
     ): Result<Unit> = withContext(ioDispatcher) {
         baseRepository.toggleFavourite(animeId, mangaId, characterId, staffId, studioId)
+    }
+
+    internal fun onMediaListSaved(entry: com.mxt.anitrend.model.entity.anilist.MediaList) {
+        val current = _state.value as? UiState.Success ?: return
+        if (current.media.id != entry.mediaId) {
+            return
+        }
+        current.media.mediaListEntry = entry
+        _state.value = UiState.Success(current.media)
+    }
+
+    internal fun onMediaListDeleted(id: Long) {
+        val current = _state.value as? UiState.Success ?: return
+        if (current.media.mediaListEntry?.id != id) {
+            return
+        }
+        current.media.mediaListEntry = null
+        _state.value = UiState.Success(current.media)
     }
 }

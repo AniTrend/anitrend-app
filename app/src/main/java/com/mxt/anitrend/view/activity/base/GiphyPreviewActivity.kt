@@ -10,6 +10,7 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -63,6 +64,7 @@ class GiphyPreviewActivity :
 
         binding = ActivityGiphyPreviewBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.previewClose.setOnClickListener { finish() }
 
         val args = fromIntent(intent)
         if (args != null) {
@@ -78,6 +80,7 @@ class GiphyPreviewActivity :
                 R.drawable.ic_warning_white_18dp,
                 Toast.LENGTH_SHORT,
             ).show()
+            showStatus(R.string.layout_empty_response)
         }
 
         binding.previewCredits.setImageResource(
@@ -94,7 +97,12 @@ class GiphyPreviewActivity :
         model: Any,
         target: Target<Drawable>,
         isFirstResource: Boolean,
-    ): Boolean = false
+    ): Boolean {
+        if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
+            showStatus(R.string.text_unknown_error)
+        }
+        return false
+    }
 
     override fun onResourceReady(
         resource: Drawable,
@@ -104,8 +112,15 @@ class GiphyPreviewActivity :
         isFirstResource: Boolean,
     ): Boolean {
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
-            binding.previewProgress.visibility = View.GONE
+            binding.previewLoadingContainer.isVisible = false
+            binding.previewStatusCard.isVisible = false
         }
         return false
+    }
+
+    private fun showStatus(messageRes: Int) {
+        binding.previewLoadingContainer.isVisible = false
+        binding.previewStatusMessage.setText(messageRes)
+        binding.previewStatusCard.isVisible = true
     }
 }

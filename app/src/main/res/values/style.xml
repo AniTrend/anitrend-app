@@ -369,4 +369,21 @@
         <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
     </style>
 
+    <style name="Widget.AniTrend.ManageSheet.CustomListChip" parent="Widget.Material3.Chip.Filter">
+        <item name="android:textColor">@color/manage_sheet_chip_text</item>
+        <item name="checkedIcon">@drawable/ic_check_circle_white_24dp</item>
+        <item name="checkedIconEnabled">true</item>
+        <item name="checkedIconTint">?attr/colorOnSecondaryContainer</item>
+        <item name="chipBackgroundColor">@color/manage_sheet_chip_background</item>
+        <item name="chipCornerRadius">18dp</item>
+        <item name="chipEndPadding">12dp</item>
+        <item name="chipMinHeight">40dp</item>
+        <item name="chipStartPadding">12dp</item>
+        <item name="chipStrokeColor">@color/manage_sheet_chip_stroke</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="ensureMinTouchTargetSize">true</item>
+        <item name="rippleColor">?attr/colorSecondaryContainer</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.Material3.Corner.Full</item>
+    </style>
+
 </resources>

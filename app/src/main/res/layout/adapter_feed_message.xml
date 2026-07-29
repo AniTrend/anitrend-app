@@ -6,144 +6,162 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/lg_margin">
+    android:layout_marginHorizontal="@dimen/lg_margin"
+    android:layout_marginTop="@dimen/lg_margin"
+    app:cardBackgroundColor="?attr/colorSurfaceContainer"
+    app:cardElevation="0dp"
+    app:strokeColor="?attr/colorOutlineVariant"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:background="@drawable/bg_feed_section_surface"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="@dimen/lg_margin">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <com.mxt.anitrend.base.custom.view.image.AvatarImageView
+                android:id="@+id/messenger_avatar"
+                android:layout_width="@dimen/avatar_ripple_radius"
+                android:layout_height="@dimen/avatar_ripple_radius"
+                tools:src="@drawable/ic_player" />
+
+            <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                android:id="@+id/recipient_user_name"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_marginStart="@dimen/lg_margin"
+                android:layout_weight="1"
+                android:textStyle="bold"
+                tools:text="wax911" />
 
-                <com.mxt.anitrend.base.custom.view.image.AvatarImageView
-                    android:id="@+id/messenger_avatar"
-                    android:layout_width="@dimen/avatar_ripple_radius"
-                    android:layout_height="@dimen/avatar_ripple_radius"
-                    tools:src="@drawable/ic_player" />
+            <Space
+                android:layout_width="@dimen/lg_margin"
+                android:layout_height="wrap_content" />
 
-                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
-                    android:id="@+id/recipient_user_name"
-                    android:layout_marginStart="@dimen/lg_margin"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    tools:text="wax911" />
-
-                <Space
-                    android:layout_width="@dimen/lg_margin"
-                    android:layout_height="wrap_content" />
-
-                <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:tint="?colorAccent"
-                    app:srcCompat="@drawable/ic_compare_arrows_white_24dp"/>
-
-                <Space
-                    android:layout_width="@dimen/lg_margin"
-                    android:layout_height="wrap_content" />
-
-                <com.mxt.anitrend.base.custom.view.image.AvatarImageView
-                    android:id="@+id/recipient_avatar"
-                    android:layout_width="@dimen/avatar_ripple_radius"
-                    android:layout_height="@dimen/avatar_ripple_radius"
-                    tools:src="@drawable/ic_player" />
-
-                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
-                    android:id="@+id/messenger_user_name"
-                    android:layout_marginStart="@dimen/lg_margin"
-                    android:layout_weight="1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    tools:text="wax911" />
-
-                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
-                    android:id="@+id/feed_time"
-                    android:layout_weight="1.2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center|end"
-                    android:textAlignment="viewEnd"
-                    tools:text="5 days ago" />
-
-            </LinearLayout>
-
-            <androidx.legacy.widget.Space
+            <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/lg_margin" />
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_compare_arrows_white_24dp"
+                app:tint="?colorAccent" />
+
+            <Space
+                android:layout_width="@dimen/lg_margin"
+                android:layout_height="wrap_content" />
+
+            <com.mxt.anitrend.base.custom.view.image.AvatarImageView
+                android:id="@+id/recipient_avatar"
+                android:layout_width="@dimen/avatar_ripple_radius"
+                android:layout_height="@dimen/avatar_ripple_radius"
+                tools:src="@drawable/ic_player" />
+
+            <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                android:id="@+id/messenger_user_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/lg_margin"
+                android:layout_weight="1"
+                android:textStyle="bold"
+                tools:text="wax911" />
+
+            <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+                android:id="@+id/feed_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/lg_margin"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                tools:text="5 days ago" />
+
+        </LinearLayout>
+
+        <androidx.legacy.widget.Space
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/mg_margin" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_feed_section_surface"
+            android:orientation="vertical"
+            android:padding="@dimen/lg_margin">
 
             <com.mxt.anitrend.base.custom.view.widget.StatusContentWidget
                 android:id="@+id/widget_status"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
             <com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView
                 android:id="@+id/widget_status_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/md_margin"
+                android:paddingTop="@dimen/md_margin"
+                android:paddingBottom="@dimen/sm_margin"
                 tools:text="@string/text_error_login" />
-
-            <androidx.legacy.widget.Space
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/md_margin" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="bottom">
-
-                <com.mxt.anitrend.base.custom.view.widget.UsersWidget
-                    android:id="@+id/widget_users"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:foreground="?selectableItemBackground" />
-
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
-
-                <com.mxt.anitrend.base.custom.view.widget.FavouriteWidget
-                    android:id="@+id/widget_favourite"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <com.mxt.anitrend.base.custom.view.widget.CommentWidget
-                    android:id="@+id/widget_comment"
-                    android:layout_marginStart="@dimen/lg_margin"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?selectableItemBackground"
-                    tools:text=" 0"/>
-
-                <com.mxt.anitrend.base.custom.view.widget.StatusEditWidget
-                    android:id="@+id/widget_edit"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:layout_marginStart="@dimen/lg_margin"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:foreground="?selectableItemBackground" />
-
-                <com.mxt.anitrend.base.custom.view.widget.StatusDeleteWidget
-                    android:id="@+id/widget_delete"
-                    android:layout_marginStart="@dimen/lg_margin"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-            </LinearLayout>
 
         </LinearLayout>
 
-    </com.mxt.anitrend.base.custom.view.container.CardViewBase>
+        <androidx.legacy.widget.Space
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/mg_margin" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.mxt.anitrend.base.custom.view.widget.UsersWidget
+                android:id="@+id/widget_users"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?selectableItemBackground" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <com.mxt.anitrend.base.custom.view.widget.FavouriteWidget
+                android:id="@+id/widget_favourite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <com.mxt.anitrend.base.custom.view.widget.CommentWidget
+                android:id="@+id/widget_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/lg_margin"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?selectableItemBackground"
+                android:textStyle="bold"
+                tools:text=" 0" />
+
+            <com.mxt.anitrend.base.custom.view.widget.StatusEditWidget
+                android:id="@+id/widget_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/lg_margin"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?selectableItemBackground" />
+
+            <com.mxt.anitrend.base.custom.view.widget.StatusDeleteWidget
+                android:id="@+id/widget_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/lg_margin" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.mxt.anitrend.base.custom.view.container.CardViewBase>

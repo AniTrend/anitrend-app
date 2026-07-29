@@ -3,93 +3,123 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:clickable="true"
-    android:focusable="true"
-    android:foreground="?selectableItemBackground"
     android:layout_margin="@dimen/lg_margin"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardPreventCornerOverlap="false"
-    app:cardBackgroundColor="?cardColor"
-    app:cardElevation="@dimen/sm_margin"
-    app:cardCornerRadius="@dimen/lg_margin">
-
-        <com.mxt.anitrend.base.custom.view.image.WideImageView
-            android:id="@+id/series_image"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?selectableItemBackground"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:scaleType="centerCrop"
-            tools:layout_height="@dimen/wide_image_md"
-            tools:src="@sample/darling" />
-
-        <FrameLayout
-            android:background="@color/colorTransparent"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
-            android:id="@+id/review_user_name"
-            android:layout_gravity="top|end"
-            android:layout_margin="@dimen/md_margin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:padding="@dimen/lg_margin"
-            android:textStyle="bold"
-            tools:text="By: Diama" />
-
-        <com.mxt.anitrend.base.custom.view.widget.CustomRatingBar
-            android:layout_gravity="top|start"
-            android:id="@+id/series_rating"
-            android:layout_margin="@dimen/md_margin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:theme="@style/SmallRating"
-            android:padding="@dimen/lg_margin"
-            tools:rating="1" />
+    app:cardBackgroundColor="?attr/colorSurfaceContainer"
+    app:cardElevation="0dp"
+    app:cardCornerRadius="20dp"
+    app:strokeColor="?attr/colorOutlineVariant"
+    app:strokeWidth="1dp">
 
         <LinearLayout
-            android:layout_marginBottom="35dp"
-            android:layout_gravity="bottom"
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/lg_margin">
+            android:orientation="vertical">
 
-            <com.mxt.anitrend.base.custom.view.text.SeriesTitleView
-                android:textColor="@color/white"
-                android:padding="@dimen/md_margin"
-                android:id="@+id/series_title"
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.mxt.anitrend.base.custom.view.image.WideImageView
+                    android:id="@+id/series_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    tools:layout_height="@dimen/wide_image_md"
+                    tools:scaleType="centerCrop"
+                    tools:src="@sample/darling" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/gradient_shadow" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/spacing_xs">
+
+                    <com.mxt.anitrend.base.custom.view.widget.CustomRatingBar
+                        android:id="@+id/series_rating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:theme="@style/SmallRating"
+                        tools:rating="1" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/review_user_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/lg_margin"
+                        android:background="@drawable/bubble_background"
+                        android:paddingHorizontal="@dimen/lg_margin"
+                        android:paddingVertical="@dimen/md_margin"
+                        android:textAppearance="?attr/textAppearanceLabelLarge"
+                        android:textColor="@color/white"
+                        tools:text="By: Diama" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:gravity="bottom"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/spacing_xs">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <com.mxt.anitrend.base.custom.view.text.SeriesTitleView
+                            android:id="@+id/series_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white"
+                            tools:text="Boku no Hero Academia" />
+                    </LinearLayout>
+
+                    <com.mxt.anitrend.base.custom.view.widget.VoteWidget
+                        android:id="@+id/review_vote"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/lg_margin" />
+                </LinearLayout>
+            </FrameLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:text="Boku no Hero Accademia" />
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_xs">
 
-            <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
-                android:id="@+id/review_summary"
-                android:textColor="@color/white"
-                android:padding="@dimen/md_margin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:text="One of the best Shonene shows you can ever ask for I also want..." />
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/review_summary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="3"
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    tools:text="One of the best shounen shows you can ever ask for. It balances spectacle, warmth, and momentum beautifully." />
 
-            <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
-                android:id="@+id/review_read_more"
-                android:padding="@dimen/md_margin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                android:text="@string/text_read_more" />
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/review_read_more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/lg_margin"
+                    android:paddingVertical="@dimen/md_margin"
+                    android:text="@string/text_read_more"
+                    android:textAppearance="?attr/textAppearanceLabelLarge"
+                    android:textColor="?attr/colorPrimary" />
+            </LinearLayout>
 
         </LinearLayout>
-
-        <com.mxt.anitrend.base.custom.view.widget.VoteWidget
-            android:id="@+id/review_vote"
-            android:layout_gravity="bottom|start"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/lg_margin"/>
-    </com.google.android.material.card.MaterialCardView>
+</com.google.android.material.card.MaterialCardView>

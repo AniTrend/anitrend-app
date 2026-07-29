@@ -741,6 +741,9 @@
     <string name="image_preview_download">Download</string>
     <string name="image_preview_share">Share</string>
     <string name="image_preview_link">Original Link</string>
+    <string name="title_giphy_preview">Giphy preview</string>
+    <string name="title_preview_unavailable">Preview unavailable</string>
+    <string name="label_latest_release">Latest release</string>
 
     <!-- Image Preview error strings -->
     <string name="image_preview_error_character_image">The character image doesn\'t exist!</string>

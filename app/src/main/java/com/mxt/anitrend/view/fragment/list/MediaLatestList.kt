@@ -5,6 +5,8 @@ import android.view.View
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.mxt.anitrend.R
+import com.mxt.anitrend.adapter.recycler.index.MediaLatestAdapter
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.container.body.PageContainer
@@ -34,6 +36,8 @@ class MediaLatestList : MediaBrowseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         isFilterableEnabled = false
+        mAdapter = MediaLatestAdapter(requireContext())
+        mColumnSize = R.integer.single_list_x1
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

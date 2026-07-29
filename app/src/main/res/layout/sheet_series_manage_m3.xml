@@ -392,6 +392,8 @@
                             android:id="@+id/sheet_manage_custom_lists_chips"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            app:chipSpacingHorizontal="@dimen/lg_margin"
+                            app:chipSpacingVertical="@dimen/lg_margin"
                             app:singleSelection="false" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>

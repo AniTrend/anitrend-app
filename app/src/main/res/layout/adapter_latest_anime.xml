@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/lg_margin"
+    android:layout_marginTop="@dimen/lg_margin"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?selectableItemBackground"
+    app:cardBackgroundColor="?attr/colorSurfaceContainer"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="0dp"
+    app:strokeColor="?attr/colorOutlineVariant"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.mxt.anitrend.base.custom.view.widget.SeriesStatusWidget
+            android:id="@+id/series_status"
+            android:layout_width="6dp"
+            android:layout_height="match_parent"
+            tools:background="@color/colorStateBlue" />
+
+        <com.mxt.anitrend.base.custom.view.image.AspectImageView
+            android:id="@+id/series_image"
+            android:layout_width="104dp"
+            android:layout_height="wrap_content"
+            tools:src="@sample/gintama" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_xs">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="top"
+                android:orientation="horizontal">
+
+                <com.mxt.anitrend.base.custom.view.text.SeriesTitleView
+                    android:id="@+id/series_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                    tools:text="Gintama" />
+
+                <com.mxt.anitrend.base.custom.view.text.RatingTextView
+                    android:id="@+id/custom_rating_widget"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/lg_margin" />
+            </LinearLayout>
+
+            <com.mxt.anitrend.base.custom.view.text.AiringTextView
+                android:id="@+id/series_airing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/lg_margin"
+                android:background="?attr/colorSecondaryContainer"
+                android:paddingHorizontal="@dimen/lg_margin"
+                android:paddingVertical="@dimen/md_margin"
+                android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
+                tools:text="Episode 31 in 4 days" />
+
+            <com.mxt.anitrend.base.custom.view.text.SeriesYearTypeTextView
+                android:id="@+id/series_year_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/lg_margin"
+                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                tools:text="2015 • TV" />
+        </LinearLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
