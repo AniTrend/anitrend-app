@@ -34,6 +34,17 @@ import com.mxt.anitrend.base.plugin.image.ImageConfigurationPlugin
 import com.mxt.anitrend.base.plugin.text.TextConfigurationPlugin
 import com.mxt.anitrend.coordinator.WidgetMutationCoordinator
 import com.mxt.anitrend.data.DatabaseHelper
+import com.mxt.anitrend.data.store.feed.FeedStore
+import com.mxt.anitrend.data.store.feed.InMemoryFeedStore
+import com.mxt.anitrend.data.store.medialist.InMemoryMediaListStore
+import com.mxt.anitrend.data.store.medialist.MediaListStore
+import com.mxt.anitrend.data.store.mutation.DefaultMutationExecutor
+import com.mxt.anitrend.data.store.mutation.DefaultMutationRegistry
+import com.mxt.anitrend.data.store.mutation.DefaultOperationIdGenerator
+import com.mxt.anitrend.data.store.mutation.KeyedMutex
+import com.mxt.anitrend.data.store.mutation.MutationExecutor
+import com.mxt.anitrend.data.store.mutation.MutationRegistry
+import com.mxt.anitrend.data.store.mutation.OperationIdGenerator
 import com.mxt.anitrend.extension.logFile
 import com.mxt.anitrend.graphql.generated.GeneratedGraphQLRegistry
 import com.mxt.anitrend.model.api.converter.AniGraphConverter
@@ -518,6 +529,8 @@ private val serviceModule = module {
 private val repositoryModule = module {
     single { MediaRepository(mediaService = get()) }
     single { UserRepository(userService = get(), boxQuery = get()) }
+    single<FeedStore> { InMemoryFeedStore() }
+    single<MediaListStore> { InMemoryMediaListStore() }
     single { BrowseRepository(browseService = get()) }
     single { CharacterRepository(characterService = get()) }
     single { StaffRepository(staffService = get()) }
@@ -526,6 +539,16 @@ private val repositoryModule = module {
     single { FeedRepository(feedService = get()) }
     single { BaseRepository(baseService = get(), boxQuery = get()) }
     single { CrunchyrollRepository(feedService = get(named("crunchyrollFeed")), crunchyrollService = get(named("crunchyroll"))) }
+    single { KeyedMutex(coroutineScope = get(ApplicationScopeQualifier)) }
+    single<MutationRegistry> { DefaultMutationRegistry() }
+    single<OperationIdGenerator> { DefaultOperationIdGenerator() }
+    single<MutationExecutor> {
+        DefaultMutationExecutor(
+            keyedMutex = get(),
+            mutationRegistry = get(),
+            operationIdGenerator = get(),
+        )
+    }
     single {
         WidgetMutationCoordinator(
             baseRepository = get(),
