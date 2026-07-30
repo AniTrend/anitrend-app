@@ -7,6 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.appcompat.app.AlertDialog
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -22,12 +26,11 @@ import com.google.android.material.textview.MaterialTextView
 import androidx.core.view.isNotEmpty
 import androidx.core.view.isVisible
 import com.mxt.anitrend.R
+import com.mxt.anitrend.base.interfaces.dao.BoxQuery
 import com.mxt.anitrend.base.custom.view.editor.MarkdownInputEditor
 import com.mxt.anitrend.base.custom.view.widget.FuzzyDateWidget
 import com.mxt.anitrend.base.custom.view.widget.ProgressWidget
 import com.mxt.anitrend.base.custom.view.widget.ScoreWidget
-import com.mxt.anitrend.coordinator.WidgetMutationCoordinator
-import com.mxt.anitrend.coordinator.saveMediaListEntry
 import com.mxt.anitrend.domain.model.MediaListDraft
 import com.mxt.anitrend.domain.model.createEditableMediaList
 import com.mxt.anitrend.domain.model.toDraft
@@ -38,8 +41,10 @@ import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.media.MediaUtil
-import timber.log.Timber
+import com.mxt.anitrend.viewmodel.MediaListMutationViewModel
 import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
+import kotlinx.coroutines.launch
 
 /**
  * M3 BottomSheetDialogFragment for managing media list entries.
@@ -51,7 +56,7 @@ import org.koin.android.ext.android.inject
  * - Status-selection side effects: inline helper text and auto-fill on COMPLETED
  *
  * The scoreRaw pipeline is wired through MediaList -> MediaListUtil ->
- * WidgetMutationCoordinator -> BrowseRepository. No UI input populates it;
+ * MediaListMutationViewModel -> SaveMediaListEntryInteractor -> BrowseRepository. No UI input populates it;
  * the AniList API derives scoreRaw from score when not explicitly provided.
  */
 class BottomSheetSeriesManage : BottomSheetDialogFragment() {
@@ -59,13 +64,16 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
     private val mediaListStatuses =
         arrayOf(KeyUtil.CURRENT, KeyUtil.PLANNING, KeyUtil.COMPLETED, KeyUtil.DROPPED, KeyUtil.PAUSED, KeyUtil.REPEATING)
 
-    private val coordinator by inject<WidgetMutationCoordinator>()
+    private val boxQuery by inject<BoxQuery>()
+    private val mediaListMutationViewModel: MediaListMutationViewModel by activityViewModel()
 
     private lateinit var mediaBase: MediaBase
     private lateinit var mediaListModel: MediaList
     private lateinit var mediaListDraft: MediaListDraft
     private var isAnime: Boolean = true
     private var isSaving: Boolean = false
+    private var progressDialog: AlertDialog? = null
+    private var lastHandledOutcomeVersion: Int = 0
 
     // M3 views
     private lateinit var titleView: MaterialTextView
@@ -131,6 +139,7 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
         configureForMediaType()
         populateFromModel()
         setupButtons()
+        observeMutationState()
 
         return dialog
     }
@@ -288,7 +297,7 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
         val committedModel = mediaListModel
         val draft = mediaListDraft
         val mediaListOptions = runCatching {
-            coordinator.databaseHelper.currentUser?.mediaListOptions
+            boxQuery.currentUser?.mediaListOptions
         }.getOrNull() ?: return
 
         val typeOptions = (if (isAnime) mediaListOptions.animeList else mediaListOptions.mangaList) ?: return
@@ -468,54 +477,7 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
             }
 
         val command = mediaListDraft.toSaveMediaListEntryCommand(mediaListModel, enabledCustomListNames)
-
-        val ctx = context ?: return
-        val progressDialog = NotifyUtil.createProgressDialog(ctx, R.string.text_processing_request)
-        setSavingState(true)
-        progressDialog.show()
-
-        coordinator.saveMediaListEntry(command) { result ->
-            try {
-                progressDialog.dismiss()
-                setSavingState(false)
-
-                if (!isAdded) return@saveMediaListEntry
-
-                result
-                    .onSuccess { savedEntry ->
-                        savedEntry.media = mediaListModel.media
-                        mediaListModel = savedEntry
-                        mediaListDraft = savedEntry.toDraft()
-                        mediaBase.mediaListEntry = savedEntry
-
-                        context?.let { safeCtx ->
-                            NotifyUtil
-                                .makeText(
-                                    safeCtx,
-                                    getString(R.string.text_changes_saved),
-                                    R.drawable.ic_check_circle_white_24dp,
-                                    Toast.LENGTH_SHORT,
-                                ).show()
-                        }
-                        dismiss()
-                    }.onFailure { throwable ->
-                        Timber.e(throwable)
-                        context?.let { safeCtx ->
-                            NotifyUtil
-                                .makeText(
-                                    safeCtx,
-                                    getString(R.string.text_error_request),
-                                    R.drawable.ic_warning_white_18dp,
-                                    Toast.LENGTH_SHORT,
-                                ).show()
-                        }
-                    }
-            } catch (e: Exception) {
-                progressDialog.dismiss()
-                setSavingState(false)
-                Timber.e(e)
-            }
-        }
+        mediaListMutationViewModel.save(command)
     }
 
     private fun handleDelete() {
@@ -523,48 +485,10 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
             return
         }
 
-        val ctx = context ?: return
-        val progressDialog = NotifyUtil.createProgressDialog(ctx, R.string.text_processing_request)
-        progressDialog.show()
-
-        coordinator.deleteMediaListEntry(mediaListModel.id) { result ->
-            try {
-                progressDialog.dismiss()
-
-                // Lifecycle guard (task 2)
-                if (!isAdded) return@deleteMediaListEntry
-
-                result
-                    .onSuccess { deleteState ->
-                        if (deleteState.isDeleted) {
-                            context?.let { safeCtx ->
-                                NotifyUtil
-                                    .makeText(
-                                        safeCtx,
-                                        getString(R.string.text_changes_saved),
-                                        R.drawable.ic_check_circle_white_24dp,
-                                        Toast.LENGTH_SHORT,
-                                    ).show()
-                            }
-                            dismiss()
-                        }
-                    }.onFailure { throwable ->
-                        Timber.w(throwable)
-                        context?.let { safeCtx ->
-                            NotifyUtil
-                                .makeText(
-                                    safeCtx,
-                                    getString(R.string.text_error_request),
-                                    R.drawable.ic_warning_white_18dp,
-                                    Toast.LENGTH_SHORT,
-                                ).show()
-                        }
-                    }
-            } catch (e: Exception) {
-                progressDialog.dismiss()
-                Timber.e(e)
-            }
-        }
+        mediaListMutationViewModel.delete(
+            entryId = mediaListModel.id,
+            mediaId = mediaBase.id,
+        )
     }
 
     private fun setSavingState(isSaving: Boolean) {
@@ -578,8 +502,75 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
      * Falls back to [KeyUtil.POINT_100] if the user data cannot be resolved.
      */
     private fun resolveScoreFormat(): String = runCatching {
-        coordinator.databaseHelper.currentUser?.mediaListOptions?.scoreFormat
+        boxQuery.currentUser?.mediaListOptions?.scoreFormat
     }.getOrNull() ?: KeyUtil.POINT_100
+
+    private fun observeMutationState() {
+        mediaListMutationViewModel.reset(mediaBase.id)
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                mediaListMutationViewModel.observeTarget(
+                    mediaId = mediaBase.id,
+                    entryId = mediaListModel.id.takeIf { it > 0 },
+                ).collect { state ->
+                    val isMutating = state.isSaveRunning || state.isDeleteRunning
+                    setSavingState(isMutating)
+                    updateProgressDialog(isMutating)
+
+                    if (state.outcomeVersion == 0 || state.outcomeVersion == lastHandledOutcomeVersion) {
+                        return@collect
+                    }
+                    lastHandledOutcomeVersion = state.outcomeVersion
+
+                    when {
+                        state.completedAction != null -> {
+                            context?.let { safeCtx ->
+                                NotifyUtil
+                                    .makeText(
+                                        safeCtx,
+                                        getString(R.string.text_changes_saved),
+                                        R.drawable.ic_check_circle_white_24dp,
+                                        Toast.LENGTH_SHORT,
+                                    ).show()
+                            }
+                            dismiss()
+                        }
+                        !state.errorMessage.isNullOrBlank() -> {
+                            context?.let { safeCtx ->
+                                NotifyUtil
+                                    .makeText(
+                                        safeCtx,
+                                        state.errorMessage,
+                                        R.drawable.ic_warning_white_18dp,
+                                        Toast.LENGTH_SHORT,
+                                    ).show()
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun updateProgressDialog(isMutating: Boolean) {
+        val ctx = context ?: return
+        if (isMutating) {
+            if (progressDialog?.isShowing != true) {
+                progressDialog = NotifyUtil.createProgressDialog(ctx, R.string.text_processing_request).also { dialog ->
+                    dialog.show()
+                }
+            }
+        } else {
+            progressDialog?.dismiss()
+            progressDialog = null
+        }
+    }
+
+    override fun onDestroy() {
+        progressDialog?.dismiss()
+        progressDialog = null
+        super.onDestroy()
+    }
 
     companion object {
         private const val ARG_MEDIA_BASE = "arg_media_base"

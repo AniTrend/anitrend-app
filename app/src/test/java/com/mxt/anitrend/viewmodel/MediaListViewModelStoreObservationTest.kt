@@ -1,0 +1,267 @@
+package com.mxt.anitrend.viewmodel
+
+import com.mxt.anitrend.data.mapper.toMediaListRecord
+import com.mxt.anitrend.data.mapper.toPageInfoRecord
+import com.mxt.anitrend.data.store.medialist.InMemoryMediaListStore
+import com.mxt.anitrend.data.store.medialist.MediaListQueryKey
+import com.mxt.anitrend.data.store.medialist.MediaListStoreChange
+import com.mxt.anitrend.data.store.mutation.DefaultMutationRegistry
+import com.mxt.anitrend.fixture.MediaListFixtures.aMediaList
+import com.mxt.anitrend.graphql.generated.MediaListSort
+import com.mxt.anitrend.graphql.generated.MediaListStatus
+import com.mxt.anitrend.graphql.generated.MediaType
+import com.mxt.anitrend.graphql.generated.ScoreFormat
+import com.mxt.anitrend.model.api.retro.anilist.BrowseService
+import com.mxt.anitrend.model.entity.anilist.MediaList
+import com.mxt.anitrend.model.entity.anilist.MediaListCollection
+import com.mxt.anitrend.model.entity.anilist.User
+import com.mxt.anitrend.model.entity.container.body.PageContainer
+import com.mxt.anitrend.repository.BrowseRepository
+import com.mxt.anitrend.repository.UserRepository
+import com.mxt.anitrend.util.KeyUtil
+import com.mxt.anitrend.util.Settings
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import org.junit.After
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
+import org.junit.Before
+import org.junit.Test
+import org.mockito.Mockito.doReturn
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.spy
+import org.mockito.Mockito.verify
+
+@OptIn(ExperimentalCoroutinesApi::class)
+class MediaListViewModelStoreObservationTest {
+
+    private val testDispatcher = StandardTestDispatcher()
+    private lateinit var browseRepository: BrowseRepository
+    private lateinit var mediaListStore: InMemoryMediaListStore
+    private lateinit var userRepository: UserRepository
+    private lateinit var settings: Settings
+
+    private val queryKey = MediaListQueryKey(
+        userId = 42L,
+        userName = null,
+        mediaType = MediaType.ANIME,
+        statuses = setOf(MediaListStatus.CURRENT),
+        sort = MediaListSort.PROGRESS_DESC,
+    )
+
+    @Before
+    fun setUp() {
+        Dispatchers.setMain(testDispatcher)
+        mediaListStore = InMemoryMediaListStore()
+        browseRepository = spy(BrowseRepository(mock(BrowseService::class.java), testDispatcher, mediaListStore))
+        userRepository = mock(UserRepository::class.java)
+        settings = mock(Settings::class.java)
+
+        doReturn(KeyUtil.PROGRESS).`when`(settings).mediaListSort
+        doReturn(KeyUtil.DESC).`when`(settings).sortOrder
+        doReturn(true).`when`(settings).isAuthenticated
+        doReturn(
+            User().apply {
+                id = 42L
+                name = "max"
+                mediaListOptions.scoreFormat = ScoreFormat.POINT_100.name
+            },
+        ).`when`(userRepository).cachedCurrentUser
+    }
+
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
+    }
+
+    @Test
+    fun `observe store query emits rendered items from canonical store`() = runTest(testDispatcher) {
+        val entry = aMediaList(id = 1L, mediaId = 100L, progress = 5)
+        doReturn(Result.success(pageContainer(entry))).`when`(browseRepository).getMediaListCollection(
+            userId = 42L,
+            userName = null,
+            type = MediaType.ANIME,
+            forceSingleCompletedList = true,
+            sort = listOf(MediaListSort.PROGRESS_DESC),
+            statusIn = listOf(MediaListStatus.CURRENT),
+            scoreFormat = ScoreFormat.POINT_100,
+            commitToStore = true,
+            queryKey = queryKey,
+        )
+
+        val viewModel = MediaListViewModel(
+            browseRepository = browseRepository,
+            mediaListStore = mediaListStore,
+            mutationRegistry = DefaultMutationRegistry(),
+            userRepository = userRepository,
+            settings = settings,
+            ioDispatcher = testDispatcher,
+        )
+        val collector = backgroundScope.launch { viewModel.state.collect {} }
+
+        viewModel.load(userId = 42L, userName = null, mediaType = KeyUtil.ANIME, statusIn = KeyUtil.CURRENT)
+        mediaListStore.apply(
+            MediaListStoreChange.CollectionLoaded(
+                queryKey = queryKey,
+                entries = listOf(entry.toMediaListRecord(revision = 1L, ownerUserId = 42L, ownerUserName = "max")),
+                pageInfo = null,
+            ),
+        )
+        advanceUntilIdle()
+
+        val state = viewModel.state.value as MediaListViewModel.UiState.Success
+        assertEquals(1, state.renderedItems.size)
+        assertEquals(5, state.renderedItems.single().progress)
+        assertEquals(5, state.items.single().progress)
+        verify(browseRepository).getMediaListCollection(
+            userId = 42L,
+            userName = null,
+            type = MediaType.ANIME,
+            forceSingleCompletedList = true,
+            sort = listOf(MediaListSort.PROGRESS_DESC),
+            statusIn = listOf(MediaListStatus.CURRENT),
+            scoreFormat = ScoreFormat.POINT_100,
+            commitToStore = true,
+            queryKey = queryKey,
+        )
+        collector.cancel()
+    }
+
+    @Test
+    fun `entry upsert updates rendered state without repository mutation events`() = runTest(testDispatcher) {
+        val entry = aMediaList(id = 1L, mediaId = 100L, progress = 5)
+        val updatedEntry = aMediaList(id = 1L, mediaId = 100L, progress = 9)
+        doReturn(Result.success(pageContainer(entry))).`when`(browseRepository).getMediaListCollection(
+            userId = 42L,
+            userName = null,
+            type = MediaType.ANIME,
+            forceSingleCompletedList = true,
+            sort = listOf(MediaListSort.PROGRESS_DESC),
+            statusIn = listOf(MediaListStatus.CURRENT),
+            scoreFormat = ScoreFormat.POINT_100,
+            commitToStore = true,
+            queryKey = queryKey,
+        )
+
+        val viewModel = MediaListViewModel(
+            browseRepository = browseRepository,
+            mediaListStore = mediaListStore,
+            mutationRegistry = DefaultMutationRegistry(),
+            userRepository = userRepository,
+            settings = settings,
+            ioDispatcher = testDispatcher,
+        )
+        val collector = backgroundScope.launch { viewModel.state.collect {} }
+
+        viewModel.load(userId = 42L, userName = null, mediaType = KeyUtil.ANIME, statusIn = KeyUtil.CURRENT)
+        mediaListStore.apply(
+            MediaListStoreChange.CollectionLoaded(
+                queryKey = queryKey,
+                entries = listOf(entry.toMediaListRecord(revision = 1L, ownerUserId = 42L, ownerUserName = "max")),
+                pageInfo = null,
+            ),
+        )
+        mediaListStore.apply(
+            MediaListStoreChange.EntryUpserted(
+                updatedEntry.toMediaListRecord(revision = 2L, ownerUserId = 42L, ownerUserName = "max"),
+            ),
+        )
+        advanceUntilIdle()
+
+        val state = viewModel.state.value as MediaListViewModel.UiState.Success
+        assertEquals(9, state.renderedItems.single().progress)
+        assertEquals(9, state.items.single().progress)
+        collector.cancel()
+    }
+
+    @Test
+    fun `entry delete and status changes update query membership from store`() = runTest(testDispatcher) {
+        val entry = aMediaList(id = 1L, mediaId = 100L, progress = 5)
+        doReturn(Result.success(pageContainer(entry))).`when`(browseRepository).getMediaListCollection(
+            userId = 42L,
+            userName = null,
+            type = MediaType.ANIME,
+            forceSingleCompletedList = true,
+            sort = listOf(MediaListSort.PROGRESS_DESC),
+            statusIn = listOf(MediaListStatus.CURRENT),
+            scoreFormat = ScoreFormat.POINT_100,
+            commitToStore = true,
+            queryKey = queryKey,
+        )
+
+        val viewModel = MediaListViewModel(
+            browseRepository = browseRepository,
+            mediaListStore = mediaListStore,
+            mutationRegistry = DefaultMutationRegistry(),
+            userRepository = userRepository,
+            settings = settings,
+            ioDispatcher = testDispatcher,
+        )
+        val collector = backgroundScope.launch { viewModel.state.collect {} }
+
+        viewModel.load(userId = 42L, userName = null, mediaType = KeyUtil.ANIME, statusIn = KeyUtil.CURRENT)
+        mediaListStore.apply(
+            MediaListStoreChange.CollectionLoaded(
+                queryKey = queryKey,
+                entries = listOf(entry.toMediaListRecord(revision = 1L, ownerUserId = 42L, ownerUserName = "max")),
+                pageInfo = null,
+            ),
+        )
+        mediaListStore.apply(
+            MediaListStoreChange.EntryUpserted(
+                aMediaList(id = 1L, mediaId = 100L, status = KeyUtil.COMPLETED, progress = 5).toMediaListRecord(
+                    revision = 2L,
+                    ownerUserId = 42L,
+                    ownerUserName = "max",
+                ),
+            ),
+        )
+        advanceUntilIdle()
+
+        var state = viewModel.state.value as MediaListViewModel.UiState.Success
+        assertTrue(state.renderedItems.isEmpty())
+
+        mediaListStore.apply(
+            MediaListStoreChange.EntryUpserted(
+                aMediaList(id = 1L, mediaId = 100L, status = KeyUtil.CURRENT, progress = 5).toMediaListRecord(
+                    revision = 3L,
+                    ownerUserId = 42L,
+                    ownerUserName = "max",
+                ),
+            ),
+        )
+        advanceUntilIdle()
+
+        state = viewModel.state.value as MediaListViewModel.UiState.Success
+        assertEquals(1, state.renderedItems.size)
+
+        mediaListStore.apply(
+            MediaListStoreChange.EntryDeleted(
+                entryId = 1L,
+                mediaId = 100L,
+                revision = 4L,
+            ),
+        )
+        advanceUntilIdle()
+
+        state = viewModel.state.value as MediaListViewModel.UiState.Success
+        assertTrue(state.renderedItems.isEmpty())
+        assertTrue(state.isEmpty)
+        collector.cancel()
+    }
+
+    private fun pageContainer(vararg entries: MediaList): PageContainer<MediaListCollection> = PageContainer<MediaListCollection>().apply {
+        pageData = listOf(
+            mock(MediaListCollection::class.java).apply {
+                status = KeyUtil.CURRENT
+                doReturn(entries.toList()).`when`(this).entries
+            },
+        )
+    }
+}

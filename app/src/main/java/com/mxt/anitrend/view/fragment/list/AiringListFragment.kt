@@ -15,8 +15,8 @@ import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.media.MediaListUtil
+import com.mxt.anitrend.util.media.MediaUtil
 import com.mxt.anitrend.viewmodel.AiringListViewModel
-import com.mxt.anitrend.viewmodel.MediaListViewModel
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -43,7 +43,6 @@ class AiringListFragment : MediaListFragment() {
             userName = userBase.name
         }
         mediaType = KeyUtil.ANIME
-        (mAdapter as? MediaListAdapter)?.setCurrentUser(userName)
         statusIn = KeyUtil.CURRENT
     }
 
@@ -92,10 +91,6 @@ class AiringListFragment : MediaListFragment() {
         )
     }
 
-    override fun updateUI() {
-        injectAdapter()
-    }
-
     /** StateFlow collector above handles the response. */
     override fun onChanged(value: PageContainer<MediaListCollection>?) = Unit
 
@@ -115,20 +110,30 @@ class AiringListFragment : MediaListFragment() {
 
                 val mediaListSort = settings.mediaListSort ?: KeyUtil.PROGRESS
                 if (MediaListUtil.isTitleSort(mediaListSort)) {
-                    val sorted = MediaListViewModel.sortMediaListByTitle(mediaList, settings.sortOrder)
-                    onPostProcessed(sorted)
+                    val sorted = mediaList.sortedWith { first, second ->
+                        val firstTitle = MediaUtil.getMediaTitle(first.media)
+                        val secondTitle = MediaUtil.getMediaTitle(second.media)
+                        if (CompatUtil.equals(settings.sortOrder, KeyUtil.ASC)) {
+                            firstTitle.compareTo(secondTitle)
+                        } else {
+                            secondTitle.compareTo(firstTitle)
+                        }
+                    }
+                    submitStateList(sorted)
                 } else {
-                    onPostProcessed(mediaList)
+                    submitStateList(mediaList)
                 }
             } else {
-                onPostProcessed(emptyList())
+                submitStateList(emptyList())
             }
         } else {
-            onPostProcessed(emptyList())
+            submitStateList(emptyList())
         }
 
-        if (mAdapter.itemCount < 1) {
-            onPostProcessed(null)
+        if ((stateListAdapter?.itemCount ?: 0) > 0) {
+            updateUI()
+        } else {
+            showEmpty(getString(com.mxt.anitrend.R.string.layout_empty_response))
         }
     }
 }

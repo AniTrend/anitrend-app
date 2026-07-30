@@ -22,4 +22,6 @@ data class MediaListRecord(
     val completedAt: FuzzyDateRecord?,
     val media: MediaSummaryRecord?,
     val revision: Long,
+    val ownerUserId: Long? = null,
+    val ownerUserName: String? = null,
 )

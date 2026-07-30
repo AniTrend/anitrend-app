@@ -113,6 +113,7 @@ import com.mxt.anitrend.viewmodel.MediaFeedViewModel
 import com.mxt.anitrend.viewmodel.MediaFormatViewModel
 import com.mxt.anitrend.viewmodel.MediaLatestViewModel
 import com.mxt.anitrend.viewmodel.MediaListViewModel
+import com.mxt.anitrend.viewmodel.MediaListMutationViewModel
 import com.mxt.anitrend.viewmodel.MediaOverviewViewModel
 import com.mxt.anitrend.viewmodel.MediaRecommendationsViewModel
 import com.mxt.anitrend.viewmodel.MediaRelationViewModel
@@ -565,7 +566,7 @@ private val repositoryModule = module {
     single { DeleteFeedInteractor(feedRepository = get(), mutationExecutor = get(), feedStore = get(), revisionProvider = get()) }
     single { SaveReplyInteractor(feedRepository = get(), mutationExecutor = get(), feedStore = get(), revisionProvider = get()) }
     single { DeleteReplyInteractor(feedRepository = get(), mutationExecutor = get(), feedStore = get(), revisionProvider = get()) }
-    single { SaveMediaListEntryInteractor(browseRepository = get(), mutationExecutor = get(), mediaListStore = get(), revisionProvider = get()) }
+    single { SaveMediaListEntryInteractor(browseRepository = get(), mutationExecutor = get(), mediaListStore = get(), revisionProvider = get(), userRepository = get()) }
     single { DeleteMediaListEntryInteractor(browseRepository = get(), mutationExecutor = get(), mediaListStore = get(), revisionProvider = get()) }
     single { IncrementMediaProgressInteractor(saveMediaListEntryInteractor = get()) }
     single {
@@ -585,9 +586,10 @@ private val repositoryModule = module {
 private val mediaFeatureModule = module {
     viewModel { AiringListViewModel(browseRepository = get()) }
     viewModel { BrowseReviewViewModel(browseRepository = get()) }
-    viewModel { MediaBrowseViewModel(baseRepository = get(), browseRepository = get()) }
+    viewModel { MediaBrowseViewModel(baseRepository = get(), browseRepository = get(), mediaListStore = get()) }
     viewModel { MediaLatestViewModel(browseRepository = get()) }
-    viewModel { MediaListViewModel(browseRepository = get(), userRepository = get(), settings = get()) }
+    viewModel { MediaListViewModel(browseRepository = get(), mediaListStore = get(), mutationRegistry = get(), userRepository = get(), settings = get()) }
+    viewModel { MediaListMutationViewModel(saveMediaListEntryInteractor = get(), deleteMediaListEntryInteractor = get(), incrementMediaProgressInteractor = get(), mutationRegistry = get()) }
     viewModel { ReviewViewModel(browseRepository = get()) }
     viewModel { SuggestionListViewModel(userRepository = get(), browseRepository = get()) }
     viewModel { MediaCharacterViewModel(mediaRepository = get()) }

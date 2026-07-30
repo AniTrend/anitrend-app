@@ -8,17 +8,19 @@ import android.widget.Toast
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.databinding.WidgetAutoIncrementerBinding
-import com.mxt.anitrend.domain.model.IncrementMediaProgressCommand
-import com.mxt.anitrend.domain.model.buildIncrementMediaProgressCommand
-import com.mxt.anitrend.domain.model.resolveIncrementResultModel
 import com.mxt.anitrend.extension.getLayoutInflater
-import com.mxt.anitrend.graphql.generated.FuzzyDateInput
-import com.mxt.anitrend.graphql.generated.MediaListStatus
-import com.mxt.anitrend.model.entity.anilist.MediaList
-import com.mxt.anitrend.model.entity.base.UserBase
+import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
-import com.mxt.anitrend.util.media.MediaUtil
-import timber.log.Timber
+import java.util.Locale
+
+data class AutoIncrementWidgetState(
+    val progress: Int,
+    val maxProgress: Int,
+    val isEnabled: Boolean,
+    val isLoading: Boolean,
+    val status: String?,
+    val mediaType: String?,
+)
 
 /**
  * Created by max on 2018/02/22.
@@ -34,71 +36,12 @@ constructor(
     CustomView,
     View.OnClickListener {
 
-    @Suppress("LongParameterList")
-    interface Listener {
-        fun onSaveMediaListEntry(
-            command: IncrementMediaProgressCommand,
-            onResult: (Result<MediaList>) -> Unit,
-        ) {
-            onSaveMediaListEntry(
-                id = command.id,
-                mediaId = command.mediaId,
-                status = command.status,
-                score = command.score,
-                scoreRaw = command.scoreRaw,
-                progress = command.requestedProgress,
-                progressVolumes = command.progressVolumes,
-                repeat = command.repeat,
-                priority = command.priority,
-                private = command.isPrivate,
-                hiddenFromStatusLists = command.hiddenFromStatusLists,
-                customLists = command.customLists,
-                advancedScores = command.advancedScores,
-                notes = command.notes,
-                startedAt = command.startedAt,
-                completedAt = command.completedAt,
-                onResult = onResult,
-            )
-        }
-
-        @Deprecated("Implement the immutable command overload")
-        fun onSaveMediaListEntry(
-            id: Int?,
-            mediaId: Long?,
-            status: MediaListStatus?,
-            score: Double?,
-            scoreRaw: Int? = null,
-            progress: Int?,
-            progressVolumes: Int?,
-            repeat: Int?,
-            priority: Int?,
-            private: Boolean,
-            hiddenFromStatusLists: Boolean,
-            customLists: List<String?>?,
-            advancedScores: List<Double?>?,
-            notes: String?,
-            startedAt: FuzzyDateInput?,
-            completedAt: FuzzyDateInput?,
-            onResult: (Result<MediaList>) -> Unit,
-        )
-    }
-
     private lateinit var binding: WidgetAutoIncrementerBinding
+    private var state: AutoIncrementWidgetState? = null
+    private var incrementListener: (() -> Unit)? = null
 
-    private var model: MediaList? = null
-
-    private var currentUser: String? = null
-    private var currentUserFull: UserBase? = null
-    private var listener: Listener? = null
-    private var recycled = false
-    private var isSaving = false
-
-    fun setListener(listener: Listener?) {
-        this.listener = listener
-    }
-
-    fun setCurrentUser(user: UserBase?) {
-        this.currentUserFull = user
+    fun setOnIncrementListener(listener: (() -> Unit)?) {
+        incrementListener = listener
     }
 
     init {
@@ -111,57 +54,45 @@ constructor(
     }
 
     override fun onClick(view: View) {
-        val currentModel = model ?: return
-        if (currentUserFull?.name == currentUser && MediaUtil.isAllowedStatus(currentModel)) {
-            if (!MediaUtil.isIncrementLimitReached(currentModel)) {
-                if (view.id == R.id.widget_flipper) {
-                    if (!isSaving && binding.widgetFlipper.displayedChild == CONTENT_STATE) {
-                        isSaving = true
-                        binding.widgetFlipper.showNext()
-                        updateModelState()
+        val currentState = state ?: return
+        if (view.id != R.id.widget_flipper) {
+            return
+        }
+        if (currentState.isLoading || binding.widgetFlipper.displayedChild == LOADING_STATE) {
+            NotifyUtil.makeText(context, R.string.busy_please_wait, Toast.LENGTH_SHORT).show()
+            return
+        }
+        if (currentState.isEnabled) {
+            incrementListener?.invoke()
+            return
+        }
+
+        if (isIncrementLimitReached(currentState)) {
+            NotifyUtil
+                .makeText(
+                    context,
+                    if (currentState.mediaType == KeyUtil.ANIME) {
+                        R.string.text_unable_to_increment_episodes
                     } else {
-                        NotifyUtil
-                            .makeText(
-                                context,
-                                R.string.busy_please_wait,
-                                Toast.LENGTH_SHORT,
-                            ).show()
-                    }
-                }
-            } else {
-                NotifyUtil
-                    .makeText(
-                        context,
-                        if (MediaUtil.isAnimeType(currentModel.media)) {
-                            R.string.text_unable_to_increment_episodes
-                        } else {
-                            R.string.text_unable_to_increment_chapters
-                        },
-                        R.drawable.ic_warning_white_18dp,
-                        Toast.LENGTH_SHORT,
-                    ).show()
-            }
+                        R.string.text_unable_to_increment_chapters
+                    },
+                    R.drawable.ic_warning_white_18dp,
+                    Toast.LENGTH_SHORT,
+                ).show()
         }
     }
 
-    fun setModel(
-        model: MediaList,
-        currentUser: String?,
-    ) {
-        recycled = false
-        isSaving = false
-        this.model = model
-        this.currentUser = currentUser
-        resetFlipperState()
-        binding.seriesProgressIncrement.setSeriesModel(model, currentUserFull?.name == currentUser)
+    fun render(state: AutoIncrementWidgetState) {
+        this.state = state
+        binding.widgetFlipper.displayedChild = if (state.isLoading) LOADING_STATE else CONTENT_STATE
+        binding.widgetFlipper.isEnabled = true
+        binding.seriesProgressIncrement.text = buildProgressLabel(state)
     }
 
     override fun onViewRecycled() {
-        recycled = true
-        isSaving = false
-        listener = null
+        incrementListener = null
+        state = null
         resetFlipperState()
-        model = null
     }
 
     private fun resetFlipperState() {
@@ -170,39 +101,26 @@ constructor(
         }
     }
 
-    private fun updateModelState() {
-        val currentModel = model ?: return
-        val saveListener = listener
-        if (saveListener == null) {
-            isSaving = false
-            resetFlipperState()
-            return
+    private fun buildProgressLabel(state: AutoIncrementWidgetState): String {
+        if (state.status == KeyUtil.NOT_YET_RELEASED) {
+            return context.getString(R.string.TBA)
         }
 
-        val command = buildIncrementMediaProgressCommand(currentModel)
-        saveListener.onSaveMediaListEntry(command) { result ->
-            isSaving = false
-            if (recycled || !isAttachedToWindow) {
-                resetFlipperState()
-                return@onSaveMediaListEntry
-            }
-
-            val renderModel = resolveIncrementResultModel(currentModel, result)
-            result.onSuccess { savedResult ->
-                val isModelCategoryChanged = savedResult.status != currentModel.status
-                model = renderModel
-                binding.seriesProgressIncrement.setSeriesModel(renderModel, currentUserFull?.name == currentUser)
-                if (isModelCategoryChanged) {
-                    NotifyUtil.makeText(context, R.string.text_changes_saved, R.drawable.ic_check_circle_white_24dp, Toast.LENGTH_SHORT).show()
-                }
-                resetFlipperState()
-            }.onFailure { throwable ->
-                binding.seriesProgressIncrement.setSeriesModel(renderModel, currentUserFull?.name == currentUser)
-                resetFlipperState()
-                Timber.w(throwable)
-            }
+        val total: String = if (state.maxProgress > 0) {
+            state.maxProgress.toString()
+        } else {
+            "?"
+        }
+        val showIncrementAffordance = !isIncrementLimitReached(state)
+        return if (showIncrementAffordance) {
+            String.format(Locale.getDefault(), "%s/%s +", state.progress, total)
+        } else {
+            String.format(Locale.getDefault(), "%s/%s", state.progress, total)
         }
     }
+
+    private fun isIncrementLimitReached(state: AutoIncrementWidgetState): Boolean =
+        state.maxProgress > 0 && state.progress >= state.maxProgress
 
     companion object {
         const val CONTENT_STATE = 0

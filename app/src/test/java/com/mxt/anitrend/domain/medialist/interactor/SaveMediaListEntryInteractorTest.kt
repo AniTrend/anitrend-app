@@ -11,8 +11,11 @@ import com.mxt.anitrend.data.store.mutation.RevisionProvider
 import com.mxt.anitrend.domain.model.SaveMediaListEntryCommand
 import com.mxt.anitrend.fixture.MediaListFixtures
 import com.mxt.anitrend.graphql.generated.MediaListStatus
+import com.mxt.anitrend.graphql.generated.ScoreFormat
+import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.model.entity.anilist.MediaList
 import com.mxt.anitrend.repository.BrowseRepository
+import com.mxt.anitrend.repository.UserRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -27,8 +30,15 @@ class SaveMediaListEntryInteractorTest {
     @Test
     fun `successful save commits EntryUpserted to store`() = runTest {
         val repository = mock(BrowseRepository::class.java)
+        val userRepository = mock(UserRepository::class.java)
         val store = InMemoryMediaListStore()
         val command = createCommand()
+        val currentUser = User().apply {
+            id = 77L
+            name = "max"
+            mediaListOptions.scoreFormat = ScoreFormat.POINT_100.name
+        }
+        doReturn(currentUser).`when`(userRepository).cachedCurrentUser
         doReturn(Result.success(MediaListFixtures.aMediaList(id = 5, mediaId = 101, progress = 9)))
             .`when`(repository)
             .saveMediaListEntry(
@@ -46,6 +56,7 @@ class SaveMediaListEntryInteractorTest {
                 customLists = null,
                 advancedScores = null,
                 notes = null,
+                scoreFormat = ScoreFormat.POINT_100,
                 startedAt = null,
                 completedAt = null,
                 commitToStore = false,
@@ -57,6 +68,7 @@ class SaveMediaListEntryInteractorTest {
             mutationExecutor = DefaultMutationExecutor(KeyedMutex(backgroundScope), DefaultMutationRegistry(), DefaultOperationIdGenerator()),
             mediaListStore = store,
             revisionProvider = RevisionProvider(),
+            userRepository = userRepository,
         )
 
         val result = interactor(command)
@@ -64,14 +76,21 @@ class SaveMediaListEntryInteractorTest {
         assertEquals(MutationResult.Success, result)
         assertEquals(9, store.state.value.entriesById.getValue(5L).progress)
         assertEquals(1L, store.state.value.entriesById.getValue(5L).revision)
+        assertEquals(77L, store.state.value.entriesById.getValue(5L).ownerUserId)
     }
 
     @Test
     fun `failed save returns MutationResult Failure and does not commit`() = runTest {
         val repository = mock(BrowseRepository::class.java)
+        val userRepository = mock(UserRepository::class.java)
         val store = InMemoryMediaListStore()
         val command = createCommand()
         val failure = IllegalStateException("save failed")
+        doReturn(
+            User().apply {
+                mediaListOptions.scoreFormat = ScoreFormat.POINT_100.name
+            },
+        ).`when`(userRepository).cachedCurrentUser
         doReturn(Result.failure<MediaList>(failure))
             .`when`(repository)
             .saveMediaListEntry(
@@ -89,6 +108,7 @@ class SaveMediaListEntryInteractorTest {
                 customLists = null,
                 advancedScores = null,
                 notes = null,
+                scoreFormat = ScoreFormat.POINT_100,
                 startedAt = null,
                 completedAt = null,
                 commitToStore = false,
@@ -100,6 +120,7 @@ class SaveMediaListEntryInteractorTest {
             mutationExecutor = DefaultMutationExecutor(KeyedMutex(backgroundScope), DefaultMutationRegistry(), DefaultOperationIdGenerator()),
             mediaListStore = store,
             revisionProvider = RevisionProvider(),
+            userRepository = userRepository,
         )
 
         val result = interactor(command)
@@ -111,8 +132,16 @@ class SaveMediaListEntryInteractorTest {
     @Test
     fun `stale response is rejected by store`() = runTest {
         val repository = mock(BrowseRepository::class.java)
+        val userRepository = mock(UserRepository::class.java)
         val store = InMemoryMediaListStore()
         val command = createCommand()
+        doReturn(
+            User().apply {
+                id = 77L
+                name = "max"
+                mediaListOptions.scoreFormat = ScoreFormat.POINT_100.name
+            },
+        ).`when`(userRepository).cachedCurrentUser
         doReturn(Result.success(MediaListFixtures.aMediaList(id = 5, mediaId = 101, progress = 9)))
             .`when`(repository)
             .saveMediaListEntry(
@@ -130,6 +159,7 @@ class SaveMediaListEntryInteractorTest {
                 customLists = null,
                 advancedScores = null,
                 notes = null,
+                scoreFormat = ScoreFormat.POINT_100,
                 startedAt = null,
                 completedAt = null,
                 commitToStore = false,
@@ -141,6 +171,7 @@ class SaveMediaListEntryInteractorTest {
             mutationExecutor = DefaultMutationExecutor(KeyedMutex(backgroundScope), DefaultMutationRegistry(), DefaultOperationIdGenerator()),
             mediaListStore = store,
             revisionProvider = RevisionProvider(),
+            userRepository = userRepository,
         )
 
         interactor(command)

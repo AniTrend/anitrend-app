@@ -10,13 +10,16 @@ import com.mxt.anitrend.data.store.mutation.ResourceKey
 import com.mxt.anitrend.data.store.mutation.RevisionProvider
 import com.mxt.anitrend.domain.interactor.executeMutation
 import com.mxt.anitrend.domain.model.SaveMediaListEntryCommand
+import com.mxt.anitrend.graphql.generated.ScoreFormat
 import com.mxt.anitrend.repository.BrowseRepository
+import com.mxt.anitrend.repository.UserRepository
 
 class SaveMediaListEntryInteractor(
     private val browseRepository: BrowseRepository,
     private val mutationExecutor: MutationExecutor,
     private val mediaListStore: MediaListStore,
     private val revisionProvider: RevisionProvider,
+    private val userRepository: UserRepository,
 ) {
     suspend operator fun invoke(command: SaveMediaListEntryCommand): MutationResult {
         val resourceKey = resolveResourceKey(command)
@@ -43,6 +46,10 @@ class SaveMediaListEntryInteractor(
         operationKey = operationKey,
         failureMessage = failureMessage,
     ) { revision ->
+        val currentUser = userRepository.cachedCurrentUser
+        val scoreFormat = currentUser?.mediaListOptions?.scoreFormat
+            ?.let { rawFormat -> runCatching { ScoreFormat.valueOf(rawFormat) }.getOrNull() }
+            ?: ScoreFormat.POINT_100
         browseRepository.saveMediaListEntry(
             id = command.id,
             mediaId = command.mediaId,
@@ -58,6 +65,7 @@ class SaveMediaListEntryInteractor(
             customLists = command.customLists,
             advancedScores = command.advancedScores,
             notes = command.notes,
+            scoreFormat = scoreFormat,
             startedAt = command.startedAt,
             completedAt = command.completedAt,
             commitToStore = false,
@@ -66,7 +74,11 @@ class SaveMediaListEntryInteractor(
             onSuccess = { entry ->
                 mediaListStore.apply(
                     MediaListStoreChange.EntryUpserted(
-                        entry = entry.toMediaListRecord(revision = revision),
+                        entry = entry.toMediaListRecord(
+                            revision = revision,
+                            ownerUserId = currentUser?.id,
+                            ownerUserName = currentUser?.name,
+                        ),
                     ),
                 )
                 MutationResult.Success

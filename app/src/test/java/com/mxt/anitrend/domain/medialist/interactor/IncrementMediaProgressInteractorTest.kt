@@ -10,8 +10,11 @@ import com.mxt.anitrend.data.store.mutation.RevisionProvider
 import com.mxt.anitrend.domain.model.IncrementMediaProgressCommand
 import com.mxt.anitrend.fixture.MediaListFixtures
 import com.mxt.anitrend.graphql.generated.MediaListStatus
+import com.mxt.anitrend.graphql.generated.ScoreFormat
 import com.mxt.anitrend.model.entity.anilist.MediaList
+import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.repository.BrowseRepository
+import com.mxt.anitrend.repository.UserRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -26,8 +29,14 @@ class IncrementMediaProgressInteractorTest {
     @Test
     fun `successful increment commits updated entry to store`() = runTest {
         val repository = mock(BrowseRepository::class.java)
+        val userRepository = mock(UserRepository::class.java)
         val store = InMemoryMediaListStore()
         val command = createCommand()
+        doReturn(
+            User().apply {
+                mediaListOptions.scoreFormat = ScoreFormat.POINT_100.name
+            },
+        ).`when`(userRepository).cachedCurrentUser
         doReturn(Result.success(MediaListFixtures.aMediaList(id = 7, mediaId = 303, progress = 6)))
             .`when`(repository)
             .saveMediaListEntry(
@@ -45,6 +54,7 @@ class IncrementMediaProgressInteractorTest {
                 customLists = null,
                 advancedScores = null,
                 notes = null,
+                scoreFormat = ScoreFormat.POINT_100,
                 startedAt = null,
                 completedAt = null,
                 commitToStore = false,
@@ -56,6 +66,7 @@ class IncrementMediaProgressInteractorTest {
             mutationExecutor = DefaultMutationExecutor(KeyedMutex(backgroundScope), DefaultMutationRegistry(), DefaultOperationIdGenerator()),
             mediaListStore = store,
             revisionProvider = RevisionProvider(),
+            userRepository = userRepository,
         )
         val interactor = IncrementMediaProgressInteractor(saveMediaListEntryInteractor = saveInteractor)
 
@@ -68,9 +79,15 @@ class IncrementMediaProgressInteractorTest {
     @Test
     fun `failed increment returns Failure and does not commit`() = runTest {
         val repository = mock(BrowseRepository::class.java)
+        val userRepository = mock(UserRepository::class.java)
         val store = InMemoryMediaListStore()
         val command = createCommand()
         val failure = IllegalStateException("increment failed")
+        doReturn(
+            User().apply {
+                mediaListOptions.scoreFormat = ScoreFormat.POINT_100.name
+            },
+        ).`when`(userRepository).cachedCurrentUser
         doReturn(Result.failure<MediaList>(failure))
             .`when`(repository)
             .saveMediaListEntry(
@@ -88,6 +105,7 @@ class IncrementMediaProgressInteractorTest {
                 customLists = null,
                 advancedScores = null,
                 notes = null,
+                scoreFormat = ScoreFormat.POINT_100,
                 startedAt = null,
                 completedAt = null,
                 commitToStore = false,
@@ -99,6 +117,7 @@ class IncrementMediaProgressInteractorTest {
             mutationExecutor = DefaultMutationExecutor(KeyedMutex(backgroundScope), DefaultMutationRegistry(), DefaultOperationIdGenerator()),
             mediaListStore = store,
             revisionProvider = RevisionProvider(),
+            userRepository = userRepository,
         )
         val interactor = IncrementMediaProgressInteractor(saveMediaListEntryInteractor = saveInteractor)
 

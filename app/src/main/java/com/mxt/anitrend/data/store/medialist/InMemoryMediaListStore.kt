@@ -116,12 +116,13 @@ class InMemoryMediaListStore : MediaListStore {
     private fun reduceEntryUpserted(entry: MediaListRecord): MediaListStoreState {
         val currentState = mutableState.value
         val entryKey = effectiveEntryKey(entry)
+        val resolvedEntry = resolveOwner(entry, currentState)
         val currentRevision = maxOf(
-            currentRevisionForEntry(entry, currentState),
+            currentRevisionForEntry(resolvedEntry, currentState),
             deletionRevisions[entryKey] ?: Long.MIN_VALUE,
-            deletionRevisions[entry.mediaId] ?: Long.MIN_VALUE,
+            deletionRevisions[resolvedEntry.mediaId] ?: Long.MIN_VALUE,
         )
-        if (entry.revision < currentRevision) {
+        if (resolvedEntry.revision < currentRevision) {
             return currentState
         }
 
@@ -130,18 +131,18 @@ class InMemoryMediaListStore : MediaListStore {
 
         val entriesById = currentState.entriesById.toMutableMap()
         val entryIdByMediaId = currentState.entryIdByMediaId.toMutableMap()
-        val previousKey = entryIdByMediaId[entry.mediaId]
+        val previousKey = entryIdByMediaId[resolvedEntry.mediaId]
         if (previousKey != null && previousKey != entryKey) {
             entriesById.remove(previousKey)
         }
-        entriesById[entryKey] = entry.copy(id = entryKey)
-        entryIdByMediaId[entry.mediaId] = entryKey
+        entriesById[entryKey] = resolvedEntry.copy(id = entryKey)
+        entryIdByMediaId[resolvedEntry.mediaId] = entryKey
 
         val interimState = currentState.copy(
             entriesById = entriesById,
             entryIdByMediaId = entryIdByMediaId,
         )
-        val queries = updateQueryMembership(interimState, entry.copy(id = entryKey))
+        val queries = updateQueryMembership(interimState, resolvedEntry.copy(id = entryKey))
 
         return interimState.copy(queries = queries)
     }
@@ -221,12 +222,11 @@ class InMemoryMediaListStore : MediaListStore {
             val existingIds = snapshot.orderedEntryIds.filterNot { it == entry.id }
             val currentlyContained = snapshot.orderedEntryIds.contains(entry.id)
             val matches = entry.matches(queryKey)
-            val shouldAdd = matches && queryKey.userId == null && queryKey.userName == null
 
             val nextIds = when {
                 currentlyContained && matches -> existingIds + entry.id
                 currentlyContained && !matches -> existingIds
-                shouldAdd -> existingIds + entry.id
+                matches -> existingIds + entry.id
                 else -> existingIds
             }
 
@@ -278,6 +278,12 @@ class InMemoryMediaListStore : MediaListStore {
     }
 
     private fun MediaListRecord.matches(queryKey: MediaListQueryKey): Boolean {
+        val matchesOwner =
+            when {
+                queryKey.userId != null -> ownerUserId == queryKey.userId
+                queryKey.userName != null -> ownerUserName == queryKey.userName
+                else -> true
+            }
         val matchesMediaType = queryKey.mediaType?.name == null || media?.type == queryKey.mediaType.name
         val matchesStatus =
             if (queryKey.statuses.isEmpty()) {
@@ -287,6 +293,23 @@ class InMemoryMediaListStore : MediaListStore {
                     runCatching { MediaListStatus.valueOf(rawStatus) }.getOrNull() in queryKey.statuses
                 } == true
             }
-        return matchesMediaType && matchesStatus
+        return matchesOwner && matchesMediaType && matchesStatus
+    }
+
+    private fun resolveOwner(
+        entry: MediaListRecord,
+        state: MediaListStoreState,
+    ): MediaListRecord {
+        if (entry.ownerUserId != null || entry.ownerUserName != null) {
+            return entry
+        }
+
+        val existingEntry = state.entriesById[effectiveEntryKey(entry)]
+            ?: state.entryIdByMediaId[entry.mediaId]?.let(state.entriesById::get)
+
+        return entry.copy(
+            ownerUserId = existingEntry?.ownerUserId,
+            ownerUserName = existingEntry?.ownerUserName,
+        )
     }
 }

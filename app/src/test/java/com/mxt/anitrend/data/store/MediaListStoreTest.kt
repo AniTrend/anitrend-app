@@ -106,6 +106,11 @@ class MediaListStoreTest {
 
         val snapshot = store.state.value.queries.getValue(currentAnimeQuery)
         assertTrue(snapshot.orderedEntryIds.isEmpty())
+
+        store.apply(MediaListStoreChange.EntryUpserted(entry.copy(status = "CURRENT", revision = 3L)))
+
+        val restoredSnapshot = store.state.value.queries.getValue(currentAnimeQuery)
+        assertEquals(listOf(10L), restoredSnapshot.orderedEntryIds)
     }
 
     private fun createEntry(
@@ -133,6 +138,7 @@ class MediaListStoreTest {
         completedAt = null,
         media = MediaSummaryRecord(
             id = mediaId,
+            titleUserPreferred = "Title $mediaId",
             titleRomaji = "Title $mediaId",
             titleEnglish = null,
             titleOriginal = null,
@@ -145,6 +151,7 @@ class MediaListStoreTest {
             siteUrl = null,
         ),
         revision = revision,
+        ownerUserId = 1L,
     )
 
     private fun createPageInfo(currentPage: Int): PageInfoRecord = PageInfoRecord(

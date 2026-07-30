@@ -90,7 +90,13 @@ class BrowseRepository(
                     mediaListStore.apply(
                         MediaListStoreChange.CollectionLoaded(
                             queryKey = resolvedQueryKey,
-                            entries = result.pageData.flatMap { it.entries.orEmpty() }.map { it.toMediaListRecord(revision = 0L) },
+                            entries = result.pageData.flatMap { it.entries.orEmpty() }.map {
+                                it.toMediaListRecord(
+                                    revision = 0L,
+                                    ownerUserId = resolvedQueryKey.userId,
+                                    ownerUserName = resolvedQueryKey.userName,
+                                )
+                            },
                             pageInfo = result.takeIf { it.hasPageInfo() }?.pageInfo?.toPageInfoRecord(),
                         ),
                     )
