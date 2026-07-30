@@ -51,25 +51,22 @@ class InMemoryFeedStore : FeedStore {
         }
     }
 
-    override fun observeFeed(feedId: Long): Flow<FeedRecord?> =
-        state.map { it.feedsById[feedId] }.distinctUntilChanged()
+    override fun observeFeed(feedId: Long): Flow<FeedRecord?> = state.map { it.feedsById[feedId] }.distinctUntilChanged()
 
-    override fun observeReplies(feedId: Long): Flow<List<FeedReplyRecord>> =
-        state.map { currentState ->
-            currentState.replyIdsByFeedId[feedId]
-                .orEmpty()
-                .mapNotNull(currentState.repliesById::get)
-        }.distinctUntilChanged()
+    override fun observeReplies(feedId: Long): Flow<List<FeedReplyRecord>> = state.map { currentState ->
+        currentState.replyIdsByFeedId[feedId]
+            .orEmpty()
+            .mapNotNull(currentState.repliesById::get)
+    }.distinctUntilChanged()
 
-    override fun observeQuery(key: FeedQueryKey): Flow<FeedQueryResult> =
-        state.map { currentState ->
-            val snapshot = currentState.queries[key]
-            FeedQueryResult(
-                feeds = snapshot?.orderedFeedIds.orEmpty().mapNotNull(currentState.feedsById::get),
-                pageInfo = snapshot?.pageInfo,
-                loadedPages = snapshot?.loadedPages.orEmpty(),
-            )
-        }.distinctUntilChanged()
+    override fun observeQuery(key: FeedQueryKey): Flow<FeedQueryResult> = state.map { currentState ->
+        val snapshot = currentState.queries[key]
+        FeedQueryResult(
+            feeds = snapshot?.orderedFeedIds.orEmpty().mapNotNull(currentState.feedsById::get),
+            pageInfo = snapshot?.pageInfo,
+            loadedPages = snapshot?.loadedPages.orEmpty(),
+        )
+    }.distinctUntilChanged()
 
     private fun reducePageLoaded(change: FeedStoreChange.PageLoaded): FeedStoreState {
         val currentState = mutableState.value

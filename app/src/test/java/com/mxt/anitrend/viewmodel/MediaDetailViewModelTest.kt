@@ -1,11 +1,8 @@
 package com.mxt.anitrend.viewmodel
 
 import com.mxt.anitrend.graphql.generated.MediaType
-import com.mxt.anitrend.data.store.feed.FeedQueryKey
-import com.mxt.anitrend.data.store.feed.FeedScope
 import com.mxt.anitrend.data.store.feed.InMemoryFeedStore
 import com.mxt.anitrend.data.store.medialist.InMemoryMediaListStore
-import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.anilist.Media
 import com.mxt.anitrend.model.entity.anilist.edge.CharacterEdge
 import com.mxt.anitrend.model.entity.anilist.edge.MediaEdge

@@ -29,8 +29,7 @@ class UserFeedFragment : FeedListFragment() {
 
     private val userFeedViewModel: UserFeedViewModel by viewModel()
 
-    override fun currentRenderedFeeds(): List<FeedList> =
-        (userFeedViewModel.state.value as? UserFeedViewModel.UiState.Success)?.content?.pageData.orEmpty()
+    override fun currentRenderedFeeds(): List<FeedList> = (userFeedViewModel.state.value as? UserFeedViewModel.UiState.Success)?.content?.pageData.orEmpty()
 
     companion object {
         @JvmStatic

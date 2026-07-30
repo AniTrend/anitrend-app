@@ -1,7 +1,6 @@
 package com.mxt.anitrend.viewmodel
 
 import com.mxt.anitrend.data.mapper.toMediaListRecord
-import com.mxt.anitrend.data.mapper.toPageInfoRecord
 import com.mxt.anitrend.data.store.medialist.InMemoryMediaListStore
 import com.mxt.anitrend.data.store.medialist.MediaListQueryKey
 import com.mxt.anitrend.data.store.medialist.MediaListStoreChange

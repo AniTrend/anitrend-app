@@ -59,42 +59,41 @@ class MediaListRecordMapperTest {
         assertEquals(9.5, record.advancedScores["Story"] ?: 0.0, 0.0)
     }
 
-    private fun createMediaList(): MediaList =
-        MediaList().also { mediaList ->
-            mediaList.id = 12L
-            mediaList.mediaId = 34L
-            mediaList.status = "CURRENT"
-            mediaList.score = 8.5f
-            mediaList.scoreRaw = 85
-            mediaList.progress = 6
-            mediaList.progressVolumes = 2
-            mediaList.repeat = 1
-            mediaList.priority = 3
-            mediaList.isHidden = true
-            mediaList.isHiddenFromStatusLists = true
-            mediaList.customLists = mutableListOf(
-                CustomList(name = "Favourites", isEnabled = true),
-                CustomList(name = "Ignored", isEnabled = false),
+    private fun createMediaList(): MediaList = MediaList().also { mediaList ->
+        mediaList.id = 12L
+        mediaList.mediaId = 34L
+        mediaList.status = "CURRENT"
+        mediaList.score = 8.5f
+        mediaList.scoreRaw = 85
+        mediaList.progress = 6
+        mediaList.progressVolumes = 2
+        mediaList.repeat = 1
+        mediaList.priority = 3
+        mediaList.isHidden = true
+        mediaList.isHiddenFromStatusLists = true
+        mediaList.customLists = mutableListOf(
+            CustomList(name = "Favourites", isEnabled = true),
+            CustomList(name = "Ignored", isEnabled = false),
+        )
+        mediaList.advancedScores = mutableMapOf(
+            "Story" to 9.5f,
+            "Art" to 8.0f,
+        )
+        mediaList.notes = "notes"
+        mediaList.startedAt = FuzzyDate(day = 2, month = 1, year = 2025)
+        mediaList.completedAt = FuzzyDate(day = 3, month = 2, year = 2026)
+        mediaList.media = MediaBase().also { media ->
+            media.id = 34L
+            media.title = MediaTitle("Romaji", "English", "Original", "Preferred")
+            media.coverImage = ImageBase(
+                extraLarge = "https://cover-extra-large",
+                large = "https://cover-large",
+                medium = "https://cover-medium",
             )
-            mediaList.advancedScores = mutableMapOf(
-                "Story" to 9.5f,
-                "Art" to 8.0f,
-            )
-            mediaList.notes = "notes"
-            mediaList.startedAt = FuzzyDate(day = 2, month = 1, year = 2025)
-            mediaList.completedAt = FuzzyDate(day = 3, month = 2, year = 2026)
-            mediaList.media = MediaBase().also { media ->
-                media.id = 34L
-                media.title = MediaTitle("Romaji", "English", "Original", "Preferred")
-                media.coverImage = ImageBase(
-                    extraLarge = "https://cover-extra-large",
-                    large = "https://cover-large",
-                    medium = "https://cover-medium",
-                )
-                media.type = "ANIME"
-                media.episodes = 12
-                media.status = "RELEASING"
-                media.siteUrl = "https://media"
-            }
+            media.type = "ANIME"
+            media.episodes = 12
+            media.status = "RELEASING"
+            media.siteUrl = "https://media"
         }
+    }
 }

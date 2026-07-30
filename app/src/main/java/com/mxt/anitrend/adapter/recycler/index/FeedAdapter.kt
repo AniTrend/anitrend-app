@@ -79,8 +79,7 @@ class FeedAdapter(
 
     override fun getFilter(): Filter? = null
 
-    private fun isLikedByCurrentUser(feed: FeedList): Boolean =
-        currentUser?.let { activeUser -> feed.likes.orEmpty().any { it.id == activeUser.id } } == true
+    private fun isLikedByCurrentUser(feed: FeedList): Boolean = currentUser?.let { activeUser -> feed.likes.orEmpty().any { it.id == activeUser.id } } == true
 
     private fun renderLike(
         widget: FavouriteWidget,

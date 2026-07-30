@@ -275,11 +275,9 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
         }
     }
 
-    protected open fun currentRenderedFeeds(): List<FeedList> =
-        (feedListViewModel.state.value as? FeedListViewModel.UiState.Success)?.content?.pageData.orEmpty()
+    protected open fun currentRenderedFeeds(): List<FeedList> = (feedListViewModel.state.value as? FeedListViewModel.UiState.Success)?.content?.pageData.orEmpty()
 
-    private fun resolveCurrentFeed(feedId: Long): FeedList? =
-        currentRenderedFeeds().firstOrNull { it.id == feedId }
+    private fun resolveCurrentFeed(feedId: Long): FeedList? = currentRenderedFeeds().firstOrNull { it.id == feedId }
 
     private fun openFeedMedia(
         target: View,

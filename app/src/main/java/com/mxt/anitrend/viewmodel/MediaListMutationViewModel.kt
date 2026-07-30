@@ -125,7 +125,7 @@ class MediaListMutationViewModel(
                     completedAction = action,
                     outcomeVersion = previous.outcomeVersion + 1,
                 )
-            )
+                )
         }
     }
 
@@ -141,7 +141,7 @@ class MediaListMutationViewModel(
                     completedAction = null,
                     outcomeVersion = previous.outcomeVersion + 1,
                 )
-            )
+                )
         }
     }
 

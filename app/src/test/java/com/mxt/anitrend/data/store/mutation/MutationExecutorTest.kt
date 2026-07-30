@@ -119,9 +119,7 @@ class MutationExecutorTest {
     ) : OperationIdGenerator {
         private var index = 0
 
-        override fun generate(): String {
-            return operationIds.getOrNull(index++)
-                ?: error("No operation ID configured for index $index")
-        }
+        override fun generate(): String = operationIds.getOrNull(index++)
+            ?: error("No operation ID configured for index $index")
     }
 }

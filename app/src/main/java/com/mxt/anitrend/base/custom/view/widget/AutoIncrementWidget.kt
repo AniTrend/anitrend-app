@@ -119,8 +119,7 @@ constructor(
         }
     }
 
-    private fun isIncrementLimitReached(state: AutoIncrementWidgetState): Boolean =
-        state.maxProgress > 0 && state.progress >= state.maxProgress
+    private fun isIncrementLimitReached(state: AutoIncrementWidgetState): Boolean = state.maxProgress > 0 && state.progress >= state.maxProgress
 
     companion object {
         const val CONTENT_STATE = 0

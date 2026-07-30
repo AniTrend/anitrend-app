@@ -178,9 +178,8 @@ class CommentFragment : FragmentBaseComment() {
         }
     }
 
-    override fun hasContentItems(): Boolean =
-        (::feedAdapter.isInitialized && feedAdapter.itemCount > 0) ||
-            (::commentListAdapter.isInitialized && commentListAdapter.itemCount > 0)
+    override fun hasContentItems(): Boolean = (::feedAdapter.isInitialized && feedAdapter.itemCount > 0) ||
+        (::commentListAdapter.isInitialized && commentListAdapter.itemCount > 0)
 
     override fun updateUI() {
         if (hasContentItems()) {
@@ -420,8 +419,7 @@ class CommentFragment : FragmentBaseComment() {
         override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int,
-        ): RecyclerViewHolder<FeedReply> =
-            throw UnsupportedOperationException("Placeholder adapter should never create view holders")
+        ): RecyclerViewHolder<FeedReply> = throw UnsupportedOperationException("Placeholder adapter should never create view holders")
 
         override fun getFilter(): Filter? = null
     }

@@ -148,29 +148,27 @@ class CommentViewModel(
         }
     }
 
-    suspend fun toggleFeedLike(feedId: Long): MutationResult =
-        if (mutationRegistry.state.value[OperationKey.feedLike(feedId)].isRunning()) {
-            MutationResult.Success
-        } else {
-            toggleLikeInteractor(
-                ToggleLikeCommand(
-                    id = feedId,
-                    likeableType = LikeableType.ACTIVITY,
-                ),
-            )
-        }
+    suspend fun toggleFeedLike(feedId: Long): MutationResult = if (mutationRegistry.state.value[OperationKey.feedLike(feedId)].isRunning()) {
+        MutationResult.Success
+    } else {
+        toggleLikeInteractor(
+            ToggleLikeCommand(
+                id = feedId,
+                likeableType = LikeableType.ACTIVITY,
+            ),
+        )
+    }
 
-    suspend fun toggleReplyLike(replyId: Long): MutationResult =
-        if (mutationRegistry.state.value[OperationKey.replyLike(replyId)].isRunning()) {
-            MutationResult.Success
-        } else {
-            toggleLikeInteractor(
-                ToggleLikeCommand(
-                    id = replyId,
-                    likeableType = LikeableType.ACTIVITY_REPLY,
-                ),
-            )
-        }
+    suspend fun toggleReplyLike(replyId: Long): MutationResult = if (mutationRegistry.state.value[OperationKey.replyLike(replyId)].isRunning()) {
+        MutationResult.Success
+    } else {
+        toggleLikeInteractor(
+            ToggleLikeCommand(
+                id = replyId,
+                likeableType = LikeableType.ACTIVITY_REPLY,
+            ),
+        )
+    }
 
     suspend fun submitReply(
         feedId: Long,
@@ -184,27 +182,24 @@ class CommentViewModel(
         ),
     )
 
-    suspend fun deleteReply(replyId: Long): MutationResult =
-        if (mutationRegistry.state.value[OperationKey.replyDelete(replyId)].isRunning()) {
-            MutationResult.Success
-        } else {
-            deleteReplyInteractor(DeleteReplyCommand(replyId = replyId))
-        }
+    suspend fun deleteReply(replyId: Long): MutationResult = if (mutationRegistry.state.value[OperationKey.replyDelete(replyId)].isRunning()) {
+        MutationResult.Success
+    } else {
+        deleteReplyInteractor(DeleteReplyCommand(replyId = replyId))
+    }
 
-    suspend fun deleteFeed(feedId: Long): MutationResult =
-        if (mutationRegistry.state.value[OperationKey.feedDelete(feedId)].isRunning()) {
-            MutationResult.Success
-        } else {
-            deleteFeedInteractor(DeleteFeedCommand(feedId = feedId))
-        }
+    suspend fun deleteFeed(feedId: Long): MutationResult = if (mutationRegistry.state.value[OperationKey.feedDelete(feedId)].isRunning()) {
+        MutationResult.Success
+    } else {
+        deleteFeedInteractor(DeleteFeedCommand(feedId = feedId))
+    }
 
-    suspend fun editFeed(feedId: Long, text: String): MutationResult =
-        saveFeedInteractor(
-            SaveFeedRequest.Text(
-                id = feedId,
-                text = text,
-            ),
-        )
+    suspend fun editFeed(feedId: Long, text: String): MutationResult = saveFeedInteractor(
+        SaveFeedRequest.Text(
+            id = feedId,
+            text = text,
+        ),
+    )
 
     private fun OperationStatus?.isRunning(): Boolean = this is OperationStatus.Running
 }

@@ -46,8 +46,7 @@ fun FeedReply.toFeedReplyRecord(
     revision = revision,
 )
 
-fun List<UserBase>.toUserSummaryRecords(): List<UserSummaryRecord> =
-    map(UserBase::toUserSummaryRecord)
+fun List<UserBase>.toUserSummaryRecords(): List<UserSummaryRecord> = map(UserBase::toUserSummaryRecord)
 
 fun UserBase.toUserSummaryRecord(): UserSummaryRecord = UserSummaryRecord(
     id = id,

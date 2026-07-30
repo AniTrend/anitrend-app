@@ -84,16 +84,14 @@ class RapidIncrementSequencingTest {
         secondJob.join()
     }
 
-    private fun com.mxt.anitrend.model.entity.anilist.MediaList.toRecord(revision: Long) =
-        toMediaListRecord(revision = revision, ownerUserId = 1L)
+    private fun com.mxt.anitrend.model.entity.anilist.MediaList.toRecord(revision: Long) = toMediaListRecord(revision = revision, ownerUserId = 1L)
 
     private class FixedOperationIdGenerator(
         private vararg val operationIds: String,
     ) : com.mxt.anitrend.data.store.mutation.OperationIdGenerator {
         private var index = 0
 
-        override fun generate(): String =
-            operationIds.getOrNull(index++)
-                ?: error("No operation ID configured for index $index")
+        override fun generate(): String = operationIds.getOrNull(index++)
+            ?: error("No operation ID configured for index $index")
     }
 }

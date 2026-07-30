@@ -274,5 +274,4 @@ class MediaListViewModel(
             mediaSummary.chapters == 0 || progress < mediaSummary.chapters
         }
     }
-
 }

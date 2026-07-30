@@ -7,12 +7,9 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mxt.anitrend.R
-import com.mxt.anitrend.adapter.recycler.shared.UnresolvedViewHolder
 import com.mxt.anitrend.base.custom.view.image.AspectImageView
 import com.mxt.anitrend.base.custom.view.widget.FavouriteWidgetState
-import com.mxt.anitrend.base.custom.view.widget.FavouriteWidget
 import com.mxt.anitrend.base.custom.view.widget.StatusDeleteWidgetState
-import com.mxt.anitrend.base.custom.view.widget.StatusDeleteWidget
 import com.mxt.anitrend.binding.richMarkDown
 import com.mxt.anitrend.binding.setImage
 import com.mxt.anitrend.databinding.AdapterFeedMessageBinding

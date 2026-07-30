@@ -114,30 +114,28 @@ class FeedRecordMapperTest {
         siteUrl = "https://feed",
     )
 
-    private fun createUser(id: Long, name: String): UserBase =
-        UserBase(name = name).also {
-            it.id = id
-            it.avatar = ImageBase(
-                extraLarge = "https://avatar-extra-large",
-                large = "https://avatar-large",
-                medium = "https://avatar-medium",
-            )
-        }
+    private fun createUser(id: Long, name: String): UserBase = UserBase(name = name).also {
+        it.id = id
+        it.avatar = ImageBase(
+            extraLarge = "https://avatar-extra-large",
+            large = "https://avatar-large",
+            medium = "https://avatar-medium",
+        )
+    }
 
-    private fun createMedia(): MediaBase =
-        MediaBase().also {
-            it.id = 44L
-            it.title = MediaTitle("Romaji", "English", "Original", "Preferred")
-            it.coverImage = ImageBase(
-                extraLarge = "https://cover-extra-large",
-                large = "https://cover-large",
-                medium = "https://cover-medium",
-            )
-            it.type = "ANIME"
-            it.episodes = 12
-            it.chapters = 0
-            it.volumes = 0
-            it.status = "FINISHED"
-            it.siteUrl = "https://media"
-        }
+    private fun createMedia(): MediaBase = MediaBase().also {
+        it.id = 44L
+        it.title = MediaTitle("Romaji", "English", "Original", "Preferred")
+        it.coverImage = ImageBase(
+            extraLarge = "https://cover-extra-large",
+            large = "https://cover-large",
+            medium = "https://cover-medium",
+        )
+        it.type = "ANIME"
+        it.episodes = 12
+        it.chapters = 0
+        it.volumes = 0
+        it.status = "FINISHED"
+        it.siteUrl = "https://media"
+    }
 }

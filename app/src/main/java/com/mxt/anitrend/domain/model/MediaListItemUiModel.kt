@@ -46,7 +46,7 @@ fun MediaListRecord.toMediaListItemUiModel(
             ?: mediaSummary?.titleRomaji
             ?: mediaSummary?.titleEnglish
             ?: mediaSummary?.titleOriginal
-            .orEmpty(),
+                .orEmpty(),
         mediaTitleEnglish = mediaSummary?.titleEnglish,
         mediaTitleOriginal = mediaSummary?.titleOriginal,
         mediaCoverImage = mediaSummary?.coverImage,

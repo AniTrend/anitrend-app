@@ -45,19 +45,17 @@ class InMemoryMediaListStore : MediaListStore {
         }
     }
 
-    override fun observeEntryByMediaId(mediaId: Long): Flow<MediaListRecord?> =
-        state.map { currentState ->
-            currentState.entryIdByMediaId[mediaId]?.let(currentState.entriesById::get)
-        }.distinctUntilChanged()
+    override fun observeEntryByMediaId(mediaId: Long): Flow<MediaListRecord?> = state.map { currentState ->
+        currentState.entryIdByMediaId[mediaId]?.let(currentState.entriesById::get)
+    }.distinctUntilChanged()
 
-    override fun observeQuery(key: MediaListQueryKey): Flow<MediaListQueryResult> =
-        state.map { currentState ->
-            val snapshot = currentState.queries[key]
-            MediaListQueryResult(
-                entries = snapshot?.orderedEntryIds.orEmpty().mapNotNull(currentState.entriesById::get),
-                pageInfo = snapshot?.pageInfo,
-            )
-        }.distinctUntilChanged()
+    override fun observeQuery(key: MediaListQueryKey): Flow<MediaListQueryResult> = state.map { currentState ->
+        val snapshot = currentState.queries[key]
+        MediaListQueryResult(
+            entries = snapshot?.orderedEntryIds.orEmpty().mapNotNull(currentState.entriesById::get),
+            pageInfo = snapshot?.pageInfo,
+        )
+    }.distinctUntilChanged()
 
     private fun reduceCollectionLoaded(change: MediaListStoreChange.CollectionLoaded): MediaListStoreState {
         val currentState = mutableState.value
@@ -207,8 +205,7 @@ class InMemoryMediaListStore : MediaListStore {
         )
     }
 
-    private fun effectiveEntryKey(entry: MediaListRecord): Long =
-        if (entry.id != 0L) entry.id else entry.mediaId
+    private fun effectiveEntryKey(entry: MediaListRecord): Long = if (entry.id != 0L) entry.id else entry.mediaId
 
     private fun resolveEntryKey(
         entryId: Long,
@@ -224,23 +221,22 @@ class InMemoryMediaListStore : MediaListStore {
     private fun updateQueryMembership(
         state: MediaListStoreState,
         entry: MediaListRecord,
-    ): Map<MediaListQueryKey, MediaListQuerySnapshot> =
-        state.queries.mapValues { (queryKey, snapshot) ->
-            val existingIds = snapshot.orderedEntryIds.filterNot { it == entry.id }
-            val currentlyContained = snapshot.orderedEntryIds.contains(entry.id)
-            val matches = entry.matches(queryKey)
+    ): Map<MediaListQueryKey, MediaListQuerySnapshot> = state.queries.mapValues { (queryKey, snapshot) ->
+        val existingIds = snapshot.orderedEntryIds.filterNot { it == entry.id }
+        val currentlyContained = snapshot.orderedEntryIds.contains(entry.id)
+        val matches = entry.matches(queryKey)
 
-            val nextIds = when {
-                currentlyContained && matches -> existingIds + entry.id
-                currentlyContained && !matches -> existingIds
-                matches -> existingIds + entry.id
-                else -> existingIds
-            }
-
-            snapshot.copy(
-                orderedEntryIds = reorderEntryIds(nextIds.distinct(), state.entriesById + (entry.id to entry), queryKey.sort),
-            )
+        val nextIds = when {
+            currentlyContained && matches -> existingIds + entry.id
+            currentlyContained && !matches -> existingIds
+            matches -> existingIds + entry.id
+            else -> existingIds
         }
+
+        snapshot.copy(
+            orderedEntryIds = reorderEntryIds(nextIds.distinct(), state.entriesById + (entry.id to entry), queryKey.sort),
+        )
+    }
 
     private fun reorderEntryIds(
         entryIds: List<Long>,

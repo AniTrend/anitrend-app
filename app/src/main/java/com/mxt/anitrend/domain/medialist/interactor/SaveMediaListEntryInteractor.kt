@@ -92,15 +92,13 @@ class SaveMediaListEntryInteractor(
         )
     }
 
-    private fun resolveResourceKey(command: SaveMediaListEntryCommand): ResourceKey? =
-        command.mediaId?.let(ResourceKey::MediaListByMedia)
-            ?: command.id?.toLong()?.let(ResourceKey::MediaListById)
+    private fun resolveResourceKey(command: SaveMediaListEntryCommand): ResourceKey? = command.mediaId?.let(ResourceKey::MediaListByMedia)
+        ?: command.id?.toLong()?.let(ResourceKey::MediaListById)
 
     private fun resolveSaveOperationKey(
         command: SaveMediaListEntryCommand,
         resourceKey: ResourceKey,
-    ): OperationKey =
-        command.mediaId?.let(OperationKey::mediaListSave)
-            ?: command.id?.toLong()?.let(OperationKey::mediaListSaveById)
-            ?: OperationKey.of(resourceKey, OperationKey.Type.MEDIA_LIST_SAVE)
+    ): OperationKey = command.mediaId?.let(OperationKey::mediaListSave)
+        ?: command.id?.toLong()?.let(OperationKey::mediaListSaveById)
+        ?: OperationKey.of(resourceKey, OperationKey.Type.MEDIA_LIST_SAVE)
 }

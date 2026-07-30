@@ -35,20 +35,18 @@ class InMemoryReviewStore : ReviewStore {
         }
     }
 
-    override fun observeReview(reviewId: Long): Flow<Review?> =
-        state.map { it.reviewsById[reviewId]?.review?.copyForStore() }.distinctUntilChanged()
+    override fun observeReview(reviewId: Long): Flow<Review?> = state.map { it.reviewsById[reviewId]?.review?.copyForStore() }.distinctUntilChanged()
 
-    override fun observeQuery(key: ReviewQueryKey): Flow<ReviewQueryResult> =
-        state.map { currentState ->
-            val snapshot = currentState.queries[key]
-            ReviewQueryResult(
-                reviews = snapshot?.orderedReviewIds.orEmpty().mapNotNull { reviewId ->
-                    currentState.reviewsById[reviewId]?.review?.copyForStore()
-                },
-                pageInfo = snapshot?.pageInfo,
-                loadedPages = snapshot?.loadedPages.orEmpty(),
-            )
-        }.distinctUntilChanged()
+    override fun observeQuery(key: ReviewQueryKey): Flow<ReviewQueryResult> = state.map { currentState ->
+        val snapshot = currentState.queries[key]
+        ReviewQueryResult(
+            reviews = snapshot?.orderedReviewIds.orEmpty().mapNotNull { reviewId ->
+                currentState.reviewsById[reviewId]?.review?.copyForStore()
+            },
+            pageInfo = snapshot?.pageInfo,
+            loadedPages = snapshot?.loadedPages.orEmpty(),
+        )
+    }.distinctUntilChanged()
 
     private fun reducePageLoaded(change: ReviewStoreChange.PageLoaded): ReviewStoreState {
         val currentState = mutableState.value

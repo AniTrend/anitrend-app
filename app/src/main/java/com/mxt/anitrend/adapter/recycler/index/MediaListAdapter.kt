@@ -16,7 +16,6 @@ import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.view.image.AspectImageView
 import com.mxt.anitrend.base.custom.view.text.AiringTextView
 import com.mxt.anitrend.base.custom.view.text.SeriesYearTypeTextView
-import com.mxt.anitrend.base.custom.view.widget.AutoIncrementWidget
 import com.mxt.anitrend.base.custom.view.widget.AutoIncrementWidgetState
 import com.mxt.anitrend.base.custom.view.widget.SeriesStatusWidget
 import com.mxt.anitrend.binding.setAverageRating
@@ -39,7 +38,8 @@ class MediaListAdapter(
     private val onOpenMedia: (View, MediaListItemUiModel) -> Unit,
     private val onOpenManage: (MediaListItemUiModel) -> Unit,
     private val onDelete: (MediaListItemUiModel) -> Unit = {},
-) : ListAdapter<MediaListItemUiModel, RecyclerView.ViewHolder>(DIFF_CALLBACK), Filterable {
+) : ListAdapter<MediaListItemUiModel, RecyclerView.ViewHolder>(DIFF_CALLBACK),
+    Filterable {
 
     private val appContext = context.applicationContext
     private var sourceItems: List<MediaListItemUiModel> = emptyList()

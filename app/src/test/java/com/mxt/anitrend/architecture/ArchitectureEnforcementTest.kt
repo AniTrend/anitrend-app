@@ -77,22 +77,20 @@ class ArchitectureEnforcementTest {
         )
     }
 
-    private fun kotlinFiles(relativePath: String): List<File> =
-        projectRoot.resolve(relativePath)
-            .walkTopDown()
-            .filter { it.isFile && it.extension == "kt" }
-            .toList()
+    private fun kotlinFiles(relativePath: String): List<File> = projectRoot.resolve(relativePath)
+        .walkTopDown()
+        .filter { it.isFile && it.extension == "kt" }
+        .toList()
 
-    private fun List<File>.matching(pattern: Regex): List<String> =
-        flatMap { file ->
-            file.readLines().mapIndexedNotNull { index, line ->
-                if (pattern.containsMatchIn(line)) {
-                    file.relativeTo(projectRoot).path + ":${index + 1}: ${line.trim()}"
-                } else {
-                    null
-                }
+    private fun List<File>.matching(pattern: Regex): List<String> = flatMap { file ->
+        file.readLines().mapIndexedNotNull { index, line ->
+            if (pattern.containsMatchIn(line)) {
+                file.relativeTo(projectRoot).path + ":${index + 1}: ${line.trim()}"
+            } else {
+                null
             }
         }
+    }
 
     private fun findProjectRoot(): File {
         val userDir = requireNotNull(System.getProperty("user.dir"))
