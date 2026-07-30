@@ -1,26 +1,26 @@
 package com.mxt.anitrend.viewmodel
 
+import com.mxt.anitrend.data.store.medialist.InMemoryMediaListStore
+import com.mxt.anitrend.fixture.MediaListFixtures.aMediaList
+import com.mxt.anitrend.fixture.MediaListFixtures.anAnimeMediaBase
 import com.mxt.anitrend.model.entity.base.MediaBase
-import com.mxt.anitrend.model.api.retro.anilist.BrowseService
 import com.mxt.anitrend.repository.BaseRepository
-import com.mxt.anitrend.repository.BrowseRepository
 import com.mxt.anitrend.repository.MediaRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.doReturn
 import org.mockito.Mockito.mock
-import org.mockito.Mockito.spy
 import org.mockito.Mockito.verify
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -29,22 +29,20 @@ class MediaViewModelTest {
     private val testDispatcher = UnconfinedTestDispatcher()
     private lateinit var mediaRepository: MediaRepository
     private lateinit var baseRepository: BaseRepository
-    private lateinit var browseRepository: BrowseRepository
+    private lateinit var mediaListStore: InMemoryMediaListStore
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
         mediaRepository = mock(MediaRepository::class.java)
         baseRepository = mock(BaseRepository::class.java)
-        browseRepository = spy(BrowseRepository(mock(BrowseService::class.java), testDispatcher))
+        mediaListStore = InMemoryMediaListStore()
     }
 
     @After
     fun tearDown() {
         Dispatchers.resetMain()
     }
-
-    // ── UiState sealed type ──
 
     @Test
     fun `UiState Loading is a singleton`() {
@@ -69,20 +67,16 @@ class MediaViewModelTest {
         assertTrue(state.message.isNotEmpty())
     }
 
-    // ── initial state ──
-
     @Test
-    fun `initial state is Loading`() = runTest {
+    fun `initial state is Loading`() = runTest(testDispatcher) {
         val vm = MediaViewModel(
             mediaRepository = mediaRepository,
             baseRepository = baseRepository,
-            browseRepository = browseRepository,
+            mediaListStore = mediaListStore,
             ioDispatcher = testDispatcher,
         )
         assertTrue(vm.state.value is MediaViewModel.UiState.Loading)
     }
-
-    // ── GraphQL error message extraction ──
 
     @Test
     fun `GraphQL error message is surfaced in Error state`() {
@@ -91,12 +85,9 @@ class MediaViewModelTest {
     }
 
     @Test
-    fun `saved media list event updates loaded media entry`() = runTest {
-        val media = MediaBase().apply { id = 100L }
-        val savedEntry = com.mxt.anitrend.model.entity.anilist.MediaList().apply {
-            id = 5L
-            mediaId = 100L
-        }
+    fun `loaded media uses media list entry from store`() = runTest(testDispatcher) {
+        val media = anAnimeMediaBase(id = 100L)
+        media.mediaListEntry = aMediaList(id = 5, mediaId = 100, progress = 7, media = media)
         doReturn(Result.success(media))
             .`when`(mediaRepository)
             .getMediaBase(100L, null, false)
@@ -104,29 +95,26 @@ class MediaViewModelTest {
         val vm = MediaViewModel(
             mediaRepository = mediaRepository,
             baseRepository = baseRepository,
-            browseRepository = browseRepository,
+            mediaListStore = mediaListStore,
             ioDispatcher = testDispatcher,
         )
+        val collector = backgroundScope.launch { vm.state.collect {} }
 
         vm.load(mediaId = 100L, mediaType = null, showAdult = false)
         advanceUntilIdle()
-        vm.onMediaListSaved(savedEntry)
 
         val state = vm.state.value as MediaViewModel.UiState.Success
         assertEquals(5L, state.media.mediaListEntry?.id)
+        assertEquals(7, state.media.mediaListEntry?.progress)
+        assertEquals(7, mediaListStore.state.value.entriesById.getValue(5L).progress)
         verify(mediaRepository).getMediaBase(100L, null, false)
+        collector.cancel()
     }
 
     @Test
-    fun `deleted media list event clears loaded media entry`() = runTest {
-        val entry = com.mxt.anitrend.model.entity.anilist.MediaList().apply {
-            id = 9L
-            mediaId = 100L
-        }
-        val media = MediaBase().apply {
-            id = 100L
-            mediaListEntry = entry
-        }
+    fun `load skips repeated fetches after first success`() = runTest(testDispatcher) {
+        val media = anAnimeMediaBase(id = 100L)
+        media.mediaListEntry = aMediaList(id = 1, mediaId = 100, progress = 5, media = media)
         doReturn(Result.success(media))
             .`when`(mediaRepository)
             .getMediaBase(100L, null, false)
@@ -134,15 +122,45 @@ class MediaViewModelTest {
         val vm = MediaViewModel(
             mediaRepository = mediaRepository,
             baseRepository = baseRepository,
-            browseRepository = browseRepository,
+            mediaListStore = mediaListStore,
             ioDispatcher = testDispatcher,
         )
+        val collector = backgroundScope.launch { vm.state.collect {} }
 
         vm.load(mediaId = 100L, mediaType = null, showAdult = false)
         advanceUntilIdle()
-        vm.onMediaListDeleted(9L)
 
-        val state = vm.state.value as MediaViewModel.UiState.Success
-        assertNull(state.media.mediaListEntry)
+        var state = vm.state.value as MediaViewModel.UiState.Success
+        assertEquals(5, state.media.mediaListEntry?.progress)
+
+        vm.load(mediaId = 100L, mediaType = null, showAdult = false)
+        advanceUntilIdle()
+
+        state = vm.state.value as MediaViewModel.UiState.Success
+        assertEquals(5, state.media.mediaListEntry?.progress)
+        verify(mediaRepository).getMediaBase(100L, null, false)
+        collector.cancel()
+    }
+
+    @Test
+    fun `load failure emits Error state`() = runTest(testDispatcher) {
+        doReturn(Result.failure<MediaBase>(IllegalStateException("Media failed")))
+            .`when`(mediaRepository)
+            .getMediaBase(100L, null, false)
+
+        val vm = MediaViewModel(
+            mediaRepository = mediaRepository,
+            baseRepository = baseRepository,
+            mediaListStore = mediaListStore,
+            ioDispatcher = testDispatcher,
+        )
+        val collector = backgroundScope.launch { vm.state.collect {} }
+
+        vm.load(mediaId = 100L, mediaType = null, showAdult = false)
+        advanceUntilIdle()
+
+        val state = vm.state.value as MediaViewModel.UiState.Error
+        assertEquals("Media failed", state.message)
+        collector.cancel()
     }
 }

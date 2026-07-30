@@ -40,9 +40,6 @@ import com.mxt.anitrend.model.entity.anilist.MediaList as MediaEntityList
 import com.mxt.anitrend.model.entity.anilist.MediaListCollection as MediaListCollectionEntity
 
 sealed class BrowseMutation {
-    data class MediaListSaved(val entry: MediaEntityList) : BrowseMutation()
-    data class MediaListDeleted(val id: Long) : BrowseMutation()
-    data class MediaListsUpdated(val entries: List<MediaEntityList>) : BrowseMutation()
     data class ReviewRated(val review: Review) : BrowseMutation()
     data class ReviewSaved(val review: Review) : BrowseMutation()
     data class ReviewDeleted(val id: Long) : BrowseMutation()
@@ -247,7 +244,6 @@ class BrowseRepository(
                         ),
                     )
                 }
-                _mutationEvents.emit(BrowseMutation.MediaListDeleted(id))
                 result
             } else {
                 throw RuntimeException(response.apiError())
@@ -311,7 +307,6 @@ class BrowseRepository(
                         ),
                     )
                 }
-                _mutationEvents.emit(BrowseMutation.MediaListSaved(result))
                 result
             } else {
                 throw RuntimeException(response.apiError())
@@ -328,7 +323,6 @@ class BrowseRepository(
             val response = browseService.updateMediaListEntries(request).execute()
             if (response.isSuccessful) {
                 val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
-                _mutationEvents.emit(BrowseMutation.MediaListsUpdated(result))
                 result
             } else {
                 throw RuntimeException(response.apiError())

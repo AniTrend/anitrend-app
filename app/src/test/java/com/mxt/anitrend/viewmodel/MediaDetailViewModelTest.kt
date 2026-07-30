@@ -1,8 +1,8 @@
 package com.mxt.anitrend.viewmodel
 
 import com.mxt.anitrend.graphql.generated.MediaType
+import com.mxt.anitrend.data.store.medialist.InMemoryMediaListStore
 import com.mxt.anitrend.model.entity.anilist.FeedList
-import com.mxt.anitrend.model.api.retro.anilist.BrowseService
 import com.mxt.anitrend.model.entity.anilist.Media
 import com.mxt.anitrend.model.entity.anilist.edge.CharacterEdge
 import com.mxt.anitrend.model.entity.anilist.edge.MediaEdge
@@ -14,23 +14,24 @@ import com.mxt.anitrend.model.entity.container.body.EdgeContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.repository.BaseMutation
 import com.mxt.anitrend.repository.BaseRepository
-import com.mxt.anitrend.repository.BrowseRepository
 import com.mxt.anitrend.repository.MediaRepository
 import com.mxt.anitrend.util.KeyUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertSame
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.doReturn
 import org.mockito.Mockito.mock
-import org.mockito.Mockito.spy
 import org.mockito.Mockito.verify
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -39,14 +40,14 @@ class MediaDetailViewModelTest {
     private val testDispatcher = UnconfinedTestDispatcher()
     private lateinit var mediaRepository: MediaRepository
     private lateinit var baseRepository: BaseRepository
-    private lateinit var browseRepository: BrowseRepository
+    private lateinit var mediaListStore: InMemoryMediaListStore
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
         mediaRepository = mock(MediaRepository::class.java)
         baseRepository = mock(BaseRepository::class.java)
-        browseRepository = spy(BrowseRepository(mock(BrowseService::class.java), testDispatcher))
+        mediaListStore = InMemoryMediaListStore()
         doReturn(MutableSharedFlow<BaseMutation>())
             .`when`(baseRepository)
             .mutationEvents
@@ -66,15 +67,18 @@ class MediaDetailViewModelTest {
         val viewModel = MediaViewModel(
             mediaRepository = mediaRepository,
             baseRepository = baseRepository,
-            browseRepository = browseRepository,
+            mediaListStore = mediaListStore,
             ioDispatcher = testDispatcher,
         )
+        val collector = backgroundScope.launch { viewModel.state.collect {} }
 
         viewModel.load(mediaId = 1L, mediaType = "ANIME", showAdult = false)
+        advanceUntilIdle()
 
         val state = viewModel.state.value as MediaViewModel.UiState.Success
-        assertSame(content, state.media)
+        assertEquals(content.id, state.media.id)
         verify(mediaRepository).getMediaBase(1L, MediaType.ANIME, false)
+        collector.cancel()
     }
 
     @Test

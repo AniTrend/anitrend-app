@@ -1,21 +1,18 @@
 package com.mxt.anitrend.view.fragment.list
 
 import android.os.Bundle
+import android.content.SharedPreferences
 import android.view.View
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.mxt.anitrend.adapter.recycler.index.MediaListAdapter
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.graphql.generated.ScoreFormat
-import com.mxt.anitrend.model.entity.anilist.MediaListCollection
-import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.repository.UserRepository
-import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.media.MediaListUtil
-import com.mxt.anitrend.util.media.MediaUtil
+import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.viewmodel.AiringListViewModel
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
@@ -57,7 +54,7 @@ class AiringListFragment : MediaListFragment() {
                             // Loading is handled by swipeRefreshLayout in the base class
                         }
                         is AiringListViewModel.UiState.Success -> {
-                            handleSuccess(state.content)
+                            handleSuccess(state)
                         }
                         is AiringListViewModel.UiState.Error -> {
                             showError(state.message)
@@ -92,48 +89,27 @@ class AiringListFragment : MediaListFragment() {
     }
 
     /** StateFlow collector above handles the response. */
-    override fun onChanged(value: PageContainer<MediaListCollection>?) = Unit
+    override fun onChanged(value: com.mxt.anitrend.model.entity.container.body.PageContainer<com.mxt.anitrend.model.entity.anilist.MediaListCollection>?) = Unit
 
-    private fun handleSuccess(value: PageContainer<MediaListCollection>) {
-        if (value.hasPageInfo()) {
-            setPageInfo(value.pageInfo)
-        }
-        if (!value.isEmpty) {
-            val mediaListCollection = value.pageData.firstOrNull()
-            if (mediaListCollection != null) {
-                val mediaList =
-                    mediaListCollection.entries
-                        .orEmpty()
-                        .filter { entry ->
-                            CompatUtil.equals(entry.media.status, KeyUtil.RELEASING)
-                        }
-
-                val mediaListSort = settings.mediaListSort ?: KeyUtil.PROGRESS
-                if (MediaListUtil.isTitleSort(mediaListSort)) {
-                    val sorted = mediaList.sortedWith { first, second ->
-                        val firstTitle = MediaUtil.getMediaTitle(first.media)
-                        val secondTitle = MediaUtil.getMediaTitle(second.media)
-                        if (CompatUtil.equals(settings.sortOrder, KeyUtil.ASC)) {
-                            firstTitle.compareTo(secondTitle)
-                        } else {
-                            secondTitle.compareTo(firstTitle)
-                        }
-                    }
-                    submitStateList(sorted)
-                } else {
-                    submitStateList(mediaList)
-                }
-            } else {
-                submitStateList(emptyList())
-            }
-        } else {
-            submitStateList(emptyList())
-        }
-
+    private fun handleSuccess(state: AiringListViewModel.UiState.Success) {
+        state.pageInfo?.let(::setPageInfo)
+        submitStateList(state.items, state.renderedItems)
         if ((stateListAdapter?.itemCount ?: 0) > 0) {
             updateUI()
         } else {
             showEmpty(getString(com.mxt.anitrend.R.string.layout_empty_response))
         }
+    }
+
+    override fun onSharedPreferenceChanged(
+        sharedPreferences: SharedPreferences,
+        key: String?,
+    ) {
+        if (key != null && GraphUtil.isKeyFilter(key)) {
+            swipeRefreshLayout.setRefreshing(true)
+            onRefresh()
+            return
+        }
+        super.onSharedPreferenceChanged(sharedPreferences, key)
     }
 }

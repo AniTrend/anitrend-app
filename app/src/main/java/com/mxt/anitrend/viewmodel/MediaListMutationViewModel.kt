@@ -104,8 +104,12 @@ class MediaListMutationViewModel(
         if (mutationRegistry.state.value[OperationKey.mediaListIncrementProgress(mediaId)].isRunning()) {
             return
         }
+        reset(mediaId)
         viewModelScope.launch {
-            incrementMediaProgressInteractor(command)
+            when (val result = incrementMediaProgressInteractor(command)) {
+                MutationResult.Success -> markCompleted(mediaId, CompletedAction.SAVED)
+                is MutationResult.Failure -> markFailure(mediaId, result.message)
+            }
         }
     }
 

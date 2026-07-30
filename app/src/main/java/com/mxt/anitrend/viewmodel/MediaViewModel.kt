@@ -2,13 +2,16 @@ package com.mxt.anitrend.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mxt.anitrend.data.mapper.toMediaList
+import com.mxt.anitrend.data.mapper.toMediaListRecord
+import com.mxt.anitrend.data.store.medialist.MediaListStore
+import com.mxt.anitrend.data.store.medialist.MediaListStoreChange
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.repository.BaseRepository
-import com.mxt.anitrend.repository.BrowseMutation
-import com.mxt.anitrend.repository.BrowseRepository
 import com.mxt.anitrend.repository.MediaRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,7 +22,7 @@ import timber.log.Timber
 class MediaViewModel(
     private val mediaRepository: MediaRepository,
     private val baseRepository: BaseRepository,
-    private val browseRepository: BrowseRepository,
+    private val mediaListStore: MediaListStore,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : ViewModel() {
 
@@ -29,22 +32,11 @@ class MediaViewModel(
         data class Error(val message: String) : UiState
     }
 
-    private val _state = MutableStateFlow<UiState>(UiState.Loading)
-    val state: StateFlow<UiState> = _state.asStateFlow()
+    private val mutableState = MutableStateFlow<UiState>(UiState.Loading)
+    val state: StateFlow<UiState> = mutableState.asStateFlow()
 
     private var loadedOnce = false
-
-    init {
-        viewModelScope.launch {
-            browseRepository.mutationEvents.collect { event ->
-                when (event) {
-                    is BrowseMutation.MediaListSaved -> onMediaListSaved(event.entry)
-                    is BrowseMutation.MediaListDeleted -> onMediaListDeleted(event.id)
-                    else -> Unit
-                }
-            }
-        }
-    }
+    private var storeObservationJob: Job? = null
 
     /**
      * Loads the media by its AniList ID. Safe to call multiple times -- skips
@@ -62,7 +54,7 @@ class MediaViewModel(
     ) {
         if (loadedOnce) return
         viewModelScope.launch {
-            _state.value = UiState.Loading
+            mutableState.value = UiState.Loading
             runCatching {
                 withContext(ioDispatcher) {
                     val typeEnum: MediaType? = mediaType?.let {
@@ -76,13 +68,25 @@ class MediaViewModel(
                     mediaRepository.getMediaBase(mediaId, typeEnum, isAdult).getOrThrow()
                 }
             }.onSuccess { media ->
-                _state.value = UiState.Success(media)
+                media.mediaListEntry?.let { mediaListEntry ->
+                    mediaListStore.apply(
+                        MediaListStoreChange.EntryUpserted(
+                            entry = mediaListEntry.toMediaListRecord(revision = 0L),
+                        ),
+                    )
+                }
+                storeObservationJob?.cancel()
+                storeObservationJob = viewModelScope.launch {
+                    mediaListStore.observeEntryByMediaId(media.id).collect { entry ->
+                        mutableState.value = UiState.Success(
+                            media.copyWithMediaListEntry(entry?.toMediaList()),
+                        )
+                    }
+                }
                 loadedOnce = true
             }.onFailure { throwable ->
                 Timber.e(throwable, "MediaViewModel load failed")
-                _state.value = UiState.Error(
-                    throwable.message ?: "Failed to load media",
-                )
+                mutableState.value = UiState.Error(throwable.message ?: "Failed to load media")
             }
         }
     }
@@ -97,21 +101,30 @@ class MediaViewModel(
         baseRepository.toggleFavourite(animeId, mangaId, characterId, staffId, studioId)
     }
 
-    internal fun onMediaListSaved(entry: com.mxt.anitrend.model.entity.anilist.MediaList) {
-        val current = _state.value as? UiState.Success ?: return
-        if (current.media.id != entry.mediaId) {
-            return
-        }
-        current.media.mediaListEntry = entry
-        _state.value = UiState.Success(current.media)
-    }
-
-    internal fun onMediaListDeleted(id: Long) {
-        val current = _state.value as? UiState.Success ?: return
-        if (current.media.mediaListEntry?.id != id) {
-            return
-        }
-        current.media.mediaListEntry = null
-        _state.value = UiState.Success(current.media)
+    private fun com.mxt.anitrend.model.entity.base.MediaBase.copyWithMediaListEntry(
+        entry: com.mxt.anitrend.model.entity.anilist.MediaList?,
+    ): com.mxt.anitrend.model.entity.base.MediaBase = com.mxt.anitrend.model.entity.base.MediaBase().also { copy ->
+        copy.id = id
+        copy.idMal = idMal
+        copy.title = title
+        copy.coverImage = coverImage
+        copy.bannerImage = bannerImage
+        copy.type = type
+        copy.format = format
+        copy.season = season
+        copy.status = status
+        copy.siteUrl = siteUrl
+        copy.meanScore = meanScore
+        copy.averageScore = averageScore
+        copy.startDate = startDate
+        copy.endDate = endDate
+        copy.episodes = episodes
+        copy.duration = duration
+        copy.chapters = chapters
+        copy.volumes = volumes
+        copy.isAdult = isAdult
+        copy.isFavourite = isFavourite
+        copy.nextAiringEpisode = nextAiringEpisode
+        copy.mediaListEntry = entry
     }
 }

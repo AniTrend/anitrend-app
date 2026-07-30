@@ -584,7 +584,7 @@ private val repositoryModule = module {
 }
 
 private val mediaFeatureModule = module {
-    viewModel { AiringListViewModel(browseRepository = get()) }
+    viewModel { AiringListViewModel(browseRepository = get(), mediaListStore = get(), mutationRegistry = get()) }
     viewModel { BrowseReviewViewModel(browseRepository = get()) }
     viewModel { MediaBrowseViewModel(baseRepository = get(), browseRepository = get(), mediaListStore = get()) }
     viewModel { MediaLatestViewModel(browseRepository = get()) }
@@ -599,7 +599,7 @@ private val mediaFeatureModule = module {
     viewModel { MediaRelationViewModel(mediaRepository = get()) }
     viewModel { MediaStaffViewModel(mediaRepository = get()) }
     viewModel { MediaStatsViewModel(mediaRepository = get()) }
-    viewModel { MediaViewModel(mediaRepository = get(), baseRepository = get(), browseRepository = get()) }
+    viewModel { MediaViewModel(mediaRepository = get(), baseRepository = get(), mediaListStore = get()) }
     viewModel { MediaSearchViewModel(searchRepository = get()) }
     viewModel { MediaFavouritesViewModel(userRepository = get()) }
 }
