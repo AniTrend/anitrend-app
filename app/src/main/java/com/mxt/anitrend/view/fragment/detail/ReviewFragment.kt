@@ -73,7 +73,7 @@ class ReviewFragment : FragmentBaseList<Review, PageContainer<Review>>() {
                             // Loading is handled by swipeRefreshLayout in the base class
                         }
                         is ReviewViewModel.UiState.Success -> {
-                            handleSuccess(state.content)
+                            handleSuccess(state.content, state.replaceExisting)
                         }
                         is ReviewViewModel.UiState.Error -> {
                             showError(state.message)
@@ -100,14 +100,27 @@ class ReviewFragment : FragmentBaseList<Review, PageContainer<Review>>() {
         )
     }
 
-    private fun handleSuccess(content: PageContainer<Review>) {
+    private fun handleSuccess(
+        content: PageContainer<Review>,
+        replaceExisting: Boolean,
+    ) {
         if (content.hasPageInfo()) {
             setPageInfo(content.pageInfo)
         }
         if (!content.isEmpty) {
-            onPostProcessed(content.pageData)
+            if (replaceExisting) {
+                mAdapter.onItemsInserted(content.pageData)
+                updateUI()
+            } else {
+                onPostProcessed(content.pageData)
+            }
         } else {
-            onPostProcessed(emptyList())
+            if (replaceExisting) {
+                mAdapter.onItemsInserted(emptyList())
+                updateUI()
+            } else {
+                onPostProcessed(emptyList())
+            }
         }
         if (mAdapter.itemCount < 1) {
             onPostProcessed(null)

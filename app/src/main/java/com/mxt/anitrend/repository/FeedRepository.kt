@@ -26,21 +26,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import com.mxt.anitrend.model.entity.anilist.FeedList as FeedListEntity
 
-sealed class FeedMutation {
-    data class FeedSaved(val feed: FeedListEntity) : FeedMutation()
-    data class FeedDeleted(val id: Long) : FeedMutation()
-    data class ReplySaved(
-        val reply: FeedReply,
-        val activityId: Long,
-    ) : FeedMutation()
-    data class ReplyDeleted(val id: Long) : FeedMutation()
-}
-
 class FeedRepository(
     private val feedService: FeedService,
     ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
     private val feedStore: FeedStore? = null,
-) : AbstractRepository<FeedMutation>(ioDispatcher) {
+) : AbstractRepository(ioDispatcher) {
 
     suspend fun getFeedList(
         page: Int? = null,
@@ -130,12 +120,38 @@ class FeedRepository(
         messengerId: Long? = null,
         userId: Long? = null,
         asHtml: Boolean = false,
+        commitToStore: Boolean = true,
+        queryKey: FeedQueryKey? = null,
+        queryGeneration: Int = 0,
     ): Result<PageContainer<FeedListEntity>> = withContext(ioDispatcher) {
         runCatching {
             val request = FeedMessage.request(page = page, perPage = perPage, messengerId = messengerId?.toInt(), userId = userId?.toInt(), asHtml = asHtml)
             val response = feedService.getFeedMessage(request).execute()
             if (response.isSuccessful) {
-                handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                val pageInfo = result.takeIf { it.hasPageInfo() }?.pageInfo?.toPageInfoRecord()
+                val resolvedQueryKey = queryKey ?: FeedQueryKey(
+                    scope = if (userId != null) FeedScope.MESSAGE_INBOX else FeedScope.MESSAGE_OUTBOX,
+                    userId = userId ?: messengerId,
+                    mediaId = null,
+                    activityType = null,
+                    isFollowing = null,
+                    isMixed = null,
+                )
+
+                if (commitToStore && queryKey != null && feedStore != null) {
+                    feedStore.apply(
+                        FeedStoreChange.PageLoaded(
+                            queryKey = resolvedQueryKey,
+                            page = pageInfo?.currentPage ?: page ?: 1,
+                            generation = queryGeneration,
+                            feeds = result.pageData.map { it.toFeedRecord(revision = 0L) },
+                            pageInfo = pageInfo,
+                        ),
+                    )
+                }
+
+                result
             } else {
                 throw RuntimeException(response.apiError())
             }
@@ -163,7 +179,6 @@ class FeedRepository(
                         ),
                     )
                 }
-                _mutationEvents.emit(FeedMutation.FeedSaved(result))
                 result
             } else {
                 throw RuntimeException(response.apiError())
@@ -191,7 +206,6 @@ class FeedRepository(
                         ),
                     )
                 }
-                _mutationEvents.emit(FeedMutation.FeedSaved(result))
                 result
             } else {
                 throw RuntimeException(response.apiError())
@@ -220,12 +234,6 @@ class FeedRepository(
                         ),
                     )
                 }
-                _mutationEvents.emit(
-                    FeedMutation.ReplySaved(
-                        reply = result,
-                        activityId = activityId,
-                    ),
-                )
                 result
             } else {
                 throw RuntimeException(response.apiError())
@@ -251,7 +259,6 @@ class FeedRepository(
                         ),
                     )
                 }
-                _mutationEvents.emit(FeedMutation.FeedDeleted(id))
                 result
             } else {
                 throw RuntimeException(response.apiError())
@@ -282,7 +289,6 @@ class FeedRepository(
                         )
                     }
                 }
-                _mutationEvents.emit(FeedMutation.ReplyDeleted(id))
                 result
             } else {
                 throw RuntimeException(response.apiError())

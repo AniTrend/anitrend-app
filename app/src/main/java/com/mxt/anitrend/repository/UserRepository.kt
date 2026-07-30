@@ -30,16 +30,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import com.mxt.anitrend.model.entity.base.UserBase as UserEntity
 
-sealed class UserMutation {
-    data class FollowToggled(val user: UserEntity) : UserMutation()
-    data class CurrentUserUpdated(val user: User) : UserMutation()
-}
-
 class UserRepository(
     private val userService: UserService,
     private val boxQuery: BoxQuery,
     ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
-) : AbstractRepository<UserMutation>(ioDispatcher) {
+) : AbstractRepository(ioDispatcher) {
 
     /** Cached current user from local DB. */
     val cachedCurrentUser: com.mxt.anitrend.model.entity.anilist.User?
@@ -274,9 +269,7 @@ class UserRepository(
             val request = ToggleFollow.request(userId = userId.toInt())
             val response = userService.toggleFollow(request).execute()
             if (response.isSuccessful) {
-                val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
-                _mutationEvents.emit(UserMutation.FollowToggled(result))
-                result
+                handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
                 throw RuntimeException(response.apiError())
             }

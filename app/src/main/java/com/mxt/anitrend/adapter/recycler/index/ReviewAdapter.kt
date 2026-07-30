@@ -28,6 +28,7 @@ import com.mxt.anitrend.util.date.DateUtil
  */
 class ReviewAdapter(
     context: Context,
+    // TODO Phase 7: remove coordinator dependency when review voting is routed via a screen ViewModel.
     private val coordinator: WidgetMutationCoordinator,
     private val isMediaType: Boolean = false,
 ) : RecyclerViewAdapter<Review>(context) {

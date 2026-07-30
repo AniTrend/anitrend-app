@@ -15,6 +15,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+// TODO Phase 7: delete this coordinator after FeedAdapter, ReviewAdapter, and UserAdapter
+// forward actions to screen-owned ViewModels instead of widget callbacks.
 class WidgetMutationCoordinator(
     private val baseRepository: BaseRepository,
     private val browseRepository: BrowseRepository,

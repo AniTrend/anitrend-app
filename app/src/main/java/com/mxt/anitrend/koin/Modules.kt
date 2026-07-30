@@ -39,6 +39,8 @@ import com.mxt.anitrend.data.store.feed.FeedStore
 import com.mxt.anitrend.data.store.feed.InMemoryFeedStore
 import com.mxt.anitrend.data.store.medialist.InMemoryMediaListStore
 import com.mxt.anitrend.data.store.medialist.MediaListStore
+import com.mxt.anitrend.data.store.review.InMemoryReviewStore
+import com.mxt.anitrend.data.store.review.ReviewStore
 import com.mxt.anitrend.data.store.mutation.DefaultMutationExecutor
 import com.mxt.anitrend.data.store.mutation.DefaultMutationRegistry
 import com.mxt.anitrend.data.store.mutation.DefaultOperationIdGenerator
@@ -538,11 +540,12 @@ private val serviceModule = module {
 }
 
 private val repositoryModule = module {
-    single { MediaRepository(mediaService = get()) }
+    single { MediaRepository(mediaService = get(), feedStore = get()) }
     single { UserRepository(userService = get(), boxQuery = get()) }
     single<FeedStore> { InMemoryFeedStore() }
     single<MediaListStore> { InMemoryMediaListStore() }
-    single { BrowseRepository(browseService = get(), mediaListStore = get()) }
+    single<ReviewStore> { InMemoryReviewStore() }
+    single { BrowseRepository(browseService = get(), mediaListStore = get(), reviewStore = get()) }
     single { CharacterRepository(characterService = get()) }
     single { StaffRepository(staffService = get()) }
     single { StudioRepository(studioService = get()) }
@@ -585,15 +588,15 @@ private val repositoryModule = module {
 
 private val mediaFeatureModule = module {
     viewModel { AiringListViewModel(browseRepository = get(), mediaListStore = get(), mutationRegistry = get()) }
-    viewModel { BrowseReviewViewModel(browseRepository = get()) }
+    viewModel { BrowseReviewViewModel(browseRepository = get(), reviewStore = get()) }
     viewModel { MediaBrowseViewModel(baseRepository = get(), browseRepository = get(), mediaListStore = get()) }
     viewModel { MediaLatestViewModel(browseRepository = get()) }
     viewModel { MediaListViewModel(browseRepository = get(), mediaListStore = get(), mutationRegistry = get(), userRepository = get(), settings = get()) }
     viewModel { MediaListMutationViewModel(saveMediaListEntryInteractor = get(), deleteMediaListEntryInteractor = get(), incrementMediaProgressInteractor = get(), mutationRegistry = get()) }
-    viewModel { ReviewViewModel(browseRepository = get()) }
+    viewModel { ReviewViewModel(browseRepository = get(), reviewStore = get()) }
     viewModel { SuggestionListViewModel(userRepository = get(), browseRepository = get()) }
     viewModel { MediaCharacterViewModel(mediaRepository = get()) }
-    viewModel { MediaFeedViewModel(mediaRepository = get(), baseRepository = get()) }
+    viewModel { MediaFeedViewModel(mediaRepository = get(), feedStore = get()) }
     viewModel { MediaOverviewViewModel(repository = get(), settings = get<Settings>()) }
     viewModel { MediaRecommendationsViewModel(mediaRepository = get()) }
     viewModel { MediaRelationViewModel(mediaRepository = get()) }
@@ -641,7 +644,7 @@ private val userFeatureModule = module {
             saveFeedInteractor = get(),
         )
     }
-    viewModel { MessageFeedViewModel(feedRepository = get(), baseRepository = get()) }
+    viewModel { MessageFeedViewModel(feedRepository = get(), feedStore = get()) }
     viewModel { LoginUserViewModel(userRepository = get()) }
 }
 

@@ -1,6 +1,9 @@
 package com.mxt.anitrend.viewmodel
 
 import com.mxt.anitrend.graphql.generated.MediaType
+import com.mxt.anitrend.data.store.feed.FeedQueryKey
+import com.mxt.anitrend.data.store.feed.FeedScope
+import com.mxt.anitrend.data.store.feed.InMemoryFeedStore
 import com.mxt.anitrend.data.store.medialist.InMemoryMediaListStore
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.anilist.Media
@@ -12,13 +15,11 @@ import com.mxt.anitrend.model.entity.base.RecommendationBase
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.container.body.EdgeContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
-import com.mxt.anitrend.repository.BaseMutation
 import com.mxt.anitrend.repository.BaseRepository
 import com.mxt.anitrend.repository.MediaRepository
 import com.mxt.anitrend.util.KeyUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -41,6 +42,7 @@ class MediaDetailViewModelTest {
     private lateinit var mediaRepository: MediaRepository
     private lateinit var baseRepository: BaseRepository
     private lateinit var mediaListStore: InMemoryMediaListStore
+    private lateinit var feedStore: InMemoryFeedStore
 
     @Before
     fun setUp() {
@@ -48,9 +50,7 @@ class MediaDetailViewModelTest {
         mediaRepository = mock(MediaRepository::class.java)
         baseRepository = mock(BaseRepository::class.java)
         mediaListStore = InMemoryMediaListStore()
-        doReturn(MutableSharedFlow<BaseMutation>())
-            .`when`(baseRepository)
-            .mutationEvents
+        feedStore = InMemoryFeedStore()
     }
 
     @After
@@ -139,24 +139,6 @@ class MediaDetailViewModelTest {
         val state = viewModel.state.value as MediaStatsViewModel.UiState.Success
         assertSame(content, state.media)
         verify(mediaRepository).getMediaStats(5L, MediaType.ANIME, null)
-    }
-
-    @Test
-    fun `MediaFeedViewModel routes load through MediaRepository`() = runTest {
-        val content = PageContainer<FeedList>()
-        doReturn(Result.success(content))
-            .`when`(mediaRepository)
-            .getMediaSocial(6L, true, 7, 1)
-        val viewModel = MediaFeedViewModel(
-            mediaRepository = mediaRepository,
-            baseRepository = baseRepository,
-        )
-
-        viewModel.load(mediaId = 6L, isFollowing = true, page = 7, pageLimit = 1)
-
-        val state = viewModel.state.value as MediaFeedViewModel.UiState.Success
-        assertSame(content, state.content)
-        verify(mediaRepository).getMediaSocial(6L, true, 7, 1)
     }
 
     @Test

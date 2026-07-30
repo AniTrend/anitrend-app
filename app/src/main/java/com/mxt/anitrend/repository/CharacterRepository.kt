@@ -25,15 +25,10 @@ import kotlinx.coroutines.withContext
 import com.mxt.anitrend.model.entity.base.CharacterBase as CharacterEntity
 import com.mxt.anitrend.model.entity.base.MediaBase as MediaEntity
 
-sealed class CharacterMutation {
-    // No mutation operations yet. Add event types when mutation methods are added.
-    data object Noop : CharacterMutation()
-}
-
 class CharacterRepository(
     private val characterService: CharacterService,
     ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
-) : AbstractRepository<CharacterMutation>(ioDispatcher) {
+) : AbstractRepository(ioDispatcher) {
 
     suspend fun getCharacterBase(id: Long): Result<CharacterEntity> = withContext(ioDispatcher) {
         runCatching {

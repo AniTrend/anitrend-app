@@ -2,21 +2,31 @@ package com.mxt.anitrend.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mxt.anitrend.graphql.generated.LikeableType
+import com.mxt.anitrend.data.mapper.toFeedList
+import com.mxt.anitrend.data.mapper.toFeedRecord
+import com.mxt.anitrend.data.mapper.toFeedReplyRecord
+import com.mxt.anitrend.data.mapper.toPageInfo
+import com.mxt.anitrend.data.store.feed.FeedQueryKey
+import com.mxt.anitrend.data.store.feed.FeedScope
+import com.mxt.anitrend.data.store.feed.FeedStore
+import com.mxt.anitrend.data.store.feed.FeedStoreChange
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.container.body.PageContainer
-import com.mxt.anitrend.repository.BaseMutation
-import com.mxt.anitrend.repository.BaseRepository
 import com.mxt.anitrend.repository.MediaRepository
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class MediaFeedViewModel(
     private val mediaRepository: MediaRepository,
-    private val baseRepository: BaseRepository,
+    private val feedStore: FeedStore,
 ) : ViewModel() {
 
     sealed interface UiState {
@@ -28,41 +38,61 @@ class MediaFeedViewModel(
         data class Error(val message: String) : UiState
     }
 
-    private val _state = MutableStateFlow<UiState>(UiState.Loading)
-    val state: StateFlow<UiState> = _state.asStateFlow()
+    private data class ScreenState(
+        val queryKey: FeedQueryKey? = null,
+        val requestGeneration: Int = 0,
+        val lastRequestedPage: Int = 1,
+        val isLoading: Boolean = false,
+        val errorMessage: String? = null,
+    )
 
-    init {
-        viewModelScope.launch {
-            baseRepository.mutationEvents.collect { event ->
-                when (event) {
-                    is BaseMutation.LikeToggled -> {
-                        if (event.targetType == LikeableType.ACTIVITY) {
-                            replaceCurrentPage { feeds ->
-                                val index = feeds.indexOfFirst { it.id == event.targetId }
-                                if (index >= 0) {
-                                    feeds[index].likes = event.users
-                                    true
-                                } else {
-                                    false
-                                }
-                            }
-                        }
+    private val screenState = MutableStateFlow(ScreenState())
+
+    val state: StateFlow<UiState> =
+        screenState
+            .flatMapLatest { screen ->
+                val queryKey = screen.queryKey ?: return@flatMapLatest flowOf(
+                    if (screen.errorMessage != null) {
+                        UiState.Error(screen.errorMessage)
+                    } else {
+                        UiState.Loading
+                    },
+                )
+
+                feedStore.observeQuery(queryKey).map { query ->
+                    val renderedFeeds = query.feeds.map { it.toFeedList() }
+                    when {
+                        screen.errorMessage != null -> UiState.Error(screen.errorMessage)
+                        screen.isLoading && renderedFeeds.isEmpty() -> UiState.Loading
+                        else -> UiState.Success(
+                            content = PageContainer<FeedList>().apply {
+                                query.pageInfo?.toPageInfo()?.let { pageInfo = it }
+                                pageData = renderedFeeds
+                            },
+                            replaceExisting = screen.lastRequestedPage <= 1,
+                        )
                     }
-                    else -> Unit
                 }
-            }
-        }
-    }
+            }.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = UiState.Loading,
+            )
 
     fun applyReturnedFeed(feed: FeedList) {
-        replaceCurrentPage { feeds ->
-            val index = feeds.indexOfFirst { it.id == feed.id }
-            if (index >= 0) {
-                feeds[index] = feed
-                true
-            } else {
-                false
-            }
+        viewModelScope.launch {
+            val feedRevision = feedStore.state.value.feedsById[feed.id]?.revision ?: 0L
+            feedStore.apply(
+                FeedStoreChange.FeedDetailLoaded(
+                    feed = feed.toFeedRecord(revision = feedRevision),
+                    replies = feed.replies.orEmpty().map { reply ->
+                        reply.toFeedReplyRecord(
+                            activityId = feed.id,
+                            revision = feedStore.state.value.repliesById[reply.id]?.revision ?: feedRevision,
+                        )
+                    },
+                ),
+            )
         }
     }
 
@@ -70,40 +100,57 @@ class MediaFeedViewModel(
      * Loads media feed (social activity). Repeatable for pagination; no loadedOnce guard.
      */
     fun load(mediaId: Long, isFollowing: Boolean, page: Int, pageLimit: Int) {
+        val queryKey = FeedQueryKey(
+            scope = FeedScope.MEDIA,
+            userId = null,
+            mediaId = mediaId,
+            activityType = null,
+            isFollowing = isFollowing,
+            isMixed = null,
+        )
+        val generation = screenState.value.requestGeneration.takeIf { page > 1 } ?: (screenState.value.requestGeneration + 1)
+        screenState.update {
+            it.copy(
+                queryKey = queryKey,
+                requestGeneration = generation,
+                lastRequestedPage = page,
+                isLoading = true,
+                errorMessage = null,
+            )
+        }
+
         viewModelScope.launch {
-            _state.value = UiState.Loading
             runCatching {
                 mediaRepository.getMediaSocial(
                     mediaId = mediaId,
                     isFollowing = isFollowing,
                     page = page,
                     perPage = pageLimit,
+                    queryKey = queryKey,
+                    queryGeneration = generation,
                 ).getOrThrow()
-            }.onSuccess { content ->
-                _state.value = UiState.Success(content)
+            }.onSuccess {
+                if (screenState.value.requestGeneration != generation) {
+                    return@onSuccess
+                }
+                screenState.update { current ->
+                    current.copy(
+                        isLoading = false,
+                        errorMessage = null,
+                    )
+                }
             }.onFailure { throwable ->
+                if (screenState.value.requestGeneration != generation) {
+                    return@onFailure
+                }
                 Timber.e(throwable, "MediaFeedViewModel load failed")
-                _state.value = UiState.Error(
-                    throwable.message ?: "Failed to load media feed",
-                )
+                screenState.update { current ->
+                    current.copy(
+                        isLoading = false,
+                        errorMessage = throwable.message ?: "Failed to load media feed",
+                    )
+                }
             }
         }
-    }
-
-    private fun replaceCurrentPage(update: (MutableList<FeedList>) -> Boolean) {
-        val current = _state.value as? UiState.Success ?: return
-        val feeds = current.content.pageData.toMutableList()
-        if (!update(feeds)) {
-            return
-        }
-        _state.value = current.copy(
-            content = PageContainer<FeedList>().apply {
-                if (current.content.hasPageInfo()) {
-                    pageInfo = current.content.pageInfo
-                }
-                pageData = feeds
-            },
-            replaceExisting = true,
-        )
     }
 }

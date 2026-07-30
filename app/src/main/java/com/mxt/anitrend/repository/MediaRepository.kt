@@ -10,6 +10,12 @@ import com.mxt.anitrend.graphql.generated.MediaStaff
 import com.mxt.anitrend.graphql.generated.MediaStats
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.graphql.generated.RecommendationMedia
+import com.mxt.anitrend.data.mapper.toFeedRecord
+import com.mxt.anitrend.data.mapper.toPageInfoRecord
+import com.mxt.anitrend.data.store.feed.FeedQueryKey
+import com.mxt.anitrend.data.store.feed.FeedScope
+import com.mxt.anitrend.data.store.feed.FeedStore
+import com.mxt.anitrend.data.store.feed.FeedStoreChange
 import com.mxt.anitrend.model.api.retro.anilist.MediaService
 import com.mxt.anitrend.model.entity.anilist.ExternalLink
 import com.mxt.anitrend.model.entity.anilist.FeedList
@@ -27,15 +33,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import com.mxt.anitrend.model.entity.base.MediaBase as MediaEntity
 
-sealed class MediaMutation {
-    // No mutation operations yet. Add event types when mutation methods are added.
-    data object Noop : MediaMutation()
-}
-
 class MediaRepository(
     private val mediaService: MediaService,
     ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
-) : AbstractRepository<MediaMutation>(ioDispatcher) {
+    private val feedStore: FeedStore? = null,
+) : AbstractRepository(ioDispatcher) {
 
     suspend fun getMediaBase(id: Long, type: MediaType?, isAdult: Boolean?): Result<MediaEntity> = withContext(ioDispatcher) {
         runCatching {
@@ -159,12 +161,38 @@ class MediaRepository(
         isFollowing: Boolean = true,
         page: Int? = null,
         perPage: Int? = null,
+        commitToStore: Boolean = true,
+        queryKey: FeedQueryKey? = null,
+        queryGeneration: Int = 0,
     ): Result<PageContainer<FeedList>> = withContext(ioDispatcher) {
         runCatching {
             val request = MediaSocial.request(mediaId = mediaId.toInt(), isFollowing = isFollowing, page = page, perPage = perPage)
             val response = mediaService.getMediaSocial(request).execute()
             if (response.isSuccessful) {
-                handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                val pageInfo = result.takeIf { it.hasPageInfo() }?.pageInfo?.toPageInfoRecord()
+                val resolvedQueryKey = queryKey ?: FeedQueryKey(
+                    scope = FeedScope.MEDIA,
+                    userId = null,
+                    mediaId = mediaId,
+                    activityType = null,
+                    isFollowing = isFollowing,
+                    isMixed = null,
+                )
+
+                if (commitToStore && queryKey != null && feedStore != null) {
+                    feedStore.apply(
+                        FeedStoreChange.PageLoaded(
+                            queryKey = resolvedQueryKey,
+                            page = pageInfo?.currentPage ?: page ?: 1,
+                            generation = queryGeneration,
+                            feeds = result.pageData.map { it.toFeedRecord(revision = 0L) },
+                            pageInfo = pageInfo,
+                        ),
+                    )
+                }
+
+                result
             } else {
                 throw RuntimeException(response.apiError())
             }

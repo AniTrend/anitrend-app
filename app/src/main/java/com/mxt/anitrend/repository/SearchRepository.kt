@@ -23,15 +23,10 @@ import com.mxt.anitrend.model.entity.base.StaffBase as StaffEntity
 import com.mxt.anitrend.model.entity.base.StudioBase as StudioEntity
 import com.mxt.anitrend.model.entity.base.UserBase as UserEntity
 
-sealed class SearchMutation {
-    // No mutation operations yet. Add event types when mutation methods are added.
-    data object Noop : SearchMutation()
-}
-
 class SearchRepository(
     private val searchService: SearchService,
     ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
-) : AbstractRepository<SearchMutation>(ioDispatcher) {
+) : AbstractRepository(ioDispatcher) {
 
     suspend fun searchMedia(
         id: Int? = null,

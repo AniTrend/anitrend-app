@@ -5,7 +5,6 @@ import androidx.work.CoroutineWorker
 import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
 import com.mxt.anitrend.presenter.base.BasePresenter
-import com.mxt.anitrend.repository.UserMutation
 import com.mxt.anitrend.repository.UserRepository
 import timber.log.Timber
 
@@ -40,7 +39,6 @@ class ClearNotificationWorker(
                 userRepository.saveCurrentUser(user)
 
                 if (user.unreadNotificationCount != 0) {
-                    userRepository.emitMutationEvent(UserMutation.CurrentUserUpdated(user))
                     val notifications = userRepository
                         .getUserNotifications(resetNotificationCount = true)
                         .getOrThrow()

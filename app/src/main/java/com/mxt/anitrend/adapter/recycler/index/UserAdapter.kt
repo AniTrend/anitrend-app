@@ -22,6 +22,7 @@ import java.util.Locale
  */
 class UserAdapter(
     context: Context,
+    // TODO Phase 7: remove coordinator dependency when follow actions are routed via a screen ViewModel.
     private val coordinator: WidgetMutationCoordinator,
 ) : RecyclerViewAdapter<UserBase>(context) {
     override fun onCreateViewHolder(

@@ -26,29 +26,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import com.mxt.anitrend.model.entity.base.UserBase as UserEntity
 
-sealed class BaseMutation {
-    data class LikeToggled(
-        val users: List<UserEntity>,
-        val targetId: Long,
-        val targetType: LikeableType,
-    ) : BaseMutation()
-
-    data class FavouriteToggled(
-        val result: Any,
-        val animeId: Int? = null,
-        val mangaId: Int? = null,
-        val characterId: Int? = null,
-        val staffId: Int? = null,
-        val studioId: Int? = null,
-    ) : BaseMutation()
-}
-
 class BaseRepository(
     private val baseService: BaseService,
     private val boxQuery: BoxQuery,
     ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
     private val feedStore: FeedStore? = null,
-) : AbstractRepository<BaseMutation>(ioDispatcher) {
+) : AbstractRepository(ioDispatcher) {
 
     /** Cached genre collection from local DB. */
     val cachedGenres: List<Genre>
@@ -150,13 +133,6 @@ class BaseRepository(
                         else -> Unit
                     }
                 }
-                _mutationEvents.emit(
-                    BaseMutation.LikeToggled(
-                        users = result,
-                        targetId = id,
-                        targetType = type,
-                    ),
-                )
                 result
             } else {
                 throw RuntimeException(response.apiError())
@@ -179,16 +155,6 @@ class BaseRepository(
             if (!response.isSuccessful) {
                 throw RuntimeException(response.apiError())
             }
-            _mutationEvents.emit(
-                BaseMutation.FavouriteToggled(
-                    result = Unit,
-                    animeId = animeId,
-                    mangaId = mangaId,
-                    characterId = characterId,
-                    staffId = staffId,
-                    studioId = studioId,
-                ),
-            )
         }
     }
 }

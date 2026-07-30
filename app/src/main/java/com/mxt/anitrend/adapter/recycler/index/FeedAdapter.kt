@@ -30,6 +30,7 @@ import com.mxt.anitrend.util.date.DateUtil
 
 class FeedAdapter(
     context: Context,
+    // TODO Phase 7: remove coordinator dependency when feed item actions are routed via ViewModel callbacks.
     private val coordinator: WidgetMutationCoordinator,
 ) : RecyclerViewAdapter<FeedList>(context) {
     private companion object {
