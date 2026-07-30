@@ -34,6 +34,7 @@ import com.mxt.anitrend.base.plugin.image.ImageConfigurationPlugin
 import com.mxt.anitrend.base.plugin.text.TextConfigurationPlugin
 import com.mxt.anitrend.coordinator.WidgetMutationCoordinator
 import com.mxt.anitrend.data.DatabaseHelper
+import com.mxt.anitrend.data.store.AccountStoreClearer
 import com.mxt.anitrend.data.store.mutation.RevisionProvider
 import com.mxt.anitrend.data.store.feed.FeedStore
 import com.mxt.anitrend.data.store.feed.InMemoryFeedStore
@@ -545,6 +546,7 @@ private val repositoryModule = module {
     single<FeedStore> { InMemoryFeedStore() }
     single<MediaListStore> { InMemoryMediaListStore() }
     single<ReviewStore> { InMemoryReviewStore() }
+    single { AccountStoreClearer(feedStore = get(), mediaListStore = get(), reviewStore = get(), mutationRegistry = get()) }
     single { BrowseRepository(browseService = get(), mediaListStore = get(), reviewStore = get()) }
     single { CharacterRepository(characterService = get()) }
     single { StaffRepository(staffService = get()) }

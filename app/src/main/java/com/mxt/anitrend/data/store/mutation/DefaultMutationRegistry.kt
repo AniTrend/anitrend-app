@@ -45,6 +45,12 @@ class DefaultMutationRegistry : MutationRegistry {
         }
     }
 
+    override suspend fun clearAll() {
+        updateState {
+            emptyMap()
+        }
+    }
+
     private suspend fun updateState(
         transform: (Map<OperationKey, OperationStatus>) -> Map<OperationKey, OperationStatus>,
     ) {

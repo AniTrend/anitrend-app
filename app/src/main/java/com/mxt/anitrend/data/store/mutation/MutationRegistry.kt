@@ -10,4 +10,6 @@ interface MutationRegistry {
     suspend fun markFailed(operationKey: OperationKey, operationId: String, message: String)
 
     suspend fun clear(operationKey: OperationKey, operationId: String)
+
+    suspend fun clearAll()
 }

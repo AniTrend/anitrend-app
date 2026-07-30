@@ -28,6 +28,13 @@ class InMemoryReviewStore : ReviewStore {
         }
     }
 
+    override suspend fun clear() {
+        mutex.withLock {
+            reviewDeletionRevisions.clear()
+            mutableState.value = ReviewStoreState()
+        }
+    }
+
     override fun observeReview(reviewId: Long): Flow<Review?> =
         state.map { it.reviewsById[reviewId]?.review?.copyForStore() }.distinctUntilChanged()
 

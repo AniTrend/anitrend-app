@@ -9,6 +9,8 @@ interface MediaListStore {
 
     suspend fun apply(change: MediaListStoreChange)
 
+    suspend fun clear()
+
     fun observeEntryByMediaId(mediaId: Long): Flow<MediaListRecord?>
 
     fun observeQuery(key: MediaListQueryKey): Flow<MediaListQueryResult>

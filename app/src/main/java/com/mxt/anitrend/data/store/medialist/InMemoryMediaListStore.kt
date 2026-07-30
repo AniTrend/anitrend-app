@@ -38,6 +38,13 @@ class InMemoryMediaListStore : MediaListStore {
         }
     }
 
+    override suspend fun clear() {
+        mutex.withLock {
+            deletionRevisions.clear()
+            mutableState.value = MediaListStoreState()
+        }
+    }
+
     override fun observeEntryByMediaId(mediaId: Long): Flow<MediaListRecord?> =
         state.map { currentState ->
             currentState.entryIdByMediaId[mediaId]?.let(currentState.entriesById::get)

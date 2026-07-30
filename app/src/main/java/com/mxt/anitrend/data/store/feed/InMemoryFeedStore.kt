@@ -43,6 +43,14 @@ class InMemoryFeedStore : FeedStore {
         }
     }
 
+    override suspend fun clear() {
+        mutex.withLock {
+            feedDeletionRevisions.clear()
+            replyDeletionRevisions.clear()
+            mutableState.value = FeedStoreState()
+        }
+    }
+
     override fun observeFeed(feedId: Long): Flow<FeedRecord?> =
         state.map { it.feedsById[feedId] }.distinctUntilChanged()
 

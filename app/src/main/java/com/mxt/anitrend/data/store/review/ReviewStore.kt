@@ -9,6 +9,8 @@ interface ReviewStore {
 
     suspend fun apply(change: ReviewStoreChange)
 
+    suspend fun clear()
+
     fun observeReview(reviewId: Long): Flow<Review?>
 
     fun observeQuery(key: ReviewQueryKey): Flow<ReviewQueryResult>

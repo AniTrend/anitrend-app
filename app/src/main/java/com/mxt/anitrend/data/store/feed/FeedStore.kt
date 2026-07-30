@@ -10,6 +10,8 @@ interface FeedStore {
 
     suspend fun apply(change: FeedStoreChange)
 
+    suspend fun clear()
+
     fun observeFeed(feedId: Long): Flow<FeedRecord?>
 
     fun observeReplies(feedId: Long): Flow<List<FeedReplyRecord>>
