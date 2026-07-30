@@ -78,6 +78,7 @@ The full specification lives at `docs/architecture/state-synchronization-and-mut
 - Migrated adapters use `ListAdapter` or `AsyncListDiffer` with immutable item UI models. No submitted list or item may be mutated after submission.
 - Adapters must not maintain a canonical list independent of the ViewModel. Fragments call `submitList(state.items)`.
 - Stable IDs must use actual stable domain IDs, not `hashCode()` or object identity.
+- The generic `RecyclerViewAdapter` base class is legacy infrastructure that uses `MutableList`, `notifyDataSetChanged()`, and `hashCode()`-based stable IDs. It remains for non-migrated screens. Do not use it for new or migrated screens. Use `ListAdapter` with `DiffUtil` instead. Track its removal as follow-up infrastructure debt.
 
 ### Identity-only navigation
 - Navigation destinations receive stable IDs and presentation-independent arguments, not complete mutable entities.

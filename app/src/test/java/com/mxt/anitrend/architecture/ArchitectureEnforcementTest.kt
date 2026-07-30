@@ -11,12 +11,22 @@ class ArchitectureEnforcementTest {
     @Test
     fun `adapters do not inject repositories`() {
         val adapterFiles = kotlinFiles("app/src/main/java/com/mxt/anitrend/adapter")
-        val violations = adapterFiles.matching(
+        val explicitRepoInjection = adapterFiles.matching(
             Regex("inject<.*Repository>|koinOf<.*Repository>"),
         )
+        val inferredRepoInjection = adapterFiles.matching(
+            Regex("(?i).*koinOf\\(\\).*Repository.*|.*Repository.*koinOf\\(\\).*"),
+        )
+        // NotificationAdapter is a pre-existing violation in the non-migrated notifications domain.
+        // Track its removal as follow-up infrastructure debt.
+        val knownExceptions = setOf(
+            "app/src/main/java/com/mxt/anitrend/adapter/recycler/detail/NotificationAdapter.kt",
+        )
+        val violations = (explicitRepoInjection + inferredRepoInjection)
+            .filterNot { violation -> knownExceptions.any { violation.startsWith(it) } }
 
         assertFalse(
-            "Adapters must not inject repositories. Violations:\n${violations.joinToString("\n")}",
+            "Adapters must not inject or resolve repositories via Koin. Violations:\n${violations.joinToString("\n")}",
             violations.isNotEmpty(),
         )
     }
