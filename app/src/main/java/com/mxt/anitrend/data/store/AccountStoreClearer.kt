@@ -13,6 +13,11 @@ class AccountStoreClearer(
     private val mutationRegistry: MutationRegistry,
 ) {
     fun clearAll() {
+        // WebTokenRequest.invalidateInstance() is synchronous and is called from
+        // legacy authentication/logout paths that immediately tear down session
+        // state after this returns. Keep this blocking bridge for now so those
+        // callers cannot observe partially cleared in-memory stores. The bounded
+        // work here is limited to store mutex updates and registry resets.
         runBlocking {
             feedStore.clear()
             mediaListStore.clear()

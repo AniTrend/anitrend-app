@@ -14,12 +14,12 @@ import com.mxt.anitrend.base.custom.view.widget.CustomRatingBar
 import com.mxt.anitrend.base.custom.view.widget.VoteWidget
 import com.mxt.anitrend.binding.markDown
 import com.mxt.anitrend.binding.setImage
-import com.mxt.anitrend.coordinator.WidgetMutationCoordinator
 import com.mxt.anitrend.databinding.AdapterReviewBinding
 import com.mxt.anitrend.databinding.AdapterSeriesReviewBinding
 import com.mxt.anitrend.extension.getLayoutInflater
 import com.mxt.anitrend.graphql.generated.ReviewRating
 import com.mxt.anitrend.model.entity.anilist.Review
+import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.util.date.DateUtil
 
 /**
@@ -28,8 +28,8 @@ import com.mxt.anitrend.util.date.DateUtil
  */
 class ReviewAdapter(
     context: Context,
-    // TODO Phase 7: remove coordinator dependency when review voting is routed via a screen ViewModel.
-    private val coordinator: WidgetMutationCoordinator,
+    private val currentUser: UserBase?,
+    private val onRateReviewAction: (Long, ReviewRating?, (Result<Review>) -> Unit) -> Unit,
     private val isMediaType: Boolean = false,
 ) : RecyclerViewAdapter<Review>(context) {
     override fun onCreateViewHolder(
@@ -52,7 +52,7 @@ class ReviewAdapter(
             id: Long,
             rating: ReviewRating?,
             onResult: (Result<Review>) -> Unit,
-        ) = coordinator.rateReview(id, rating, onResult)
+        ) = onRateReviewAction(id, rating, onResult)
     }
 
     inner class ReviewBanner(
@@ -69,7 +69,7 @@ class ReviewAdapter(
             CustomRatingBar.setAverageScore(binding.seriesRating, model.score)
             binding.seriesTitle.setTitle(model)
             binding.reviewVote.setModel(model, R.color.white)
-            binding.reviewVote.setCurrentUser(coordinator.databaseHelper.currentUser)
+            binding.reviewVote.setCurrentUser(currentUser)
             binding.reviewVote.setListener(voteListener)
             binding.reviewSummary.text = model.summary
         }
@@ -103,7 +103,7 @@ class ReviewAdapter(
             binding.reviewSummary.markDown(model.summary)
             CustomRatingBar.setAverageScore(binding.seriesRating, model.score)
             binding.reviewVote.setModel(model, 0)
-            binding.reviewVote.setCurrentUser(coordinator.databaseHelper.currentUser)
+            binding.reviewVote.setCurrentUser(currentUser)
             binding.reviewVote.setListener(voteListener)
             AspectImageView.setImage(binding.seriesImage, model.media.coverImage)
         }

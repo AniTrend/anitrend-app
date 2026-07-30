@@ -6,6 +6,7 @@ import com.mxt.anitrend.data.mapper.toPageInfo
 import com.mxt.anitrend.data.store.review.ReviewQueryKey
 import com.mxt.anitrend.data.store.review.ReviewStore
 import com.mxt.anitrend.graphql.generated.MediaType
+import com.mxt.anitrend.graphql.generated.ReviewRating
 import com.mxt.anitrend.graphql.generated.ReviewSort
 import com.mxt.anitrend.model.entity.anilist.Review
 import com.mxt.anitrend.model.entity.container.body.PageContainer
@@ -134,6 +135,16 @@ class BrowseReviewViewModel(
                     )
                 }
             }
+        }
+    }
+
+    fun rateReview(
+        reviewId: Long,
+        rating: ReviewRating?,
+        onResult: (Result<Review>) -> Unit,
+    ) {
+        viewModelScope.launch {
+            onResult(browseRepository.rateReview(id = reviewId, rating = rating))
         }
     }
 }

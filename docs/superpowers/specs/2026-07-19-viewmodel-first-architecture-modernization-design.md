@@ -82,6 +82,7 @@ UI -> ViewModel -> interactor/use case -> repository/data source
 ### State surfaces
 - Default for new ViewModels: `StateFlow` or `SharedFlow`.
 - `LiveData` is acceptable when integrating with legacy screens already using it.
+- The state synchronisation and mutation refactor is complete. New domain ViewModels should observe canonical stores for committed shared state instead of repository mutation callbacks or adapter-owned copies.
 
 ### Coroutine dispatchers
 - Inject dispatchers into new ViewModels for testability (e.g., constructor parameter defaulting to `Dispatchers.Default` or `Dispatchers.IO`, overridden in tests with `UnconfinedTestDispatcher`).

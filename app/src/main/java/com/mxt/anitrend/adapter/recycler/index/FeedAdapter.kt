@@ -11,27 +11,27 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder
 import com.mxt.anitrend.base.custom.view.image.AspectImageView
 import com.mxt.anitrend.base.custom.view.text.FeedHeadlineTextView
+import com.mxt.anitrend.base.custom.view.widget.FavouriteWidget
 import com.mxt.anitrend.base.custom.view.widget.FavouriteWidgetState
+import com.mxt.anitrend.base.custom.view.widget.StatusDeleteWidget
 import com.mxt.anitrend.base.custom.view.widget.StatusDeleteWidgetState
 import com.mxt.anitrend.binding.richMarkDown
 import com.mxt.anitrend.binding.setImage
-import com.mxt.anitrend.coordinator.WidgetMutationCoordinator
 import com.mxt.anitrend.databinding.AdapterFeedMessageBinding
 import com.mxt.anitrend.databinding.AdapterFeedProgressBinding
 import com.mxt.anitrend.databinding.AdapterFeedStatusBinding
 import com.mxt.anitrend.databinding.CustomRecyclerUnresolvedBinding
 import com.mxt.anitrend.extension.getLayoutInflater
-import com.mxt.anitrend.extension.koinOf
-import com.mxt.anitrend.graphql.generated.LikeableType
 import com.mxt.anitrend.model.entity.anilist.FeedList
-import com.mxt.anitrend.repository.UserRepository
+import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.date.DateUtil
 
 class FeedAdapter(
     context: Context,
-    // TODO Phase 7: remove coordinator dependency when feed item actions are routed via ViewModel callbacks.
-    private val coordinator: WidgetMutationCoordinator,
+    private val currentUser: UserBase?,
+    private val onToggleLikeAction: (Long) -> Unit,
+    private val onDeleteFeedAction: (Long) -> Unit,
 ) : RecyclerViewAdapter<FeedList>(context) {
     private companion object {
         const val FEED_STATUS = 10
@@ -42,8 +42,6 @@ class FeedAdapter(
 
     @KeyUtil.MessageType
     private var messageType: Int = 0
-
-    private val userRepository: UserRepository by lazy { koinOf() }
 
     fun setMessageType(@KeyUtil.MessageType messageType: Int) {
         this.messageType = messageType
@@ -82,11 +80,12 @@ class FeedAdapter(
     override fun getFilter(): Filter? = null
 
     private fun isLikedByCurrentUser(feed: FeedList): Boolean =
-        coordinator.databaseHelper.currentUser?.let { currentUser ->
-            feed.likes.orEmpty().any { it.id == currentUser.id }
-        } == true
+        currentUser?.let { activeUser -> feed.likes.orEmpty().any { it.id == activeUser.id } } == true
 
-    private fun renderLike(widget: com.mxt.anitrend.base.custom.view.widget.FavouriteWidget, feed: FeedList) {
+    private fun renderLike(
+        widget: FavouriteWidget,
+        feed: FeedList,
+    ) {
         widget.render(
             FavouriteWidgetState(
                 count = feed.likes.orEmpty().size,
@@ -95,22 +94,18 @@ class FeedAdapter(
                 isLoading = false,
             ),
         )
-        widget.setOnToggleListener {
-            coordinator.toggleLike(feed.id, LikeableType.ACTIVITY) { }
-        }
+        widget.setOnToggleListener { onToggleLikeAction(feed.id) }
     }
 
     private fun renderDelete(
-        widget: com.mxt.anitrend.base.custom.view.widget.StatusDeleteWidget,
+        widget: StatusDeleteWidget,
         canDelete: Boolean,
         feed: FeedList,
     ) {
         if (canDelete) {
             widget.render(StatusDeleteWidgetState(isEnabled = true, isLoading = false))
             widget.visibility = View.VISIBLE
-            widget.setOnDeleteListener {
-                coordinator.deleteActivity(feed.id) { }
-            }
+            widget.setOnDeleteListener { onDeleteFeedAction(feed.id) }
         } else {
             widget.visibility = View.GONE
             widget.setOnDeleteListener(null)
@@ -135,7 +130,7 @@ class FeedAdapter(
             AspectImageView.setImage(binding.seriesImage, model.media?.coverImage)
             renderLike(binding.widgetFavourite, model)
             binding.widgetComment.setReplyCount(model.replyCount)
-            renderDelete(binding.widgetDelete, userRepository.cachedCurrentUser?.id == model.user?.id, model)
+            renderDelete(binding.widgetDelete, currentUser?.id == model.user?.id, model)
         }
 
         override fun onViewRecycled() {
@@ -174,7 +169,7 @@ class FeedAdapter(
             renderLike(binding.widgetFavourite, model)
             binding.widgetComment.setReplyCount(model.replyCount)
 
-            val canDelete = userRepository.cachedCurrentUser?.id == model.user?.id
+            val canDelete = currentUser?.id == model.user?.id
             binding.widgetEdit.visibility = if (canDelete) View.VISIBLE else View.GONE
             renderDelete(binding.widgetDelete, canDelete, model)
         }
@@ -221,7 +216,7 @@ class FeedAdapter(
             renderLike(binding.widgetFavourite, model)
             binding.widgetComment.setReplyCount(model.replyCount)
 
-            val canDelete = userRepository.cachedCurrentUser?.id == model.messenger?.id
+            val canDelete = currentUser?.id == model.messenger?.id
             binding.widgetEdit.visibility = if (canDelete) View.VISIBLE else View.GONE
             renderDelete(binding.widgetDelete, canDelete, model)
         }
@@ -259,7 +254,7 @@ class FeedAdapter(
             binding.widgetUsers.visibility = View.GONE
             binding.widgetFavourite.visibility = View.GONE
             binding.widgetComment.setReplyCount(model.replyCount)
-            renderDelete(binding.widgetDelete, userRepository.cachedCurrentUser?.id == model.user?.id, model)
+            renderDelete(binding.widgetDelete, currentUser?.id == model.user?.id, model)
         }
 
         override fun onViewRecycled() {

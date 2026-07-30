@@ -178,6 +178,7 @@ Reasons:
 - Decision: ObjectBox-backed in a follow-up implementation.
 - Persistence recommendation: this is the first domain that should gain disk-backed canonical state.
 - Reason: highest user value and best fit for offline read.
+- This deferral is explicitly permitted by Section 20.3 of `docs/architecture/state-synchronization-and-mutation-refactor.md` while offline-first persistence remains a follow-up concern.
 
 ### Review
 

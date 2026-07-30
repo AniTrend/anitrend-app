@@ -94,6 +94,15 @@ class MessageFeedFragment : FeedListFragment() {
     override fun applyUpdatedFeedResult(feed: FeedList) {
         messageFeedViewModel.applyReturnedFeed(feed)
     }
+
+    override fun handleLegacyToggleLike(feedId: Long) {
+        messageFeedViewModel.toggleLike(feedId)
+    }
+
+    override fun handleLegacyDeleteFeed(feedId: Long) {
+        messageFeedViewModel.deleteFeed(feedId)
+    }
+
     override fun onItemClick(
         target: View,
         data: IndexedValue<FeedList>,

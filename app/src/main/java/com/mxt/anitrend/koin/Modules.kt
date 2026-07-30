@@ -32,7 +32,6 @@ import com.mxt.anitrend.base.interfaces.dao.BoxQuery
 import com.mxt.anitrend.base.plugin.image.GlideImagePlugin
 import com.mxt.anitrend.base.plugin.image.ImageConfigurationPlugin
 import com.mxt.anitrend.base.plugin.text.TextConfigurationPlugin
-import com.mxt.anitrend.coordinator.WidgetMutationCoordinator
 import com.mxt.anitrend.data.DatabaseHelper
 import com.mxt.anitrend.data.store.AccountStoreClearer
 import com.mxt.anitrend.data.store.mutation.RevisionProvider
@@ -574,18 +573,6 @@ private val repositoryModule = module {
     single { SaveMediaListEntryInteractor(browseRepository = get(), mutationExecutor = get(), mediaListStore = get(), revisionProvider = get(), userRepository = get()) }
     single { DeleteMediaListEntryInteractor(browseRepository = get(), mutationExecutor = get(), mediaListStore = get(), revisionProvider = get()) }
     single { IncrementMediaProgressInteractor(saveMediaListEntryInteractor = get()) }
-    single {
-        WidgetMutationCoordinator(
-            baseRepository = get(),
-            browseRepository = get(),
-            userRepository = get(),
-            feedRepository = get(),
-            coroutineScope = get(ApplicationScopeQualifier),
-            ioDispatcher = get(IoDispatcherQualifier),
-            mainDispatcher = get(MainDispatcherQualifier),
-            databaseHelper = get(),
-        )
-    }
 }
 
 private val mediaFeatureModule = module {
@@ -598,7 +585,15 @@ private val mediaFeatureModule = module {
     viewModel { ReviewViewModel(browseRepository = get(), reviewStore = get()) }
     viewModel { SuggestionListViewModel(userRepository = get(), browseRepository = get()) }
     viewModel { MediaCharacterViewModel(mediaRepository = get()) }
-    viewModel { MediaFeedViewModel(mediaRepository = get(), feedStore = get()) }
+    viewModel {
+        MediaFeedViewModel(
+            mediaRepository = get(),
+            feedStore = get(),
+            mutationRegistry = get(),
+            toggleLikeInteractor = get(),
+            deleteFeedInteractor = get(),
+        )
+    }
     viewModel { MediaOverviewViewModel(repository = get(), settings = get<Settings>()) }
     viewModel { MediaRecommendationsViewModel(mediaRepository = get()) }
     viewModel { MediaRelationViewModel(mediaRepository = get()) }
@@ -622,7 +617,7 @@ private val userFeatureModule = module {
         )
     }
     viewModel { UserListViewModel(userRepository = get()) }
-    viewModel { UserSearchViewModel(searchRepository = get()) }
+    viewModel { UserSearchViewModel(searchRepository = get(), userRepository = get()) }
     viewModel { NotificationViewModel(userRepository = get()) }
     viewModel { ProfileViewModel(userRepository = get()) }
     viewModel {
@@ -646,7 +641,15 @@ private val userFeatureModule = module {
             saveFeedInteractor = get(),
         )
     }
-    viewModel { MessageFeedViewModel(feedRepository = get(), feedStore = get()) }
+    viewModel {
+        MessageFeedViewModel(
+            feedRepository = get(),
+            feedStore = get(),
+            mutationRegistry = get(),
+            toggleLikeInteractor = get(),
+            deleteFeedInteractor = get(),
+        )
+    }
     viewModel { LoginUserViewModel(userRepository = get()) }
 }
 

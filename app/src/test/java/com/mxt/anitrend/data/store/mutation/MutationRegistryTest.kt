@@ -71,6 +71,18 @@ class MutationRegistryTest {
     }
 
     @Test
+    fun `clearAll removes every tracked operation`() = runTest {
+        val registry = DefaultMutationRegistry()
+
+        registry.markRunning(OperationKey.feedLike(1L), "feed-like")
+        registry.markFailed(OperationKey.reviewRate(2L), "review-rate", "failed")
+
+        registry.clearAll()
+
+        assertTrue(registry.state.value.isEmpty())
+    }
+
+    @Test
     fun `state is observable via StateFlow`() = runTest {
         val registry = DefaultMutationRegistry()
         val operationKey = OperationKey.feedDelete(5L)

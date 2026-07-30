@@ -5,6 +5,9 @@ import com.mxt.anitrend.data.store.feed.FeedQueryKey
 import com.mxt.anitrend.data.store.feed.FeedScope
 import com.mxt.anitrend.data.store.feed.FeedStoreChange
 import com.mxt.anitrend.data.store.feed.InMemoryFeedStore
+import com.mxt.anitrend.data.store.mutation.MutationRegistry
+import com.mxt.anitrend.domain.feed.interactor.DeleteFeedInteractor
+import com.mxt.anitrend.domain.like.interactor.ToggleLikeInteractor
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.anilist.FeedReply
 import com.mxt.anitrend.model.entity.container.body.PageContainer
@@ -31,6 +34,9 @@ class SecondaryFeedViewModelStoreObservationTest {
     private lateinit var feedRepository: FeedRepository
     private lateinit var mediaRepository: MediaRepository
     private lateinit var store: InMemoryFeedStore
+    private lateinit var mutationRegistry: MutationRegistry
+    private lateinit var toggleLikeInteractor: ToggleLikeInteractor
+    private lateinit var deleteFeedInteractor: DeleteFeedInteractor
 
     @Before
     fun setUp() {
@@ -38,6 +44,9 @@ class SecondaryFeedViewModelStoreObservationTest {
         feedRepository = mock(FeedRepository::class.java)
         mediaRepository = mock(MediaRepository::class.java)
         store = InMemoryFeedStore()
+        mutationRegistry = mock(MutationRegistry::class.java)
+        toggleLikeInteractor = mock(ToggleLikeInteractor::class.java)
+        deleteFeedInteractor = mock(DeleteFeedInteractor::class.java)
     }
 
     @After
@@ -55,7 +64,13 @@ class SecondaryFeedViewModelStoreObservationTest {
             isFollowing = null,
             isMixed = null,
         )
-        val viewModel = MessageFeedViewModel(feedRepository = feedRepository, feedStore = store)
+        val viewModel = MessageFeedViewModel(
+            feedRepository = feedRepository,
+            feedStore = store,
+            mutationRegistry = mutationRegistry,
+            toggleLikeInteractor = toggleLikeInteractor,
+            deleteFeedInteractor = deleteFeedInteractor,
+        )
         val collector = backgroundScope.launch { viewModel.state.collect {} }
 
         stubMessagePage(queryKey = queryKey, page = 1, generation = 1, feeds = listOf(feed(1L), feed(2L)))
@@ -72,7 +87,13 @@ class SecondaryFeedViewModelStoreObservationTest {
 
     @Test
     fun `message feed apply returned feed commits detail into store`() = runTest {
-        val viewModel = MessageFeedViewModel(feedRepository = feedRepository, feedStore = store)
+        val viewModel = MessageFeedViewModel(
+            feedRepository = feedRepository,
+            feedStore = store,
+            mutationRegistry = mutationRegistry,
+            toggleLikeInteractor = toggleLikeInteractor,
+            deleteFeedInteractor = deleteFeedInteractor,
+        )
         val feed = feed(8L).apply {
             replyCount = 1
             replies = listOf(FeedReply(id = 99L, text = "reply", createdAt = 10L))
@@ -95,7 +116,13 @@ class SecondaryFeedViewModelStoreObservationTest {
             isFollowing = true,
             isMixed = null,
         )
-        val viewModel = MediaFeedViewModel(mediaRepository = mediaRepository, feedStore = store)
+        val viewModel = MediaFeedViewModel(
+            mediaRepository = mediaRepository,
+            feedStore = store,
+            mutationRegistry = mutationRegistry,
+            toggleLikeInteractor = toggleLikeInteractor,
+            deleteFeedInteractor = deleteFeedInteractor,
+        )
         val collector = backgroundScope.launch { viewModel.state.collect {} }
 
         stubMediaPage(queryKey = queryKey, page = 1, generation = 1, feeds = listOf(feed(10L), feed(11L)))

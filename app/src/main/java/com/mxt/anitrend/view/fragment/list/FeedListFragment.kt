@@ -14,7 +14,6 @@ import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.FeedAdapter
 import com.mxt.anitrend.adapter.recycler.index.FeedListAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
-import com.mxt.anitrend.coordinator.WidgetMutationCoordinator
 import com.mxt.anitrend.data.DatabaseHelper
 import com.mxt.anitrend.domain.model.FeedItemUiModel
 import com.mxt.anitrend.graphql.generated.ActivityType
@@ -45,7 +44,6 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
     private val settings: Settings by inject()
 
     private val databaseHelper: DatabaseHelper by inject()
-    private val mutationCoordinator by inject<WidgetMutationCoordinator>()
 
     private val feedListViewModel: FeedListViewModel by viewModel()
     private var feedListAdapter: FeedListAdapter? = null
@@ -70,7 +68,12 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
         mColumnSize = R.integer.single_list_x1
         // TODO: MessageFeedFragment and MediaFeedFragment still use the legacy FeedAdapter
         // path until their migration phases are completed.
-        mAdapter = FeedAdapter(ctx, mutationCoordinator)
+        mAdapter = FeedAdapter(
+            context = ctx,
+            currentUser = databaseHelper.currentUser,
+            onToggleLikeAction = ::handleLegacyToggleLike,
+            onDeleteFeedAction = ::handleLegacyDeleteFeed,
+        )
         if (useStateListAdapter) {
             feedListAdapter = FeedListAdapter(
                 experimentalMarkdown = settings.experimentalMarkdown,
@@ -212,6 +215,14 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
     }
 
     protected open fun applyUpdatedFeedResult(feed: FeedList) = Unit
+
+    protected open fun handleLegacyToggleLike(feedId: Long) {
+        feedListViewModel.toggleLike(feedId)
+    }
+
+    protected open fun handleLegacyDeleteFeed(feedId: Long) {
+        feedListViewModel.deleteFeed(feedId)
+    }
 
     protected fun handleSuccess(
         value: PageContainer<FeedList>,

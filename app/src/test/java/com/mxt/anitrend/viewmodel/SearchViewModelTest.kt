@@ -13,6 +13,7 @@ import com.mxt.anitrend.model.entity.base.StudioBase
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.repository.SearchRepository
+import com.mxt.anitrend.repository.UserRepository
 import com.mxt.anitrend.util.KeyUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -33,11 +34,13 @@ class SearchViewModelTest {
 
     private val testDispatcher = UnconfinedTestDispatcher()
     private lateinit var searchRepository: SearchRepository
+    private lateinit var userRepository: UserRepository
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
         searchRepository = mock(SearchRepository::class.java)
+        userRepository = mock(UserRepository::class.java)
     }
 
     @After
@@ -160,7 +163,7 @@ class SearchViewModelTest {
                 perPage = KeyUtil.PAGING_LIMIT,
                 sort = listOf(UserSort.SEARCH_MATCH),
             )
-        val viewModel = UserSearchViewModel(searchRepository = searchRepository)
+        val viewModel = UserSearchViewModel(searchRepository = searchRepository, userRepository = userRepository)
 
         viewModel.load(search = "max", page = 5)
 

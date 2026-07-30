@@ -77,4 +77,12 @@ class MediaFeedFragment : FeedListFragment() {
     override fun applyUpdatedFeedResult(feed: FeedList) {
         mediaFeedViewModel.applyReturnedFeed(feed)
     }
+
+    override fun handleLegacyToggleLike(feedId: Long) {
+        mediaFeedViewModel.toggleLike(feedId)
+    }
+
+    override fun handleLegacyDeleteFeed(feedId: Long) {
+        mediaFeedViewModel.deleteFeed(feedId)
+    }
 }

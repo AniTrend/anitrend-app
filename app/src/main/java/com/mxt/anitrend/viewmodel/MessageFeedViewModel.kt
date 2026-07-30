@@ -10,6 +10,14 @@ import com.mxt.anitrend.data.store.feed.FeedQueryKey
 import com.mxt.anitrend.data.store.feed.FeedScope
 import com.mxt.anitrend.data.store.feed.FeedStore
 import com.mxt.anitrend.data.store.feed.FeedStoreChange
+import com.mxt.anitrend.data.store.mutation.MutationRegistry
+import com.mxt.anitrend.data.store.mutation.OperationKey
+import com.mxt.anitrend.data.store.mutation.OperationStatus
+import com.mxt.anitrend.domain.feed.interactor.DeleteFeedInteractor
+import com.mxt.anitrend.domain.like.interactor.ToggleLikeInteractor
+import com.mxt.anitrend.domain.model.DeleteFeedCommand
+import com.mxt.anitrend.domain.model.ToggleLikeCommand
+import com.mxt.anitrend.graphql.generated.LikeableType
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.repository.FeedRepository
@@ -27,6 +35,9 @@ import timber.log.Timber
 class MessageFeedViewModel(
     private val feedRepository: FeedRepository,
     private val feedStore: FeedStore,
+    private val mutationRegistry: MutationRegistry,
+    private val toggleLikeInteractor: ToggleLikeInteractor,
+    private val deleteFeedInteractor: DeleteFeedInteractor,
 ) : ViewModel() {
 
     sealed interface UiState {
@@ -158,4 +169,29 @@ class MessageFeedViewModel(
             }
         }
     }
+
+    fun toggleLike(feedId: Long) {
+        if (mutationRegistry.state.value[OperationKey.feedLike(feedId)].isRunning()) {
+            return
+        }
+        viewModelScope.launch {
+            toggleLikeInteractor(
+                ToggleLikeCommand(
+                    id = feedId,
+                    likeableType = LikeableType.ACTIVITY,
+                ),
+            )
+        }
+    }
+
+    fun deleteFeed(feedId: Long) {
+        if (mutationRegistry.state.value[OperationKey.feedDelete(feedId)].isRunning()) {
+            return
+        }
+        viewModelScope.launch {
+            deleteFeedInteractor(DeleteFeedCommand(feedId = feedId))
+        }
+    }
+
+    private fun OperationStatus?.isRunning(): Boolean = this is OperationStatus.Running
 }
