@@ -106,7 +106,7 @@ class MediaListViewModelStoreObservationTest {
             userRepository = userRepository,
             settings = settings,
             requestSequence = RequestSequence(),
-            ioDispatcher = Dispatchers.IO,
+            ioDispatcher = testDispatcher,
         )
         val collector = backgroundScope.launch { viewModel.state.collect {} }
 
@@ -300,7 +300,7 @@ class MediaListViewModelStoreObservationTest {
             )
         org.mockito.Mockito.doAnswer {
             secondStarted.countDown()
-            Result.success(pageContainer(entry))
+            pageContainer(entry)
         }
             .`when`(localBrowseRepository)
             .getMediaListCollection(
