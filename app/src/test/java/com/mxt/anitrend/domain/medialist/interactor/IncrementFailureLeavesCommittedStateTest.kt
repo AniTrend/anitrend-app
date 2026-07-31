@@ -8,7 +8,8 @@ import com.mxt.anitrend.data.store.mutation.DefaultMutationRegistry
 import com.mxt.anitrend.data.store.mutation.DefaultOperationIdGenerator
 import com.mxt.anitrend.data.store.mutation.KeyedMutex
 import com.mxt.anitrend.data.store.mutation.MutationResult
-import com.mxt.anitrend.data.store.mutation.RevisionProvider
+import com.mxt.anitrend.data.store.mutation.RequestSequence
+import com.mxt.anitrend.data.store.mutation.SessionEpoch
 import com.mxt.anitrend.domain.model.IncrementMediaProgressCommand
 import com.mxt.anitrend.fixture.MediaListFixtures.aMediaList
 import com.mxt.anitrend.graphql.generated.MediaListStatus
@@ -74,9 +75,9 @@ class IncrementFailureLeavesCommittedStateTest {
 
         val saveInteractor = SaveMediaListEntryInteractor(
             browseRepository = repository,
-            mutationExecutor = DefaultMutationExecutor(KeyedMutex(backgroundScope), DefaultMutationRegistry(), DefaultOperationIdGenerator()),
+            mutationExecutor = DefaultMutationExecutor(applicationScope = backgroundScope, keyedMutex = KeyedMutex(backgroundScope), mutationRegistry = DefaultMutationRegistry(), operationIdGenerator = DefaultOperationIdGenerator(), sessionEpoch = SessionEpoch()),
             mediaListStore = store,
-            revisionProvider = RevisionProvider(),
+            requestSequence = RequestSequence(),
             userRepository = userRepository,
         )
         val interactor = IncrementMediaProgressInteractor(saveMediaListEntryInteractor = saveInteractor)

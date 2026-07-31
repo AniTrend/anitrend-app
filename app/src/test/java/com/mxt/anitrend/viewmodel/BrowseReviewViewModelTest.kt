@@ -2,9 +2,11 @@ package com.mxt.anitrend.viewmodel
 
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.graphql.generated.ReviewSort
+import com.mxt.anitrend.data.store.mutation.RequestSequence
 import com.mxt.anitrend.data.store.review.InMemoryReviewStore
 import com.mxt.anitrend.data.store.review.ReviewQueryKey
 import com.mxt.anitrend.data.store.review.ReviewStoreChange
+import com.mxt.anitrend.domain.review.interactor.RateReviewInteractor
 import com.mxt.anitrend.model.entity.anilist.Review
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.repository.BrowseRepository
@@ -32,12 +34,14 @@ class BrowseReviewViewModelTest {
     private val testDispatcher = UnconfinedTestDispatcher()
     private lateinit var browseRepository: BrowseRepository
     private lateinit var reviewStore: InMemoryReviewStore
+    private lateinit var rateReviewInteractor: RateReviewInteractor
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
         browseRepository = mock(BrowseRepository::class.java)
         reviewStore = InMemoryReviewStore()
+        rateReviewInteractor = mock(RateReviewInteractor::class.java)
     }
 
     @After
@@ -47,7 +51,7 @@ class BrowseReviewViewModelTest {
 
     @Test
     fun `initial state is Loading`() = runTest {
-        val vm = BrowseReviewViewModel(browseRepository = browseRepository, reviewStore = reviewStore)
+        val vm = BrowseReviewViewModel(browseRepository = browseRepository, reviewStore = reviewStore, requestSequence = RequestSequence(), rateReviewInteractor = rateReviewInteractor)
         assertTrue(vm.state.value is BrowseReviewViewModel.UiState.Loading)
     }
 
@@ -63,7 +67,7 @@ class BrowseReviewViewModelTest {
             ReviewStoreChange.PageLoaded(
                 queryKey = queryKey,
                 page = 1,
-                generation = 1,
+                token = 1L,
                 reviews = listOf(review),
                 pageInfo = null,
             ),
@@ -78,9 +82,9 @@ class BrowseReviewViewModelTest {
                 asHtml = false,
                 commitToStore = true,
                 queryKey = queryKey,
-                queryGeneration = 1,
+                readToken = 1L,
             )
-        val vm = BrowseReviewViewModel(browseRepository = browseRepository, reviewStore = reviewStore)
+        val vm = BrowseReviewViewModel(browseRepository = browseRepository, reviewStore = reviewStore, requestSequence = RequestSequence(), rateReviewInteractor = rateReviewInteractor)
         val collector = backgroundScope.launch { vm.state.collect {} }
 
         vm.load(type = MediaType.ANIME, page = 1, sort = null)
@@ -96,7 +100,7 @@ class BrowseReviewViewModelTest {
             asHtml = false,
             commitToStore = true,
             queryKey = queryKey,
-            queryGeneration = 1,
+            readToken = 1L,
         )
         collector.cancel()
     }
@@ -114,9 +118,9 @@ class BrowseReviewViewModelTest {
                 asHtml = false,
                 commitToStore = true,
                 queryKey = queryKey,
-                queryGeneration = 1,
+                readToken = 1L,
             )
-        val vm = BrowseReviewViewModel(browseRepository = browseRepository, reviewStore = reviewStore)
+        val vm = BrowseReviewViewModel(browseRepository = browseRepository, reviewStore = reviewStore, requestSequence = RequestSequence(), rateReviewInteractor = rateReviewInteractor)
         val collector = backgroundScope.launch { vm.state.collect {} }
 
         vm.load(type = null, page = 1, sort = null)
@@ -141,14 +145,14 @@ class BrowseReviewViewModelTest {
             rating = 42
             ratingAmount = 5
         }
-        val vm = BrowseReviewViewModel(browseRepository = browseRepository, reviewStore = reviewStore)
+        val vm = BrowseReviewViewModel(browseRepository = browseRepository, reviewStore = reviewStore, requestSequence = RequestSequence(), rateReviewInteractor = rateReviewInteractor)
         val collector = backgroundScope.launch { vm.state.collect {} }
 
         reviewStore.apply(
             ReviewStoreChange.PageLoaded(
                 queryKey = queryKey,
                 page = 1,
-                generation = 1,
+                token = 1L,
                 reviews = listOf(review),
                 pageInfo = null,
             ),
@@ -163,7 +167,7 @@ class BrowseReviewViewModelTest {
                 asHtml = false,
                 commitToStore = true,
                 queryKey = queryKey,
-                queryGeneration = 1,
+                readToken = 1L,
             )
 
         vm.load(type = MediaType.ANIME, page = 1, sort = null)

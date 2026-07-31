@@ -59,6 +59,10 @@ class InMemoryMediaListStore : MediaListStore {
 
     private fun reduceCollectionLoaded(change: MediaListStoreChange.CollectionLoaded): MediaListStoreState {
         val currentState = mutableState.value
+        val existingSnapshot = currentState.queries[change.queryKey]
+        if (existingSnapshot != null && change.token < existingSnapshot.token) {
+            return currentState
+        }
         val entriesById = currentState.entriesById.toMutableMap()
         val entryIdByMediaId = currentState.entryIdByMediaId.toMutableMap()
         val acceptedEntryIds = mutableListOf<Long>()
@@ -77,7 +81,7 @@ class InMemoryMediaListStore : MediaListStore {
                 if (previousKey != null && previousKey != entryKey) {
                     entriesById.remove(previousKey)
                 }
-                entriesById[entryKey] = entry.copy(id = entryKey)
+                entriesById[entryKey] = entry.copy(id = entryKey, revision = change.token)
                 entryIdByMediaId[entry.mediaId] = entryKey
             }
             if (entriesById.containsKey(entryKey)) {
@@ -85,7 +89,6 @@ class InMemoryMediaListStore : MediaListStore {
             }
         }
 
-        val existingSnapshot = currentState.queries[change.queryKey]
         val currentPage = change.pageInfo?.currentPage ?: 1
         val orderedEntryIds =
             if (currentPage <= 1) {
@@ -106,6 +109,7 @@ class InMemoryMediaListStore : MediaListStore {
                     orderedEntryIds = orderedEntryIds,
                     pageInfo = change.pageInfo,
                     loadedPages = loadedPages,
+                    token = change.token,
                     lastUpdatedAtMillis = System.currentTimeMillis(),
                 ),
             )

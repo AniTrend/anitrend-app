@@ -9,6 +9,7 @@ import com.mxt.anitrend.data.store.mutation.KeyedMutex
 import com.mxt.anitrend.data.store.mutation.OperationKey
 import com.mxt.anitrend.data.store.mutation.OperationStatus
 import com.mxt.anitrend.data.store.mutation.ResourceKey
+import com.mxt.anitrend.data.store.mutation.SessionEpoch
 import com.mxt.anitrend.fixture.MediaListFixtures.aMediaList
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -28,9 +29,11 @@ class RapidIncrementSequencingTest {
         val store = InMemoryMediaListStore()
         val registry = DefaultMutationRegistry()
         val executor = DefaultMutationExecutor(
+            applicationScope = this,
             keyedMutex = KeyedMutex(this),
             mutationRegistry = registry,
             operationIdGenerator = FixedOperationIdGenerator("increment-1", "increment-2"),
+            sessionEpoch = SessionEpoch(),
         )
         val seed = aMediaList(id = 7, mediaId = 303, progress = 5).toRecord(revision = 0L)
         store.apply(MediaListStoreChange.EntryUpserted(seed))
@@ -49,6 +52,7 @@ class RapidIncrementSequencingTest {
                 releaseFirst.await()
                 store.apply(MediaListStoreChange.EntryUpserted(seed.copy(progress = 6, revision = 1L)))
                 order += "first-end"
+                com.mxt.anitrend.data.store.mutation.MutationResult.Success
             }
         }
 
@@ -68,6 +72,7 @@ class RapidIncrementSequencingTest {
                 order += "second-start"
                 store.apply(MediaListStoreChange.EntryUpserted(seed.copy(progress = 7, revision = 2L)))
                 order += "second-end"
+                com.mxt.anitrend.data.store.mutation.MutationResult.Success
             }
         }
 

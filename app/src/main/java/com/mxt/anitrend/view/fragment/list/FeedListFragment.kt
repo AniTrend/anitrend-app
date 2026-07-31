@@ -15,7 +15,9 @@ import com.mxt.anitrend.adapter.recycler.index.FeedAdapter
 import com.mxt.anitrend.adapter.recycler.index.FeedListAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
 import com.mxt.anitrend.data.DatabaseHelper
+import com.mxt.anitrend.data.mapper.toUserBase
 import com.mxt.anitrend.domain.model.FeedItemUiModel
+import com.mxt.anitrend.domain.model.toFeedItemUiModel
 import com.mxt.anitrend.graphql.generated.ActivityType
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.container.body.PageContainer
@@ -66,21 +68,17 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
         isPager = true
         isFeed = true
         mColumnSize = R.integer.single_list_x1
-        // TODO: MessageFeedFragment and MediaFeedFragment still use the legacy FeedAdapter
-        // path until their migration phases are completed.
         mAdapter = FeedAdapter(
             context = ctx,
             currentUser = databaseHelper.currentUser,
-            onToggleLikeAction = ::handleLegacyToggleLike,
-            onDeleteFeedAction = ::handleLegacyDeleteFeed,
+            onToggleLikeAction = ::onToggleLike,
+            onDeleteFeedAction = ::onDeleteFeed,
         )
         if (useStateListAdapter) {
             feedListAdapter = FeedListAdapter(
                 experimentalMarkdown = settings.experimentalMarkdown,
-                currentUser = databaseHelper.currentUser,
-                resolveFeed = ::resolveCurrentFeed,
-                onToggleLikeAction = feedListViewModel::toggleLike,
-                onDeleteFeedAction = feedListViewModel::deleteFeed,
+                onToggleLikeAction = ::onToggleLike,
+                onDeleteFeedAction = ::onDeleteFeed,
                 onOpenMedia = { target, feedId -> openFeedMedia(target, feedId) },
                 onOpenComments = ::openFeedComments,
                 onEditFeed = ::editFeed,
@@ -214,13 +212,11 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
         }
     }
 
-    protected open fun applyUpdatedFeedResult(feed: FeedList) = Unit
-
-    protected open fun handleLegacyToggleLike(feedId: Long) {
+    protected open fun onToggleLike(feedId: Long) {
         feedListViewModel.toggleLike(feedId)
     }
 
-    protected open fun handleLegacyDeleteFeed(feedId: Long) {
+    protected open fun onDeleteFeed(feedId: Long) {
         feedListViewModel.deleteFeed(feedId)
     }
 
@@ -233,7 +229,17 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
             if (value.hasPageInfo()) {
                 setPageInfo(value.pageInfo)
             }
-            val renderedItems = items.orEmpty().filter { !it.type.isNullOrBlank() }
+            val currentUserId = databaseHelper.currentUser?.id
+            val pendingStates = items.orEmpty().associateBy(FeedItemUiModel::id)
+            val renderedItems =
+                value.pageData
+                    .map { feed ->
+                        val pendingState = pendingStates[feed.id]
+                        feed.toFeedItemUiModel(currentUserId).copy(
+                            isLikePending = pendingState?.isLikePending ?: false,
+                            isDeletePending = pendingState?.isDeletePending ?: false,
+                        )
+                    }.filter { !it.type.isNullOrBlank() }
             mScrollListener.getPageInfo()?.perPage = renderedItems.size
             feedListAdapter?.submitList(renderedItems)
             if (renderedItems.isEmpty()) {
@@ -277,18 +283,21 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
 
     protected open fun currentRenderedFeeds(): List<FeedList> = (feedListViewModel.state.value as? FeedListViewModel.UiState.Success)?.content?.pageData.orEmpty()
 
-    private fun resolveCurrentFeed(feedId: Long): FeedList? = currentRenderedFeeds().firstOrNull { it.id == feedId }
+    protected open fun currentRenderedFeedItems(): List<FeedItemUiModel> = feedListAdapter?.currentList.orEmpty()
+
+    private fun resolveCurrentFeedItem(feedId: Long): FeedItemUiModel? = currentRenderedFeedItems().firstOrNull { it.id == feedId }
 
     private fun openFeedMedia(
         target: View,
         feedId: Long,
     ) {
-        val series = resolveCurrentFeed(feedId)?.media ?: return
+        val feedItem = resolveCurrentFeedItem(feedId) ?: return
+        val mediaId = feedItem.mediaId ?: return
         val host = activity ?: return
         val intent =
             Intent(host, MediaActivity::class.java).apply {
-                putExtra(KeyUtil.arg_id, series.id)
-                putExtra(KeyUtil.arg_mediaType, series.type)
+                putExtra(KeyUtil.arg_id, mediaId)
+                putExtra(KeyUtil.arg_mediaType, feedItem.mediaType)
             }
         CompatUtil.startRevealAnim(host, target, intent)
     }
@@ -302,8 +311,8 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
         startActivity(intent)
     }
 
-    private fun editFeed(feedId: Long) {
-        val feed = resolveCurrentFeed(feedId) ?: return
+    protected open fun editFeed(feedId: Long) {
+        val feed = currentRenderedFeeds().firstOrNull { it.id == feedId } ?: return
         mBottomSheet =
             BottomSheetComposer
                 .Builder()
@@ -315,7 +324,7 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
     }
 
     private fun showFeedLikes(feedId: Long) {
-        val likes = resolveCurrentFeed(feedId)?.likes.orEmpty()
+        val likes = resolveCurrentFeedItem(feedId)?.likes.orEmpty().map { it.toUserBase() }
         if (likes.isNotEmpty()) {
             mBottomSheet =
                 BottomSheetUsers
@@ -360,12 +369,12 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
             }
             return false
         }
-        val media = resolveCurrentFeed(feedId)?.media ?: return false
+        val mediaId = resolveCurrentFeedItem(feedId)?.mediaId ?: return false
         val host = activity ?: return false
         mediaActionUtil =
             MediaActionUtil
                 .Builder()
-                .setId(media.id)
+                .setId(mediaId)
                 .build(host)
         mediaActionUtil.startSeriesAction()
         return true

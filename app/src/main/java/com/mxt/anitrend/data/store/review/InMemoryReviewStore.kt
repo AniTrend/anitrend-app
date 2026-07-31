@@ -51,7 +51,7 @@ class InMemoryReviewStore : ReviewStore {
     private fun reducePageLoaded(change: ReviewStoreChange.PageLoaded): ReviewStoreState {
         val currentState = mutableState.value
         val existingSnapshot = currentState.queries[change.queryKey]
-        if (existingSnapshot != null && change.generation < existingSnapshot.generation) {
+        if (existingSnapshot != null && change.token < existingSnapshot.token) {
             return currentState
         }
 
@@ -63,9 +63,9 @@ class InMemoryReviewStore : ReviewStore {
                 reviewsById[review.id]?.revision ?: Long.MIN_VALUE,
                 reviewDeletionRevisions[review.id] ?: Long.MIN_VALUE,
             )
-            if (0L >= currentRevision) {
+            if (change.token >= currentRevision) {
                 reviewDeletionRevisions.remove(review.id)
-                reviewsById[review.id] = ReviewStoreRecord(review = review.copyForStore(), revision = 0L)
+                reviewsById[review.id] = ReviewStoreRecord(review = review.copyForStore(), revision = change.token)
             }
             if (reviewsById.containsKey(review.id)) {
                 acceptedIds += review.id
@@ -91,7 +91,7 @@ class InMemoryReviewStore : ReviewStore {
                     orderedReviewIds = orderedReviewIds,
                     pageInfo = change.pageInfo,
                     loadedPages = loadedPages,
-                    generation = change.generation,
+                    token = change.token,
                     lastUpdatedAtMillis = System.currentTimeMillis(),
                 ),
             )

@@ -3,20 +3,20 @@ package com.mxt.anitrend.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mxt.anitrend.data.mapper.toFeedList
-import com.mxt.anitrend.data.mapper.toFeedRecord
-import com.mxt.anitrend.data.mapper.toFeedReplyRecord
 import com.mxt.anitrend.data.mapper.toPageInfo
 import com.mxt.anitrend.data.store.feed.FeedQueryKey
 import com.mxt.anitrend.data.store.feed.FeedScope
 import com.mxt.anitrend.data.store.feed.FeedStore
-import com.mxt.anitrend.data.store.feed.FeedStoreChange
 import com.mxt.anitrend.data.store.mutation.MutationRegistry
 import com.mxt.anitrend.data.store.mutation.OperationKey
 import com.mxt.anitrend.data.store.mutation.OperationStatus
+import com.mxt.anitrend.data.store.mutation.RequestSequence
 import com.mxt.anitrend.domain.feed.interactor.DeleteFeedInteractor
 import com.mxt.anitrend.domain.like.interactor.ToggleLikeInteractor
 import com.mxt.anitrend.domain.model.DeleteFeedCommand
+import com.mxt.anitrend.domain.model.FeedItemUiModel
 import com.mxt.anitrend.domain.model.ToggleLikeCommand
+import com.mxt.anitrend.domain.model.toFeedItemUiModel
 import com.mxt.anitrend.graphql.generated.LikeableType
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.container.body.PageContainer
@@ -24,9 +24,9 @@ import com.mxt.anitrend.repository.FeedRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -38,20 +38,23 @@ class MessageFeedViewModel(
     private val mutationRegistry: MutationRegistry,
     private val toggleLikeInteractor: ToggleLikeInteractor,
     private val deleteFeedInteractor: DeleteFeedInteractor,
+    private val requestSequence: RequestSequence,
 ) : ViewModel() {
 
     sealed interface UiState {
         data object Loading : UiState
         data class Success(
             val content: PageContainer<FeedList>,
-            val replaceExisting: Boolean = false,
+            val items: List<FeedItemUiModel>,
+            val loadedPages: Set<Int>,
+            val replaceExisting: Boolean,
         ) : UiState
         data class Error(val message: String) : UiState
     }
 
     private data class ScreenState(
         val queryKey: FeedQueryKey? = null,
-        val requestGeneration: Int = 0,
+        val requestToken: Long = 0L,
         val lastRequestedPage: Int = 1,
         val isLoading: Boolean = false,
         val errorMessage: String? = null,
@@ -70,18 +73,35 @@ class MessageFeedViewModel(
                     },
                 )
 
-                feedStore.observeQuery(queryKey).map { query ->
+                combine(
+                    feedStore.observeQuery(queryKey),
+                    mutationRegistry.state,
+                    flowOf(screen),
+                ) { query, operations, currentScreen ->
                     val renderedFeeds = query.feeds.map { it.toFeedList() }
                     when {
-                        screen.errorMessage != null -> UiState.Error(screen.errorMessage)
-                        screen.isLoading && renderedFeeds.isEmpty() -> UiState.Loading
-                        else -> UiState.Success(
-                            content = PageContainer<FeedList>().apply {
-                                query.pageInfo?.toPageInfo()?.let { pageInfo = it }
-                                pageData = renderedFeeds
-                            },
-                            replaceExisting = screen.lastRequestedPage <= 1,
-                        )
+                        currentScreen.errorMessage != null -> {
+                            UiState.Error(currentScreen.errorMessage)
+                        }
+                        currentScreen.isLoading && renderedFeeds.isEmpty() -> {
+                            UiState.Loading
+                        }
+                        else -> {
+                            UiState.Success(
+                                content = PageContainer<FeedList>().apply {
+                                    query.pageInfo?.toPageInfo()?.let { pageInfo = it }
+                                    pageData = renderedFeeds
+                                },
+                                items = query.feeds.map { feed ->
+                                    feed.toFeedItemUiModel(
+                                        isLikePending = operations[OperationKey.feedLike(feed.id)].isRunning(),
+                                        isDeletePending = operations[OperationKey.feedDelete(feed.id)].isRunning(),
+                                    )
+                                },
+                                loadedPages = query.loadedPages,
+                                replaceExisting = currentScreen.lastRequestedPage <= 1,
+                            )
+                        }
                     }
                 }
             }.stateIn(
@@ -89,23 +109,6 @@ class MessageFeedViewModel(
                 started = SharingStarted.WhileSubscribed(5_000),
                 initialValue = UiState.Loading,
             )
-
-    fun applyReturnedFeed(feed: FeedList) {
-        viewModelScope.launch {
-            val feedRevision = feedStore.state.value.feedsById[feed.id]?.revision ?: 0L
-            feedStore.apply(
-                FeedStoreChange.FeedDetailLoaded(
-                    feed = feed.toFeedRecord(revision = feedRevision),
-                    replies = feed.replies.orEmpty().map { reply ->
-                        reply.toFeedReplyRecord(
-                            activityId = feed.id,
-                            revision = feedStore.state.value.repliesById[reply.id]?.revision ?: feedRevision,
-                        )
-                    },
-                ),
-            )
-        }
-    }
 
     /**
      * Loads message feed. Repeatable for pagination; no loadedOnce guard.
@@ -126,11 +129,11 @@ class MessageFeedViewModel(
             isFollowing = null,
             isMixed = null,
         )
-        val generation = screenState.value.requestGeneration.takeIf { page > 1 } ?: (screenState.value.requestGeneration + 1)
+        val token = if (page > 1) screenState.value.requestToken else requestSequence.next()
         screenState.update {
             it.copy(
                 queryKey = queryKey,
-                requestGeneration = generation,
+                requestToken = token,
                 lastRequestedPage = page,
                 isLoading = true,
                 errorMessage = null,
@@ -144,9 +147,9 @@ class MessageFeedViewModel(
                 userId = if (messageType == 0) userId else null,
                 messengerId = if (messageType != 0) userId else null,
                 queryKey = queryKey,
-                queryGeneration = generation,
+                readToken = token,
             ).onSuccess {
-                if (screenState.value.requestGeneration != generation) {
+                if (screenState.value.requestToken != token) {
                     return@onSuccess
                 }
                 screenState.update { current ->
@@ -156,7 +159,7 @@ class MessageFeedViewModel(
                     )
                 }
             }.onFailure { throwable ->
-                if (screenState.value.requestGeneration != generation) {
+                if (screenState.value.requestToken != token) {
                     return@onFailure
                 }
                 Timber.e(throwable, "MessageFeedViewModel load failed")

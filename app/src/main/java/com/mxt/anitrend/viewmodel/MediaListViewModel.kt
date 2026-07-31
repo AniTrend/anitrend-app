@@ -9,6 +9,7 @@ import com.mxt.anitrend.data.store.medialist.MediaListStore
 import com.mxt.anitrend.data.store.mutation.MutationRegistry
 import com.mxt.anitrend.data.store.mutation.OperationKey
 import com.mxt.anitrend.data.store.mutation.OperationStatus
+import com.mxt.anitrend.data.store.mutation.RequestSequence
 import com.mxt.anitrend.domain.model.MediaListItemUiModel
 import com.mxt.anitrend.domain.model.toMediaListItemUiModel
 import com.mxt.anitrend.graphql.generated.MediaListSort
@@ -43,6 +44,7 @@ class MediaListViewModel(
     private val mutationRegistry: MutationRegistry,
     private val userRepository: UserRepository,
     private val settings: Settings,
+    private val requestSequence: RequestSequence,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : ViewModel() {
 
@@ -62,7 +64,7 @@ class MediaListViewModel(
         val queryKey: MediaListQueryKey? = null,
         val isLoading: Boolean = false,
         val errorMessage: String? = null,
-        val requestGeneration: Int = 0,
+        val requestToken: Long = 0L,
         val isCurrentUser: Boolean = false,
         val titleSortVersion: Int = 0,
     )
@@ -132,37 +134,37 @@ class MediaListViewModel(
         statusIn: String?,
     ) {
         val isCurrentUser = isCurrentUser(userId, userName)
+        val token = requestSequence.next()
+        val mediaListSort = settings.mediaListSort ?: KeyUtil.PROGRESS
+        val sortString = if (!MediaListUtil.isTitleSort(mediaListSort)) {
+            mediaListSort + settings.sortOrder
+        } else {
+            KeyUtil.MEDIA_ID + settings.sortOrder
+        }
+        val sort: List<MediaListSort>? = runCatching { listOf(MediaListSort.valueOf(sortString)) }.getOrNull()
+        val statusList: List<MediaListStatus>? =
+            statusIn?.let { runCatching { listOf(MediaListStatus.valueOf(it)) }.getOrNull() }
+        val type: MediaType? = mediaType?.let { runCatching { MediaType.valueOf(it) }.getOrNull() }
+        val queryKey = MediaListQueryKey(
+            userId = if (userId != 0L) userId else null,
+            userName = if (userId == 0L) userName else null,
+            mediaType = type,
+            statuses = statusList.orEmpty().toSet(),
+            sort = sort?.firstOrNull(),
+        )
+        screenState.update {
+            it.copy(
+                queryKey = queryKey,
+                isLoading = true,
+                errorMessage = null,
+                requestToken = token,
+                isCurrentUser = isCurrentUser,
+            )
+        }
+
         viewModelScope.launch {
-            val generation = screenState.value.requestGeneration + 1
             runCatching {
                 withContext(ioDispatcher) {
-                    val mediaListSort = settings.mediaListSort ?: KeyUtil.PROGRESS
-                    val sortString = if (!MediaListUtil.isTitleSort(mediaListSort)) {
-                        mediaListSort + settings.sortOrder
-                    } else {
-                        KeyUtil.MEDIA_ID + settings.sortOrder
-                    }
-                    val sort: List<MediaListSort>? =
-                        runCatching { listOf(MediaListSort.valueOf(sortString)) }.getOrNull()
-                    val statusList: List<MediaListStatus>? =
-                        statusIn?.let { runCatching { listOf(MediaListStatus.valueOf(it)) }.getOrNull() }
-                    val type: MediaType? = mediaType?.let { runCatching { MediaType.valueOf(it) }.getOrNull() }
-                    val queryKey = MediaListQueryKey(
-                        userId = if (userId != 0L) userId else null,
-                        userName = if (userId == 0L) userName else null,
-                        mediaType = type,
-                        statuses = statusList.orEmpty().toSet(),
-                        sort = sort?.firstOrNull(),
-                    )
-                    screenState.update {
-                        it.copy(
-                            queryKey = queryKey,
-                            isLoading = true,
-                            errorMessage = null,
-                            requestGeneration = generation,
-                            isCurrentUser = isCurrentUser,
-                        )
-                    }
                     val scoreFormat: ScoreFormat =
                         userRepository.cachedCurrentUser?.mediaListOptions?.let { options ->
                             runCatching { ScoreFormat.valueOf(options.scoreFormat) }.getOrNull()
@@ -176,11 +178,12 @@ class MediaListViewModel(
                         statusIn = statusList,
                         scoreFormat = scoreFormat,
                         queryKey = queryKey,
+                        readToken = token,
                     )
                     result.getOrThrow()
                 }
             }.onSuccess {
-                if (screenState.value.requestGeneration != generation) {
+                if (screenState.value.requestToken != token) {
                     return@onSuccess
                 }
                 screenState.update { current ->
@@ -190,6 +193,9 @@ class MediaListViewModel(
                     )
                 }
             }.onFailure { throwable ->
+                if (screenState.value.requestToken != token) {
+                    return@onFailure
+                }
                 Timber.e(throwable, "MediaListViewModel load failed")
                 screenState.update { current ->
                     current.copy(

@@ -43,6 +43,7 @@ class MediaListStoreTest {
         store.apply(
             MediaListStoreChange.CollectionLoaded(
                 queryKey = currentAnimeQuery,
+                token = 1L,
                 entries = listOf(entry),
                 pageInfo = createPageInfo(1),
             ),
@@ -62,6 +63,7 @@ class MediaListStoreTest {
         store.apply(
             MediaListStoreChange.CollectionLoaded(
                 queryKey = currentAnimeQuery,
+                token = 1L,
                 entries = listOf(createEntry(10L, 100L, "CURRENT", 1L), createEntry(11L, 101L, "CURRENT", 1L)),
                 pageInfo = createPageInfo(1),
             ),
@@ -70,6 +72,7 @@ class MediaListStoreTest {
         store.apply(
             MediaListStoreChange.CollectionLoaded(
                 queryKey = currentAnimeQuery,
+                token = 1L,
                 entries = listOf(createEntry(12L, 102L, "CURRENT", 1L), createEntry(11L, 101L, "CURRENT", 2L)),
                 pageInfo = createPageInfo(2),
             ),
@@ -97,6 +100,7 @@ class MediaListStoreTest {
         store.apply(
             MediaListStoreChange.CollectionLoaded(
                 queryKey = currentAnimeQuery,
+                token = 1L,
                 entries = listOf(entry),
                 pageInfo = createPageInfo(1),
             ),

@@ -10,6 +10,7 @@ import com.mxt.anitrend.data.store.feed.FeedStore
 import com.mxt.anitrend.data.store.mutation.MutationRegistry
 import com.mxt.anitrend.data.store.mutation.OperationKey
 import com.mxt.anitrend.data.store.mutation.OperationStatus
+import com.mxt.anitrend.data.store.mutation.RequestSequence
 import com.mxt.anitrend.domain.feed.interactor.DeleteFeedInteractor
 import com.mxt.anitrend.domain.like.interactor.ToggleLikeInteractor
 import com.mxt.anitrend.domain.model.DeleteFeedCommand
@@ -38,6 +39,7 @@ class UserFeedViewModel(
     private val mutationRegistry: MutationRegistry,
     private val toggleLikeInteractor: ToggleLikeInteractor,
     private val deleteFeedInteractor: DeleteFeedInteractor,
+    private val requestSequence: RequestSequence,
 ) : ViewModel() {
 
     sealed interface UiState {
@@ -55,7 +57,7 @@ class UserFeedViewModel(
 
     private data class ScreenState(
         val queryKey: FeedQueryKey? = null,
-        val requestGeneration: Int = 0,
+        val requestToken: Long = 0L,
         val lastRequestedPage: Int = 1,
         val isLoading: Boolean = false,
         val errorMessage: String? = null,
@@ -131,11 +133,11 @@ class UserFeedViewModel(
             isFollowing = isFollowing,
             isMixed = isMixed,
         )
-        val generation = screenState.value.requestGeneration.takeIf { page > 1 } ?: (screenState.value.requestGeneration + 1)
+        val token = if (page > 1) screenState.value.requestToken else requestSequence.next()
         screenState.update {
             it.copy(
                 queryKey = queryKey,
-                requestGeneration = generation,
+                requestToken = token,
                 lastRequestedPage = page,
                 isLoading = true,
                 errorMessage = null,
@@ -151,9 +153,9 @@ class UserFeedViewModel(
                 type = type,
                 isMixed = isMixed,
                 queryKey = queryKey,
-                queryGeneration = generation,
+                readToken = token,
             ).onSuccess {
-                if (screenState.value.requestGeneration != generation) {
+                if (screenState.value.requestToken != token) {
                     return@onSuccess
                 }
                 screenState.update { current ->
@@ -163,7 +165,7 @@ class UserFeedViewModel(
                     )
                 }
             }.onFailure { throwable ->
-                if (screenState.value.requestGeneration != generation) {
+                if (screenState.value.requestToken != token) {
                     return@onFailure
                 }
                 Timber.e(throwable, "UserFeedViewModel load failed")

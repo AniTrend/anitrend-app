@@ -5,11 +5,11 @@ import com.mxt.anitrend.data.store.feed.FeedQueryKey
 import com.mxt.anitrend.data.store.feed.FeedScope
 import com.mxt.anitrend.data.store.feed.FeedStoreChange
 import com.mxt.anitrend.data.store.feed.InMemoryFeedStore
-import com.mxt.anitrend.data.store.mutation.MutationRegistry
+import com.mxt.anitrend.data.store.mutation.DefaultMutationRegistry
+import com.mxt.anitrend.data.store.mutation.RequestSequence
 import com.mxt.anitrend.domain.feed.interactor.DeleteFeedInteractor
 import com.mxt.anitrend.domain.like.interactor.ToggleLikeInteractor
 import com.mxt.anitrend.model.entity.anilist.FeedList
-import com.mxt.anitrend.model.entity.anilist.FeedReply
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.repository.FeedRepository
 import com.mxt.anitrend.repository.MediaRepository
@@ -34,7 +34,7 @@ class SecondaryFeedViewModelStoreObservationTest {
     private lateinit var feedRepository: FeedRepository
     private lateinit var mediaRepository: MediaRepository
     private lateinit var store: InMemoryFeedStore
-    private lateinit var mutationRegistry: MutationRegistry
+    private lateinit var mutationRegistry: DefaultMutationRegistry
     private lateinit var toggleLikeInteractor: ToggleLikeInteractor
     private lateinit var deleteFeedInteractor: DeleteFeedInteractor
 
@@ -44,7 +44,7 @@ class SecondaryFeedViewModelStoreObservationTest {
         feedRepository = mock(FeedRepository::class.java)
         mediaRepository = mock(MediaRepository::class.java)
         store = InMemoryFeedStore()
-        mutationRegistry = mock(MutationRegistry::class.java)
+        mutationRegistry = DefaultMutationRegistry()
         toggleLikeInteractor = mock(ToggleLikeInteractor::class.java)
         deleteFeedInteractor = mock(DeleteFeedInteractor::class.java)
     }
@@ -70,11 +70,12 @@ class SecondaryFeedViewModelStoreObservationTest {
             mutationRegistry = mutationRegistry,
             toggleLikeInteractor = toggleLikeInteractor,
             deleteFeedInteractor = deleteFeedInteractor,
+            requestSequence = RequestSequence(),
         )
         val collector = backgroundScope.launch { viewModel.state.collect {} }
 
-        stubMessagePage(queryKey = queryKey, page = 1, generation = 1, feeds = listOf(feed(1L), feed(2L)))
-        stubMessagePage(queryKey = queryKey, page = 2, generation = 1, feeds = listOf(feed(3L), feed(4L)))
+        stubMessagePage(queryKey = queryKey, page = 1, token = 1L, feeds = listOf(feed(1L), feed(2L)))
+        stubMessagePage(queryKey = queryKey, page = 2, token = 1L, feeds = listOf(feed(3L), feed(4L)))
 
         viewModel.load(userId = 42L, page = 1, pageLimit = 20, messageType = 0)
         viewModel.load(userId = 42L, page = 2, pageLimit = 20, messageType = 0)
@@ -82,28 +83,9 @@ class SecondaryFeedViewModelStoreObservationTest {
 
         val state = viewModel.state.value as MessageFeedViewModel.UiState.Success
         assertEquals(listOf(1L, 2L, 3L, 4L), state.content.pageData.map { it.id })
+        assertEquals(listOf(1L, 2L, 3L, 4L), state.items.map { it.id })
+        assertEquals(setOf(1, 2), state.loadedPages)
         collector.cancel()
-    }
-
-    @Test
-    fun `message feed apply returned feed commits detail into store`() = runTest {
-        val viewModel = MessageFeedViewModel(
-            feedRepository = feedRepository,
-            feedStore = store,
-            mutationRegistry = mutationRegistry,
-            toggleLikeInteractor = toggleLikeInteractor,
-            deleteFeedInteractor = deleteFeedInteractor,
-        )
-        val feed = feed(8L).apply {
-            replyCount = 1
-            replies = listOf(FeedReply(id = 99L, text = "reply", createdAt = 10L))
-        }
-
-        viewModel.applyReturnedFeed(feed)
-        advanceUntilIdle()
-
-        assertEquals(1, store.state.value.feedsById.getValue(8L).replyCount)
-        assertEquals(listOf(99L), store.state.value.replyIdsByFeedId.getValue(8L))
     }
 
     @Test
@@ -122,11 +104,12 @@ class SecondaryFeedViewModelStoreObservationTest {
             mutationRegistry = mutationRegistry,
             toggleLikeInteractor = toggleLikeInteractor,
             deleteFeedInteractor = deleteFeedInteractor,
+            requestSequence = RequestSequence(),
         )
         val collector = backgroundScope.launch { viewModel.state.collect {} }
 
-        stubMediaPage(queryKey = queryKey, page = 1, generation = 1, feeds = listOf(feed(10L), feed(11L)))
-        stubMediaPage(queryKey = queryKey, page = 2, generation = 1, feeds = listOf(feed(12L)))
+        stubMediaPage(queryKey = queryKey, page = 1, token = 1L, feeds = listOf(feed(10L), feed(11L)))
+        stubMediaPage(queryKey = queryKey, page = 2, token = 1L, feeds = listOf(feed(12L)))
 
         viewModel.load(mediaId = 10L, isFollowing = true, page = 1, pageLimit = 20)
         viewModel.load(mediaId = 10L, isFollowing = true, page = 2, pageLimit = 20)
@@ -134,13 +117,15 @@ class SecondaryFeedViewModelStoreObservationTest {
 
         val state = viewModel.state.value as MediaFeedViewModel.UiState.Success
         assertEquals(listOf(10L, 11L, 12L), state.content.pageData.map { it.id })
+        assertEquals(listOf(10L, 11L, 12L), state.items.map { it.id })
+        assertEquals(setOf(1, 2), state.loadedPages)
         collector.cancel()
     }
 
     private fun stubMessagePage(
         queryKey: FeedQueryKey,
         page: Int,
-        generation: Int,
+        token: Long,
         feeds: List<FeedList>,
     ) {
         val content = PageContainer<FeedList>().apply { pageData = feeds }
@@ -149,8 +134,8 @@ class SecondaryFeedViewModelStoreObservationTest {
                 FeedStoreChange.PageLoaded(
                     queryKey = queryKey,
                     page = page,
-                    generation = generation,
-                    feeds = feeds.map { it.toFeedRecord(revision = 0L) },
+                    token = token,
+                    feeds = feeds.map { it.toFeedRecord(revision = token) },
                     pageInfo = null,
                 ),
             )
@@ -165,7 +150,7 @@ class SecondaryFeedViewModelStoreObservationTest {
                     asHtml = false,
                     commitToStore = true,
                     queryKey = queryKey,
-                    queryGeneration = generation,
+                    readToken = token,
                 )
         }
     }
@@ -173,7 +158,7 @@ class SecondaryFeedViewModelStoreObservationTest {
     private fun stubMediaPage(
         queryKey: FeedQueryKey,
         page: Int,
-        generation: Int,
+        token: Long,
         feeds: List<FeedList>,
     ) {
         val content = PageContainer<FeedList>().apply { pageData = feeds }
@@ -182,8 +167,8 @@ class SecondaryFeedViewModelStoreObservationTest {
                 FeedStoreChange.PageLoaded(
                     queryKey = queryKey,
                     page = page,
-                    generation = generation,
-                    feeds = feeds.map { it.toFeedRecord(revision = 0L) },
+                    token = token,
+                    feeds = feeds.map { it.toFeedRecord(revision = token) },
                     pageInfo = null,
                 ),
             )
@@ -197,7 +182,7 @@ class SecondaryFeedViewModelStoreObservationTest {
                     perPage = 20,
                     commitToStore = true,
                     queryKey = queryKey,
-                    queryGeneration = generation,
+                    readToken = token,
                 )
         }
     }

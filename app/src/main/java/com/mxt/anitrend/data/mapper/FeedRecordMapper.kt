@@ -27,6 +27,7 @@ fun FeedList.toFeedRecord(revision: Long = 0L): FeedRecord = FeedRecord(
     messenger = messenger?.toUserSummaryRecord(),
     recipient = recipient?.toUserSummaryRecord(),
     media = media?.toMediaSummaryRecord(),
+    hasLikes = likes != null,
     likes = likes.orEmpty().map { it.toUserSummaryRecord() },
     replyCount = replyCount,
     siteUrl = siteUrl,
@@ -91,7 +92,7 @@ fun FeedRecord.toFeedList(replies: List<FeedReply> = emptyList()): FeedList = Fe
     media = media?.toMediaBase(),
     messenger = messenger?.toUserBase(),
     recipient = recipient?.toUserBase(),
-    likes = likes.map(UserSummaryRecord::toUserBase),
+    likes = if (hasLikes) likes.map(UserSummaryRecord::toUserBase) else null,
     siteUrl = siteUrl,
 ).apply {
     this.replies = replies

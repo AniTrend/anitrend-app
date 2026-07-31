@@ -1,9 +1,9 @@
 package com.mxt.anitrend.data.store.mutation
 
 interface MutationExecutor {
-    suspend fun <T> execute(
+    suspend fun execute(
         resourceKey: ResourceKey,
         operationKey: OperationKey,
-        block: suspend () -> T,
-    ): T
+        block: suspend (context: MutationContext) -> MutationResult,
+    ): MutationResult
 }

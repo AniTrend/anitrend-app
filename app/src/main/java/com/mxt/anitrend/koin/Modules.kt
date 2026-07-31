@@ -34,7 +34,7 @@ import com.mxt.anitrend.base.plugin.image.ImageConfigurationPlugin
 import com.mxt.anitrend.base.plugin.text.TextConfigurationPlugin
 import com.mxt.anitrend.data.DatabaseHelper
 import com.mxt.anitrend.data.store.AccountStoreClearer
-import com.mxt.anitrend.data.store.mutation.RevisionProvider
+import com.mxt.anitrend.data.store.mutation.RequestSequence
 import com.mxt.anitrend.data.store.feed.FeedStore
 import com.mxt.anitrend.data.store.feed.InMemoryFeedStore
 import com.mxt.anitrend.data.store.medialist.InMemoryMediaListStore
@@ -48,6 +48,7 @@ import com.mxt.anitrend.data.store.mutation.KeyedMutex
 import com.mxt.anitrend.data.store.mutation.MutationExecutor
 import com.mxt.anitrend.data.store.mutation.MutationRegistry
 import com.mxt.anitrend.data.store.mutation.OperationIdGenerator
+import com.mxt.anitrend.data.store.mutation.SessionEpoch
 import com.mxt.anitrend.extension.logFile
 import com.mxt.anitrend.domain.feed.interactor.DeleteFeedInteractor
 import com.mxt.anitrend.domain.feed.interactor.DeleteReplyInteractor
@@ -57,6 +58,7 @@ import com.mxt.anitrend.domain.like.interactor.ToggleLikeInteractor
 import com.mxt.anitrend.domain.medialist.interactor.DeleteMediaListEntryInteractor
 import com.mxt.anitrend.domain.medialist.interactor.IncrementMediaProgressInteractor
 import com.mxt.anitrend.domain.medialist.interactor.SaveMediaListEntryInteractor
+import com.mxt.anitrend.domain.review.interactor.RateReviewInteractor
 import com.mxt.anitrend.graphql.generated.GeneratedGraphQLRegistry
 import com.mxt.anitrend.model.api.converter.AniGraphConverter
 import com.mxt.anitrend.model.api.interceptor.AuthInterceptor
@@ -545,7 +547,7 @@ private val repositoryModule = module {
     single<FeedStore> { InMemoryFeedStore() }
     single<MediaListStore> { InMemoryMediaListStore() }
     single<ReviewStore> { InMemoryReviewStore() }
-    single { AccountStoreClearer(feedStore = get(), mediaListStore = get(), reviewStore = get(), mutationRegistry = get()) }
+    single { AccountStoreClearer(feedStore = get(), mediaListStore = get(), reviewStore = get(), mutationRegistry = get(), sessionEpoch = get()) }
     single { BrowseRepository(browseService = get(), mediaListStore = get(), reviewStore = get()) }
     single { CharacterRepository(characterService = get()) }
     single { StaffRepository(staffService = get()) }
@@ -554,35 +556,39 @@ private val repositoryModule = module {
     single { FeedRepository(feedService = get(), feedStore = get()) }
     single { BaseRepository(baseService = get(), boxQuery = get(), feedStore = get()) }
     single { CrunchyrollRepository(feedService = get(named("crunchyrollFeed")), crunchyrollService = get(named("crunchyroll"))) }
+    single { SessionEpoch() }
     single { KeyedMutex(coroutineScope = get(ApplicationScopeQualifier)) }
     single<MutationRegistry> { DefaultMutationRegistry() }
     single<OperationIdGenerator> { DefaultOperationIdGenerator() }
-    single { RevisionProvider() }
+    single { RequestSequence() }
     single<MutationExecutor> {
         DefaultMutationExecutor(
+            applicationScope = get(ApplicationScopeQualifier),
             keyedMutex = get(),
             mutationRegistry = get(),
             operationIdGenerator = get(),
+            sessionEpoch = get(),
         )
     }
-    single { ToggleLikeInteractor(baseRepository = get(), mutationExecutor = get(), feedStore = get(), revisionProvider = get()) }
-    single { SaveFeedInteractor(feedRepository = get(), mutationExecutor = get(), feedStore = get(), revisionProvider = get()) }
-    single { DeleteFeedInteractor(feedRepository = get(), mutationExecutor = get(), feedStore = get(), revisionProvider = get()) }
-    single { SaveReplyInteractor(feedRepository = get(), mutationExecutor = get(), feedStore = get(), revisionProvider = get()) }
-    single { DeleteReplyInteractor(feedRepository = get(), mutationExecutor = get(), feedStore = get(), revisionProvider = get()) }
-    single { SaveMediaListEntryInteractor(browseRepository = get(), mutationExecutor = get(), mediaListStore = get(), revisionProvider = get(), userRepository = get()) }
-    single { DeleteMediaListEntryInteractor(browseRepository = get(), mutationExecutor = get(), mediaListStore = get(), revisionProvider = get()) }
+    single { ToggleLikeInteractor(baseRepository = get(), mutationExecutor = get(), feedStore = get(), requestSequence = get()) }
+    single { SaveFeedInteractor(feedRepository = get(), mutationExecutor = get(), feedStore = get(), requestSequence = get()) }
+    single { DeleteFeedInteractor(feedRepository = get(), mutationExecutor = get(), feedStore = get(), requestSequence = get()) }
+    single { SaveReplyInteractor(feedRepository = get(), mutationExecutor = get(), feedStore = get(), requestSequence = get()) }
+    single { DeleteReplyInteractor(feedRepository = get(), mutationExecutor = get(), feedStore = get(), requestSequence = get()) }
+    single { SaveMediaListEntryInteractor(browseRepository = get(), mutationExecutor = get(), mediaListStore = get(), requestSequence = get(), userRepository = get()) }
+    single { DeleteMediaListEntryInteractor(browseRepository = get(), mutationExecutor = get(), mediaListStore = get(), requestSequence = get()) }
     single { IncrementMediaProgressInteractor(saveMediaListEntryInteractor = get()) }
+    single { RateReviewInteractor(browseRepository = get(), mutationExecutor = get(), reviewStore = get(), requestSequence = get()) }
 }
 
 private val mediaFeatureModule = module {
-    viewModel { AiringListViewModel(browseRepository = get(), mediaListStore = get(), mutationRegistry = get()) }
-    viewModel { BrowseReviewViewModel(browseRepository = get(), reviewStore = get()) }
+    viewModel { AiringListViewModel(browseRepository = get(), mediaListStore = get(), mutationRegistry = get(), requestSequence = get()) }
+    viewModel { BrowseReviewViewModel(browseRepository = get(), reviewStore = get(), requestSequence = get(), rateReviewInteractor = get()) }
     viewModel { MediaBrowseViewModel(baseRepository = get(), browseRepository = get(), mediaListStore = get()) }
     viewModel { MediaLatestViewModel(browseRepository = get()) }
-    viewModel { MediaListViewModel(browseRepository = get(), mediaListStore = get(), mutationRegistry = get(), userRepository = get(), settings = get()) }
+    viewModel { MediaListViewModel(browseRepository = get(), mediaListStore = get(), mutationRegistry = get(), userRepository = get(), settings = get(), requestSequence = get()) }
     viewModel { MediaListMutationViewModel(saveMediaListEntryInteractor = get(), deleteMediaListEntryInteractor = get(), incrementMediaProgressInteractor = get(), mutationRegistry = get()) }
-    viewModel { ReviewViewModel(browseRepository = get(), reviewStore = get()) }
+    viewModel { ReviewViewModel(browseRepository = get(), reviewStore = get(), requestSequence = get(), rateReviewInteractor = get()) }
     viewModel { SuggestionListViewModel(userRepository = get(), browseRepository = get()) }
     viewModel { MediaCharacterViewModel(mediaRepository = get()) }
     viewModel {
@@ -592,6 +598,7 @@ private val mediaFeatureModule = module {
             mutationRegistry = get(),
             toggleLikeInteractor = get(),
             deleteFeedInteractor = get(),
+            requestSequence = get(),
         )
     }
     viewModel { MediaOverviewViewModel(repository = get(), settings = get<Settings>()) }
@@ -614,6 +621,7 @@ private val userFeatureModule = module {
             mutationRegistry = get(),
             toggleLikeInteractor = get(),
             deleteFeedInteractor = get(),
+            requestSequence = get(),
         )
     }
     viewModel { UserListViewModel(userRepository = get()) }
@@ -627,6 +635,7 @@ private val userFeatureModule = module {
             mutationRegistry = get(),
             toggleLikeInteractor = get(),
             deleteFeedInteractor = get(),
+            requestSequence = get(),
         )
     }
     viewModel {
@@ -648,6 +657,7 @@ private val userFeatureModule = module {
             mutationRegistry = get(),
             toggleLikeInteractor = get(),
             deleteFeedInteractor = get(),
+            requestSequence = get(),
         )
     }
     viewModel { LoginUserViewModel(userRepository = get()) }

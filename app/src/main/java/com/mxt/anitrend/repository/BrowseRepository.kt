@@ -58,6 +58,7 @@ class BrowseRepository(
         scoreFormat: ScoreFormat = ScoreFormat.POINT_100,
         commitToStore: Boolean = true,
         queryKey: MediaListQueryKey? = null,
+        readToken: Long = 0L,
     ): Result<PageContainer<MediaListCollectionEntity>> = withContext(ioDispatcher) {
         runCatching {
             val request = MediaListCollection.request(
@@ -84,9 +85,10 @@ class BrowseRepository(
                     mediaListStore.apply(
                         MediaListStoreChange.CollectionLoaded(
                             queryKey = resolvedQueryKey,
+                            token = readToken,
                             entries = result.pageData.flatMap { it.entries.orEmpty() }.map {
                                 it.toMediaListRecord(
-                                    revision = 0L,
+                                    revision = readToken,
                                     ownerUserId = resolvedQueryKey.userId,
                                     ownerUserName = resolvedQueryKey.userName,
                                 )
@@ -149,7 +151,7 @@ class BrowseRepository(
         asHtml: Boolean = false,
         commitToStore: Boolean = true,
         queryKey: ReviewQueryKey? = null,
-        queryGeneration: Int = 0,
+        readToken: Long = 0L,
     ): Result<PageContainer<Review>> = withContext(ioDispatcher) {
         runCatching {
             val request = ReviewBrowse.request(page = page, perPage = perPage, mediaId = mediaId?.toInt(), type = type, sort = sort, asHtml = asHtml)
@@ -168,7 +170,7 @@ class BrowseRepository(
                         ReviewStoreChange.PageLoaded(
                             queryKey = resolvedQueryKey,
                             page = pageInfo?.currentPage ?: page ?: 1,
-                            generation = queryGeneration,
+                            token = readToken,
                             reviews = result.pageData,
                             pageInfo = pageInfo,
                         ),

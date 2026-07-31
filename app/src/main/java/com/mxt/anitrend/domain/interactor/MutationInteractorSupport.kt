@@ -1,25 +1,26 @@
 package com.mxt.anitrend.domain.interactor
 
+import com.mxt.anitrend.data.store.mutation.MutationContext
 import com.mxt.anitrend.data.store.mutation.MutationExecutor
 import com.mxt.anitrend.data.store.mutation.MutationResult
 import com.mxt.anitrend.data.store.mutation.OperationKey
 import com.mxt.anitrend.data.store.mutation.ResourceKey
-import com.mxt.anitrend.data.store.mutation.RevisionProvider
+import com.mxt.anitrend.data.store.mutation.RequestSequence
 import kotlin.coroutines.cancellation.CancellationException
 
 internal suspend fun executeMutation(
     mutationExecutor: MutationExecutor,
-    revisionProvider: RevisionProvider,
+    requestSequence: RequestSequence,
     resourceKey: ResourceKey,
     operationKey: OperationKey,
     failureMessage: String,
-    block: suspend (revision: Long) -> MutationResult,
+    block: suspend (revision: Long, context: MutationContext) -> MutationResult,
 ): MutationResult = try {
     mutationExecutor.execute(
         resourceKey = resourceKey,
         operationKey = operationKey,
-    ) {
-        block(revisionProvider.nextRevision(resourceKey))
+    ) { context ->
+        block(requestSequence.next(), context)
     }
 } catch (cancellation: CancellationException) {
     throw cancellation

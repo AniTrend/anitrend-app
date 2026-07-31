@@ -7,7 +7,7 @@ sealed interface ReviewStoreChange {
     data class PageLoaded(
         val queryKey: ReviewQueryKey,
         val page: Int,
-        val generation: Int,
+        val token: Long,
         val reviews: List<Review>,
         val pageInfo: PageInfoRecord?,
     ) : ReviewStoreChange

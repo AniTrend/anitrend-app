@@ -9,7 +9,8 @@ import com.mxt.anitrend.data.store.mutation.DefaultMutationExecutor
 import com.mxt.anitrend.data.store.mutation.DefaultMutationRegistry
 import com.mxt.anitrend.data.store.mutation.DefaultOperationIdGenerator
 import com.mxt.anitrend.data.store.mutation.KeyedMutex
-import com.mxt.anitrend.data.store.mutation.RevisionProvider
+import com.mxt.anitrend.data.store.mutation.RequestSequence
+import com.mxt.anitrend.data.store.mutation.SessionEpoch
 import com.mxt.anitrend.domain.feed.interactor.DeleteFeedInteractor
 import com.mxt.anitrend.domain.like.interactor.ToggleLikeInteractor
 import com.mxt.anitrend.graphql.generated.LikeableType
@@ -22,6 +23,7 @@ import com.mxt.anitrend.repository.FeedRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -63,13 +65,15 @@ class FeedListViewModelStoreObservationTest {
         store = InMemoryFeedStore()
         registry = DefaultMutationRegistry()
 
-        val mutationExecutor = DefaultMutationExecutor(KeyedMutex(CoroutineScope(dispatcher)), registry, DefaultOperationIdGenerator())
+        val applicationScope = CoroutineScope(SupervisorJob() + dispatcher)
+        val mutationExecutor = DefaultMutationExecutor(applicationScope = applicationScope, keyedMutex = KeyedMutex(applicationScope), mutationRegistry = registry, operationIdGenerator = DefaultOperationIdGenerator(), sessionEpoch = SessionEpoch())
         viewModel = FeedListViewModel(
             feedRepository = feedRepository,
             feedStore = store,
             mutationRegistry = registry,
-            toggleLikeInteractor = ToggleLikeInteractor(baseRepository, mutationExecutor, store, RevisionProvider()),
-            deleteFeedInteractor = DeleteFeedInteractor(feedRepository, mutationExecutor, store, RevisionProvider()),
+            toggleLikeInteractor = ToggleLikeInteractor(baseRepository, mutationExecutor, store, RequestSequence()),
+            deleteFeedInteractor = DeleteFeedInteractor(feedRepository, mutationExecutor, store, RequestSequence()),
+            requestSequence = RequestSequence(),
         )
     }
 
@@ -81,8 +85,8 @@ class FeedListViewModelStoreObservationTest {
     @Test
     fun `observe store query and derive accumulated items from store state`() = runTest {
         val collector = backgroundScope.launch { viewModel.state.collect {} }
-        stubPage(page = 1, generation = 1, feeds = listOf(feed(1L), feed(2L)))
-        stubPage(page = 2, generation = 1, feeds = listOf(feed(3L), feed(4L)))
+        stubPage(page = 1, token = 1L, feeds = listOf(feed(1L), feed(2L)))
+        stubPage(page = 2, token = 1L, feeds = listOf(feed(3L), feed(4L)))
 
         viewModel.load(page = 1, pageLimit = 20, isFollowing = null, type = null, isMixed = null)
         viewModel.load(page = 2, pageLimit = 20, isFollowing = null, type = null, isMixed = null)
@@ -98,7 +102,7 @@ class FeedListViewModelStoreObservationTest {
     @Test
     fun `like from list updates store and view model state`() = runTest {
         val collector = backgroundScope.launch { viewModel.state.collect {} }
-        stubPage(page = 1, generation = 1, feeds = listOf(feed(1L)))
+        stubPage(page = 1, token = 1L, feeds = listOf(feed(1L)))
         val likes = listOf(user(99L, "max"))
         doReturn(Result.success(likes))
             .`when`(baseRepository)
@@ -119,7 +123,7 @@ class FeedListViewModelStoreObservationTest {
     @Test
     fun `delete from list updates store and view model state`() = runTest {
         val collector = backgroundScope.launch { viewModel.state.collect {} }
-        stubPage(page = 1, generation = 1, feeds = listOf(feed(1L), feed(2L)))
+        stubPage(page = 1, token = 1L, feeds = listOf(feed(1L), feed(2L)))
         doReturn(Result.success(DeleteState(isDeleted = true)))
             .`when`(feedRepository)
             .deleteActivity(2L, false, 1L)
@@ -138,7 +142,7 @@ class FeedListViewModelStoreObservationTest {
 
     private fun stubPage(
         page: Int,
-        generation: Int,
+        token: Long,
         feeds: List<FeedList>,
     ) {
         val content = PageContainer<FeedList>().apply { pageData = feeds }
@@ -147,8 +151,8 @@ class FeedListViewModelStoreObservationTest {
                 FeedStoreChange.PageLoaded(
                     queryKey = queryKey,
                     page = page,
-                    generation = generation,
-                    feeds = feeds.map { it.toFeedRecord(revision = 0L) },
+                    token = token,
+                    feeds = feeds.map { it.toFeedRecord(revision = token) },
                     pageInfo = null,
                 ),
             )
@@ -166,7 +170,7 @@ class FeedListViewModelStoreObservationTest {
                     asHtml = false,
                     commitToStore = true,
                     queryKey = queryKey,
-                    queryGeneration = generation,
+                    readToken = token,
                 )
         }
     }

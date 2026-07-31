@@ -23,6 +23,8 @@ import com.mxt.anitrend.base.interfaces.event.ItemClickListener
 import com.mxt.anitrend.data.DatabaseHelper
 import com.mxt.anitrend.data.mapper.toUserBase
 import com.mxt.anitrend.domain.model.CommentReplyUiModel
+import com.mxt.anitrend.domain.model.FeedItemUiModel
+import com.mxt.anitrend.domain.model.toFeedItemUiModel
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.anilist.FeedReply
 import com.mxt.anitrend.model.entity.base.UserBase
@@ -79,8 +81,6 @@ class CommentFragment : FragmentBaseComment() {
         feedAdapter =
             FeedListAdapter(
                 experimentalMarkdown = settings.experimentalMarkdown,
-                currentUser = databaseHelper.currentUser,
-                resolveFeed = { feedId -> currentState().feed?.takeIf { it.id == feedId } },
                 onToggleLikeAction = { feedId ->
                     viewLifecycleOwner.lifecycleScope.launch {
                         commentViewModel.toggleFeedLike(feedId)
@@ -91,12 +91,12 @@ class CommentFragment : FragmentBaseComment() {
                         commentViewModel.deleteFeed(feedId)
                     }
                 },
-                onOpenMedia = { target, _ -> openFeedMedia(target) },
+                onOpenMedia = ::openFeedMedia,
                 onOpenComments = {},
                 onEditFeed = ::startFeedEdit,
-                onShowLikes = { showFeedLikes() },
+                onShowLikes = ::showFeedLikes,
                 onOpenProfile = { target, userId -> openProfile(target, userId) },
-                onLongPressMedia = { target, _ -> onFeedMediaLongPressed(target) },
+                onLongPressMedia = ::onFeedMediaLongPressed,
             )
         commentListAdapter =
             CommentListAdapter(
@@ -281,7 +281,14 @@ class CommentFragment : FragmentBaseComment() {
     }
 
     private fun renderState(state: CommentViewModel.CommentUiState) {
-        val headerItems = listOfNotNull(state.feedItem)
+        val currentUserId = databaseHelper.currentUser?.id
+        val headerItems =
+            listOfNotNull(
+                state.feed?.toFeedItemUiModel(currentUserId)?.copy(
+                    isLikePending = state.feedItem?.isLikePending ?: false,
+                    isDeletePending = state.feedItem?.isDeletePending ?: false,
+                ) ?: state.feedItem,
+            )
         feedAdapter.submitList(headerItems)
         commentListAdapter.submitList(state.replies)
 
@@ -344,8 +351,8 @@ class CommentFragment : FragmentBaseComment() {
         }
     }
 
-    private fun showFeedLikes() {
-        val likes = currentState().feed?.likes.orEmpty()
+    private fun showFeedLikes(feedId: Long) {
+        val likes = resolveCurrentFeedItem(feedId)?.likes.orEmpty().map { it.toUserBase() }
         if (likes.isNotEmpty()) {
             mBottomSheet =
                 BottomSheetUsers.Builder()
@@ -360,13 +367,17 @@ class CommentFragment : FragmentBaseComment() {
         }
     }
 
-    private fun openFeedMedia(target: View) {
-        val media = currentState().feed?.media ?: return
+    private fun openFeedMedia(
+        target: View,
+        feedId: Long,
+    ) {
+        val feedItem = resolveCurrentFeedItem(feedId) ?: return
+        val mediaId = feedItem.mediaId ?: return
         val host = activity ?: return
         val intent =
             Intent(host, MediaActivity::class.java).apply {
-                putExtra(KeyUtil.arg_id, media.id)
-                putExtra(KeyUtil.arg_mediaType, media.type)
+                putExtra(KeyUtil.arg_id, mediaId)
+                putExtra(KeyUtil.arg_mediaType, feedItem.mediaType)
             }
         CompatUtil.startRevealAnim(host, target, intent)
     }
@@ -384,7 +395,10 @@ class CommentFragment : FragmentBaseComment() {
         CompatUtil.startRevealAnim(host, target, intent)
     }
 
-    private fun onFeedMediaLongPressed(target: View): Boolean {
+    private fun onFeedMediaLongPressed(
+        target: View,
+        feedId: Long,
+    ): Boolean {
         if (!settings.isAuthenticated) {
             context?.let {
                 NotifyUtil.makeText(
@@ -396,14 +410,16 @@ class CommentFragment : FragmentBaseComment() {
             }
             return false
         }
-        val media = currentState().feed?.media ?: return false
+        val mediaId = resolveCurrentFeedItem(feedId)?.mediaId ?: return false
         val host = activity ?: return false
-        mediaActionUtil = MediaActionUtil.Builder().setId(media.id).build(host)
+        mediaActionUtil = MediaActionUtil.Builder().setId(mediaId).build(host)
         mediaActionUtil.startSeriesAction()
         return true
     }
 
     private fun currentState(): CommentViewModel.CommentUiState = commentViewModel.state.value
+
+    private fun resolveCurrentFeedItem(feedId: Long): FeedItemUiModel? = feedAdapter.currentList.firstOrNull { it.id == feedId }
 
     private fun CommentReplyUiModel.toFeedReply(): FeedReply = FeedReply(
         id = id,

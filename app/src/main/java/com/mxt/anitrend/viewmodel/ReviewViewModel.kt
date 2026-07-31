@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.mxt.anitrend.data.mapper.toPageInfo
 import com.mxt.anitrend.data.store.review.ReviewQueryKey
 import com.mxt.anitrend.data.store.review.ReviewStore
+import com.mxt.anitrend.data.store.mutation.RequestSequence
+import com.mxt.anitrend.domain.review.interactor.RateReviewInteractor
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.graphql.generated.ReviewRating
 import com.mxt.anitrend.model.entity.anilist.Review
@@ -25,6 +27,8 @@ import timber.log.Timber
 class ReviewViewModel(
     private val browseRepository: BrowseRepository,
     private val reviewStore: ReviewStore,
+    private val requestSequence: RequestSequence,
+    private val rateReviewInteractor: RateReviewInteractor,
 ) : ViewModel() {
 
     sealed interface UiState {
@@ -38,7 +42,7 @@ class ReviewViewModel(
 
     private data class ScreenState(
         val queryKey: ReviewQueryKey? = null,
-        val requestGeneration: Int = 0,
+        val requestToken: Long = 0L,
         val lastRequestedPage: Int = 1,
         val isLoading: Boolean = false,
         val errorMessage: String? = null,
@@ -85,11 +89,11 @@ class ReviewViewModel(
             mediaType = type,
             sort = null,
         )
-        val generation = screenState.value.requestGeneration.takeIf { page > 1 } ?: (screenState.value.requestGeneration + 1)
+        val token = if (page > 1) screenState.value.requestToken else requestSequence.next()
         screenState.update {
             it.copy(
                 queryKey = queryKey,
-                requestGeneration = generation,
+                requestToken = token,
                 lastRequestedPage = page,
                 isLoading = true,
                 errorMessage = null,
@@ -105,10 +109,10 @@ class ReviewViewModel(
                     type = type,
                     asHtml = false,
                     queryKey = queryKey,
-                    queryGeneration = generation,
+                    readToken = token,
                 ).getOrThrow()
             }.onSuccess {
-                if (screenState.value.requestGeneration != generation) {
+                if (screenState.value.requestToken != token) {
                     return@onSuccess
                 }
                 screenState.update { current ->
@@ -118,7 +122,7 @@ class ReviewViewModel(
                     )
                 }
             }.onFailure { throwable ->
-                if (screenState.value.requestGeneration != generation) {
+                if (screenState.value.requestToken != token) {
                     return@onFailure
                 }
                 Timber.e(throwable, "ReviewViewModel load failed")
@@ -132,13 +136,9 @@ class ReviewViewModel(
         }
     }
 
-    fun rateReview(
-        reviewId: Long,
-        rating: ReviewRating?,
-        onResult: (Result<Review>) -> Unit,
-    ) {
+    fun rateReview(reviewId: Long, rating: ReviewRating?) {
         viewModelScope.launch {
-            onResult(browseRepository.rateReview(id = reviewId, rating = rating))
+            rateReviewInteractor(reviewId, rating)
         }
     }
 }

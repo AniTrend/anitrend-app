@@ -6,7 +6,8 @@ import com.mxt.anitrend.data.store.mutation.DefaultMutationExecutor
 import com.mxt.anitrend.data.store.mutation.DefaultMutationRegistry
 import com.mxt.anitrend.data.store.mutation.KeyedMutex
 import com.mxt.anitrend.data.store.mutation.MutationResult
-import com.mxt.anitrend.data.store.mutation.RevisionProvider
+import com.mxt.anitrend.data.store.mutation.RequestSequence
+import com.mxt.anitrend.data.store.mutation.SessionEpoch
 import com.mxt.anitrend.domain.feed.model.FeedRecord
 import com.mxt.anitrend.domain.model.ToggleLikeCommand
 import com.mxt.anitrend.domain.model.UserSummaryRecord
@@ -43,9 +44,9 @@ class ToggleLikeInteractorTest {
 
         val interactor = ToggleLikeInteractor(
             baseRepository = repository,
-            mutationExecutor = DefaultMutationExecutor(KeyedMutex(backgroundScope), DefaultMutationRegistry(), com.mxt.anitrend.data.store.mutation.DefaultOperationIdGenerator()),
+            mutationExecutor = DefaultMutationExecutor(applicationScope = backgroundScope, keyedMutex = KeyedMutex(backgroundScope), mutationRegistry = DefaultMutationRegistry(), operationIdGenerator = com.mxt.anitrend.data.store.mutation.DefaultOperationIdGenerator(), sessionEpoch = SessionEpoch()),
             feedStore = store,
-            revisionProvider = RevisionProvider(),
+            requestSequence = RequestSequence(),
         )
 
         val result = interactor(ToggleLikeCommand(id = 1L, likeableType = LikeableType.ACTIVITY))
@@ -67,9 +68,9 @@ class ToggleLikeInteractorTest {
 
         val interactor = ToggleLikeInteractor(
             baseRepository = repository,
-            mutationExecutor = DefaultMutationExecutor(KeyedMutex(backgroundScope), DefaultMutationRegistry(), com.mxt.anitrend.data.store.mutation.DefaultOperationIdGenerator()),
+            mutationExecutor = DefaultMutationExecutor(applicationScope = backgroundScope, keyedMutex = KeyedMutex(backgroundScope), mutationRegistry = DefaultMutationRegistry(), operationIdGenerator = com.mxt.anitrend.data.store.mutation.DefaultOperationIdGenerator(), sessionEpoch = SessionEpoch()),
             feedStore = store,
-            revisionProvider = RevisionProvider(),
+            requestSequence = RequestSequence(),
         )
 
         val result = interactor(ToggleLikeCommand(id = 1L, likeableType = LikeableType.ACTIVITY))
@@ -117,9 +118,9 @@ class ToggleLikeInteractorTest {
 
         val interactor = ToggleLikeInteractor(
             baseRepository = repository,
-            mutationExecutor = DefaultMutationExecutor(KeyedMutex(backgroundScope), DefaultMutationRegistry(), com.mxt.anitrend.data.store.mutation.DefaultOperationIdGenerator()),
+            mutationExecutor = DefaultMutationExecutor(applicationScope = backgroundScope, keyedMutex = KeyedMutex(backgroundScope), mutationRegistry = DefaultMutationRegistry(), operationIdGenerator = com.mxt.anitrend.data.store.mutation.DefaultOperationIdGenerator(), sessionEpoch = SessionEpoch()),
             feedStore = store,
-            revisionProvider = RevisionProvider(),
+            requestSequence = RequestSequence(),
         )
 
         val first = launch(Dispatchers.Default) {

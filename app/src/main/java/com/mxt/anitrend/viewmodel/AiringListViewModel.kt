@@ -9,6 +9,7 @@ import com.mxt.anitrend.data.store.medialist.MediaListStore
 import com.mxt.anitrend.data.store.mutation.MutationRegistry
 import com.mxt.anitrend.data.store.mutation.OperationKey
 import com.mxt.anitrend.data.store.mutation.OperationStatus
+import com.mxt.anitrend.data.store.mutation.RequestSequence
 import com.mxt.anitrend.domain.model.MediaListItemUiModel
 import com.mxt.anitrend.domain.model.toMediaListItemUiModel
 import com.mxt.anitrend.graphql.generated.MediaListSort
@@ -34,6 +35,7 @@ class AiringListViewModel(
     private val browseRepository: BrowseRepository,
     private val mediaListStore: MediaListStore,
     private val mutationRegistry: MutationRegistry,
+    private val requestSequence: RequestSequence,
 ) : ViewModel() {
 
     sealed interface UiState {
@@ -51,7 +53,7 @@ class AiringListViewModel(
         val queryKey: MediaListQueryKey? = null,
         val isLoading: Boolean = false,
         val errorMessage: String? = null,
-        val requestGeneration: Int = 0,
+        val requestToken: Long = 0L,
     )
 
     private val screenState = MutableStateFlow(ScreenState())
@@ -128,16 +130,16 @@ class AiringListViewModel(
             statuses = statusList.orEmpty().toSet(),
             sort = sortList?.firstOrNull(),
         )
+        val token = requestSequence.next()
+        screenState.update {
+            it.copy(
+                queryKey = queryKey,
+                isLoading = true,
+                errorMessage = null,
+                requestToken = token,
+            )
+        }
         viewModelScope.launch {
-            val generation = screenState.value.requestGeneration + 1
-            screenState.update {
-                it.copy(
-                    queryKey = queryKey,
-                    isLoading = true,
-                    errorMessage = null,
-                    requestGeneration = generation,
-                )
-            }
             runCatching {
                 browseRepository.getMediaListCollection(
                     userId = userId.toLong(),
@@ -147,9 +149,10 @@ class AiringListViewModel(
                     statusIn = statusList,
                     scoreFormat = scoreFormat ?: ScoreFormat.POINT_100,
                     queryKey = queryKey,
+                    readToken = token,
                 ).getOrThrow()
             }.onSuccess {
-                if (screenState.value.requestGeneration != generation) {
+                if (screenState.value.requestToken != token) {
                     return@onSuccess
                 }
                 screenState.update { current ->
@@ -160,7 +163,7 @@ class AiringListViewModel(
                 }
             }.onFailure { throwable ->
                 Timber.e(throwable, "AiringListViewModel load failed")
-                if (screenState.value.requestGeneration != generation) {
+                if (screenState.value.requestToken != token) {
                     return@onFailure
                 }
                 screenState.update { current ->

@@ -29,7 +29,7 @@ class ReviewStoreClearTest {
             ReviewStoreChange.PageLoaded(
                 queryKey = queryKey,
                 page = 1,
-                generation = 1,
+                token = 1L,
                 reviews = listOf(review),
                 pageInfo = pageInfo(1),
             ),

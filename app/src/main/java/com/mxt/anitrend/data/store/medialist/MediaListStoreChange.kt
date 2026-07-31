@@ -6,6 +6,7 @@ import com.mxt.anitrend.domain.model.PageInfoRecord
 sealed interface MediaListStoreChange {
     data class CollectionLoaded(
         val queryKey: MediaListQueryKey,
+        val token: Long,
         val entries: List<MediaListRecord>,
         val pageInfo: PageInfoRecord?,
     ) : MediaListStoreChange

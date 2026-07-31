@@ -18,15 +18,11 @@ import com.mxt.anitrend.databinding.AdapterFeedStatusBinding
 import com.mxt.anitrend.databinding.CustomRecyclerUnresolvedBinding
 import com.mxt.anitrend.domain.model.FeedItemUiModel
 import com.mxt.anitrend.extension.getLayoutInflater
-import com.mxt.anitrend.model.entity.anilist.FeedList
-import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.date.DateUtil
 
 class FeedListAdapter(
     private val experimentalMarkdown: Boolean,
-    private val currentUser: UserBase?,
-    private val resolveFeed: (Long) -> FeedList?,
     private val onToggleLikeAction: (Long) -> Unit,
     private val onDeleteFeedAction: (Long) -> Unit,
     private val onOpenMedia: (View, Long) -> Unit,
@@ -104,7 +100,7 @@ class FeedListAdapter(
         return when {
             model.type == KeyUtil.TEXT -> ViewTypes.FEED_STATUS
             model.type == KeyUtil.MESSAGE -> ViewTypes.FEED_MESSAGE
-            model.type == KeyUtil.MEDIA_LIST && resolveFeed(model.id)?.likes == null -> ViewTypes.FEED_LIST
+            model.type == KeyUtil.MEDIA_LIST && !model.hasLikes -> ViewTypes.FEED_LIST
             else -> ViewTypes.FEED_PROGRESS
         }
     }
@@ -132,25 +128,16 @@ class FeedListAdapter(
             }
         }
 
-        protected fun canModify(feed: FeedList?): Boolean {
-            val currentUserId = currentUser?.id ?: return false
-            return when {
-                feed?.messenger?.id != null -> feed.messenger?.id == currentUserId
-                else -> feed?.user?.id == currentUserId
-            }
-        }
-
         override fun onClick(view: View) {
             val model = currentItem() ?: return
-            val feed = resolveFeed(model.id)
             when (view.id) {
                 R.id.series_image -> onOpenMedia(view, model.id)
                 R.id.widget_comment -> onOpenComments(model.id)
                 R.id.widget_edit -> onEditFeed(model.id)
                 R.id.widget_users -> onShowLikes(model.id)
-                R.id.user_avatar -> feed?.user?.id?.let { onOpenProfile(view, it) }
-                R.id.messenger_avatar -> feed?.messenger?.id?.let { onOpenProfile(view, it) }
-                R.id.recipient_avatar -> feed?.recipient?.id?.let { onOpenProfile(view, it) }
+                R.id.user_avatar -> model.userId?.let { onOpenProfile(view, it) }
+                R.id.messenger_avatar -> model.messengerId?.let { onOpenProfile(view, it) }
+                R.id.recipient_avatar -> model.recipientId?.let { onOpenProfile(view, it) }
             }
         }
 
@@ -177,25 +164,24 @@ class FeedListAdapter(
         }
 
         fun bind(model: FeedItemUiModel) {
-            val feed = resolveFeed(model.id)
-            binding.userAvatar.setImage(feed?.user?.avatar)
-            binding.userName.text = feed?.user?.name
-            binding.feedTime.text = feed?.createdAt?.let(DateUtil::getPrettyDateUnix)
+            binding.userAvatar.setImage(model.userAvatarUrl)
+            binding.userName.text = model.userName
+            binding.feedTime.text = DateUtil.getPrettyDateUnix(model.createdAt)
             binding.feedHeadline.text = model.headline
-            binding.mediaTitleEnglish.text = feed?.media?.title?.english
-            binding.mediaTitleOriginal.text = feed?.media?.title?.original
-            AspectImageView.setImage(binding.seriesImage, feed?.media?.coverImage)
+            binding.mediaTitleEnglish.text = model.mediaTitleEnglish
+            binding.mediaTitleOriginal.text = model.mediaTitleOriginal
+            AspectImageView.setImage(binding.seriesImage, model.mediaCoverImageUrl)
             binding.widgetFavourite.render(
                 FavouriteWidgetState(
                     count = model.likeCount,
-                    isLiked = model.isLikedByCurrentUser || (currentUser != null && feed?.likes.orEmpty().any { it.id == currentUser.id }),
+                    isLiked = model.isLikedByCurrentUser,
                     isEnabled = !model.isLikePending,
                     isLoading = model.isLikePending,
                 ),
             )
             binding.widgetFavourite.setOnToggleListener { onToggleLikeAction(model.id) }
             binding.widgetComment.setReplyCount(model.replyCount)
-            if (canModify(feed) && feed != null) {
+            if (model.canDelete) {
                 binding.widgetDelete.render(
                     StatusDeleteWidgetState(
                         isEnabled = !model.isDeletePending,
@@ -235,13 +221,13 @@ class FeedListAdapter(
         }
 
         fun bind(model: FeedItemUiModel) {
-            val feed = resolveFeed(model.id)
-            binding.userAvatar.setImage(feed?.user?.avatar)
-            binding.userName.text = feed?.user?.name
-            binding.feedTime.text = feed?.createdAt?.let(DateUtil::getPrettyDateUnix)
-            if (!experimentalMarkdown && feed != null) {
+            binding.userAvatar.setImage(model.userAvatarUrl)
+            binding.userName.text = model.userName
+            binding.feedTime.text = DateUtil.getPrettyDateUnix(model.createdAt)
+            if (!experimentalMarkdown) {
                 binding.widgetStatus.visibility = View.VISIBLE
-                binding.widgetStatus.setModel(feed)
+                binding.widgetStatus.onViewRecycled()
+                binding.widgetStatus.setTextData(model.feedText)
             } else {
                 binding.widgetStatus.visibility = View.GONE
             }
@@ -249,7 +235,7 @@ class FeedListAdapter(
             binding.widgetFavourite.render(
                 FavouriteWidgetState(
                     count = model.likeCount,
-                    isLiked = model.isLikedByCurrentUser || (currentUser != null && feed?.likes.orEmpty().any { it.id == currentUser.id }),
+                    isLiked = model.isLikedByCurrentUser,
                     isEnabled = !model.isLikePending,
                     isLoading = model.isLikePending,
                 ),
@@ -257,8 +243,8 @@ class FeedListAdapter(
             binding.widgetFavourite.setOnToggleListener { onToggleLikeAction(model.id) }
             binding.widgetComment.setReplyCount(model.replyCount)
 
-            binding.widgetEdit.visibility = if (canModify(feed)) View.VISIBLE else View.GONE
-            if (canModify(feed) && feed != null) {
+            binding.widgetEdit.visibility = if (model.canEdit) View.VISIBLE else View.GONE
+            if (model.canDelete) {
                 binding.widgetDelete.render(
                     StatusDeleteWidgetState(
                         isEnabled = !model.isDeletePending,
@@ -297,16 +283,18 @@ class FeedListAdapter(
         }
 
         fun bind(model: FeedItemUiModel) {
-            val feed = resolveFeed(model.id)
-            binding.messengerAvatar.setImage(feed?.messenger?.avatar)
-            binding.recipientAvatar.setImage(feed?.recipient?.avatar)
+            binding.messengerAvatar.setImage(model.messengerAvatarUrl)
+            binding.recipientAvatar.setImage(model.recipientAvatarUrl)
             binding.recipientUserName.visibility = View.VISIBLE
             binding.messengerUserName.visibility = View.GONE
-            binding.recipientUserName.text = feed?.recipient?.name ?: feed?.messenger?.name
-            binding.feedTime.text = feed?.createdAt?.let(DateUtil::getPrettyDateUnix)
-            if (!experimentalMarkdown && feed != null) {
+            val displayName = model.recipientName ?: model.messengerName
+            binding.recipientUserName.text = displayName
+            binding.messengerUserName.text = displayName
+            binding.feedTime.text = DateUtil.getPrettyDateUnix(model.createdAt)
+            if (!experimentalMarkdown) {
                 binding.widgetStatus.visibility = View.VISIBLE
-                binding.widgetStatus.setModel(feed)
+                binding.widgetStatus.onViewRecycled()
+                binding.widgetStatus.setTextData(model.feedText)
             } else {
                 binding.widgetStatus.visibility = View.GONE
             }
@@ -314,7 +302,7 @@ class FeedListAdapter(
             binding.widgetFavourite.render(
                 FavouriteWidgetState(
                     count = model.likeCount,
-                    isLiked = model.isLikedByCurrentUser || (currentUser != null && feed?.likes.orEmpty().any { it.id == currentUser.id }),
+                    isLiked = model.isLikedByCurrentUser,
                     isEnabled = !model.isLikePending,
                     isLoading = model.isLikePending,
                 ),
@@ -322,8 +310,8 @@ class FeedListAdapter(
             binding.widgetFavourite.setOnToggleListener { onToggleLikeAction(model.id) }
             binding.widgetComment.setReplyCount(model.replyCount)
 
-            binding.widgetEdit.visibility = if (canModify(feed)) View.VISIBLE else View.GONE
-            if (canModify(feed) && feed != null) {
+            binding.widgetEdit.visibility = if (model.canEdit) View.VISIBLE else View.GONE
+            if (model.canDelete) {
                 binding.widgetDelete.render(
                     StatusDeleteWidgetState(
                         isEnabled = !model.isDeletePending,
@@ -357,18 +345,17 @@ class FeedListAdapter(
         }
 
         fun bind(model: FeedItemUiModel) {
-            val feed = resolveFeed(model.id)
-            binding.userAvatar.setImage(feed?.user?.avatar)
-            binding.userName.text = feed?.user?.name
-            binding.feedTime.text = feed?.createdAt?.let(DateUtil::getPrettyDateUnix)
+            binding.userAvatar.setImage(model.userAvatarUrl)
+            binding.userName.text = model.userName
+            binding.feedTime.text = DateUtil.getPrettyDateUnix(model.createdAt)
             binding.feedHeadline.text = model.headline
-            binding.mediaTitleEnglish.text = feed?.media?.title?.english
-            binding.mediaTitleOriginal.text = feed?.media?.title?.original
-            AspectImageView.setImage(binding.seriesImage, feed?.media?.coverImage)
+            binding.mediaTitleEnglish.text = model.mediaTitleEnglish
+            binding.mediaTitleOriginal.text = model.mediaTitleOriginal
+            AspectImageView.setImage(binding.seriesImage, model.mediaCoverImageUrl)
             binding.widgetUsers.visibility = View.GONE
             binding.widgetFavourite.visibility = View.GONE
             binding.widgetComment.setReplyCount(model.replyCount)
-            if (canModify(feed) && feed != null) {
+            if (model.canDelete) {
                 binding.widgetDelete.render(
                     StatusDeleteWidgetState(
                         isEnabled = !model.isDeletePending,

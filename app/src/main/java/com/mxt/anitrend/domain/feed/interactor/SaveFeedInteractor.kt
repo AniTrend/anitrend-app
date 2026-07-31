@@ -7,7 +7,7 @@ import com.mxt.anitrend.data.store.mutation.MutationExecutor
 import com.mxt.anitrend.data.store.mutation.MutationResult
 import com.mxt.anitrend.data.store.mutation.OperationKey
 import com.mxt.anitrend.data.store.mutation.ResourceKey
-import com.mxt.anitrend.data.store.mutation.RevisionProvider
+import com.mxt.anitrend.data.store.mutation.RequestSequence
 import com.mxt.anitrend.domain.interactor.executeMutation
 import com.mxt.anitrend.repository.FeedRepository
 
@@ -33,7 +33,7 @@ class SaveFeedInteractor(
     private val feedRepository: FeedRepository,
     private val mutationExecutor: MutationExecutor,
     private val feedStore: FeedStore,
-    private val revisionProvider: RevisionProvider,
+    private val requestSequence: RequestSequence,
 ) {
     suspend operator fun invoke(request: SaveFeedRequest): MutationResult {
         val resourceKey = ResourceKey.Feed(request.id ?: 0L)
@@ -41,11 +41,11 @@ class SaveFeedInteractor(
 
         return executeMutation(
             mutationExecutor = mutationExecutor,
-            revisionProvider = revisionProvider,
+            requestSequence = requestSequence,
             resourceKey = resourceKey,
             operationKey = operationKey,
             failureMessage = "Unable to save feed",
-        ) { revision ->
+        ) { revision, context ->
             val result =
                 when (request) {
                     is SaveFeedRequest.Text ->
@@ -69,6 +69,7 @@ class SaveFeedInteractor(
 
             result.fold(
                 onSuccess = { feed ->
+                    context.ensureSessionActive()
                     feedStore.apply(
                         FeedStoreChange.FeedUpserted(
                             feed = feed.toFeedRecord(revision = revision),

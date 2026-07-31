@@ -163,7 +163,7 @@ class MediaRepository(
         perPage: Int? = null,
         commitToStore: Boolean = true,
         queryKey: FeedQueryKey? = null,
-        queryGeneration: Int = 0,
+        readToken: Long = 0L,
     ): Result<PageContainer<FeedList>> = withContext(ioDispatcher) {
         runCatching {
             val request = MediaSocial.request(mediaId = mediaId.toInt(), isFollowing = isFollowing, page = page, perPage = perPage)
@@ -185,8 +185,8 @@ class MediaRepository(
                         FeedStoreChange.PageLoaded(
                             queryKey = resolvedQueryKey,
                             page = pageInfo?.currentPage ?: page ?: 1,
-                            generation = queryGeneration,
-                            feeds = result.pageData.map { it.toFeedRecord(revision = 0L) },
+                            token = readToken,
+                            feeds = result.pageData.map { it.toFeedRecord(revision = readToken) },
                             pageInfo = pageInfo,
                         ),
                     )

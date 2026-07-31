@@ -28,7 +28,7 @@ class ReviewStoreTest {
             ReviewStoreChange.PageLoaded(
                 queryKey = queryKey,
                 page = 1,
-                generation = 1,
+                token = 1L,
                 reviews = listOf(review(1L), review(2L)),
                 pageInfo = pageInfo(1),
             ),
@@ -37,7 +37,7 @@ class ReviewStoreTest {
             ReviewStoreChange.PageLoaded(
                 queryKey = queryKey,
                 page = 2,
-                generation = 1,
+                token = 1L,
                 reviews = listOf(review(3L), review(4L)),
                 pageInfo = pageInfo(2),
             ),
@@ -53,7 +53,7 @@ class ReviewStoreTest {
             ReviewStoreChange.PageLoaded(
                 queryKey = queryKey,
                 page = 1,
-                generation = 1,
+                token = 1L,
                 reviews = listOf(review(1L), review(2L)),
                 pageInfo = pageInfo(1),
             ),
@@ -82,7 +82,7 @@ class ReviewStoreTest {
             ReviewStoreChange.PageLoaded(
                 queryKey = queryKey,
                 page = 1,
-                generation = 1,
+                token = 1L,
                 reviews = emptyList(),
                 pageInfo = pageInfo(1),
             ),

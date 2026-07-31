@@ -8,7 +8,8 @@ import com.mxt.anitrend.data.store.mutation.DefaultMutationRegistry
 import com.mxt.anitrend.data.store.mutation.DefaultOperationIdGenerator
 import com.mxt.anitrend.data.store.mutation.KeyedMutex
 import com.mxt.anitrend.data.store.mutation.MutationResult
-import com.mxt.anitrend.data.store.mutation.RevisionProvider
+import com.mxt.anitrend.data.store.mutation.RequestSequence
+import com.mxt.anitrend.data.store.mutation.SessionEpoch
 import com.mxt.anitrend.domain.medialist.interactor.SaveMediaListEntryInteractor
 import com.mxt.anitrend.domain.model.SaveMediaListEntryCommand
 import com.mxt.anitrend.fixture.MediaListFixtures.aMediaList
@@ -72,6 +73,7 @@ class CrossScreenConvergenceTest {
         store.apply(
             MediaListStoreChange.CollectionLoaded(
                 queryKey = queryKey,
+                token = 1L,
                 entries = emptyList(),
                 pageInfo = null,
             ),
@@ -109,9 +111,9 @@ class CrossScreenConvergenceTest {
 
         val interactor = SaveMediaListEntryInteractor(
             browseRepository = repository,
-            mutationExecutor = DefaultMutationExecutor(KeyedMutex(backgroundScope), DefaultMutationRegistry(), DefaultOperationIdGenerator()),
+            mutationExecutor = DefaultMutationExecutor(applicationScope = backgroundScope, keyedMutex = KeyedMutex(backgroundScope), mutationRegistry = DefaultMutationRegistry(), operationIdGenerator = DefaultOperationIdGenerator(), sessionEpoch = SessionEpoch()),
             mediaListStore = store,
-            revisionProvider = RevisionProvider(),
+            requestSequence = RequestSequence(),
             userRepository = userRepository,
         )
         val observerOne = async { store.observeQuery(queryKey).drop(1).first() }

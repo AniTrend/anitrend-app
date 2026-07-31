@@ -7,7 +7,8 @@ import com.mxt.anitrend.data.store.mutation.DefaultMutationRegistry
 import com.mxt.anitrend.data.store.mutation.DefaultOperationIdGenerator
 import com.mxt.anitrend.data.store.mutation.KeyedMutex
 import com.mxt.anitrend.data.store.mutation.MutationResult
-import com.mxt.anitrend.data.store.mutation.RevisionProvider
+import com.mxt.anitrend.data.store.mutation.RequestSequence
+import com.mxt.anitrend.data.store.mutation.SessionEpoch
 import com.mxt.anitrend.domain.feed.model.FeedRecord
 import com.mxt.anitrend.domain.model.DeleteFeedCommand
 import com.mxt.anitrend.model.entity.anilist.meta.DeleteState
@@ -35,9 +36,9 @@ class DeleteFeedInteractorTest {
 
         val interactor = DeleteFeedInteractor(
             feedRepository = repository,
-            mutationExecutor = DefaultMutationExecutor(KeyedMutex(backgroundScope), DefaultMutationRegistry(), DefaultOperationIdGenerator()),
+            mutationExecutor = DefaultMutationExecutor(applicationScope = backgroundScope, keyedMutex = KeyedMutex(backgroundScope), mutationRegistry = DefaultMutationRegistry(), operationIdGenerator = DefaultOperationIdGenerator(), sessionEpoch = SessionEpoch()),
             feedStore = store,
-            revisionProvider = RevisionProvider(),
+            requestSequence = RequestSequence(),
         )
 
         val result = interactor(DeleteFeedCommand(feedId = 5L))
@@ -58,9 +59,9 @@ class DeleteFeedInteractorTest {
 
         val interactor = DeleteFeedInteractor(
             feedRepository = repository,
-            mutationExecutor = DefaultMutationExecutor(KeyedMutex(backgroundScope), DefaultMutationRegistry(), DefaultOperationIdGenerator()),
+            mutationExecutor = DefaultMutationExecutor(applicationScope = backgroundScope, keyedMutex = KeyedMutex(backgroundScope), mutationRegistry = DefaultMutationRegistry(), operationIdGenerator = DefaultOperationIdGenerator(), sessionEpoch = SessionEpoch()),
             feedStore = store,
-            revisionProvider = RevisionProvider(),
+            requestSequence = RequestSequence(),
         )
 
         val result = interactor(DeleteFeedCommand(feedId = 5L))

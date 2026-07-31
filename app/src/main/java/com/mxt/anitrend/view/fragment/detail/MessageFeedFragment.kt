@@ -1,17 +1,13 @@
 package com.mxt.anitrend.view.fragment.detail
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
-import com.mxt.anitrend.adapter.recycler.index.FeedAdapter
 import com.mxt.anitrend.model.entity.anilist.FeedList
-import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
-import com.mxt.anitrend.view.activity.detail.ProfileActivity
 import com.mxt.anitrend.view.fragment.list.FeedListFragment
 import com.mxt.anitrend.view.sheet.BottomSheetComposer
 import com.mxt.anitrend.viewmodel.MessageFeedViewModel
@@ -23,11 +19,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * MessageFeedFragment
  */
 class MessageFeedFragment : FeedListFragment() {
-    override val useStateListAdapter: Boolean = false
-
     private var userId: Long = 0
 
-    @KeyUtil.MessageType
     private var messageType: Int = 0
 
     private val messageFeedViewModel: MessageFeedViewModel by viewModel()
@@ -36,7 +29,7 @@ class MessageFeedFragment : FeedListFragment() {
         @JvmStatic
         fun newInstance(
             params: Bundle,
-            @KeyUtil.MessageType messageType: Int,
+            messageType: Int,
         ): MessageFeedFragment {
             val args =
                 Bundle(params).apply {
@@ -56,7 +49,6 @@ class MessageFeedFragment : FeedListFragment() {
         }
         isMenuDisabled = true
         isFeed = false
-        (mAdapter as? FeedAdapter)?.setMessageType(messageType)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -70,7 +62,7 @@ class MessageFeedFragment : FeedListFragment() {
                             // Loading is handled by swipeRefreshLayout in the base class
                         }
                         is MessageFeedViewModel.UiState.Success -> {
-                            handleSuccess(state.content, replaceExisting = state.replaceExisting)
+                            handleSuccess(state.content, state.items, state.replaceExisting)
                         }
                         is MessageFeedViewModel.UiState.Error -> {
                             showError(state.message)
@@ -91,58 +83,27 @@ class MessageFeedFragment : FeedListFragment() {
         )
     }
 
-    override fun applyUpdatedFeedResult(feed: FeedList) {
-        messageFeedViewModel.applyReturnedFeed(feed)
-    }
-
-    override fun handleLegacyToggleLike(feedId: Long) {
+    override fun onToggleLike(feedId: Long) {
         messageFeedViewModel.toggleLike(feedId)
     }
 
-    override fun handleLegacyDeleteFeed(feedId: Long) {
+    override fun onDeleteFeed(feedId: Long) {
         messageFeedViewModel.deleteFeed(feedId)
     }
 
-    override fun onItemClick(
-        target: View,
-        data: IndexedValue<FeedList>,
-    ) {
-        when (target.id) {
-            R.id.messenger_avatar -> {
-                data.value.messenger?.let { messenger ->
-                    val host = activity ?: return
-                    val intent =
-                        Intent(host, ProfileActivity::class.java).apply {
-                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                            putExtra(KeyUtil.arg_id, messenger.id)
-                        }
-                    CompatUtil.startRevealAnim(host, target, intent)
-                }
-            }
-            R.id.recipient_avatar -> {
-                data.value.recipient?.let { recipient ->
-                    val host = activity ?: return
-                    val intent =
-                        Intent(host, ProfileActivity::class.java).apply {
-                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                            putExtra(KeyUtil.arg_id, recipient.id)
-                        }
-                    CompatUtil.startRevealAnim(host, target, intent)
-                }
-            }
-            R.id.widget_edit -> {
-                val recipient = data.value.recipient ?: return
-                mBottomSheet =
-                    BottomSheetComposer
-                        .Builder()
-                        .setUserActivity(data.value)
-                        .setRequestMode(KeyUtil.MUT_SAVE_MESSAGE_FEED)
-                        .setUserModel(recipient)
-                        .setTitle(R.string.edit_status_title)
-                        .build()
-                showBottomSheet()
-            }
-            else -> super.onItemClick(target, data)
-        }
+    override fun currentRenderedFeeds(): List<FeedList> = (messageFeedViewModel.state.value as? MessageFeedViewModel.UiState.Success)?.content?.pageData.orEmpty()
+
+    override fun editFeed(feedId: Long) {
+        val feed = currentRenderedFeeds().firstOrNull { it.id == feedId } ?: return
+        val recipient = feed.recipient ?: return
+        mBottomSheet =
+            BottomSheetComposer
+                .Builder()
+                .setUserActivity(feed)
+                .setRequestMode(KeyUtil.MUT_SAVE_MESSAGE_FEED)
+                .setUserModel(recipient)
+                .setTitle(R.string.edit_status_title)
+                .build()
+        showBottomSheet()
     }
 }

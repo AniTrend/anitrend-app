@@ -29,7 +29,7 @@ import com.mxt.anitrend.util.date.DateUtil
 class ReviewAdapter(
     context: Context,
     private val currentUser: UserBase?,
-    private val onRateReviewAction: (Long, ReviewRating?, (Result<Review>) -> Unit) -> Unit,
+    private val onRateReviewAction: (Long, ReviewRating?) -> Unit,
     private val isMediaType: Boolean = false,
 ) : RecyclerViewAdapter<Review>(context) {
     override fun onCreateViewHolder(
@@ -51,8 +51,7 @@ class ReviewAdapter(
         override fun onRateReview(
             id: Long,
             rating: ReviewRating?,
-            onResult: (Result<Review>) -> Unit,
-        ) = onRateReviewAction(id, rating, onResult)
+        ) = onRateReviewAction(id, rating)
     }
 
     inner class ReviewBanner(

@@ -4,6 +4,7 @@ import com.mxt.anitrend.data.mapper.toMediaListRecord
 import com.mxt.anitrend.data.store.medialist.InMemoryMediaListStore
 import com.mxt.anitrend.data.store.medialist.MediaListQueryKey
 import com.mxt.anitrend.data.store.medialist.MediaListStoreChange
+import com.mxt.anitrend.data.store.mutation.RequestSequence
 import com.mxt.anitrend.data.store.mutation.DefaultMutationRegistry
 import com.mxt.anitrend.fixture.MediaListFixtures.aMediaList
 import com.mxt.anitrend.fixture.MediaListFixtures.anAiringMediaBase
@@ -68,6 +69,7 @@ class AiringListViewModelTest {
             browseRepository = browseRepository,
             mediaListStore = mediaListStore,
             mutationRegistry = DefaultMutationRegistry(),
+            requestSequence = RequestSequence(),
         )
 
         assertTrue(vm.state.value is AiringListViewModel.UiState.Loading)
@@ -92,12 +94,14 @@ class AiringListViewModelTest {
                 scoreFormat = ScoreFormat.POINT_10,
                 commitToStore = true,
                 queryKey = queryKey,
+                readToken = 1L,
             )
 
         val vm = AiringListViewModel(
             browseRepository = browseRepository,
             mediaListStore = mediaListStore,
             mutationRegistry = DefaultMutationRegistry(),
+            requestSequence = RequestSequence(),
         )
         val collector = backgroundScope.launch { vm.state.collect {} }
 
@@ -111,6 +115,7 @@ class AiringListViewModelTest {
         mediaListStore.apply(
             MediaListStoreChange.CollectionLoaded(
                 queryKey = queryKey,
+                token = 1L,
                 entries = listOf(entry.toMediaListRecord(revision = 1L, ownerUserId = 10L)),
                 pageInfo = null,
             ),
@@ -130,6 +135,7 @@ class AiringListViewModelTest {
             scoreFormat = ScoreFormat.POINT_10,
             commitToStore = true,
             queryKey = queryKey,
+            readToken = 1L,
         )
         collector.cancel()
     }
@@ -153,12 +159,14 @@ class AiringListViewModelTest {
                 scoreFormat = ScoreFormat.POINT_100,
                 commitToStore = true,
                 queryKey = queryKey,
+                readToken = 1L,
             )
 
         val vm = AiringListViewModel(
             browseRepository = browseRepository,
             mediaListStore = mediaListStore,
             mutationRegistry = DefaultMutationRegistry(),
+            requestSequence = RequestSequence(),
         )
         val collector = backgroundScope.launch { vm.state.collect {} }
 
@@ -172,6 +180,7 @@ class AiringListViewModelTest {
         mediaListStore.apply(
             MediaListStoreChange.CollectionLoaded(
                 queryKey = queryKey,
+                token = 1L,
                 entries = listOf(entry.toMediaListRecord(revision = 1L, ownerUserId = 10L)),
                 pageInfo = null,
             ),
@@ -225,12 +234,14 @@ class AiringListViewModelTest {
                     statuses = emptySet(),
                     sort = null,
                 ),
+                readToken = 1L,
             )
 
         val vm = AiringListViewModel(
             browseRepository = browseRepository,
             mediaListStore = mediaListStore,
             mutationRegistry = DefaultMutationRegistry(),
+            requestSequence = RequestSequence(),
         )
         val collector = backgroundScope.launch { vm.state.collect {} }
 

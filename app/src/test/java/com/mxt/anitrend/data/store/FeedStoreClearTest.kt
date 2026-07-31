@@ -34,7 +34,7 @@ class FeedStoreClearTest {
             FeedStoreChange.PageLoaded(
                 queryKey = queryKey,
                 page = 1,
-                generation = 1,
+                token = 1L,
                 feeds = listOf(feed),
                 pageInfo = createPageInfo(1),
             ),

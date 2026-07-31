@@ -4,6 +4,7 @@ import com.mxt.anitrend.data.mapper.toMediaListRecord
 import com.mxt.anitrend.data.store.medialist.InMemoryMediaListStore
 import com.mxt.anitrend.data.store.medialist.MediaListQueryKey
 import com.mxt.anitrend.data.store.medialist.MediaListStoreChange
+import com.mxt.anitrend.data.store.mutation.RequestSequence
 import com.mxt.anitrend.data.store.mutation.DefaultMutationRegistry
 import com.mxt.anitrend.fixture.MediaListFixtures.aMediaList
 import com.mxt.anitrend.graphql.generated.MediaListSort
@@ -14,6 +15,7 @@ import com.mxt.anitrend.model.api.retro.anilist.BrowseService
 import com.mxt.anitrend.model.entity.anilist.MediaList
 import com.mxt.anitrend.model.entity.anilist.MediaListCollection
 import com.mxt.anitrend.model.entity.anilist.User
+import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.repository.BrowseRepository
 import com.mxt.anitrend.repository.UserRepository
@@ -22,7 +24,7 @@ import com.mxt.anitrend.util.Settings
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -36,11 +38,13 @@ import org.mockito.Mockito.doReturn
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.spy
 import org.mockito.Mockito.verify
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class MediaListViewModelStoreObservationTest {
 
-    private val testDispatcher = StandardTestDispatcher()
+    private val testDispatcher = UnconfinedTestDispatcher()
     private lateinit var browseRepository: BrowseRepository
     private lateinit var mediaListStore: InMemoryMediaListStore
     private lateinit var userRepository: UserRepository
@@ -81,7 +85,7 @@ class MediaListViewModelStoreObservationTest {
 
     @Test
     fun `observe store query emits rendered items from canonical store`() = runTest(testDispatcher) {
-        val entry = aMediaList(id = 1L, mediaId = 100L, progress = 5)
+        val entry = mediaListEntity(id = 1L, mediaId = 100L, progress = 5)
         doReturn(Result.success(pageContainer(entry))).`when`(browseRepository).getMediaListCollection(
             userId = 42L,
             userName = null,
@@ -92,6 +96,7 @@ class MediaListViewModelStoreObservationTest {
             scoreFormat = ScoreFormat.POINT_100,
             commitToStore = true,
             queryKey = queryKey,
+            readToken = 1L,
         )
 
         val viewModel = MediaListViewModel(
@@ -100,7 +105,8 @@ class MediaListViewModelStoreObservationTest {
             mutationRegistry = DefaultMutationRegistry(),
             userRepository = userRepository,
             settings = settings,
-            ioDispatcher = testDispatcher,
+            requestSequence = RequestSequence(),
+            ioDispatcher = Dispatchers.IO,
         )
         val collector = backgroundScope.launch { viewModel.state.collect {} }
 
@@ -108,6 +114,7 @@ class MediaListViewModelStoreObservationTest {
         mediaListStore.apply(
             MediaListStoreChange.CollectionLoaded(
                 queryKey = queryKey,
+                token = 1L,
                 entries = listOf(entry.toMediaListRecord(revision = 1L, ownerUserId = 42L, ownerUserName = "max")),
                 pageInfo = null,
             ),
@@ -128,6 +135,7 @@ class MediaListViewModelStoreObservationTest {
             scoreFormat = ScoreFormat.POINT_100,
             commitToStore = true,
             queryKey = queryKey,
+            readToken = 1L,
         )
         collector.cancel()
     }
@@ -146,6 +154,7 @@ class MediaListViewModelStoreObservationTest {
             scoreFormat = ScoreFormat.POINT_100,
             commitToStore = true,
             queryKey = queryKey,
+            readToken = 1L,
         )
 
         val viewModel = MediaListViewModel(
@@ -154,6 +163,7 @@ class MediaListViewModelStoreObservationTest {
             mutationRegistry = DefaultMutationRegistry(),
             userRepository = userRepository,
             settings = settings,
+            requestSequence = RequestSequence(),
             ioDispatcher = testDispatcher,
         )
         val collector = backgroundScope.launch { viewModel.state.collect {} }
@@ -162,6 +172,7 @@ class MediaListViewModelStoreObservationTest {
         mediaListStore.apply(
             MediaListStoreChange.CollectionLoaded(
                 queryKey = queryKey,
+                token = 1L,
                 entries = listOf(entry.toMediaListRecord(revision = 1L, ownerUserId = 42L, ownerUserName = "max")),
                 pageInfo = null,
             ),
@@ -192,6 +203,7 @@ class MediaListViewModelStoreObservationTest {
             scoreFormat = ScoreFormat.POINT_100,
             commitToStore = true,
             queryKey = queryKey,
+            readToken = 1L,
         )
 
         val viewModel = MediaListViewModel(
@@ -200,6 +212,7 @@ class MediaListViewModelStoreObservationTest {
             mutationRegistry = DefaultMutationRegistry(),
             userRepository = userRepository,
             settings = settings,
+            requestSequence = RequestSequence(),
             ioDispatcher = testDispatcher,
         )
         val collector = backgroundScope.launch { viewModel.state.collect {} }
@@ -208,6 +221,7 @@ class MediaListViewModelStoreObservationTest {
         mediaListStore.apply(
             MediaListStoreChange.CollectionLoaded(
                 queryKey = queryKey,
+                token = 1L,
                 entries = listOf(entry.toMediaListRecord(revision = 1L, ownerUserId = 42L, ownerUserName = "max")),
                 pageInfo = null,
             ),
@@ -255,6 +269,87 @@ class MediaListViewModelStoreObservationTest {
         collector.cancel()
     }
 
+    @Test
+    fun `stale failure does not overwrite newer successful load`() = runTest(testDispatcher) {
+        val localBrowseRepository = mock(BrowseRepository::class.java)
+        val firstStarted = CountDownLatch(1)
+        val releaseFirst = CountDownLatch(1)
+        val secondStarted = CountDownLatch(1)
+        val entry = aMediaList(id = 1L, mediaId = 100L, progress = 5)
+
+        doReturn(KeyUtil.PROGRESS).`when`(settings).mediaListSort
+        doReturn(KeyUtil.DESC).`when`(settings).sortOrder
+
+        org.mockito.Mockito.doAnswer {
+            firstStarted.countDown()
+            releaseFirst.await(5, TimeUnit.SECONDS)
+            Result.failure<PageContainer<MediaListCollection>>(RuntimeException("stale failure"))
+        }
+            .`when`(localBrowseRepository)
+            .getMediaListCollection(
+                userId = 42L,
+                userName = null,
+                type = MediaType.ANIME,
+                forceSingleCompletedList = true,
+                sort = listOf(MediaListSort.PROGRESS_DESC),
+                statusIn = listOf(MediaListStatus.CURRENT),
+                scoreFormat = ScoreFormat.POINT_100,
+                commitToStore = true,
+                queryKey = queryKey,
+                readToken = 1L,
+            )
+        org.mockito.Mockito.doAnswer {
+            secondStarted.countDown()
+            Result.success(pageContainer(entry))
+        }
+            .`when`(localBrowseRepository)
+            .getMediaListCollection(
+                userId = 42L,
+                userName = null,
+                type = MediaType.ANIME,
+                forceSingleCompletedList = true,
+                sort = listOf(MediaListSort.PROGRESS_DESC),
+                statusIn = listOf(MediaListStatus.CURRENT),
+                scoreFormat = ScoreFormat.POINT_100,
+                commitToStore = true,
+                queryKey = queryKey,
+                readToken = 2L,
+            )
+
+        val viewModel = MediaListViewModel(
+            browseRepository = localBrowseRepository,
+            mediaListStore = mediaListStore,
+            mutationRegistry = DefaultMutationRegistry(),
+            userRepository = userRepository,
+            settings = settings,
+            requestSequence = RequestSequence(),
+            ioDispatcher = Dispatchers.IO,
+        )
+        val collector = backgroundScope.launch { viewModel.state.collect {} }
+
+        viewModel.load(userId = 42L, userName = null, mediaType = KeyUtil.ANIME, statusIn = KeyUtil.CURRENT)
+        viewModel.load(userId = 42L, userName = null, mediaType = KeyUtil.ANIME, statusIn = KeyUtil.CURRENT)
+        assertTrue(secondStarted.await(5, TimeUnit.SECONDS))
+
+        mediaListStore.apply(
+            MediaListStoreChange.CollectionLoaded(
+                queryKey = queryKey,
+                token = 2L,
+                entries = listOf(entry.toMediaListRecord(revision = 2L, ownerUserId = 42L, ownerUserName = "max")),
+                pageInfo = null,
+            ),
+        )
+        advanceUntilIdle()
+
+        releaseFirst.countDown()
+        advanceUntilIdle()
+
+        val state = viewModel.state.value as MediaListViewModel.UiState.Success
+        assertEquals(1, state.renderedItems.size)
+        assertEquals(5, state.renderedItems.single().progress)
+        collector.cancel()
+    }
+
     private fun pageContainer(vararg entries: MediaList): PageContainer<MediaListCollection> = PageContainer<MediaListCollection>().apply {
         pageData = listOf(
             mock(MediaListCollection::class.java).apply {
@@ -262,5 +357,23 @@ class MediaListViewModelStoreObservationTest {
                 doReturn(entries.toList()).`when`(this).entries
             },
         )
+    }
+
+    private fun mediaListEntity(
+        id: Long,
+        mediaId: Long,
+        progress: Int,
+    ): MediaList = MediaList().apply {
+        this.id = id
+        this.mediaId = mediaId
+        this.status = KeyUtil.CURRENT
+        this.progress = progress
+        this.score = 8f
+        this.media = MediaBase().apply {
+            this.id = mediaId
+            this.type = KeyUtil.ANIME
+            this.episodes = 12
+            this.status = KeyUtil.RELEASING
+        }
     }
 }

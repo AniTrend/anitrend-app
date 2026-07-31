@@ -7,7 +7,7 @@ import com.mxt.anitrend.data.store.mutation.MutationExecutor
 import com.mxt.anitrend.data.store.mutation.MutationResult
 import com.mxt.anitrend.data.store.mutation.OperationKey
 import com.mxt.anitrend.data.store.mutation.ResourceKey
-import com.mxt.anitrend.data.store.mutation.RevisionProvider
+import com.mxt.anitrend.data.store.mutation.RequestSequence
 import com.mxt.anitrend.domain.interactor.executeMutation
 import com.mxt.anitrend.domain.model.SaveMediaListEntryCommand
 import com.mxt.anitrend.graphql.generated.ScoreFormat
@@ -18,7 +18,7 @@ class SaveMediaListEntryInteractor(
     private val browseRepository: BrowseRepository,
     private val mutationExecutor: MutationExecutor,
     private val mediaListStore: MediaListStore,
-    private val revisionProvider: RevisionProvider,
+    private val requestSequence: RequestSequence,
     private val userRepository: UserRepository,
 ) {
     suspend operator fun invoke(command: SaveMediaListEntryCommand): MutationResult {
@@ -41,11 +41,11 @@ class SaveMediaListEntryInteractor(
         failureMessage: String = "Unable to save media list entry",
     ): MutationResult = executeMutation(
         mutationExecutor = mutationExecutor,
-        revisionProvider = revisionProvider,
+        requestSequence = requestSequence,
         resourceKey = resourceKey,
         operationKey = operationKey,
         failureMessage = failureMessage,
-    ) { revision ->
+    ) { revision, context ->
         val currentUser = userRepository.cachedCurrentUser
         val scoreFormat = currentUser?.mediaListOptions?.scoreFormat
             ?.let { rawFormat -> runCatching { ScoreFormat.valueOf(rawFormat) }.getOrNull() }
@@ -72,6 +72,7 @@ class SaveMediaListEntryInteractor(
             revision = revision,
         ).fold(
             onSuccess = { entry ->
+                context.ensureSessionActive()
                 mediaListStore.apply(
                     MediaListStoreChange.EntryUpserted(
                         entry = entry.toMediaListRecord(

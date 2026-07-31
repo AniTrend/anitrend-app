@@ -13,6 +13,7 @@ data class FeedRecord(
     val messenger: UserSummaryRecord?,
     val recipient: UserSummaryRecord?,
     val media: MediaSummaryRecord?,
+    val hasLikes: Boolean = true,
     val likes: List<UserSummaryRecord>,
     val replyCount: Int,
     val siteUrl: String?,

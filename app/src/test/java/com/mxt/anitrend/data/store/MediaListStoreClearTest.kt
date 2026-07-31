@@ -32,6 +32,7 @@ class MediaListStoreClearTest {
         store.apply(
             MediaListStoreChange.CollectionLoaded(
                 queryKey = queryKey,
+                token = 1L,
                 entries = listOf(entry),
                 pageInfo = createPageInfo(1),
             ),

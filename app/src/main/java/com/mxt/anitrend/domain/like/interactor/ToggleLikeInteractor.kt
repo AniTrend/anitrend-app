@@ -7,7 +7,7 @@ import com.mxt.anitrend.data.store.mutation.MutationExecutor
 import com.mxt.anitrend.data.store.mutation.MutationResult
 import com.mxt.anitrend.data.store.mutation.OperationKey
 import com.mxt.anitrend.data.store.mutation.ResourceKey
-import com.mxt.anitrend.data.store.mutation.RevisionProvider
+import com.mxt.anitrend.data.store.mutation.RequestSequence
 import com.mxt.anitrend.domain.interactor.executeMutation
 import com.mxt.anitrend.domain.model.ToggleLikeCommand
 import com.mxt.anitrend.graphql.generated.LikeableType
@@ -17,7 +17,7 @@ class ToggleLikeInteractor(
     private val baseRepository: BaseRepository,
     private val mutationExecutor: MutationExecutor,
     private val feedStore: FeedStore,
-    private val revisionProvider: RevisionProvider,
+    private val requestSequence: RequestSequence,
 ) {
     suspend operator fun invoke(command: ToggleLikeCommand): MutationResult {
         val resourceKey =
@@ -38,11 +38,11 @@ class ToggleLikeInteractor(
 
         return executeMutation(
             mutationExecutor = mutationExecutor,
-            revisionProvider = revisionProvider,
+            requestSequence = requestSequence,
             resourceKey = resourceKey,
             operationKey = operationKey,
             failureMessage = "Unable to toggle like",
-        ) { revision ->
+        ) { revision, context ->
             val replyFeedId =
                 if (command.likeableType == LikeableType.ACTIVITY_REPLY) {
                     feedStore.state.value.repliesById[command.id]?.activityId
@@ -61,6 +61,7 @@ class ToggleLikeInteractor(
                     val likes = users.toUserSummaryRecords()
                     when (command.likeableType) {
                         LikeableType.ACTIVITY -> {
+                            context.ensureSessionActive()
                             feedStore.apply(
                                 FeedStoreChange.FeedLikesReplaced(
                                     feedId = command.id,
@@ -75,6 +76,7 @@ class ToggleLikeInteractor(
                                 replyFeedId ?: return@fold MutationResult.Failure(
                                     message = "Reply ${command.id} is not available in FeedStore",
                                 )
+                            context.ensureSessionActive()
                             feedStore.apply(
                                 FeedStoreChange.ReplyLikesReplaced(
                                     feedId = feedId,

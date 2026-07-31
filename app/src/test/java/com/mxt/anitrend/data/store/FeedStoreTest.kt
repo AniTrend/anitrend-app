@@ -47,7 +47,7 @@ class FeedStoreTest {
         val feed = createFeed(id = 1L, revision = 1L)
         val reply = createReply(id = 20L, activityId = 1L, revision = 1L)
 
-        store.apply(FeedStoreChange.PageLoaded(queryKey, page = 1, generation = 1, feeds = listOf(feed), pageInfo = createPageInfo(1)))
+        store.apply(FeedStoreChange.PageLoaded(queryKey, page = 1, token = 1L, feeds = listOf(feed), pageInfo = createPageInfo(1)))
         store.apply(FeedStoreChange.ReplyUpserted(feedId = 1L, reply = reply))
         store.apply(FeedStoreChange.FeedDeleted(feedId = 1L, revision = 2L))
 
@@ -92,7 +92,7 @@ class FeedStoreTest {
             FeedStoreChange.PageLoaded(
                 queryKey = queryKey,
                 page = 1,
-                generation = 1,
+                token = 1L,
                 feeds = listOf(createFeed(1L, 1L), createFeed(2L, 1L)),
                 pageInfo = createPageInfo(1),
             ),
@@ -102,7 +102,7 @@ class FeedStoreTest {
             FeedStoreChange.PageLoaded(
                 queryKey = queryKey,
                 page = 2,
-                generation = 1,
+                token = 1L,
                 feeds = listOf(createFeed(3L, 1L), createFeed(4L, 1L)),
                 pageInfo = createPageInfo(2),
             ),
@@ -118,7 +118,7 @@ class FeedStoreTest {
             FeedStoreChange.PageLoaded(
                 queryKey = queryKey,
                 page = 1,
-                generation = 1,
+                token = 1L,
                 feeds = listOf(createFeed(1L, 1L), createFeed(2L, 1L)),
                 pageInfo = createPageInfo(1),
             ),
@@ -128,7 +128,7 @@ class FeedStoreTest {
             FeedStoreChange.PageLoaded(
                 queryKey = queryKey,
                 page = 2,
-                generation = 1,
+                token = 1L,
                 feeds = listOf(createFeed(2L, 2L), createFeed(3L, 1L)),
                 pageInfo = createPageInfo(2),
             ),
@@ -151,6 +151,37 @@ class FeedStoreTest {
     }
 
     @Test
+    fun `refresh after mutation can overwrite older mutation revision with newer read token`() = runTest {
+        val store = InMemoryFeedStore()
+        val original = createFeed(id = 1L, revision = 10L, text = "original")
+        val mutated = createFeed(id = 1L, revision = 11L, text = "mutated")
+        val refreshed = createFeed(id = 1L, revision = 12L, text = "refreshed")
+
+        store.apply(
+            FeedStoreChange.PageLoaded(
+                queryKey = queryKey,
+                page = 1,
+                token = 10L,
+                feeds = listOf(original),
+                pageInfo = createPageInfo(1),
+            ),
+        )
+        store.apply(FeedStoreChange.FeedUpserted(mutated))
+        store.apply(
+            FeedStoreChange.PageLoaded(
+                queryKey = queryKey,
+                page = 1,
+                token = 12L,
+                feeds = listOf(refreshed),
+                pageInfo = createPageInfo(1),
+            ),
+        )
+
+        assertEquals(12L, store.state.value.feedsById.getValue(1L).revision)
+        assertEquals("refreshed", store.state.value.feedsById.getValue(1L).text)
+    }
+
+    @Test
     fun `reply likes replaced updates likes and rejects stale revision`() = runTest {
         val store = InMemoryFeedStore()
         store.apply(FeedStoreChange.FeedUpserted(createFeed(id = 1L, revision = 1L)))
@@ -168,6 +199,57 @@ class FeedStoreTest {
 
         assertEquals(newLikes, store.state.value.repliesById.getValue(10L).likes)
         assertEquals(3L, store.state.value.repliesById.getValue(10L).revision)
+    }
+
+    @Test
+    fun `feed detail merge preserves newer mutated replies`() = runTest {
+        val store = InMemoryFeedStore()
+        val initialFeed = createFeed(id = 1L, revision = 0L).copy(replyCount = 2)
+        val initialReplyA = createReply(id = 1L, activityId = 1L, revision = 0L)
+        val initialReplyB = createReply(id = 2L, activityId = 1L, revision = 0L)
+
+        store.apply(
+            FeedStoreChange.FeedDetailLoaded(
+                feed = initialFeed,
+                replies = listOf(initialReplyA, initialReplyB),
+            ),
+        )
+        store.apply(
+            FeedStoreChange.ReplyUpserted(
+                feedId = 1L,
+                reply = createReply(id = 1L, activityId = 1L, revision = 5L),
+            ),
+        )
+        store.apply(
+            FeedStoreChange.FeedDetailLoaded(
+                feed = createFeed(id = 1L, revision = 2L).copy(replyCount = 2),
+                replies = listOf(initialReplyA, initialReplyB),
+            ),
+        )
+
+        val state = store.state.value
+        assertEquals(5L, state.repliesById.getValue(1L).revision)
+        assertTrue(state.repliesById.containsKey(2L))
+    }
+
+    @Test
+    fun `feed detail merge stores current snapshot replies`() = runTest {
+        val store = InMemoryFeedStore()
+        val feed = createFeed(id = 1L, revision = 10L).copy(replyCount = 2)
+        val replyA = createReply(id = 1L, activityId = 1L, revision = 10L)
+        val replyB = createReply(id = 2L, activityId = 1L, revision = 10L)
+
+        store.apply(
+            FeedStoreChange.FeedDetailLoaded(
+                feed = feed,
+                replies = listOf(replyA, replyB),
+            ),
+        )
+
+        val state = store.state.value
+        assertEquals(10L, state.repliesById.getValue(1L).revision)
+        assertEquals(10L, state.repliesById.getValue(2L).revision)
+        assertEquals(listOf(1L, 2L), state.replyIdsByFeedId.getValue(1L))
     }
 
     @Test

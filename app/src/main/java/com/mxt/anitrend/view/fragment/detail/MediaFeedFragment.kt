@@ -5,7 +5,6 @@ import android.view.View
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.view.fragment.list.FeedListFragment
 import com.mxt.anitrend.viewmodel.MediaFeedViewModel
@@ -17,8 +16,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * Media feed list fragment for media types, both anime and manga
  */
 class MediaFeedFragment : FeedListFragment() {
-    override val useStateListAdapter: Boolean = false
-
     private val mediaFeedViewModel: MediaFeedViewModel by viewModel()
 
     companion object {
@@ -53,7 +50,7 @@ class MediaFeedFragment : FeedListFragment() {
                             // Loading is handled by swipeRefreshLayout in the base class
                         }
                         is MediaFeedViewModel.UiState.Success -> {
-                            handleSuccess(state.content, replaceExisting = state.replaceExisting)
+                            handleSuccess(state.content, state.items, state.replaceExisting)
                         }
                         is MediaFeedViewModel.UiState.Error -> {
                             showError(state.message)
@@ -74,15 +71,13 @@ class MediaFeedFragment : FeedListFragment() {
         )
     }
 
-    override fun applyUpdatedFeedResult(feed: FeedList) {
-        mediaFeedViewModel.applyReturnedFeed(feed)
-    }
-
-    override fun handleLegacyToggleLike(feedId: Long) {
+    override fun onToggleLike(feedId: Long) {
         mediaFeedViewModel.toggleLike(feedId)
     }
 
-    override fun handleLegacyDeleteFeed(feedId: Long) {
+    override fun onDeleteFeed(feedId: Long) {
         mediaFeedViewModel.deleteFeed(feedId)
     }
+
+    override fun currentRenderedFeeds() = (mediaFeedViewModel.state.value as? MediaFeedViewModel.UiState.Success)?.content?.pageData.orEmpty()
 }

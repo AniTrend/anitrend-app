@@ -43,7 +43,7 @@ class FeedRepository(
         asHtml: Boolean = false,
         commitToStore: Boolean = true,
         queryKey: FeedQueryKey? = null,
-        queryGeneration: Int = 0,
+        readToken: Long = 0L,
     ): Result<PageContainer<FeedListEntity>> = withContext(ioDispatcher) {
         runCatching {
             val request = FeedList.request(page = page, perPage = perPage, id = id?.toInt(), isFollowing = isFollowing, userId = userId?.toInt(), type = type, isMixed = isMixed, asHtml = asHtml)
@@ -69,8 +69,8 @@ class FeedRepository(
                         FeedStoreChange.PageLoaded(
                             queryKey = resolvedQueryKey,
                             page = pageInfo?.currentPage ?: page ?: 1,
-                            generation = queryGeneration,
-                            feeds = result.pageData.map { it.toFeedRecord(revision = 0L) },
+                            token = readToken,
+                            feeds = result.pageData.map { it.toFeedRecord(revision = readToken) },
                             pageInfo = pageInfo,
                         ),
                     )
@@ -88,6 +88,7 @@ class FeedRepository(
         asHtml: Boolean = false,
         commitToStore: Boolean = true,
         revision: Long = 0L,
+        readToken: Long = 0L,
     ): Result<FeedListEntity> = withContext(ioDispatcher) {
         runCatching {
             val request = FeedListReply.request(id = id.toInt(), asHtml = asHtml)
@@ -97,11 +98,11 @@ class FeedRepository(
                     if (commitToStore) {
                         feedStore?.apply(
                             FeedStoreChange.FeedDetailLoaded(
-                                feed = result.toFeedRecord(revision = revision),
+                                feed = result.toFeedRecord(revision = readToken),
                                 replies = result.replies.orEmpty().map { reply ->
                                     reply.toFeedReplyRecord(
                                         activityId = result.id,
-                                        revision = revision,
+                                        revision = readToken,
                                     )
                                 },
                             ),
@@ -122,7 +123,7 @@ class FeedRepository(
         asHtml: Boolean = false,
         commitToStore: Boolean = true,
         queryKey: FeedQueryKey? = null,
-        queryGeneration: Int = 0,
+        readToken: Long = 0L,
     ): Result<PageContainer<FeedListEntity>> = withContext(ioDispatcher) {
         runCatching {
             val request = FeedMessage.request(page = page, perPage = perPage, messengerId = messengerId?.toInt(), userId = userId?.toInt(), asHtml = asHtml)
@@ -144,8 +145,8 @@ class FeedRepository(
                         FeedStoreChange.PageLoaded(
                             queryKey = resolvedQueryKey,
                             page = pageInfo?.currentPage ?: page ?: 1,
-                            generation = queryGeneration,
-                            feeds = result.pageData.map { it.toFeedRecord(revision = 0L) },
+                            token = readToken,
+                            feeds = result.pageData.map { it.toFeedRecord(revision = readToken) },
                             pageInfo = pageInfo,
                         ),
                     )

@@ -71,7 +71,7 @@ class InMemoryFeedStore : FeedStore {
     private fun reducePageLoaded(change: FeedStoreChange.PageLoaded): FeedStoreState {
         val currentState = mutableState.value
         val existingSnapshot = currentState.queries[change.queryKey]
-        if (existingSnapshot != null && change.generation < existingSnapshot.generation) {
+        if (existingSnapshot != null && change.token < existingSnapshot.token) {
             return currentState
         }
 
@@ -111,7 +111,7 @@ class InMemoryFeedStore : FeedStore {
                     orderedFeedIds = orderedFeedIds,
                     pageInfo = change.pageInfo,
                     loadedPages = loadedPages,
-                    generation = change.generation,
+                    token = change.token,
                     lastUpdatedAtMillis = System.currentTimeMillis(),
                 ),
             )
@@ -140,9 +140,19 @@ class InMemoryFeedStore : FeedStore {
         }
 
         val previousReplyIds = currentState.replyIdsByFeedId[change.feed.id].orEmpty()
-        val repliesById = currentState.repliesById.toMutableMap().apply {
-            previousReplyIds.forEach(::remove)
+        val incomingReplyIds = change.replies.map { it.id }.toSet()
+
+        val repliesById = currentState.repliesById.toMutableMap()
+
+        previousReplyIds.forEach { replyId ->
+            if (replyId !in incomingReplyIds) {
+                val existingReply = currentState.repliesById[replyId]
+                if (existingReply != null && change.feed.revision >= existingReply.revision) {
+                    repliesById.remove(replyId)
+                }
+            }
         }
+
         val replyIds = mutableListOf<Long>()
         change.replies.forEach { reply ->
             val replyCurrentRevision = maxOf(
@@ -152,7 +162,17 @@ class InMemoryFeedStore : FeedStore {
             if (reply.revision >= replyCurrentRevision) {
                 replyDeletionRevisions.remove(reply.id)
                 repliesById[reply.id] = reply.copy(activityId = change.feed.id)
+            }
+        }
+
+        change.replies.forEach { reply ->
+            if (repliesById.containsKey(reply.id)) {
                 replyIds += reply.id
+            }
+        }
+        previousReplyIds.forEach { replyId ->
+            if (replyId !in incomingReplyIds && repliesById.containsKey(replyId)) {
+                replyIds += replyId
             }
         }
 

@@ -9,7 +9,8 @@ import com.mxt.anitrend.data.store.mutation.DefaultMutationRegistry
 import com.mxt.anitrend.data.store.mutation.DefaultOperationIdGenerator
 import com.mxt.anitrend.data.store.mutation.KeyedMutex
 import com.mxt.anitrend.data.store.mutation.MutationResult
-import com.mxt.anitrend.data.store.mutation.RevisionProvider
+import com.mxt.anitrend.data.store.mutation.RequestSequence
+import com.mxt.anitrend.data.store.mutation.SessionEpoch
 import com.mxt.anitrend.domain.feed.interactor.DeleteFeedInteractor
 import com.mxt.anitrend.domain.feed.interactor.DeleteReplyInteractor
 import com.mxt.anitrend.domain.feed.interactor.SaveFeedInteractor
@@ -25,6 +26,7 @@ import com.mxt.anitrend.repository.FeedRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -58,16 +60,17 @@ class CommentViewModelTest {
         store = InMemoryFeedStore()
         registry = DefaultMutationRegistry()
 
-        val mutationExecutor = DefaultMutationExecutor(KeyedMutex(CoroutineScope(dispatcher)), registry, DefaultOperationIdGenerator())
+        val applicationScope = CoroutineScope(SupervisorJob() + dispatcher)
+        val mutationExecutor = DefaultMutationExecutor(applicationScope = applicationScope, keyedMutex = KeyedMutex(applicationScope), mutationRegistry = registry, operationIdGenerator = DefaultOperationIdGenerator(), sessionEpoch = SessionEpoch())
         viewModel = CommentViewModel(
             feedStore = store,
             feedRepository = feedRepository,
             mutationRegistry = registry,
-            toggleLikeInteractor = ToggleLikeInteractor(baseRepository, mutationExecutor, store, RevisionProvider()),
-            saveReplyInteractor = SaveReplyInteractor(feedRepository, mutationExecutor, store, RevisionProvider()),
-            deleteReplyInteractor = DeleteReplyInteractor(feedRepository, mutationExecutor, store, RevisionProvider()),
-            deleteFeedInteractor = DeleteFeedInteractor(feedRepository, mutationExecutor, store, RevisionProvider()),
-            saveFeedInteractor = SaveFeedInteractor(feedRepository, mutationExecutor, store, RevisionProvider()),
+            toggleLikeInteractor = ToggleLikeInteractor(baseRepository, mutationExecutor, store, RequestSequence()),
+            saveReplyInteractor = SaveReplyInteractor(feedRepository, mutationExecutor, store, RequestSequence()),
+            deleteReplyInteractor = DeleteReplyInteractor(feedRepository, mutationExecutor, store, RequestSequence()),
+            deleteFeedInteractor = DeleteFeedInteractor(feedRepository, mutationExecutor, store, RequestSequence()),
+            saveFeedInteractor = SaveFeedInteractor(feedRepository, mutationExecutor, store, RequestSequence()),
         )
     }
 
