@@ -60,6 +60,38 @@
 ### Reference
 - See `docs/superpowers/specs/2026-07-19-viewmodel-first-architecture-modernization-design.md` for the full design spec, migration strategy, and `LoggingActivity` refactor target.
 
+## State synchronisation and mutation architecture
+
+The full specification lives at `docs/architecture/state-synchronization-and-mutation-refactor.md`. The rules below are mandatory for all new and refactored code in migrated domains (feed, comments, likes, replies, media-list entries).
+
+### Canonical stores
+- Each migrated domain has one canonical store as the exclusive mutable owner of committed entity state. Repositories commit successful mutation responses into stores; ViewModels observe store state.
+- Do not use repository `SharedFlow` mutation events (`mutationEvents`) as a business-state propagation mechanism. Business state must live in observable store or ViewModel state, not transient event streams.
+- Do not create one generic global store. Stores are domain-specific (`FeedStore`, `MediaListStore`).
+
+### No repository or coordinator access from adapters or widgets
+- Adapters and custom views must not resolve repositories, `WidgetMutationCoordinator`, or any Koin business dependency.
+- Adapters render immutable item models and forward actions via callbacks. Widgets render immutable state and emit user actions only.
+- Do not launch business coroutines from adapters, ViewHolders, or widgets.
+
+### Immutable RecyclerView items
+- Migrated adapters use `ListAdapter` or `AsyncListDiffer` with immutable item UI models. No submitted list or item may be mutated after submission.
+- Adapters must not maintain a canonical list independent of the ViewModel. Fragments call `submitList(state.items)`.
+- Stable IDs must use actual stable domain IDs, not `hashCode()` or object identity.
+- The generic `RecyclerViewAdapter` base class is legacy infrastructure that uses `MutableList`, `notifyDataSetChanged()`, and `hashCode()`-based stable IDs. It remains for non-migrated screens. Do not use it for new or migrated screens. Use `ListAdapter` with `DiffUtil` instead. Track its removal as follow-up infrastructure debt.
+
+### Identity-only navigation
+- Navigation destinations receive stable IDs and presentation-independent arguments, not complete mutable entities.
+- Activity results must not return a complete application entity to synchronise another screen. Use identity-only or explicit user selections.
+
+### Per-resource mutation serialisation
+- Mutations affecting the same logical resource execute sequentially via `MutationExecutor` with `ResourceKey`. Unrelated resources may run concurrently.
+- Server-authoritative mutations by default: update state only after server success. Optimistic mutations are prohibited until a revision and rollback protocol is implemented and tested.
+- Stale responses must be rejected using revision ordering; an older response must not overwrite newer committed state.
+
+### Reference
+- See `docs/architecture/state-synchronization-and-mutation-refactor.md` for the full specification, phase gates, prohibited patterns, and completion criteria.
+
 ## Material 3 design system
 - `@DESIGN.md` is the app-wide M3 design system. It defines color tokens, typography hierarchy, spacing scale, component specs (bottom sheets, dialogs, cards, buttons, text fields, switches, sliders, chips, lists, navigation, custom views, loading), motion and feedback rules, and do's and don'ts.
 - Consult `@DESIGN.md` before any UI/UX work: new screens, layout changes, component selection, styling, spacing, color usage, typography choices, dialog or sheet design, custom view creation, or any visual refactor.

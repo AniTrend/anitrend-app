@@ -6,52 +6,62 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
+import android.widget.Filter
 import android.widget.Toast
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
-import com.mxt.anitrend.adapter.recycler.detail.CommentAdapter
-import com.mxt.anitrend.adapter.recycler.index.FeedAdapter
+import com.mxt.anitrend.adapter.recycler.detail.CommentListAdapter
+import com.mxt.anitrend.adapter.recycler.index.FeedListAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseComment
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder
 import com.mxt.anitrend.base.custom.view.editor.ComposerWidget
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener
-import com.mxt.anitrend.coordinator.WidgetMutationCoordinator
-import com.mxt.anitrend.extension.hideKeyboard
-import com.mxt.anitrend.extension.parcelable
-import com.mxt.anitrend.graphql.generated.LikeableType
+import com.mxt.anitrend.data.DatabaseHelper
+import com.mxt.anitrend.data.mapper.toUserBase
+import com.mxt.anitrend.domain.model.CommentReplyUiModel
+import com.mxt.anitrend.domain.model.FeedItemUiModel
+import com.mxt.anitrend.domain.model.toFeedItemUiModel
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.anilist.FeedReply
-import com.mxt.anitrend.repository.BaseMutation
-import com.mxt.anitrend.repository.BaseRepository
-import com.mxt.anitrend.repository.FeedMutation
-import com.mxt.anitrend.repository.FeedRepository
+import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
+import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.media.MediaActionUtil
-import com.mxt.anitrend.view.activity.detail.CommentActivity
 import com.mxt.anitrend.view.activity.detail.MediaActivity
 import com.mxt.anitrend.view.activity.detail.ProfileActivity
 import com.mxt.anitrend.view.sheet.BottomSheetGiphy
 import com.mxt.anitrend.view.sheet.BottomSheetUsers
+import com.mxt.anitrend.viewmodel.CommentViewModel
+import com.mxt.anitrend.data.store.mutation.MutationResult
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
-import timber.log.Timber
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-/**
- * Created by max on 2017/11/16.
- * Comment fragment
- */
 class CommentFragment : FragmentBaseComment() {
-    private lateinit var feedAdapter: FeedAdapter
+    private val commentViewModel: CommentViewModel by viewModel()
+    private val settings: Settings by inject()
+    private val databaseHelper: DatabaseHelper by inject()
 
-    private val mutationCoordinator by inject<WidgetMutationCoordinator>()
+    private lateinit var feedAdapter: FeedListAdapter
+    private lateinit var commentListAdapter: CommentListAdapter
 
-    private val baseRepository: BaseRepository by inject()
+    private sealed interface ComposerMode {
+        data class Feed(val feedId: Long) : ComposerMode
 
-    private val feedRepository: FeedRepository by inject()
+        data class Reply(
+            val feedId: Long,
+            val replyId: Long? = null,
+        ) : ComposerMode
+    }
+
+    private var composerMode: ComposerMode? = null
 
     companion object {
         @JvmStatic
@@ -62,19 +72,51 @@ class CommentFragment : FragmentBaseComment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val ctx = requireContext()
-        arguments?.let { args ->
-            if (args.containsKey(KeyUtil.arg_model)) {
-                feedList = args.parcelable(KeyUtil.arg_model)
-            }
-            if (args.containsKey(KeyUtil.arg_id)) {
-                userActivityId = args.getLong(KeyUtil.arg_id)
-            }
-        }
+        userActivityId = arguments?.getLong(KeyUtil.arg_id) ?: 0L
         mColumnSize = R.integer.single_list_x1
         setInflateMenu(R.menu.custom_menu)
-        mAdapter = CommentAdapter(ctx, mutationCoordinator)
-        feedAdapter = FeedAdapter(ctx, mutationCoordinator)
+
+        val ctx = requireContext()
+        mAdapter = PlaceholderReplyAdapter(ctx)
+        feedAdapter =
+            FeedListAdapter(
+                experimentalMarkdown = settings.experimentalMarkdown,
+                onToggleLikeAction = { feedId ->
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        commentViewModel.toggleFeedLike(feedId)
+                    }
+                },
+                onDeleteFeedAction = { feedId ->
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        commentViewModel.deleteFeed(feedId)
+                    }
+                },
+                onOpenMedia = ::openFeedMedia,
+                onOpenComments = {},
+                onEditFeed = ::startFeedEdit,
+                onShowLikes = ::showFeedLikes,
+                onOpenProfile = { target, userId -> openProfile(target, userId) },
+                onLongPressMedia = ::onFeedMediaLongPressed,
+            )
+        commentListAdapter =
+            CommentListAdapter(
+                experimentalMarkdown = settings.experimentalMarkdown,
+                currentUser = databaseHelper.currentUser,
+                onToggleLike = { replyId ->
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        commentViewModel.toggleReplyLike(replyId)
+                    }
+                },
+                onDeleteReply = { replyId ->
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        commentViewModel.deleteReply(replyId)
+                    }
+                },
+                onEditReply = ::startReplyEdit,
+                onMentionReply = ::mentionReply,
+                onShowLikes = ::showReplyLikes,
+                onOpenProfile = { target, userId -> openProfile(target, userId) },
+            )
     }
 
     @Deprecated("Deprecated in Java")
@@ -89,20 +131,24 @@ class CommentFragment : FragmentBaseComment() {
 
     @Deprecated("Deprecated in Java")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (feedList != null) {
-            when (item.itemId) {
-                R.id.action_share -> {
-                    val intent =
-                        Intent(Intent.ACTION_SEND).apply {
-                            putExtra(Intent.EXTRA_TEXT, feedList?.siteUrl)
-                            type = "text/plain"
-                        }
-                    startActivity(Intent.createChooser(intent, getString(R.string.abc_shareactionprovider_share_with)))
+        when (item.itemId) {
+            R.id.action_share -> {
+                val siteUrl = currentState().feed?.siteUrl
+                if (!siteUrl.isNullOrBlank()) {
+                    startActivity(
+                        Intent.createChooser(
+                            Intent(Intent.ACTION_SEND).apply {
+                                putExtra(Intent.EXTRA_TEXT, siteUrl)
+                                type = "text/plain"
+                            },
+                            getString(R.string.abc_shareactionprovider_share_with),
+                        ),
+                    )
+                } else {
+                    context?.let {
+                        NotifyUtil.makeText(it, R.string.text_activity_loading, Toast.LENGTH_SHORT).show()
+                    }
                 }
-            }
-        } else {
-            context?.let {
-                NotifyUtil.makeText(it, R.string.text_activity_loading, Toast.LENGTH_SHORT).show()
             }
         }
         @Suppress("DEPRECATION")
@@ -110,6 +156,74 @@ class CommentFragment : FragmentBaseComment() {
     }
 
     override fun onStart() {
+        configureComposer()
+        super.onStart()
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        originRecycler.adapter = feedAdapter
+        recyclerView.adapter = commentListAdapter
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                commentViewModel.state.collect { state ->
+                    when {
+                        state.errorMessage != null && state.feed == null -> showError(state.errorMessage)
+                        state.isLoading && state.feed == null -> showLoading()
+                        else -> renderState(state)
+                    }
+                }
+            }
+        }
+    }
+
+    override fun hasContentItems(): Boolean = (::feedAdapter.isInitialized && feedAdapter.itemCount > 0) ||
+        (::commentListAdapter.isInitialized && commentListAdapter.itemCount > 0)
+
+    override fun updateUI() {
+        if (hasContentItems()) {
+            if (swipeRefreshLayout.isRefreshing()) {
+                swipeRefreshLayout.setRefreshing(false)
+            } else if (swipeRefreshLayout.isLoading()) {
+                swipeRefreshLayout.setLoading(false)
+            }
+            showContent()
+        } else {
+            showEmpty(getString(R.string.layout_empty_response))
+        }
+    }
+
+    override fun makeRequest() {
+        commentViewModel.load(userActivityId)
+    }
+
+    override fun onBackPress(): Boolean {
+        if (composerWidget.editBoxHasFocus(true)) {
+            return true
+        }
+        return super.onBackPress()
+    }
+
+    override fun onDestroyView() {
+        composerWidget.setListener(null)
+        composerWidget.onViewRecycled()
+        super.onDestroyView()
+    }
+
+    override fun onChanged(value: FeedList?) = Unit
+
+    override fun onItemClick(
+        target: View,
+        data: IndexedValue<FeedReply>,
+    ) = Unit
+
+    override fun onItemLongClick(
+        target: View,
+        data: IndexedValue<FeedReply>,
+    ) = Unit
+
+    private fun configureComposer() {
         composerWidget.lifecycle = viewLifecycleOwner.lifecycle
         composerWidget.itemClickListener =
             object : ItemClickListener<Any> {
@@ -121,15 +235,13 @@ class CommentFragment : FragmentBaseComment() {
                         R.id.insert_emoticon -> Unit
                         R.id.insert_gif -> {
                             mBottomSheet =
-                                BottomSheetGiphy
-                                    .Builder()
+                                BottomSheetGiphy.Builder()
                                     .setTitle(R.string.title_bottom_sheet_giphy)
                                     .build()
                                     .also { (it as? BottomSheetGiphy)?.onGiphySelected = { giphy -> composerWidget.insertGiphy(giphy) } }
-
                             showBottomSheet()
                         }
-                        R.id.widget_flipper -> activity?.hideKeyboard()
+                        R.id.widget_flipper -> Unit
                         else -> {
                             context?.let {
                                 DialogUtil.createDialogAttachMedia(target.id, composerWidget.editor, it)
@@ -143,352 +255,188 @@ class CommentFragment : FragmentBaseComment() {
                     data: IndexedValue<Any>,
                 ) = Unit
             }
-        composerWidget.setListener(object : ComposerWidget.Listener {
-            override fun onSubmit(
-                text: String,
-                @KeyUtil.RequestType requestType: Int,
-                onResult: (Boolean) -> Unit,
-            ) {
-                lifecycleScope.launch {
-                    val success = when (requestType) {
-                        KeyUtil.MUT_SAVE_FEED_REPLY -> {
-                            feedRepository.saveActivityReply(
-                                id = null,
-                                activityId = feedList?.id ?: 0,
-                                text = text,
-                                asHtml = false,
-                            ).onSuccess { reply ->
-                                appendReply(reply)
-                            }.isSuccess
+        composerWidget.setListener(
+            object : ComposerWidget.Listener {
+                override fun onSubmit(
+                    text: String,
+                    requestType: Int,
+                    onResult: (Boolean) -> Unit,
+                ) {
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        val result =
+                            when (val mode = composerMode) {
+                                is ComposerMode.Feed -> commentViewModel.editFeed(mode.feedId, text)
+                                is ComposerMode.Reply -> commentViewModel.submitReply(mode.feedId, text, mode.replyId)
+                                null -> MutationResult.Success
+                            }
+                        val success = result is MutationResult.Success
+                        if (success) {
+                            currentState().feed?.let(::setReplyComposer)
                         }
-                        KeyUtil.MUT_SAVE_TEXT_FEED -> {
-                            feedRepository.saveTextActivity(
-                                id = feedList?.id,
-                                text = text,
-                                asHtml = false,
-                            ).isSuccess
-                        }
-                        else -> false
+                        onResult(success)
                     }
-                    onResult(success)
                 }
-            }
-        })
-        super.onStart()
+            },
+        )
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch {
-                    feedRepository.mutationEvents.collect(::handleFeedMutation)
-                }
-                launch {
-                    baseRepository.mutationEvents.collect(::handleBaseMutation)
-                }
-            }
-        }
-    }
-
-    override fun updateUI() {
-        injectAdapter()
-    }
-
-    override fun makeRequest() {
-        val currentFeed = feedList
-        if (currentFeed != null) {
-            userActivityId = currentFeed.id
-            initExtraComponents()
-        }
-
-        lifecycleScope.launch {
-            feedRepository
-                .getFeedListReply(id = userActivityId, asHtml = false)
-                .onSuccess(::onChanged)
-                .onFailure { throwable ->
-                    Timber.e(throwable)
-                    showError(throwable.message ?: getString(R.string.text_error_request))
-                }
-        }
-    }
-
-    override fun onBackPress(): Boolean {
-        if (composerWidget.editBoxHasFocus(true)) {
-            return true
-        }
-        return super.onBackPress()
-    }
-
-    private fun initExtraComponents() {
-        val feedList = feedList ?: return
-        composerWidget.setModel(feedList, KeyUtil.MUT_SAVE_FEED_REPLY)
-
-        feedAdapter.onItemsInserted(listOf(feedList))
-        if (feedAdapter.clickListener == null) {
-            feedAdapter.setClickListener(
-                object : ItemClickListener<FeedList> {
-                    override fun onItemClick(
-                        target: View,
-                        data: IndexedValue<FeedList>,
-                    ) {
-                        when (target.id) {
-                            R.id.series_image -> {
-                                val media = data.value.media ?: return
-                                val host = activity ?: return
-                                val intent =
-                                    Intent(host, MediaActivity::class.java).apply {
-                                        putExtra(KeyUtil.arg_id, media.id)
-                                        putExtra(KeyUtil.arg_mediaType, media.type)
-                                    }
-                                CompatUtil.startRevealAnim(host, target, intent)
-                            }
-                            R.id.widget_users -> {
-                                val likes = data.value.likes.orEmpty()
-                                if (likes.isNotEmpty()) {
-                                    mBottomSheet =
-                                        BottomSheetUsers
-                                            .Builder()
-                                            .setModel(likes)
-                                            .setTitle(R.string.title_bottom_sheet_likes)
-                                            .build()
-                                    showBottomSheet()
-                                } else {
-                                    activity?.let {
-                                        NotifyUtil.makeText(it, R.string.text_no_likes, Toast.LENGTH_SHORT).show()
-                                    }
-                                }
-                            }
-                            R.id.user_avatar -> {
-                                data.value.user?.let { user ->
-                                    val host = activity ?: return
-                                    val intent =
-                                        Intent(host, ProfileActivity::class.java).apply {
-                                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                            putExtra(KeyUtil.arg_id, user.id)
-                                        }
-                                    CompatUtil.startRevealAnim(host, target, intent)
-                                }
-                            }
-                            R.id.recipient_avatar -> {
-                                data.value.recipient?.let { recipient ->
-                                    val host = activity ?: return
-                                    val intent =
-                                        Intent(host, ProfileActivity::class.java).apply {
-                                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                            putExtra(KeyUtil.arg_id, recipient.id)
-                                        }
-                                    CompatUtil.startRevealAnim(host, target, intent)
-                                }
-                            }
-                            R.id.messenger_avatar -> {
-                                data.value.messenger?.let { messenger ->
-                                    val host = activity ?: return
-                                    val intent =
-                                        Intent(host, ProfileActivity::class.java).apply {
-                                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                            putExtra(KeyUtil.arg_id, messenger.id)
-                                        }
-                                    CompatUtil.startRevealAnim(host, target, intent)
-                                }
-                            }
-                        }
-                    }
-
-                    override fun onItemLongClick(
-                        target: View,
-                        data: IndexedValue<FeedList>,
-                    ) {
-                        when (target.id) {
-                            R.id.series_image -> {
-                                if (presenter.settings.isAuthenticated) {
-                                    val host = activity ?: return
-                                    data.value.media?.let { media ->
-                                        mediaActionUtil =
-                                            MediaActionUtil
-                                                .Builder()
-                                                .setId(media.id)
-                                                .build(host)
-                                        mediaActionUtil.startSeriesAction()
-                                    }
-                                } else {
-                                    context?.let {
-                                        NotifyUtil
-                                            .makeText(
-                                                it,
-                                                R.string.info_login_req,
-                                                R.drawable.ic_group_add_grey_600_18dp,
-                                                Toast.LENGTH_SHORT,
-                                            ).show()
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
+    private fun renderState(state: CommentViewModel.CommentUiState) {
+        val currentUserId = databaseHelper.currentUser?.id
+        val headerItems =
+            listOfNotNull(
+                state.feed?.toFeedItemUiModel(currentUserId)?.copy(
+                    isLikePending = state.feedItem?.isLikePending ?: false,
+                    isDeletePending = state.feedItem?.isDeletePending ?: false,
+                ) ?: state.feedItem,
             )
+        feedAdapter.submitList(headerItems)
+        commentListAdapter.submitList(state.replies)
+
+        if (state.feed != null && composerMode == null) {
+            setReplyComposer(state.feed)
         }
-        if (originRecycler.adapter == null) {
-            originRecycler.adapter = feedAdapter
+
+        if (state.isDeleted) {
+            activity?.finish()
+            return
+        }
+
+        if (state.feed != null) {
+            updateUI()
+        } else if (!state.isLoading) {
+            showEmpty(getString(R.string.layout_empty_response))
         }
     }
 
-    override fun onDestroyView() {
-        composerWidget.setListener(null)
-        composerWidget.onViewRecycled()
-        super.onDestroyView()
+    private fun setReplyComposer(feed: FeedList) {
+        composerMode = ComposerMode.Reply(feedId = feed.id)
+        composerWidget.setModel(feed, KeyUtil.MUT_SAVE_FEED_REPLY)
     }
 
-    override fun onChanged(value: FeedList?) {
-        super.onChanged(value)
-        if (value != null) {
-            feedList = value
-            initExtraComponents()
-            publishUpdatedFeedResult()
+    private fun startFeedEdit(feedId: Long) {
+        val feed = currentState().feed?.takeIf { it.id == feedId } ?: return
+        composerMode = ComposerMode.Feed(feedId)
+        composerWidget.setModel(feed, KeyUtil.MUT_SAVE_TEXT_FEED)
+        composerWidget.editor.text?.clear()
+        composerWidget.setText(feed.text)
+    }
+
+    private fun startReplyEdit(replyId: Long) {
+        val reply = currentState().replies.firstOrNull { it.id == replyId } ?: return
+        composerMode = ComposerMode.Reply(feedId = userActivityId, replyId = replyId)
+        composerWidget.setModel(reply.toFeedReply(), KeyUtil.MUT_SAVE_FEED_REPLY)
+        composerWidget.editor.text?.clear()
+        composerWidget.setText(reply.reply)
+    }
+
+    private fun mentionReply(replyId: Long) {
+        val reply = currentState().replies.firstOrNull { it.id == replyId } ?: return
+        composerWidget.mentionUserFrom(reply.toFeedReply())
+    }
+
+    private fun showReplyLikes(replyId: Long) {
+        val reply = currentState().replies.firstOrNull { it.id == replyId } ?: return
+        val likes = reply.likes.map { it.toUserBase() }
+        if (likes.isNotEmpty()) {
+            mBottomSheet =
+                BottomSheetUsers.Builder()
+                    .setModel(likes)
+                    .setTitle(R.string.title_bottom_sheet_likes)
+                    .build()
+            showBottomSheet()
         } else {
             activity?.let {
-                NotifyUtil.createAlerter(
-                    it,
-                    R.string.text_error_request,
-                    R.string.layout_empty_response,
-                    R.drawable.ic_warning_white_18dp,
-                    R.color.colorStateOrange,
-                )
+                NotifyUtil.makeText(it, R.string.text_no_likes, Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    override fun onItemClick(
-        target: View,
-        data: IndexedValue<FeedReply>,
-    ) {
-        val feedList = feedList ?: return
-        when (target.id) {
-            R.id.series_image -> {
-                val mediaBase = feedList.media ?: return
-                val host = activity ?: return
-                val intent =
-                    Intent(host, MediaActivity::class.java).apply {
-                        putExtra(KeyUtil.arg_id, mediaBase.id)
-                        putExtra(KeyUtil.arg_mediaType, mediaBase.type)
-                    }
-                CompatUtil.startRevealAnim(host, target, intent)
-            }
-            R.id.widget_mention -> composerWidget.mentionUserFrom(data.value)
-            R.id.widget_edit -> {
-                composerWidget.setModel(data.value, KeyUtil.MUT_SAVE_FEED_REPLY)
-                composerWidget.setText(data.value.reply)
-            }
-            R.id.widget_users -> {
-                val likes = data.value.likes.orEmpty()
-                if (likes.isNotEmpty()) {
-                    mBottomSheet =
-                        BottomSheetUsers
-                            .Builder()
-                            .setModel(likes)
-                            .setTitle(R.string.title_bottom_sheet_likes)
-                            .build()
-                    showBottomSheet()
-                } else {
-                    activity?.let {
-                        NotifyUtil.makeText(it, R.string.text_no_likes, Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-            R.id.user_avatar -> {
-                data.value.user?.let { user ->
-                    val host = activity ?: return
-                    val intent =
-                        Intent(host, ProfileActivity::class.java).apply {
-                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                            putExtra(KeyUtil.arg_id, user.id)
-                        }
-                    CompatUtil.startRevealAnim(host, target, intent)
-                }
-            }
-        }
-    }
-
-    override fun onItemLongClick(
-        target: View,
-        data: IndexedValue<FeedReply>,
-    ) = Unit
-
-    private fun handleFeedMutation(event: FeedMutation) {
-        when (event) {
-            is FeedMutation.FeedSaved -> {
-                val currentFeed = feedList ?: return
-                if (currentFeed.id == event.feed.id) {
-                    event.feed.replies = currentFeed.replies
-                    feedList = event.feed
-                    initExtraComponents()
-                    publishUpdatedFeedResult()
-                }
-            }
-            is FeedMutation.ReplyDeleted -> {
-                val currentFeed = feedList ?: return
-                val replies = currentFeed.replies.orEmpty()
-                if (replies.any { it.id == event.id }) {
-                    val updatedReplies = replies.filterNot { it.id == event.id }
-                    currentFeed.replies = updatedReplies
-                    currentFeed.replyCount = updatedReplies.size
-                    mAdapter.onItemsInserted(updatedReplies)
-                    initExtraComponents()
-                    publishUpdatedFeedResult()
-                }
-            }
-            else -> Unit
-        }
-    }
-
-    private fun handleBaseMutation(event: BaseMutation) {
-        when (event) {
-            is BaseMutation.LikeToggled -> {
-                when (event.targetType) {
-                    LikeableType.ACTIVITY -> {
-                        val currentFeed = feedList ?: return
-                        if (currentFeed.id == event.targetId) {
-                            currentFeed.likes = event.users
-                            initExtraComponents()
-                            publishUpdatedFeedResult()
-                        }
-                    }
-                    LikeableType.ACTIVITY_REPLY -> {
-                        val currentFeed = feedList ?: return
-                        val replies = currentFeed.replies.orEmpty().toMutableList()
-                        val index = replies.indexOfFirst { it.id == event.targetId }
-                        if (index >= 0) {
-                            replies[index].likes = event.users
-                            currentFeed.replies = replies
-                            mAdapter.onItemsInserted(replies)
-                        }
-                    }
-                    else -> Unit
-                }
-            }
-            else -> Unit
-        }
-    }
-
-    private fun appendReply(reply: FeedReply) {
-        val currentFeed = feedList ?: return
-        val replies = currentFeed.replies.orEmpty().toMutableList()
-        val index = replies.indexOfFirst { it.id == reply.id }
-        if (index >= 0) {
-            replies[index] = reply
+    private fun showFeedLikes(feedId: Long) {
+        val likes = resolveCurrentFeedItem(feedId)?.likes.orEmpty().map { it.toUserBase() }
+        if (likes.isNotEmpty()) {
+            mBottomSheet =
+                BottomSheetUsers.Builder()
+                    .setModel(likes)
+                    .setTitle(R.string.title_bottom_sheet_likes)
+                    .build()
+            showBottomSheet()
         } else {
-            replies.add(reply)
+            activity?.let {
+                NotifyUtil.makeText(it, R.string.text_no_likes, Toast.LENGTH_SHORT).show()
+            }
         }
-        currentFeed.replies = replies
-        currentFeed.replyCount = replies.size
-        mAdapter.onItemsInserted(replies)
-        initExtraComponents()
-        publishUpdatedFeedResult()
     }
 
-    private fun publishUpdatedFeedResult() {
-        val currentFeed = feedList ?: return
-        (activity as? CommentActivity)?.updateResult(currentFeed)
+    private fun openFeedMedia(
+        target: View,
+        feedId: Long,
+    ) {
+        val feedItem = resolveCurrentFeedItem(feedId) ?: return
+        val mediaId = feedItem.mediaId ?: return
+        val host = activity ?: return
+        val intent =
+            Intent(host, MediaActivity::class.java).apply {
+                putExtra(KeyUtil.arg_id, mediaId)
+                putExtra(KeyUtil.arg_mediaType, feedItem.mediaType)
+            }
+        CompatUtil.startRevealAnim(host, target, intent)
+    }
+
+    private fun openProfile(
+        target: View,
+        userId: Long,
+    ) {
+        val host = activity ?: return
+        val intent =
+            Intent(host, ProfileActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                putExtra(KeyUtil.arg_id, userId)
+            }
+        CompatUtil.startRevealAnim(host, target, intent)
+    }
+
+    private fun onFeedMediaLongPressed(
+        target: View,
+        feedId: Long,
+    ): Boolean {
+        if (!settings.isAuthenticated) {
+            context?.let {
+                NotifyUtil.makeText(
+                    it,
+                    R.string.info_login_req,
+                    R.drawable.ic_group_add_grey_600_18dp,
+                    Toast.LENGTH_SHORT,
+                ).show()
+            }
+            return false
+        }
+        val mediaId = resolveCurrentFeedItem(feedId)?.mediaId ?: return false
+        val host = activity ?: return false
+        mediaActionUtil = MediaActionUtil.Builder().setId(mediaId).build(host)
+        mediaActionUtil.startSeriesAction()
+        return true
+    }
+
+    private fun currentState(): CommentViewModel.CommentUiState = commentViewModel.state.value
+
+    private fun resolveCurrentFeedItem(feedId: Long): FeedItemUiModel? = feedAdapter.currentList.firstOrNull { it.id == feedId }
+
+    private fun CommentReplyUiModel.toFeedReply(): FeedReply = FeedReply(
+        id = id,
+        text = reply,
+        createdAt = createdAt,
+        user = userId?.let { UserBase(name = userName).apply { this.id = it } },
+        likes = likes.map { it.toUserBase() },
+    )
+
+    private class PlaceholderReplyAdapter(
+        context: android.content.Context,
+    ) : RecyclerViewAdapter<FeedReply>(context) {
+        override fun onCreateViewHolder(
+            parent: ViewGroup,
+            viewType: Int,
+        ): RecyclerViewHolder<FeedReply> = throw UnsupportedOperationException("Placeholder adapter should never create view holders")
+
+        override fun getFilter(): Filter? = null
     }
 }

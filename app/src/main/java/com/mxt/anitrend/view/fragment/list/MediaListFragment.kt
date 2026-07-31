@@ -14,7 +14,11 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.MediaListAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
-import com.mxt.anitrend.coordinator.WidgetMutationCoordinator
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter
+import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder
+import com.mxt.anitrend.data.mapper.toMediaListRecord
+import com.mxt.anitrend.domain.model.toMediaListItemUiModel
+import com.mxt.anitrend.domain.model.buildIncrementMediaProgressCommand
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.model.entity.anilist.MediaList
 import com.mxt.anitrend.model.entity.anilist.MediaListCollection
@@ -29,7 +33,9 @@ import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.util.media.MediaListUtil
 import com.mxt.anitrend.util.selectedIndex
 import com.mxt.anitrend.view.activity.detail.MediaActivity
+import com.mxt.anitrend.viewmodel.MediaListMutationViewModel
 import com.mxt.anitrend.viewmodel.MediaListViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -49,9 +55,11 @@ open class MediaListFragment : FragmentBaseList<MediaList, PageContainer<MediaLi
 
     private val settings: Settings by inject()
 
-    private val mutationCoordinator by inject<WidgetMutationCoordinator>()
-
     private val mediaListViewModel: MediaListViewModel by viewModel()
+    private val mediaListMutationViewModel: MediaListMutationViewModel by viewModel()
+
+    protected var stateListAdapter: MediaListAdapter? = null
+    private val renderedItems = MutableStateFlow<List<MediaList>>(emptyList())
 
     companion object {
         @JvmStatic
@@ -75,10 +83,15 @@ open class MediaListFragment : FragmentBaseList<MediaList, PageContainer<MediaLi
         isFilterableEnabled = true
         isPager = false
         val ctx = requireContext()
-        mAdapter =
-            MediaListAdapter(ctx, mutationCoordinator).apply {
-                setCurrentUser(userName)
-            }
+        stateListAdapter =
+            MediaListAdapter(
+                context = ctx,
+                mediaListStyle = settings.mediaListStyle,
+                onIncrement = ::incrementMediaProgress,
+                onOpenMedia = ::openMedia,
+                onOpenManage = ::openManage,
+            )
+        mAdapter = MediaListAdapterBridge(ctx) { stateListAdapter }
 
         mColumnSize =
             if (settings.mediaListStyle == KeyUtil.LIST_VIEW_STYLE_COMPACT_X1) {
@@ -159,7 +172,20 @@ open class MediaListFragment : FragmentBaseList<MediaList, PageContainer<MediaLi
     }
 
     override fun updateUI() {
-        injectAdapter()
+        val adapter = stateListAdapter ?: return
+        if (adapter.itemCount > 0) {
+            if (recyclerView.adapter !== adapter) {
+                recyclerView.adapter = adapter
+            }
+            if (swipeRefreshLayout.isRefreshing()) {
+                swipeRefreshLayout.setRefreshing(false)
+            } else if (swipeRefreshLayout.isLoading()) {
+                swipeRefreshLayout.setLoading(false)
+            }
+            showContent()
+        } else {
+            showEmpty(getString(R.string.layout_empty_response))
+        }
     }
 
     override fun makeRequest() {
@@ -185,67 +211,126 @@ open class MediaListFragment : FragmentBaseList<MediaList, PageContainer<MediaLi
     override fun onChanged(value: PageContainer<MediaListCollection>?) = Unit
 
     private fun handleSuccess(state: MediaListViewModel.UiState.Success) {
+        submitStateList(state.items, state.renderedItems)
         if (state.pageInfo != null) {
             setPageInfo(state.pageInfo)
         }
-        if (!state.isEmpty) {
-            onPostProcessed(state.items)
+        if (state.renderedItems.isNotEmpty()) {
+            updateUI()
         } else {
-            onPostProcessed(emptyList())
+            showEmpty(getString(R.string.layout_empty_response))
         }
-        if (mAdapter.itemCount < 1) {
-            onPostProcessed(null)
+    }
+
+    protected fun submitStateList(
+        items: List<MediaList>,
+        rendered: List<com.mxt.anitrend.domain.model.MediaListItemUiModel>? = null,
+    ) {
+        renderedItems.value = items
+        val currentUser = mediaListViewModel.isCurrentUser(userId, userName)
+        stateListAdapter?.submitItems(
+            rendered ?: items.map { entry ->
+                entry.toMediaListRecord().toMediaListItemUiModel(
+                    isIncrementPending = false,
+                    isDeletePending = false,
+                    canIncrement = canIncrement(entry, currentUser),
+                )
+            },
+        )
+    }
+
+    override fun onStart() {
+        showLoading()
+        if ((stateListAdapter?.itemCount ?: 0) < 1) {
+            onRefresh()
+        } else {
+            updateUI()
         }
     }
 
     override fun onItemClick(
         target: View,
         data: IndexedValue<MediaList>,
-    ) {
-        when (target.id) {
-            R.id.container,
-            R.id.series_image,
-            -> {
-                val host = activity ?: return
-                val mediaBase = data.value.media
-                val intent =
-                    Intent(host, MediaActivity::class.java).apply {
-                        putExtra(KeyUtil.arg_id, data.value.mediaId)
-                        putExtra(KeyUtil.arg_mediaType, mediaBase.type)
-                    }
-                CompatUtil.startRevealAnim(host, target, intent)
-            }
-        }
-    }
+    ) = Unit
 
     override fun onItemLongClick(
         target: View,
         data: IndexedValue<MediaList>,
+    ) = Unit
+
+    private fun openMedia(
+        target: View,
+        item: com.mxt.anitrend.domain.model.MediaListItemUiModel,
     ) {
-        when (target.id) {
-            R.id.container,
-            R.id.series_image,
-            -> {
-                if (settings.isAuthenticated) {
-                    val host = activity ?: return
-                    mediaActionUtil =
-                        MediaActionUtil
-                            .Builder()
-                            .setId(data.value.mediaId)
-                            .build(host)
-                    mediaActionUtil.startSeriesAction()
-                } else {
-                    context?.let {
-                        NotifyUtil
-                            .makeText(
-                                it,
-                                R.string.info_login_req,
-                                R.drawable.ic_group_add_grey_600_18dp,
-                                Toast.LENGTH_SHORT,
-                            ).show()
-                    }
-                }
+        val host = activity ?: return
+        val intent =
+            Intent(host, MediaActivity::class.java).apply {
+                putExtra(KeyUtil.arg_id, item.mediaId)
+                putExtra(KeyUtil.arg_mediaType, item.mediaType)
             }
+        CompatUtil.startRevealAnim(host, target, intent)
+    }
+
+    private fun openManage(item: com.mxt.anitrend.domain.model.MediaListItemUiModel) {
+        if (!settings.isAuthenticated) {
+            context?.let {
+                NotifyUtil
+                    .makeText(
+                        it,
+                        R.string.info_login_req,
+                        R.drawable.ic_group_add_grey_600_18dp,
+                        Toast.LENGTH_SHORT,
+                    ).show()
+            }
+            return
         }
+
+        val host = activity ?: return
+        mediaActionUtil =
+            MediaActionUtil
+                .Builder()
+                .setId(item.mediaId)
+                .build(host)
+        mediaActionUtil.startSeriesAction()
+    }
+
+    private fun incrementMediaProgress(item: com.mxt.anitrend.domain.model.MediaListItemUiModel) {
+        val entry = renderedItems.value.firstOrNull { mediaList ->
+            mediaList.id == item.id || mediaList.mediaId == item.mediaId
+        } ?: return
+        mediaListMutationViewModel.increment(buildIncrementMediaProgressCommand(entry))
+    }
+
+    private fun canIncrement(
+        entry: MediaList,
+        isCurrentUser: Boolean,
+    ): Boolean {
+        if (!isCurrentUser) {
+            return false
+        }
+        if (CompatUtil.equals(entry.media.status, KeyUtil.NOT_YET_RELEASED)) {
+            return false
+        }
+        return if (CompatUtil.equals(entry.media.type, KeyUtil.ANIME)) {
+            entry.media.episodes == 0 || entry.progress < entry.media.episodes
+        } else {
+            entry.media.chapters == 0 || entry.progress < entry.media.chapters
+        }
+    }
+
+    private class MediaListAdapterBridge(
+        context: android.content.Context,
+        private val delegate: () -> MediaListAdapter?,
+    ) : RecyclerViewAdapter<MediaList>(context) {
+        override fun onCreateViewHolder(
+            parent: android.view.ViewGroup,
+            viewType: Int,
+        ): RecyclerViewHolder<MediaList> = error("Bridge adapter should never create view holders")
+
+        override fun onBindViewHolder(holder: RecyclerViewHolder<MediaList>, position: Int) = Unit
+
+        override fun getItemCount(): Int = delegate()?.itemCount ?: 0
+
+        override fun getFilter() = delegate()?.filter
     }
 }

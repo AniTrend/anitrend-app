@@ -18,15 +18,10 @@ import kotlinx.coroutines.withContext
 import com.mxt.anitrend.model.entity.base.MediaBase as MediaEntity
 import com.mxt.anitrend.model.entity.base.StudioBase as StudioEntity
 
-sealed class StudioMutation {
-    // No mutation operations yet. Add event types when mutation methods are added.
-    data object Noop : StudioMutation()
-}
-
 class StudioRepository(
     private val studioService: StudioService,
     ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
-) : AbstractRepository<StudioMutation>(ioDispatcher) {
+) : AbstractRepository(ioDispatcher) {
 
     suspend fun getStudioBase(id: Long): Result<StudioEntity> = withContext(ioDispatcher) {
         runCatching {

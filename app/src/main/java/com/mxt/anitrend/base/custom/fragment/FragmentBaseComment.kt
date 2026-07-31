@@ -111,12 +111,14 @@ abstract class FragmentBaseComment :
     override fun onStart() {
         super.onStart()
         showLoading()
-        if (mAdapter.itemCount < 1) {
+        if (!hasContentItems()) {
             onRefresh()
         } else {
             updateUI()
         }
     }
+
+    protected open fun hasContentItems(): Boolean = mAdapter.itemCount > 0
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)

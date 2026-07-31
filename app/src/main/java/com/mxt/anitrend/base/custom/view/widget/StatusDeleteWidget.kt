@@ -10,13 +10,13 @@ import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.databinding.WidgetDeleteBinding
 import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.extension.getLayoutInflater
-import com.mxt.anitrend.model.entity.anilist.FeedList
-import com.mxt.anitrend.model.entity.anilist.FeedReply
-import com.mxt.anitrend.model.entity.anilist.meta.DeleteState
 import com.mxt.anitrend.util.DialogUtil
-import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
-import timber.log.Timber
+
+data class StatusDeleteWidgetState(
+    val isEnabled: Boolean,
+    val isLoading: Boolean,
+)
 
 class StatusDeleteWidget
 @JvmOverloads
@@ -28,34 +28,15 @@ constructor(
     CustomView,
     View.OnClickListener {
 
-    interface Listener {
-        fun onDeleteFeed(
-            feedId: Long,
-            @KeyUtil.RequestType requestType: Int,
-            onResult: (Result<DeleteState>) -> Unit,
-        )
-    }
-
     private lateinit var binding: WidgetDeleteBinding
-
-    @KeyUtil.RequestType
-    private var requestType: Int = 0
-    private var feedList: FeedList? = null
-    private var feedReply: FeedReply? = null
-    private var listener: Listener? = null
+    private var deleteListener: (() -> Unit)? = null
     private var recycled = false
-
-    fun setListener(listener: Listener?) {
-        this.listener = listener
-    }
+    private var state = StatusDeleteWidgetState(isEnabled = true, isLoading = false)
 
     init {
         onInit()
     }
 
-    /**
-     * Optionally included when constructing custom views
-     */
     override fun onInit() {
         binding = WidgetDeleteBinding.inflate(context.getLayoutInflater(), this, true)
         binding.widgetDelete.setCompoundDrawablesWithIntrinsicBounds(
@@ -65,74 +46,45 @@ constructor(
             null,
         )
         binding.widgetFlipper.setOnClickListener(this)
+        render(state)
     }
 
-    fun setModel(
-        feedList: FeedList,
-        @KeyUtil.RequestType requestType: Int,
-    ) {
+    fun render(state: StatusDeleteWidgetState) {
         recycled = false
-        this.requestType = requestType
-        this.feedList = feedList
+        this.state = state
+        binding.widgetFlipper.displayedChild = if (state.isLoading) LOADING_STATE else CONTENT_STATE
+        binding.widgetFlipper.isEnabled = state.isEnabled
+        binding.widgetDelete.isEnabled = state.isEnabled
     }
 
-    fun setModel(
-        feedReply: FeedReply,
-        @KeyUtil.RequestType requestType: Int,
-    ) {
-        recycled = false
-        this.requestType = requestType
-        this.feedReply = feedReply
+    fun setOnDeleteListener(listener: (() -> Unit)?) {
+        deleteListener = listener
     }
 
-    /**
-     * Clean up any resources that won't be needed
-     */
     override fun onViewRecycled() {
         recycled = true
-        listener = null
-        resetFlipperState()
-        feedReply = null
-        feedList = null
-    }
-
-    private fun resetFlipperState() {
-        if (binding.widgetFlipper.displayedChild == LOADING_STATE) {
-            binding.widgetFlipper.displayedChild = CONTENT_STATE
-        }
+        deleteListener = null
+        state = StatusDeleteWidgetState(isEnabled = true, isLoading = false)
+        render(state)
     }
 
     override fun onClick(view: View) {
+        if (view.id != R.id.widget_flipper || recycled || !isAttachedToWindow) {
+            return
+        }
+        if (state.isLoading) {
+            NotifyUtil.makeText(context, R.string.busy_please_wait, Toast.LENGTH_SHORT).show()
+            return
+        }
+        if (!state.isEnabled) {
+            return
+        }
         DialogUtil.createMessage(
             context,
             R.string.dialog_title_delete_activity,
             R.string.dialog_message_delete_activity,
         ) { _, _ ->
-            if (view.id == R.id.widget_flipper) {
-                if (binding.widgetFlipper.displayedChild == CONTENT_STATE) {
-                    binding.widgetFlipper.showNext()
-                    val feedId = feedList?.id ?: feedReply?.id ?: run {
-                        resetFlipperState()
-                        return@createMessage
-                    }
-                    listener?.onDeleteFeed(feedId, requestType) { result ->
-                        if (recycled || !isAttachedToWindow) return@onDeleteFeed
-                        result.onSuccess {
-                            resetFlipperState()
-                        }.onFailure {
-                            resetFlipperState()
-                            Timber.w(it)
-                        }
-                    }
-                } else {
-                    NotifyUtil
-                        .makeText(
-                            context,
-                            R.string.busy_please_wait,
-                            Toast.LENGTH_SHORT,
-                        ).show()
-                }
-            }
+            deleteListener?.invoke()
         }
     }
 

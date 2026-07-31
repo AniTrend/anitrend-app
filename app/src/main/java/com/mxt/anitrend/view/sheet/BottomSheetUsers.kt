@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mxt.anitrend.R
@@ -15,14 +16,16 @@ import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
 import com.mxt.anitrend.base.interfaces.event.ISearchDelegate
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener
-import com.mxt.anitrend.coordinator.WidgetMutationCoordinator
+import com.mxt.anitrend.data.DatabaseHelper
 import com.mxt.anitrend.databinding.BottomSheetListBinding
 import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.extension.parcelableArrayList
 import com.mxt.anitrend.model.entity.base.UserBase
+import com.mxt.anitrend.repository.UserRepository
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.view.activity.detail.ProfileActivity
 import com.mxt.anitrend.widget.ProgressLayout
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 class BottomSheetUsers :
@@ -39,7 +42,8 @@ class BottomSheetUsers :
     private var recyclerView: StatefulRecyclerView? = null
     private var mColumnSize: Int = 0
 
-    private val mutationCoordinator by inject<WidgetMutationCoordinator>()
+    private val databaseHelper: DatabaseHelper by inject()
+    private val userRepository: UserRepository by inject()
 
     companion object {
         @JvmStatic
@@ -52,10 +56,23 @@ class BottomSheetUsers :
         super.onCreate(savedInstanceState)
         val ctx = requireContext()
         mColumnSize = resources.getInteger(R.integer.single_list_x1)
-        mAdapter = UserAdapter(ctx, mutationCoordinator)
+        mAdapter = UserAdapter(
+            context = ctx,
+            currentUser = databaseHelper.currentUser,
+            onToggleFollowAction = ::toggleFollow,
+        )
         val baseList = arguments?.parcelableArrayList<UserBase>(KeyUtil.arg_list_model)
         if (!baseList.isNullOrEmpty()) {
             mAdapter.onItemsInserted(baseList)
+        }
+    }
+
+    private fun toggleFollow(
+        userId: Long,
+        onResult: (Result<UserBase>) -> Unit,
+    ) {
+        lifecycleScope.launch {
+            onResult(userRepository.toggleFollow(userId))
         }
     }
 

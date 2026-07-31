@@ -10,11 +10,9 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder
 import com.mxt.anitrend.base.custom.view.widget.FollowStateWidget
 import com.mxt.anitrend.binding.setImage
-import com.mxt.anitrend.coordinator.WidgetMutationCoordinator
 import com.mxt.anitrend.databinding.AdapterUserBinding
 import com.mxt.anitrend.extension.getLayoutInflater
 import com.mxt.anitrend.model.entity.base.UserBase
-import com.mxt.anitrend.util.CompatUtil
 import java.util.Locale
 
 /**
@@ -22,7 +20,8 @@ import java.util.Locale
  */
 class UserAdapter(
     context: Context,
-    private val coordinator: WidgetMutationCoordinator,
+    private val currentUser: UserBase?,
+    private val onToggleFollowAction: (Long, (Result<UserBase>) -> Unit) -> Unit,
 ) : RecyclerViewAdapter<UserBase>(context) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -35,7 +34,7 @@ class UserAdapter(
         return object : Filter() {
             override fun performFiltering(constraint: CharSequence?): FilterResults {
                 val results = FilterResults()
-                if (CompatUtil.isEmpty(clone)) {
+                if (clone.isNullOrEmpty()) {
                     clone = data
                 }
                 val filter = constraint?.toString()?.lowercase(Locale.getDefault()).orEmpty()
@@ -59,8 +58,7 @@ class UserAdapter(
             ) {
                 val filtered = results.values as? List<UserBase>
                 if (filtered != null) {
-                    data = filtered.toMutableList()
-                    notifyDataSetChanged()
+                    onItemsInserted(filtered)
                 }
             }
         }
@@ -70,7 +68,7 @@ class UserAdapter(
         override fun onToggleFollow(
             userId: Long,
             onResult: (Result<UserBase>) -> Unit,
-        ) = coordinator.toggleFollow(userId, onResult)
+        ) = onToggleFollowAction(userId, onResult)
     }
 
     inner class UserViewHolder(
@@ -84,7 +82,7 @@ class UserAdapter(
             binding.userAvatar.setImage(model.avatar)
             binding.userName.text = model.name
             binding.userFollowStateWidget.setUserModel(model)
-            binding.userFollowStateWidget.setCurrentUser(coordinator.databaseHelper.currentUser)
+            binding.userFollowStateWidget.setCurrentUser(currentUser)
             binding.userFollowStateWidget.setListener(followListener)
         }
 

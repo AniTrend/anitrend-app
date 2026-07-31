@@ -32,9 +32,33 @@ import com.mxt.anitrend.base.interfaces.dao.BoxQuery
 import com.mxt.anitrend.base.plugin.image.GlideImagePlugin
 import com.mxt.anitrend.base.plugin.image.ImageConfigurationPlugin
 import com.mxt.anitrend.base.plugin.text.TextConfigurationPlugin
-import com.mxt.anitrend.coordinator.WidgetMutationCoordinator
 import com.mxt.anitrend.data.DatabaseHelper
+import com.mxt.anitrend.data.store.AccountStoreClearer
+import com.mxt.anitrend.data.store.mutation.RequestSequence
+import com.mxt.anitrend.data.store.feed.FeedStore
+import com.mxt.anitrend.data.store.feed.InMemoryFeedStore
+import com.mxt.anitrend.data.store.medialist.InMemoryMediaListStore
+import com.mxt.anitrend.data.store.medialist.MediaListStore
+import com.mxt.anitrend.data.store.review.InMemoryReviewStore
+import com.mxt.anitrend.data.store.review.ReviewStore
+import com.mxt.anitrend.data.store.mutation.DefaultMutationExecutor
+import com.mxt.anitrend.data.store.mutation.DefaultMutationRegistry
+import com.mxt.anitrend.data.store.mutation.DefaultOperationIdGenerator
+import com.mxt.anitrend.data.store.mutation.KeyedMutex
+import com.mxt.anitrend.data.store.mutation.MutationExecutor
+import com.mxt.anitrend.data.store.mutation.MutationRegistry
+import com.mxt.anitrend.data.store.mutation.OperationIdGenerator
+import com.mxt.anitrend.data.store.mutation.SessionEpoch
 import com.mxt.anitrend.extension.logFile
+import com.mxt.anitrend.domain.feed.interactor.DeleteFeedInteractor
+import com.mxt.anitrend.domain.feed.interactor.DeleteReplyInteractor
+import com.mxt.anitrend.domain.feed.interactor.SaveFeedInteractor
+import com.mxt.anitrend.domain.feed.interactor.SaveReplyInteractor
+import com.mxt.anitrend.domain.like.interactor.ToggleLikeInteractor
+import com.mxt.anitrend.domain.medialist.interactor.DeleteMediaListEntryInteractor
+import com.mxt.anitrend.domain.medialist.interactor.IncrementMediaProgressInteractor
+import com.mxt.anitrend.domain.medialist.interactor.SaveMediaListEntryInteractor
+import com.mxt.anitrend.domain.review.interactor.RateReviewInteractor
 import com.mxt.anitrend.graphql.generated.GeneratedGraphQLRegistry
 import com.mxt.anitrend.model.api.converter.AniGraphConverter
 import com.mxt.anitrend.model.api.interceptor.AuthInterceptor
@@ -78,6 +102,7 @@ import com.mxt.anitrend.viewmodel.CharacterFavouritesViewModel
 import com.mxt.anitrend.viewmodel.CharacterOverviewViewModel
 import com.mxt.anitrend.viewmodel.CharacterSearchViewModel
 import com.mxt.anitrend.viewmodel.CharacterViewModel
+import com.mxt.anitrend.viewmodel.CommentViewModel
 import com.mxt.anitrend.viewmodel.FeedListViewModel
 import com.mxt.anitrend.viewmodel.GiphyViewModel
 import com.mxt.anitrend.viewmodel.LoggingViewModel
@@ -92,6 +117,7 @@ import com.mxt.anitrend.viewmodel.MediaFeedViewModel
 import com.mxt.anitrend.viewmodel.MediaFormatViewModel
 import com.mxt.anitrend.viewmodel.MediaLatestViewModel
 import com.mxt.anitrend.viewmodel.MediaListViewModel
+import com.mxt.anitrend.viewmodel.MediaListMutationViewModel
 import com.mxt.anitrend.viewmodel.MediaOverviewViewModel
 import com.mxt.anitrend.viewmodel.MediaRecommendationsViewModel
 import com.mxt.anitrend.viewmodel.MediaRelationViewModel
@@ -516,46 +542,71 @@ private val serviceModule = module {
 }
 
 private val repositoryModule = module {
-    single { MediaRepository(mediaService = get()) }
+    single { MediaRepository(mediaService = get(), feedStore = get()) }
     single { UserRepository(userService = get(), boxQuery = get()) }
-    single { BrowseRepository(browseService = get()) }
+    single<FeedStore> { InMemoryFeedStore() }
+    single<MediaListStore> { InMemoryMediaListStore() }
+    single<ReviewStore> { InMemoryReviewStore() }
+    single { AccountStoreClearer(feedStore = get(), mediaListStore = get(), reviewStore = get(), mutationRegistry = get(), sessionEpoch = get()) }
+    single { BrowseRepository(browseService = get(), mediaListStore = get(), reviewStore = get()) }
     single { CharacterRepository(characterService = get()) }
     single { StaffRepository(staffService = get()) }
     single { StudioRepository(studioService = get()) }
     single { SearchRepository(searchService = get()) }
-    single { FeedRepository(feedService = get()) }
-    single { BaseRepository(baseService = get(), boxQuery = get()) }
+    single { FeedRepository(feedService = get(), feedStore = get()) }
+    single { BaseRepository(baseService = get(), boxQuery = get(), feedStore = get()) }
     single { CrunchyrollRepository(feedService = get(named("crunchyrollFeed")), crunchyrollService = get(named("crunchyroll"))) }
-    single {
-        WidgetMutationCoordinator(
-            baseRepository = get(),
-            browseRepository = get(),
-            userRepository = get(),
-            feedRepository = get(),
-            coroutineScope = get(ApplicationScopeQualifier),
-            ioDispatcher = get(IoDispatcherQualifier),
-            mainDispatcher = get(MainDispatcherQualifier),
-            databaseHelper = get(),
+    single { SessionEpoch() }
+    single { KeyedMutex(coroutineScope = get(ApplicationScopeQualifier)) }
+    single<MutationRegistry> { DefaultMutationRegistry() }
+    single<OperationIdGenerator> { DefaultOperationIdGenerator() }
+    single { RequestSequence() }
+    single<MutationExecutor> {
+        DefaultMutationExecutor(
+            applicationScope = get(ApplicationScopeQualifier),
+            keyedMutex = get(),
+            mutationRegistry = get(),
+            operationIdGenerator = get(),
+            sessionEpoch = get(),
         )
     }
+    single { ToggleLikeInteractor(baseRepository = get(), mutationExecutor = get(), feedStore = get(), requestSequence = get()) }
+    single { SaveFeedInteractor(feedRepository = get(), mutationExecutor = get(), feedStore = get(), requestSequence = get()) }
+    single { DeleteFeedInteractor(feedRepository = get(), mutationExecutor = get(), feedStore = get(), requestSequence = get()) }
+    single { SaveReplyInteractor(feedRepository = get(), mutationExecutor = get(), feedStore = get(), requestSequence = get()) }
+    single { DeleteReplyInteractor(feedRepository = get(), mutationExecutor = get(), feedStore = get(), requestSequence = get()) }
+    single { SaveMediaListEntryInteractor(browseRepository = get(), mutationExecutor = get(), mediaListStore = get(), requestSequence = get(), userRepository = get()) }
+    single { DeleteMediaListEntryInteractor(browseRepository = get(), mutationExecutor = get(), mediaListStore = get(), requestSequence = get()) }
+    single { IncrementMediaProgressInteractor(saveMediaListEntryInteractor = get()) }
+    single { RateReviewInteractor(browseRepository = get(), mutationExecutor = get(), reviewStore = get(), requestSequence = get()) }
 }
 
 private val mediaFeatureModule = module {
-    viewModel { AiringListViewModel(browseRepository = get()) }
-    viewModel { BrowseReviewViewModel(browseRepository = get()) }
-    viewModel { MediaBrowseViewModel(baseRepository = get(), browseRepository = get()) }
+    viewModel { AiringListViewModel(browseRepository = get(), mediaListStore = get(), mutationRegistry = get(), requestSequence = get()) }
+    viewModel { BrowseReviewViewModel(browseRepository = get(), reviewStore = get(), requestSequence = get(), rateReviewInteractor = get()) }
+    viewModel { MediaBrowseViewModel(baseRepository = get(), browseRepository = get(), mediaListStore = get()) }
     viewModel { MediaLatestViewModel(browseRepository = get()) }
-    viewModel { MediaListViewModel(browseRepository = get(), userRepository = get(), settings = get()) }
-    viewModel { ReviewViewModel(browseRepository = get()) }
+    viewModel { MediaListViewModel(browseRepository = get(), mediaListStore = get(), mutationRegistry = get(), userRepository = get(), settings = get(), requestSequence = get()) }
+    viewModel { MediaListMutationViewModel(saveMediaListEntryInteractor = get(), deleteMediaListEntryInteractor = get(), incrementMediaProgressInteractor = get(), mutationRegistry = get()) }
+    viewModel { ReviewViewModel(browseRepository = get(), reviewStore = get(), requestSequence = get(), rateReviewInteractor = get()) }
     viewModel { SuggestionListViewModel(userRepository = get(), browseRepository = get()) }
     viewModel { MediaCharacterViewModel(mediaRepository = get()) }
-    viewModel { MediaFeedViewModel(mediaRepository = get(), baseRepository = get()) }
+    viewModel {
+        MediaFeedViewModel(
+            mediaRepository = get(),
+            feedStore = get(),
+            mutationRegistry = get(),
+            toggleLikeInteractor = get(),
+            deleteFeedInteractor = get(),
+            requestSequence = get(),
+        )
+    }
     viewModel { MediaOverviewViewModel(repository = get(), settings = get<Settings>()) }
     viewModel { MediaRecommendationsViewModel(mediaRepository = get()) }
     viewModel { MediaRelationViewModel(mediaRepository = get()) }
     viewModel { MediaStaffViewModel(mediaRepository = get()) }
     viewModel { MediaStatsViewModel(mediaRepository = get()) }
-    viewModel { MediaViewModel(mediaRepository = get(), baseRepository = get(), browseRepository = get()) }
+    viewModel { MediaViewModel(mediaRepository = get(), baseRepository = get(), mediaListStore = get()) }
     viewModel { MediaSearchViewModel(searchRepository = get()) }
     viewModel { MediaFavouritesViewModel(userRepository = get()) }
 }
@@ -563,13 +614,52 @@ private val mediaFeatureModule = module {
 private val userFeatureModule = module {
     viewModel { MainViewModel(userRepository = get()) }
     viewModel { UserOverviewViewModel(userRepository = get()) }
-    viewModel { UserFeedViewModel(feedRepository = get(), baseRepository = get()) }
+    viewModel {
+        UserFeedViewModel(
+            feedRepository = get(),
+            feedStore = get(),
+            mutationRegistry = get(),
+            toggleLikeInteractor = get(),
+            deleteFeedInteractor = get(),
+            requestSequence = get(),
+        )
+    }
     viewModel { UserListViewModel(userRepository = get()) }
-    viewModel { UserSearchViewModel(searchRepository = get()) }
+    viewModel { UserSearchViewModel(searchRepository = get(), userRepository = get()) }
     viewModel { NotificationViewModel(userRepository = get()) }
     viewModel { ProfileViewModel(userRepository = get()) }
-    viewModel { FeedListViewModel(feedRepository = get(), baseRepository = get()) }
-    viewModel { MessageFeedViewModel(feedRepository = get(), baseRepository = get()) }
+    viewModel {
+        FeedListViewModel(
+            feedRepository = get(),
+            feedStore = get(),
+            mutationRegistry = get(),
+            toggleLikeInteractor = get(),
+            deleteFeedInteractor = get(),
+            requestSequence = get(),
+        )
+    }
+    viewModel {
+        CommentViewModel(
+            feedStore = get(),
+            feedRepository = get(),
+            mutationRegistry = get(),
+            toggleLikeInteractor = get(),
+            saveReplyInteractor = get(),
+            deleteReplyInteractor = get(),
+            deleteFeedInteractor = get(),
+            saveFeedInteractor = get(),
+        )
+    }
+    viewModel {
+        MessageFeedViewModel(
+            feedRepository = get(),
+            feedStore = get(),
+            mutationRegistry = get(),
+            toggleLikeInteractor = get(),
+            deleteFeedInteractor = get(),
+            requestSequence = get(),
+        )
+    }
     viewModel { LoginUserViewModel(userRepository = get()) }
 }
 

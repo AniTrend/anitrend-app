@@ -1,5 +1,6 @@
 package com.mxt.anitrend.view.sheet
 
+import com.mxt.anitrend.domain.model.toDraft
 import com.mxt.anitrend.fixture.MediaListFixtures
 import com.mxt.anitrend.util.KeyUtil
 import org.hamcrest.MatcherAssert.assertThat
@@ -230,13 +231,13 @@ class ManageSheetLogicTest {
 
     @Test
     fun buildMediaListFromForm_allFieldsSet_shouldPopulateModel() {
-        val model = MediaListFixtures.aMediaList()
+        val draft = MediaListFixtures.aMediaList().toDraft()
         val startedAt = MediaListFixtures.aFuzzyDate(2024, 1, 10)
         val completedAt = MediaListFixtures.aFuzzyDate(2024, 6, 20)
         val advancedScores = mapOf("Story" to 9.0f, "Art" to 8.0f)
 
         val result = buildMediaListFromForm(
-            model = model,
+            draft = draft,
             statusIndex = 2, // COMPLETED
             statuses = statuses,
             progress = 24,
@@ -268,9 +269,9 @@ class ManageSheetLogicTest {
 
     @Test
     fun buildMediaListFromForm_isAnime_shouldNotSetProgressVolumes() {
-        val model = MediaListFixtures.aMediaList(progressVolumes = 5)
+        val draft = MediaListFixtures.aMediaList(progressVolumes = 5).toDraft()
         val result = buildMediaListFromForm(
-            model = model,
+            draft = draft,
             statusIndex = 0,
             statuses = statuses,
             progress = 10,
@@ -291,9 +292,9 @@ class ManageSheetLogicTest {
 
     @Test
     fun buildMediaListFromForm_isAnimeFalse_shouldProgressVolumes() {
-        val model = MediaListFixtures.aMediaList(progressVolumes = 0)
+        val draft = MediaListFixtures.aMediaList(progressVolumes = 0).toDraft()
         val result = buildMediaListFromForm(
-            model = model,
+            draft = draft,
             statusIndex = 0,
             statuses = statuses,
             progress = 10,
@@ -314,9 +315,9 @@ class ManageSheetLogicTest {
 
     @Test
     fun buildMediaListFromForm_statusIndex_shouldMapCorrectly() {
-        val model = MediaListFixtures.aMediaList()
+        val draft = MediaListFixtures.aMediaList().toDraft()
         val result = buildMediaListFromForm(
-            model = model,
+            draft = draft,
             statusIndex = 4, // PAUSED
             statuses = statuses,
             progress = 10,
@@ -337,9 +338,9 @@ class ManageSheetLogicTest {
 
     @Test
     fun buildMediaListFromForm_notesPassedThrough() {
-        val model = MediaListFixtures.aMediaList(notes = null)
+        val draft = MediaListFixtures.aMediaList(notes = null).toDraft()
         val result = buildMediaListFromForm(
-            model = model,
+            draft = draft,
             statusIndex = 0,
             statuses = statuses,
             progress = 0,
@@ -360,10 +361,10 @@ class ManageSheetLogicTest {
 
     @Test
     fun buildMediaListFromForm_advancedScoresSet() {
-        val model = MediaListFixtures.aMediaList(advancedScores = null)
+        val draft = MediaListFixtures.aMediaList(advancedScores = null).toDraft()
         val advancedScores = mapOf("Story" to 7.5f, "Characters" to 9.0f)
         val result = buildMediaListFromForm(
-            model = model,
+            draft = draft,
             statusIndex = 0,
             statuses = statuses,
             progress = 0,
@@ -385,9 +386,9 @@ class ManageSheetLogicTest {
     @Test
     fun buildMediaListFromForm_advancedScoresNull_shouldNotOverwriteExisting() {
         val existingScores = mapOf("Story" to 5.0f)
-        val model = MediaListFixtures.aMediaList(advancedScores = existingScores)
+        val draft = MediaListFixtures.aMediaList(advancedScores = existingScores).toDraft()
         val result = buildMediaListFromForm(
-            model = model,
+            draft = draft,
             statusIndex = 0,
             statuses = statuses,
             progress = 0,

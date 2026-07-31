@@ -2,138 +2,113 @@ package com.mxt.anitrend.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mxt.anitrend.data.mapper.toFeedList
+import com.mxt.anitrend.data.mapper.toPageInfo
+import com.mxt.anitrend.data.store.feed.FeedQueryKey
+import com.mxt.anitrend.data.store.feed.FeedScope
+import com.mxt.anitrend.data.store.feed.FeedStore
+import com.mxt.anitrend.data.store.mutation.MutationRegistry
+import com.mxt.anitrend.data.store.mutation.OperationKey
+import com.mxt.anitrend.data.store.mutation.OperationStatus
+import com.mxt.anitrend.data.store.mutation.RequestSequence
+import com.mxt.anitrend.domain.feed.interactor.DeleteFeedInteractor
+import com.mxt.anitrend.domain.like.interactor.ToggleLikeInteractor
+import com.mxt.anitrend.domain.model.DeleteFeedCommand
+import com.mxt.anitrend.domain.model.FeedItemUiModel
+import com.mxt.anitrend.domain.model.ToggleLikeCommand
+import com.mxt.anitrend.domain.model.toFeedItemUiModel
 import com.mxt.anitrend.graphql.generated.LikeableType
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.container.body.PageContainer
-import com.mxt.anitrend.repository.BaseMutation
-import com.mxt.anitrend.repository.BaseRepository
-import com.mxt.anitrend.repository.FeedMutation
 import com.mxt.anitrend.repository.FeedRepository
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class MessageFeedViewModel(
     private val feedRepository: FeedRepository,
-    private val baseRepository: BaseRepository,
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val feedStore: FeedStore,
+    private val mutationRegistry: MutationRegistry,
+    private val toggleLikeInteractor: ToggleLikeInteractor,
+    private val deleteFeedInteractor: DeleteFeedInteractor,
+    private val requestSequence: RequestSequence,
 ) : ViewModel() {
 
     sealed interface UiState {
         data object Loading : UiState
         data class Success(
             val content: PageContainer<FeedList>,
-            val replaceExisting: Boolean = false,
+            val items: List<FeedItemUiModel>,
+            val loadedPages: Set<Int>,
+            val replaceExisting: Boolean,
         ) : UiState
         data class Error(val message: String) : UiState
     }
 
-    private val _state = MutableStateFlow<UiState>(UiState.Loading)
-    val state: StateFlow<UiState> = _state.asStateFlow()
+    private data class ScreenState(
+        val queryKey: FeedQueryKey? = null,
+        val requestToken: Long = 0L,
+        val lastRequestedPage: Int = 1,
+        val isLoading: Boolean = false,
+        val errorMessage: String? = null,
+    )
 
-    init {
-        viewModelScope.launch {
-            feedRepository.mutationEvents.collect { event ->
-                when (event) {
-                    is FeedMutation.ReplySaved -> {
-                        replaceCurrentPage { feeds ->
-                            var changed = false
-                            feeds.replaceAll { feed ->
-                                if (feed.id == event.activityId) {
-                                    changed = true
-                                    FeedList(
-                                        id = feed.id,
-                                        replyCount = feed.replyCount + 1,
-                                        type = feed.type,
-                                        status = feed.status,
-                                        text = feed.text,
-                                        createdAt = feed.createdAt,
-                                        user = feed.user,
-                                        media = feed.media,
-                                        messenger = feed.messenger,
-                                        recipient = feed.recipient,
-                                        likes = feed.likes,
-                                        siteUrl = feed.siteUrl,
-                                    ).also {
-                                        it.replies = (feed.replies ?: emptyList()) + event.reply
-                                    }
-                                } else {
-                                    feed
-                                }
-                            }
-                            changed
+    private val screenState = MutableStateFlow(ScreenState())
+
+    val state: StateFlow<UiState> =
+        screenState
+            .flatMapLatest { screen ->
+                val queryKey = screen.queryKey ?: return@flatMapLatest flowOf(
+                    if (screen.errorMessage != null) {
+                        UiState.Error(screen.errorMessage)
+                    } else {
+                        UiState.Loading
+                    },
+                )
+
+                combine(
+                    feedStore.observeQuery(queryKey),
+                    mutationRegistry.state,
+                    flowOf(screen),
+                ) { query, operations, currentScreen ->
+                    val renderedFeeds = query.feeds.map { it.toFeedList() }
+                    when {
+                        currentScreen.errorMessage != null -> {
+                            UiState.Error(currentScreen.errorMessage)
+                        }
+                        currentScreen.isLoading && renderedFeeds.isEmpty() -> {
+                            UiState.Loading
+                        }
+                        else -> {
+                            UiState.Success(
+                                content = PageContainer<FeedList>().apply {
+                                    query.pageInfo?.toPageInfo()?.let { pageInfo = it }
+                                    pageData = renderedFeeds
+                                },
+                                items = query.feeds.map { feed ->
+                                    feed.toFeedItemUiModel(
+                                        isLikePending = operations[OperationKey.feedLike(feed.id)].isRunning(),
+                                        isDeletePending = operations[OperationKey.feedDelete(feed.id)].isRunning(),
+                                    )
+                                },
+                                loadedPages = query.loadedPages,
+                                replaceExisting = currentScreen.lastRequestedPage <= 1,
+                            )
                         }
                     }
-                    is FeedMutation.ReplyDeleted -> {
-                        replaceCurrentPage { feeds ->
-                            var changed = false
-                            feeds.replaceAll { feed ->
-                                val filtered = feed.replies?.filter { it.id != event.id }
-                                if (filtered != feed.replies) {
-                                    changed = true
-                                    FeedList(
-                                        id = feed.id,
-                                        replyCount = maxOf(0, feed.replyCount - 1),
-                                        type = feed.type,
-                                        status = feed.status,
-                                        text = feed.text,
-                                        createdAt = feed.createdAt,
-                                        user = feed.user,
-                                        media = feed.media,
-                                        messenger = feed.messenger,
-                                        recipient = feed.recipient,
-                                        likes = feed.likes,
-                                        siteUrl = feed.siteUrl,
-                                    ).also { it.replies = filtered }
-                                } else {
-                                    feed
-                                }
-                            }
-                            changed
-                        }
-                    }
-                    else -> { /* ignore feed-level events - not relevant to message threads */ }
                 }
-            }
-        }
-
-        viewModelScope.launch {
-            baseRepository.mutationEvents.collect { event ->
-                when (event) {
-                    is BaseMutation.LikeToggled -> {
-                        if (event.targetType == LikeableType.ACTIVITY) {
-                            replaceCurrentPage { feeds ->
-                                val index = feeds.indexOfFirst { it.id == event.targetId }
-                                if (index >= 0) {
-                                    feeds[index].likes = event.users
-                                    true
-                                } else {
-                                    false
-                                }
-                            }
-                        }
-                    }
-                    else -> Unit
-                }
-            }
-        }
-    }
-
-    fun applyReturnedFeed(feed: FeedList) {
-        replaceCurrentPage { feeds ->
-            val index = feeds.indexOfFirst { it.id == feed.id }
-            if (index >= 0) {
-                feeds[index] = feed
-                true
-            } else {
-                false
-            }
-        }
-    }
+            }.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = UiState.Loading,
+            )
 
     /**
      * Loads message feed. Repeatable for pagination; no loadedOnce guard.
@@ -146,38 +121,80 @@ class MessageFeedViewModel(
         pageLimit: Int,
         messageType: Int,
     ) {
+        val queryKey = FeedQueryKey(
+            scope = if (messageType == 0) FeedScope.MESSAGE_INBOX else FeedScope.MESSAGE_OUTBOX,
+            userId = userId,
+            mediaId = null,
+            activityType = null,
+            isFollowing = null,
+            isMixed = null,
+        )
+        val token = if (page > 1) screenState.value.requestToken else requestSequence.next()
+        screenState.update {
+            it.copy(
+                queryKey = queryKey,
+                requestToken = token,
+                lastRequestedPage = page,
+                isLoading = true,
+                errorMessage = null,
+            )
+        }
+
         viewModelScope.launch {
-            _state.value = UiState.Loading
             feedRepository.getFeedMessage(
                 page = page,
                 perPage = pageLimit,
                 userId = if (messageType == 0) userId else null,
                 messengerId = if (messageType != 0) userId else null,
-            ).onSuccess { content ->
-                _state.value = UiState.Success(content)
+                queryKey = queryKey,
+                readToken = token,
+            ).onSuccess {
+                if (screenState.value.requestToken != token) {
+                    return@onSuccess
+                }
+                screenState.update { current ->
+                    current.copy(
+                        isLoading = false,
+                        errorMessage = null,
+                    )
+                }
             }.onFailure { throwable ->
+                if (screenState.value.requestToken != token) {
+                    return@onFailure
+                }
                 Timber.e(throwable, "MessageFeedViewModel load failed")
-                _state.value = UiState.Error(
-                    throwable.message ?: "Failed to load message feed",
-                )
+                screenState.update { current ->
+                    current.copy(
+                        isLoading = false,
+                        errorMessage = throwable.message ?: "Failed to load message feed",
+                    )
+                }
             }
         }
     }
 
-    private fun replaceCurrentPage(update: (MutableList<FeedList>) -> Boolean) {
-        val current = _state.value as? UiState.Success ?: return
-        val feeds = current.content.pageData.toMutableList()
-        if (!update(feeds)) {
+    fun toggleLike(feedId: Long) {
+        if (mutationRegistry.state.value[OperationKey.feedLike(feedId)].isRunning()) {
             return
         }
-        _state.value = current.copy(
-            content = PageContainer<FeedList>().apply {
-                if (current.content.hasPageInfo()) {
-                    pageInfo = current.content.pageInfo
-                }
-                pageData = feeds
-            },
-            replaceExisting = true,
-        )
+        viewModelScope.launch {
+            toggleLikeInteractor(
+                ToggleLikeCommand(
+                    id = feedId,
+                    likeableType = LikeableType.ACTIVITY,
+                ),
+            )
+        }
     }
+
+    fun deleteFeed(feedId: Long) {
+        if (mutationRegistry.state.value[OperationKey.feedDelete(feedId)].isRunning()) {
+            return
+        }
+        viewModelScope.launch {
+            deleteFeedInteractor(DeleteFeedCommand(feedId = feedId))
+        }
+    }
+
+    private fun OperationStatus?.isRunning(): Boolean = this is OperationStatus.Running
 }

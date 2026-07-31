@@ -71,4 +71,13 @@ class UserListViewModel(
             }
         }
     }
+
+    fun toggleFollow(
+        userId: Long,
+        onResult: (Result<UserBase>) -> Unit,
+    ) {
+        viewModelScope.launch {
+            onResult(userRepository.toggleFollow(userId))
+        }
+    }
 }

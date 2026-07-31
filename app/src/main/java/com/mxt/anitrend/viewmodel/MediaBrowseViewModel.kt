@@ -2,6 +2,8 @@ package com.mxt.anitrend.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mxt.anitrend.data.mapper.toMediaList
+import com.mxt.anitrend.data.store.medialist.MediaListStore
 import com.mxt.anitrend.graphql.generated.MediaFormat
 import com.mxt.anitrend.graphql.generated.MediaSeason
 import com.mxt.anitrend.graphql.generated.MediaSort
@@ -10,27 +12,39 @@ import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.model.entity.anilist.Genre
 import com.mxt.anitrend.model.entity.anilist.MediaTag
 import com.mxt.anitrend.model.entity.base.MediaBase
+import com.mxt.anitrend.model.entity.container.attribute.PageInfo
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.repository.BaseRepository
-import com.mxt.anitrend.repository.BrowseMutation
 import com.mxt.anitrend.repository.BrowseRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class MediaBrowseViewModel(
     private val baseRepository: BaseRepository,
     private val browseRepository: BrowseRepository,
+    private val mediaListStore: MediaListStore,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : ViewModel() {
 
     sealed interface UiState {
         data object Loading : UiState
-        data class Success(val content: PageContainer<MediaBase>) : UiState
+        data class Success(
+            val content: PageContainer<MediaBase>,
+            val loadedPages: Set<Int>,
+            val replaceExisting: Boolean = false,
+        ) : UiState
         data class Error(val message: String) : UiState
     }
 
@@ -39,33 +53,26 @@ class MediaBrowseViewModel(
     val mediaTags: List<MediaTag>
         get() = baseRepository.cachedTags
 
-    private val _state = MutableStateFlow<UiState>(UiState.Loading)
-    val state: StateFlow<UiState> = _state.asStateFlow()
-    private val loadedMedia = linkedMapOf<Long, MediaBase>()
+    private data class ScreenState(
+        val loadedMedia: LinkedHashMap<Long, MediaBase> = linkedMapOf(),
+        val loadedPages: Set<Int> = emptySet(),
+        val currentPageInfo: PageInfo? = null,
+        val requestGeneration: Int = 0,
+        val lastRequestedPage: Int = 1,
+        val isLoading: Boolean = false,
+        val errorMessage: String? = null,
+    )
 
-    init {
-        viewModelScope.launch {
-            browseRepository.mutationEvents.collect { event ->
-                when (event) {
-                    is BrowseMutation.MediaListSaved -> {
-                        loadedMedia[event.entry.mediaId]?.let { media ->
-                            media.mediaListEntry = event.entry
-                            emitUpdatedMedia()
-                        }
-                    }
-                    is BrowseMutation.MediaListDeleted -> {
-                        loadedMedia.values.firstOrNull { media ->
-                            media.mediaListEntry?.id == event.id
-                        }?.let { media ->
-                            media.mediaListEntry = null
-                            emitUpdatedMedia()
-                        }
-                    }
-                    else -> Unit
-                }
-            }
-        }
-    }
+    private val screenState = MutableStateFlow(ScreenState())
+
+    val state: StateFlow<UiState> =
+        screenState
+            .flatMapLatest(::observeRenderedMedia)
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = UiState.Loading,
+            )
 
     fun load(
         type: MediaType?,
@@ -81,8 +88,19 @@ class MediaBrowseViewModel(
         genres: List<String>?,
         tags: List<String>?,
     ) {
-        viewModelScope.launch {
-            _state.value = UiState.Loading
+        val generation = screenState.value.requestGeneration.takeIf { page > 1 } ?: (screenState.value.requestGeneration + 1)
+        screenState.update {
+            it.copy(
+                requestGeneration = generation,
+                lastRequestedPage = page,
+                isLoading = true,
+                errorMessage = null,
+                loadedMedia = if (page <= 1) linkedMapOf() else LinkedHashMap(it.loadedMedia),
+                loadedPages = if (page <= 1) emptySet() else it.loadedPages,
+                currentPageInfo = if (page <= 1) null else it.currentPageInfo,
+            )
+        }
+        viewModelScope.launch(ioDispatcher) {
             runCatching {
                 val sortList: List<MediaSort>? =
                     sort?.let { sortName -> runCatching { MediaSort.valueOf(sortName) }.getOrNull()?.let { listOf(it) } }
@@ -110,47 +128,96 @@ class MediaBrowseViewModel(
                     tags = normalizedTags,
                 ).getOrThrow()
             }.onSuccess { content ->
-                trackMedia(page, content.pageData)
-                _state.value = UiState.Success(content)
+                if (generation != screenState.value.requestGeneration) {
+                    return@onSuccess
+                }
+                screenState.update { current ->
+                    val nextLoadedMedia = if (page <= 1) linkedMapOf() else LinkedHashMap(current.loadedMedia)
+                    content.pageData.forEach { item ->
+                        nextLoadedMedia[item.id] = item
+                    }
+                    current.copy(
+                        loadedMedia = nextLoadedMedia,
+                        loadedPages = if (page <= 1) setOf(page) else current.loadedPages + page,
+                        currentPageInfo = if (content.hasPageInfo()) content.pageInfo else null,
+                        isLoading = false,
+                        errorMessage = null,
+                    )
+                }
             }.onFailure { throwable ->
+                if (generation != screenState.value.requestGeneration) {
+                    return@onFailure
+                }
                 Timber.e(throwable, "MediaBrowseViewModel load failed")
-                _state.value = UiState.Error(
-                    throwable.message ?: "Failed to browse media",
-                )
+                screenState.update { current ->
+                    current.copy(
+                        isLoading = false,
+                        errorMessage = throwable.message ?: "Failed to browse media",
+                    )
+                }
             }
         }
     }
 
-    private fun trackMedia(
-        page: Int,
-        media: List<MediaBase>,
-    ) {
-        if (page <= 1) {
-            loadedMedia.clear()
-        }
-        media.forEach { item ->
-            loadedMedia[item.id] = item
-        }
-    }
+    private fun observeRenderedMedia(screen: ScreenState): Flow<UiState> {
+        val mediaItems = screen.loadedMedia.values.toList()
+        val renderedMedia =
+            if (mediaItems.isEmpty()) {
+                flowOf(emptyList<MediaBase>())
+            } else {
+                combine(
+                    mediaItems.map { media ->
+                        mediaListStore.observeEntryByMediaId(media.id).map { entry ->
+                            media.copyWithMediaListEntry(entry?.toMediaList())
+                        }
+                    },
+                ) { rendered -> rendered.toList() }
+            }
 
-    private fun emitUpdatedMedia() {
-        val current = _state.value as? UiState.Success ?: return
-        val updatedMedia = current.content.pageData.toList()
-        _state.value = UiState.Success(
-            PageContainer<MediaBase>().apply {
-                if (current.content.hasPageInfo()) {
-                    pageInfo = current.content.pageInfo
+        return renderedMedia.map { updatedMedia ->
+            when {
+                screen.errorMessage != null -> {
+                    UiState.Error(screen.errorMessage)
                 }
-                pageData = updatedMedia
-            },
-        )
-        trackAllMedia(updatedMedia)
+                screen.isLoading && updatedMedia.isEmpty() -> {
+                    UiState.Loading
+                }
+                else -> {
+                    UiState.Success(
+                        content = PageContainer<MediaBase>().apply {
+                            screen.currentPageInfo?.let { pageInfo = it }
+                            pageData = updatedMedia
+                        },
+                        loadedPages = screen.loadedPages,
+                        replaceExisting = screen.lastRequestedPage <= 1,
+                    )
+                }
+            }
+        }
     }
 
-    private fun trackAllMedia(media: List<MediaBase>) {
-        loadedMedia.clear()
-        media.forEach { item ->
-            loadedMedia[item.id] = item
-        }
+    private fun MediaBase.copyWithMediaListEntry(entry: com.mxt.anitrend.model.entity.anilist.MediaList?): MediaBase = MediaBase().also { copy ->
+        copy.id = id
+        copy.idMal = idMal
+        copy.title = title
+        copy.coverImage = coverImage
+        copy.bannerImage = bannerImage
+        copy.type = type
+        copy.format = format
+        copy.season = season
+        copy.status = status
+        copy.siteUrl = siteUrl
+        copy.meanScore = meanScore
+        copy.averageScore = averageScore
+        copy.startDate = startDate
+        copy.endDate = endDate
+        copy.episodes = episodes
+        copy.duration = duration
+        copy.chapters = chapters
+        copy.volumes = volumes
+        copy.isAdult = isAdult
+        copy.isFavourite = isFavourite
+        copy.nextAiringEpisode = nextAiringEpisode
+        copy.mediaListEntry = entry
     }
 }

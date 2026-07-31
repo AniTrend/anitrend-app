@@ -2,51 +2,105 @@ package com.mxt.anitrend.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mxt.anitrend.data.mapper.toPageInfo
+import com.mxt.anitrend.data.store.review.ReviewQueryKey
+import com.mxt.anitrend.data.store.review.ReviewStore
+import com.mxt.anitrend.data.store.mutation.RequestSequence
+import com.mxt.anitrend.domain.review.interactor.RateReviewInteractor
 import com.mxt.anitrend.graphql.generated.MediaType
+import com.mxt.anitrend.graphql.generated.ReviewRating
 import com.mxt.anitrend.model.entity.anilist.Review
 import com.mxt.anitrend.model.entity.container.body.PageContainer
-import com.mxt.anitrend.repository.BrowseMutation
 import com.mxt.anitrend.repository.BrowseRepository
 import com.mxt.anitrend.util.KeyUtil
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class ReviewViewModel(
     private val browseRepository: BrowseRepository,
+    private val reviewStore: ReviewStore,
+    private val requestSequence: RequestSequence,
+    private val rateReviewInteractor: RateReviewInteractor,
 ) : ViewModel() {
 
     sealed interface UiState {
         data object Loading : UiState
-        data class Success(val content: PageContainer<Review>) : UiState
+        data class Success(
+            val content: PageContainer<Review>,
+            val replaceExisting: Boolean = false,
+        ) : UiState
         data class Error(val message: String) : UiState
     }
 
-    private val _state = MutableStateFlow<UiState>(UiState.Loading)
-    val state: StateFlow<UiState> = _state.asStateFlow()
-    private val loadedReviews = linkedMapOf<Long, Review>()
+    private data class ScreenState(
+        val queryKey: ReviewQueryKey? = null,
+        val requestToken: Long = 0L,
+        val lastRequestedPage: Int = 1,
+        val isLoading: Boolean = false,
+        val errorMessage: String? = null,
+    )
 
-    init {
-        viewModelScope.launch {
-            browseRepository.mutationEvents.collect { event ->
-                if (event is BrowseMutation.ReviewRated) {
-                    loadedReviews[event.review.id]?.let { review ->
-                        review.applyReviewRating(event.review)
-                        emitUpdatedReviews()
+    private val screenState = MutableStateFlow(ScreenState())
+
+    val state: StateFlow<UiState> =
+        screenState
+            .flatMapLatest { screen ->
+                val queryKey = screen.queryKey ?: return@flatMapLatest flowOf(
+                    if (screen.errorMessage != null) {
+                        UiState.Error(screen.errorMessage)
+                    } else {
+                        UiState.Loading
+                    },
+                )
+
+                reviewStore.observeQuery(queryKey).map { query ->
+                    when {
+                        screen.errorMessage != null -> UiState.Error(screen.errorMessage)
+                        screen.isLoading && query.reviews.isEmpty() -> UiState.Loading
+                        else -> UiState.Success(
+                            content = PageContainer<Review>().apply {
+                                query.pageInfo?.toPageInfo()?.let { pageInfo = it }
+                                pageData = query.reviews
+                            },
+                            replaceExisting = screen.lastRequestedPage <= 1,
+                        )
                     }
                 }
-            }
-        }
-    }
+            }.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = UiState.Loading,
+            )
 
     /**
      * Loads reviews for a given media entry. Repeatable for pagination; no loadedOnce guard.
      */
     fun load(mediaId: Long, type: MediaType?, page: Int) {
+        val queryKey = ReviewQueryKey(
+            mediaId = mediaId,
+            mediaType = type,
+            sort = null,
+        )
+        val token = if (page > 1) screenState.value.requestToken else requestSequence.next()
+        screenState.update {
+            it.copy(
+                queryKey = queryKey,
+                requestToken = token,
+                lastRequestedPage = page,
+                isLoading = true,
+                errorMessage = null,
+            )
+        }
+
         viewModelScope.launch {
-            _state.value = UiState.Loading
             runCatching {
                 browseRepository.getReviewBrowse(
                     mediaId = mediaId,
@@ -54,55 +108,37 @@ class ReviewViewModel(
                     perPage = KeyUtil.PAGING_LIMIT,
                     type = type,
                     asHtml = false,
+                    queryKey = queryKey,
+                    readToken = token,
                 ).getOrThrow()
-            }.onSuccess { content ->
-                trackReviews(page, content.pageData)
-                _state.value = UiState.Success(content)
+            }.onSuccess {
+                if (screenState.value.requestToken != token) {
+                    return@onSuccess
+                }
+                screenState.update { current ->
+                    current.copy(
+                        isLoading = false,
+                        errorMessage = null,
+                    )
+                }
             }.onFailure { throwable ->
+                if (screenState.value.requestToken != token) {
+                    return@onFailure
+                }
                 Timber.e(throwable, "ReviewViewModel load failed")
-                _state.value = UiState.Error(
-                    throwable.message ?: "Failed to load reviews",
-                )
+                screenState.update { current ->
+                    current.copy(
+                        isLoading = false,
+                        errorMessage = throwable.message ?: "Failed to load reviews",
+                    )
+                }
             }
         }
     }
 
-    private fun trackReviews(
-        page: Int,
-        reviews: List<Review>,
-    ) {
-        if (page <= 1) {
-            loadedReviews.clear()
-        }
-        reviews.forEach { review ->
-            loadedReviews[review.id] = review
-        }
-    }
-
-    private fun Review.applyReviewRating(source: Review) {
-        rating = source.rating
-        ratingAmount = source.ratingAmount
-        userRating = source.userRating
-    }
-
-    private fun emitUpdatedReviews() {
-        val current = _state.value as? UiState.Success ?: return
-        val updatedReviews = current.content.pageData.toList()
-        _state.value = UiState.Success(
-            PageContainer<Review>().apply {
-                if (current.content.hasPageInfo()) {
-                    pageInfo = current.content.pageInfo
-                }
-                pageData = updatedReviews
-            },
-        )
-        trackAllReviews(updatedReviews)
-    }
-
-    private fun trackAllReviews(reviews: List<Review>) {
-        loadedReviews.clear()
-        reviews.forEach { review ->
-            loadedReviews[review.id] = review
+    fun rateReview(reviewId: Long, rating: ReviewRating?) {
+        viewModelScope.launch {
+            rateReviewInteractor(reviewId, rating)
         }
     }
 }

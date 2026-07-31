@@ -12,30 +12,26 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder
 import com.mxt.anitrend.base.custom.view.image.AspectImageView
 import com.mxt.anitrend.base.custom.view.text.FeedHeadlineTextView
 import com.mxt.anitrend.base.custom.view.widget.FavouriteWidget
+import com.mxt.anitrend.base.custom.view.widget.FavouriteWidgetState
 import com.mxt.anitrend.base.custom.view.widget.StatusDeleteWidget
+import com.mxt.anitrend.base.custom.view.widget.StatusDeleteWidgetState
 import com.mxt.anitrend.binding.richMarkDown
 import com.mxt.anitrend.binding.setImage
-import com.mxt.anitrend.coordinator.WidgetMutationCoordinator
 import com.mxt.anitrend.databinding.AdapterFeedMessageBinding
 import com.mxt.anitrend.databinding.AdapterFeedProgressBinding
 import com.mxt.anitrend.databinding.AdapterFeedStatusBinding
 import com.mxt.anitrend.databinding.CustomRecyclerUnresolvedBinding
 import com.mxt.anitrend.extension.getLayoutInflater
-import com.mxt.anitrend.extension.koinOf
-import com.mxt.anitrend.graphql.generated.LikeableType
 import com.mxt.anitrend.model.entity.anilist.FeedList
-import com.mxt.anitrend.model.entity.anilist.meta.DeleteState
 import com.mxt.anitrend.model.entity.base.UserBase
-import com.mxt.anitrend.repository.UserRepository
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.date.DateUtil
 
-/**
- * Created by max on 2017/11/07.
- */
 class FeedAdapter(
     context: Context,
-    private val coordinator: WidgetMutationCoordinator,
+    private val currentUser: UserBase?,
+    private val onToggleLikeAction: (Long) -> Unit,
+    private val onDeleteFeedAction: (Long) -> Unit,
 ) : RecyclerViewAdapter<FeedList>(context) {
     private companion object {
         const val FEED_STATUS = 10
@@ -47,33 +43,7 @@ class FeedAdapter(
     @KeyUtil.MessageType
     private var messageType: Int = 0
 
-    private val userRepository: UserRepository by lazy { koinOf() }
-
-    private val favouriteListener = object : FavouriteWidget.Listener {
-        override fun onToggleLike(
-            id: Long,
-            type: LikeableType,
-            onResult: (Result<List<UserBase>>) -> Unit,
-        ) = coordinator.toggleLike(id, type, onResult)
-    }
-
-    private val deleteListener = object : StatusDeleteWidget.Listener {
-        override fun onDeleteFeed(
-            feedId: Long,
-            @KeyUtil.RequestType requestType: Int,
-            onResult: (Result<DeleteState>) -> Unit,
-        ) {
-            when (requestType) {
-                KeyUtil.MUT_DELETE_FEED -> coordinator.deleteActivity(feedId, onResult)
-                KeyUtil.MUT_DELETE_FEED_REPLY -> coordinator.deleteActivityReply(feedId, onResult)
-                else -> onResult(Result.failure(IllegalStateException("Unknown request type: $requestType")))
-            }
-        }
-    }
-
-    fun setMessageType(
-        @KeyUtil.MessageType messageType: Int,
-    ) {
+    fun setMessageType(@KeyUtil.MessageType messageType: Int) {
         this.messageType = messageType
     }
 
@@ -87,22 +57,10 @@ class FeedAdapter(
             )
         }
         return when (viewType) {
-            FEED_STATUS ->
-                StatusFeedViewHolder(
-                    AdapterFeedStatusBinding.inflate(parent.context.getLayoutInflater(), parent, false),
-                )
-            FEED_MESSAGE ->
-                MessageFeedViewHolder(
-                    AdapterFeedMessageBinding.inflate(parent.context.getLayoutInflater(), parent, false),
-                )
-            FEED_LIST ->
-                ListFeedViewHolder(
-                    AdapterFeedProgressBinding.inflate(parent.context.getLayoutInflater(), parent, false),
-                )
-            else ->
-                ProgressFeedViewHolder(
-                    AdapterFeedProgressBinding.inflate(parent.context.getLayoutInflater(), parent, false),
-                )
+            FEED_STATUS -> StatusFeedViewHolder(AdapterFeedStatusBinding.inflate(parent.context.getLayoutInflater(), parent, false))
+            FEED_MESSAGE -> MessageFeedViewHolder(AdapterFeedMessageBinding.inflate(parent.context.getLayoutInflater(), parent, false))
+            FEED_LIST -> ListFeedViewHolder(AdapterFeedProgressBinding.inflate(parent.context.getLayoutInflater(), parent, false))
+            else -> ProgressFeedViewHolder(AdapterFeedProgressBinding.inflate(parent.context.getLayoutInflater(), parent, false))
         }
     }
 
@@ -121,16 +79,43 @@ class FeedAdapter(
 
     override fun getFilter(): Filter? = null
 
+    private fun isLikedByCurrentUser(feed: FeedList): Boolean = currentUser?.let { activeUser -> feed.likes.orEmpty().any { it.id == activeUser.id } } == true
+
+    private fun renderLike(
+        widget: FavouriteWidget,
+        feed: FeedList,
+    ) {
+        widget.render(
+            FavouriteWidgetState(
+                count = feed.likes.orEmpty().size,
+                isLiked = isLikedByCurrentUser(feed),
+                isEnabled = true,
+                isLoading = false,
+            ),
+        )
+        widget.setOnToggleListener { onToggleLikeAction(feed.id) }
+    }
+
+    private fun renderDelete(
+        widget: StatusDeleteWidget,
+        canDelete: Boolean,
+        feed: FeedList,
+    ) {
+        if (canDelete) {
+            widget.render(StatusDeleteWidgetState(isEnabled = true, isLoading = false))
+            widget.visibility = View.VISIBLE
+            widget.setOnDeleteListener { onDeleteFeedAction(feed.id) }
+        } else {
+            widget.visibility = View.GONE
+            widget.setOnDeleteListener(null)
+        }
+    }
+
     inner class ProgressFeedViewHolder(
         private val binding: AdapterFeedProgressBinding,
     ) : RecyclerViewHolder<FeedList>(binding.root) {
         init {
-            bindClickListeners(
-                R.id.widget_users,
-                R.id.user_avatar,
-                R.id.widget_comment,
-                R.id.series_image,
-            )
+            bindClickListeners(R.id.widget_users, R.id.user_avatar, R.id.widget_comment, R.id.series_image)
             bindLongClickListeners(R.id.series_image)
         }
 
@@ -142,33 +127,21 @@ class FeedAdapter(
             binding.mediaTitleEnglish.text = model.media?.title?.english
             binding.mediaTitleOriginal.text = model.media?.title?.original
             AspectImageView.setImage(binding.seriesImage, model.media?.coverImage)
-            binding.widgetFavourite.setRequestParams(KeyUtil.ACTIVITY, model.id)
-            binding.widgetFavourite.setModel(model.likes)
-            binding.widgetFavourite.setCurrentUser(coordinator.databaseHelper.currentUser)
-            binding.widgetFavourite.setListener(favouriteListener)
+            renderLike(binding.widgetFavourite, model)
             binding.widgetComment.setReplyCount(model.replyCount)
-            val currentUserId = userRepository.cachedCurrentUser?.id
-            if (currentUserId != null && model.user?.id == currentUserId) {
-                binding.widgetDelete.setModel(model, KeyUtil.MUT_DELETE_FEED)
-                binding.widgetDelete.visibility = View.VISIBLE
-            } else {
-                binding.widgetDelete.visibility = View.GONE
-            }
-            binding.widgetDelete.setListener(deleteListener)
+            renderDelete(binding.widgetDelete, currentUser?.id == model.user?.id, model)
         }
 
         override fun onViewRecycled() {
             Glide.with(getContext()).clear(binding.userAvatar)
             Glide.with(getContext()).clear(binding.seriesImage)
-            binding.widgetFavourite.setListener(null)
-            binding.widgetDelete.setListener(null)
+            binding.widgetFavourite.setOnToggleListener(null)
+            binding.widgetDelete.setOnDeleteListener(null)
             binding.widgetFavourite.onViewRecycled()
             binding.widgetDelete.onViewRecycled()
         }
 
-        override fun onClick(v: View) {
-            performClick(clickListener, data, v)
-        }
+        override fun onClick(v: View) = performClick(clickListener, data, v)
 
         override fun onLongClick(v: View): Boolean = performLongClick(clickListener, data, v)
     }
@@ -177,13 +150,7 @@ class FeedAdapter(
         private val binding: AdapterFeedStatusBinding,
     ) : RecyclerViewHolder<FeedList>(binding.root) {
         init {
-            bindClickListeners(
-                R.id.container,
-                R.id.widget_edit,
-                R.id.widget_users,
-                R.id.user_avatar,
-                R.id.widget_comment,
-            )
+            bindClickListeners(R.id.container, R.id.widget_edit, R.id.widget_users, R.id.user_avatar, R.id.widget_comment)
             bindLongClickListeners(R.id.container)
         }
 
@@ -198,38 +165,24 @@ class FeedAdapter(
                 binding.widgetStatus.visibility = View.GONE
             }
             binding.widgetStatusText.richMarkDown(model.text)
-
-            binding.widgetFavourite.setRequestParams(KeyUtil.ACTIVITY, model.id)
-            binding.widgetFavourite.setModel(model.likes)
-            binding.widgetFavourite.setCurrentUser(coordinator.databaseHelper.currentUser)
-            binding.widgetFavourite.setListener(favouriteListener)
+            renderLike(binding.widgetFavourite, model)
             binding.widgetComment.setReplyCount(model.replyCount)
 
-            val currentUserId = userRepository.cachedCurrentUser?.id
-            if (currentUserId != null && model.user?.id == currentUserId) {
-                binding.widgetDelete.setModel(model, KeyUtil.MUT_DELETE_FEED)
-
-                binding.widgetEdit.visibility = View.VISIBLE
-                binding.widgetDelete.visibility = View.VISIBLE
-            } else {
-                binding.widgetEdit.visibility = View.GONE
-                binding.widgetDelete.visibility = View.GONE
-            }
-            binding.widgetDelete.setListener(deleteListener)
+            val canDelete = currentUser?.id == model.user?.id
+            binding.widgetEdit.visibility = if (canDelete) View.VISIBLE else View.GONE
+            renderDelete(binding.widgetDelete, canDelete, model)
         }
 
         override fun onViewRecycled() {
             Glide.with(getContext()).clear(binding.userAvatar)
-            binding.widgetFavourite.setListener(null)
-            binding.widgetDelete.setListener(null)
+            binding.widgetFavourite.setOnToggleListener(null)
+            binding.widgetDelete.setOnDeleteListener(null)
             binding.widgetFavourite.onViewRecycled()
             binding.widgetStatus.onViewRecycled()
             binding.widgetDelete.onViewRecycled()
         }
 
-        override fun onClick(v: View) {
-            performClick(clickListener, data, v)
-        }
+        override fun onClick(v: View) = performClick(clickListener, data, v)
 
         override fun onLongClick(v: View): Boolean = performLongClick(clickListener, data, v)
     }
@@ -238,13 +191,7 @@ class FeedAdapter(
         private val binding: AdapterFeedMessageBinding,
     ) : RecyclerViewHolder<FeedList>(binding.root) {
         init {
-            bindClickListeners(
-                R.id.widget_edit,
-                R.id.widget_users,
-                R.id.messenger_avatar,
-                R.id.recipient_avatar,
-                R.id.widget_comment,
-            )
+            bindClickListeners(R.id.widget_edit, R.id.widget_users, R.id.messenger_avatar, R.id.recipient_avatar, R.id.widget_comment)
         }
 
         override fun onBindViewHolder(model: FeedList) {
@@ -265,39 +212,25 @@ class FeedAdapter(
                 binding.widgetStatus.visibility = View.GONE
             }
             binding.widgetStatusText.richMarkDown(model.text)
-
-            binding.widgetFavourite.setRequestParams(KeyUtil.ACTIVITY, model.id)
-            binding.widgetFavourite.setModel(model.likes)
-            binding.widgetFavourite.setCurrentUser(coordinator.databaseHelper.currentUser)
-            binding.widgetFavourite.setListener(favouriteListener)
+            renderLike(binding.widgetFavourite, model)
             binding.widgetComment.setReplyCount(model.replyCount)
 
-            val currentUserId = userRepository.cachedCurrentUser?.id
-            if (currentUserId != null && model.messenger?.id == currentUserId) {
-                binding.widgetDelete.setModel(model, KeyUtil.MUT_DELETE_FEED)
-
-                binding.widgetEdit.visibility = View.VISIBLE
-                binding.widgetDelete.visibility = View.VISIBLE
-            } else {
-                binding.widgetEdit.visibility = View.GONE
-                binding.widgetDelete.visibility = View.GONE
-            }
-            binding.widgetDelete.setListener(deleteListener)
+            val canDelete = currentUser?.id == model.messenger?.id
+            binding.widgetEdit.visibility = if (canDelete) View.VISIBLE else View.GONE
+            renderDelete(binding.widgetDelete, canDelete, model)
         }
 
         override fun onViewRecycled() {
             Glide.with(getContext()).clear(binding.messengerAvatar)
             Glide.with(getContext()).clear(binding.recipientAvatar)
-            binding.widgetFavourite.setListener(null)
-            binding.widgetDelete.setListener(null)
+            binding.widgetFavourite.setOnToggleListener(null)
+            binding.widgetDelete.setOnDeleteListener(null)
             binding.widgetFavourite.onViewRecycled()
             binding.widgetStatus.onViewRecycled()
             binding.widgetDelete.onViewRecycled()
         }
 
-        override fun onClick(v: View) {
-            performClick(clickListener, data, v)
-        }
+        override fun onClick(v: View) = performClick(clickListener, data, v)
 
         override fun onLongClick(v: View): Boolean = performLongClick(clickListener, data, v)
     }
@@ -319,30 +252,19 @@ class FeedAdapter(
             AspectImageView.setImage(binding.seriesImage, model.media?.coverImage)
             binding.widgetUsers.visibility = View.GONE
             binding.widgetFavourite.visibility = View.GONE
-            binding.widgetFavourite.setCurrentUser(coordinator.databaseHelper.currentUser)
-            binding.widgetFavourite.setListener(favouriteListener)
             binding.widgetComment.setReplyCount(model.replyCount)
-            val currentUserId = userRepository.cachedCurrentUser?.id
-            if (currentUserId != null && model.user?.id == currentUserId) {
-                binding.widgetDelete.setModel(model, KeyUtil.MUT_DELETE_FEED)
-                binding.widgetDelete.visibility = View.VISIBLE
-            } else {
-                binding.widgetDelete.visibility = View.GONE
-            }
-            binding.widgetDelete.setListener(deleteListener)
+            renderDelete(binding.widgetDelete, currentUser?.id == model.user?.id, model)
         }
 
         override fun onViewRecycled() {
             Glide.with(getContext()).clear(binding.userAvatar)
             Glide.with(getContext()).clear(binding.seriesImage)
-            binding.widgetFavourite.setListener(null)
-            binding.widgetDelete.setListener(null)
+            binding.widgetFavourite.setOnToggleListener(null)
+            binding.widgetDelete.setOnDeleteListener(null)
             binding.widgetDelete.onViewRecycled()
         }
 
-        override fun onClick(v: View) {
-            performClick(clickListener, data, v)
-        }
+        override fun onClick(v: View) = performClick(clickListener, data, v)
 
         override fun onLongClick(v: View): Boolean = performLongClick(clickListener, data, v)
     }

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.mxt.anitrend.graphql.generated.UserSort
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.model.entity.container.body.PageContainer
+import com.mxt.anitrend.repository.UserRepository
 import com.mxt.anitrend.repository.SearchRepository
 import com.mxt.anitrend.util.KeyUtil
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,6 +16,7 @@ import timber.log.Timber
 
 class UserSearchViewModel(
     private val searchRepository: SearchRepository,
+    private val userRepository: UserRepository,
 ) : ViewModel() {
 
     sealed interface UiState {
@@ -47,6 +49,15 @@ class UserSearchViewModel(
                     throwable.message ?: "Failed to load user search",
                 )
             }
+        }
+    }
+
+    fun toggleFollow(
+        userId: Long,
+        onResult: (Result<UserBase>) -> Unit,
+    ) {
+        viewModelScope.launch {
+            onResult(userRepository.toggleFollow(userId))
         }
     }
 }

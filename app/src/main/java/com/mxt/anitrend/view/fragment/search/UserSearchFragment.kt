@@ -9,7 +9,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.UserAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
-import com.mxt.anitrend.coordinator.WidgetMutationCoordinator
+import com.mxt.anitrend.data.DatabaseHelper
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.util.CompatUtil
@@ -26,7 +26,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class UserSearchFragment : FragmentBaseList<UserBase, PageContainer<UserBase>>() {
     private var searchQuery: String? = null
 
-    private val mutationCoordinator by inject<WidgetMutationCoordinator>()
+    private val databaseHelper: DatabaseHelper by inject()
 
     private val userSearchViewModel: UserSearchViewModel by viewModel()
 
@@ -45,7 +45,11 @@ class UserSearchFragment : FragmentBaseList<UserBase, PageContainer<UserBase>>()
         }
         mColumnSize = R.integer.single_list_x1
         isPager = true
-        mAdapter = UserAdapter(ctx, mutationCoordinator)
+        mAdapter = UserAdapter(
+            context = ctx,
+            currentUser = databaseHelper.currentUser,
+            onToggleFollowAction = userSearchViewModel::toggleFollow,
+        )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

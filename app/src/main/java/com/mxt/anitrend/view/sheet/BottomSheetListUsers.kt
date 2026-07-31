@@ -19,7 +19,7 @@ import com.mxt.anitrend.base.custom.view.container.CustomSwipeRefreshLayout
 import com.mxt.anitrend.base.interfaces.event.ISearchDelegate
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener
 import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener
-import com.mxt.anitrend.coordinator.WidgetMutationCoordinator
+import com.mxt.anitrend.data.DatabaseHelper
 import com.mxt.anitrend.databinding.BottomSheetListBinding
 import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.model.entity.base.UserBase
@@ -56,7 +56,7 @@ class BottomSheetListUsers :
     @KeyUtil.RequestType
     private var requestType: Int = 0
 
-    private val mutationCoordinator by inject<WidgetMutationCoordinator>()
+    private val databaseHelper: DatabaseHelper by inject()
 
     private val userListViewModel: UserListViewModel by viewModel()
 
@@ -81,7 +81,11 @@ class BottomSheetListUsers :
             userId = args.getLong(KeyUtil.arg_userId)
             requestType = args.getInt(KeyUtil.arg_request_type)
         }
-        mAdapter = UserAdapter(ctx, mutationCoordinator)
+        mAdapter = UserAdapter(
+            context = ctx,
+            currentUser = databaseHelper.currentUser,
+            onToggleFollowAction = userListViewModel::toggleFollow,
+        )
         isPager = true
         mColumnSize = resources.getInteger(R.integer.single_list_x1)
     }

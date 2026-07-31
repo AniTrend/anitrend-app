@@ -6,6 +6,7 @@ import android.os.Build
 import com.mxt.anitrend.analytics.contract.ISupportAnalytics
 import com.mxt.anitrend.base.interfaces.dao.BoxQuery
 import com.mxt.anitrend.data.DatabaseHelper
+import com.mxt.anitrend.data.store.AccountStoreClearer
 import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.model.api.retro.ServiceFactory
@@ -42,6 +43,7 @@ object WebTokenRequest {
         presenter.settings.isAuthenticated = false
         presenter.settings.lastDismissedNotificationId = -1
         presenter.database.invalidateBoxStores()
+        KoinExt.get(AccountStoreClearer::class.java).clearAll()
         KoinExt.get(JobSchedulerUtil::class.java).cancelNotificationJob(context)
         ServiceFactory.invalidate()
         token = null

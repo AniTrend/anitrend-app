@@ -4,6 +4,9 @@ import co.anitrend.retrofit.graphql.model.EmptyGraphQLVariables
 import co.anitrend.retrofit.graphql.model.GraphQLRequest
 import co.anitrend.retrofit.graphql.model.body.GraphContainer
 import com.mxt.anitrend.base.interfaces.dao.BoxQuery
+import com.mxt.anitrend.data.mapper.toUserSummaryRecords
+import com.mxt.anitrend.data.store.feed.FeedStore
+import com.mxt.anitrend.data.store.feed.FeedStoreChange
 import com.mxt.anitrend.graphql.generated.GenreCollection
 import com.mxt.anitrend.graphql.generated.GenreCollectionData
 import com.mxt.anitrend.graphql.generated.LikeableType
@@ -23,28 +26,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import com.mxt.anitrend.model.entity.base.UserBase as UserEntity
 
-sealed class BaseMutation {
-    data class LikeToggled(
-        val users: List<UserEntity>,
-        val targetId: Long,
-        val targetType: LikeableType,
-    ) : BaseMutation()
-
-    data class FavouriteToggled(
-        val result: Any,
-        val animeId: Int? = null,
-        val mangaId: Int? = null,
-        val characterId: Int? = null,
-        val staffId: Int? = null,
-        val studioId: Int? = null,
-    ) : BaseMutation()
-}
-
 class BaseRepository(
     private val baseService: BaseService,
     private val boxQuery: BoxQuery,
     ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
-) : AbstractRepository<BaseMutation>(ioDispatcher) {
+    private val feedStore: FeedStore? = null,
+) : AbstractRepository(ioDispatcher) {
 
     /** Cached genre collection from local DB. */
     val cachedGenres: List<Genre>
@@ -106,19 +93,46 @@ class BaseRepository(
         return body.data?.mediaTagCollection?.toMediaTags() ?: throw IllegalStateException("Empty response body")
     }
 
-    suspend fun toggleLike(id: Long, type: LikeableType): Result<List<UserEntity>> = withContext(ioDispatcher) {
+    suspend fun toggleLike(
+        id: Long,
+        type: LikeableType,
+        commitToStore: Boolean = true,
+        replyFeedId: Long? = null,
+        revision: Long = 0L,
+    ): Result<List<UserEntity>> = withContext(ioDispatcher) {
         runCatching {
             val request = ToggleLike.request(id = id.toInt(), type = type)
             val response = baseService.toggleLike(request).execute()
             if (response.isSuccessful) {
                 val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
-                _mutationEvents.emit(
-                    BaseMutation.LikeToggled(
-                        users = result,
-                        targetId = id,
-                        targetType = type,
-                    ),
-                )
+                if (commitToStore) {
+                    val likes = result.toUserSummaryRecords()
+                    when (type) {
+                        LikeableType.ACTIVITY -> {
+                            feedStore?.apply(
+                                FeedStoreChange.FeedLikesReplaced(
+                                    feedId = id,
+                                    likes = likes,
+                                    revision = revision,
+                                ),
+                            )
+                        }
+                        LikeableType.ACTIVITY_REPLY -> {
+                            val parentFeedId = replyFeedId ?: feedStore?.state?.value?.repliesById?.get(id)?.activityId
+                            if (parentFeedId != null) {
+                                feedStore?.apply(
+                                    FeedStoreChange.ReplyLikesReplaced(
+                                        feedId = parentFeedId,
+                                        replyId = id,
+                                        likes = likes,
+                                        revision = revision,
+                                    ),
+                                )
+                            }
+                        }
+                        else -> Unit
+                    }
+                }
                 result
             } else {
                 throw RuntimeException(response.apiError())
@@ -141,16 +155,6 @@ class BaseRepository(
             if (!response.isSuccessful) {
                 throw RuntimeException(response.apiError())
             }
-            _mutationEvents.emit(
-                BaseMutation.FavouriteToggled(
-                    result = Unit,
-                    animeId = animeId,
-                    mangaId = mangaId,
-                    characterId = characterId,
-                    staffId = staffId,
-                    studioId = studioId,
-                ),
-            )
         }
     }
 }

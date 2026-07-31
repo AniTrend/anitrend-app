@@ -40,7 +40,6 @@ constructor(
         fun onRateReview(
             id: Long,
             rating: ReviewRating?,
-            onResult: (Result<Review>) -> Unit,
         )
     }
 
@@ -66,7 +65,7 @@ constructor(
         onInit()
     }
 
-    private fun performRating(@KeyUtil.ReviewRating ratingType: String) {
+    private fun performRating(ratingType: String) {
         val currentModel = model ?: return
         val rating = try {
             ReviewRating.valueOf(ratingType)
@@ -75,17 +74,9 @@ constructor(
             resetFlipperState()
             return
         }
-        listener?.onRateReview(currentModel.id, rating) { result ->
-            if (recycled || !isAttachedToWindow) return@onRateReview
-            result.onSuccess { responseModel ->
-                currentModel.rating = responseModel.rating
-                currentModel.ratingAmount = responseModel.ratingAmount
-                currentModel.userRating = responseModel.userRating
-                setReviewStatus()
-            }.onFailure { throwable ->
-                Timber.e(throwable)
-                resetFlipperState()
-            }
+        listener?.onRateReview(currentModel.id, rating)
+        if (!recycled && isAttachedToWindow) {
+            resetFlipperState()
         }
     }
 

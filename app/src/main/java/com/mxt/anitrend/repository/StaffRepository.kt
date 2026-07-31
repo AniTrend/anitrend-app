@@ -19,15 +19,10 @@ import kotlinx.coroutines.withContext
 import com.mxt.anitrend.model.entity.base.MediaBase as MediaEntity
 import com.mxt.anitrend.model.entity.base.StaffBase as StaffEntity
 
-sealed class StaffMutation {
-    // No mutation operations yet. Add event types when mutation methods are added.
-    data object Noop : StaffMutation()
-}
-
 class StaffRepository(
     private val staffService: StaffService,
     ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
-) : AbstractRepository<StaffMutation>(ioDispatcher) {
+) : AbstractRepository(ioDispatcher) {
 
     suspend fun getStaffBase(id: Long): Result<StaffEntity> = withContext(ioDispatcher) {
         runCatching {

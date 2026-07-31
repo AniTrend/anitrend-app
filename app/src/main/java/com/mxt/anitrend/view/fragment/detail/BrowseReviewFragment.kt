@@ -13,7 +13,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.ReviewAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
-import com.mxt.anitrend.coordinator.WidgetMutationCoordinator
+import com.mxt.anitrend.data.DatabaseHelper
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.model.entity.anilist.Review
 import com.mxt.anitrend.model.entity.base.MediaBase
@@ -41,8 +41,7 @@ class BrowseReviewFragment : FragmentBaseList<Review, PageContainer<Review>>() {
     private var mediaType: String? = null
 
     private val settings: Settings by inject()
-
-    private val mutationCoordinator by inject<WidgetMutationCoordinator>()
+    private val databaseHelper: DatabaseHelper by inject()
 
     private val browseReviewViewModel: BrowseReviewViewModel by viewModel()
 
@@ -70,7 +69,11 @@ class BrowseReviewFragment : FragmentBaseList<Review, PageContainer<Review>>() {
         isPager = true
         mColumnSize = R.integer.single_list_x1
         isFilterableEnabled = true
-        mAdapter = ReviewAdapter(ctx, mutationCoordinator)
+        mAdapter = ReviewAdapter(
+            context = ctx,
+            currentUser = databaseHelper.currentUser,
+            onRateReviewAction = browseReviewViewModel::rateReview,
+        )
     }
 
     @Deprecated("Deprecated in Java")
@@ -134,7 +137,7 @@ class BrowseReviewFragment : FragmentBaseList<Review, PageContainer<Review>>() {
                             // Loading is handled by swipeRefreshLayout in the base class
                         }
                         is BrowseReviewViewModel.UiState.Success -> {
-                            handleSuccess(state.content)
+                            handleSuccess(state.content, state.replaceExisting)
                         }
                         is BrowseReviewViewModel.UiState.Error -> {
                             showError(state.message)
@@ -159,14 +162,27 @@ class BrowseReviewFragment : FragmentBaseList<Review, PageContainer<Review>>() {
         )
     }
 
-    private fun handleSuccess(value: PageContainer<Review>) {
+    private fun handleSuccess(
+        value: PageContainer<Review>,
+        replaceExisting: Boolean,
+    ) {
         if (value.hasPageInfo()) {
             setPageInfo(value.pageInfo)
         }
         if (!value.isEmpty) {
-            onPostProcessed(value.pageData)
+            if (replaceExisting) {
+                mAdapter.onItemsInserted(value.pageData)
+                updateUI()
+            } else {
+                onPostProcessed(value.pageData)
+            }
         } else {
-            onPostProcessed(emptyList())
+            if (replaceExisting) {
+                mAdapter.onItemsInserted(emptyList())
+                updateUI()
+            } else {
+                onPostProcessed(emptyList())
+            }
         }
         if (mAdapter.itemCount < 1) {
             onPostProcessed(null)

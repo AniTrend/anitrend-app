@@ -2,72 +2,126 @@ package com.mxt.anitrend.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mxt.anitrend.data.mapper.toMediaList
+import com.mxt.anitrend.data.mapper.toPageInfo
+import com.mxt.anitrend.data.store.medialist.MediaListQueryKey
+import com.mxt.anitrend.data.store.medialist.MediaListStore
+import com.mxt.anitrend.data.store.mutation.MutationRegistry
+import com.mxt.anitrend.data.store.mutation.OperationKey
+import com.mxt.anitrend.data.store.mutation.OperationStatus
+import com.mxt.anitrend.data.store.mutation.RequestSequence
+import com.mxt.anitrend.domain.model.MediaListItemUiModel
+import com.mxt.anitrend.domain.model.toMediaListItemUiModel
 import com.mxt.anitrend.graphql.generated.MediaListSort
 import com.mxt.anitrend.graphql.generated.MediaListStatus
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.graphql.generated.ScoreFormat
 import com.mxt.anitrend.model.entity.anilist.MediaList
-import com.mxt.anitrend.model.entity.container.attribute.PageInfo
-import com.mxt.anitrend.repository.BrowseMutation
+import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.repository.BrowseRepository
 import com.mxt.anitrend.repository.UserRepository
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.media.MediaListUtil
-import com.mxt.anitrend.util.media.MediaUtil
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class MediaListViewModel(
     private val browseRepository: BrowseRepository,
+    private val mediaListStore: MediaListStore,
+    private val mutationRegistry: MutationRegistry,
     private val userRepository: UserRepository,
     private val settings: Settings,
+    private val requestSequence: RequestSequence,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : ViewModel() {
 
     sealed interface UiState {
         data object Loading : UiState
         data class Success(
+            val content: PageContainer<MediaList>,
             val items: List<MediaList>,
-            val pageInfo: PageInfo?,
+            val renderedItems: List<MediaListItemUiModel>,
+            val pageInfo: com.mxt.anitrend.model.entity.container.attribute.PageInfo?,
             val isEmpty: Boolean,
         ) : UiState
         data class Error(val message: String) : UiState
     }
 
-    private val _state = MutableStateFlow<UiState>(UiState.Loading)
-    val state: StateFlow<UiState> = _state.asStateFlow()
+    private data class ScreenState(
+        val queryKey: MediaListQueryKey? = null,
+        val isLoading: Boolean = false,
+        val errorMessage: String? = null,
+        val requestToken: Long = 0L,
+        val isCurrentUser: Boolean = false,
+        val titleSortVersion: Int = 0,
+    )
 
-    private var currentItems: List<MediaList> = emptyList()
-    private var currentPageInfo: PageInfo? = null
+    private val screenState = MutableStateFlow(ScreenState())
 
-    private var lastUserId: Long = 0
-    private var lastUserName: String? = null
-    private var lastMediaType: String? = null
-    private var lastStatusIn: String? = null
+    val state: StateFlow<UiState> =
+        screenState
+            .flatMapLatest { screen ->
+                val queryKey = screen.queryKey ?: return@flatMapLatest flowOf(
+                    if (screen.errorMessage != null) {
+                        UiState.Error(screen.errorMessage)
+                    } else {
+                        UiState.Loading
+                    },
+                )
 
-    init {
-        viewModelScope.launch {
-            browseRepository.mutationEvents.collect { event ->
-                when (event) {
-                    is BrowseMutation.MediaListSaved -> onMediaListSaved(event.entry)
-                    is BrowseMutation.MediaListDeleted -> {
-                        if (currentItems.isNotEmpty()) {
-                            load(lastUserId, lastUserName, lastMediaType, lastStatusIn)
+                combine(
+                    mediaListStore.observeQuery(queryKey),
+                    mutationRegistry.state,
+                    flowOf(screen),
+                ) { query, operations, currentScreen ->
+                    val sortedEntries = sortEntriesIfNeeded(query.entries)
+                    val renderedItems = sortedEntries.map { entry ->
+                        entry.toMediaListItemUiModel(
+                            isIncrementPending = operations.isIncrementPending(entry.id, entry.mediaId),
+                            isDeletePending = operations.isDeletePending(entry.id, entry.mediaId),
+                            canIncrement = entry.canIncrement(currentScreen.isCurrentUser),
+                        )
+                    }
+                    val contentItems = sortedEntries.map { it.toMediaList() }
+                    when {
+                        currentScreen.errorMessage != null -> {
+                            UiState.Error(currentScreen.errorMessage)
+                        }
+                        currentScreen.isLoading && renderedItems.isEmpty() -> {
+                            UiState.Loading
+                        }
+                        else -> {
+                            UiState.Success(
+                                content = PageContainer<MediaList>().apply {
+                                    query.pageInfo?.toPageInfo()?.let { pageInfo = it }
+                                    pageData = contentItems
+                                },
+                                items = contentItems,
+                                renderedItems = renderedItems,
+                                pageInfo = query.pageInfo?.toPageInfo(),
+                                isEmpty = renderedItems.isEmpty(),
+                            )
                         }
                     }
-                    else -> Unit
                 }
-            }
-        }
-    }
+            }.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = UiState.Loading,
+            )
 
     /**
      * Loads media list collection. Single load; not paginated.
@@ -79,25 +133,38 @@ class MediaListViewModel(
         mediaType: String?,
         statusIn: String?,
     ) {
-        lastUserId = userId
-        lastUserName = userName
-        lastMediaType = mediaType
-        lastStatusIn = statusIn
+        val isCurrentUser = isCurrentUser(userId, userName)
+        val token = requestSequence.next()
+        val mediaListSort = settings.mediaListSort ?: KeyUtil.PROGRESS
+        val sortString = if (!MediaListUtil.isTitleSort(mediaListSort)) {
+            mediaListSort + settings.sortOrder
+        } else {
+            KeyUtil.MEDIA_ID + settings.sortOrder
+        }
+        val sort: List<MediaListSort>? = runCatching { listOf(MediaListSort.valueOf(sortString)) }.getOrNull()
+        val statusList: List<MediaListStatus>? =
+            statusIn?.let { runCatching { listOf(MediaListStatus.valueOf(it)) }.getOrNull() }
+        val type: MediaType? = mediaType?.let { runCatching { MediaType.valueOf(it) }.getOrNull() }
+        val queryKey = MediaListQueryKey(
+            userId = if (userId != 0L) userId else null,
+            userName = if (userId == 0L) userName else null,
+            mediaType = type,
+            statuses = statusList.orEmpty().toSet(),
+            sort = sort?.firstOrNull(),
+        )
+        screenState.update {
+            it.copy(
+                queryKey = queryKey,
+                isLoading = true,
+                errorMessage = null,
+                requestToken = token,
+                isCurrentUser = isCurrentUser,
+            )
+        }
+
         viewModelScope.launch {
-            _state.value = UiState.Loading
             runCatching {
                 withContext(ioDispatcher) {
-                    val mediaListSort = settings.mediaListSort ?: KeyUtil.PROGRESS
-                    val sortString = if (!MediaListUtil.isTitleSort(mediaListSort)) {
-                        mediaListSort + settings.sortOrder
-                    } else {
-                        KeyUtil.MEDIA_ID + settings.sortOrder
-                    }
-                    val sort: List<MediaListSort>? =
-                        runCatching { listOf(MediaListSort.valueOf(sortString)) }.getOrNull()
-                    val statusList: List<MediaListStatus>? =
-                        statusIn?.let { runCatching { listOf(MediaListStatus.valueOf(it)) }.getOrNull() }
-                    val type: MediaType? = mediaType?.let { runCatching { MediaType.valueOf(it) }.getOrNull() }
                     val scoreFormat: ScoreFormat =
                         userRepository.cachedCurrentUser?.mediaListOptions?.let { options ->
                             runCatching { ScoreFormat.valueOf(options.scoreFormat) }.getOrNull()
@@ -110,22 +177,32 @@ class MediaListViewModel(
                         sort = sort,
                         statusIn = statusList,
                         scoreFormat = scoreFormat,
+                        queryKey = queryKey,
+                        readToken = token,
                     )
                     result.getOrThrow()
                 }
-            }.onSuccess { content ->
-                val pageInfo = if (content.hasPageInfo()) content.pageInfo else null
-                val entries = if (!content.isEmpty) {
-                    content.pageData.firstOrNull()?.entries.orEmpty()
-                } else {
-                    emptyList()
+            }.onSuccess {
+                if (screenState.value.requestToken != token) {
+                    return@onSuccess
                 }
-                emitSuccess(entries, pageInfo, content.isEmpty)
+                screenState.update { current ->
+                    current.copy(
+                        isLoading = false,
+                        errorMessage = null,
+                    )
+                }
             }.onFailure { throwable ->
+                if (screenState.value.requestToken != token) {
+                    return@onFailure
+                }
                 Timber.e(throwable, "MediaListViewModel load failed")
-                _state.value = UiState.Error(
-                    throwable.message ?: "Failed to load media list",
-                )
+                screenState.update { current ->
+                    current.copy(
+                        isLoading = false,
+                        errorMessage = throwable.message ?: "Failed to load media list",
+                    )
+                }
             }
         }
     }
@@ -135,16 +212,11 @@ class MediaListViewModel(
      * Does not re-fetch from the API.
      */
     fun onSortPreferenceChanged() {
-        if (currentItems.isEmpty()) return
         val mediaListSort = settings.mediaListSort ?: KeyUtil.PROGRESS
         if (MediaListUtil.isTitleSort(mediaListSort)) {
-            val sorted = sortMediaListByTitle(currentItems, settings.sortOrder)
-            currentItems = sorted
-            _state.value = UiState.Success(
-                items = sorted,
-                pageInfo = currentPageInfo,
-                isEmpty = sorted.isEmpty(),
-            )
+            screenState.update { current ->
+                current.copy(titleSortVersion = current.titleSortVersion + 1)
+            }
         }
     }
 
@@ -158,94 +230,54 @@ class MediaListViewModel(
                 ?: (userId != 0L && userRepository.cachedCurrentUser?.id == userId)
             )
 
-    internal fun onMediaListSaved(entry: MediaList) {
-        val current = _state.value as? UiState.Success ?: return
-        val existingIndex = currentItems.indexOfFirst { item ->
-            item.id == entry.id || item.mediaId == entry.mediaId
-        }
-        val matchesFilters = matchesLoadedFilters(entry)
-        if (existingIndex == -1 && !matchesFilters) {
-            return
-        }
-
-        val updatedItems = currentItems.toMutableList()
-        when {
-            existingIndex >= 0 && matchesFilters -> updatedItems[existingIndex].mergeFrom(entry)
-            existingIndex >= 0 -> updatedItems.removeAt(existingIndex)
-            matchesFilters -> updatedItems.add(entry)
-        }
-
-        emitSuccess(
-            items = updatedItems,
-            pageInfo = current.pageInfo,
-            isEmpty = updatedItems.isEmpty(),
-        )
-    }
-
-    private fun matchesLoadedFilters(entry: MediaList): Boolean {
-        val loadedMediaType = lastMediaType
-        val loadedStatusIn = lastStatusIn
-        val matchesMediaType =
-            loadedMediaType?.let { CompatUtil.equals(entry.media.type, it) } ?: true
-        val matchesStatus =
-            loadedStatusIn?.let { CompatUtil.equals(entry.status, it) } ?: true
-        return matchesMediaType && matchesStatus
-    }
-
-    private fun emitSuccess(
-        items: List<MediaList>,
-        pageInfo: PageInfo?,
-        isEmpty: Boolean,
-    ) {
+    private fun sortEntriesIfNeeded(entries: List<com.mxt.anitrend.domain.medialist.model.MediaListRecord>): List<com.mxt.anitrend.domain.medialist.model.MediaListRecord> {
         val mediaListSort = settings.mediaListSort ?: KeyUtil.PROGRESS
-        val sorted = if (MediaListUtil.isTitleSort(mediaListSort)) {
-            sortMediaListByTitle(items, settings.sortOrder)
-        } else {
-            items
+        if (!MediaListUtil.isTitleSort(mediaListSort)) {
+            return entries
         }
-        currentItems = sorted
-        currentPageInfo = pageInfo
-        _state.value = UiState.Success(
-            items = sorted,
-            pageInfo = pageInfo,
-            isEmpty = isEmpty,
-        )
-    }
 
-    private fun MediaList.mergeFrom(entry: MediaList) {
-        id = entry.id
-        mediaId = entry.mediaId
-        status = entry.status
-        score = entry.score
-        scoreRaw = entry.scoreRaw
-        progress = entry.progress
-        progressVolumes = entry.progressVolumes
-        repeat = entry.repeat
-        priority = entry.priority
-        notes = entry.notes
-        isHidden = entry.isHidden
-        isHiddenFromStatusLists = entry.isHiddenFromStatusLists
-        advancedScores = entry.advancedScores
-        customLists = entry.customLists
-        startedAt = entry.startedAt
-        completedAt = entry.completedAt
-        updatedAt = entry.updatedAt
-        createdAt = entry.createdAt
-        media = entry.media
-    }
-
-    companion object {
-        fun sortMediaListByTitle(
-            mediaLists: List<MediaList>,
-            sortOrder: String,
-        ): List<MediaList> = mediaLists.sortedWith { first, second ->
-            val firstTitle = MediaUtil.getMediaTitle(first.media)
-            val secondTitle = MediaUtil.getMediaTitle(second.media)
-            if (CompatUtil.equals(sortOrder, KeyUtil.ASC)) {
+        return entries.sortedWith { first, second ->
+            val firstTitle = first.media?.titleUserPreferred ?: first.media?.titleRomaji ?: first.media?.titleEnglish ?: first.media?.titleOriginal.orEmpty()
+            val secondTitle = second.media?.titleUserPreferred ?: second.media?.titleRomaji ?: second.media?.titleEnglish ?: second.media?.titleOriginal.orEmpty()
+            if (CompatUtil.equals(settings.sortOrder, KeyUtil.ASC)) {
                 firstTitle.compareTo(secondTitle)
             } else {
                 secondTitle.compareTo(firstTitle)
             }
+        }
+    }
+
+    private fun Map<OperationKey, OperationStatus>.isIncrementPending(
+        entryId: Long,
+        mediaId: Long,
+    ): Boolean = listOfNotNull(
+        OperationKey.mediaListIncrementProgress(mediaId),
+        OperationKey.mediaListSave(mediaId),
+        entryId.takeIf { it > 0 }?.let(OperationKey::mediaListSaveById),
+    ).any { this[it] is OperationStatus.Running }
+
+    private fun Map<OperationKey, OperationStatus>.isDeletePending(
+        entryId: Long,
+        mediaId: Long,
+    ): Boolean = listOfNotNull(
+        OperationKey.mediaListDeleteByMedia(mediaId),
+        entryId.takeIf { it > 0 }?.let(OperationKey::mediaListDelete),
+    ).any { this[it] is OperationStatus.Running }
+
+    private fun com.mxt.anitrend.domain.medialist.model.MediaListRecord.canIncrement(isCurrentUser: Boolean): Boolean {
+        if (!isCurrentUser) {
+            return false
+        }
+
+        val mediaSummary = media ?: return false
+        if (CompatUtil.equals(mediaSummary.status, KeyUtil.NOT_YET_RELEASED)) {
+            return false
+        }
+
+        return if (CompatUtil.equals(mediaSummary.type, KeyUtil.ANIME)) {
+            mediaSummary.episodes == 0 || progress < mediaSummary.episodes
+        } else {
+            mediaSummary.chapters == 0 || progress < mediaSummary.chapters
         }
     }
 }

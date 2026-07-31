@@ -1,22 +1,19 @@
 package com.mxt.anitrend.view.fragment.list
 
 import android.os.Bundle
+import android.content.SharedPreferences
 import android.view.View
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.mxt.anitrend.adapter.recycler.index.MediaListAdapter
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.graphql.generated.ScoreFormat
-import com.mxt.anitrend.model.entity.anilist.MediaListCollection
-import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.repository.UserRepository
-import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.media.MediaListUtil
+import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.viewmodel.AiringListViewModel
-import com.mxt.anitrend.viewmodel.MediaListViewModel
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -43,7 +40,6 @@ class AiringListFragment : MediaListFragment() {
             userName = userBase.name
         }
         mediaType = KeyUtil.ANIME
-        (mAdapter as? MediaListAdapter)?.setCurrentUser(userName)
         statusIn = KeyUtil.CURRENT
     }
 
@@ -58,7 +54,7 @@ class AiringListFragment : MediaListFragment() {
                             // Loading is handled by swipeRefreshLayout in the base class
                         }
                         is AiringListViewModel.UiState.Success -> {
-                            handleSuccess(state.content)
+                            handleSuccess(state)
                         }
                         is AiringListViewModel.UiState.Error -> {
                             showError(state.message)
@@ -92,43 +88,28 @@ class AiringListFragment : MediaListFragment() {
         )
     }
 
-    override fun updateUI() {
-        injectAdapter()
+    /** StateFlow collector above handles the response. */
+    override fun onChanged(value: com.mxt.anitrend.model.entity.container.body.PageContainer<com.mxt.anitrend.model.entity.anilist.MediaListCollection>?) = Unit
+
+    private fun handleSuccess(state: AiringListViewModel.UiState.Success) {
+        state.pageInfo?.let(::setPageInfo)
+        submitStateList(state.items, state.renderedItems)
+        if ((stateListAdapter?.itemCount ?: 0) > 0) {
+            updateUI()
+        } else {
+            showEmpty(getString(com.mxt.anitrend.R.string.layout_empty_response))
+        }
     }
 
-    /** StateFlow collector above handles the response. */
-    override fun onChanged(value: PageContainer<MediaListCollection>?) = Unit
-
-    private fun handleSuccess(value: PageContainer<MediaListCollection>) {
-        if (value.hasPageInfo()) {
-            setPageInfo(value.pageInfo)
+    override fun onSharedPreferenceChanged(
+        sharedPreferences: SharedPreferences,
+        key: String?,
+    ) {
+        if (key != null && GraphUtil.isKeyFilter(key)) {
+            swipeRefreshLayout.setRefreshing(true)
+            onRefresh()
+            return
         }
-        if (!value.isEmpty) {
-            val mediaListCollection = value.pageData.firstOrNull()
-            if (mediaListCollection != null) {
-                val mediaList =
-                    mediaListCollection.entries
-                        .orEmpty()
-                        .filter { entry ->
-                            CompatUtil.equals(entry.media.status, KeyUtil.RELEASING)
-                        }
-
-                val mediaListSort = settings.mediaListSort ?: KeyUtil.PROGRESS
-                if (MediaListUtil.isTitleSort(mediaListSort)) {
-                    val sorted = MediaListViewModel.sortMediaListByTitle(mediaList, settings.sortOrder)
-                    onPostProcessed(sorted)
-                } else {
-                    onPostProcessed(mediaList)
-                }
-            } else {
-                onPostProcessed(emptyList())
-            }
-        } else {
-            onPostProcessed(emptyList())
-        }
-
-        if (mAdapter.itemCount < 1) {
-            onPostProcessed(null)
-        }
+        super.onSharedPreferenceChanged(sharedPreferences, key)
     }
 }

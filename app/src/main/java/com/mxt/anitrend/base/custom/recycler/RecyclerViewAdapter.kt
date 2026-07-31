@@ -75,10 +75,8 @@ abstract class RecyclerViewAdapter<T>(
     }
 
     override fun onItemRangeChanged(swap: List<T>) {
-        val startRange = itemCount
-        val difference = swap.size - startRange
         data = ArrayList(swap)
-        notifyItemRangeChanged(startRange, difference)
+        notifyDataSetChanged()
     }
 
     override fun onItemChanged(

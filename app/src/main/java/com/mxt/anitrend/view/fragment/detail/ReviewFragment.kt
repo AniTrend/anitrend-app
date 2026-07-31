@@ -10,7 +10,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.ReviewAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
-import com.mxt.anitrend.coordinator.WidgetMutationCoordinator
+import com.mxt.anitrend.data.DatabaseHelper
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.model.entity.anilist.Review
 import com.mxt.anitrend.model.entity.base.MediaBase
@@ -38,8 +38,7 @@ class ReviewFragment : FragmentBaseList<Review, PageContainer<Review>>() {
     private var mediaId: Long = 0
 
     private val settings: Settings by inject()
-
-    private val mutationCoordinator by inject<WidgetMutationCoordinator>()
+    private val databaseHelper: DatabaseHelper by inject()
 
     private val reviewViewModel: ReviewViewModel by viewModel()
 
@@ -57,7 +56,12 @@ class ReviewFragment : FragmentBaseList<Review, PageContainer<Review>>() {
             mediaId = args.getLong(KeyUtil.arg_id)
             mediaType = args.getString(KeyUtil.arg_mediaType)
         }
-        mAdapter = ReviewAdapter(ctx, mutationCoordinator, true)
+        mAdapter = ReviewAdapter(
+            context = ctx,
+            currentUser = databaseHelper.currentUser,
+            onRateReviewAction = reviewViewModel::rateReview,
+            isMediaType = true,
+        )
         mColumnSize = R.integer.single_list_x1
         isPager = true
     }
@@ -73,7 +77,7 @@ class ReviewFragment : FragmentBaseList<Review, PageContainer<Review>>() {
                             // Loading is handled by swipeRefreshLayout in the base class
                         }
                         is ReviewViewModel.UiState.Success -> {
-                            handleSuccess(state.content)
+                            handleSuccess(state.content, state.replaceExisting)
                         }
                         is ReviewViewModel.UiState.Error -> {
                             showError(state.message)
@@ -100,14 +104,27 @@ class ReviewFragment : FragmentBaseList<Review, PageContainer<Review>>() {
         )
     }
 
-    private fun handleSuccess(content: PageContainer<Review>) {
+    private fun handleSuccess(
+        content: PageContainer<Review>,
+        replaceExisting: Boolean,
+    ) {
         if (content.hasPageInfo()) {
             setPageInfo(content.pageInfo)
         }
         if (!content.isEmpty) {
-            onPostProcessed(content.pageData)
+            if (replaceExisting) {
+                mAdapter.onItemsInserted(content.pageData)
+                updateUI()
+            } else {
+                onPostProcessed(content.pageData)
+            }
         } else {
-            onPostProcessed(emptyList())
+            if (replaceExisting) {
+                mAdapter.onItemsInserted(emptyList())
+                updateUI()
+            } else {
+                onPostProcessed(emptyList())
+            }
         }
         if (mAdapter.itemCount < 1) {
             onPostProcessed(null)
