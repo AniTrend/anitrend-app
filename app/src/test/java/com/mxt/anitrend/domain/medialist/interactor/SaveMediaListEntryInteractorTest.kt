@@ -216,7 +216,7 @@ class SaveMediaListEntryInteractorTest {
         ).`when`(userRepository).cachedCurrentUser
         doAnswer {
             sessionEpoch.bump()
-            Result.success(MediaListFixtures.aMediaList(id = 5, mediaId = 101, progress = 9))
+            MediaListFixtures.aMediaList(id = 5, mediaId = 101, progress = 9)
         }.`when`(repository)
             .saveMediaListEntry(
                 id = 5,

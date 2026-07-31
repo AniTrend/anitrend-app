@@ -15,12 +15,14 @@ import com.mxt.anitrend.graphql.generated.LikeableType
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.repository.BaseRepository
 import java.util.concurrent.atomic.AtomicInteger
-import kotlinx.coroutines.Dispatchers
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.intrinsics.COROUTINE_SUSPENDED
+import kotlin.coroutines.resume
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -92,13 +94,18 @@ class ToggleLikeInteractorTest {
         val activeCalls = AtomicInteger(0)
         val maxActiveCalls = AtomicInteger(0)
 
-        doAnswer {
+        doAnswer { invocation ->
             val current = activeCalls.incrementAndGet()
             maxActiveCalls.updateAndGet { previous -> maxOf(previous, current) }
             try {
                 firstStarted.complete(Unit)
-                runBlocking { allowFirstReturn.await() }
-                Result.success(listOf(createUserEntity(1L)))
+                val continuation =
+                    invocation.rawArguments.last() as Continuation<Result<List<UserBase>>>
+                backgroundScope.launch {
+                    allowFirstReturn.await()
+                    continuation.resume(Result.success(listOf(createUserEntity(1L))))
+                }
+                COROUTINE_SUSPENDED
             } finally {
                 activeCalls.decrementAndGet()
             }
@@ -109,7 +116,7 @@ class ToggleLikeInteractorTest {
             maxActiveCalls.updateAndGet { previous -> maxOf(previous, current) }
             try {
                 secondStarted.complete(Unit)
-                Result.success(listOf(createUserEntity(2L)))
+                listOf(createUserEntity(2L))
             } finally {
                 activeCalls.decrementAndGet()
             }
@@ -123,18 +130,20 @@ class ToggleLikeInteractorTest {
             requestSequence = RequestSequence(),
         )
 
-        val first = launch(Dispatchers.Default) {
+        val first = backgroundScope.launch {
             interactor(ToggleLikeCommand(id = 1L, likeableType = LikeableType.ACTIVITY))
         }
+        runCurrent()
         firstStarted.await()
 
-        val second = launch(Dispatchers.Default) {
+        val second = backgroundScope.launch {
             interactor(ToggleLikeCommand(id = 1L, likeableType = LikeableType.ACTIVITY))
         }
         advanceUntilIdle()
         assertTrue(!secondStarted.isCompleted)
 
         allowFirstReturn.complete(Unit)
+        advanceUntilIdle()
 
         first.join()
         second.join()
