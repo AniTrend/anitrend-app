@@ -15,21 +15,19 @@ import android.view.WindowManager
 import android.view.animation.DecelerateInterpolator
 import android.widget.Toast
 import androidx.annotation.VisibleForTesting
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import com.bumptech.glide.Glide
 import com.mxt.anitrend.R
 import com.mxt.anitrend.databinding.ActivityImagePreviewBinding
-import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
-import com.mxt.anitrend.util.Settings
+import com.mxt.anitrend.view.activity.CommonActivity
 import timber.log.Timber
 
-class ImagePreviewActivity : AppCompatActivity() {
+class ImagePreviewActivity : CommonActivity() {
 
     data class Args(val modelUrl: String)
 
@@ -58,14 +56,6 @@ class ImagePreviewActivity : AppCompatActivity() {
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
         )
-        // Preserve configured theme (previously handled by ActivityBase.configureActivity).
-        val settings = KoinExt.get(Settings::class.java)
-        val themeRes = when (settings.theme) {
-            KeyUtil.THEME_DARK -> R.style.AppThemeDark
-            KeyUtil.THEME_BLACK -> R.style.AppThemeBlack
-            else -> R.style.AppThemeLight
-        }
-        setTheme(themeRes)
         super.onCreate(savedInstanceState)
 
         binding = ActivityImagePreviewBinding.inflate(layoutInflater)

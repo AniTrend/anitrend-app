@@ -8,7 +8,6 @@ import android.view.Window
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.annotation.VisibleForTesting
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import com.bumptech.glide.Glide
@@ -18,14 +17,13 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.mxt.anitrend.R
 import com.mxt.anitrend.databinding.ActivityGiphyPreviewBinding
-import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
-import com.mxt.anitrend.util.Settings
+import com.mxt.anitrend.view.activity.CommonActivity
 
 class GiphyPreviewActivity :
-    AppCompatActivity(),
+    CommonActivity(),
     RequestListener<Drawable> {
 
     data class Args(val modelUrl: String)
@@ -51,14 +49,6 @@ class GiphyPreviewActivity :
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
         )
-        // Preserve configured theme (previously handled by ActivityBase.configureActivity).
-        val settings = KoinExt.get(Settings::class.java)
-        val themeRes = when (settings.theme) {
-            KeyUtil.THEME_DARK -> R.style.AppThemeDark
-            KeyUtil.THEME_BLACK -> R.style.AppThemeBlack
-            else -> R.style.AppThemeLight
-        }
-        setTheme(themeRes)
         super.onCreate(savedInstanceState)
 
         binding = ActivityGiphyPreviewBinding.inflate(layoutInflater)

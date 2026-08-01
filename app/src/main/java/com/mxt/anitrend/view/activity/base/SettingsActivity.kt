@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.edit
 import androidx.core.os.LocaleListCompat
@@ -23,27 +22,22 @@ import com.mxt.anitrend.databinding.ItemSettingsRowSwitchBinding
 import com.mxt.anitrend.databinding.ItemSettingsRowValueBinding
 import com.mxt.anitrend.databinding.ItemSettingsSectionCardBinding
 import com.mxt.anitrend.databinding.SettingsActivityBinding
-import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.extension.applyConfiguredTheme
 import com.mxt.anitrend.presenter.base.BasePresenter
+import com.mxt.anitrend.ui.commit
+import com.mxt.anitrend.ui.model.FragmentItem
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.JobSchedulerUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.Settings
+import com.mxt.anitrend.view.activity.CommonActivity
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsActivity : CommonActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val settings = KoinExt.get(Settings::class.java)
-        val themeRes = when (settings.theme) {
-            KeyUtil.THEME_DARK -> R.style.AppThemeDark
-            KeyUtil.THEME_BLACK -> R.style.AppThemeBlack
-            else -> R.style.AppThemeLight
-        }
-        setTheme(themeRes)
         super.onCreate(savedInstanceState)
 
         val binding = SettingsActivityBinding.inflate(layoutInflater)
@@ -52,16 +46,15 @@ class SettingsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         if (savedInstanceState == null) {
-            val fragment: Fragment =
-                if (settings.experimentalSettingsScreen) {
-                    MaterialSettingsFragment()
-                } else {
-                    SettingsFragment()
-                }
-            supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.settings, fragment)
-                .commit()
+            if (settings.experimentalSettingsScreen) {
+                FragmentItem(
+                    fragment = MaterialSettingsFragment::class.java,
+                ).commit(R.id.settings, this)
+            } else {
+                FragmentItem(
+                    fragment = SettingsFragment::class.java,
+                ).commit(R.id.settings, this)
+            }
         }
     }
 

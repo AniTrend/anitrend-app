@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -24,6 +23,7 @@ import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.selectedIndex
+import com.mxt.anitrend.view.activity.CommonActivity
 import com.mxt.anitrend.viewmodel.StaffViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -33,7 +33,7 @@ import java.util.Locale
  * Created by max on 2017/12/14.
  * staff activity
  */
-class StaffActivity : AppCompatActivity() {
+class StaffActivity : CommonActivity() {
 
     private lateinit var binding: ActivityPagerGenericBinding
 
@@ -48,14 +48,6 @@ class StaffActivity : AppCompatActivity() {
     private val staffViewModel: StaffViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Preserve configured theme (was previously handled by ActivityBase.configureActivity).
-        val settings = KoinExt.get(Settings::class.java)
-        val themeRes = when (settings.theme) {
-            KeyUtil.THEME_DARK -> R.style.AppThemeDark
-            KeyUtil.THEME_BLACK -> R.style.AppThemeBlack
-            else -> R.style.AppThemeLight
-        }
-        setTheme(themeRes)
         super.onCreate(savedInstanceState)
 
         // Process deep links (e.g. anilist.co/staff/{id}) so arg_id is injected

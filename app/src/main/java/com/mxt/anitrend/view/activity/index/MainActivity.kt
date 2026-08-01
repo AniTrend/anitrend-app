@@ -11,12 +11,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
-import androidx.annotation.StyleRes
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.core.view.GravityCompat
-import androidx.core.view.WindowCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -43,12 +40,10 @@ import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
 import com.mxt.anitrend.base.custom.view.image.AvatarIndicatorView
 import com.mxt.anitrend.base.custom.view.image.HeaderImageView
 import com.mxt.anitrend.base.custom.view.search.MaterialSearchView
-import com.mxt.anitrend.base.interfaces.dao.BoxQuery
 import com.mxt.anitrend.base.interfaces.event.BottomSheetChoice
 import com.mxt.anitrend.base.interfaces.event.ISearchDelegate
 import com.mxt.anitrend.databinding.ActivityMainBinding
 import com.mxt.anitrend.extension.LAZY_MODE_UNSAFE
-import com.mxt.anitrend.extension.applyConfiguredTheme
 import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.extension.requestNotificationsPermission
@@ -57,9 +52,9 @@ import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
-import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.date.DateUtil
 import com.mxt.anitrend.util.media.MediaActionUtil
+import com.mxt.anitrend.view.activity.CommonActivity
 import com.mxt.anitrend.view.activity.base.AboutActivity
 import com.mxt.anitrend.view.activity.base.ChangelogActivity
 import com.mxt.anitrend.view.activity.base.LoggingActivity
@@ -69,10 +64,8 @@ import com.mxt.anitrend.view.sheet.BottomSheetMessage
 import com.mxt.anitrend.viewmodel.MainViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
-import java.util.Locale
 
 /**
  * Created by max on 2017/10/04.
@@ -80,16 +73,13 @@ import java.util.Locale
  */
 
 class MainActivity :
-    AppCompatActivity(),
+    CommonActivity(),
     View.OnClickListener,
     NavigationView.OnNavigationItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
 
     // --- Fields carried over from ActivityBase shell ---
     private var mediaActionUtil: MediaActionUtil? = null
-
-    private var currentTheme: String? = null
-    private var currentLocale: String? = null
 
     /** @see ActivityBase.showBottomSheet */
     internal var mBottomSheet: BottomSheetBase<*>? = null
@@ -104,9 +94,6 @@ class MainActivity :
     }
     private val mNavigationTabStrip by lazy(LazyThreadSafetyMode.NONE) {
         binding.appBarMain.customTab.smartTab
-    }
-    private val coordinatorLayout by lazy(LazyThreadSafetyMode.NONE) {
-        binding.appBarMain.coordinator
     }
     private val mDrawerLayout by lazy(LazyThreadSafetyMode.NONE) {
         binding.drawerLayout
@@ -145,10 +132,6 @@ class MainActivity :
 
     private val mainViewModel: MainViewModel by viewModel()
 
-    private val settings: Settings by inject()
-    private val boxQuery: BoxQuery by inject()
-    private val currentUser get() = boxQuery.currentUser
-
     private lateinit var menuItems: Menu
 
     private lateinit var mHomeFeed: MenuItem
@@ -171,8 +154,6 @@ class MainActivity :
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        configureActivity()
-        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -227,7 +208,6 @@ class MainActivity :
                     when (state) {
                         is MainViewModel.UiState.Loading -> Unit
                         is MainViewModel.UiState.Success -> {
-                            boxQuery.currentUser = state.user
                             updateUI()
                         }
                         is MainViewModel.UiState.Error -> {
@@ -412,7 +392,6 @@ class MainActivity :
      */
     override fun onResume() {
         super.onResume()
-        onResumeThemeCheck()
         mediaActionUtil?.onResume(null)
         mDrawerLayout.addDrawerListener(mDrawerToggle)
         mDrawerToggle.syncState()
@@ -474,8 +453,8 @@ class MainActivity :
             R.id.nav_myanime -> {
                 val animeParams = Bundle()
                 animeParams.putString(KeyUtil.arg_mediaType, KeyUtil.ANIME)
-                animeParams.putString(KeyUtil.arg_userName, currentUser?.name)
-                animeParams.putLong(KeyUtil.arg_id, currentUser?.id ?: 0)
+                animeParams.putString(KeyUtil.arg_userName, mainViewModel.currentUser()?.name)
+                animeParams.putLong(KeyUtil.arg_id, mainViewModel.currentUser()?.id ?: 0)
 
                 val animeListPageAdapter =
                     MediaListPageAdapter(this, applicationContext)
@@ -489,8 +468,8 @@ class MainActivity :
             R.id.nav_mymanga -> {
                 val mangaParams = Bundle()
                 mangaParams.putString(KeyUtil.arg_mediaType, KeyUtil.MANGA)
-                mangaParams.putString(KeyUtil.arg_userName, currentUser?.name)
-                mangaParams.putLong(KeyUtil.arg_id, currentUser?.id ?: 0)
+                mangaParams.putString(KeyUtil.arg_userName, mainViewModel.currentUser()?.name)
+                mangaParams.putLong(KeyUtil.arg_id, mainViewModel.currentUser()?.id ?: 0)
 
                 val mangaListPageAdapter =
                     MediaListPageAdapter(this, applicationContext)
@@ -653,7 +632,7 @@ class MainActivity :
     }
 
     private fun setupUserItems() {
-        currentUser?.apply {
+        mainViewModel.currentUser()?.apply {
             mUserName.text = name.orEmpty()
             mUserAvatar.onInit()
             mHeaderView.setImage(bannerImage.orEmpty())
@@ -681,11 +660,11 @@ class MainActivity :
     override fun onClick(view: View) {
         if (view.id == R.id.banner_clickable) {
             if (settings.isAuthenticated) {
-                val user = currentUser
+                val user = mainViewModel.currentUser()
                 if (user != null) {
                     startNewActivity<ProfileActivity>(
                         Bundle().apply {
-                            putString(KeyUtil.arg_userName, currentUser?.name)
+                            putString(KeyUtil.arg_userName, user.name)
                         },
                     )
                 } else {
@@ -710,39 +689,6 @@ class MainActivity :
         }
         mediaActionUtil?.onDestroy()
         super.onDestroy()
-    }
-
-    private fun configureActivity() {
-        currentTheme = settings.theme
-        currentLocale = settings.userLanguage ?: Locale.getDefault().language
-        @StyleRes val theme = when (currentTheme) {
-            KeyUtil.THEME_DARK -> R.style.AppThemeDark
-            KeyUtil.THEME_BLACK -> R.style.AppThemeBlack
-            else -> R.style.AppThemeLight
-        }
-        setTheme(theme)
-    }
-
-    private fun enableEdgeToEdge() {
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-        if (CompatUtil.isLightTheme(settings)) {
-            WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars =
-                true
-            WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightNavigationBars =
-                true
-        }
-    }
-
-    @Suppress("DEPRECATION")
-    private fun onResumeThemeCheck() {
-        if (currentTheme != settings.theme || currentLocale != settings.userLanguage) {
-            applyConfiguredTheme()
-            val currentIntent = intent
-            finish()
-            overridePendingTransition(0, 0)
-            startActivity(currentIntent)
-            overridePendingTransition(0, 0)
-        }
     }
 
     /** @see ActivityBase.showBottomSheet */

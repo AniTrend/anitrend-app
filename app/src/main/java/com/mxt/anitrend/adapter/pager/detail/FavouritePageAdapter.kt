@@ -1,10 +1,14 @@
 package com.mxt.anitrend.adapter.pager.detail
 
 import android.content.Context
+import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter
+import com.mxt.anitrend.extension.LAZY_MODE_UNSAFE
+import com.mxt.anitrend.ui.fragmentByTagOrNew
+import com.mxt.anitrend.ui.model.FragmentItem
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.view.fragment.favourite.CharacterFavouriteFragment
 import com.mxt.anitrend.view.fragment.favourite.MediaFavouriteFragment
@@ -22,12 +26,27 @@ class FavouritePageAdapter(
         setPagerTitles(R.array.favorites_page_titles)
     }
 
-    override fun createFragment(position: Int): Fragment = when (position) {
-        0 -> MediaFavouriteFragment.newInstance(params, KeyUtil.ANIME)
-        1 -> CharacterFavouriteFragment.newInstance(params)
-        2 -> MediaFavouriteFragment.newInstance(params, KeyUtil.MANGA)
-        3 -> StaffFavouriteFragment.newInstance(params)
-        4 -> StudioFavouriteFragment.newInstance(params)
-        else -> throw IndexOutOfBoundsException("Invalid position: $position")
+    private val fragmentItems by lazy(LAZY_MODE_UNSAFE) {
+        listOf<FragmentItem<Fragment>>(
+            FragmentItem(
+                MediaFavouriteFragment::class.java,
+                Bundle(params).apply {
+                    putString(KeyUtil.arg_mediaType, KeyUtil.ANIME)
+                },
+                "MediaFavouriteFragmentAnime",
+            ),
+            FragmentItem(CharacterFavouriteFragment::class.java, Bundle(params)),
+            FragmentItem(
+                MediaFavouriteFragment::class.java,
+                Bundle(params).apply {
+                    putString(KeyUtil.arg_mediaType, KeyUtil.MANGA)
+                },
+                "MediaFavouriteFragmentManga",
+            ),
+            FragmentItem(StaffFavouriteFragment::class.java, Bundle(params)),
+            FragmentItem(StudioFavouriteFragment::class.java, Bundle(params)),
+        )
     }
+
+    override fun createFragment(position: Int): Fragment = fragmentItems[position].fragmentByTagOrNew(fragmentActivity)
 }

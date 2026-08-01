@@ -6,6 +6,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter
+import com.mxt.anitrend.extension.LAZY_MODE_UNSAFE
+import com.mxt.anitrend.ui.fragmentByTagOrNew
+import com.mxt.anitrend.ui.model.FragmentItem
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.view.fragment.detail.UserFeedFragment
 import com.mxt.anitrend.view.fragment.detail.UserOverviewFragment
@@ -21,22 +24,27 @@ class ProfilePageAdapter(
         setPagerTitles(R.array.profile_page_titles)
     }
 
-    override fun createFragment(position: Int): Fragment = when (position) {
-        0 -> UserOverviewFragment.newInstance(params)
-        1 ->
-            UserFeedFragment.newInstance(
+    private val fragmentItems by lazy(LAZY_MODE_UNSAFE) {
+        listOf<FragmentItem<Fragment>>(
+            FragmentItem(UserOverviewFragment::class.java, Bundle(params)),
+            FragmentItem(
+                UserFeedFragment::class.java,
                 Bundle(params).apply {
                     putString(KeyUtil.arg_type, KeyUtil.MEDIA_LIST)
                     putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
                 },
-            )
-        2 ->
-            UserFeedFragment.newInstance(
+                "UserFeedFragmentMediaList",
+            ),
+            FragmentItem(
+                UserFeedFragment::class.java,
                 Bundle(params).apply {
                     putString(KeyUtil.arg_type, KeyUtil.TEXT)
                     putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
                 },
-            )
-        else -> throw IndexOutOfBoundsException("Invalid position: $position")
+                "UserFeedFragmentText",
+            ),
+        )
     }
+
+    override fun createFragment(position: Int): Fragment = fragmentItems[position].fragmentByTagOrNew(fragmentActivity)
 }

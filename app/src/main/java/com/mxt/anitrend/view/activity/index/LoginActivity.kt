@@ -7,24 +7,21 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.async.WebTokenRequest
-import com.mxt.anitrend.base.interfaces.dao.BoxQuery
 import com.mxt.anitrend.binding.basicText
 import com.mxt.anitrend.databinding.ActivityLoginBinding
 import com.mxt.anitrend.model.api.retro.ServiceFactory
 import com.mxt.anitrend.model.entity.anilist.User
-import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.JobSchedulerUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
-import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.ShortcutUtil
 import com.mxt.anitrend.util.WidgetState
+import com.mxt.anitrend.view.activity.CommonActivity
 import com.mxt.anitrend.viewmodel.LoginAuthState
 import com.mxt.anitrend.viewmodel.LoginAuthViewModel
 import com.mxt.anitrend.viewmodel.LoginUserViewModel
@@ -38,27 +35,16 @@ import timber.log.Timber
  * Authentication activity
  */
 class LoginActivity :
-    AppCompatActivity(),
+    CommonActivity(),
     View.OnClickListener {
 
     private lateinit var binding: ActivityLoginBinding
     private val authViewModel: LoginAuthViewModel by viewModel()
     private val userViewModel: LoginUserViewModel by viewModel()
     private var model: User? = null
-
-    private val settings: Settings by inject()
     private val scheduler: JobSchedulerUtil by inject()
-    private val boxQuery: BoxQuery by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Preserve translucent theme (was previously handled by ActivityBase.configureActivity).
-        setTheme(
-            if (CompatUtil.isLightTheme(settings)) {
-                R.style.AppThemeLight_Translucent
-            } else {
-                R.style.AppThemeDark_Translucent
-            },
-        )
         super.onCreate(savedInstanceState)
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
@@ -85,7 +71,6 @@ class LoginActivity :
                         is LoginUserViewModel.UiState.Loading -> Unit
                         is LoginUserViewModel.UiState.Success -> {
                             model = state.user
-                            boxQuery.currentUser = model
                             scheduleJobAndShortcuts()
                             finish()
                         }

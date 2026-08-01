@@ -141,11 +141,12 @@ class BottomSheetComposer :
             R.id.insert_emoticon -> Unit
             R.id.insert_gif -> {
                 mBottomSheet =
-                    BottomSheetGiphy
-                        .Builder()
-                        .setTitle(R.string.title_bottom_sheet_giphy)
-                        .build()
-                        .also { (it as? BottomSheetGiphy)?.onGiphySelected = { giphy -> composerWidget?.insertGiphy(giphy) } }
+                    BottomSheetGiphy().apply {
+                        arguments =
+                            Bundle().apply {
+                                putInt(KeyUtil.arg_title, R.string.title_bottom_sheet_giphy)
+                            }
+                    }.also { it.onGiphySelected = { giphy -> composerWidget?.insertGiphy(giphy) } }
                 activity?.let { host ->
                     mBottomSheet?.show(host.supportFragmentManager, mBottomSheet?.tag)
                 }

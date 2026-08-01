@@ -71,6 +71,8 @@ class UserRepository(
             } else {
                 throw RuntimeException(response.apiError())
             }
+        }.onSuccess {
+            boxQuery.currentUser = it
         }
     }
 

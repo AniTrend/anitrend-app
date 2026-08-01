@@ -2,7 +2,6 @@ package com.mxt.anitrend.view.activity.index
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -14,10 +13,9 @@ import com.mxt.anitrend.repository.UserRepository
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.JobSchedulerUtil
-import com.mxt.anitrend.util.KeyUtil
-import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.migration.MigrationUtil
 import com.mxt.anitrend.util.migration.Migrations
+import com.mxt.anitrend.view.activity.CommonActivity
 import com.mxt.anitrend.view.activity.base.WelcomeActivity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -28,21 +26,11 @@ import org.koin.android.ext.android.inject
  * Base splash screen
  */
 
-class SplashActivity : AppCompatActivity() {
+class SplashActivity : CommonActivity() {
     private lateinit var binding: ActivitySplashBinding
-    private lateinit var settings: Settings
     private val userRepository: UserRepository by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Apply theme before super.onCreate() -- replicates ActivityBase.configureActivity()
-        // theme logic using the proven pattern from LoggingActivity.
-        settings = inject<Settings>().value
-        val themeRes = when (settings.theme) {
-            KeyUtil.THEME_DARK -> R.style.AppThemeDark
-            KeyUtil.THEME_BLACK -> R.style.AppThemeBlack
-            else -> R.style.AppThemeLight
-        }
-        setTheme(themeRes)
         super.onCreate(savedInstanceState)
 
         binding = ActivitySplashBinding.inflate(layoutInflater)

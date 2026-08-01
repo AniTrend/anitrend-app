@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.detail.GiphyAdapter
-import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
 import com.mxt.anitrend.base.custom.sheet.BottomSheetGiphyList
 import com.mxt.anitrend.base.interfaces.event.ISearchDelegate
 import com.mxt.anitrend.databinding.BottomSheetListBinding
@@ -32,13 +31,6 @@ class BottomSheetGiphy : BottomSheetGiphyList() {
     var onGiphySelected: ((Giphy) -> Unit)? = null
 
     private val giphyViewModel: GiphyViewModel by viewModel()
-
-    companion object {
-        @JvmStatic
-        fun newInstance(bundle: Bundle): BottomSheetGiphy = BottomSheetGiphy().apply {
-            arguments = bundle
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -163,9 +155,5 @@ class BottomSheetGiphy : BottomSheetGiphyList() {
             val intent = GiphyPreviewActivity.newIntent(host, giphySample?.url ?: "")
             host.startActivity(intent)
         }
-    }
-
-    class Builder : BottomSheetBuilder() {
-        override fun build(): BottomSheetBase<*> = newInstance(bundle)
     }
 }

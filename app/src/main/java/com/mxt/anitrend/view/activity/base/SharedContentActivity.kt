@@ -2,7 +2,6 @@ package com.mxt.anitrend.view.activity.base
 
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ShareCompat
 import androidx.lifecycle.Lifecycle
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -12,19 +11,20 @@ import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
 import com.mxt.anitrend.base.interfaces.event.BottomSheetListener
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener
 import com.mxt.anitrend.databinding.ActivityShareContentBinding
-import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.extension.getCompatTintedDrawable
 import com.mxt.anitrend.extension.hideKeyboard
+import com.mxt.anitrend.ui.fragmentByTagOrNew
+import com.mxt.anitrend.ui.model.FragmentItem
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.IntentBundleUtil
 import com.mxt.anitrend.util.KeyUtil
-import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.markdown.MarkDownUtil
+import com.mxt.anitrend.view.activity.CommonActivity
 import com.mxt.anitrend.view.sheet.BottomSheetGiphy
 
 class SharedContentActivity :
-    AppCompatActivity(),
+    CommonActivity(),
     BottomSheetListener,
     ItemClickListener<Any> {
 
@@ -65,15 +65,6 @@ class SharedContentActivity :
         )
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Translucent theme (previously handled by ActivityBase.configureActivity).
-        val settings = KoinExt.get(Settings::class.java)
-        setTheme(
-            if (CompatUtil.isLightTheme(settings)) {
-                R.style.AppThemeLight_Translucent
-            } else {
-                R.style.AppThemeDark_Translucent
-            },
-        )
         super.onCreate(savedInstanceState)
 
         // Process share-intent deep links (previously ActivityBase.onCreate).
@@ -177,11 +168,9 @@ class SharedContentActivity :
             R.id.insert_emoticon -> Unit
             R.id.insert_gif -> {
                 mBottomSheet =
-                    BottomSheetGiphy
-                        .Builder()
-                        .setTitle(R.string.title_bottom_sheet_giphy)
-                        .build()
-                        .also { (it as? BottomSheetGiphy)?.onGiphySelected = { giphy -> binding.composerWidget.insertGiphy(giphy) } }
+                    FragmentItem(fragment = BottomSheetGiphy::class.java)
+                        .fragmentByTagOrNew(this@SharedContentActivity)
+                        .also { it.onGiphySelected = { giphy -> binding.composerWidget.insertGiphy(giphy) } }
                 mBottomSheet?.let { sheet ->
                     sheet.show(supportFragmentManager, sheet.tag)
                 }

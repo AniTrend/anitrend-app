@@ -61,4 +61,6 @@ class StudioViewModel(
     ): Result<Unit> = withContext(ioDispatcher) {
         baseRepository.toggleFavourite(animeId, mangaId, characterId, staffId, studioId)
     }
+
+    fun isAuthenticated() = studioRepository.isAuthenticated()
 }

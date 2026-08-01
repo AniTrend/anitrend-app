@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.annotation.VisibleForTesting
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
@@ -20,18 +19,16 @@ import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.detail.LogEntryAdapter
 import com.mxt.anitrend.databinding.ActivityLoggingBinding
-import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.model.entity.log.LogFilter
 import com.mxt.anitrend.model.entity.log.LogUiState
-import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
-import com.mxt.anitrend.util.Settings
+import com.mxt.anitrend.view.activity.CommonActivity
 import com.mxt.anitrend.viewmodel.LoggingViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-class LoggingActivity : AppCompatActivity() {
+class LoggingActivity : CommonActivity() {
 
     private lateinit var binding: ActivityLoggingBinding
 
@@ -45,16 +42,6 @@ class LoggingActivity : AppCompatActivity() {
     internal val loggingViewModel: LoggingViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Replicates ActivityBase.configureActivity() theme behaviour via
-        // ConfigurationUtil.onCreateAttach. Must run before super.onCreate() so
-        // the correct theme resource is locked in before setContentView().
-        val settings = KoinExt.get(Settings::class.java)
-        val themeRes = when (settings.theme) {
-            KeyUtil.THEME_DARK -> R.style.AppThemeDark
-            KeyUtil.THEME_BLACK -> R.style.AppThemeBlack
-            else -> R.style.AppThemeLight
-        }
-        setTheme(themeRes)
         super.onCreate(savedInstanceState)
 
         binding = ActivityLoggingBinding.inflate(layoutInflater)

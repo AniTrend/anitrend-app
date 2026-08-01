@@ -70,4 +70,9 @@ class ProfileViewModel(
                 connectionContainer.connection
             }
     }
+
+    fun isCurrentUser(userId: Long, userName: String?) = userRepository.isCurrentUser(
+        userId = userId,
+        userName = userName,
+    )
 }

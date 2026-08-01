@@ -5,20 +5,18 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.annotation.VisibleForTesting
-import androidx.appcompat.app.AppCompatActivity
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import com.mxt.anitrend.R
 import com.mxt.anitrend.databinding.ActivityVideoPlayerBinding
-import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
-import com.mxt.anitrend.util.Settings
+import com.mxt.anitrend.view.activity.CommonActivity
 import timber.log.Timber
 
-class VideoPlayerActivity : AppCompatActivity() {
+class VideoPlayerActivity : CommonActivity() {
 
     /**
      * Navigation args for [VideoPlayerActivity]. Use [newIntent] to build and
@@ -43,14 +41,6 @@ class VideoPlayerActivity : AppCompatActivity() {
     private lateinit var binding: ActivityVideoPlayerBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Preserve configured theme (previously handled by ActivityBase.configureActivity).
-        val settings = KoinExt.get(Settings::class.java)
-        val themeRes = when (settings.theme) {
-            KeyUtil.THEME_DARK -> R.style.AppThemeDark
-            KeyUtil.THEME_BLACK -> R.style.AppThemeBlack
-            else -> R.style.AppThemeLight
-        }
-        setTheme(themeRes)
         super.onCreate(savedInstanceState)
 
         binding = ActivityVideoPlayerBinding.inflate(layoutInflater)

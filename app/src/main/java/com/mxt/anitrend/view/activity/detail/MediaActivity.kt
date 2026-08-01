@@ -7,7 +7,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -25,13 +24,12 @@ import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.IntentBundleUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
-import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.TapTargetUtil
 import com.mxt.anitrend.util.TutorialUtil
 import com.mxt.anitrend.util.media.MediaActionUtil
+import com.mxt.anitrend.view.activity.CommonActivity
 import com.mxt.anitrend.viewmodel.MediaViewModel
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.Locale
 
@@ -40,12 +38,10 @@ import java.util.Locale
  * Media activity
  */
 class MediaActivity :
-    AppCompatActivity(),
+    CommonActivity(),
     View.OnClickListener {
 
     private lateinit var binding: ActivitySeriesBinding
-
-    private val settings: Settings by inject()
 
     @KeyUtil.MediaType
     private var mediaType: String? = null
@@ -61,13 +57,6 @@ class MediaActivity :
     private val mediaViewModel: MediaViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Preserve configured theme (was previously handled by ActivityBase.configureActivity).
-        val themeRes = when (settings.theme) {
-            KeyUtil.THEME_DARK -> R.style.AppThemeDark
-            KeyUtil.THEME_BLACK -> R.style.AppThemeBlack
-            else -> R.style.AppThemeLight
-        }
-        setTheme(themeRes)
         super.onCreate(savedInstanceState)
 
         // Process deep links (e.g. anilist.co/anime/{id}) so arg_id is injected

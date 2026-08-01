@@ -95,6 +95,49 @@ import com.mxt.anitrend.util.ConfigurationUtil
 import com.mxt.anitrend.util.JobSchedulerUtil
 import com.mxt.anitrend.util.NotificationUtil
 import com.mxt.anitrend.util.Settings
+import com.mxt.anitrend.view.activity.base.SettingsActivity
+import com.mxt.anitrend.view.activity.base.SettingsActivity.MaterialSettingsFragment
+import com.mxt.anitrend.view.fragment.detail.AboutFragment
+import com.mxt.anitrend.view.fragment.detail.BrowseReviewFragment
+import com.mxt.anitrend.view.fragment.detail.ChangelogFragment
+import com.mxt.anitrend.view.fragment.detail.CharacterOverviewFragment
+import com.mxt.anitrend.view.fragment.detail.CommentFragment
+import com.mxt.anitrend.view.fragment.detail.MediaFeedFragment
+import com.mxt.anitrend.view.fragment.detail.MediaOverviewFragment
+import com.mxt.anitrend.view.fragment.detail.MediaStaffFragment
+import com.mxt.anitrend.view.fragment.detail.MediaStatsFragment
+import com.mxt.anitrend.view.fragment.detail.MessageFeedFragment
+import com.mxt.anitrend.view.fragment.detail.NotificationFragment
+import com.mxt.anitrend.view.fragment.detail.ReviewFragment
+import com.mxt.anitrend.view.fragment.detail.StaffOverviewFragment
+import com.mxt.anitrend.view.fragment.detail.StudioMediaFragment
+import com.mxt.anitrend.view.fragment.detail.UserFeedFragment
+import com.mxt.anitrend.view.fragment.detail.UserOverviewFragment
+import com.mxt.anitrend.view.fragment.favourite.CharacterFavouriteFragment
+import com.mxt.anitrend.view.fragment.favourite.MediaFavouriteFragment
+import com.mxt.anitrend.view.fragment.favourite.StaffFavouriteFragment
+import com.mxt.anitrend.view.fragment.favourite.StudioFavouriteFragment
+import com.mxt.anitrend.view.fragment.group.CharacterActorsFragment
+import com.mxt.anitrend.view.fragment.group.MediaAnimeRoleFragment
+import com.mxt.anitrend.view.fragment.group.MediaCharacterFragment
+import com.mxt.anitrend.view.fragment.group.MediaFormatFragment
+import com.mxt.anitrend.view.fragment.group.MediaRecommendationsFragment
+import com.mxt.anitrend.view.fragment.group.MediaRelationFragment
+import com.mxt.anitrend.view.fragment.group.MediaStaffRoleFragment
+import com.mxt.anitrend.view.fragment.list.AiringListFragment
+import com.mxt.anitrend.view.fragment.list.FeedListFragment
+import com.mxt.anitrend.view.fragment.list.MediaBrowseFragment
+import com.mxt.anitrend.view.fragment.list.MediaLatestList
+import com.mxt.anitrend.view.fragment.list.MediaListFragment
+import com.mxt.anitrend.view.fragment.list.SuggestionListFragment
+import com.mxt.anitrend.view.fragment.list.WatchListFragment
+import com.mxt.anitrend.view.fragment.search.CharacterSearchFragment
+import com.mxt.anitrend.view.fragment.search.MediaSearchFragment
+import com.mxt.anitrend.view.fragment.search.StaffSearchFragment
+import com.mxt.anitrend.view.fragment.search.StudioSearchFragment
+import com.mxt.anitrend.view.fragment.search.UserSearchFragment
+import com.mxt.anitrend.view.fragment.youtube.YouTubeEmbedFragment
+import com.mxt.anitrend.view.sheet.BottomSheetGiphy
 import com.mxt.anitrend.viewmodel.AiringListViewModel
 import com.mxt.anitrend.viewmodel.BrowseReviewViewModel
 import com.mxt.anitrend.viewmodel.CharacterActorsViewModel
@@ -166,6 +209,7 @@ import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
+import org.koin.androidx.fragment.dsl.fragment
 import org.koin.androidx.workmanager.dsl.worker
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.qualifier.named
@@ -551,7 +595,7 @@ private val repositoryModule = module {
     single { BrowseRepository(browseService = get(), mediaListStore = get(), reviewStore = get()) }
     single { CharacterRepository(characterService = get()) }
     single { StaffRepository(staffService = get()) }
-    single { StudioRepository(studioService = get()) }
+    single { StudioRepository(studioService = get(), settings = get()) }
     single { SearchRepository(searchService = get()) }
     single { FeedRepository(feedService = get(), feedStore = get()) }
     single { BaseRepository(baseService = get(), boxQuery = get(), feedStore = get()) }
@@ -587,7 +631,7 @@ private val mediaFeatureModule = module {
     viewModel { MediaBrowseViewModel(baseRepository = get(), browseRepository = get(), mediaListStore = get()) }
     viewModel { MediaLatestViewModel(browseRepository = get()) }
     viewModel { MediaListViewModel(browseRepository = get(), mediaListStore = get(), mutationRegistry = get(), userRepository = get(), settings = get(), requestSequence = get()) }
-    viewModel { MediaListMutationViewModel(saveMediaListEntryInteractor = get(), deleteMediaListEntryInteractor = get(), incrementMediaProgressInteractor = get(), mutationRegistry = get()) }
+    viewModel { MediaListMutationViewModel(saveMediaListEntryInteractor = get(), deleteMediaListEntryInteractor = get(), incrementMediaProgressInteractor = get(), mutationRegistry = get(), userRepository = get()) }
     viewModel { ReviewViewModel(browseRepository = get(), reviewStore = get(), requestSequence = get(), rateReviewInteractor = get()) }
     viewModel { SuggestionListViewModel(userRepository = get(), browseRepository = get()) }
     viewModel { MediaCharacterViewModel(mediaRepository = get()) }
@@ -712,6 +756,138 @@ private val utilityFeatureModule = module {
     }
 }
 
+private val fragmentModule = module {
+    fragment {
+        MaterialSettingsFragment()
+    }
+    fragment {
+        SettingsActivity.SettingsFragment()
+    }
+    fragment {
+        BottomSheetGiphy()
+    }
+    fragment {
+        AiringListFragment()
+    }
+    fragment {
+        WatchListFragment()
+    }
+    fragment {
+        FeedListFragment()
+    }
+    fragment {
+        SuggestionListFragment()
+    }
+    fragment {
+        MediaBrowseFragment()
+    }
+    fragment {
+        MediaLatestList()
+    }
+    fragment {
+        MediaListFragment()
+    }
+    fragment {
+        BrowseReviewFragment()
+    }
+    fragment {
+        MediaSearchFragment()
+    }
+    fragment {
+        StudioSearchFragment()
+    }
+    fragment {
+        StaffSearchFragment()
+    }
+    fragment {
+        CharacterSearchFragment()
+    }
+    fragment {
+        UserSearchFragment()
+    }
+    fragment {
+        MediaOverviewFragment()
+    }
+    fragment {
+        MediaRelationFragment()
+    }
+    fragment {
+        MediaRecommendationsFragment()
+    }
+    fragment {
+        MediaStatsFragment()
+    }
+    fragment {
+        MediaCharacterFragment()
+    }
+    fragment {
+        MediaStaffFragment()
+    }
+    fragment {
+        MediaFeedFragment()
+    }
+    fragment {
+        ReviewFragment()
+    }
+    fragment {
+        CharacterOverviewFragment()
+    }
+    fragment {
+        MediaFormatFragment()
+    }
+    fragment {
+        CharacterActorsFragment()
+    }
+    fragment {
+        StaffOverviewFragment()
+    }
+    fragment {
+        MediaAnimeRoleFragment()
+    }
+    fragment {
+        MediaStaffRoleFragment()
+    }
+    fragment {
+        UserOverviewFragment()
+    }
+    fragment {
+        UserFeedFragment()
+    }
+    fragment {
+        MessageFeedFragment()
+    }
+    fragment {
+        MediaFavouriteFragment()
+    }
+    fragment {
+        CharacterFavouriteFragment()
+    }
+    fragment {
+        StaffFavouriteFragment()
+    }
+    fragment {
+        StudioFavouriteFragment()
+    }
+    fragment {
+        ChangelogFragment()
+    }
+    fragment {
+        AboutFragment()
+    }
+    fragment {
+        CommentFragment()
+    }
+    fragment {
+        StudioMediaFragment()
+    }
+    fragment {
+        NotificationFragment()
+    }
+    fragment {
+        YouTubeEmbedFragment()
+    }
+}
+
 val appModules = module {
     includes(
         coroutineModule,
@@ -729,5 +905,6 @@ val appModules = module {
         staffFeatureModule,
         studioFeatureModule,
         utilityFeatureModule,
+        fragmentModule,
     )
 }

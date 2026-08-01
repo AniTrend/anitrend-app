@@ -42,18 +42,19 @@ class KoinModuleVerificationTest {
         12 to 7, // staffFeatureModule
         13 to 4, // studioFeatureModule
         14 to 5, // utilityFeatureModule (GiphyVM + LoginAuthVM + LoggingVM + logFile + metadata)
+        15 to 43, // fragmentModule (settings x2 + giphy sheet + 40 koin-owned fragment factories)
     )
 
     @OptIn(KoinInternalApi::class)
     @Test
-    fun `appModules has exactly 15 entries`() {
+    fun `appModules has exactly 16 entries`() {
         assertEquals(
-            "appModules should contain exactly 15 modules:\n" +
+            "appModules should contain exactly 16 modules:\n" +
                 "  coroutineModule, core, widget, worker, presenter, network, retrofit,\n" +
                 "  service, repository,\n" +
                 "  mediaFeature, userFeature, characterFeature, staffFeature,\n" +
-                "  studioFeature, utilityFeature",
-            15,
+                "  studioFeature, utilityFeature, fragment",
+            16,
             appModules.includedModules.size,
         )
     }
@@ -62,7 +63,7 @@ class KoinModuleVerificationTest {
     @Test
     fun `each module is non-null and at expected position`() {
         val modules = appModules.includedModules
-        for (i in 0 until 15) {
+        for (i in 0 until 16) {
             assertNotNull("Module at index $i must not be null", modules[i])
         }
     }
@@ -84,11 +85,11 @@ class KoinModuleVerificationTest {
 
     @OptIn(KoinInternalApi::class)
     @Test
-    fun `appModules combined has 129 distinct definitions`() {
+    fun `appModules combined has 172 distinct definitions`() {
         val total = appModules.includedModules.sumOf { it.mappings.values.distinct().size }
         assertEquals(
-            "Combined distinct definition count drifted. Expected 129, got $total.",
-            129,
+            "Combined distinct definition count drifted. Expected 172, got $total.",
+            172,
             total,
         )
     }
