@@ -11,6 +11,7 @@ import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.repository.mapper.toStudioEntity
 import com.mxt.anitrend.repository.mapper.toStudioMediaConnection
+import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.graphql.apiError
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -20,6 +21,7 @@ import com.mxt.anitrend.model.entity.base.StudioBase as StudioEntity
 
 class StudioRepository(
     private val studioService: StudioService,
+    private val settings: Settings,
     ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : AbstractRepository(ioDispatcher) {
 
@@ -59,6 +61,8 @@ class StudioRepository(
             }
         }
     }
+
+    fun isAuthenticated() = settings.isAuthenticated
 
     private fun handleStudioMedia(body: GraphContainer<StudioMediaData>): ConnectionContainer<PageContainer<MediaEntity>> {
         val graphErrors = body.errors

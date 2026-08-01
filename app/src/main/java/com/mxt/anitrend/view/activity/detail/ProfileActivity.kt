@@ -6,7 +6,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -14,7 +13,6 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.pager.detail.ProfilePageAdapter
 import com.mxt.anitrend.base.custom.view.image.WideImageView
-import com.mxt.anitrend.base.interfaces.dao.BoxQuery
 import com.mxt.anitrend.databinding.ActivityProfileBinding
 import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.model.entity.base.UserBase
@@ -22,12 +20,11 @@ import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.IntentBundleUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
-import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.TutorialUtil
+import com.mxt.anitrend.view.activity.CommonActivity
 import com.mxt.anitrend.view.sheet.BottomSheetComposer
 import com.mxt.anitrend.viewmodel.ProfileViewModel
 import kotlinx.coroutines.launch
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.Locale
 
@@ -36,7 +33,7 @@ import java.util.Locale
  * Profile activity
  */
 class ProfileActivity :
-    AppCompatActivity(),
+    CommonActivity(),
     View.OnClickListener {
 
     private lateinit var binding: ActivityProfileBinding
@@ -48,17 +45,7 @@ class ProfileActivity :
 
     private val profileViewModel: ProfileViewModel by viewModel()
 
-    private val settings: Settings by inject()
-    private val boxQuery: BoxQuery by inject()
-
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Preserve configured theme (was previously handled by ActivityBase.configureActivity).
-        val themeRes = when (settings.theme) {
-            KeyUtil.THEME_DARK -> R.style.AppThemeDark
-            KeyUtil.THEME_BLACK -> R.style.AppThemeBlack
-            else -> R.style.AppThemeLight
-        }
-        setTheme(themeRes)
         super.onCreate(savedInstanceState)
 
         // Process deep links (e.g. anilist.co/user/{name}) so arg_userName/arg_id
@@ -277,11 +264,6 @@ class ProfileActivity :
 
     private fun isCurrentUser(userId: Long, userName: String? = null): Boolean {
         if (!settings.isAuthenticated) return false
-        val currentUser = boxQuery.currentUser ?: return false
-        return if (userName != null) {
-            currentUser.name == userName
-        } else {
-            userId != 0L && currentUser.id == userId
-        }
+        return profileViewModel.isCurrentUser(userId, userName)
     }
 }

@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -20,6 +19,7 @@ import com.mxt.anitrend.util.IntentBundleUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.Settings
+import com.mxt.anitrend.view.activity.CommonActivity
 import com.mxt.anitrend.viewmodel.CharacterViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -29,7 +29,7 @@ import java.util.Locale
  * Created by max on 2017/12/14.
  * character activity
  */
-class CharacterActivity : AppCompatActivity() {
+class CharacterActivity : CommonActivity() {
 
     private lateinit var binding: ActivityPagerGenericBinding
 
@@ -39,14 +39,6 @@ class CharacterActivity : AppCompatActivity() {
     private val characterViewModel: CharacterViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Preserve configured theme (was previously handled by ActivityBase.configureActivity).
-        val settings = KoinExt.get(Settings::class.java)
-        val themeRes = when (settings.theme) {
-            KeyUtil.THEME_DARK -> R.style.AppThemeDark
-            KeyUtil.THEME_BLACK -> R.style.AppThemeBlack
-            else -> R.style.AppThemeLight
-        }
-        setTheme(themeRes)
         super.onCreate(savedInstanceState)
 
         // Process deep links (e.g. anilist.co/character/{id}) so arg_id is injected

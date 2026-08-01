@@ -125,7 +125,7 @@ constructor(
                 }
             }
             R.id.user_followers_container -> {
-                if (followers == null || followers?.total ?: 0 < 1) {
+                if (followers == null || (followers?.total ?: 0) < 1) {
                     NotifyUtil.makeText(context, R.string.text_activity_loading, Toast.LENGTH_SHORT).show()
                 } else {
                     val manager = fragmentManager ?: return

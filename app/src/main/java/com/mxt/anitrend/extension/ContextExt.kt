@@ -12,6 +12,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
+import android.content.ContextWrapper
+import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import androidx.annotation.*
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.ActivityCompat
@@ -25,7 +29,6 @@ import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.locale.LocaleUtil
 import timber.log.Timber
 import java.io.File
-
 /**
  * Exactly whether a device is low-RAM is ultimately up to the device configuration, but currently
  * it generally means something in the class of a 512MB device with about a 800x480 or less screen.
@@ -238,4 +241,33 @@ fun FragmentActivity.requestNotificationsPermission() {
             1,
         )
     }
+}
+
+/**
+ * Resolve [androidx.fragment.app.FragmentManager] from any context
+ *
+ * @throws NotImplementedError when a context type cannot be handled
+ */
+@Throws(NotImplementedError::class)
+fun Context.fragmentManager() = when (this) {
+    is FragmentActivity -> supportFragmentManager
+    is ContextWrapper -> (baseContext as FragmentActivity).supportFragmentManager
+    else -> throw NotImplementedError("This type of context: $this is not handled/supported")
+}
+
+@Throws(IllegalArgumentException::class)
+fun Context.requireLifecycleOwner(): LifecycleOwner = when (val context = this) {
+    is LifecycleOwner -> context
+    else -> throw IllegalArgumentException("$context is not a lifecycle owner")
+}
+
+fun Context.lifecycleOwner(): LifecycleOwner? = runCatching(::requireLifecycleOwner)
+    .getOrElse {
+        Timber.w(it)
+        null
+    }
+
+fun Context.lifecycleScope(): LifecycleCoroutineScope? {
+    val lifecycleOwner = lifecycleOwner()
+    return lifecycleOwner?.lifecycleScope
 }

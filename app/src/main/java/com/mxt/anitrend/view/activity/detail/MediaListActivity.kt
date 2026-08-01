@@ -3,27 +3,17 @@ package com.mxt.anitrend.view.activity.detail
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.pager.index.MediaListPageAdapter
 import com.mxt.anitrend.databinding.ActivityPagerGenericBinding
-import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
-import com.mxt.anitrend.util.Settings
+import com.mxt.anitrend.view.activity.CommonActivity
 
-class MediaListActivity : AppCompatActivity() {
+class MediaListActivity : CommonActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Preserve configured theme (previously handled by ActivityBase.configureActivity).
-        val settings = KoinExt.get(Settings::class.java)
-        val themeRes = when (settings.theme) {
-            KeyUtil.THEME_DARK -> R.style.AppThemeDark
-            KeyUtil.THEME_BLACK -> R.style.AppThemeBlack
-            else -> R.style.AppThemeLight
-        }
-        setTheme(themeRes)
         super.onCreate(savedInstanceState)
 
         val binding = ActivityPagerGenericBinding.inflate(layoutInflater)

@@ -2,7 +2,6 @@ package com.mxt.anitrend.view.fragment.youtube
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +19,7 @@ import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.markdown.RegexUtil
 import timber.log.Timber
+import androidx.core.net.toUri
 
 class YouTubeEmbedFragment : Fragment() {
     private var mediaTrailer: MediaTrailer? = null
@@ -82,7 +82,7 @@ class YouTubeEmbedFragment : Fragment() {
                 val youtubeLink = RegexUtil.buildYoutube(trailer.id.orEmpty())
                 val intent =
                     Intent(Intent.ACTION_VIEW).apply {
-                        data = Uri.parse(youtubeLink)
+                        data = youtubeLink.toUri()
                     }
                 startActivity(intent)
             } catch (e: ActivityNotFoundException) {

@@ -1,5 +1,6 @@
 package com.mxt.anitrend.extension
 
+import android.content.res.Resources
 import java.util.*
 
 /**
@@ -67,3 +68,15 @@ fun String?.capitalizeWords(exceptions: List<String>? = null): String = when {
     }
     else -> String.empty()
 }
+
+val Float.dp: Float
+    get() = (this * Resources.getSystem().displayMetrics.density + 0.5f)
+
+val Int.dp: Int
+    get() = (this * Resources.getSystem().displayMetrics.density + 0.5f).toInt()
+
+val Float.px: Float
+    get() = (this / Resources.getSystem().displayMetrics.density + 0.5f)
+
+val Int.px: Int
+    get() = (this / Resources.getSystem().displayMetrics.density + 0.5f).toInt()

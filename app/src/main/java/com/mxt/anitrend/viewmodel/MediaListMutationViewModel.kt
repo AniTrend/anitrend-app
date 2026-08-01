@@ -11,6 +11,8 @@ import com.mxt.anitrend.domain.medialist.interactor.IncrementMediaProgressIntera
 import com.mxt.anitrend.domain.medialist.interactor.SaveMediaListEntryInteractor
 import com.mxt.anitrend.domain.model.IncrementMediaProgressCommand
 import com.mxt.anitrend.domain.model.SaveMediaListEntryCommand
+import com.mxt.anitrend.model.entity.anilist.meta.MediaListOptions
+import com.mxt.anitrend.repository.UserRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
@@ -22,7 +24,12 @@ class MediaListMutationViewModel(
     private val deleteMediaListEntryInteractor: DeleteMediaListEntryInteractor,
     private val incrementMediaProgressInteractor: IncrementMediaProgressInteractor,
     private val mutationRegistry: MutationRegistry,
+    private val userRepository: UserRepository,
 ) : ViewModel() {
+
+    /** Read-only access to the current user's media list options, if a user is cached. */
+    val currentUserMediaListOptions: MediaListOptions?
+        get() = userRepository.cachedCurrentUser?.mediaListOptions
 
     enum class CompletedAction {
         SAVED,

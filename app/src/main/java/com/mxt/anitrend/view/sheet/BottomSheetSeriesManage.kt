@@ -26,7 +26,6 @@ import com.google.android.material.textview.MaterialTextView
 import androidx.core.view.isNotEmpty
 import androidx.core.view.isVisible
 import com.mxt.anitrend.R
-import com.mxt.anitrend.base.interfaces.dao.BoxQuery
 import com.mxt.anitrend.base.custom.view.editor.MarkdownInputEditor
 import com.mxt.anitrend.base.custom.view.widget.FuzzyDateWidget
 import com.mxt.anitrend.base.custom.view.widget.ProgressWidget
@@ -42,7 +41,6 @@ import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.media.MediaUtil
 import com.mxt.anitrend.viewmodel.MediaListMutationViewModel
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import kotlinx.coroutines.launch
 
@@ -64,7 +62,6 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
     private val mediaListStatuses =
         arrayOf(KeyUtil.CURRENT, KeyUtil.PLANNING, KeyUtil.COMPLETED, KeyUtil.DROPPED, KeyUtil.PAUSED, KeyUtil.REPEATING)
 
-    private val boxQuery by inject<BoxQuery>()
     private val mediaListMutationViewModel: MediaListMutationViewModel by activityViewModel()
 
     private lateinit var mediaBase: MediaBase
@@ -296,9 +293,7 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
     private fun populateCustomListsAndAdvancedScores() {
         val committedModel = mediaListModel
         val draft = mediaListDraft
-        val mediaListOptions = runCatching {
-            boxQuery.currentUser?.mediaListOptions
-        }.getOrNull() ?: return
+        val mediaListOptions = mediaListMutationViewModel.currentUserMediaListOptions ?: return
 
         val typeOptions = (if (isAnime) mediaListOptions.animeList else mediaListOptions.mangaList) ?: return
 
@@ -501,9 +496,7 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
      * Resolves the user's score format from the current user's media list options.
      * Falls back to [KeyUtil.POINT_100] if the user data cannot be resolved.
      */
-    private fun resolveScoreFormat(): String = runCatching {
-        boxQuery.currentUser?.mediaListOptions?.scoreFormat
-    }.getOrNull() ?: KeyUtil.POINT_100
+    private fun resolveScoreFormat(): String = mediaListMutationViewModel.currentUserMediaListOptions?.scoreFormat ?: KeyUtil.POINT_100
 
     private fun observeMutationState() {
         mediaListMutationViewModel.reset(mediaBase.id)

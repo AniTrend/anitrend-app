@@ -6,6 +6,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter
+import com.mxt.anitrend.extension.LAZY_MODE_UNSAFE
+import com.mxt.anitrend.ui.fragmentByTagOrNew
+import com.mxt.anitrend.ui.model.FragmentItem
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.view.fragment.list.MediaListFragment
 
@@ -31,14 +34,17 @@ class MediaListPageAdapter(
         setPagerTitles(R.array.media_list_status)
     }
 
-    override fun createFragment(position: Int): Fragment {
-        if (position !in mediaListStatuses.indices) {
-            throw IndexOutOfBoundsException("Invalid position: $position")
+    private val fragmentItems: List<FragmentItem<Fragment>> by lazy(LAZY_MODE_UNSAFE) {
+        mediaListStatuses.map { status ->
+            FragmentItem(
+                MediaListFragment::class.java,
+                Bundle(params).apply {
+                    putString(KeyUtil.arg_statusIn, status)
+                },
+                "MediaListFragment$status",
+            )
         }
-        return MediaListFragment.newInstance(
-            Bundle(params).apply {
-                putString(KeyUtil.arg_statusIn, mediaListStatuses[position])
-            },
-        )
     }
+
+    override fun createFragment(position: Int): Fragment = fragmentItems[position].fragmentByTagOrNew(fragmentActivity)
 }

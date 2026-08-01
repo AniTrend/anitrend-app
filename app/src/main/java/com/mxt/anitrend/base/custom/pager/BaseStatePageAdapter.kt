@@ -17,7 +17,7 @@ import com.mxt.anitrend.util.locale.LocaleUtil
  * Base page state adapter
  */
 abstract class BaseStatePageAdapter(
-    fragmentActivity: FragmentActivity,
+    protected val fragmentActivity: FragmentActivity,
     private val context: Context,
 ) : FragmentStateAdapter(fragmentActivity) {
     var params: Bundle = Bundle.EMPTY

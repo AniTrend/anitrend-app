@@ -6,28 +6,26 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget
 import com.mxt.anitrend.databinding.ActivityFrameGenericBinding
-import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.model.entity.base.StudioBase
+import com.mxt.anitrend.ui.commit
+import com.mxt.anitrend.ui.model.FragmentItem
 import com.mxt.anitrend.util.IntentBundleUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
-import com.mxt.anitrend.util.Settings
+import com.mxt.anitrend.view.activity.CommonActivity
 import com.mxt.anitrend.view.fragment.detail.StudioMediaFragment
 import com.mxt.anitrend.viewmodel.StudioViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.Locale
 
-class StudioActivity : AppCompatActivity() {
+class StudioActivity : CommonActivity() {
 
     data class Args(val id: Long)
 
@@ -51,14 +49,6 @@ class StudioActivity : AppCompatActivity() {
     private val studioViewModel: StudioViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Preserve configured theme (was previously handled by ActivityBase.configureActivity).
-        val settings = KoinExt.get(Settings::class.java)
-        val themeRes = when (settings.theme) {
-            KeyUtil.THEME_DARK -> R.style.AppThemeDark
-            KeyUtil.THEME_BLACK -> R.style.AppThemeBlack
-            else -> R.style.AppThemeLight
-        }
-        setTheme(themeRes)
         super.onCreate(savedInstanceState)
 
         // Process deep links (e.g. anilist.co/studio/{id}) so arg_id is injected
@@ -113,15 +103,12 @@ class StudioActivity : AppCompatActivity() {
     }
 
     private fun addStudioMediaFragment(args: Bundle) {
-        val fragment = StudioMediaFragment.newInstance(args)
-        val fragmentManager: FragmentManager = supportFragmentManager
-        val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.content_frame, fragment, fragment.TAG)
-        fragmentTransaction.commit()
+        FragmentItem(fragment = StudioMediaFragment::class.java, parameter = args)
+            .commit(contentFrame = R.id.content_frame, context = this@StudioActivity)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val isAuth = KoinExt.get(Settings::class.java).isAuthenticated
+        val isAuth = studioViewModel.isAuthenticated()
         menuInflater.inflate(R.menu.custom_menu, menu)
         menu.findItem(R.id.action_favourite).isVisible = isAuth
         if (isAuth) {

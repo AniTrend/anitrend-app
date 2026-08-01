@@ -6,6 +6,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter
+import com.mxt.anitrend.extension.LAZY_MODE_UNSAFE
+import com.mxt.anitrend.ui.fragmentByTagOrNew
+import com.mxt.anitrend.ui.model.FragmentItem
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.view.fragment.list.MediaBrowseFragment
 import com.mxt.anitrend.view.fragment.list.MediaLatestList
@@ -22,22 +25,25 @@ class MangaPageAdapter(
         setPagerTitles(R.array.manga_title)
     }
 
-    override fun createFragment(position: Int): Fragment = when (position) {
-        0 ->
-            MediaBrowseFragment.newInstance(
+    private val fragmentItems by lazy(LAZY_MODE_UNSAFE) {
+        listOf<FragmentItem<Fragment>>(
+            FragmentItem(
+                MediaBrowseFragment::class.java,
                 Bundle(params).apply {
                     putString(KeyUtil.arg_mediaType, KeyUtil.MANGA)
                     putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
                 },
-            )
-        1 ->
-            MediaLatestList.newInstance(
+            ),
+            FragmentItem(
+                MediaLatestList::class.java,
                 Bundle(params).apply {
                     putString(KeyUtil.arg_mediaType, KeyUtil.MANGA)
                     putString(KeyUtil.arg_sort, KeyUtil.ID + KeyUtil.DESC)
                     putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
                 },
-            )
-        else -> throw IndexOutOfBoundsException("Invalid position: $position")
+            ),
+        )
     }
+
+    override fun createFragment(position: Int): Fragment = fragmentItems[position].fragmentByTagOrNew(fragmentActivity)
 }

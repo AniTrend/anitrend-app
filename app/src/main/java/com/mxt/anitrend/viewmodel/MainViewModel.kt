@@ -47,4 +47,6 @@ class MainViewModel(
             }
         }
     }
+
+    fun currentUser() = userRepository.cachedCurrentUser
 }

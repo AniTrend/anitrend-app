@@ -16,6 +16,7 @@ import com.mxt.anitrend.model.api.retro.anilist.StudioService
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import com.mxt.anitrend.util.Settings
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
@@ -31,8 +32,10 @@ class StudioRepositoryTest {
 
     private val testDispatcher = UnconfinedTestDispatcher()
     private val service = mock(StudioService::class.java)
+    private val settings = mock(Settings::class.java)
     private val repository = StudioRepository(
         studioService = service,
+        settings = settings,
         ioDispatcher = testDispatcher,
     )
 

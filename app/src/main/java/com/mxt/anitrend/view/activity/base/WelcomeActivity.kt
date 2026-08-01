@@ -1,7 +1,6 @@
 package com.mxt.anitrend.view.activity.base
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
@@ -26,10 +25,9 @@ class WelcomeActivity : AhoyOnboarderActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val isModernIcons = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
-        val paintIcon = if (isModernIcons) R.drawable.ic_format_paint_white_24dp else R.drawable.ic_format_paint_white_48dp
-        val chartIcon = if (isModernIcons) R.drawable.ic_bubble_chart_white_24dp else R.drawable.ic_bubble_chart_white_48dp
-        val searchIcon = if (isModernIcons) R.drawable.ic_search_white_24dp else R.drawable.ic_search_white_48dp
+        val paintIcon = R.drawable.ic_format_paint_white_24dp
+        val chartIcon = R.drawable.ic_bubble_chart_white_24dp
+        val searchIcon = R.drawable.ic_search_white_24dp
 
         ahoyPages =
             listOf(
@@ -67,14 +65,14 @@ class WelcomeActivity : AhoyOnboarderActivity() {
     }
 
     override fun onFinishButtonPressed() {
-        val target = findViewById<View>(com.codemybrainsout.onboarder.R.id.btn_skip)
+        val target = findViewById<View>(R.id.btn_skip)
         CompatUtil.startRevealAnim(this, target, Intent(this, MainActivity::class.java), true)
     }
 
     @Suppress("DEPRECATION")
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && hasFocus) {
+        if (hasFocus) {
             window.decorView.systemUiVisibility =
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE or
                 View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
