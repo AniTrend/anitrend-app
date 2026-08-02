@@ -355,7 +355,10 @@ class MediaListViewModelStoreObservationTest {
             )
         org.mockito.Mockito.doAnswer {
             secondStarted.countDown()
-            Result.success(collectionResult(entry))
+            // The Mockito proxy wraps doAnswer return values in Result.success, so a
+            // bare record here yields the single, correctly-typed Result the ViewModel
+            // consumes (wrapping it in Result.success would double-wrap and break).
+            collectionResult(entry)
         }
             .`when`(localBrowseRepository)
             .getMediaListCollection(

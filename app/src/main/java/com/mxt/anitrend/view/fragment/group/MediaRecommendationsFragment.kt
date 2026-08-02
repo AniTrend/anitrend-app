@@ -1,6 +1,5 @@
 package com.mxt.anitrend.view.fragment.group
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -143,11 +142,7 @@ class MediaRecommendationsFragment : FragmentBaseList<RecommendationItemUiModel,
         item: RecommendationItemUiModel,
     ) {
         val host = activity ?: return
-        val intent =
-            Intent(host, MediaActivity::class.java).apply {
-                putExtra(KeyUtil.arg_id, item.mediaId)
-                putExtra(KeyUtil.arg_mediaType, item.mediaType)
-            }
+        val intent = MediaActivity.newIntent(host, item.mediaId, item.mediaType)
         CompatUtil.startRevealAnim(host, target, intent)
     }
 

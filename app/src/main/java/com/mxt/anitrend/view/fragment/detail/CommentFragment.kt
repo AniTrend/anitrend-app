@@ -370,11 +370,7 @@ class CommentFragment : FragmentBaseComment() {
         val feedItem = resolveCurrentFeedItem(feedId) ?: return
         val mediaId = feedItem.mediaId ?: return
         val host = activity ?: return
-        val intent =
-            Intent(host, MediaActivity::class.java).apply {
-                putExtra(KeyUtil.arg_id, mediaId)
-                putExtra(KeyUtil.arg_mediaType, feedItem.mediaType)
-            }
+        val intent = MediaActivity.newIntent(host, mediaId, feedItem.mediaType)
         CompatUtil.startRevealAnim(host, target, intent)
     }
 

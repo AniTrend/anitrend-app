@@ -248,11 +248,7 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
         val feedItem = resolveCurrentFeedItem(feedId) ?: return
         val mediaId = feedItem.mediaId ?: return
         val host = activity ?: return
-        val intent =
-            Intent(host, MediaActivity::class.java).apply {
-                putExtra(KeyUtil.arg_id, mediaId)
-                putExtra(KeyUtil.arg_mediaType, feedItem.mediaType)
-            }
+        val intent = MediaActivity.newIntent(host, mediaId, feedItem.mediaType)
         CompatUtil.startRevealAnim(host, target, intent)
     }
 
@@ -348,11 +344,7 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
             R.id.series_image -> {
                 val series = data.value.media ?: return
                 val host = activity ?: return
-                val intent =
-                    Intent(host, MediaActivity::class.java).apply {
-                        putExtra(KeyUtil.arg_id, series.id)
-                        putExtra(KeyUtil.arg_mediaType, series.type)
-                    }
+                val intent = MediaActivity.newIntent(host, series.id, series.type)
                 CompatUtil.startRevealAnim(host, target, intent)
             }
             R.id.widget_comment -> {

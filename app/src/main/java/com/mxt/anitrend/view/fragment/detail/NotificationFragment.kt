@@ -250,9 +250,7 @@ class NotificationFragment : FragmentBaseList<NotificationItemUiModel, Notificat
                 KeyUtil.MEDIA_DELETION,
                 KeyUtil.MEDIA_MERGE,
                 -> {
-                    intent = Intent(host, MediaActivity::class.java)
-                    intent.putExtra(KeyUtil.arg_id, record.media?.id)
-                    intent.putExtra(KeyUtil.arg_mediaType, record.media?.type)
+                    intent = MediaActivity.newIntent(host, record.media?.id ?: 0L, record.media?.type)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     if (record.media != null) {
                         startActivity(intent)

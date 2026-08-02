@@ -1,5 +1,6 @@
 package com.mxt.anitrend.view.activity.detail
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -21,6 +22,9 @@ import com.mxt.anitrend.base.custom.view.widget.FavouriteWidgetRenderState
 import com.mxt.anitrend.databinding.ActivitySeriesBinding
 import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.model.entity.base.MediaBase
+import com.mxt.anitrend.navigation.extension.putScreenParam
+import com.mxt.anitrend.navigation.extension.screenParam
+import com.mxt.anitrend.navigation.model.MediaScreenParam
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.IntentBundleUtil
 import com.mxt.anitrend.util.KeyUtil
@@ -42,6 +46,44 @@ import java.util.Locale
 class MediaActivity :
     CommonActivity(),
     View.OnClickListener {
+
+    companion object {
+        fun newIntent(context: Context, param: MediaScreenParam): Intent = Intent(context, MediaActivity::class.java).apply {
+            putScreenParam(param)
+            // Interim boundary: the pager and its fragments still consume the legacy
+            // wire keys from the activity extras, so keep them alongside the typed param.
+            putExtra(KeyUtil.arg_id, param.mediaId)
+            putExtra(KeyUtil.arg_mediaType, param.mediaType)
+        }
+
+        /**
+         * Compatibility overload preserving the legacy id/type-based callers. Bridges into
+         * the typed parameter so navigation always uses [MediaScreenParam].
+         */
+        fun newIntent(context: Context, mediaId: Long, mediaType: String?): Intent =
+            newIntent(context, MediaScreenParam(mediaId = mediaId, mediaType = mediaType))
+
+        /**
+         * Resolves the typed parameter from the intent.
+         *
+         * The typed parameter is read first. Deep links (injected by
+         * [IntentBundleUtil.checkIntentData]) still write the legacy [KeyUtil.arg_id] and
+         * [KeyUtil.arg_mediaType] extras, so those values are bridged here into
+         * [MediaScreenParam]. The bridge is a scalar conversion point inside the activity,
+         * not a parcel path for the media entity.
+         */
+        fun fromIntent(intent: Intent): MediaScreenParam? {
+            intent.screenParam<MediaScreenParam>()?.let { param ->
+                return if (param.mediaId > 0) param else null
+            }
+            val id = intent.getLongExtra(KeyUtil.arg_id, -1)
+            return if (id > 0) {
+                MediaScreenParam(mediaId = id, mediaType = intent.getStringExtra(KeyUtil.arg_mediaType))
+            } else {
+                null
+            }
+        }
+    }
 
     private lateinit var binding: ActivitySeriesBinding
 
@@ -76,12 +118,21 @@ class MediaActivity :
         )
         binding.seriesBanner.setOnClickListener(this)
 
-        if (intent.hasExtra(KeyUtil.arg_id)) {
-            mediaId = intent.getLongExtra(KeyUtil.arg_id, -1)
+        // Resolve the destination through the typed parameter, falling back to the
+        // legacy wire keys for deep links and pre-bridge callers.
+        val args = fromIntent(intent)
+        if (args == null) {
+            NotifyUtil.makeText(
+                this,
+                R.string.text_error_request,
+                R.drawable.ic_warning_white_18dp,
+                Toast.LENGTH_SHORT,
+            ).show()
+            finish()
+            return
         }
-        if (intent.hasExtra(KeyUtil.arg_mediaType)) {
-            mediaType = intent.getStringExtra(KeyUtil.arg_mediaType)
-        }
+        mediaId = args.mediaId
+        mediaType = args.mediaType
 
         observeViewModel()
         setUpPager()

@@ -1,6 +1,5 @@
 package com.mxt.anitrend.view.fragment.detail
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -168,11 +167,7 @@ class StudioMediaFragment : FragmentBaseList<MediaBase, ConnectionContainer<Page
         when (target.id) {
             R.id.container -> {
                 val host = activity ?: return
-                val intent =
-                    Intent(host, MediaActivity::class.java).apply {
-                        putExtra(KeyUtil.arg_id, data.value.id)
-                        putExtra(KeyUtil.arg_mediaType, data.value.type)
-                    }
+                val intent = MediaActivity.newIntent(host, data.value.id, data.value.type)
                 CompatUtil.startRevealAnim(host, target, intent)
             }
         }

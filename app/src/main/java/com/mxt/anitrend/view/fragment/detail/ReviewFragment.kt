@@ -176,11 +176,7 @@ class ReviewFragment : FragmentBaseList<ReviewRecord, PageContainer<ReviewRecord
             R.id.series_image -> {
                 val mediaBase: MediaSummaryRecord? = data.value.media
                 val host = activity ?: return
-                val intent =
-                    Intent(host, MediaActivity::class.java).apply {
-                        putExtra(KeyUtil.arg_id, mediaBase?.id ?: return)
-                        putExtra(KeyUtil.arg_mediaType, mediaBase?.type)
-                    }
+                val intent = MediaActivity.newIntent(host, mediaBase?.id ?: return, mediaBase?.type)
                 CompatUtil.startRevealAnim(host, target, intent)
             }
             R.id.user_avatar -> {

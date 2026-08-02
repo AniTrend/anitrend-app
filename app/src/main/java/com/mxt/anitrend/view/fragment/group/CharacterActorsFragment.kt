@@ -69,11 +69,7 @@ class CharacterActorsFragment : FragmentBaseList<RecyclerItem, ConnectionContain
                         R.id.container -> {
                             val media = data.value as? MediaBase ?: return
                             val host = activity ?: return
-                            val intent =
-                                Intent(host, MediaActivity::class.java).apply {
-                                    putExtra(KeyUtil.arg_id, media.id)
-                                    putExtra(KeyUtil.arg_mediaType, media.type)
-                                }
+                            val intent = MediaActivity.newIntent(host, media.id, media.type)
                             CompatUtil.startRevealAnim(host, target, intent)
                         }
                     }
