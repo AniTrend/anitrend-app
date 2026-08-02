@@ -13,6 +13,7 @@ import com.mxt.anitrend.graphql.generated.MediaOverviewVariables
 import com.mxt.anitrend.graphql.generated.MediaRelationsData
 import com.mxt.anitrend.graphql.generated.MediaRelationsVariables
 import com.mxt.anitrend.graphql.generated.MediaSocialVariables
+import com.mxt.anitrend.graphql.generated.MediaStaffData
 import com.mxt.anitrend.graphql.generated.MediaStatsData
 import com.mxt.anitrend.graphql.generated.MediaStaffVariables
 import com.mxt.anitrend.graphql.generated.MediaStatsVariables
@@ -117,6 +118,12 @@ interface MediaService {
     fun getMediaStaff(
         @Body request: GraphQLRequest<MediaStaffVariables>,
     ): Call<AniListContainer<ConnectionContainer<EdgeContainer<StaffEdge>>>>
+
+    @POST("/")
+    @Headers("Content-Type: application/json")
+    fun getMediaStaffRecord(
+        @Body request: GraphQLRequest<MediaStaffVariables>,
+    ): Call<GraphContainer<MediaStaffData>>
 
     @POST("/")
     @Headers("Content-Type: application/json")

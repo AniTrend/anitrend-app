@@ -13,6 +13,7 @@ import com.mxt.anitrend.graphql.generated.MediaRelations
 import com.mxt.anitrend.graphql.generated.MediaRelationsData
 import com.mxt.anitrend.graphql.generated.MediaSocial
 import com.mxt.anitrend.graphql.generated.MediaStaff
+import com.mxt.anitrend.graphql.generated.MediaStaffData
 import com.mxt.anitrend.graphql.generated.MediaStats
 import com.mxt.anitrend.graphql.generated.MediaStatsData
 import com.mxt.anitrend.graphql.generated.MediaType
@@ -25,6 +26,7 @@ import com.mxt.anitrend.data.mapper.toMediaEpisodesRecord
 import com.mxt.anitrend.data.mapper.toMediaOverviewRecord
 import com.mxt.anitrend.data.mapper.toMediaRelationsRecord
 import com.mxt.anitrend.data.mapper.toMediaStatsRecord
+import com.mxt.anitrend.data.mapper.toMediaStaffRecord
 import com.mxt.anitrend.data.mapper.toPageInfoRecord
 import com.mxt.anitrend.data.mapper.toRecommendationRecord
 import com.mxt.anitrend.data.store.feed.FeedQueryKey
@@ -38,6 +40,7 @@ import com.mxt.anitrend.domain.mediadetail.model.MediaEpisodesRecord
 import com.mxt.anitrend.domain.mediadetail.model.MediaOverviewRecord
 import com.mxt.anitrend.domain.mediadetail.model.MediaRelationsRecord
 import com.mxt.anitrend.domain.mediadetail.model.MediaStatsRecord
+import com.mxt.anitrend.domain.mediadetail.model.MediaStaffRecord
 import com.mxt.anitrend.model.api.retro.anilist.MediaService
 import com.mxt.anitrend.model.entity.anilist.ExternalLink
 import com.mxt.anitrend.model.entity.anilist.FeedList
@@ -277,6 +280,32 @@ class MediaRepository(
         }
     }
 
+    // Record-typed additive surface for the media staff query (Lane C).
+    //
+    // Preserves the exact transport, request parameters (including pagination and
+    // sort), GraphQL error, empty body/null root, page-info, and HTTP failure
+    // semantics of the legacy entity-typed getMediaStaff above, but maps at the
+    // data boundary into MediaStaffRecord. The legacy method is unchanged for its
+    // remaining consumers (MediaStaffViewModel).
+    suspend fun getMediaStaffRecord(
+        id: Long,
+        type: MediaType?,
+        isAdult: Boolean?,
+        page: Int? = null,
+        perPage: Int? = null,
+        sort: List<com.mxt.anitrend.graphql.generated.StaffSort>? = null,
+    ): Result<MediaStaffRecord> = withContext(ioDispatcher) {
+        runCatching {
+            val request = MediaStaff.request(id = id.toInt(), type = type, sort = sort, isAdult = isAdult, page = page, perPage = perPage)
+            val response = mediaService.getMediaStaffRecord(request).execute()
+            if (response.isSuccessful) {
+                handleMediaStaffRecord(response.body() ?: throw IllegalStateException("Empty response body"))
+            } else {
+                throw RuntimeException(response.apiError())
+            }
+        }
+    }
+
     suspend fun getMediaRecommendations(
         id: Long,
         type: MediaType?,
@@ -354,6 +383,16 @@ class MediaRepository(
         val media = body.data?.media
             ?: throw IllegalStateException("Empty response body")
         return media.toMediaCharactersRecord()
+    }
+
+    private fun handleMediaStaffRecord(body: GraphContainer<MediaStaffData>): MediaStaffRecord {
+        val graphErrors = body.errors
+        if (!graphErrors.isNullOrEmpty()) {
+            throw RuntimeException(graphErrors.first().message ?: "GraphQL error")
+        }
+        val media = body.data?.media
+            ?: throw IllegalStateException("Empty response body")
+        return media.toMediaStaffRecord()
     }
 
     private fun handleMediaRecommendations(body: GraphContainer<RecommendationMediaData>): RecommendationPageResult {
