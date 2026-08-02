@@ -28,14 +28,14 @@ simply stale and must be deleted in the migration PR that removed it.
 
 ## Why each exception exists
 
-### `model-entity-baseline.txt` (95 entries)
+### `model-entity-baseline.txt` (89 entries)
 
 `com.mxt.anitrend.model.entity.**` is the legacy compatibility package that the
-ADR deletes after all consumers migrate (ADR sections 3 and 9, Phase 6). The 95
+ADR deletes after all consumers migrate (ADR sections 3 and 9, Phase 6). The 89
 current Kotlin files are frozen at their pre-migration state. Phase 1 forbids
 adding classes here so the legacy surface can only shrink, never grow.
 
-### `parcelable-baseline.txt` (76 entries)
+### `parcelable-baseline.txt` (61 entries)
 
 ADR section 9 Phase 1 and section 7.6 prohibit new handwritten Parcelable code.
 The current violations are the two documented scoped exceptions (ADR section 9,
@@ -66,13 +66,14 @@ are transport and command inputs at the existing data boundary, not domain
 models. This is not a blanket domain-package exemption: any other GraphQL import
 or any Android/ObjectBox/Gson import in `domain` fails.
 
-### `mutation-methods-baseline.txt` (5 entries)
+### `mutation-methods-baseline.txt` (0 entries)
 
 ADR section 4.4 prohibits model mutation methods. The ADR method names detected
 are `toggle`, `mergeFrom`/`merge`, `increment`, `markDeleted`,
 `copyForEditing`, `delete`, and `save`, only where they are member function
 declarations of model classes (repository and ViewModel owners are out of
-scope). The baseline lists the pre-existing legacy entity violations:
-`UserBase.toggleFollow()` and the four `toggleFavourite()` implementations
-(`MediaBase`, `CharacterBase`, `StaffBase`, `StudioBase`). New member mutation
-methods anywhere in `model/entity/**` or `domain/**/model/**` fail.
+scope). The baseline is empty because the pre-existing legacy entity
+violations, `UserBase.toggleFollow()` and the four `toggleFavourite()`
+implementations (`MediaBase`, `CharacterBase`, `StaffBase`, `StudioBase`), have
+been migrated. New member mutation methods anywhere in `model/entity/**` or
+`domain/**/model/**` fail.

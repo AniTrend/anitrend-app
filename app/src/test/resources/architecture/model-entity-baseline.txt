@@ -11,14 +11,11 @@ app/src/main/java/com/mxt/anitrend/model/entity/anilist/MediaRank.kt
 app/src/main/java/com/mxt/anitrend/model/entity/anilist/MediaTag.kt
 app/src/main/java/com/mxt/anitrend/model/entity/anilist/Recommendation.kt
 app/src/main/java/com/mxt/anitrend/model/entity/anilist/Review.kt
-app/src/main/java/com/mxt/anitrend/model/entity/anilist/Thread.kt
 app/src/main/java/com/mxt/anitrend/model/entity/anilist/User.kt
 app/src/main/java/com/mxt/anitrend/model/entity/anilist/UserStats.kt
 app/src/main/java/com/mxt/anitrend/model/entity/anilist/WebToken.kt
 app/src/main/java/com/mxt/anitrend/model/entity/anilist/edge/CharacterEdge.kt
-app/src/main/java/com/mxt/anitrend/model/entity/anilist/edge/CharacterMediaEdge.kt
 app/src/main/java/com/mxt/anitrend/model/entity/anilist/edge/MediaEdge.kt
-app/src/main/java/com/mxt/anitrend/model/entity/anilist/edge/RecommendationEdge.kt
 app/src/main/java/com/mxt/anitrend/model/entity/anilist/edge/StaffEdge.kt
 app/src/main/java/com/mxt/anitrend/model/entity/anilist/meta/AiringSchedule.kt
 app/src/main/java/com/mxt/anitrend/model/entity/anilist/meta/CustomList.kt
@@ -64,7 +61,6 @@ app/src/main/java/com/mxt/anitrend/model/entity/base/RecommendationBase.kt
 app/src/main/java/com/mxt/anitrend/model/entity/base/StaffBase.kt
 app/src/main/java/com/mxt/anitrend/model/entity/base/StatsRing.kt
 app/src/main/java/com/mxt/anitrend/model/entity/base/StudioBase.kt
-app/src/main/java/com/mxt/anitrend/model/entity/base/ThreadBase.kt
 app/src/main/java/com/mxt/anitrend/model/entity/base/UserBase.kt
 app/src/main/java/com/mxt/anitrend/model/entity/base/VersionBase.kt
 app/src/main/java/com/mxt/anitrend/model/entity/container/attribute/Edge.kt

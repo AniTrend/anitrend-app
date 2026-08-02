@@ -14,8 +14,7 @@ import com.mxt.anitrend.util.KeyUtil
  */
 class MediaList() :
     RecyclerItem(),
-    Parcelable,
-    Cloneable {
+    Parcelable {
     var id: Long = 0
     var mediaId: Long = 0
 
@@ -93,12 +92,6 @@ class MediaList() :
         is MediaList -> other.id == id && other.mediaId == mediaId
         is MediaBase -> other.id == mediaId
         else -> super.equals(other)
-    }
-
-    @Throws(CloneNotSupportedException::class)
-    public override fun clone(): MediaList {
-        super.clone()
-        return this
     }
 
     companion object {

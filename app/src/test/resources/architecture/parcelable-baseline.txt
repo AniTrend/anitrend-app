@@ -23,8 +23,6 @@ app/src/main/java/com/mxt/anitrend/model/entity/anilist/Review.kt:object : Parce
 app/src/main/java/com/mxt/anitrend/model/entity/anilist/Review.kt:override fun describeContents(): Int = 0
 app/src/main/java/com/mxt/anitrend/model/entity/anilist/Review.kt:override fun writeToParcel(
 app/src/main/java/com/mxt/anitrend/model/entity/anilist/Review.kt:val CREATOR: Parcelable.Creator<Review> =
-app/src/main/java/com/mxt/anitrend/model/entity/anilist/Thread.kt:object : Parcelable.Creator<Thread> {
-app/src/main/java/com/mxt/anitrend/model/entity/anilist/Thread.kt:val CREATOR: Parcelable.Creator<Thread> =
 app/src/main/java/com/mxt/anitrend/model/entity/anilist/User.kt:object : Parcelable.Creator<User> {
 app/src/main/java/com/mxt/anitrend/model/entity/anilist/User.kt:override fun describeContents(): Int = 0
 app/src/main/java/com/mxt/anitrend/model/entity/anilist/User.kt:override fun writeToParcel(
@@ -57,10 +55,6 @@ app/src/main/java/com/mxt/anitrend/model/entity/base/StudioBase.kt:object : Parc
 app/src/main/java/com/mxt/anitrend/model/entity/base/StudioBase.kt:override fun describeContents(): Int = 0
 app/src/main/java/com/mxt/anitrend/model/entity/base/StudioBase.kt:override fun writeToParcel(
 app/src/main/java/com/mxt/anitrend/model/entity/base/StudioBase.kt:val CREATOR: Parcelable.Creator<StudioBase> =
-app/src/main/java/com/mxt/anitrend/model/entity/base/ThreadBase.kt:object : Parcelable.Creator<ThreadBase> {
-app/src/main/java/com/mxt/anitrend/model/entity/base/ThreadBase.kt:override fun describeContents(): Int = 0
-app/src/main/java/com/mxt/anitrend/model/entity/base/ThreadBase.kt:override fun writeToParcel(
-app/src/main/java/com/mxt/anitrend/model/entity/base/ThreadBase.kt:val CREATOR: Parcelable.Creator<ThreadBase> =
 app/src/main/java/com/mxt/anitrend/model/entity/base/VersionBase.kt:object : Parcelable.Creator<VersionBase> {
 app/src/main/java/com/mxt/anitrend/model/entity/base/VersionBase.kt:override fun describeContents(): Int = 0
 app/src/main/java/com/mxt/anitrend/model/entity/base/VersionBase.kt:override fun writeToParcel(
