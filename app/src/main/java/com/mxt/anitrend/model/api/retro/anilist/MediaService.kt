@@ -4,6 +4,7 @@ import co.anitrend.retrofit.graphql.model.GraphQLRequest
 import co.anitrend.retrofit.graphql.model.body.GraphContainer
 import com.mxt.anitrend.graphql.generated.MediaBaseData
 import com.mxt.anitrend.graphql.generated.MediaBaseVariables
+import com.mxt.anitrend.graphql.generated.MediaCharactersData
 import com.mxt.anitrend.graphql.generated.MediaCharactersVariables
 import com.mxt.anitrend.graphql.generated.MediaEpisodesData
 import com.mxt.anitrend.graphql.generated.MediaEpisodesVariables
@@ -104,6 +105,12 @@ interface MediaService {
     fun getMediaCharacters(
         @Body request: GraphQLRequest<MediaCharactersVariables>,
     ): Call<AniListContainer<ConnectionContainer<EdgeContainer<CharacterEdge>>>>
+
+    @POST("/")
+    @Headers("Content-Type: application/json")
+    fun getMediaCharactersRecord(
+        @Body request: GraphQLRequest<MediaCharactersVariables>,
+    ): Call<GraphContainer<MediaCharactersData>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
