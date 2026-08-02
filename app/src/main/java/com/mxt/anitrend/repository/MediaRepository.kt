@@ -6,6 +6,7 @@ import com.mxt.anitrend.graphql.generated.MediaBaseData
 import com.mxt.anitrend.graphql.generated.MediaCharacters
 import com.mxt.anitrend.graphql.generated.MediaEpisodes
 import com.mxt.anitrend.graphql.generated.MediaOverview
+import com.mxt.anitrend.graphql.generated.MediaOverviewData
 import com.mxt.anitrend.graphql.generated.MediaRelations
 import com.mxt.anitrend.graphql.generated.MediaSocial
 import com.mxt.anitrend.graphql.generated.MediaStaff
@@ -15,6 +16,7 @@ import com.mxt.anitrend.graphql.generated.RecommendationMedia
 import com.mxt.anitrend.graphql.generated.RecommendationMediaData
 import com.mxt.anitrend.data.mapper.toFeedRecord
 import com.mxt.anitrend.data.mapper.toMediaDetailRecord
+import com.mxt.anitrend.data.mapper.toMediaOverviewRecord
 import com.mxt.anitrend.data.mapper.toPageInfoRecord
 import com.mxt.anitrend.data.mapper.toRecommendationRecord
 import com.mxt.anitrend.data.store.feed.FeedQueryKey
@@ -23,6 +25,7 @@ import com.mxt.anitrend.data.store.feed.FeedStore
 import com.mxt.anitrend.data.store.feed.FeedStoreChange
 import com.mxt.anitrend.domain.model.RecommendationPageResult
 import com.mxt.anitrend.domain.mediadetail.model.MediaDetailRecord
+import com.mxt.anitrend.domain.mediadetail.model.MediaOverviewRecord
 import com.mxt.anitrend.model.api.retro.anilist.MediaService
 import com.mxt.anitrend.model.entity.anilist.ExternalLink
 import com.mxt.anitrend.model.entity.anilist.FeedList
@@ -80,6 +83,25 @@ class MediaRepository(
             val response = mediaService.getMediaOverview(request).execute()
             if (response.isSuccessful) {
                 handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+            } else {
+                throw RuntimeException(response.apiError())
+            }
+        }
+    }
+
+    // Record-typed additive surface for the media overview query (Lane C).
+    //
+    // Preserves the exact transport, request parameters, GraphQL error, empty
+    // body/null root, and HTTP failure semantics of the legacy entity-typed
+    // getMediaOverview above, but maps at the data boundary into
+    // MediaOverviewRecord. The legacy method is unchanged for its remaining
+    // consumers (MediaOverviewViewModel).
+    suspend fun getMediaOverviewRecord(id: Long, type: MediaType?, isAdult: Boolean?, asHtml: Boolean = false): Result<MediaOverviewRecord> = withContext(ioDispatcher) {
+        runCatching {
+            val request = MediaOverview.request(id = id.toInt(), type = type, isAdult = isAdult, asHtml = asHtml)
+            val response = mediaService.getMediaOverviewRecord(request).execute()
+            if (response.isSuccessful) {
+                handleMediaOverviewRecord(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
                 throw RuntimeException(response.apiError())
             }
@@ -187,6 +209,16 @@ class MediaRepository(
         val media = body.data?.media
             ?: throw IllegalStateException("Empty response body")
         return media.toMediaDetailRecord()
+    }
+
+    private fun handleMediaOverviewRecord(body: GraphContainer<MediaOverviewData>): MediaOverviewRecord {
+        val graphErrors = body.errors
+        if (!graphErrors.isNullOrEmpty()) {
+            throw RuntimeException(graphErrors.first().message ?: "GraphQL error")
+        }
+        val media = body.data?.media
+            ?: throw IllegalStateException("Empty response body")
+        return media.toMediaOverviewRecord()
     }
 
     private fun handleMediaRecommendations(body: GraphContainer<RecommendationMediaData>): RecommendationPageResult {
