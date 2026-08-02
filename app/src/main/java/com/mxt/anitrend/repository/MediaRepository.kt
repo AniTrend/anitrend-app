@@ -2,6 +2,7 @@ package com.mxt.anitrend.repository
 
 import co.anitrend.retrofit.graphql.model.body.GraphContainer
 import com.mxt.anitrend.graphql.generated.MediaBase
+import com.mxt.anitrend.graphql.generated.MediaBaseData
 import com.mxt.anitrend.graphql.generated.MediaCharacters
 import com.mxt.anitrend.graphql.generated.MediaEpisodes
 import com.mxt.anitrend.graphql.generated.MediaOverview
@@ -13,6 +14,7 @@ import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.graphql.generated.RecommendationMedia
 import com.mxt.anitrend.graphql.generated.RecommendationMediaData
 import com.mxt.anitrend.data.mapper.toFeedRecord
+import com.mxt.anitrend.data.mapper.toMediaDetailRecord
 import com.mxt.anitrend.data.mapper.toPageInfoRecord
 import com.mxt.anitrend.data.mapper.toRecommendationRecord
 import com.mxt.anitrend.data.store.feed.FeedQueryKey
@@ -20,6 +22,7 @@ import com.mxt.anitrend.data.store.feed.FeedScope
 import com.mxt.anitrend.data.store.feed.FeedStore
 import com.mxt.anitrend.data.store.feed.FeedStoreChange
 import com.mxt.anitrend.domain.model.RecommendationPageResult
+import com.mxt.anitrend.domain.mediadetail.model.MediaDetailRecord
 import com.mxt.anitrend.model.api.retro.anilist.MediaService
 import com.mxt.anitrend.model.entity.anilist.ExternalLink
 import com.mxt.anitrend.model.entity.anilist.FeedList
@@ -48,6 +51,23 @@ class MediaRepository(
             val response = mediaService.getMediaBase(request).execute()
             if (response.isSuccessful) {
                 handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+            } else {
+                throw RuntimeException(response.apiError())
+            }
+        }
+    }
+
+    // Record-typed additive surface for the primary media detail query (Lane C).
+    //
+    // Preserves the exact transport, request parameters, GraphQL error, empty
+    // body/null root, and HTTP failure semantics of the legacy entity-typed
+    // getMediaBase above, but maps at the data boundary into MediaDetailRecord.
+    suspend fun getMediaBaseRecord(id: Long, type: MediaType?, isAdult: Boolean?): Result<MediaDetailRecord> = withContext(ioDispatcher) {
+        runCatching {
+            val request = MediaBase.request(id = id.toInt(), type = type, isAdult = isAdult)
+            val response = mediaService.getMediaBaseRecord(request).execute()
+            if (response.isSuccessful) {
+                handleMediaBaseRecord(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
                 throw RuntimeException(response.apiError())
             }
@@ -157,6 +177,16 @@ class MediaRepository(
                 throw RuntimeException(response.apiError())
             }
         }
+    }
+
+    private fun handleMediaBaseRecord(body: GraphContainer<MediaBaseData>): MediaDetailRecord {
+        val graphErrors = body.errors
+        if (!graphErrors.isNullOrEmpty()) {
+            throw RuntimeException(graphErrors.first().message ?: "GraphQL error")
+        }
+        val media = body.data?.media
+            ?: throw IllegalStateException("Empty response body")
+        return media.toMediaDetailRecord()
     }
 
     private fun handleMediaRecommendations(body: GraphContainer<RecommendationMediaData>): RecommendationPageResult {

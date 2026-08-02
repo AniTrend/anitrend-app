@@ -2,6 +2,7 @@ package com.mxt.anitrend.model.api.retro.anilist
 
 import co.anitrend.retrofit.graphql.model.GraphQLRequest
 import co.anitrend.retrofit.graphql.model.body.GraphContainer
+import com.mxt.anitrend.graphql.generated.MediaBaseData
 import com.mxt.anitrend.graphql.generated.MediaBaseVariables
 import com.mxt.anitrend.graphql.generated.MediaCharactersVariables
 import com.mxt.anitrend.graphql.generated.MediaEpisodesVariables
@@ -39,6 +40,12 @@ interface MediaService {
     fun getMediaBase(
         @Body request: GraphQLRequest<MediaBaseVariables>,
     ): Call<AniListContainer<MediaBase>>
+
+    @POST("/")
+    @Headers("Content-Type: application/json")
+    fun getMediaBaseRecord(
+        @Body request: GraphQLRequest<MediaBaseVariables>,
+    ): Call<GraphContainer<MediaBaseData>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
