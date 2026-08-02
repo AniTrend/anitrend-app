@@ -5,6 +5,7 @@ import androidx.annotation.IdRes
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter
 import com.mxt.anitrend.base.interfaces.dao.BoxQuery
+import com.mxt.anitrend.data.mapper.toUserStatisticsRecord
 import com.mxt.anitrend.model.entity.anilist.user.UserStatisticTypes
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.model.entity.crunchy.MediaContent
@@ -95,8 +96,9 @@ open class BasePresenter(
         if (CompatUtil.isEmpty(favouriteGenres)) {
             val userStats: UserStatisticTypes? = database.currentUser?.statistics
             if (database.currentUser != null && userStats != null) {
-                if (!userStats.anime.genres.isNullOrEmpty()) {
-                    favouriteGenres = userStats.anime.genres
+                val stats = userStats.toUserStatisticsRecord()
+                if (!stats.anime.genres.isNullOrEmpty()) {
+                    favouriteGenres = stats.anime.genres
                         .sortedByDescending {
                             it.count
                         }.mapNotNull { it.genre }
@@ -111,8 +113,9 @@ open class BasePresenter(
         if (CompatUtil.isEmpty(favouriteTags)) {
             val userStats: UserStatisticTypes? = database.currentUser?.statistics
             if (database.currentUser != null && userStats != null) {
-                if (!userStats.anime.tags.isNullOrEmpty()) {
-                    favouriteTags = userStats.anime.tags.sortedByDescending {
+                val stats = userStats.toUserStatisticsRecord()
+                if (!stats.anime.tags.isNullOrEmpty()) {
+                    favouriteTags = stats.anime.tags.sortedByDescending {
                         it.count
                     }.filter {
                         it.tag != null
@@ -129,8 +132,9 @@ open class BasePresenter(
         if (CompatUtil.isEmpty(favouriteYears)) {
             val userStats: UserStatisticTypes? = database.currentUser?.statistics
             if (database.currentUser != null && userStats != null) {
-                if (!userStats.anime.releaseYears.isNullOrEmpty()) {
-                    favouriteYears = userStats.anime.releaseYears
+                val stats = userStats.toUserStatisticsRecord()
+                if (!stats.anime.releaseYears.isNullOrEmpty()) {
+                    favouriteYears = stats.anime.releaseYears
                         .sortedByDescending {
                             it.count
                         }.mapNotNull { releaseYear ->
@@ -146,8 +150,9 @@ open class BasePresenter(
         if (CompatUtil.isEmpty(favouriteFormats)) {
             val userStats: UserStatisticTypes? = database.currentUser?.statistics
             if (database.currentUser != null && userStats != null) {
-                if (!userStats.anime.formats.isNullOrEmpty()) {
-                    favouriteFormats = userStats.anime.formats
+                val stats = userStats.toUserStatisticsRecord()
+                if (!stats.anime.formats.isNullOrEmpty()) {
+                    favouriteFormats = stats.anime.formats
                         .sortedByDescending {
                             it.count
                         }.mapNotNull { it.format }
