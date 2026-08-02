@@ -10,6 +10,7 @@ import com.mxt.anitrend.graphql.generated.MediaOverviewData
 import com.mxt.anitrend.graphql.generated.MediaOverviewVariables
 import com.mxt.anitrend.graphql.generated.MediaRelationsVariables
 import com.mxt.anitrend.graphql.generated.MediaSocialVariables
+import com.mxt.anitrend.graphql.generated.MediaStatsData
 import com.mxt.anitrend.graphql.generated.MediaStaffVariables
 import com.mxt.anitrend.graphql.generated.MediaStatsVariables
 import com.mxt.anitrend.graphql.generated.RecommendationMediaData
@@ -71,6 +72,12 @@ interface MediaService {
     fun getMediaStats(
         @Body request: GraphQLRequest<MediaStatsVariables>,
     ): Call<AniListContainer<Media>>
+
+    @POST("/")
+    @Headers("Content-Type: application/json")
+    fun getMediaStatsRecord(
+        @Body request: GraphQLRequest<MediaStatsVariables>,
+    ): Call<GraphContainer<MediaStatsData>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
