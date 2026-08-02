@@ -14,6 +14,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.MediaListAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
+import com.mxt.anitrend.data.mapper.toPageInfo
 import com.mxt.anitrend.domain.medialist.model.MediaListRecord
 import com.mxt.anitrend.domain.model.MediaListItemUiModel
 import com.mxt.anitrend.domain.model.buildIncrementMediaProgressCommand
@@ -218,9 +219,7 @@ open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, PageContai
     private fun handleSuccess(state: MediaListViewModel.UiState.Success) {
         latestEntries = state.entries
         submitStateList(state.renderedItems)
-        if (state.pageInfo != null) {
-            setPageInfo(state.pageInfo)
-        }
+        state.pageInfo?.let { setPageInfo(it.toPageInfo()) }
         if (state.renderedItems.isNotEmpty()) {
             updateUI()
         } else {

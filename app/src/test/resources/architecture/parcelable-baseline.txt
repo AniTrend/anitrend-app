@@ -19,11 +19,6 @@ app/src/main/java/com/mxt/anitrend/model/entity/anilist/MediaListCollection.kt:e
 app/src/main/java/com/mxt/anitrend/model/entity/anilist/MediaListCollection.kt:override fun describeContents(): Int = 0
 app/src/main/java/com/mxt/anitrend/model/entity/anilist/MediaListCollection.kt:override fun writeToParcel(
 app/src/main/java/com/mxt/anitrend/model/entity/anilist/MediaListCollection.kt:super.writeToParcel(dest, flags)
-app/src/main/java/com/mxt/anitrend/model/entity/anilist/Notification.kt:object : Parcelable.Creator<Notification> {
-app/src/main/java/com/mxt/anitrend/model/entity/anilist/Notification.kt:override fun describeContents(): Int = 0
-app/src/main/java/com/mxt/anitrend/model/entity/anilist/Notification.kt:override fun writeToParcel(
-app/src/main/java/com/mxt/anitrend/model/entity/anilist/Notification.kt:super.writeToParcel(dest, flags)
-app/src/main/java/com/mxt/anitrend/model/entity/anilist/Notification.kt:val CREATOR: Parcelable.Creator<Notification> =
 app/src/main/java/com/mxt/anitrend/model/entity/anilist/Review.kt:object : Parcelable.Creator<Review> {
 app/src/main/java/com/mxt/anitrend/model/entity/anilist/Review.kt:override fun describeContents(): Int = 0
 app/src/main/java/com/mxt/anitrend/model/entity/anilist/Review.kt:override fun writeToParcel(
@@ -54,10 +49,6 @@ app/src/main/java/com/mxt/anitrend/model/entity/base/MediaListCollectionBase.kt:
 app/src/main/java/com/mxt/anitrend/model/entity/base/MediaListCollectionBase.kt:override fun describeContents(): Int = 0
 app/src/main/java/com/mxt/anitrend/model/entity/base/MediaListCollectionBase.kt:override fun writeToParcel(
 app/src/main/java/com/mxt/anitrend/model/entity/base/MediaListCollectionBase.kt:val CREATOR: Parcelable.Creator<MediaListCollectionBase> =
-app/src/main/java/com/mxt/anitrend/model/entity/base/NotificationBase.kt:object : Parcelable.Creator<NotificationBase> {
-app/src/main/java/com/mxt/anitrend/model/entity/base/NotificationBase.kt:override fun describeContents(): Int = 0
-app/src/main/java/com/mxt/anitrend/model/entity/base/NotificationBase.kt:override fun writeToParcel(
-app/src/main/java/com/mxt/anitrend/model/entity/base/NotificationBase.kt:val CREATOR: Parcelable.Creator<NotificationBase> =
 app/src/main/java/com/mxt/anitrend/model/entity/base/StaffBase.kt:object : Parcelable.Creator<StaffBase> {
 app/src/main/java/com/mxt/anitrend/model/entity/base/StaffBase.kt:override fun describeContents(): Int = 0
 app/src/main/java/com/mxt/anitrend/model/entity/base/StaffBase.kt:override fun writeToParcel(

@@ -1,6 +1,7 @@
 package com.mxt.anitrend.model.api.retro.anilist
 
 import co.anitrend.retrofit.graphql.model.GraphQLRequest
+import co.anitrend.retrofit.graphql.model.body.GraphContainer
 import com.mxt.anitrend.graphql.generated.AnimeFavouritesVariables
 import com.mxt.anitrend.graphql.generated.CharacterFavouritesVariables
 import com.mxt.anitrend.graphql.generated.CurrentUserVariables
@@ -12,11 +13,11 @@ import com.mxt.anitrend.graphql.generated.UserBaseVariables
 import com.mxt.anitrend.graphql.generated.UserFavouriteCountVariables
 import com.mxt.anitrend.graphql.generated.UserFollowersVariables
 import com.mxt.anitrend.graphql.generated.UserFollowingVariables
+import com.mxt.anitrend.graphql.generated.UserNotificationsData
 import com.mxt.anitrend.graphql.generated.UserNotificationsVariables
 import com.mxt.anitrend.graphql.generated.UserOverviewVariables
 import com.mxt.anitrend.graphql.generated.UserStatsVariables
 import com.mxt.anitrend.model.entity.anilist.Favourite
-import com.mxt.anitrend.model.entity.anilist.Notification
 import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.model.entity.anilist.user.UserStatisticTypes
 import com.mxt.anitrend.model.entity.base.UserBase
@@ -38,7 +39,7 @@ interface UserService {
     @Headers("Content-Type: application/json")
     fun getUserNotifications(
         @Body request: GraphQLRequest<UserNotificationsVariables>,
-    ): Call<AniListContainer<PageContainer<Notification>>>
+    ): Call<GraphContainer<UserNotificationsData>>
 
     @POST("/")
     @Headers("Content-Type: application/json")

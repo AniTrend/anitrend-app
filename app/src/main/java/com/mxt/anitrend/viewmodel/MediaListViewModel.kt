@@ -2,7 +2,6 @@ package com.mxt.anitrend.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mxt.anitrend.data.mapper.toPageInfo
 import com.mxt.anitrend.data.store.medialist.MediaListQueryKey
 import com.mxt.anitrend.data.store.medialist.MediaListStore
 import com.mxt.anitrend.data.store.mutation.MutationRegistry
@@ -11,6 +10,7 @@ import com.mxt.anitrend.data.store.mutation.OperationStatus
 import com.mxt.anitrend.data.store.mutation.RequestSequence
 import com.mxt.anitrend.domain.medialist.model.MediaListRecord
 import com.mxt.anitrend.domain.model.MediaListItemUiModel
+import com.mxt.anitrend.domain.model.PageInfoRecord
 import com.mxt.anitrend.domain.model.toMediaListItemUiModel
 import com.mxt.anitrend.graphql.generated.MediaListSort
 import com.mxt.anitrend.graphql.generated.MediaListStatus
@@ -51,7 +51,7 @@ class MediaListViewModel(
         data class Success(
             val entries: List<MediaListRecord>,
             val renderedItems: List<MediaListItemUiModel>,
-            val pageInfo: com.mxt.anitrend.model.entity.container.attribute.PageInfo?,
+            val pageInfo: PageInfoRecord?,
             val isEmpty: Boolean,
         ) : UiState
         data class Error(val message: String) : UiState
@@ -103,7 +103,7 @@ class MediaListViewModel(
                             UiState.Success(
                                 entries = sortedEntries,
                                 renderedItems = renderedItems,
-                                pageInfo = query.pageInfo?.toPageInfo(),
+                                pageInfo = query.pageInfo,
                                 isEmpty = renderedItems.isEmpty(),
                             )
                         }

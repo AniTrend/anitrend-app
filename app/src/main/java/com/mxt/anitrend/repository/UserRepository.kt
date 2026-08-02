@@ -1,6 +1,9 @@
 package com.mxt.anitrend.repository
 
+import co.anitrend.retrofit.graphql.model.body.GraphContainer
 import com.mxt.anitrend.base.interfaces.dao.BoxQuery
+import com.mxt.anitrend.data.mapper.toNotificationPageResult
+import com.mxt.anitrend.domain.model.NotificationPageResult
 import com.mxt.anitrend.graphql.generated.AnimeFavourites
 import com.mxt.anitrend.graphql.generated.CharacterFavourites
 import com.mxt.anitrend.graphql.generated.CurrentUser
@@ -14,11 +17,11 @@ import com.mxt.anitrend.graphql.generated.UserFavouriteCount
 import com.mxt.anitrend.graphql.generated.UserFollowers
 import com.mxt.anitrend.graphql.generated.UserFollowing
 import com.mxt.anitrend.graphql.generated.UserNotifications
+import com.mxt.anitrend.graphql.generated.UserNotificationsData
 import com.mxt.anitrend.graphql.generated.UserOverview
 import com.mxt.anitrend.graphql.generated.UserStats
 import com.mxt.anitrend.model.api.retro.anilist.UserService
 import com.mxt.anitrend.model.entity.anilist.Favourite
-import com.mxt.anitrend.model.entity.anilist.Notification
 import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.model.entity.anilist.user.UserStatisticTypes
 import com.mxt.anitrend.model.entity.base.NotificationHistory
@@ -53,8 +56,8 @@ class UserRepository(
     }
 
     /** Persists notification ids as read notification history entries. */
-    fun saveNotificationHistory(notifications: PageContainer<Notification>) {
-        val notificationHistories = notifications.pageData
+    fun saveNotificationHistory(pageResult: NotificationPageResult) {
+        val notificationHistories = pageResult.notifications
             .map { notification -> NotificationHistory(notification.id) }
 
         boxQuery
@@ -254,16 +257,24 @@ class UserRepository(
         type: NotificationType? = null,
         typeIn: List<NotificationType?>? = null,
         resetNotificationCount: Boolean? = false,
-    ): Result<PageContainer<Notification>> = withContext(ioDispatcher) {
+    ): Result<NotificationPageResult> = withContext(ioDispatcher) {
         runCatching {
             val request = UserNotifications.request(page = page, perPage = perPage, type = type, typeIn = typeIn, resetNotificationCount = resetNotificationCount)
             val response = userService.getUserNotifications(request).execute()
             if (response.isSuccessful) {
-                handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                handleUserNotifications(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
                 throw RuntimeException(response.apiError())
             }
         }
+    }
+
+    private fun handleUserNotifications(body: GraphContainer<UserNotificationsData>): NotificationPageResult {
+        val graphErrors = body.errors
+        if (!graphErrors.isNullOrEmpty()) {
+            throw RuntimeException(graphErrors.first().message ?: "GraphQL error")
+        }
+        return body.data?.page?.toNotificationPageResult() ?: throw IllegalStateException("Empty response body")
     }
 
     suspend fun toggleFollow(userId: Long): Result<UserEntity> = withContext(ioDispatcher) {

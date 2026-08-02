@@ -12,11 +12,10 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.PRIORITY_HIGH
 import androidx.core.text.bold
 import com.mxt.anitrend.R
+import com.mxt.anitrend.domain.model.NotificationPageResult
 import com.mxt.anitrend.extension.checkNotificationPermission
 import com.mxt.anitrend.extension.getCompatColor
-import com.mxt.anitrend.model.entity.anilist.Notification
 import com.mxt.anitrend.model.entity.anilist.User
-import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.receiver.ClearNotifications
 import com.mxt.anitrend.view.activity.detail.NotificationActivity
 import kotlin.math.min
@@ -66,17 +65,17 @@ class NotificationUtil(
 
     private fun buildBigNotificationContent(
         unreadCount: Int,
-        notificationsContainer: PageContainer<Notification>,
+        pageResult: NotificationPageResult,
     ): CharSequence {
         // Take the (at most) last 5 unread notifications
         // and build a list that will be used as the content of the expanded notification.
 
         val maxNotifications = min(unreadCount, 5)
-        val displayedNotificationsCount = min(maxNotifications, notificationsContainer.pageData.size)
+        val displayedNotificationsCount = min(maxNotifications, pageResult.notifications.size)
 
         val builder = SpannableStringBuilder()
         for (i in 0 until displayedNotificationsCount) {
-            val notification = notificationsContainer.pageData[i]
+            val notification = pageResult.notifications[i]
             builder.bold {
                 builder.append("• ")
             }
@@ -95,23 +94,22 @@ class NotificationUtil(
                 KeyUtil.THREAD_COMMENT_LIKE,
                 -> {
                     builder.bold {
-                        builder.append(notification.user.name.orEmpty())
+                        builder.append(notification.user?.name.orEmpty())
                     }
                     builder.append(": ")
-                    builder.append(notification.context)
+                    builder.append(notification.context.orEmpty())
                 }
                 KeyUtil.AIRING -> {
                     builder.bold {
-                        builder.append(notification.media?.title?.userPreferred)
+                        builder.append(notification.media?.titleUserPreferred)
                     }
                     builder.append(": ")
                     builder.append(
                         context.getString(
                             R.string.notification_episode,
-                            notification.episode.toString(),
+                            notification.episode?.toString().orEmpty(),
                             notification.media
-                                ?.title
-                                ?.userPreferred
+                                ?.titleUserPreferred
                                 .orEmpty(),
                         ),
                     )
@@ -122,10 +120,10 @@ class NotificationUtil(
                 KeyUtil.MEDIA_DELETION,
                 -> {
                     builder.bold {
-                        builder.append(notification.media?.title?.userPreferred)
+                        builder.append(notification.media?.titleUserPreferred)
                     }
                     builder.append(": ")
-                    builder.append(notification.context)
+                    builder.append(notification.context.orEmpty())
                 }
             }
             if (i != displayedNotificationsCount - 1) {
@@ -142,9 +140,9 @@ class NotificationUtil(
 
     fun createNotification(
         userGraphContainer: User,
-        notificationsContainer: PageContainer<Notification>,
+        pageResult: NotificationPageResult,
     ) {
-        val notificationIdRemote = notificationsContainer.pageData.first().id
+        val notificationIdRemote = pageResult.notifications.first().id
         if (settings.lastDismissedNotificationId == notificationIdRemote) {
             return
         }
@@ -201,7 +199,7 @@ class NotificationUtil(
         }
 
         if (notificationCount > 0) {
-            val notificationContent = buildBigNotificationContent(notificationCount, notificationsContainer)
+            val notificationContent = buildBigNotificationContent(notificationCount, pageResult)
             notificationBuilder
                 .setContentIntent(multiContentIntent())
                 .setContentTitle(

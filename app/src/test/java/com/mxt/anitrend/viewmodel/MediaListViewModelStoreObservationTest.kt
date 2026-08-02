@@ -6,6 +6,7 @@ import com.mxt.anitrend.data.store.medialist.MediaListQueryKey
 import com.mxt.anitrend.data.store.medialist.MediaListStoreChange
 import com.mxt.anitrend.data.store.mutation.RequestSequence
 import com.mxt.anitrend.data.store.mutation.DefaultMutationRegistry
+import com.mxt.anitrend.domain.model.PageInfoRecord
 import com.mxt.anitrend.fixture.MediaListFixtures.aMediaList
 import com.mxt.anitrend.graphql.generated.MediaListSort
 import com.mxt.anitrend.graphql.generated.MediaListStatus
@@ -137,6 +138,61 @@ class MediaListViewModelStoreObservationTest {
             queryKey = queryKey,
             readToken = 1L,
         )
+        collector.cancel()
+    }
+
+    @Test
+    fun `success state exposes store pageInfo as immutable PageInfoRecord`() = runTest(testDispatcher) {
+        val entry = aMediaList(id = 1L, mediaId = 100L, progress = 5)
+        val pageInfo = PageInfoRecord(
+            currentPage = 1,
+            lastPage = 2,
+            perPage = 25,
+            total = 42,
+            hasNextPage = true,
+            hasPreviousPage = false,
+        )
+        doReturn(Result.success(pageContainer(entry))).`when`(browseRepository).getMediaListCollection(
+            userId = 42L,
+            userName = null,
+            type = MediaType.ANIME,
+            forceSingleCompletedList = true,
+            sort = listOf(MediaListSort.PROGRESS_DESC),
+            statusIn = listOf(MediaListStatus.CURRENT),
+            scoreFormat = ScoreFormat.POINT_100,
+            commitToStore = true,
+            queryKey = queryKey,
+            readToken = 1L,
+        )
+
+        val viewModel = MediaListViewModel(
+            browseRepository = browseRepository,
+            mediaListStore = mediaListStore,
+            mutationRegistry = DefaultMutationRegistry(),
+            userRepository = userRepository,
+            settings = settings,
+            requestSequence = RequestSequence(),
+            ioDispatcher = testDispatcher,
+        )
+        val collector = backgroundScope.launch { viewModel.state.collect {} }
+
+        viewModel.load(userId = 42L, userName = null, mediaType = KeyUtil.ANIME, statusIn = KeyUtil.CURRENT)
+        mediaListStore.apply(
+            MediaListStoreChange.CollectionLoaded(
+                queryKey = queryKey,
+                token = 1L,
+                entries = listOf(entry.toMediaListRecord(revision = 1L, ownerUserId = 42L, ownerUserName = "max")),
+                pageInfo = pageInfo,
+            ),
+        )
+        advanceUntilIdle()
+
+        val state = viewModel.state.value as MediaListViewModel.UiState.Success
+        assertTrue(state.pageInfo is PageInfoRecord)
+        assertEquals(pageInfo, state.pageInfo)
+        assertEquals(2, state.pageInfo?.lastPage)
+        assertEquals(42, state.pageInfo?.total)
+        assertEquals(true, state.pageInfo?.hasNextPage)
         collector.cancel()
     }
 

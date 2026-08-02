@@ -9,7 +9,6 @@ app/src/main/java/com/mxt/anitrend/model/entity/anilist/MediaList.kt
 app/src/main/java/com/mxt/anitrend/model/entity/anilist/MediaListCollection.kt
 app/src/main/java/com/mxt/anitrend/model/entity/anilist/MediaRank.kt
 app/src/main/java/com/mxt/anitrend/model/entity/anilist/MediaTag.kt
-app/src/main/java/com/mxt/anitrend/model/entity/anilist/Notification.kt
 app/src/main/java/com/mxt/anitrend/model/entity/anilist/Recommendation.kt
 app/src/main/java/com/mxt/anitrend/model/entity/anilist/Review.kt
 app/src/main/java/com/mxt/anitrend/model/entity/anilist/Thread.kt
@@ -60,7 +59,6 @@ app/src/main/java/com/mxt/anitrend/model/entity/base/CharacterBase.kt
 app/src/main/java/com/mxt/anitrend/model/entity/base/CharacterStaffBase.kt
 app/src/main/java/com/mxt/anitrend/model/entity/base/MediaBase.kt
 app/src/main/java/com/mxt/anitrend/model/entity/base/MediaListCollectionBase.kt
-app/src/main/java/com/mxt/anitrend/model/entity/base/NotificationBase.kt
 app/src/main/java/com/mxt/anitrend/model/entity/base/NotificationHistory.kt
 app/src/main/java/com/mxt/anitrend/model/entity/base/RecommendationBase.kt
 app/src/main/java/com/mxt/anitrend/model/entity/base/StaffBase.kt

@@ -32,6 +32,7 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -117,6 +118,7 @@ class MediaListViewModelImmutableStateTest {
         assertTrue(state.renderedItems.all { it is MediaListItemUiModel })
         assertEquals(1, state.renderedItems.size)
         assertEquals(5, state.renderedItems.single().progress)
+        assertNull(state.pageInfo)
         collector.cancel()
     }
 
