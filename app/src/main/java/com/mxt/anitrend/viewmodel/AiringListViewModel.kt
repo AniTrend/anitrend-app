@@ -2,7 +2,6 @@ package com.mxt.anitrend.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mxt.anitrend.data.mapper.toMediaList
 import com.mxt.anitrend.data.mapper.toPageInfo
 import com.mxt.anitrend.data.store.medialist.MediaListQueryKey
 import com.mxt.anitrend.data.store.medialist.MediaListStore
@@ -10,13 +9,13 @@ import com.mxt.anitrend.data.store.mutation.MutationRegistry
 import com.mxt.anitrend.data.store.mutation.OperationKey
 import com.mxt.anitrend.data.store.mutation.OperationStatus
 import com.mxt.anitrend.data.store.mutation.RequestSequence
+import com.mxt.anitrend.domain.medialist.model.MediaListRecord
 import com.mxt.anitrend.domain.model.MediaListItemUiModel
 import com.mxt.anitrend.domain.model.toMediaListItemUiModel
 import com.mxt.anitrend.graphql.generated.MediaListSort
 import com.mxt.anitrend.graphql.generated.MediaListStatus
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.graphql.generated.ScoreFormat
-import com.mxt.anitrend.model.entity.anilist.MediaList
 import com.mxt.anitrend.repository.BrowseRepository
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
@@ -41,7 +40,7 @@ class AiringListViewModel(
     sealed interface UiState {
         data object Loading : UiState
         data class Success(
-            val items: List<MediaList>,
+            val entries: List<MediaListRecord>,
             val renderedItems: List<MediaListItemUiModel>,
             val pageInfo: com.mxt.anitrend.model.entity.container.attribute.PageInfo?,
             val isEmpty: Boolean,
@@ -97,7 +96,7 @@ class AiringListViewModel(
                         }
                         else -> {
                             UiState.Success(
-                                items = airingEntries.map { it.toMediaList() },
+                                entries = airingEntries,
                                 renderedItems = renderedItems,
                                 pageInfo = query.pageInfo?.toPageInfo(),
                                 isEmpty = renderedItems.isEmpty(),
@@ -177,9 +176,9 @@ class AiringListViewModel(
     }
 
     private fun sortEntriesIfNeeded(
-        entries: List<com.mxt.anitrend.domain.medialist.model.MediaListRecord>,
+        entries: List<MediaListRecord>,
         sort: MediaListSort?,
-    ): List<com.mxt.anitrend.domain.medialist.model.MediaListRecord> {
+    ): List<MediaListRecord> {
         val resolvedSort = sort ?: return entries
         if (!resolvedSort.name.startsWith("MEDIA_ID")) {
             return entries
@@ -214,7 +213,7 @@ class AiringListViewModel(
         entryId.takeIf { it > 0 }?.let(OperationKey::mediaListDelete),
     ).any { this[it] is OperationStatus.Running }
 
-    private fun com.mxt.anitrend.domain.medialist.model.MediaListRecord.canIncrement(): Boolean {
+    private fun MediaListRecord.canIncrement(): Boolean {
         val mediaSummary = media ?: return false
         if (CompatUtil.equals(mediaSummary.status, KeyUtil.NOT_YET_RELEASED)) {
             return false

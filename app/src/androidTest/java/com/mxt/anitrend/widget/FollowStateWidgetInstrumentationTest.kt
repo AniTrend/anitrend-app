@@ -17,7 +17,7 @@ import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.WidgetState
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
+import org.junit.Assert.assertFalse
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -25,7 +25,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class FollowStateWidgetInstrumentationTest {
     @Test
-    fun listenerSuccess_togglesFollowStateAndResetsLoadingSpinner() {
+    fun clickDeliversUserIdFireAndForget_andDoesNotMutateBoundEntity() {
         val database = KoinExt.get(DatabaseHelper::class.java)
         ActivityScenario.launch(ProgressLayoutTestActivity::class.java).use { scenario ->
             Settings(androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().targetContext).isAuthenticated = true
@@ -50,26 +50,32 @@ class FollowStateWidgetInstrumentationTest {
                     },
                 )
                 widget.setUserModel(targetUser)
+
+                val deliveredUserIds = mutableListOf<Long>()
                 widget.setListener(
-                    object : FollowStateWidget.Listener {
-                        override fun onToggleFollow(
-                            userId: Long,
-                            onResult: (Result<UserBase>) -> Unit,
-                        ) {
-                            assertEquals(2L, userId)
-                            onResult(Result.success(targetUser))
-                        }
+                    FollowStateWidget.Listener { userId ->
+                        deliveredUserIds.add(userId)
                     },
                 )
 
                 val flipper = widget.findViewById<ViewFlipper>(R.id.widget_flipper)
-                flipper.displayedChild = WidgetState.LOADING_STATE
                 flipper.performClick()
 
+                // Fire-and-forget: the userId is delivered without any result callback.
+                assertEquals(listOf(2L), deliveredUserIds)
+                // Render-only: the bound entity is never mutated by the widget.
+                assertFalse(targetUser.isFollowing)
+                assertEquals(WidgetState.LOADING_STATE, flipper.displayedChild)
+
+                // A newly bound committed state resets the loading spinner and re-renders.
+                val committedUser = UserBase(name = "other-user", isFollowing = true).apply {
+                    id = 2L
+                }
+                widget.setUserModel(committedUser)
+
                 val label = widget.findViewById<MaterialButton>(R.id.button_state_text)
-                assertTrue(targetUser.isFollowing)
-                assertEquals(activity.getString(R.string.following), label.text.toString())
                 assertEquals(WidgetState.CONTENT_STATE, flipper.displayedChild)
+                assertEquals(activity.getString(R.string.following), label.text.toString())
             }
         }
         database.invalidateBoxStores()

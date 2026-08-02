@@ -12,15 +12,17 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.pager.detail.CharacterPageAdapter
 import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget
+import com.mxt.anitrend.base.custom.view.widget.FavouriteWidgetRenderState
 import com.mxt.anitrend.databinding.ActivityPagerGenericBinding
+import com.mxt.anitrend.domain.model.CharacterRecord
 import com.mxt.anitrend.extension.KoinExt
-import com.mxt.anitrend.model.entity.base.CharacterBase
 import com.mxt.anitrend.util.IntentBundleUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.view.activity.CommonActivity
 import com.mxt.anitrend.viewmodel.CharacterViewModel
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.Locale
@@ -33,7 +35,7 @@ class CharacterActivity : CommonActivity() {
 
     private lateinit var binding: ActivityPagerGenericBinding
 
-    private var model: CharacterBase? = null
+    private var model: CharacterRecord? = null
     private var characterId: Long = 0
     private var favouriteWidget: FavouriteToolbarWidget? = null
     private val characterViewModel: CharacterViewModel by viewModel()
@@ -67,7 +69,6 @@ class CharacterActivity : CommonActivity() {
                         is CharacterViewModel.UiState.Loading -> { /* content loads below */ }
                         is CharacterViewModel.UiState.Success -> {
                             model = state.character
-                            updateUI()
                         }
                         is CharacterViewModel.UiState.Error -> {
                             NotifyUtil.makeText(
@@ -78,6 +79,24 @@ class CharacterActivity : CommonActivity() {
                             ).show()
                         }
                     }
+                }
+            }
+        }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                // Observe the canonical favourite store through the ViewModel and
+                // re-render after every committed mutation (or in-flight loading change).
+                combine(
+                    characterViewModel.favouriteFlag,
+                    characterViewModel.favouriteLoading,
+                ) { flag, loading ->
+                    FavouriteWidgetRenderState.fromFlag(
+                        flag = flag,
+                        fallbackIsFavourite = model?.isFavourite ?: false,
+                        isLoading = loading,
+                    )
+                }.collect { renderState ->
+                    favouriteWidget?.render(renderState)
                 }
             }
         }
@@ -104,23 +123,27 @@ class CharacterActivity : CommonActivity() {
             favouriteWidget = favouriteMenuItem.actionView as? FavouriteToolbarWidget
             if (favouriteWidget == null) {
                 favouriteMenuItem.isVisible = false
-            }
-            favouriteWidget?.setListener(object : FavouriteToolbarWidget.Listener {
-                override fun onToggleFavourite(
-                    animeId: Int?,
-                    mangaId: Int?,
-                    characterId: Int?,
-                    staffId: Int?,
-                    studioId: Int?,
-                    onResult: (Result<Unit>) -> Unit,
-                ) {
-                    lifecycleScope.launch {
-                        onResult(characterViewModel.toggleFavourite(animeId, mangaId, characterId, staffId, studioId))
-                    }
+            } else {
+                favouriteWidget?.setOnToggleAction {
+                    characterViewModel.toggleFavouriteCharacter(characterId)
                 }
-            })
+                // The widget is created after the observeViewModel collectors start, so
+                // render once with the current values and let the collector re-render on
+                // any subsequent store or loading change.
+                renderFavouriteWidget()
+            }
         }
         return true
+    }
+
+    private fun renderFavouriteWidget() {
+        favouriteWidget?.render(
+            FavouriteWidgetRenderState.fromFlag(
+                flag = characterViewModel.favouriteFlag.value,
+                fallbackIsFavourite = model?.isFavourite ?: false,
+                isLoading = characterViewModel.favouriteLoading.value,
+            ),
+        )
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -139,7 +162,7 @@ class CharacterActivity : CommonActivity() {
                                 String.format(
                                     Locale.getDefault(),
                                     "%s - %s",
-                                    current.name?.fullName ?: "",
+                                    current.name ?: "",
                                     current.siteUrl ?: "",
                                 ),
                             )
@@ -170,14 +193,8 @@ class CharacterActivity : CommonActivity() {
         characterViewModel.load(characterId)
     }
 
-    private fun updateUI() {
-        model?.let { current ->
-            favouriteWidget?.setModel(current)
-        }
-    }
-
     override fun onDestroy() {
-        favouriteWidget?.setListener(null)
+        favouriteWidget?.setOnToggleAction(null)
         super.onDestroy()
     }
 }

@@ -8,14 +8,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
-import com.mxt.anitrend.adapter.recycler.group.GroupSeriesAdapter
+import com.mxt.anitrend.adapter.recycler.group.RecommendationAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
+import com.mxt.anitrend.data.mapper.toPageInfo
+import com.mxt.anitrend.domain.model.RecommendationItemUiModel
+import com.mxt.anitrend.domain.model.RecommendationPageResult
 import com.mxt.anitrend.graphql.generated.MediaType
-import com.mxt.anitrend.model.entity.base.MediaBase
-import com.mxt.anitrend.model.entity.base.RecommendationBase
-import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
-import com.mxt.anitrend.model.entity.container.body.PageContainer
-import com.mxt.anitrend.model.entity.group.RecyclerItem
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
@@ -27,7 +25,7 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MediaRecommendationsFragment : FragmentBaseList<RecyclerItem, ConnectionContainer<PageContainer<RecommendationBase>>>() {
+class MediaRecommendationsFragment : FragmentBaseList<RecommendationItemUiModel, RecommendationPageResult>() {
     @KeyUtil.MediaType
     private var mediaType: String? = null
     private var mediaId: Long = 0
@@ -35,6 +33,8 @@ class MediaRecommendationsFragment : FragmentBaseList<RecyclerItem, ConnectionCo
     private val settings: Settings by inject()
 
     private val mediaRecommendationsViewModel: MediaRecommendationsViewModel by viewModel()
+
+    private var recommendationAdapter: RecommendationAdapter? = null
 
     companion object {
         @JvmStatic
@@ -50,8 +50,14 @@ class MediaRecommendationsFragment : FragmentBaseList<RecyclerItem, ConnectionCo
             mediaId = args.getLong(KeyUtil.arg_id)
             mediaType = args.getString(KeyUtil.arg_mediaType)
         }
+        isPager = true
         mColumnSize = R.integer.grid_giphy_x3
-        mAdapter = GroupSeriesAdapter(ctx)
+        recommendationAdapter =
+            RecommendationAdapter(
+                context = ctx,
+                onOpenMedia = ::openMedia,
+                onLongPressMedia = ::onLongPressMedia,
+            )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -62,10 +68,10 @@ class MediaRecommendationsFragment : FragmentBaseList<RecyclerItem, ConnectionCo
                 mediaRecommendationsViewModel.state.collect { state ->
                     when (state) {
                         is MediaRecommendationsViewModel.UiState.Loading -> {
-                            // Loading is handled by swipeRefreshLayout in the base class
+                            // Loading is handled by swipeRefreshLayout / progress layout in the base class
                         }
                         is MediaRecommendationsViewModel.UiState.Success -> {
-                            handleSuccess(state.content)
+                            handleSuccess(state.items, state.pageInfo)
                         }
                         is MediaRecommendationsViewModel.UiState.Error -> {
                             showError(state.message)
@@ -76,81 +82,108 @@ class MediaRecommendationsFragment : FragmentBaseList<RecyclerItem, ConnectionCo
         }
     }
 
+    override fun onStart() {
+        showLoading()
+        val adapter = recommendationAdapter
+        if (adapter == null || adapter.itemCount < 1) {
+            onRefresh()
+        } else {
+            updateUI()
+        }
+    }
+
     override fun updateUI() {
         setSwipeRefreshLayoutEnabled(false)
-        injectAdapter()
+        val adapter = recommendationAdapter ?: return
+        if (adapter.itemCount > 0) {
+            if (recyclerView.adapter !== adapter) {
+                recyclerView.adapter = adapter
+            }
+            if (swipeRefreshLayout.isRefreshing()) {
+                swipeRefreshLayout.setRefreshing(false)
+            } else if (swipeRefreshLayout.isLoading()) {
+                swipeRefreshLayout.setLoading(false)
+            }
+            showContent()
+        } else {
+            showEmpty(getString(R.string.layout_empty_response))
+        }
     }
 
     override fun makeRequest() {
         val type = mediaType?.let { runCatching { MediaType.valueOf(it) }.getOrNull() }
         val isAdult: Boolean? = if (settings.displayAdultContent) null else false
-        mediaRecommendationsViewModel.load(mediaId = mediaId, type = type, isAdult = isAdult)
+        mediaRecommendationsViewModel.load(
+            mediaId = mediaId,
+            type = type,
+            isAdult = isAdult,
+            page = mScrollListener.currentPage.takeIf { it > 1 },
+        )
     }
 
-    private fun handleSuccess(content: ConnectionContainer<PageContainer<RecommendationBase>>) {
-        if (!content.isEmpty) {
-            if (content.connection.hasPageInfo()) {
-                setPageInfo(content.connection.pageInfo)
-            }
-            val entityMap: List<RecyclerItem> =
-                content.connection.pageData.mapNotNull { it.mediaRecommendation }
-            onPostProcessed(entityMap)
+    private fun handleSuccess(
+        items: List<RecommendationItemUiModel>,
+        pageInfo: com.mxt.anitrend.domain.model.PageInfoRecord?,
+    ) {
+        val adapter = recommendationAdapter ?: return
+        pageInfo?.toPageInfo()?.let { setPageInfo(it) }
+        if (items.isEmpty() && adapter.itemCount > 0) {
+            setLimitReached()
+            updateUI()
         } else {
-            onPostProcessed(emptyList())
-        }
-        if (mAdapter.itemCount < 1) {
-            onPostProcessed(null)
+            adapter.submitList(items) { updateUI() }
         }
     }
 
     /** No-op: StateFlow collector above handles the response. */
-    override fun onChanged(value: ConnectionContainer<PageContainer<RecommendationBase>>?) = Unit
+    override fun onChanged(value: RecommendationPageResult?) = Unit
+
+    private fun openMedia(
+        target: View,
+        item: RecommendationItemUiModel,
+    ) {
+        val host = activity ?: return
+        val intent =
+            Intent(host, MediaActivity::class.java).apply {
+                putExtra(KeyUtil.arg_id, item.mediaId)
+                putExtra(KeyUtil.arg_mediaType, item.mediaType)
+            }
+        CompatUtil.startRevealAnim(host, target, intent)
+    }
+
+    private fun onLongPressMedia(
+        target: View,
+        item: RecommendationItemUiModel,
+    ): Boolean {
+        if (settings.isAuthenticated) {
+            val host = activity ?: return false
+            mediaActionUtil =
+                MediaActionUtil
+                    .Builder()
+                    .setId(item.mediaId)
+                    .build(host)
+            mediaActionUtil.startSeriesAction()
+            return true
+        }
+        context?.let {
+            NotifyUtil
+                .makeText(
+                    it,
+                    R.string.info_login_req,
+                    R.drawable.ic_group_add_grey_600_18dp,
+                    Toast.LENGTH_SHORT,
+                ).show()
+        }
+        return true
+    }
 
     override fun onItemClick(
         target: View,
-        data: IndexedValue<RecyclerItem>,
-    ) {
-        when (target.id) {
-            R.id.container -> {
-                val media = data.value as? MediaBase ?: return
-                val host = activity ?: return
-                val intent =
-                    Intent(host, MediaActivity::class.java).apply {
-                        putExtra(KeyUtil.arg_id, media.id)
-                        putExtra(KeyUtil.arg_mediaType, media.type)
-                    }
-                CompatUtil.startRevealAnim(host, target, intent)
-            }
-        }
-    }
+        data: IndexedValue<RecommendationItemUiModel>,
+    ) = Unit
 
     override fun onItemLongClick(
         target: View,
-        data: IndexedValue<RecyclerItem>,
-    ) {
-        when (target.id) {
-            R.id.container -> {
-                if (settings.isAuthenticated) {
-                    val media = data.value as? MediaBase ?: return
-                    val host = activity ?: return
-                    mediaActionUtil =
-                        MediaActionUtil
-                            .Builder()
-                            .setId(media.id)
-                            .build(host)
-                    mediaActionUtil.startSeriesAction()
-                } else {
-                    context?.let {
-                        NotifyUtil
-                            .makeText(
-                                it,
-                                R.string.info_login_req,
-                                R.drawable.ic_group_add_grey_600_18dp,
-                                Toast.LENGTH_SHORT,
-                            ).show()
-                    }
-                }
-            }
-        }
-    }
+        data: IndexedValue<RecommendationItemUiModel>,
+    ) = Unit
 }

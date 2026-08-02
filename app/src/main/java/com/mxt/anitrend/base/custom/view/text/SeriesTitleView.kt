@@ -3,8 +3,8 @@ package com.mxt.anitrend.base.custom.view.text
 import android.content.Context
 import android.util.AttributeSet
 import com.mxt.anitrend.base.interfaces.view.CustomView
+import com.mxt.anitrend.domain.model.ReviewRecord
 import com.mxt.anitrend.model.entity.anilist.MediaList
-import com.mxt.anitrend.model.entity.anilist.Review
 import com.mxt.anitrend.model.entity.base.MediaBase
 
 /**
@@ -32,8 +32,8 @@ constructor(
         setTitle(mediaList.media)
     }
 
-    fun setTitle(review: Review) {
-        setTitle(review.media)
+    fun setTitle(review: ReviewRecord) {
+        text = review.media?.titleUserPreferred.orEmpty()
     }
 
     override fun onViewRecycled() = Unit

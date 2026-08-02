@@ -14,13 +14,10 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.MediaListAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
-import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter
-import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder
-import com.mxt.anitrend.data.mapper.toMediaListRecord
-import com.mxt.anitrend.domain.model.toMediaListItemUiModel
+import com.mxt.anitrend.domain.medialist.model.MediaListRecord
+import com.mxt.anitrend.domain.model.MediaListItemUiModel
 import com.mxt.anitrend.domain.model.buildIncrementMediaProgressCommand
 import com.mxt.anitrend.graphql.generated.MediaType
-import com.mxt.anitrend.model.entity.anilist.MediaList
 import com.mxt.anitrend.model.entity.anilist.MediaListCollection
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.util.CompatUtil
@@ -35,7 +32,6 @@ import com.mxt.anitrend.util.selectedIndex
 import com.mxt.anitrend.view.activity.detail.MediaActivity
 import com.mxt.anitrend.viewmodel.MediaListMutationViewModel
 import com.mxt.anitrend.viewmodel.MediaListViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -44,7 +40,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * Created by max on 2017/12/18.
  * media list fragment
  */
-open class MediaListFragment : FragmentBaseList<MediaList, PageContainer<MediaListCollection>>() {
+open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, PageContainer<MediaListCollection>>() {
 
     protected var userId: Long = 0
     protected var userName: String? = null
@@ -59,7 +55,7 @@ open class MediaListFragment : FragmentBaseList<MediaList, PageContainer<MediaLi
     private val mediaListMutationViewModel: MediaListMutationViewModel by viewModel()
 
     protected var stateListAdapter: MediaListAdapter? = null
-    private val renderedItems = MutableStateFlow<List<MediaList>>(emptyList())
+    private var latestEntries: List<MediaListRecord> = emptyList()
 
     companion object {
         @JvmStatic
@@ -91,7 +87,6 @@ open class MediaListFragment : FragmentBaseList<MediaList, PageContainer<MediaLi
                 onOpenMedia = ::openMedia,
                 onOpenManage = ::openManage,
             )
-        mAdapter = MediaListAdapterBridge(ctx) { stateListAdapter }
 
         mColumnSize =
             if (settings.mediaListStyle == KeyUtil.LIST_VIEW_STYLE_COMPACT_X1) {
@@ -120,6 +115,14 @@ open class MediaListFragment : FragmentBaseList<MediaList, PageContainer<MediaLi
                     }
                 }
             }
+        }
+    }
+
+    override fun applySearchQuery(searchQuery: String?) {
+        this.query = searchQuery
+        if (!isPager && (stateListAdapter?.itemCount ?: 0) > 0) {
+            val filterQuery = if (searchQuery.isNullOrEmpty()) "" else searchQuery
+            stateListAdapter?.filter?.filter(filterQuery)
         }
     }
 
@@ -202,7 +205,9 @@ open class MediaListFragment : FragmentBaseList<MediaList, PageContainer<MediaLi
                 swipeRefreshLayout.setRefreshing(true)
                 mediaListViewModel.onSortPreferenceChanged()
             } else {
-                super.onSharedPreferenceChanged(sharedPreferences, key)
+                showLoading()
+                stateListAdapter?.submitItems(emptyList())
+                onRefresh()
             }
         }
     }
@@ -211,7 +216,8 @@ open class MediaListFragment : FragmentBaseList<MediaList, PageContainer<MediaLi
     override fun onChanged(value: PageContainer<MediaListCollection>?) = Unit
 
     private fun handleSuccess(state: MediaListViewModel.UiState.Success) {
-        submitStateList(state.items, state.renderedItems)
+        latestEntries = state.entries
+        submitStateList(state.renderedItems)
         if (state.pageInfo != null) {
             setPageInfo(state.pageInfo)
         }
@@ -222,21 +228,8 @@ open class MediaListFragment : FragmentBaseList<MediaList, PageContainer<MediaLi
         }
     }
 
-    protected fun submitStateList(
-        items: List<MediaList>,
-        rendered: List<com.mxt.anitrend.domain.model.MediaListItemUiModel>? = null,
-    ) {
-        renderedItems.value = items
-        val currentUser = mediaListViewModel.isCurrentUser(userId, userName)
-        stateListAdapter?.submitItems(
-            rendered ?: items.map { entry ->
-                entry.toMediaListRecord().toMediaListItemUiModel(
-                    isIncrementPending = false,
-                    isDeletePending = false,
-                    canIncrement = canIncrement(entry, currentUser),
-                )
-            },
-        )
+    protected fun submitStateList(rendered: List<MediaListItemUiModel>) {
+        stateListAdapter?.submitItems(rendered)
     }
 
     override fun onStart() {
@@ -250,17 +243,17 @@ open class MediaListFragment : FragmentBaseList<MediaList, PageContainer<MediaLi
 
     override fun onItemClick(
         target: View,
-        data: IndexedValue<MediaList>,
+        data: IndexedValue<MediaListItemUiModel>,
     ) = Unit
 
     override fun onItemLongClick(
         target: View,
-        data: IndexedValue<MediaList>,
+        data: IndexedValue<MediaListItemUiModel>,
     ) = Unit
 
     private fun openMedia(
         target: View,
-        item: com.mxt.anitrend.domain.model.MediaListItemUiModel,
+        item: MediaListItemUiModel,
     ) {
         val host = activity ?: return
         val intent =
@@ -271,7 +264,7 @@ open class MediaListFragment : FragmentBaseList<MediaList, PageContainer<MediaLi
         CompatUtil.startRevealAnim(host, target, intent)
     }
 
-    private fun openManage(item: com.mxt.anitrend.domain.model.MediaListItemUiModel) {
+    private fun openManage(item: MediaListItemUiModel) {
         if (!settings.isAuthenticated) {
             context?.let {
                 NotifyUtil
@@ -294,43 +287,10 @@ open class MediaListFragment : FragmentBaseList<MediaList, PageContainer<MediaLi
         mediaActionUtil.startSeriesAction()
     }
 
-    private fun incrementMediaProgress(item: com.mxt.anitrend.domain.model.MediaListItemUiModel) {
-        val entry = renderedItems.value.firstOrNull { mediaList ->
-            mediaList.id == item.id || mediaList.mediaId == item.mediaId
+    private fun incrementMediaProgress(item: MediaListItemUiModel) {
+        val entry = latestEntries.firstOrNull { record ->
+            record.id == item.id || record.mediaId == item.mediaId
         } ?: return
         mediaListMutationViewModel.increment(buildIncrementMediaProgressCommand(entry))
-    }
-
-    private fun canIncrement(
-        entry: MediaList,
-        isCurrentUser: Boolean,
-    ): Boolean {
-        if (!isCurrentUser) {
-            return false
-        }
-        if (CompatUtil.equals(entry.media.status, KeyUtil.NOT_YET_RELEASED)) {
-            return false
-        }
-        return if (CompatUtil.equals(entry.media.type, KeyUtil.ANIME)) {
-            entry.media.episodes == 0 || entry.progress < entry.media.episodes
-        } else {
-            entry.media.chapters == 0 || entry.progress < entry.media.chapters
-        }
-    }
-
-    private class MediaListAdapterBridge(
-        context: android.content.Context,
-        private val delegate: () -> MediaListAdapter?,
-    ) : RecyclerViewAdapter<MediaList>(context) {
-        override fun onCreateViewHolder(
-            parent: android.view.ViewGroup,
-            viewType: Int,
-        ): RecyclerViewHolder<MediaList> = error("Bridge adapter should never create view holders")
-
-        override fun onBindViewHolder(holder: RecyclerViewHolder<MediaList>, position: Int) = Unit
-
-        override fun getItemCount(): Int = delegate()?.itemCount ?: 0
-
-        override fun getFilter() = delegate()?.filter
     }
 }

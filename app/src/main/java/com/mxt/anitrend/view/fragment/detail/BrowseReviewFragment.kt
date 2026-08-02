@@ -1,6 +1,7 @@
 package com.mxt.anitrend.view.fragment.detail
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -14,15 +15,16 @@ import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.ReviewAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
 import com.mxt.anitrend.data.DatabaseHelper
+import com.mxt.anitrend.domain.model.MediaSummaryRecord
+import com.mxt.anitrend.domain.model.ReviewRecord
 import com.mxt.anitrend.graphql.generated.MediaType
-import com.mxt.anitrend.model.entity.anilist.Review
-import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.Settings
+import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.util.selectedIndex
 import com.mxt.anitrend.view.activity.detail.MediaActivity
@@ -36,7 +38,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * Created by max on 2017/10/30.
  * Media review browse
  */
-class BrowseReviewFragment : FragmentBaseList<Review, PageContainer<Review>>() {
+class BrowseReviewFragment : FragmentBaseList<ReviewRecord, PageContainer<ReviewRecord>>() {
     @KeyUtil.MediaType
     private var mediaType: String? = null
 
@@ -44,6 +46,8 @@ class BrowseReviewFragment : FragmentBaseList<Review, PageContainer<Review>>() {
     private val databaseHelper: DatabaseHelper by inject()
 
     private val browseReviewViewModel: BrowseReviewViewModel by viewModel()
+
+    private var reviewAdapter: ReviewAdapter? = null
 
     companion object {
         @JvmStatic
@@ -69,11 +73,14 @@ class BrowseReviewFragment : FragmentBaseList<Review, PageContainer<Review>>() {
         isPager = true
         mColumnSize = R.integer.single_list_x1
         isFilterableEnabled = true
-        mAdapter = ReviewAdapter(
-            context = ctx,
-            currentUser = databaseHelper.currentUser,
-            onRateReviewAction = browseReviewViewModel::rateReview,
-        )
+        reviewAdapter =
+            ReviewAdapter(
+                context = ctx,
+                currentUser = databaseHelper.currentUser,
+                onRateReviewAction = browseReviewViewModel::rateReview,
+            ).also { adapter ->
+                adapter.clickListener = this
+            }
     }
 
     @Deprecated("Deprecated in Java")
@@ -148,8 +155,41 @@ class BrowseReviewFragment : FragmentBaseList<Review, PageContainer<Review>>() {
         }
     }
 
+    override fun onStart() {
+        showLoading()
+        if ((reviewAdapter?.itemCount ?: 0) < 1) {
+            onRefresh()
+        } else {
+            updateUI()
+        }
+    }
+
     override fun updateUI() {
-        injectAdapter()
+        val adapter = reviewAdapter ?: return
+        if (adapter.itemCount > 0) {
+            if (recyclerView.adapter !== adapter) {
+                recyclerView.adapter = adapter
+            }
+            if (swipeRefreshLayout.isRefreshing()) {
+                swipeRefreshLayout.setRefreshing(false)
+            } else if (swipeRefreshLayout.isLoading()) {
+                swipeRefreshLayout.setLoading(false)
+            }
+            showContent()
+        } else {
+            showEmpty(getString(R.string.layout_empty_response))
+        }
+    }
+
+    override fun onSharedPreferenceChanged(
+        sharedPreferences: SharedPreferences,
+        key: String?,
+    ) {
+        if (key != null && isFilterableEnabled && GraphUtil.isKeyFilter(key)) {
+            showLoading()
+            reviewAdapter?.submitList(emptyList())
+            onRefresh()
+        }
     }
 
     override fun makeRequest() {
@@ -163,47 +203,41 @@ class BrowseReviewFragment : FragmentBaseList<Review, PageContainer<Review>>() {
     }
 
     private fun handleSuccess(
-        value: PageContainer<Review>,
+        value: PageContainer<ReviewRecord>,
         replaceExisting: Boolean,
     ) {
         if (value.hasPageInfo()) {
             setPageInfo(value.pageInfo)
         }
         if (!value.isEmpty) {
-            if (replaceExisting) {
-                mAdapter.onItemsInserted(value.pageData)
-                updateUI()
-            } else {
-                onPostProcessed(value.pageData)
-            }
-        } else {
-            if (replaceExisting) {
-                mAdapter.onItemsInserted(emptyList())
-                updateUI()
-            } else {
-                onPostProcessed(emptyList())
-            }
+            reviewAdapter?.submitList(value.pageData)
+            updateUI()
+        } else if (replaceExisting) {
+            reviewAdapter?.submitList(emptyList())
+            updateUI()
+        } else if (isPager) {
+            setLimitReached()
         }
-        if (mAdapter.itemCount < 1) {
-            onPostProcessed(null)
+        if ((reviewAdapter?.itemCount ?: 0) < 1) {
+            showEmpty(getString(R.string.layout_empty_response))
         }
     }
 
     /** No-op: StateFlow collector above handles the response. */
-    override fun onChanged(value: PageContainer<Review>?) = Unit
+    override fun onChanged(value: PageContainer<ReviewRecord>?) = Unit
 
     override fun onItemClick(
         target: View,
-        data: IndexedValue<Review>,
+        data: IndexedValue<ReviewRecord>,
     ) {
         when (target.id) {
             R.id.series_image -> {
-                val mediaBase: MediaBase = data.value.media
+                val mediaBase: MediaSummaryRecord? = data.value.media
                 val host = activity ?: return
                 val intent =
                     Intent(host, MediaActivity::class.java).apply {
-                        putExtra(KeyUtil.arg_id, mediaBase.id)
-                        putExtra(KeyUtil.arg_mediaType, mediaBase.type)
+                        putExtra(KeyUtil.arg_id, mediaBase?.id ?: return)
+                        putExtra(KeyUtil.arg_mediaType, mediaBase?.type)
                     }
                 CompatUtil.startRevealAnim(host, target, intent)
             }
@@ -221,7 +255,7 @@ class BrowseReviewFragment : FragmentBaseList<Review, PageContainer<Review>>() {
 
     override fun onItemLongClick(
         target: View,
-        data: IndexedValue<Review>,
+        data: IndexedValue<ReviewRecord>,
     ) {
         when (target.id) {
             R.id.series_image -> {
@@ -230,7 +264,7 @@ class BrowseReviewFragment : FragmentBaseList<Review, PageContainer<Review>>() {
                     mediaActionUtil =
                         MediaActionUtil
                             .Builder()
-                            .setId(data.value.media.id)
+                            .setId(data.value.media?.id ?: return)
                             .build(host)
                     mediaActionUtil.startSeriesAction()
                 } else {

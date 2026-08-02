@@ -64,11 +64,14 @@ class UserAdapter(
         }
     }
 
-    private val followListener = object : FollowStateWidget.Listener {
-        override fun onToggleFollow(
-            userId: Long,
-            onResult: (Result<UserBase>) -> Unit,
-        ) = onToggleFollowAction(userId, onResult)
+    /**
+     * Bridges the render-only widget's fire-and-forget userId delivery to the owner's
+     * callback. The widget no longer accepts a result; the owner decides how the
+     * mutation result is applied. Legacy owners still receive their original result
+     * callback contract.
+     */
+    private val followListener = FollowStateWidget.Listener { userId ->
+        onToggleFollowAction(userId) { _ -> }
     }
 
     inner class UserViewHolder(

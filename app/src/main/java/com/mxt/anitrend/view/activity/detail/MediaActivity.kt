@@ -17,6 +17,7 @@ import com.mxt.anitrend.adapter.pager.detail.MangaPageAdapter
 import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter
 import com.mxt.anitrend.base.custom.view.image.WideImageView
 import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget
+import com.mxt.anitrend.base.custom.view.widget.FavouriteWidgetRenderState
 import com.mxt.anitrend.databinding.ActivitySeriesBinding
 import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.model.entity.base.MediaBase
@@ -29,6 +30,7 @@ import com.mxt.anitrend.util.TutorialUtil
 import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.view.activity.CommonActivity
 import com.mxt.anitrend.viewmodel.MediaViewModel
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.Locale
@@ -107,6 +109,24 @@ class MediaActivity :
                 }
             }
         }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                // Observe the canonical favourite store through the ViewModel and
+                // re-render after every committed mutation (or in-flight loading change).
+                combine(
+                    mediaViewModel.favouriteFlag,
+                    mediaViewModel.favouriteLoading,
+                ) { flag, loading ->
+                    FavouriteWidgetRenderState.fromFlag(
+                        flag = flag,
+                        fallbackIsFavourite = model?.isFavourite ?: false,
+                        isLoading = loading,
+                    )
+                }.collect { renderState ->
+                    favouriteWidget?.render(renderState)
+                }
+            }
+        }
     }
 
     private fun setUpPager() {
@@ -157,24 +177,26 @@ class MediaActivity :
             if (favouriteWidget == null) {
                 favouriteMenuItem.isVisible = false
             } else {
-                setFavouriteWidgetMenuItemIcon()
-                favouriteWidget?.setListener(object : FavouriteToolbarWidget.Listener {
-                    override fun onToggleFavourite(
-                        animeId: Int?,
-                        mangaId: Int?,
-                        characterId: Int?,
-                        staffId: Int?,
-                        studioId: Int?,
-                        onResult: (Result<Unit>) -> Unit,
-                    ) {
-                        lifecycleScope.launch {
-                            onResult(mediaViewModel.toggleFavourite(animeId, mangaId, characterId, staffId, studioId))
-                        }
-                    }
-                })
+                favouriteWidget?.setOnToggleAction {
+                    mediaViewModel.toggleFavouriteMedia(mediaId, mediaType)
+                }
+                // The widget is created after the observeViewModel collectors start, so
+                // render once with the current values and let the collector re-render on
+                // any subsequent store or loading change.
+                renderFavouriteWidget()
             }
         }
         return true
+    }
+
+    private fun renderFavouriteWidget() {
+        favouriteWidget?.render(
+            FavouriteWidgetRenderState.fromFlag(
+                flag = mediaViewModel.favouriteFlag.value,
+                fallbackIsFavourite = model?.isFavourite ?: false,
+                isLoading = mediaViewModel.favouriteLoading.value,
+            ),
+        )
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -255,7 +277,6 @@ class MediaActivity :
     private fun updateUI() {
         model?.let { current ->
             WideImageView.setImage(binding.seriesBanner, current.bannerImage)
-            setFavouriteWidgetMenuItemIcon()
             setMenuItemIcons()
             if (settings.isAuthenticated) {
                 val favouritesPrompt =
@@ -289,7 +310,7 @@ class MediaActivity :
     }
 
     override fun onDestroy() {
-        favouriteWidget?.setListener(null)
+        favouriteWidget?.setOnToggleAction(null)
         favouriteWidget?.onViewRecycled()
         mediaActionUtil?.onDestroy()
         super.onDestroy()
@@ -301,12 +322,6 @@ class MediaActivity :
                 manageMenuItem?.icon = getCompatDrawable(R.drawable.ic_mode_edit_white_24dp)
             }
             malMenuItem?.isVisible = current.idMal > 0
-        }
-    }
-
-    private fun setFavouriteWidgetMenuItemIcon() {
-        model?.let { current ->
-            favouriteWidget?.setModel(current)
         }
     }
 }

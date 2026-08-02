@@ -70,10 +70,6 @@ open class MediaBase() :
         mediaListEntry = parcel.readParcelable(MediaList::class.java.classLoader)
     }
 
-    fun toggleFavourite() {
-        isFavourite = !isFavourite
-    }
-
     override fun writeToParcel(
         dest: Parcel,
         flags: Int,

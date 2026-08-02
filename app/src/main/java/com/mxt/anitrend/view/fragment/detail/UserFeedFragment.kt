@@ -6,7 +6,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.graphql.generated.ActivityType
-import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.repository.UserRepository
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.Settings
@@ -28,8 +27,6 @@ class UserFeedFragment : FeedListFragment() {
     private val userRepository: UserRepository by inject()
 
     private val userFeedViewModel: UserFeedViewModel by viewModel()
-
-    override fun currentRenderedFeeds(): List<FeedList> = (userFeedViewModel.state.value as? UserFeedViewModel.UiState.Success)?.content?.pageData.orEmpty()
 
     companion object {
         @JvmStatic
@@ -54,6 +51,14 @@ class UserFeedFragment : FeedListFragment() {
         isFeed = false
     }
 
+    override fun onToggleLike(feedId: Long) {
+        userFeedViewModel.toggleLike(feedId)
+    }
+
+    override fun onDeleteFeed(feedId: Long) {
+        userFeedViewModel.deleteFeed(feedId)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -65,7 +70,7 @@ class UserFeedFragment : FeedListFragment() {
                             // Loading is handled by swipeRefreshLayout in the base class
                         }
                         is UserFeedViewModel.UiState.Success -> {
-                            handleSuccess(state.content, state.items, state.replaceExisting)
+                            handleSuccess(state.items, state.pageInfo)
                         }
                         is UserFeedViewModel.UiState.Error -> {
                             showError(state.message)
@@ -89,6 +94,7 @@ class UserFeedFragment : FeedListFragment() {
                 isFollowing = if (args.containsKey(KeyUtil.arg_isFollowing)) args.getBoolean(KeyUtil.arg_isFollowing) else null,
                 type = args.getString(KeyUtil.arg_type)?.let { runCatching { ActivityType.valueOf(it) }.getOrNull() },
                 isMixed = if (args.containsKey(KeyUtil.arg_isMixed)) args.getBoolean(KeyUtil.arg_isMixed) else null,
+                currentUserId = currentUserId(),
             )
         }
     }

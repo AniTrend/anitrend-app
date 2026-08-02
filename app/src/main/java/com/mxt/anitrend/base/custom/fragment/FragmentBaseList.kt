@@ -46,7 +46,7 @@ abstract class FragmentBaseList<M, C> :
      *
      * @param searchQuery The query string to filter by, or null/empty to clear the filter.
      */
-    fun applySearchQuery(searchQuery: String?) {
+    open fun applySearchQuery(searchQuery: String?) {
         this.query = searchQuery
         if (!isPager && ::mAdapter.isInitialized && mAdapter.itemCount > 0) {
             val filterQuery = if (searchQuery.isNullOrEmpty()) "" else searchQuery

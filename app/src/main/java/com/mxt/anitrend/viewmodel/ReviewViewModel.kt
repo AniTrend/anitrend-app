@@ -6,10 +6,10 @@ import com.mxt.anitrend.data.mapper.toPageInfo
 import com.mxt.anitrend.data.store.review.ReviewQueryKey
 import com.mxt.anitrend.data.store.review.ReviewStore
 import com.mxt.anitrend.data.store.mutation.RequestSequence
+import com.mxt.anitrend.domain.model.ReviewRecord
 import com.mxt.anitrend.domain.review.interactor.RateReviewInteractor
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.graphql.generated.ReviewRating
-import com.mxt.anitrend.model.entity.anilist.Review
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.repository.BrowseRepository
 import com.mxt.anitrend.util.KeyUtil
@@ -34,7 +34,7 @@ class ReviewViewModel(
     sealed interface UiState {
         data object Loading : UiState
         data class Success(
-            val content: PageContainer<Review>,
+            val content: PageContainer<ReviewRecord>,
             val replaceExisting: Boolean = false,
         ) : UiState
         data class Error(val message: String) : UiState
@@ -66,7 +66,7 @@ class ReviewViewModel(
                         screen.errorMessage != null -> UiState.Error(screen.errorMessage)
                         screen.isLoading && query.reviews.isEmpty() -> UiState.Loading
                         else -> UiState.Success(
-                            content = PageContainer<Review>().apply {
+                            content = PageContainer<ReviewRecord>().apply {
                                 query.pageInfo?.toPageInfo()?.let { pageInfo = it }
                                 pageData = query.reviews
                             },

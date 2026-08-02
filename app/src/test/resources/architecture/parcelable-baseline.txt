@@ -1,0 +1,76 @@
+app/src/main/java/com/mxt/anitrend/base/custom/view/search/MaterialSearchView.kt:companion object CREATOR : Parcelable.Creator<SavedState> {
+app/src/main/java/com/mxt/anitrend/base/custom/view/search/MaterialSearchView.kt:override fun writeToParcel(out: Parcel, flags: Int) {
+app/src/main/java/com/mxt/anitrend/base/custom/view/search/MaterialSearchView.kt:super.writeToParcel(out, flags)
+app/src/main/java/com/mxt/anitrend/model/entity/anilist/Media.kt:object : Parcelable.Creator<Media> {
+app/src/main/java/com/mxt/anitrend/model/entity/anilist/Media.kt:override fun describeContents(): Int = 0
+app/src/main/java/com/mxt/anitrend/model/entity/anilist/Media.kt:override fun writeToParcel(
+app/src/main/java/com/mxt/anitrend/model/entity/anilist/Media.kt:super.writeToParcel(dest, flags)
+app/src/main/java/com/mxt/anitrend/model/entity/anilist/Media.kt:val CREATOR: Parcelable.Creator<Media> =
+app/src/main/java/com/mxt/anitrend/model/entity/anilist/MediaCharacter.kt:companion object CREATOR : Parcelable.Creator<MediaCharacter> {
+app/src/main/java/com/mxt/anitrend/model/entity/anilist/MediaCharacter.kt:override fun describeContents(): Int = 0
+app/src/main/java/com/mxt/anitrend/model/entity/anilist/MediaCharacter.kt:override fun writeToParcel(
+app/src/main/java/com/mxt/anitrend/model/entity/anilist/MediaCharacter.kt:super.writeToParcel(dest, flags)
+app/src/main/java/com/mxt/anitrend/model/entity/anilist/MediaList.kt:object : Parcelable.Creator<MediaList> {
+app/src/main/java/com/mxt/anitrend/model/entity/anilist/MediaList.kt:override fun describeContents(): Int = 0
+app/src/main/java/com/mxt/anitrend/model/entity/anilist/MediaList.kt:override fun writeToParcel(
+app/src/main/java/com/mxt/anitrend/model/entity/anilist/MediaList.kt:val CREATOR: Parcelable.Creator<MediaList> =
+app/src/main/java/com/mxt/anitrend/model/entity/anilist/MediaListCollection.kt:companion object CREATOR : Parcelable.Creator<MediaListCollection> {
+app/src/main/java/com/mxt/anitrend/model/entity/anilist/MediaListCollection.kt:entries = parcel.createTypedArrayList(MediaList.CREATOR)
+app/src/main/java/com/mxt/anitrend/model/entity/anilist/MediaListCollection.kt:override fun describeContents(): Int = 0
+app/src/main/java/com/mxt/anitrend/model/entity/anilist/MediaListCollection.kt:override fun writeToParcel(
+app/src/main/java/com/mxt/anitrend/model/entity/anilist/MediaListCollection.kt:super.writeToParcel(dest, flags)
+app/src/main/java/com/mxt/anitrend/model/entity/anilist/Notification.kt:object : Parcelable.Creator<Notification> {
+app/src/main/java/com/mxt/anitrend/model/entity/anilist/Notification.kt:override fun describeContents(): Int = 0
+app/src/main/java/com/mxt/anitrend/model/entity/anilist/Notification.kt:override fun writeToParcel(
+app/src/main/java/com/mxt/anitrend/model/entity/anilist/Notification.kt:super.writeToParcel(dest, flags)
+app/src/main/java/com/mxt/anitrend/model/entity/anilist/Notification.kt:val CREATOR: Parcelable.Creator<Notification> =
+app/src/main/java/com/mxt/anitrend/model/entity/anilist/Review.kt:object : Parcelable.Creator<Review> {
+app/src/main/java/com/mxt/anitrend/model/entity/anilist/Review.kt:override fun describeContents(): Int = 0
+app/src/main/java/com/mxt/anitrend/model/entity/anilist/Review.kt:override fun writeToParcel(
+app/src/main/java/com/mxt/anitrend/model/entity/anilist/Review.kt:val CREATOR: Parcelable.Creator<Review> =
+app/src/main/java/com/mxt/anitrend/model/entity/anilist/Thread.kt:object : Parcelable.Creator<Thread> {
+app/src/main/java/com/mxt/anitrend/model/entity/anilist/Thread.kt:val CREATOR: Parcelable.Creator<Thread> =
+app/src/main/java/com/mxt/anitrend/model/entity/anilist/User.kt:object : Parcelable.Creator<User> {
+app/src/main/java/com/mxt/anitrend/model/entity/anilist/User.kt:override fun describeContents(): Int = 0
+app/src/main/java/com/mxt/anitrend/model/entity/anilist/User.kt:override fun writeToParcel(
+app/src/main/java/com/mxt/anitrend/model/entity/anilist/User.kt:super.writeToParcel(dest, flags)
+app/src/main/java/com/mxt/anitrend/model/entity/anilist/User.kt:val CREATOR: Parcelable.Creator<User> =
+app/src/main/java/com/mxt/anitrend/model/entity/base/AuthBase.kt:override fun describeContents(): Int = 0
+app/src/main/java/com/mxt/anitrend/model/entity/base/AuthBase.kt:override fun writeToParcel(dest: Parcel, flags: Int) {
+app/src/main/java/com/mxt/anitrend/model/entity/base/AuthBase.kt:val CREATOR: Parcelable.Creator<AuthBase> = object : Parcelable.Creator<AuthBase> {
+app/src/main/java/com/mxt/anitrend/model/entity/base/CharacterBase.kt:object : Parcelable.Creator<CharacterBase> {
+app/src/main/java/com/mxt/anitrend/model/entity/base/CharacterBase.kt:override fun describeContents(): Int = 0
+app/src/main/java/com/mxt/anitrend/model/entity/base/CharacterBase.kt:override fun writeToParcel(
+app/src/main/java/com/mxt/anitrend/model/entity/base/CharacterBase.kt:val CREATOR: Parcelable.Creator<CharacterBase> =
+app/src/main/java/com/mxt/anitrend/model/entity/base/CharacterStaffBase.kt:object : Parcelable.Creator<CharacterStaffBase> {
+app/src/main/java/com/mxt/anitrend/model/entity/base/CharacterStaffBase.kt:override fun describeContents(): Int = 0
+app/src/main/java/com/mxt/anitrend/model/entity/base/CharacterStaffBase.kt:override fun writeToParcel(
+app/src/main/java/com/mxt/anitrend/model/entity/base/CharacterStaffBase.kt:val CREATOR: Parcelable.Creator<CharacterStaffBase> =
+app/src/main/java/com/mxt/anitrend/model/entity/base/MediaBase.kt:object : Parcelable.Creator<MediaBase> {
+app/src/main/java/com/mxt/anitrend/model/entity/base/MediaBase.kt:override fun describeContents(): Int = 0
+app/src/main/java/com/mxt/anitrend/model/entity/base/MediaBase.kt:override fun writeToParcel(
+app/src/main/java/com/mxt/anitrend/model/entity/base/MediaBase.kt:val CREATOR: Parcelable.Creator<MediaBase> =
+app/src/main/java/com/mxt/anitrend/model/entity/base/MediaListCollectionBase.kt:object : Parcelable.Creator<MediaListCollectionBase> {
+app/src/main/java/com/mxt/anitrend/model/entity/base/MediaListCollectionBase.kt:override fun describeContents(): Int = 0
+app/src/main/java/com/mxt/anitrend/model/entity/base/MediaListCollectionBase.kt:override fun writeToParcel(
+app/src/main/java/com/mxt/anitrend/model/entity/base/MediaListCollectionBase.kt:val CREATOR: Parcelable.Creator<MediaListCollectionBase> =
+app/src/main/java/com/mxt/anitrend/model/entity/base/NotificationBase.kt:object : Parcelable.Creator<NotificationBase> {
+app/src/main/java/com/mxt/anitrend/model/entity/base/NotificationBase.kt:override fun describeContents(): Int = 0
+app/src/main/java/com/mxt/anitrend/model/entity/base/NotificationBase.kt:override fun writeToParcel(
+app/src/main/java/com/mxt/anitrend/model/entity/base/NotificationBase.kt:val CREATOR: Parcelable.Creator<NotificationBase> =
+app/src/main/java/com/mxt/anitrend/model/entity/base/StaffBase.kt:object : Parcelable.Creator<StaffBase> {
+app/src/main/java/com/mxt/anitrend/model/entity/base/StaffBase.kt:override fun describeContents(): Int = 0
+app/src/main/java/com/mxt/anitrend/model/entity/base/StaffBase.kt:override fun writeToParcel(
+app/src/main/java/com/mxt/anitrend/model/entity/base/StaffBase.kt:val CREATOR: Parcelable.Creator<StaffBase> =
+app/src/main/java/com/mxt/anitrend/model/entity/base/StudioBase.kt:object : Parcelable.Creator<StudioBase> {
+app/src/main/java/com/mxt/anitrend/model/entity/base/StudioBase.kt:override fun describeContents(): Int = 0
+app/src/main/java/com/mxt/anitrend/model/entity/base/StudioBase.kt:override fun writeToParcel(
+app/src/main/java/com/mxt/anitrend/model/entity/base/StudioBase.kt:val CREATOR: Parcelable.Creator<StudioBase> =
+app/src/main/java/com/mxt/anitrend/model/entity/base/ThreadBase.kt:object : Parcelable.Creator<ThreadBase> {
+app/src/main/java/com/mxt/anitrend/model/entity/base/ThreadBase.kt:override fun describeContents(): Int = 0
+app/src/main/java/com/mxt/anitrend/model/entity/base/ThreadBase.kt:override fun writeToParcel(
+app/src/main/java/com/mxt/anitrend/model/entity/base/ThreadBase.kt:val CREATOR: Parcelable.Creator<ThreadBase> =
+app/src/main/java/com/mxt/anitrend/model/entity/base/VersionBase.kt:object : Parcelable.Creator<VersionBase> {
+app/src/main/java/com/mxt/anitrend/model/entity/base/VersionBase.kt:override fun describeContents(): Int = 0
+app/src/main/java/com/mxt/anitrend/model/entity/base/VersionBase.kt:override fun writeToParcel(
+app/src/main/java/com/mxt/anitrend/model/entity/base/VersionBase.kt:val CREATOR: Parcelable.Creator<VersionBase> =

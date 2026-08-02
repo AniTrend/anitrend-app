@@ -1,6 +1,7 @@
 package com.mxt.anitrend.util.date
 
 import androidx.annotation.IntRange
+import com.mxt.anitrend.domain.model.AiringScheduleRecord
 import com.mxt.anitrend.model.entity.anilist.meta.AiringSchedule
 import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate
 import com.mxt.anitrend.util.CompatUtil
@@ -248,6 +249,17 @@ object DateUtil {
      * @param airingSchedule - the current airingSchedule object of a series
      */
     fun getNextEpDate(airingSchedule: AiringSchedule): String {
+        val prettyTime = PrettyTime(Locale.getDefault())
+        val fromNow = prettyTime.format(
+            Date(
+                System.currentTimeMillis() + airingSchedule.timeUntilAiring * 1000L,
+            ),
+        )
+        return String.format(Locale.getDefault(), "EP %d: %s", airingSchedule.episode, fromNow)
+    }
+
+    /** Same formatting as the [AiringSchedule] overload, driven by the immutable domain record. */
+    fun getNextEpDate(airingSchedule: AiringScheduleRecord): String {
         val prettyTime = PrettyTime(Locale.getDefault())
         val fromNow = prettyTime.format(
             Date(

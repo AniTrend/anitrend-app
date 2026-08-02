@@ -2,8 +2,6 @@ package com.mxt.anitrend.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mxt.anitrend.data.mapper.toFeedList
-import com.mxt.anitrend.data.mapper.toPageInfo
 import com.mxt.anitrend.data.store.feed.FeedQueryKey
 import com.mxt.anitrend.data.store.feed.FeedScope
 import com.mxt.anitrend.data.store.feed.FeedStore
@@ -15,11 +13,10 @@ import com.mxt.anitrend.domain.feed.interactor.DeleteFeedInteractor
 import com.mxt.anitrend.domain.like.interactor.ToggleLikeInteractor
 import com.mxt.anitrend.domain.model.DeleteFeedCommand
 import com.mxt.anitrend.domain.model.FeedItemUiModel
+import com.mxt.anitrend.domain.model.PageInfoRecord
 import com.mxt.anitrend.domain.model.ToggleLikeCommand
 import com.mxt.anitrend.domain.model.toFeedItemUiModel
 import com.mxt.anitrend.graphql.generated.LikeableType
-import com.mxt.anitrend.model.entity.anilist.FeedList
-import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.repository.MediaRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -44,8 +41,8 @@ class MediaFeedViewModel(
     sealed interface UiState {
         data object Loading : UiState
         data class Success(
-            val content: PageContainer<FeedList>,
             val items: List<FeedItemUiModel>,
+            val pageInfo: PageInfoRecord?,
             val loadedPages: Set<Int>,
             val replaceExisting: Boolean,
         ) : UiState
@@ -54,6 +51,7 @@ class MediaFeedViewModel(
 
     private data class ScreenState(
         val queryKey: FeedQueryKey? = null,
+        val currentUserId: Long? = null,
         val requestToken: Long = 0L,
         val lastRequestedPage: Int = 1,
         val isLoading: Boolean = false,
@@ -78,26 +76,23 @@ class MediaFeedViewModel(
                     mutationRegistry.state,
                     flowOf(screen),
                 ) { query, operations, currentScreen ->
-                    val renderedFeeds = query.feeds.map { it.toFeedList() }
                     when {
                         currentScreen.errorMessage != null -> {
                             UiState.Error(currentScreen.errorMessage)
                         }
-                        currentScreen.isLoading && renderedFeeds.isEmpty() -> {
+                        currentScreen.isLoading && query.feeds.isEmpty() -> {
                             UiState.Loading
                         }
                         else -> {
                             UiState.Success(
-                                content = PageContainer<FeedList>().apply {
-                                    query.pageInfo?.toPageInfo()?.let { pageInfo = it }
-                                    pageData = renderedFeeds
-                                },
                                 items = query.feeds.map { feed ->
                                     feed.toFeedItemUiModel(
                                         isLikePending = operations[OperationKey.feedLike(feed.id)].isRunning(),
                                         isDeletePending = operations[OperationKey.feedDelete(feed.id)].isRunning(),
+                                        currentUserId = currentScreen.currentUserId,
                                     )
                                 },
+                                pageInfo = query.pageInfo,
                                 loadedPages = query.loadedPages,
                                 replaceExisting = currentScreen.lastRequestedPage <= 1,
                             )
@@ -113,7 +108,13 @@ class MediaFeedViewModel(
     /**
      * Loads media feed (social activity). Repeatable for pagination; no loadedOnce guard.
      */
-    fun load(mediaId: Long, isFollowing: Boolean, page: Int, pageLimit: Int) {
+    fun load(
+        mediaId: Long,
+        isFollowing: Boolean,
+        page: Int,
+        pageLimit: Int,
+        currentUserId: Long? = null,
+    ) {
         val queryKey = FeedQueryKey(
             scope = FeedScope.MEDIA,
             userId = null,
@@ -126,6 +127,7 @@ class MediaFeedViewModel(
         screenState.update {
             it.copy(
                 queryKey = queryKey,
+                currentUserId = currentUserId,
                 requestToken = token,
                 lastRequestedPage = page,
                 isLoading = true,

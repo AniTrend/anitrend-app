@@ -27,10 +27,6 @@ open class CharacterBase() :
         siteUrl = parcel.readString()
     }
 
-    fun toggleFavourite() {
-        isFavourite = !isFavourite
-    }
-
     override fun writeToParcel(
         dest: Parcel,
         flags: Int,

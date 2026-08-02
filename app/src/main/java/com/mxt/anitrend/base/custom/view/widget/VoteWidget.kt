@@ -12,10 +12,10 @@ import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.view.text.SingleLineTextView
 import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.databinding.WidgetVoteBinding
+import com.mxt.anitrend.domain.model.ReviewRecord
 import com.mxt.anitrend.extension.getCompatColor
 import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.graphql.generated.ReviewRating
-import com.mxt.anitrend.model.entity.anilist.Review
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
@@ -44,7 +44,7 @@ constructor(
     }
 
     private lateinit var binding: WidgetVoteBinding
-    private var model: Review? = null
+    private var model: ReviewRecord? = null
     private val tagName = VoteWidget::class.java.simpleName
     private var listener: Listener? = null
     private var recycled = false
@@ -87,7 +87,7 @@ constructor(
                     if (binding.widgetThumbUpFlipper.displayedChild == CONTENT_STATE) {
                         binding.widgetThumbUpFlipper.showNext()
                         val current = model?.userRating
-                        val rating = if (current == KeyUtil.UP_VOTE) KeyUtil.NO_VOTE else KeyUtil.UP_VOTE
+                        val rating = nextRating(current, KeyUtil.UP_VOTE)
                         performRating(rating)
                     } else {
                         NotifyUtil
@@ -102,7 +102,7 @@ constructor(
                     if (binding.widgetThumbDownFlipper.displayedChild == CONTENT_STATE) {
                         binding.widgetThumbDownFlipper.showNext()
                         val current = model?.userRating
-                        val rating = if (current == KeyUtil.DOWN_VOTE) KeyUtil.NO_VOTE else KeyUtil.DOWN_VOTE
+                        val rating = nextRating(current, KeyUtil.DOWN_VOTE)
                         performRating(rating)
                     } else {
                         NotifyUtil
@@ -155,7 +155,7 @@ constructor(
     }
 
     fun setModel(
-        model: Review,
+        model: ReviewRecord,
         @ColorRes colorStyle: Int,
     ) {
         recycled = false
@@ -235,5 +235,14 @@ constructor(
         const val LOADING_STATE = 1
 
         fun convertToText(count: Int): String = String.format(Locale.getDefault(), " %d ", count)
+
+        /**
+         * Computes the next rating after a user taps a thumb button. Tapping the currently
+         * active thumb clears the vote; tapping the opposite thumb switches the vote.
+         */
+        fun nextRating(
+            current: String?,
+            ratingTarget: String,
+        ): String = if (current == ratingTarget) KeyUtil.NO_VOTE else ratingTarget
     }
 }

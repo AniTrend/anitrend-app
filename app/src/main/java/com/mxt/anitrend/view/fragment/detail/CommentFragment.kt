@@ -22,12 +22,11 @@ import com.mxt.anitrend.base.custom.view.editor.ComposerWidget
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener
 import com.mxt.anitrend.data.DatabaseHelper
 import com.mxt.anitrend.data.mapper.toUserBase
-import com.mxt.anitrend.domain.model.CommentReplyUiModel
+import com.mxt.anitrend.domain.feed.model.FeedRecord
 import com.mxt.anitrend.domain.model.FeedItemUiModel
-import com.mxt.anitrend.domain.model.toFeedItemUiModel
+import com.mxt.anitrend.domain.model.toFeedReplyRecord
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.anilist.FeedReply
-import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
@@ -195,7 +194,7 @@ class CommentFragment : FragmentBaseComment() {
     }
 
     override fun makeRequest() {
-        commentViewModel.load(userActivityId)
+        commentViewModel.load(userActivityId, databaseHelper.currentUser?.id)
     }
 
     override fun onBackPress(): Boolean {
@@ -283,14 +282,9 @@ class CommentFragment : FragmentBaseComment() {
     }
 
     private fun renderState(state: CommentViewModel.CommentUiState) {
-        val currentUserId = databaseHelper.currentUser?.id
-        val headerItems =
-            listOfNotNull(
-                state.feed?.toFeedItemUiModel(currentUserId)?.copy(
-                    isLikePending = state.feedItem?.isLikePending ?: false,
-                    isDeletePending = state.feedItem?.isDeletePending ?: false,
-                ) ?: state.feedItem,
-            )
+        // The ViewModel precomputes the canonical feed projection; the header
+        // renders exactly what the store-backed state emits.
+        val headerItems = listOfNotNull(state.feedItem)
         feedAdapter.submitList(headerItems)
         commentListAdapter.submitList(state.replies)
 
@@ -310,7 +304,7 @@ class CommentFragment : FragmentBaseComment() {
         }
     }
 
-    private fun setReplyComposer(feed: FeedList) {
+    private fun setReplyComposer(feed: FeedRecord) {
         composerMode = ComposerMode.Reply(feedId = feed.id)
         composerWidget.setModel(feed, KeyUtil.MUT_SAVE_FEED_REPLY)
     }
@@ -326,14 +320,14 @@ class CommentFragment : FragmentBaseComment() {
     private fun startReplyEdit(replyId: Long) {
         val reply = currentState().replies.firstOrNull { it.id == replyId } ?: return
         composerMode = ComposerMode.Reply(feedId = userActivityId, replyId = replyId)
-        composerWidget.setModel(reply.toFeedReply(), KeyUtil.MUT_SAVE_FEED_REPLY)
+        composerWidget.setModel(reply.toFeedReplyRecord(activityId = userActivityId), KeyUtil.MUT_SAVE_FEED_REPLY)
         composerWidget.editor.text?.clear()
         composerWidget.setText(reply.reply)
     }
 
     private fun mentionReply(replyId: Long) {
         val reply = currentState().replies.firstOrNull { it.id == replyId } ?: return
-        composerWidget.mentionUserFrom(reply.toFeedReply())
+        composerWidget.mentionUserFrom(reply.toFeedReplyRecord())
     }
 
     private fun showReplyLikes(replyId: Long) {
@@ -422,14 +416,6 @@ class CommentFragment : FragmentBaseComment() {
     private fun currentState(): CommentViewModel.CommentUiState = commentViewModel.state.value
 
     private fun resolveCurrentFeedItem(feedId: Long): FeedItemUiModel? = feedAdapter.currentList.firstOrNull { it.id == feedId }
-
-    private fun CommentReplyUiModel.toFeedReply(): FeedReply = FeedReply(
-        id = id,
-        text = reply,
-        createdAt = createdAt,
-        user = userId?.let { UserBase(name = userName).apply { this.id = it } },
-        likes = likes.map { it.toUserBase() },
-    )
 
     private class PlaceholderReplyAdapter(
         context: android.content.Context,

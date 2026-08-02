@@ -19,10 +19,6 @@ open class StudioBase() : Parcelable {
         isFavourite = parcel.readByte().toInt() != 0
     }
 
-    fun toggleFavourite() {
-        isFavourite = !isFavourite
-    }
-
     override fun writeToParcel(
         dest: Parcel,
         flags: Int,

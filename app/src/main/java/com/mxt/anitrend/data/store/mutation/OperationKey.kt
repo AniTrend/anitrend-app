@@ -17,6 +17,12 @@ sealed interface OperationKey {
         REVIEW_SAVE,
         REVIEW_DELETE,
         REVIEW_RATE,
+        USER_FOLLOW,
+        FAVOURITE_ANIME,
+        FAVOURITE_MANGA,
+        FAVOURITE_CHARACTER,
+        FAVOURITE_STAFF,
+        FAVOURITE_STUDIO,
     }
 
     data class Key(
@@ -98,6 +104,36 @@ sealed interface OperationKey {
         fun reviewRate(reviewId: Long): OperationKey = Key(
             resourceKey = ResourceKey.Review(reviewId),
             type = Type.REVIEW_RATE,
+        )
+
+        fun userFollow(userId: Long): OperationKey = Key(
+            resourceKey = ResourceKey.User(userId),
+            type = Type.USER_FOLLOW,
+        )
+
+        fun favouriteAnime(mediaId: Long): OperationKey = Key(
+            resourceKey = ResourceKey.FavouriteAnime(mediaId),
+            type = Type.FAVOURITE_ANIME,
+        )
+
+        fun favouriteManga(mediaId: Long): OperationKey = Key(
+            resourceKey = ResourceKey.FavouriteManga(mediaId),
+            type = Type.FAVOURITE_MANGA,
+        )
+
+        fun favouriteCharacter(characterId: Long): OperationKey = Key(
+            resourceKey = ResourceKey.FavouriteCharacter(characterId),
+            type = Type.FAVOURITE_CHARACTER,
+        )
+
+        fun favouriteStaff(staffId: Long): OperationKey = Key(
+            resourceKey = ResourceKey.FavouriteStaff(staffId),
+            type = Type.FAVOURITE_STAFF,
+        )
+
+        fun favouriteStudio(studioId: Long): OperationKey = Key(
+            resourceKey = ResourceKey.FavouriteStudio(studioId),
+            type = Type.FAVOURITE_STUDIO,
         )
     }
 }

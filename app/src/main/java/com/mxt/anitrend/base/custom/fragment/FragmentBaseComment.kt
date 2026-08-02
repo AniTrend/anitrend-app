@@ -46,7 +46,6 @@ abstract class FragmentBaseComment :
     private var binding: FragmentCommentBinding? = null
 
     protected var userActivityId: Long = 0
-    protected var feedList: FeedList? = null
 
     protected var query: String? = null
     protected var isLimit: Boolean = false

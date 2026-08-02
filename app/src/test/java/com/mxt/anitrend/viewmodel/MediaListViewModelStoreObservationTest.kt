@@ -124,7 +124,7 @@ class MediaListViewModelStoreObservationTest {
         val state = viewModel.state.value as MediaListViewModel.UiState.Success
         assertEquals(1, state.renderedItems.size)
         assertEquals(5, state.renderedItems.single().progress)
-        assertEquals(5, state.items.single().progress)
+        assertEquals(5, state.entries.single().progress)
         verify(browseRepository).getMediaListCollection(
             userId = 42L,
             userName = null,
@@ -186,7 +186,7 @@ class MediaListViewModelStoreObservationTest {
 
         val state = viewModel.state.value as MediaListViewModel.UiState.Success
         assertEquals(9, state.renderedItems.single().progress)
-        assertEquals(9, state.items.single().progress)
+        assertEquals(9, state.entries.single().progress)
         collector.cancel()
     }
 

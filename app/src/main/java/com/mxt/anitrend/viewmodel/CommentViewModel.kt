@@ -2,8 +2,6 @@ package com.mxt.anitrend.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mxt.anitrend.data.mapper.toFeedList
-import com.mxt.anitrend.data.mapper.toFeedReply
 import com.mxt.anitrend.data.store.feed.FeedStore
 import com.mxt.anitrend.data.store.mutation.MutationRegistry
 import com.mxt.anitrend.data.store.mutation.MutationResult
@@ -15,6 +13,7 @@ import com.mxt.anitrend.domain.feed.interactor.SaveFeedInteractor
 import com.mxt.anitrend.domain.feed.interactor.SaveFeedRequest
 import com.mxt.anitrend.domain.feed.interactor.SaveReplyInteractor
 import com.mxt.anitrend.domain.feed.interactor.SaveReplyRequest
+import com.mxt.anitrend.domain.feed.model.FeedRecord
 import com.mxt.anitrend.domain.like.interactor.ToggleLikeInteractor
 import com.mxt.anitrend.domain.model.CommentReplyUiModel
 import com.mxt.anitrend.domain.model.DeleteFeedCommand
@@ -24,7 +23,6 @@ import com.mxt.anitrend.domain.model.ToggleLikeCommand
 import com.mxt.anitrend.domain.model.toCommentReplyUiModel
 import com.mxt.anitrend.domain.model.toFeedItemUiModel
 import com.mxt.anitrend.graphql.generated.LikeableType
-import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.repository.FeedRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -38,6 +36,12 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
+/**
+ * Comment/reply lane ViewModel. All committed state comes from the feed store
+ * as `FeedRecord` / `FeedReplyRecord`; the active state carries no reverse
+ * mapped legacy entities. `[CommentUiState.feedItem]` is the canonical feed
+ * projection precomputed here and rendered as the header by the fragment.
+ */
 class CommentViewModel(
     private val feedStore: FeedStore,
     private val feedRepository: FeedRepository,
@@ -51,7 +55,7 @@ class CommentViewModel(
 
     data class CommentUiState(
         val isLoading: Boolean = true,
-        val feed: FeedList? = null,
+        val feed: FeedRecord? = null,
         val feedItem: FeedItemUiModel? = null,
         val replies: List<CommentReplyUiModel> = emptyList(),
         val isDeleted: Boolean = false,
@@ -60,6 +64,7 @@ class CommentViewModel(
 
     private data class ScreenState(
         val feedId: Long? = null,
+        val currentUserId: Long? = null,
         val isLoading: Boolean = false,
         val hasAttemptedLoad: Boolean = false,
         val errorMessage: String? = null,
@@ -78,18 +83,19 @@ class CommentViewModel(
                     mutationRegistry.state,
                     screenState,
                 ) { feed, replies, operations, screen ->
-                    val renderedFeed = feed?.toFeedList(replies = replies.map { it.toFeedReply() })
                     CommentUiState(
                         isLoading = screen.isLoading && feed == null,
-                        feed = renderedFeed,
+                        feed = feed,
                         feedItem = feed?.toFeedItemUiModel(
                             isLikePending = operations[OperationKey.feedLike(feed.id)].isRunning(),
                             isDeletePending = operations[OperationKey.feedDelete(feed.id)].isRunning(),
+                            currentUserId = screen.currentUserId,
                         ),
                         replies = replies.map { reply ->
                             reply.toCommentReplyUiModel(
                                 isLikePending = operations[OperationKey.replyLike(reply.id)].isRunning(),
                                 isDeletePending = operations[OperationKey.replyDelete(reply.id)].isRunning(),
+                                currentUserId = screen.currentUserId,
                             )
                         },
                         isDeleted = screen.hasAttemptedLoad && !screen.isLoading && feed == null,
@@ -102,11 +108,15 @@ class CommentViewModel(
                 initialValue = CommentUiState(),
             )
 
-    fun load(feedId: Long) {
+    fun load(
+        feedId: Long,
+        currentUserId: Long? = null,
+    ) {
         if (feedId <= 0L) {
             screenState.update {
                 it.copy(
                     feedId = feedId,
+                    currentUserId = currentUserId,
                     isLoading = false,
                     hasAttemptedLoad = true,
                     errorMessage = "Invalid feed id",
@@ -118,6 +128,7 @@ class CommentViewModel(
         screenState.update {
             it.copy(
                 feedId = feedId,
+                currentUserId = currentUserId,
                 isLoading = true,
                 hasAttemptedLoad = true,
                 errorMessage = null,
@@ -125,7 +136,7 @@ class CommentViewModel(
         }
 
         viewModelScope.launch {
-            feedRepository.getFeedListReply(
+            feedRepository.getFeedListReplyRecords(
                 id = feedId,
                 asHtml = false,
                 commitToStore = true,

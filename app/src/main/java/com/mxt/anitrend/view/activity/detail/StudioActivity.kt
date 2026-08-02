@@ -11,8 +11,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget
+import com.mxt.anitrend.base.custom.view.widget.FavouriteWidgetRenderState
 import com.mxt.anitrend.databinding.ActivityFrameGenericBinding
-import com.mxt.anitrend.model.entity.base.StudioBase
+import com.mxt.anitrend.domain.model.StudioRecord
+import com.mxt.anitrend.navigation.extension.putScreenParam
+import com.mxt.anitrend.navigation.extension.screenParam
+import com.mxt.anitrend.navigation.model.StudioScreenParam
 import com.mxt.anitrend.ui.commit
 import com.mxt.anitrend.ui.model.FragmentItem
 import com.mxt.anitrend.util.IntentBundleUtil
@@ -21,29 +25,48 @@ import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.view.activity.CommonActivity
 import com.mxt.anitrend.view.fragment.detail.StudioMediaFragment
 import com.mxt.anitrend.viewmodel.StudioViewModel
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.Locale
 
 class StudioActivity : CommonActivity() {
 
-    data class Args(val id: Long)
-
     companion object {
-        fun newIntent(context: Context, id: Long): Intent = Intent(context, StudioActivity::class.java).apply {
-            putExtra(KeyUtil.arg_id, id)
+        fun newIntent(context: Context, param: StudioScreenParam): Intent = Intent(context, StudioActivity::class.java).apply {
+            putScreenParam(param)
+            // Interim boundary: keep the legacy wire key until the StudioMediaFragment
+            // destination reads the typed parameter directly.
+            putExtra(KeyUtil.arg_id, param.studioId)
         }
 
-        fun fromIntent(intent: Intent): Args? {
-            if (!intent.hasExtra(KeyUtil.arg_id)) return null
+        /**
+         * Compatibility overload preserving the legacy id-based callers. Bridges into the
+         * typed parameter so navigation always uses [StudioScreenParam].
+         */
+        fun newIntent(context: Context, id: Long): Intent = newIntent(context, StudioScreenParam(studioId = id))
+
+        /**
+         * Resolves the typed parameter from the intent.
+         *
+         * The typed parameter is read first. Deep links (injected by
+         * [IntentBundleUtil.checkIntentData]) still write the legacy [KeyUtil.arg_id]
+         * extra, so that value is bridged here into [StudioScreenParam]. The bridge is a
+         * single scalar conversion point inside the activity, not a parcel path for the
+         * studio entity.
+         */
+        fun fromIntent(intent: Intent): StudioScreenParam? {
+            intent.screenParam<StudioScreenParam>()?.let { param ->
+                return if (param.studioId > 0) param else null
+            }
             val id = intent.getLongExtra(KeyUtil.arg_id, -1)
-            return if (id > 0) Args(id) else null
+            return if (id > 0) StudioScreenParam(studioId = id) else null
         }
     }
 
     private lateinit var binding: ActivityFrameGenericBinding
 
-    private var model: StudioBase? = null
+    private var model: StudioRecord? = null
     private var studioId: Long = 0
     private var favouriteWidget: FavouriteToolbarWidget? = null
     private val studioViewModel: StudioViewModel by viewModel()
@@ -72,7 +95,7 @@ class StudioActivity : CommonActivity() {
             finish()
             return
         }
-        studioId = args.id
+        studioId = args.studioId
 
         observeViewModel()
         addStudioMediaFragment(intent.extras ?: Bundle.EMPTY)
@@ -81,21 +104,39 @@ class StudioActivity : CommonActivity() {
     private fun observeViewModel() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                studioViewModel.state.collect { state ->
-                    when (state) {
-                        is StudioViewModel.UiState.Loading -> { /* content loads below */ }
-                        is StudioViewModel.UiState.Success -> {
-                            model = state.studio
-                            updateUI()
+                launch {
+                    studioViewModel.state.collect { state ->
+                        when (state) {
+                            is StudioViewModel.UiState.Loading -> { /* content loads below */ }
+                            is StudioViewModel.UiState.Success -> {
+                                model = state.studio
+                                updateUI()
+                            }
+                            is StudioViewModel.UiState.Error -> {
+                                NotifyUtil.makeText(
+                                    this@StudioActivity,
+                                    state.message,
+                                    R.drawable.ic_warning_white_18dp,
+                                    Toast.LENGTH_LONG,
+                                ).show()
+                            }
                         }
-                        is StudioViewModel.UiState.Error -> {
-                            NotifyUtil.makeText(
-                                this@StudioActivity,
-                                state.message,
-                                R.drawable.ic_warning_white_18dp,
-                                Toast.LENGTH_LONG,
-                            ).show()
-                        }
+                    }
+                }
+                launch {
+                    // Observe the canonical favourite store through the ViewModel and
+                    // re-render after every committed mutation (or in-flight loading change).
+                    combine(
+                        studioViewModel.favouriteFlag,
+                        studioViewModel.favouriteLoading,
+                    ) { flag, loading ->
+                        FavouriteWidgetRenderState.fromFlag(
+                            flag = flag,
+                            fallbackIsFavourite = model?.isFavourite ?: false,
+                            isLoading = loading,
+                        )
+                    }.collect { renderState ->
+                        favouriteWidget?.render(renderState)
                     }
                 }
             }
@@ -116,23 +157,27 @@ class StudioActivity : CommonActivity() {
             favouriteWidget = favouriteMenuItem.actionView as? FavouriteToolbarWidget
             if (favouriteWidget == null) {
                 favouriteMenuItem.isVisible = false
-            }
-            favouriteWidget?.setListener(object : FavouriteToolbarWidget.Listener {
-                override fun onToggleFavourite(
-                    animeId: Int?,
-                    mangaId: Int?,
-                    characterId: Int?,
-                    staffId: Int?,
-                    studioId: Int?,
-                    onResult: (Result<Unit>) -> Unit,
-                ) {
-                    lifecycleScope.launch {
-                        onResult(studioViewModel.toggleFavourite(animeId, mangaId, characterId, staffId, studioId))
-                    }
+            } else {
+                favouriteWidget?.setOnToggleAction {
+                    studioViewModel.toggleFavouriteStudio(studioId)
                 }
-            })
+                // The widget is created after the observeViewModel collectors start, so
+                // render once with the current values and let the collector re-render on
+                // any subsequent store or loading change.
+                renderFavouriteWidget()
+            }
         }
         return true
+    }
+
+    private fun renderFavouriteWidget() {
+        favouriteWidget?.render(
+            FavouriteWidgetRenderState.fromFlag(
+                flag = studioViewModel.favouriteFlag.value,
+                fallbackIsFavourite = model?.isFavourite ?: false,
+                isLoading = studioViewModel.favouriteLoading.value,
+            ),
+        )
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -184,13 +229,12 @@ class StudioActivity : CommonActivity() {
 
     private fun updateUI() {
         model?.let { current ->
-            favouriteWidget?.setModel(current)
             supportActionBar?.title = current.name
         }
     }
 
     override fun onDestroy() {
-        favouriteWidget?.setListener(null)
+        favouriteWidget?.setOnToggleAction(null)
         super.onDestroy()
     }
 }

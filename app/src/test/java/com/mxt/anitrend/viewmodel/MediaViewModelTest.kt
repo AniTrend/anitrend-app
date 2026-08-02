@@ -1,24 +1,47 @@
 package com.mxt.anitrend.viewmodel
 
+import com.mxt.anitrend.data.store.favourite.FavouriteStoreChange
+import com.mxt.anitrend.data.store.favourite.InMemoryFavouriteStore
 import com.mxt.anitrend.data.store.medialist.InMemoryMediaListStore
+import com.mxt.anitrend.data.store.mutation.DefaultMutationExecutor
+import com.mxt.anitrend.data.store.mutation.DefaultMutationRegistry
+import com.mxt.anitrend.data.store.mutation.DefaultOperationIdGenerator
+import com.mxt.anitrend.data.store.mutation.KeyedMutex
+import com.mxt.anitrend.data.store.mutation.MutationResult
+import com.mxt.anitrend.data.store.mutation.RequestSequence
+import com.mxt.anitrend.data.store.mutation.SessionEpoch
+import com.mxt.anitrend.domain.favourite.interactor.ToggleFavouriteInteractor
+import com.mxt.anitrend.domain.favourite.model.FavouriteKey
+import com.mxt.anitrend.domain.model.ToggleFavouriteCommand
 import com.mxt.anitrend.fixture.MediaListFixtures.aMediaList
+import com.mxt.anitrend.fixture.MediaListFixtures.aMangaMediaBase
 import com.mxt.anitrend.fixture.MediaListFixtures.anAnimeMediaBase
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.repository.BaseRepository
 import com.mxt.anitrend.repository.MediaRepository
+import com.mxt.anitrend.util.KeyUtil
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.intrinsics.COROUTINE_SUSPENDED
+import kotlin.coroutines.resume
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import org.mockito.Mockito.doAnswer
 import org.mockito.Mockito.doReturn
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
@@ -69,12 +92,7 @@ class MediaViewModelTest {
 
     @Test
     fun `initial state is Loading`() = runTest(testDispatcher) {
-        val vm = MediaViewModel(
-            mediaRepository = mediaRepository,
-            baseRepository = baseRepository,
-            mediaListStore = mediaListStore,
-            ioDispatcher = testDispatcher,
-        )
+        val vm = viewModel()
         assertTrue(vm.state.value is MediaViewModel.UiState.Loading)
     }
 
@@ -92,12 +110,7 @@ class MediaViewModelTest {
             .`when`(mediaRepository)
             .getMediaBase(100L, null, false)
 
-        val vm = MediaViewModel(
-            mediaRepository = mediaRepository,
-            baseRepository = baseRepository,
-            mediaListStore = mediaListStore,
-            ioDispatcher = testDispatcher,
-        )
+        val vm = viewModel()
         val collector = backgroundScope.launch { vm.state.collect {} }
 
         vm.load(mediaId = 100L, mediaType = null, showAdult = false)
@@ -119,12 +132,7 @@ class MediaViewModelTest {
             .`when`(mediaRepository)
             .getMediaBase(100L, null, false)
 
-        val vm = MediaViewModel(
-            mediaRepository = mediaRepository,
-            baseRepository = baseRepository,
-            mediaListStore = mediaListStore,
-            ioDispatcher = testDispatcher,
-        )
+        val vm = viewModel()
         val collector = backgroundScope.launch { vm.state.collect {} }
 
         vm.load(mediaId = 100L, mediaType = null, showAdult = false)
@@ -148,12 +156,7 @@ class MediaViewModelTest {
             .`when`(mediaRepository)
             .getMediaBase(100L, null, false)
 
-        val vm = MediaViewModel(
-            mediaRepository = mediaRepository,
-            baseRepository = baseRepository,
-            mediaListStore = mediaListStore,
-            ioDispatcher = testDispatcher,
-        )
+        val vm = viewModel()
         val collector = backgroundScope.launch { vm.state.collect {} }
 
         vm.load(mediaId = 100L, mediaType = null, showAdult = false)
@@ -163,4 +166,211 @@ class MediaViewModelTest {
         assertEquals("Media failed", state.message)
         collector.cancel()
     }
+
+    // ── favourite store seeding ──
+
+    @Test
+    fun `load seeds the favourite store with an Anime key from an anime media`() = runTest {
+        val store = InMemoryFavouriteStore()
+        val media = anAnimeMediaBase(id = 100L).apply { isFavourite = true }
+        doReturn(Result.success(media)).`when`(mediaRepository).getMediaBase(100L, null, false)
+        val vm = viewModel(favouriteStore = store)
+
+        vm.load(mediaId = 100L, mediaType = null, showAdult = false)
+
+        val committed = store.state.value.flagsByKey[FavouriteKey.Anime(100L)]
+        assertNotNull(committed)
+        assertTrue(committed!!.isFavourite)
+        assertEquals(MediaViewModel.FAVOURITE_SEED_REVISION, committed.revision)
+        assertNull(store.state.value.flagsByKey[FavouriteKey.Manga(100L)])
+    }
+
+    @Test
+    fun `load seeds the favourite store with a Manga key from a manga media`() = runTest {
+        val store = InMemoryFavouriteStore()
+        val media = aMangaMediaBase(id = 100L).apply { isFavourite = true }
+        doReturn(Result.success(media)).`when`(mediaRepository).getMediaBase(100L, null, false)
+        val vm = viewModel(favouriteStore = store)
+
+        vm.load(mediaId = 100L, mediaType = null, showAdult = false)
+
+        val committed = store.state.value.flagsByKey[FavouriteKey.Manga(100L)]
+        assertNotNull(committed)
+        assertTrue(committed!!.isFavourite)
+        assertEquals(MediaViewModel.FAVOURITE_SEED_REVISION, committed.revision)
+        assertNull(store.state.value.flagsByKey[FavouriteKey.Anime(100L)])
+    }
+
+    @Test
+    fun `load does not overwrite a committed store value`() = runTest {
+        val store = InMemoryFavouriteStore()
+        store.apply(
+            FavouriteStoreChange.FavouriteFlagReplaced(
+                key = FavouriteKey.Anime(100L),
+                isFavourite = false,
+                revision = 1L,
+            ),
+        )
+        val media = anAnimeMediaBase(id = 100L).apply { isFavourite = true }
+        doReturn(Result.success(media)).`when`(mediaRepository).getMediaBase(100L, null, false)
+        val vm = viewModel(favouriteStore = store)
+
+        vm.load(mediaId = 100L, mediaType = null, showAdult = false)
+
+        val committed = store.state.value.flagsByKey.getValue(FavouriteKey.Anime(100L))
+        assertFalse(committed.isFavourite)
+        assertEquals(1L, committed.revision)
+    }
+
+    @Test
+    fun `favouriteFlag mirrors committed store state after load`() = runTest {
+        val store = InMemoryFavouriteStore()
+        val media = anAnimeMediaBase(id = 100L).apply { isFavourite = true }
+        doReturn(Result.success(media)).`when`(mediaRepository).getMediaBase(100L, null, false)
+        val vm = viewModel(favouriteStore = store)
+
+        vm.load(mediaId = 100L, mediaType = null, showAdult = false)
+
+        assertTrue(vm.favouriteFlag.value?.isFavourite == true)
+    }
+
+    // ── toggleFavouriteMedia command routing ──
+
+    @Test
+    fun `toggleFavouriteMedia routes an Anime command for anime media`() = runTest(testDispatcher) {
+        val interactor = mock(ToggleFavouriteInteractor::class.java)
+        doReturn(MutationResult.Success)
+            .`when`(interactor)
+            .invoke(ToggleFavouriteCommand(FavouriteKey.Anime(100L)))
+        val media = anAnimeMediaBase(id = 100L)
+        doReturn(Result.success(media)).`when`(mediaRepository).getMediaBase(100L, null, false)
+        val vm = viewModel(toggleFavouriteInteractor = interactor)
+
+        vm.load(mediaId = 100L, mediaType = null, showAdult = false)
+        advanceUntilIdle()
+        vm.toggleFavouriteMedia(100L, mediaType = null)
+
+        verify(interactor).invoke(ToggleFavouriteCommand(FavouriteKey.Anime(100L)))
+        assertFalse(vm.favouriteLoading.value)
+    }
+
+    @Test
+    fun `toggleFavouriteMedia routes a Manga command for manga media`() = runTest(testDispatcher) {
+        val interactor = mock(ToggleFavouriteInteractor::class.java)
+        doReturn(MutationResult.Success)
+            .`when`(interactor)
+            .invoke(ToggleFavouriteCommand(FavouriteKey.Manga(101L)))
+        val media = aMangaMediaBase(id = 101L)
+        doReturn(Result.success(media)).`when`(mediaRepository).getMediaBase(101L, null, false)
+        val vm = viewModel(toggleFavouriteInteractor = interactor)
+
+        vm.load(mediaId = 101L, mediaType = null, showAdult = false)
+        advanceUntilIdle()
+        vm.toggleFavouriteMedia(101L, mediaType = null)
+
+        verify(interactor).invoke(ToggleFavouriteCommand(FavouriteKey.Manga(101L)))
+    }
+
+    @Test
+    fun `toggleFavouriteMedia falls back to the mediaType argument before the entity is loaded`() = runTest(testDispatcher) {
+        val interactor = mock(ToggleFavouriteInteractor::class.java)
+        doReturn(MutationResult.Success)
+            .`when`(interactor)
+            .invoke(ToggleFavouriteCommand(FavouriteKey.Anime(7L)))
+        doReturn(MutationResult.Success)
+            .`when`(interactor)
+            .invoke(ToggleFavouriteCommand(FavouriteKey.Manga(7L)))
+        val vm = viewModel(toggleFavouriteInteractor = interactor)
+
+        vm.toggleFavouriteMedia(7L, KeyUtil.ANIME)
+        verify(interactor).invoke(ToggleFavouriteCommand(FavouriteKey.Anime(7L)))
+
+        vm.toggleFavouriteMedia(7L, KeyUtil.MANGA)
+        verify(interactor).invoke(ToggleFavouriteCommand(FavouriteKey.Manga(7L)))
+    }
+
+    // ── toggleFavouriteMedia loading and convergence ──
+
+    @Suppress("UNCHECKED_CAST")
+    @Test
+    fun `toggleFavouriteMedia tracks loading and converges the store on success`() = runTest(testDispatcher) {
+        val store = InMemoryFavouriteStore()
+        val repository = mock(BaseRepository::class.java)
+        val allowReturn = CompletableDeferred<Unit>()
+        doAnswer { invocation ->
+            val continuation = invocation.rawArguments.last() as Continuation<Result<Unit>>
+            backgroundScope.launch {
+                allowReturn.await()
+                continuation.resume(Result.success(Unit))
+            }
+            COROUTINE_SUSPENDED
+        }.`when`(repository)
+            .toggleFavourite(7, null, null, null, null, null, null)
+
+        val interactor = ToggleFavouriteInteractor(
+            baseRepository = repository,
+            mutationExecutor = DefaultMutationExecutor(
+                applicationScope = backgroundScope,
+                keyedMutex = KeyedMutex(backgroundScope),
+                mutationRegistry = DefaultMutationRegistry(),
+                operationIdGenerator = DefaultOperationIdGenerator(),
+                sessionEpoch = SessionEpoch(),
+            ),
+            favouriteStore = store,
+            requestSequence = RequestSequence(),
+        )
+        val media = anAnimeMediaBase(id = 7L)
+        doReturn(Result.success(media)).`when`(mediaRepository).getMediaBase(7L, null, false)
+        val vm = viewModel(favouriteStore = store, toggleFavouriteInteractor = interactor)
+
+        vm.load(mediaId = 7L, mediaType = null, showAdult = false)
+        advanceUntilIdle()
+        vm.toggleFavouriteMedia(7L, mediaType = null)
+        runCurrent()
+        assertTrue(vm.favouriteLoading.value)
+
+        allowReturn.complete(Unit)
+        advanceUntilIdle()
+
+        assertFalse(vm.favouriteLoading.value)
+        assertTrue(store.state.value.flagsByKey.getValue(FavouriteKey.Anime(7L)).isFavourite)
+        assertTrue(vm.favouriteFlag.value?.isFavourite == true)
+    }
+
+    @Test
+    fun `toggleFavouriteMedia leaves the store unchanged on failure`() = runTest(testDispatcher) {
+        val store = InMemoryFavouriteStore()
+        val interactor = mock(ToggleFavouriteInteractor::class.java)
+        doReturn(MutationResult.Failure(message = "Unable to toggle favourite"))
+            .`when`(interactor)
+            .invoke(ToggleFavouriteCommand(FavouriteKey.Anime(7L)))
+        val media = anAnimeMediaBase(id = 7L).apply { isFavourite = true }
+        doReturn(Result.success(media)).`when`(mediaRepository).getMediaBase(7L, null, false)
+        val vm = viewModel(favouriteStore = store, toggleFavouriteInteractor = interactor)
+
+        vm.load(mediaId = 7L, mediaType = null, showAdult = false)
+        advanceUntilIdle()
+        assertTrue(store.state.value.flagsByKey.getValue(FavouriteKey.Anime(7L)).isFavourite)
+
+        vm.toggleFavouriteMedia(7L, mediaType = null)
+        advanceUntilIdle()
+
+        assertFalse(vm.favouriteLoading.value)
+        val committed = store.state.value.flagsByKey.getValue(FavouriteKey.Anime(7L))
+        assertTrue(committed.isFavourite)
+        assertEquals(MediaViewModel.FAVOURITE_SEED_REVISION, committed.revision)
+        assertTrue(vm.favouriteFlag.value?.isFavourite == true)
+    }
+
+    private fun viewModel(
+        favouriteStore: InMemoryFavouriteStore = InMemoryFavouriteStore(),
+        toggleFavouriteInteractor: ToggleFavouriteInteractor = mock(ToggleFavouriteInteractor::class.java),
+    ): MediaViewModel = MediaViewModel(
+        mediaRepository = mediaRepository,
+        baseRepository = baseRepository,
+        mediaListStore = mediaListStore,
+        favouriteStore = favouriteStore,
+        toggleFavouriteInteractor = toggleFavouriteInteractor,
+        ioDispatcher = testDispatcher,
+    )
 }

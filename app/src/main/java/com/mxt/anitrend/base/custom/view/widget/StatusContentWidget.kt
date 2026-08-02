@@ -20,6 +20,8 @@ import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener
 import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.databinding.WidgetStatusBinding
+import com.mxt.anitrend.domain.feed.model.FeedRecord
+import com.mxt.anitrend.domain.feed.model.FeedReplyRecord
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.anilist.FeedReply
 import com.mxt.anitrend.util.CenterSnapUtil
@@ -90,6 +92,24 @@ constructor(
     }
 
     fun setModel(model: FeedReply) {
+        findMediaAttachments(model.reply)
+    }
+
+    /**
+     * Record-typed additive overload for the comment/reply migration lane.
+     * Delegates to the same media-attachment rendering path, preserving all
+     * visual and click behavior. Legacy entity overloads stay untouched.
+     */
+    fun setModel(model: FeedRecord) {
+        findMediaAttachments(model.text)
+    }
+
+    /**
+     * Record-typed additive overload for the comment/reply migration lane.
+     * Delegates to the same media-attachment rendering path, preserving all
+     * visual and click behavior. Legacy entity overloads stay untouched.
+     */
+    fun setModel(model: FeedReplyRecord) {
         findMediaAttachments(model.reply)
     }
 

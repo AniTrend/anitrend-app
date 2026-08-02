@@ -1,5 +1,6 @@
 package com.mxt.anitrend.viewmodel
 
+import com.mxt.anitrend.data.mapper.toReviewRecord
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.graphql.generated.ReviewSort
 import com.mxt.anitrend.data.store.mutation.RequestSequence
@@ -68,7 +69,7 @@ class BrowseReviewViewModelTest {
                 queryKey = queryKey,
                 page = 1,
                 token = 1L,
-                reviews = listOf(review),
+                reviews = listOf(review.toReviewRecord(revision = 1L)),
                 pageInfo = null,
             ),
         )
@@ -153,7 +154,7 @@ class BrowseReviewViewModelTest {
                 queryKey = queryKey,
                 page = 1,
                 token = 1L,
-                reviews = listOf(review),
+                reviews = listOf(review.toReviewRecord(revision = 1L)),
                 pageInfo = null,
             ),
         )
@@ -172,7 +173,7 @@ class BrowseReviewViewModelTest {
 
         vm.load(type = MediaType.ANIME, page = 1, sort = null)
         advanceUntilIdle()
-        reviewStore.apply(ReviewStoreChange.ReviewRated(updatedReview, revision = 1L))
+        reviewStore.apply(ReviewStoreChange.ReviewRated(updatedReview.toReviewRecord(revision = 1L), revision = 1L))
         advanceUntilIdle()
 
         val state = vm.state.value as BrowseReviewViewModel.UiState.Success

@@ -1,6 +1,7 @@
 package com.mxt.anitrend.model.api.retro.anilist
 
 import co.anitrend.retrofit.graphql.model.GraphQLRequest
+import co.anitrend.retrofit.graphql.model.body.GraphContainer
 import com.mxt.anitrend.graphql.generated.MediaBaseVariables
 import com.mxt.anitrend.graphql.generated.MediaCharactersVariables
 import com.mxt.anitrend.graphql.generated.MediaEpisodesVariables
@@ -9,6 +10,7 @@ import com.mxt.anitrend.graphql.generated.MediaRelationsVariables
 import com.mxt.anitrend.graphql.generated.MediaSocialVariables
 import com.mxt.anitrend.graphql.generated.MediaStaffVariables
 import com.mxt.anitrend.graphql.generated.MediaStatsVariables
+import com.mxt.anitrend.graphql.generated.RecommendationMediaData
 import com.mxt.anitrend.graphql.generated.RecommendationMediaVariables
 import com.mxt.anitrend.model.entity.anilist.ExternalLink
 import com.mxt.anitrend.model.entity.anilist.FeedList
@@ -17,7 +19,6 @@ import com.mxt.anitrend.model.entity.anilist.edge.CharacterEdge
 import com.mxt.anitrend.model.entity.anilist.edge.MediaEdge
 import com.mxt.anitrend.model.entity.anilist.edge.StaffEdge
 import com.mxt.anitrend.model.entity.base.MediaBase
-import com.mxt.anitrend.model.entity.base.RecommendationBase
 import com.mxt.anitrend.model.entity.container.body.AniListContainer
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.container.body.EdgeContainer
@@ -79,7 +80,7 @@ interface MediaService {
     @Headers("Content-Type: application/json")
     fun getMediaRecommendations(
         @Body request: GraphQLRequest<RecommendationMediaVariables>,
-    ): Call<AniListContainer<ConnectionContainer<PageContainer<RecommendationBase>>>>
+    ): Call<GraphContainer<RecommendationMediaData>>
 
     @POST("/")
     @Headers("Content-Type: application/json")

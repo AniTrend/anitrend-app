@@ -6,6 +6,11 @@ import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.base.UserBase
 import java.util.Locale
 
+/**
+ * Immutable render projection of a feed item. `FeedListAdapter` renders
+ * exclusively from this model and never touches a mutable legacy `FeedList`
+ * entity, so rows can be diffed and recycled safely.
+ */
 data class FeedItemUiModel(
     val id: Long,
     val type: String?,
@@ -38,6 +43,11 @@ data class FeedItemUiModel(
     val feedText: String?,
 )
 
+/**
+ * Legacy projection retained only for screens that still render from the
+ * mutable `FeedList` network entity (`FeedListFragment`, `CommentFragment`).
+ * New code should use [FeedRecord.toFeedItemUiModel] instead.
+ */
 fun FeedList.toFeedItemUiModel(currentUserId: Long? = null): FeedItemUiModel {
     val likes = likes.orEmpty()
     val canModify = when {
@@ -79,6 +89,12 @@ fun FeedList.toFeedItemUiModel(currentUserId: Long? = null): FeedItemUiModel {
     )
 }
 
+/**
+ * Canonical projection from the feed store record. All store-driven feed
+ * screens observe committed `FeedRecord` state and render through this path.
+ * The likes list is defensively copied so the resulting model never aliases
+ * mutable state held by the caller.
+ */
 fun FeedRecord.toFeedItemUiModel(
     isLikePending: Boolean,
     isDeletePending: Boolean,
@@ -119,7 +135,7 @@ fun FeedRecord.toFeedItemUiModel(
         mediaTitleOriginal = media?.titleOriginal,
         mediaCoverImageUrl = media?.coverImage,
         hasLikes = hasLikes,
-        likes = likes,
+        likes = likes.toList(),
         feedText = text,
     )
 }

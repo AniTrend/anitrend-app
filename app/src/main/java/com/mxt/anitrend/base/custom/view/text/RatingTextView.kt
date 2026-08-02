@@ -121,6 +121,63 @@ class RatingTextView :
         }
     }
 
+    /** Same formatting rules as the [MediaList] overload, driven by the immutable domain score. */
+    fun setRating(score: Double) {
+        if (mediaListOptions != null) {
+            when (mediaListOptions?.scoreFormat) {
+                KeyUtil.POINT_10_DECIMAL -> binding.ratingValue.text = String.format(Locale.getDefault(), "%.1f", score)
+                KeyUtil.POINT_100, KeyUtil.POINT_10, KeyUtil.POINT_5 -> binding.ratingValue.text = String.format(Locale.getDefault(), "%d", score.toInt())
+                KeyUtil.POINT_3 -> {
+                    binding.ratingValue.text = ""
+                    when (score.toInt()) {
+                        0 -> binding.ratingValue.setCompoundDrawablesWithIntrinsicBounds(context.getCompatDrawable(R.drawable.ic_face_white_18dp), null, null, null)
+                        1 -> binding.ratingValue.setCompoundDrawablesWithIntrinsicBounds(context.getCompatDrawable(R.drawable.ic_sentiment_dissatisfied_white_18dp), null, null, null)
+                        2 -> binding.ratingValue.setCompoundDrawablesWithIntrinsicBounds(context.getCompatDrawable(R.drawable.ic_sentiment_neutral_white_18dp), null, null, null)
+                        3 -> binding.ratingValue.setCompoundDrawablesWithIntrinsicBounds(context.getCompatDrawable(R.drawable.ic_sentiment_satisfied_white_18dp), null, null, null)
+                    }
+                }
+            }
+        } else {
+            binding.ratingValue.text = String.format(Locale.getDefault(), "%d", score.toInt())
+        }
+    }
+
+    /** Same formatting rules as the [MediaBase] overload, driven by an immutable average score. */
+    fun setRating(averageScore: Int?) {
+        val score = averageScore ?: 0
+        var mediaScoreDefault = score.toFloat() * 5 / 100f
+        if (mediaListOptions != null) {
+            when (mediaListOptions?.scoreFormat) {
+                KeyUtil.POINT_10_DECIMAL -> {
+                    mediaScoreDefault = score / 10f
+                    binding.ratingValue.text = String.format(Locale.getDefault(), "%.1f", mediaScoreDefault)
+                }
+                KeyUtil.POINT_100 -> binding.ratingValue.text = String.format(Locale.getDefault(), "%d", score)
+                KeyUtil.POINT_10 -> {
+                    mediaScoreDefault = score / 10f
+                    binding.ratingValue.text = String.format(Locale.getDefault(), "%d", mediaScoreDefault.toInt())
+                }
+                KeyUtil.POINT_5 -> binding.ratingValue.text = String.format(Locale.getDefault(), "%d", mediaScoreDefault.toInt())
+                KeyUtil.POINT_3 -> {
+                    binding.ratingValue.text = ""
+                    if (score == 0) {
+                        binding.ratingValue.setCompoundDrawablesWithIntrinsicBounds(context.getCompatDrawable(R.drawable.ic_face_white_18dp), null, null, null)
+                    }
+                    when {
+                        score in 1..33 ->
+                            binding.ratingValue.setCompoundDrawablesWithIntrinsicBounds(context.getCompatDrawable(R.drawable.ic_sentiment_dissatisfied_white_18dp), null, null, null)
+                        score in 34..66 ->
+                            binding.ratingValue.setCompoundDrawablesWithIntrinsicBounds(context.getCompatDrawable(R.drawable.ic_sentiment_neutral_white_18dp), null, null, null)
+                        score in 67..100 ->
+                            binding.ratingValue.setCompoundDrawablesWithIntrinsicBounds(context.getCompatDrawable(R.drawable.ic_sentiment_satisfied_white_18dp), null, null, null)
+                    }
+                }
+            }
+        } else {
+            binding.ratingValue.text = String.format(Locale.getDefault(), "%d", score)
+        }
+    }
+
     fun setRating(mediaBase: MediaBase) {
         var mediaScoreDefault = mediaBase.averageScore.toFloat() * 5 / 100f
         if (mediaListOptions != null) {

@@ -1,5 +1,6 @@
 package com.mxt.anitrend.fixture
 
+import com.mxt.anitrend.domain.model.FuzzyDateRecord
 import com.mxt.anitrend.model.entity.anilist.MediaList
 import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate
 import com.mxt.anitrend.model.entity.base.MediaBase
@@ -128,4 +129,17 @@ object MediaListFixtures {
         month: Int = 6,
         day: Int = 15,
     ): FuzzyDate = FuzzyDate(day, month, year)
+
+    /**
+     * Creates a domain [FuzzyDateRecord] from year, month, day components.
+     */
+    fun aFuzzyDateRecord(
+        year: Int = 2024,
+        month: Int = 6,
+        day: Int = 15,
+    ): FuzzyDateRecord = FuzzyDateRecord(
+        year = year,
+        month = month,
+        day = day,
+    )
 }

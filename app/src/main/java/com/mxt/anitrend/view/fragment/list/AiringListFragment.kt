@@ -93,7 +93,7 @@ class AiringListFragment : MediaListFragment() {
 
     private fun handleSuccess(state: AiringListViewModel.UiState.Success) {
         state.pageInfo?.let(::setPageInfo)
-        submitStateList(state.items, state.renderedItems)
+        submitStateList(state.renderedItems)
         if ((stateListAdapter?.itemCount ?: 0) > 0) {
             updateUI()
         } else {

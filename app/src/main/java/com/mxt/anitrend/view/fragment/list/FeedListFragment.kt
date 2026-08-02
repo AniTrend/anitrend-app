@@ -11,13 +11,13 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
-import com.mxt.anitrend.adapter.recycler.index.FeedAdapter
 import com.mxt.anitrend.adapter.recycler.index.FeedListAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
 import com.mxt.anitrend.data.DatabaseHelper
+import com.mxt.anitrend.data.mapper.toPageInfo
 import com.mxt.anitrend.data.mapper.toUserBase
 import com.mxt.anitrend.domain.model.FeedItemUiModel
-import com.mxt.anitrend.domain.model.toFeedItemUiModel
+import com.mxt.anitrend.domain.model.PageInfoRecord
 import com.mxt.anitrend.graphql.generated.ActivityType
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.container.body.PageContainer
@@ -38,6 +38,13 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
+ * Filters out render-unresolvable item types. This is the only transformation applied
+ * between the ViewModel's canonical [FeedItemUiModel] list and the adapter submission,
+ * so the fragment never re-projects store records.
+ */
+internal fun renderableFeedItems(items: List<FeedItemUiModel>): List<FeedItemUiModel> = items.filter { !it.type.isNullOrBlank() }
+
+/**
  * Created by max on 2017/11/07.
  * Home page feed base
  */
@@ -49,8 +56,6 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
 
     private val feedListViewModel: FeedListViewModel by viewModel()
     private var feedListAdapter: FeedListAdapter? = null
-
-    protected open val useStateListAdapter: Boolean = true
 
     companion object {
         @JvmStatic
@@ -64,18 +69,11 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val ctx = requireContext()
         isPager = true
         isFeed = true
         mColumnSize = R.integer.single_list_x1
-        mAdapter = FeedAdapter(
-            context = ctx,
-            currentUser = databaseHelper.currentUser,
-            onToggleLikeAction = ::onToggleLike,
-            onDeleteFeedAction = ::onDeleteFeed,
-        )
-        if (useStateListAdapter) {
-            feedListAdapter = FeedListAdapter(
+        feedListAdapter =
+            FeedListAdapter(
                 experimentalMarkdown = settings.experimentalMarkdown,
                 onToggleLikeAction = ::onToggleLike,
                 onDeleteFeedAction = ::onDeleteFeed,
@@ -86,7 +84,6 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
                 onOpenProfile = { target, userId -> openFeedProfile(target, userId) },
                 onLongPressMedia = { target, feedId -> onFeedMediaLongPressed(target, feedId) },
             )
-        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -100,7 +97,7 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
                             // Loading is handled by swipeRefreshLayout in the base class
                         }
                         is FeedListViewModel.UiState.Success -> {
-                            handleSuccess(state.content, state.items, state.replaceExisting)
+                            handleSuccess(state.items, state.pageInfo)
                         }
                         is FeedListViewModel.UiState.Error -> {
                             showError(state.message)
@@ -130,23 +127,19 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
     }
 
     override fun updateUI() {
-        if (useStateListAdapter) {
-            val adapter = feedListAdapter ?: return
-            if (adapter.itemCount > 0) {
-                if (recyclerView.adapter !== adapter) {
-                    recyclerView.adapter = adapter
-                }
-                if (swipeRefreshLayout.isRefreshing()) {
-                    swipeRefreshLayout.setRefreshing(false)
-                } else if (swipeRefreshLayout.isLoading()) {
-                    swipeRefreshLayout.setLoading(false)
-                }
-                showContent()
-            } else {
-                showEmpty(getString(R.string.layout_empty_response))
+        val adapter = feedListAdapter ?: return
+        if (adapter.itemCount > 0) {
+            if (recyclerView.adapter !== adapter) {
+                recyclerView.adapter = adapter
             }
+            if (swipeRefreshLayout.isRefreshing()) {
+                swipeRefreshLayout.setRefreshing(false)
+            } else if (swipeRefreshLayout.isLoading()) {
+                swipeRefreshLayout.setLoading(false)
+            }
+            showContent()
         } else {
-            injectAdapter()
+            showEmpty(getString(R.string.layout_empty_response))
         }
         if (!TapTargetUtil.isActive(KeyUtil.KEY_POST_TYPE_TIP) && isFeed) {
             if (settings.shouldShowTipFor(KeyUtil.KEY_POST_TYPE_TIP)) {
@@ -176,8 +169,15 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
             isFollowing = if (args.containsKey(KeyUtil.arg_isFollowing)) args.getBoolean(KeyUtil.arg_isFollowing) else null,
             type = args.getString(KeyUtil.arg_type)?.let { runCatching { ActivityType.valueOf(it) }.getOrNull() },
             isMixed = if (args.containsKey(KeyUtil.arg_isMixed)) args.getBoolean(KeyUtil.arg_isMixed) else null,
+            currentUserId = currentUserId(),
         )
     }
+
+    /**
+     * Current authenticated user id used to resolve edit/delete ownership and liked state
+     * on store-backed feed items. Subclasses may override when they hold a fresher source.
+     */
+    protected open fun currentUserId(): Long? = databaseHelper.currentUser?.id
 
     protected fun Bundle.applyBaseFeedRequestArguments(source: Bundle?) {
         putInt(KeyUtil.arg_page_limit, source?.getInt(KeyUtil.arg_page_limit) ?: KeyUtil.PAGING_LIMIT)
@@ -200,10 +200,6 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
     override fun onChanged(value: PageContainer<FeedList>?) = Unit
 
     override fun onStart() {
-        if (!useStateListAdapter) {
-            super.onStart()
-            return
-        }
         showLoading()
         if ((feedListAdapter?.itemCount ?: 0) < 1) {
             onRefresh()
@@ -220,68 +216,26 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
         feedListViewModel.deleteFeed(feedId)
     }
 
+    /**
+     * Submits the ViewModel's canonical [FeedItemUiModel] list directly to the adapter.
+     * The only transformation applied is invalid-type filtering via [renderableFeedItems];
+     * store records are never re-projected here and pending flags are never merged a
+     * second time (they are already part of each item from the ViewModel projection).
+     */
     protected fun handleSuccess(
-        value: PageContainer<FeedList>,
-        items: List<FeedItemUiModel>? = null,
-        replaceExisting: Boolean = false,
+        items: List<FeedItemUiModel>,
+        pageInfo: PageInfoRecord?,
     ) {
-        if (useStateListAdapter) {
-            if (value.hasPageInfo()) {
-                setPageInfo(value.pageInfo)
-            }
-            val currentUserId = databaseHelper.currentUser?.id
-            val pendingStates = items.orEmpty().associateBy(FeedItemUiModel::id)
-            val renderedItems =
-                value.pageData
-                    .map { feed ->
-                        val pendingState = pendingStates[feed.id]
-                        feed.toFeedItemUiModel(currentUserId).copy(
-                            isLikePending = pendingState?.isLikePending ?: false,
-                            isDeletePending = pendingState?.isDeletePending ?: false,
-                        )
-                    }.filter { !it.type.isNullOrBlank() }
-            mScrollListener.getPageInfo()?.perPage = renderedItems.size
-            feedListAdapter?.submitList(renderedItems)
-            if (renderedItems.isEmpty()) {
-                showEmpty(getString(R.string.layout_empty_response))
-            } else {
-                updateUI()
-            }
-            return
-        }
-        handleLegacySuccess(value, replaceExisting)
-    }
-
-    private fun handleLegacySuccess(
-        value: PageContainer<FeedList>,
-        replaceExisting: Boolean,
-    ) {
-        if (value.hasPageInfo()) {
-            setPageInfo(value.pageInfo)
-        }
-        if (!value.isEmpty) {
-            val filtered = value.pageData.filter { !it.type.isNullOrBlank() }
-            mScrollListener.getPageInfo()?.perPage = filtered.size
-            if (replaceExisting) {
-                mAdapter.onItemsInserted(filtered)
-                updateUI()
-            } else {
-                onPostProcessed(filtered)
-            }
+        pageInfo?.let { setPageInfo(it.toPageInfo()) }
+        val renderedItems = renderableFeedItems(items)
+        mScrollListener.getPageInfo()?.perPage = renderedItems.size
+        feedListAdapter?.submitList(renderedItems)
+        if (renderedItems.isEmpty()) {
+            showEmpty(getString(R.string.layout_empty_response))
         } else {
-            if (replaceExisting) {
-                mAdapter.onItemsInserted(emptyList())
-                updateUI()
-            } else {
-                onPostProcessed(emptyList())
-            }
-        }
-        if (mAdapter.itemCount < 1) {
-            onPostProcessed(null)
+            updateUI()
         }
     }
-
-    protected open fun currentRenderedFeeds(): List<FeedList> = (feedListViewModel.state.value as? FeedListViewModel.UiState.Success)?.content?.pageData.orEmpty()
 
     protected open fun currentRenderedFeedItems(): List<FeedItemUiModel> = feedListAdapter?.currentList.orEmpty()
 
@@ -311,12 +265,18 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
         startActivity(intent)
     }
 
+    /**
+     * Opens the composer for an existing feed. The immutable [FeedItemUiModel] is
+     * resolved from the adapter's current submitted list, so only the stable feed id
+     * and draft text extracted by [BottomSheetComposer.Builder.setUserActivity] reach
+     * the typed composer parameter.
+     */
     protected open fun editFeed(feedId: Long) {
-        val feed = currentRenderedFeeds().firstOrNull { it.id == feedId } ?: return
+        val feedItem = currentRenderedFeedItems().firstOrNull { it.id == feedId } ?: return
         mBottomSheet =
             BottomSheetComposer
                 .Builder()
-                .setUserActivity(feed)
+                .setUserActivity(feedItem)
                 .setRequestMode(KeyUtil.MUT_SAVE_TEXT_FEED)
                 .setTitle(R.string.edit_status_title)
                 .build()

@@ -1,6 +1,8 @@
 package com.mxt.anitrend.repository
 
 import co.anitrend.retrofit.graphql.model.body.GraphContainer
+import com.mxt.anitrend.data.mapper.toCharacterRecord
+import com.mxt.anitrend.domain.model.CharacterRecord
 import com.mxt.anitrend.graphql.generated.CharacterActors
 import com.mxt.anitrend.graphql.generated.CharacterBase
 import com.mxt.anitrend.graphql.generated.CharacterBaseData
@@ -16,13 +18,11 @@ import com.mxt.anitrend.model.entity.anilist.edge.MediaEdge
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.container.body.EdgeContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
-import com.mxt.anitrend.repository.mapper.toCharacterEntity
 import com.mxt.anitrend.repository.mapper.toMediaCharacterEntity
 import com.mxt.anitrend.util.graphql.apiError
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import com.mxt.anitrend.model.entity.base.CharacterBase as CharacterEntity
 import com.mxt.anitrend.model.entity.base.MediaBase as MediaEntity
 
 class CharacterRepository(
@@ -30,7 +30,7 @@ class CharacterRepository(
     ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : AbstractRepository(ioDispatcher) {
 
-    suspend fun getCharacterBase(id: Long): Result<CharacterEntity> = withContext(ioDispatcher) {
+    suspend fun getCharacterBase(id: Long): Result<CharacterRecord> = withContext(ioDispatcher) {
         runCatching {
             val request = CharacterBase.request(id = id.toInt())
             val response = characterService.getCharacterBase(request).execute()
@@ -42,12 +42,12 @@ class CharacterRepository(
         }
     }
 
-    private fun handleCharacterBase(body: GraphContainer<CharacterBaseData>): CharacterEntity {
+    private fun handleCharacterBase(body: GraphContainer<CharacterBaseData>): CharacterRecord {
         val graphErrors = body.errors
         if (!graphErrors.isNullOrEmpty()) {
             throw RuntimeException(graphErrors.first().message ?: "GraphQL error")
         }
-        return body.data?.toCharacterEntity() ?: throw IllegalStateException("Empty response body")
+        return body.data?.character?.toCharacterRecord() ?: throw IllegalStateException("Empty response body")
     }
 
     suspend fun getCharacterOverview(id: Long, asHtml: Boolean = false): Result<MediaCharacter> = withContext(ioDispatcher) {

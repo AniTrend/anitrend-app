@@ -123,8 +123,8 @@ class AiringListViewModelTest {
         advanceUntilIdle()
 
         val state = vm.state.value as AiringListViewModel.UiState.Success
-        assertEquals(1, state.items.size)
-        assertEquals(7, state.items.single().progress)
+        assertEquals(1, state.entries.size)
+        assertEquals(7, state.entries.single().progress)
         assertEquals(7, state.renderedItems.single().progress)
         verify(browseRepository).getMediaListCollection(
             userId = 10L,
@@ -198,7 +198,7 @@ class AiringListViewModelTest {
         advanceUntilIdle()
 
         var state = vm.state.value as AiringListViewModel.UiState.Success
-        assertEquals(8, state.items.single().progress)
+        assertEquals(8, state.entries.single().progress)
 
         mediaListStore.apply(
             MediaListStoreChange.EntryDeleted(
@@ -210,7 +210,7 @@ class AiringListViewModelTest {
         advanceUntilIdle()
 
         state = vm.state.value as AiringListViewModel.UiState.Success
-        assertTrue(state.items.isEmpty())
+        assertTrue(state.entries.isEmpty())
         assertTrue(state.isEmpty)
         collector.cancel()
     }

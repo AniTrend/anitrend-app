@@ -1,6 +1,6 @@
 package com.mxt.anitrend.data.store.review
 
-import com.mxt.anitrend.model.entity.anilist.Review
+import com.mxt.anitrend.domain.model.ReviewRecord
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -35,13 +35,13 @@ class InMemoryReviewStore : ReviewStore {
         }
     }
 
-    override fun observeReview(reviewId: Long): Flow<Review?> = state.map { it.reviewsById[reviewId]?.review?.copyForStore() }.distinctUntilChanged()
+    override fun observeReview(reviewId: Long): Flow<ReviewRecord?> = state.map { it.reviewsById[reviewId]?.review }.distinctUntilChanged()
 
     override fun observeQuery(key: ReviewQueryKey): Flow<ReviewQueryResult> = state.map { currentState ->
         val snapshot = currentState.queries[key]
         ReviewQueryResult(
             reviews = snapshot?.orderedReviewIds.orEmpty().mapNotNull { reviewId ->
-                currentState.reviewsById[reviewId]?.review?.copyForStore()
+                currentState.reviewsById[reviewId]?.review
             },
             pageInfo = snapshot?.pageInfo,
             loadedPages = snapshot?.loadedPages.orEmpty(),
@@ -65,7 +65,7 @@ class InMemoryReviewStore : ReviewStore {
             )
             if (change.token >= currentRevision) {
                 reviewDeletionRevisions.remove(review.id)
-                reviewsById[review.id] = ReviewStoreRecord(review = review.copyForStore(), revision = change.token)
+                reviewsById[review.id] = ReviewStoreRecord(review = review, revision = change.token)
             }
             if (reviewsById.containsKey(review.id)) {
                 acceptedIds += review.id
@@ -104,7 +104,7 @@ class InMemoryReviewStore : ReviewStore {
     }
 
     private fun reduceReviewUpserted(
-        review: Review,
+        review: ReviewRecord,
         revision: Long,
         insertIfMissing: Boolean,
     ): ReviewStoreState {
@@ -119,7 +119,7 @@ class InMemoryReviewStore : ReviewStore {
 
         reviewDeletionRevisions.remove(review.id)
         val reviewsById = currentState.reviewsById.toMutableMap().apply {
-            put(review.id, ReviewStoreRecord(review = review.copyForStore(), revision = revision))
+            put(review.id, ReviewStoreRecord(review = review, revision = revision))
         }
         val queries = currentState.queries.mapValuesTo(linkedMapOf()) { (queryKey, snapshot) ->
             val alreadyPresent = snapshot.orderedReviewIds.contains(review.id)
@@ -169,31 +169,16 @@ class InMemoryReviewStore : ReviewStore {
         )
     }
 
-    private fun Review.matches(queryKey: ReviewQueryKey): Boolean {
-        if (queryKey.mediaId != null && media.id != queryKey.mediaId) {
+    private fun ReviewRecord.matches(queryKey: ReviewQueryKey): Boolean {
+        if (queryKey.mediaId != null && media?.id != queryKey.mediaId) {
             return false
         }
 
-        val reviewMediaType = media.type ?: mediaType
+        val reviewMediaType = media?.type ?: mediaType
         if (queryKey.mediaType != null && reviewMediaType != queryKey.mediaType.name) {
             return false
         }
 
         return true
-    }
-
-    private fun Review.copyForStore(): Review = Review().also { copy ->
-        copy.id = id
-        copy.summary = summary
-        copy.mediaType = mediaType
-        copy.body = body
-        copy.rating = rating
-        copy.ratingAmount = ratingAmount
-        copy.userRating = userRating
-        copy.score = score
-        copy.isPrivate = isPrivate
-        copy.createdAt = createdAt
-        copy.user = user
-        copy.media = media
     }
 }

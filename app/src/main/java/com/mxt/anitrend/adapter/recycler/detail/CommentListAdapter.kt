@@ -11,11 +11,9 @@ import com.mxt.anitrend.base.custom.view.widget.FavouriteWidgetState
 import com.mxt.anitrend.base.custom.view.widget.StatusDeleteWidgetState
 import com.mxt.anitrend.binding.richMarkDown
 import com.mxt.anitrend.binding.setImage
-import com.mxt.anitrend.data.mapper.toUserBase
 import com.mxt.anitrend.databinding.AdapterCommentBinding
 import com.mxt.anitrend.domain.model.CommentReplyUiModel
 import com.mxt.anitrend.extension.getLayoutInflater
-import com.mxt.anitrend.model.entity.anilist.FeedReply
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.util.date.DateUtil
 
@@ -64,7 +62,7 @@ class CommentListAdapter(
             binding.feedTime.text = DateUtil.getPrettyDateUnix(model.createdAt)
             if (!experimentalMarkdown) {
                 binding.widgetStatus.visibility = View.VISIBLE
-                binding.widgetStatus.setModel(model.toFeedReply())
+                binding.widgetStatus.setTextData(model.reply)
             } else {
                 binding.widgetStatus.visibility = View.GONE
             }
@@ -73,7 +71,7 @@ class CommentListAdapter(
             binding.widgetFavourite.render(
                 FavouriteWidgetState(
                     count = model.likeCount,
-                    isLiked = currentUser?.let { user -> model.likes.any { it.id == user.id } } == true,
+                    isLiked = model.isLikedByCurrentUser,
                     isEnabled = !model.isLikePending,
                     isLoading = model.isLikePending,
                 ),
@@ -139,12 +137,4 @@ class CommentListAdapter(
                 ): Boolean = oldItem == newItem
             }
     }
-
-    private fun CommentReplyUiModel.toFeedReply(): FeedReply = FeedReply(
-        id = id,
-        text = reply,
-        createdAt = createdAt,
-        user = userId?.let { UserBase(name = userName).apply { this.id = it } },
-        likes = likes.map { it.toUserBase() },
-    )
 }

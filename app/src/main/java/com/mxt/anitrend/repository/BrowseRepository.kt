@@ -24,6 +24,7 @@ import com.mxt.anitrend.graphql.generated.SaveReview
 import com.mxt.anitrend.graphql.generated.ScoreFormat
 import com.mxt.anitrend.data.mapper.toMediaListRecord
 import com.mxt.anitrend.data.mapper.toPageInfoRecord
+import com.mxt.anitrend.data.mapper.toReviewRecord
 import com.mxt.anitrend.data.store.medialist.MediaListQueryKey
 import com.mxt.anitrend.data.store.medialist.MediaListStore
 import com.mxt.anitrend.data.store.medialist.MediaListStoreChange
@@ -171,7 +172,7 @@ class BrowseRepository(
                             queryKey = resolvedQueryKey,
                             page = pageInfo?.currentPage ?: page ?: 1,
                             token = readToken,
-                            reviews = result.pageData,
+                            reviews = result.pageData.map { it.toReviewRecord(revision = readToken) },
                             pageInfo = pageInfo,
                         ),
                     )
@@ -362,7 +363,7 @@ class BrowseRepository(
                 if (commitToStore) {
                     reviewStore?.apply(
                         ReviewStoreChange.ReviewRated(
-                            review = result,
+                            review = result.toReviewRecord(revision = revision),
                             revision = revision,
                         ),
                     )
@@ -393,7 +394,7 @@ class BrowseRepository(
                 if (commitToStore) {
                     reviewStore?.apply(
                         ReviewStoreChange.ReviewSaved(
-                            review = result,
+                            review = result.toReviewRecord(revision = revision),
                             revision = revision,
                         ),
                     )

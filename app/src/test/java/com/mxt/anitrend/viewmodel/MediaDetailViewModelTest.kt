@@ -1,17 +1,18 @@
 package com.mxt.anitrend.viewmodel
 
 import com.mxt.anitrend.graphql.generated.MediaType
+import com.mxt.anitrend.data.store.favourite.InMemoryFavouriteStore
 import com.mxt.anitrend.data.store.feed.InMemoryFeedStore
 import com.mxt.anitrend.data.store.medialist.InMemoryMediaListStore
+import com.mxt.anitrend.domain.favourite.interactor.ToggleFavouriteInteractor
+import com.mxt.anitrend.domain.model.RecommendationPageResult
 import com.mxt.anitrend.model.entity.anilist.Media
 import com.mxt.anitrend.model.entity.anilist.edge.CharacterEdge
 import com.mxt.anitrend.model.entity.anilist.edge.MediaEdge
 import com.mxt.anitrend.model.entity.anilist.edge.StaffEdge
 import com.mxt.anitrend.model.entity.base.MediaBase
-import com.mxt.anitrend.model.entity.base.RecommendationBase
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.container.body.EdgeContainer
-import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.repository.BaseRepository
 import com.mxt.anitrend.repository.MediaRepository
 import com.mxt.anitrend.util.KeyUtil
@@ -28,6 +29,8 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertSame
 import org.junit.Before
 import org.junit.Test
+import org.mockito.ArgumentMatchers.eq
+import org.mockito.ArgumentMatchers.isNull
 import org.mockito.Mockito.doReturn
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
@@ -65,6 +68,8 @@ class MediaDetailViewModelTest {
             mediaRepository = mediaRepository,
             baseRepository = baseRepository,
             mediaListStore = mediaListStore,
+            favouriteStore = InMemoryFavouriteStore(),
+            toggleFavouriteInteractor = mock(ToggleFavouriteInteractor::class.java),
             ioDispatcher = testDispatcher,
         )
         val collector = backgroundScope.launch { viewModel.state.collect {} }
@@ -139,17 +144,35 @@ class MediaDetailViewModelTest {
     }
 
     @Test
-    fun `MediaRecommendationsViewModel routes load through MediaRepository`() = runTest {
-        val content = ConnectionContainer<PageContainer<RecommendationBase>>()
+    fun `MediaRecommendationsViewModel routes load through MediaRepository and projects UI items`() = runTest {
+        val content = RecommendationPageResult(recommendations = emptyList(), pageInfo = null)
         doReturn(Result.success(content))
             .`when`(mediaRepository)
-            .getMediaRecommendations(7L, MediaType.MANGA, false)
-        val viewModel = MediaRecommendationsViewModel(mediaRepository = mediaRepository)
+            .getMediaRecommendations(
+                eq(7L),
+                eq(MediaType.MANGA),
+                eq(false),
+                isNull(),
+                eq(21),
+                isNull(),
+            )
+        val viewModel = MediaRecommendationsViewModel(
+            mediaRepository = mediaRepository,
+            dispatcher = testDispatcher,
+        )
 
         viewModel.load(mediaId = 7L, type = MediaType.MANGA, isAdult = false)
 
         val state = viewModel.state.value as MediaRecommendationsViewModel.UiState.Success
-        assertSame(content, state.content)
-        verify(mediaRepository).getMediaRecommendations(7L, MediaType.MANGA, false)
+        assertEquals(content.recommendations, state.items)
+        assertSame(content.pageInfo, state.pageInfo)
+        verify(mediaRepository).getMediaRecommendations(
+            eq(7L),
+            eq(MediaType.MANGA),
+            eq(false),
+            isNull(),
+            eq(21),
+            isNull(),
+        )
     }
 }
