@@ -6,6 +6,7 @@ import com.mxt.anitrend.data.store.medialist.MediaListQueryKey
 import com.mxt.anitrend.data.store.medialist.MediaListStoreChange
 import com.mxt.anitrend.data.store.mutation.DefaultMutationRegistry
 import com.mxt.anitrend.data.store.mutation.RequestSequence
+import com.mxt.anitrend.domain.medialist.model.MediaListCollectionPageResult
 import com.mxt.anitrend.domain.medialist.model.MediaListRecord
 import com.mxt.anitrend.domain.model.MediaListItemUiModel
 import com.mxt.anitrend.fixture.MediaListFixtures.aMediaList
@@ -15,9 +16,7 @@ import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.graphql.generated.ScoreFormat
 import com.mxt.anitrend.model.api.retro.anilist.BrowseService
 import com.mxt.anitrend.model.entity.anilist.MediaList
-import com.mxt.anitrend.model.entity.anilist.MediaListCollection
 import com.mxt.anitrend.model.entity.anilist.User
-import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.repository.BrowseRepository
 import com.mxt.anitrend.repository.UserRepository
 import com.mxt.anitrend.util.KeyUtil
@@ -85,7 +84,7 @@ class MediaListViewModelImmutableStateTest {
     @Test
     fun `success state exposes immutable domain snapshots only`() = runTest(testDispatcher) {
         val entry = aMediaList(id = 1L, mediaId = 100L, progress = 5)
-        doReturn(Result.success(pageContainer(entry))).`when`(browseRepository).getMediaListCollection(
+        doReturn(Result.success(collectionResult(entry))).`when`(browseRepository).getMediaListCollection(
             userId = 42L,
             userName = null,
             type = MediaType.ANIME,
@@ -125,7 +124,7 @@ class MediaListViewModelImmutableStateTest {
     @Test
     fun `previously emitted snapshot is not mutated by later store upserts`() = runTest(testDispatcher) {
         val entry = aMediaList(id = 1L, mediaId = 100L, progress = 5)
-        doReturn(Result.success(pageContainer(entry))).`when`(browseRepository).getMediaListCollection(
+        doReturn(Result.success(collectionResult(entry))).`when`(browseRepository).getMediaListCollection(
             userId = 42L,
             userName = null,
             type = MediaType.ANIME,
@@ -187,12 +186,7 @@ class MediaListViewModelImmutableStateTest {
         ioDispatcher = testDispatcher,
     )
 
-    private fun pageContainer(vararg entries: MediaList): PageContainer<MediaListCollection> = PageContainer<MediaListCollection>().apply {
-        pageData = listOf(
-            mock(MediaListCollection::class.java).apply {
-                status = KeyUtil.CURRENT
-                doReturn(entries.toList()).`when`(this).entries
-            },
-        )
-    }
+    private fun collectionResult(vararg entries: MediaList): MediaListCollectionPageResult = MediaListCollectionPageResult(
+        entries = entries.map { it.toMediaListRecord(revision = 1L, ownerUserId = 42L, ownerUserName = "max") },
+    )
 }

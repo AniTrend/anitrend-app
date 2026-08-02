@@ -6,6 +6,7 @@ import com.mxt.anitrend.data.store.medialist.MediaListQueryKey
 import com.mxt.anitrend.data.store.medialist.MediaListStoreChange
 import com.mxt.anitrend.data.store.mutation.RequestSequence
 import com.mxt.anitrend.data.store.mutation.DefaultMutationRegistry
+import com.mxt.anitrend.domain.medialist.model.MediaListCollectionPageResult
 import com.mxt.anitrend.domain.model.PageInfoRecord
 import com.mxt.anitrend.fixture.MediaListFixtures.aMediaList
 import com.mxt.anitrend.graphql.generated.MediaListSort
@@ -14,10 +15,8 @@ import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.graphql.generated.ScoreFormat
 import com.mxt.anitrend.model.api.retro.anilist.BrowseService
 import com.mxt.anitrend.model.entity.anilist.MediaList
-import com.mxt.anitrend.model.entity.anilist.MediaListCollection
 import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.model.entity.base.MediaBase
-import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.repository.BrowseRepository
 import com.mxt.anitrend.repository.UserRepository
 import com.mxt.anitrend.util.KeyUtil
@@ -87,7 +86,7 @@ class MediaListViewModelStoreObservationTest {
     @Test
     fun `observe store query emits rendered items from canonical store`() = runTest(testDispatcher) {
         val entry = mediaListEntity(id = 1L, mediaId = 100L, progress = 5)
-        doReturn(Result.success(pageContainer(entry))).`when`(browseRepository).getMediaListCollection(
+        doReturn(Result.success(collectionResult(entry))).`when`(browseRepository).getMediaListCollection(
             userId = 42L,
             userName = null,
             type = MediaType.ANIME,
@@ -152,7 +151,7 @@ class MediaListViewModelStoreObservationTest {
             hasNextPage = true,
             hasPreviousPage = false,
         )
-        doReturn(Result.success(pageContainer(entry))).`when`(browseRepository).getMediaListCollection(
+        doReturn(Result.success(collectionResult(entry))).`when`(browseRepository).getMediaListCollection(
             userId = 42L,
             userName = null,
             type = MediaType.ANIME,
@@ -200,7 +199,7 @@ class MediaListViewModelStoreObservationTest {
     fun `entry upsert updates rendered state without repository mutation events`() = runTest(testDispatcher) {
         val entry = aMediaList(id = 1L, mediaId = 100L, progress = 5)
         val updatedEntry = aMediaList(id = 1L, mediaId = 100L, progress = 9)
-        doReturn(Result.success(pageContainer(entry))).`when`(browseRepository).getMediaListCollection(
+        doReturn(Result.success(collectionResult(entry))).`when`(browseRepository).getMediaListCollection(
             userId = 42L,
             userName = null,
             type = MediaType.ANIME,
@@ -249,7 +248,7 @@ class MediaListViewModelStoreObservationTest {
     @Test
     fun `entry delete and status changes update query membership from store`() = runTest(testDispatcher) {
         val entry = aMediaList(id = 1L, mediaId = 100L, progress = 5)
-        doReturn(Result.success(pageContainer(entry))).`when`(browseRepository).getMediaListCollection(
+        doReturn(Result.success(collectionResult(entry))).`when`(browseRepository).getMediaListCollection(
             userId = 42L,
             userName = null,
             type = MediaType.ANIME,
@@ -339,7 +338,7 @@ class MediaListViewModelStoreObservationTest {
         org.mockito.Mockito.doAnswer {
             firstStarted.countDown()
             releaseFirst.await(5, TimeUnit.SECONDS)
-            Result.failure<PageContainer<MediaListCollection>>(RuntimeException("stale failure"))
+            Result.failure<MediaListCollectionPageResult>(RuntimeException("stale failure"))
         }
             .`when`(localBrowseRepository)
             .getMediaListCollection(
@@ -356,7 +355,7 @@ class MediaListViewModelStoreObservationTest {
             )
         org.mockito.Mockito.doAnswer {
             secondStarted.countDown()
-            pageContainer(entry)
+            Result.success(collectionResult(entry))
         }
             .`when`(localBrowseRepository)
             .getMediaListCollection(
@@ -400,20 +399,33 @@ class MediaListViewModelStoreObservationTest {
         releaseFirst.countDown()
         advanceUntilIdle()
 
-        val state = viewModel.state.value as MediaListViewModel.UiState.Success
+        // The first load's failure continuation resumes from the real IO dispatcher, so
+        // wait for the store-backed Success state to settle instead of reading it once.
+        val state = awaitSuccess(viewModel)
         assertEquals(1, state.renderedItems.size)
         assertEquals(5, state.renderedItems.single().progress)
         collector.cancel()
     }
 
-    private fun pageContainer(vararg entries: MediaList): PageContainer<MediaListCollection> = PageContainer<MediaListCollection>().apply {
-        pageData = listOf(
-            mock(MediaListCollection::class.java).apply {
-                status = KeyUtil.CURRENT
-                doReturn(entries.toList()).`when`(this).entries
-            },
-        )
+    private fun awaitSuccess(
+        viewModel: MediaListViewModel,
+        timeoutMillis: Long = 5_000,
+    ): MediaListViewModel.UiState.Success {
+        val deadline = System.currentTimeMillis() + timeoutMillis
+        while (System.currentTimeMillis() < deadline) {
+            when (val current = viewModel.state.value) {
+                is MediaListViewModel.UiState.Success -> return current
+                is MediaListViewModel.UiState.Error ->
+                    throw AssertionError("Expected Success, got Error: ${current.message}")
+                else -> Thread.sleep(10)
+            }
+        }
+        throw AssertionError("Timed out waiting for Success state")
     }
+
+    private fun collectionResult(vararg entries: MediaList): MediaListCollectionPageResult = MediaListCollectionPageResult(
+        entries = entries.map { it.toMediaListRecord(revision = 1L, ownerUserId = 42L, ownerUserName = "max") },
+    )
 
     private fun mediaListEntity(
         id: Long,

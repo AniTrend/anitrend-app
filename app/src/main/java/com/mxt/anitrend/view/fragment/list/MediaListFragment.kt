@@ -15,12 +15,11 @@ import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.MediaListAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
 import com.mxt.anitrend.data.mapper.toPageInfo
+import com.mxt.anitrend.domain.medialist.model.MediaListCollectionPageResult
 import com.mxt.anitrend.domain.medialist.model.MediaListRecord
 import com.mxt.anitrend.domain.model.MediaListItemUiModel
 import com.mxt.anitrend.domain.model.buildIncrementMediaProgressCommand
 import com.mxt.anitrend.graphql.generated.MediaType
-import com.mxt.anitrend.model.entity.anilist.MediaListCollection
-import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
@@ -41,7 +40,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * Created by max on 2017/12/18.
  * media list fragment
  */
-open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, PageContainer<MediaListCollection>>() {
+open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, MediaListCollectionPageResult>() {
 
     protected var userId: Long = 0
     protected var userName: String? = null
@@ -214,7 +213,7 @@ open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, PageContai
     }
 
     /** No-op: StateFlow collector above handles the response. */
-    override fun onChanged(value: PageContainer<MediaListCollection>?) = Unit
+    override fun onChanged(value: MediaListCollectionPageResult?) = Unit
 
     private fun handleSuccess(state: MediaListViewModel.UiState.Success) {
         latestEntries = state.entries

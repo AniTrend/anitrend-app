@@ -6,6 +6,7 @@ import android.view.View
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.mxt.anitrend.domain.medialist.model.MediaListCollectionPageResult
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.graphql.generated.ScoreFormat
 import com.mxt.anitrend.repository.UserRepository
@@ -89,7 +90,7 @@ class AiringListFragment : MediaListFragment() {
     }
 
     /** StateFlow collector above handles the response. */
-    override fun onChanged(value: com.mxt.anitrend.model.entity.container.body.PageContainer<com.mxt.anitrend.model.entity.anilist.MediaListCollection>?) = Unit
+    override fun onChanged(value: MediaListCollectionPageResult?) = Unit
 
     private fun handleSuccess(state: AiringListViewModel.UiState.Success) {
         state.pageInfo?.let(::setPageInfo)

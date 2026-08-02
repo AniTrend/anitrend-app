@@ -6,6 +6,7 @@ import com.mxt.anitrend.data.store.medialist.MediaListQueryKey
 import com.mxt.anitrend.data.store.medialist.MediaListStoreChange
 import com.mxt.anitrend.data.store.mutation.RequestSequence
 import com.mxt.anitrend.data.store.mutation.DefaultMutationRegistry
+import com.mxt.anitrend.domain.medialist.model.MediaListCollectionPageResult
 import com.mxt.anitrend.fixture.MediaListFixtures.aMediaList
 import com.mxt.anitrend.fixture.MediaListFixtures.anAiringMediaBase
 import com.mxt.anitrend.graphql.generated.MediaListSort
@@ -14,10 +15,7 @@ import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.graphql.generated.ScoreFormat
 import com.mxt.anitrend.model.api.retro.anilist.BrowseService
 import com.mxt.anitrend.model.entity.anilist.MediaList
-import com.mxt.anitrend.model.entity.anilist.MediaListCollection
-import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.repository.BrowseRepository
-import com.mxt.anitrend.util.KeyUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
@@ -83,7 +81,7 @@ class AiringListViewModelTest {
             progress = 7,
             media = anAiringMediaBase(id = 100L),
         )
-        doReturn(Result.success(pageContainer(entry)))
+        doReturn(Result.success(collectionResult(entry)))
             .`when`(browseRepository)
             .getMediaListCollection(
                 userId = 10L,
@@ -148,7 +146,7 @@ class AiringListViewModelTest {
             progress = 4,
             media = anAiringMediaBase(id = 100L),
         )
-        doReturn(Result.success(pageContainer(entry)))
+        doReturn(Result.success(collectionResult(entry)))
             .`when`(browseRepository)
             .getMediaListCollection(
                 userId = 10L,
@@ -217,7 +215,7 @@ class AiringListViewModelTest {
 
     @Test
     fun `load emits Error from repository failure`() = runTest(testDispatcher) {
-        doReturn(Result.failure<PageContainer<MediaListCollection>>(RuntimeException("Airing failed")))
+        doReturn(Result.failure<MediaListCollectionPageResult>(RuntimeException("Airing failed")))
             .`when`(browseRepository)
             .getMediaListCollection(
                 userId = 10L,
@@ -253,12 +251,7 @@ class AiringListViewModelTest {
         collector.cancel()
     }
 
-    private fun pageContainer(vararg entries: MediaList): PageContainer<MediaListCollection> = PageContainer<MediaListCollection>().apply {
-        pageData = listOf(
-            mock(MediaListCollection::class.java).apply {
-                status = KeyUtil.CURRENT
-                doReturn(entries.toList()).`when`(this).entries
-            },
-        )
-    }
+    private fun collectionResult(vararg entries: MediaList): MediaListCollectionPageResult = MediaListCollectionPageResult(
+        entries = entries.map { it.toMediaListRecord(revision = 1L, ownerUserId = 10L) },
+    )
 }
