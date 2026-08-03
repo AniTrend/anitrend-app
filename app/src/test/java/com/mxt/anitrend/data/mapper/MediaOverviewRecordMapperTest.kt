@@ -359,6 +359,42 @@ class MediaOverviewRecordMapperTest {
         assertFalse(tag?.isAdult == true)
     }
 
+    @Test
+    fun `falls back to userPreferred title when romaji english or native is null`() {
+        val record = media(
+            id = 1,
+            title = MediaOverviewData.MediaTitle(
+                english = null,
+                native = null,
+                romaji = null,
+                userPreferred = "No Game No Life",
+            ),
+        ).toMediaOverviewRecord()
+
+        assertEquals("No Game No Life", record.titleUserPreferred)
+        assertEquals("No Game No Life", record.titleRomaji)
+        assertEquals("No Game No Life", record.titleEnglish)
+        assertEquals("No Game No Life", record.titleOriginal)
+    }
+
+    @Test
+    fun `keeps raw title fields when present over the userPreferred fallback`() {
+        val record = media(
+            id = 1,
+            title = MediaOverviewData.MediaTitle(
+                english = "Sword Art Online",
+                native = "ソードアート・オンライン",
+                romaji = "Sword Art Online",
+                userPreferred = "Different",
+            ),
+        ).toMediaOverviewRecord()
+
+        assertEquals("Different", record.titleUserPreferred)
+        assertEquals("Sword Art Online", record.titleRomaji)
+        assertEquals("Sword Art Online", record.titleEnglish)
+        assertEquals("ソードアート・オンライン", record.titleOriginal)
+    }
+
     private fun media(
         id: Int,
         title: MediaOverviewData.MediaTitle? = null,

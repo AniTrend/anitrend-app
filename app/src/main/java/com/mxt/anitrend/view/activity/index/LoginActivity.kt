@@ -91,6 +91,25 @@ class LoginActivity :
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Returning from the external browser (Chrome back button, or the flow was
+        // abandoned) does not deliver a redirect intent, so the flipper would stay
+        // on the loading state indefinitely. Restore the content state instead,
+        // while an intent carrying redirect data is still handled by checkNewIntent.
+        if (!settings.isAuthenticated && intent?.data == null) {
+            restoreContentState()
+        }
+    }
+
+    private fun restoreContentState() {
+        if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED) &&
+            binding.widgetFlipper.displayedChild == WidgetState.LOADING_STATE
+        ) {
+            binding.widgetFlipper.showPrevious()
+        }
+    }
+
     private fun showAuthFailure(authState: LoginAuthState.Failure) {
         if (!lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) return
         if (!TextUtils.isEmpty(authState.error) && !TextUtils.isEmpty(authState.errorDescription)) {
@@ -177,6 +196,7 @@ class LoginActivity :
                     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(ServiceFactory.API_AUTH_LINK)))
                 } catch (e: Exception) {
                     Timber.e(e)
+                    restoreContentState()
                     NotifyUtil.makeText(this, R.string.text_unknown_error, Toast.LENGTH_SHORT).show()
                 }
             } else {

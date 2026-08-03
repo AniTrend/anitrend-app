@@ -29,9 +29,11 @@ import com.mxt.anitrend.graphql.generated.MediaOverviewData
 fun MediaOverviewData.Media.toMediaOverviewRecord(): MediaOverviewRecord = MediaOverviewRecord(
     id = id.toLong(),
     titleUserPreferred = title?.userPreferred,
-    titleRomaji = title?.romaji,
-    titleEnglish = title?.english,
-    titleOriginal = title?.native,
+    // Matches the legacy MediaTitle getters, which fall back to userPreferred
+    // when the raw romaji/english/native fields are absent.
+    titleRomaji = title?.romaji ?: title?.userPreferred,
+    titleEnglish = title?.english ?: title?.userPreferred,
+    titleOriginal = title?.native ?: title?.userPreferred,
     bannerImage = bannerImage,
     coverImage = coverImage?.toMediaOverviewCoverImageRecord(),
     type = type?.name,

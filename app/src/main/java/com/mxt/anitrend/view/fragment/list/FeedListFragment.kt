@@ -200,6 +200,7 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
     override fun onChanged(value: PageContainer<FeedList>?) = Unit
 
     override fun onStart() {
+        super.onStart()
         showLoading()
         if ((feedListAdapter?.itemCount ?: 0) < 1) {
             onRefresh()
@@ -229,11 +230,13 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
         pageInfo?.let { setPageInfo(it.toPageInfo()) }
         val renderedItems = renderableFeedItems(items)
         mScrollListener.getPageInfo()?.perPage = renderedItems.size
-        feedListAdapter?.submitList(renderedItems)
         if (renderedItems.isEmpty()) {
+            feedListAdapter?.submitList(emptyList())
             showEmpty(getString(R.string.layout_empty_response))
         } else {
-            updateUI()
+            // updateUI is deferred to the submit commit callback so the adapter's
+            // itemCount has settled before the content/empty teardown runs.
+            feedListAdapter?.submitList(renderedItems) { updateUI() }
         }
     }
 

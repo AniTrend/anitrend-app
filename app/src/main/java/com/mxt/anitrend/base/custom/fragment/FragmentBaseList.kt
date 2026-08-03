@@ -121,6 +121,7 @@ abstract class FragmentBaseList<M, C> :
     override fun onStart() {
         super.onStart()
         showLoading()
+        if (!::mAdapter.isInitialized) return
         if (mAdapter.itemCount < 1) {
             onRefresh()
         } else {

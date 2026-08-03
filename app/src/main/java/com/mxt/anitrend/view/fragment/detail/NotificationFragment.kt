@@ -103,6 +103,7 @@ class NotificationFragment : FragmentBaseList<NotificationItemUiModel, Notificat
     }
 
     override fun onStart() {
+        super.onStart()
         @Suppress("DEPRECATION")
         if (!isMenuDisabled) {
             setHasOptionsMenu(true)
@@ -195,12 +196,14 @@ class NotificationFragment : FragmentBaseList<NotificationItemUiModel, Notificat
                 pageItems
             }
         mScrollListener.getPageInfo()?.perPage = pageItems.size
-        notificationAdapter.submitList(loadedItems)
         if (loadedItems.isEmpty()) {
+            notificationAdapter.submitList(emptyList())
             setLimitReached()
             showEmpty(getString(R.string.layout_empty_response))
         } else {
-            updateUI()
+            // updateUI is deferred to the submit commit callback so the adapter's
+            // itemCount has settled before the content/empty teardown runs.
+            notificationAdapter.submitList(loadedItems) { updateUI() }
         }
     }
 

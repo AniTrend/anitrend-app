@@ -18,6 +18,13 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonNull
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.add
+import kotlinx.serialization.json.buildJsonArray
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
@@ -107,8 +114,14 @@ class BrowseMediaListCollectionRepositoryTest {
                                     entry(
                                         id = 1,
                                         mediaId = 100,
-                                        customLists = """["Favourites","Rewatch"]""",
-                                        advancedScores = """{"Story":9.5,"Art":8.0}""",
+                                        customLists = buildJsonArray {
+                                            add("Favourites")
+                                            add("Rewatch")
+                                        },
+                                        advancedScores = buildJsonObject {
+                                            put("Story", 9.5)
+                                            put("Art", 8.0)
+                                        },
                                         notes = "note",
                                     ),
                                 ),
@@ -136,6 +149,73 @@ class BrowseMediaListCollectionRepositoryTest {
         assertEquals(mapOf("Story" to 9.5, "Art" to 8.0), record.advancedScores)
         assertEquals("note", record.notes)
         assertNull(record.scoreRaw)
+    }
+
+    @Test
+    fun `getMediaListCollection degrades null wrong-shape and non-string non-numeric JSON scalars`() = runTest {
+        val repository = BrowseRepository(browseService = service, ioDispatcher = testDispatcher)
+        val call = collectionCall()
+        `when`(service.getMediaListCollection(collectionRequest())).thenReturn(call)
+        `when`(call.execute()).thenReturn(
+            Response.success(
+                GraphContainer(
+                    data = collectionData(
+                        listOf(
+                            list(
+                                entries = listOf(
+                                    entry(
+                                        id = 1,
+                                        mediaId = 100,
+                                        customLists = null,
+                                        advancedScores = null,
+                                    ),
+                                    entry(
+                                        id = 2,
+                                        mediaId = 200,
+                                        customLists = JsonPrimitive("not-an-array"),
+                                        advancedScores = buildJsonArray { add(1) },
+                                    ),
+                                    entry(
+                                        id = 3,
+                                        mediaId = 300,
+                                        customLists = buildJsonArray {
+                                            add("Favourites")
+                                            add(5)
+                                            add(JsonNull)
+                                            add("Rewatch")
+                                        },
+                                        advancedScores = buildJsonObject {
+                                            put("Story", JsonPrimitive("nope"))
+                                            put("Art", 8.0)
+                                            put("Null", JsonNull)
+                                        },
+                                    ),
+                                ),
+                            ),
+                        ),
+                    ),
+                    errors = null,
+                ),
+            ),
+        )
+
+        val result = repository.getMediaListCollection(
+            userId = 42L,
+            type = MediaType.ANIME,
+            forceSingleCompletedList = true,
+            sort = listOf(MediaListSort.PROGRESS_DESC),
+            statusIn = listOf(MediaListStatus.CURRENT),
+            scoreFormat = ScoreFormat.POINT_100,
+        )
+
+        assertTrue(result.isSuccess)
+        val records = result.getOrThrow().entries
+        assertEquals(emptyList<String>(), records[0].customLists)
+        assertEquals(emptyMap<String, Double>(), records[0].advancedScores)
+        assertEquals(emptyList<String>(), records[1].customLists)
+        assertEquals(emptyMap<String, Double>(), records[1].advancedScores)
+        assertEquals(listOf("Favourites", "Rewatch"), records[2].customLists)
+        assertEquals(mapOf("Story" to 0.0, "Art" to 8.0, "Null" to 0.0), records[2].advancedScores)
     }
 
     @Test
@@ -286,8 +366,8 @@ class BrowseMediaListCollectionRepositoryTest {
         priority: Int? = 0,
         privateValue: Boolean? = false,
         hiddenFromStatusLists: Boolean? = false,
-        customLists: String? = null,
-        advancedScores: String? = null,
+        customLists: JsonElement? = null,
+        advancedScores: JsonElement? = null,
         notes: String? = null,
     ): MediaListCollectionData.MediaListCollectionListsEntries = MediaListCollectionData.MediaListCollectionListsEntries(
         advancedScores = advancedScores,

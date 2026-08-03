@@ -25,10 +25,12 @@ import com.mxt.anitrend.databinding.FragmentSeriesOverviewBinding
 import com.mxt.anitrend.databinding.SectionSeriesDescriptionBinding
 import com.mxt.anitrend.databinding.SectionSeriesDetailsBinding
 import com.mxt.anitrend.databinding.SectionSeriesInfoBinding
+import com.mxt.anitrend.domain.mediadetail.model.MediaOverviewRecord
+import com.mxt.anitrend.domain.mediadetail.model.MediaOverviewTagRecord
 import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.model.entity.anilist.Genre
-import com.mxt.anitrend.model.entity.anilist.Media
 import com.mxt.anitrend.model.entity.anilist.MediaTag
+import com.mxt.anitrend.model.entity.anilist.meta.MediaTrailer
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
@@ -51,7 +53,9 @@ class MediaOverviewFragment : Fragment() {
     private var _binding: FragmentSeriesOverviewBinding? = null
     private val binding get() = _binding!!
 
-    private var model: Media? = null
+    private var overviewRecord: MediaOverviewRecord? = null
+
+    private var tagItems: List<MediaTag> = emptyList()
 
     private var genreAdapter: GenreAdapter? = null
     private var tagAdapter: TagAdapter? = null
@@ -113,10 +117,10 @@ class MediaOverviewFragment : Fragment() {
                             binding.stateLayout.showLoading()
                         }
                         is MediaOverviewViewModel.UiState.Success -> {
-                            model = state.media
+                            overviewRecord = state.record
                             val data = mediaOverviewViewModel.displayData.value
                             if (data != null) {
-                                updateUI(data)
+                                updateUI(state.record, data)
                             }
                         }
                         is MediaOverviewViewModel.UiState.Error -> {
@@ -144,9 +148,9 @@ class MediaOverviewFragment : Fragment() {
         _binding = null
     }
 
-    private fun updateUI(displayData: MediaOverviewViewModel.MediaOverviewDisplayData) {
+    private fun updateUI(record: MediaOverviewRecord, displayData: MediaOverviewViewModel.MediaOverviewDisplayData) {
         val ctx = requireContext()
-        val trailer = model?.trailer
+        val trailer = record.trailer?.let { MediaTrailer(id = it.id, site = it.site) }
         if (activity != null && trailer != null && CompatUtil.equals(trailer.site, "youtube")) {
             childFragmentManager.beginTransaction()
                 .replace(R.id.youtube_view, YouTubeEmbedFragment.newInstance(trailer))
@@ -155,21 +159,19 @@ class MediaOverviewFragment : Fragment() {
             binding.youtubeView.visibility = View.GONE
         }
 
-        binding.seriesInfoSection.let { bindSeriesInfo(it, model, displayData) }
-        binding.seriesDescriptionSection.let { bindSeriesDescription(it, model) }
-        binding.seriesDetailsSection.let { bindSeriesDetails(it, model, displayData) }
+        binding.seriesInfoSection.let { bindSeriesInfo(it, record, displayData) }
+        binding.seriesDescriptionSection.let { bindSeriesDescription(it, record) }
+        binding.seriesDetailsSection.let { bindSeriesDetails(it, record, displayData) }
 
         binding.genreRecycler.visibility =
             if (displayData.genres.isNotEmpty()) View.VISIBLE else View.GONE
         binding.tagsRecycler.visibility =
-            if (!CompatUtil.isEmpty(model?.tags)) View.VISIBLE else View.GONE
+            if (!record.tags.isNullOrEmpty()) View.VISIBLE else View.GONE
 
-        if (model?.tags != null && model?.tagsNoSpoilers != null) {
-            if (model?.tagsNoSpoilers?.size == model?.tags?.size) {
-                binding.showSpoilerTags.visibility = View.GONE
-            } else {
-                binding.showSpoilerTags.visibility = View.VISIBLE
-            }
+        if (record.tags != null) {
+            // The legacy overview lane never populated isMediaSpoiler, so all tags
+            // are shown up front and the reveal toggle stays hidden.
+            binding.showSpoilerTags.visibility = View.GONE
         }
 
         if (genreAdapter == null) {
@@ -207,54 +209,53 @@ class MediaOverviewFragment : Fragment() {
             })
         }
         binding.genreRecycler.adapter = genreAdapter
-        model?.tagsNoSpoilers?.also {
-            if (tagAdapter == null) {
-                tagAdapter = TagAdapter(ctx)
-                tagAdapter?.onItemsInserted(it)
-                tagAdapter?.setClickListener(object : ItemClickListener<MediaTag> {
-                    override fun onItemClick(target: View, data: IndexedValue<MediaTag>) {
-                        when (target.id) {
-                            R.id.container -> activity?.let { host ->
-                                DialogUtil.createTagMessage(
-                                    host,
-                                    data.value.name.orEmpty(),
-                                    data.value.description.orEmpty(),
-                                    data.value.isMediaSpoiler,
-                                    R.string.More,
-                                    R.string.Close,
-                                ) { _, _ ->
-                                    val args = Bundle()
-                                    val intent = Intent(host, MediaBrowseActivity::class.java)
-                                    args.putString(KeyUtil.arg_mediaType, mediaType)
-                                    args.putStringArrayList(
-                                        KeyUtil.arg_tags,
-                                        arrayListOf(data.value.name.orEmpty()),
-                                    )
-                                    args.putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
-                                    if (!settings.displayAdultContent) {
-                                        args.putBoolean(KeyUtil.arg_isAdult, false)
-                                    }
-                                    args.putString(KeyUtil.arg_activity_tag, data.value.name.orEmpty())
-                                    args.putParcelable(
-                                        KeyUtil.arg_media_util,
-                                        MediaBrowseUtil()
-                                            .setCompactType(true)
-                                            .setBasicFilter(true)
-                                            .setFilterEnabled(true),
-                                    )
-                                    intent.putExtras(args)
-                                    startActivity(intent)
+        tagItems = record.tags.orEmpty().map { it.toMediaTag() }
+        if (tagAdapter == null) {
+            tagAdapter = TagAdapter(ctx)
+            tagAdapter?.onItemsInserted(tagItems)
+            tagAdapter?.setClickListener(object : ItemClickListener<MediaTag> {
+                override fun onItemClick(target: View, data: IndexedValue<MediaTag>) {
+                    when (target.id) {
+                        R.id.container -> activity?.let { host ->
+                            DialogUtil.createTagMessage(
+                                host,
+                                data.value.name.orEmpty(),
+                                data.value.description.orEmpty(),
+                                data.value.isMediaSpoiler,
+                                R.string.More,
+                                R.string.Close,
+                            ) { _, _ ->
+                                val args = Bundle()
+                                val intent = Intent(host, MediaBrowseActivity::class.java)
+                                args.putString(KeyUtil.arg_mediaType, mediaType)
+                                args.putStringArrayList(
+                                    KeyUtil.arg_tags,
+                                    arrayListOf(data.value.name.orEmpty()),
+                                )
+                                args.putInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT)
+                                if (!settings.displayAdultContent) {
+                                    args.putBoolean(KeyUtil.arg_isAdult, false)
                                 }
+                                args.putString(KeyUtil.arg_activity_tag, data.value.name.orEmpty())
+                                args.putParcelable(
+                                    KeyUtil.arg_media_util,
+                                    MediaBrowseUtil()
+                                        .setCompactType(true)
+                                        .setBasicFilter(true)
+                                        .setFilterEnabled(true),
+                                )
+                                intent.putExtras(args)
+                                startActivity(intent)
                             }
                         }
                     }
+                }
 
-                    override fun onItemLongClick(target: View, data: IndexedValue<MediaTag>) {
-                    }
-                })
-            }
-            binding.tagsRecycler.adapter = tagAdapter
+                override fun onItemLongClick(target: View, data: IndexedValue<MediaTag>) {
+                }
+            })
         }
+        binding.tagsRecycler.adapter = tagAdapter
 
         binding.stateLayout.showContent()
     }
@@ -263,20 +264,20 @@ class MediaOverviewFragment : Fragment() {
         when (v.id) {
             R.id.series_image -> CompatUtil.imagePreview(
                 v,
-                model?.coverImage?.extraLarge,
+                overviewRecord?.coverImage?.extraLarge,
                 R.string.image_preview_error_series_cover,
             )
             R.id.anime_main_studio_container -> {
-                val studioBase = model?.studios?.connection?.firstOrNull()
-                if (studioBase != null) {
+                val studioId = overviewRecord?.studios?.firstOrNull()?.id
+                if (studioId != null) {
                     val host = activity ?: return
-                    val intent = StudioActivity.newIntent(host, studioBase.id)
+                    val intent = StudioActivity.newIntent(host, studioId)
                     startActivity(intent)
                 }
             }
             R.id.show_spoiler_tags -> {
-                model?.tags?.also {
-                    tagAdapter?.onItemRangeChanged(it)
+                if (tagItems.isNotEmpty()) {
+                    tagAdapter?.onItemRangeChanged(tagItems)
                     tagAdapter?.notifyDataSetChanged()
                     v.visibility = View.GONE
                 }
@@ -286,30 +287,32 @@ class MediaOverviewFragment : Fragment() {
 
     private fun bindSeriesInfo(
         sectionBinding: SectionSeriesInfoBinding,
-        media: Media?,
+        record: MediaOverviewRecord?,
         displayData: MediaOverviewViewModel.MediaOverviewDisplayData,
     ) {
-        val title = media?.title
-        sectionBinding.seriesTitleRomaji.text = title?.romaji.orEmpty()
-        sectionBinding.seriesTitleEnglish.text = title?.english.orEmpty()
+        sectionBinding.seriesTitleRomaji.text = record?.titleRomaji.orEmpty()
+        sectionBinding.seriesTitleEnglish.text = record?.titleEnglish.orEmpty()
         SeriesTypeView.setSeriesType(
             sectionBinding.seriesType,
             displayData.formatText ?: getString(R.string.tba_placeholder),
         )
-        SeriesStatusWidget.setStatus(sectionBinding.seriesStatus, media)
-        AspectImageView.setImage(sectionBinding.seriesImage, media?.coverImage)
+        SeriesStatusWidget.setStatus(sectionBinding.seriesStatus, record?.status)
+        AspectImageView.setImage(
+            sectionBinding.seriesImage,
+            record?.coverImage?.extraLarge ?: record?.coverImage?.large,
+        )
     }
 
-    private fun bindSeriesDescription(sectionBinding: SectionSeriesDescriptionBinding, media: Media?) {
-        RangeDateTextView.setStartDate(sectionBinding.seriesStartDate, media?.startDate)
-        RangeDateTextView.setEndDate(sectionBinding.seriesEndDate, media?.endDate)
-        sectionBinding.seriesTitleOriginal.text = media?.title?.original.orEmpty()
-        sectionBinding.seriesDescriptionText.htmlText(media?.description)
+    private fun bindSeriesDescription(sectionBinding: SectionSeriesDescriptionBinding, record: MediaOverviewRecord?) {
+        RangeDateTextView.setStartDate(sectionBinding.seriesStartDate, record?.startDate)
+        RangeDateTextView.setEndDate(sectionBinding.seriesEndDate, record?.endDate)
+        sectionBinding.seriesTitleOriginal.text = record?.titleOriginal.orEmpty()
+        sectionBinding.seriesDescriptionText.htmlText(record?.description)
     }
 
     private fun bindSeriesDetails(
         sectionBinding: SectionSeriesDetailsBinding,
-        media: Media?,
+        record: MediaOverviewRecord?,
         displayData: MediaOverviewViewModel.MediaOverviewDisplayData,
     ) {
         val mangaVisibility = if (displayData.isManga) View.VISIBLE else View.GONE
@@ -344,8 +347,19 @@ class MediaOverviewFragment : Fragment() {
         } ?: getString(R.string.tba_placeholder)
         sectionBinding.mainStudioValue.text = displayData.mainStudioName ?: getString(R.string.TBA)
         sectionBinding.seriesStatusValue.text = displayData.statusText ?: getString(R.string.TBA)
-        AiringTextView.setAiring(sectionBinding.nextEpisodeValue, media)
+        AiringTextView.setAiring(sectionBinding.nextEpisodeValue, record?.nextAiringEpisode, record?.status)
     }
+
+    private fun MediaOverviewTagRecord.toMediaTag(): MediaTag = MediaTag(
+        name = name,
+        description = description,
+        category = category,
+        rank = rank,
+        // The legacy overview lane never populated isMediaSpoiler, so the tags
+        // keep the exact display behavior of the previous Media-backed path.
+        isMediaSpoiler = false,
+        isAdult = isAdult,
+    )
 
     companion object {
 

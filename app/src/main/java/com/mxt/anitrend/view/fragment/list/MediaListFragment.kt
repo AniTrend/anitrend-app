@@ -175,19 +175,19 @@ open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, MediaListC
 
     override fun updateUI() {
         val adapter = stateListAdapter ?: return
-        if (adapter.itemCount > 0) {
-            if (recyclerView.adapter !== adapter) {
-                recyclerView.adapter = adapter
-            }
-            if (swipeRefreshLayout.isRefreshing()) {
-                swipeRefreshLayout.setRefreshing(false)
-            } else if (swipeRefreshLayout.isLoading()) {
-                swipeRefreshLayout.setLoading(false)
-            }
-            showContent()
-        } else {
-            showEmpty(getString(R.string.layout_empty_response))
+        // Content/empty is decided by the success handler from the submitted payload
+        // (submitItems applies asynchronously through the filter + AsyncListDiffer), so
+        // itemCount must not gate the teardown here. Both callers (onStart with
+        // itemCount >= 1, and handleSuccess with a non-empty payload) guarantee content.
+        if (recyclerView.adapter !== adapter) {
+            recyclerView.adapter = adapter
         }
+        if (swipeRefreshLayout.isRefreshing()) {
+            swipeRefreshLayout.setRefreshing(false)
+        } else if (swipeRefreshLayout.isLoading()) {
+            swipeRefreshLayout.setLoading(false)
+        }
+        showContent()
     }
 
     override fun makeRequest() {
@@ -230,6 +230,7 @@ open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, MediaListC
     }
 
     override fun onStart() {
+        super.onStart()
         showLoading()
         if ((stateListAdapter?.itemCount ?: 0) < 1) {
             onRefresh()

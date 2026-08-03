@@ -109,8 +109,9 @@ class MediaRepository(
     // Preserves the exact transport, request parameters, GraphQL error, empty
     // body/null root, and HTTP failure semantics of the legacy entity-typed
     // getMediaOverview above, but maps at the data boundary into
-    // MediaOverviewRecord. The legacy method is unchanged for its remaining
-    // consumers (MediaOverviewViewModel).
+    // MediaOverviewRecord. The legacy getMediaOverview below has no remaining
+    // consumers after the MediaOverviewViewModel migration and is kept only as
+    // infrastructure debt pending removal with the legacy entity lane.
     suspend fun getMediaOverviewRecord(id: Long, type: MediaType?, isAdult: Boolean?, asHtml: Boolean = false): Result<MediaOverviewRecord> = withContext(ioDispatcher) {
         runCatching {
             val request = MediaOverview.request(id = id.toInt(), type = type, isAdult = isAdult, asHtml = asHtml)

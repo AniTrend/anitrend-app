@@ -2,6 +2,7 @@ package com.mxt.anitrend.util.date
 
 import androidx.annotation.IntRange
 import com.mxt.anitrend.domain.model.AiringScheduleRecord
+import com.mxt.anitrend.domain.model.FuzzyDateRecord
 import com.mxt.anitrend.model.entity.anilist.meta.AiringSchedule
 import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate
 import com.mxt.anitrend.util.CompatUtil
@@ -39,6 +40,19 @@ object DateUtil {
 
     private const val dateOutputFormat = "MMM dd, yyyy"
     private const val dateInputFormat = "yyyy/MM/dd"
+
+    /**
+     * Boundary conversion for the immutable [FuzzyDateRecord] lane so the record
+     * based overloads below share the exact formatting of the legacy [FuzzyDate]
+     * implementations. Null record fields map to 0, matching the legacy entity
+     * defaults, so [FuzzyDate.isValidDate] and [FuzzyDate.toString] behave
+     * identically for both lanes.
+     */
+    private fun FuzzyDateRecord.toLegacyFuzzyDate(): FuzzyDate = FuzzyDate(
+        day = day ?: 0,
+        month = month ?: 0,
+        year = year ?: 0,
+    )
 
     /**
      * Gets current season title
@@ -141,6 +155,9 @@ object DateUtil {
         return fuzzyDate.toString()
     }
 
+    /** Same season resolution as the [FuzzyDate] overload, driven by the immutable domain record. */
+    fun getMediaSeason(fuzzyDate: FuzzyDateRecord): String = getMediaSeason(fuzzyDate.toLegacyFuzzyDate())
+
     /**
      * Gets the current year + delta, if the season for the year is winter later in the year
      * then the result would be the current year plus the delta
@@ -194,6 +211,9 @@ object DateUtil {
         return "TBA"
     }
 
+    /** Same conversion as the [FuzzyDate] overload, driven by the immutable domain record. */
+    fun convertDate(fuzzyDate: FuzzyDateRecord?): String? = convertDate(fuzzyDate?.toLegacyFuzzyDate())
+
     /**
      * Checks if the given data is newer than the current data on the device
      */
@@ -223,6 +243,9 @@ object DateUtil {
         return "Ends"
     }
 
+    /** Same title resolution as the [FuzzyDate] overload, driven by the immutable domain record. */
+    fun getEndTitle(fuzzyDate: FuzzyDateRecord?): String = getEndTitle(fuzzyDate?.toLegacyFuzzyDate())
+
     /**
      * Returns appropriate title for starts or started
      * <br></br>
@@ -241,6 +264,9 @@ object DateUtil {
 
         return "Starts"
     }
+
+    /** Same title resolution as the [FuzzyDate] overload, driven by the immutable domain record. */
+    fun getStartTitle(fuzzyDate: FuzzyDateRecord?): String = getStartTitle(fuzzyDate?.toLegacyFuzzyDate())
 
     /**
      * Formats the epotch time to a pretty data

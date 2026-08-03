@@ -82,7 +82,7 @@ class MediaRecommendationsFragment : FragmentBaseList<RecommendationItemUiModel,
     }
 
     override fun onStart() {
-        showLoading()
+        super.onStart()
         val adapter = recommendationAdapter
         if (adapter == null || adapter.itemCount < 1) {
             onRefresh()

@@ -1,12 +1,15 @@
 package com.mxt.anitrend.data.mapper
 
-import com.google.gson.JsonParser
 import com.mxt.anitrend.domain.medialist.model.MediaListCollectionPageResult
 import com.mxt.anitrend.domain.medialist.model.MediaListRecord
 import com.mxt.anitrend.domain.model.AiringScheduleRecord
 import com.mxt.anitrend.domain.model.FuzzyDateRecord
 import com.mxt.anitrend.domain.model.MediaSummaryRecord
 import com.mxt.anitrend.graphql.generated.MediaListCollectionData
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
 
 /**
  * Maps the generated `MediaListCollectionData` GraphQL types to the immutable
@@ -102,37 +105,33 @@ private fun MediaListCollectionData.MediaListCollectionListsEntriesMediaNextAiri
 )
 
 /**
- * Parses the GraphQL `Json` scalar payload of `customLists(asArray: true)`, which the
- * generated code exposes as a raw JSON array string. Unknown or malformed payloads
- * degrade to an empty list, matching the legacy Gson lane for absent custom lists.
+ * Maps the GraphQL `Json` scalar payload of `customLists(asArray: true)`, which the
+ * generated code exposes as a kotlinx [JsonElement]. Absent, malformed, or
+ * wrong-shape payloads degrade to an empty list; non-string elements are dropped,
+ * matching the legacy Gson lane for absent custom lists.
  */
-private fun String?.toCustomListNames(): List<String> {
-    val raw = this ?: return emptyList()
-    if (raw.isBlank()) {
-        return emptyList()
+private fun JsonElement?.toCustomListNames(): List<String> {
+    if (this !is JsonArray) return emptyList()
+    return mapNotNull { element ->
+        (element as? JsonPrimitive)
+            ?.takeIf { it.isString }
+            ?.content
     }
-    return runCatching {
-        JsonParser.parseString(raw).asJsonArray.mapNotNull { element ->
-            element.takeIf { it.isJsonPrimitive && it.asJsonPrimitive.isString }?.asString
-        }
-    }.getOrDefault(emptyList())
 }
 
 /**
- * Parses the GraphQL `Json` scalar payload of `advancedScores` into the domain map.
- * Unknown or malformed payloads degrade to an empty map.
+ * Maps the GraphQL `Json` scalar payload of `advancedScores` into the domain map.
+ * Absent, malformed, or wrong-shape payloads degrade to an empty map; non-numeric
+ * values degrade to 0.0 for their key.
  */
-private fun String?.toAdvancedScores(): Map<String, Double> {
-    val raw = this ?: return emptyMap()
-    if (raw.isBlank()) {
-        return emptyMap()
+private fun JsonElement?.toAdvancedScores(): Map<String, Double> {
+    if (this !is JsonObject) return emptyMap()
+    val scores = mutableMapOf<String, Double>()
+    for ((key, value) in this) {
+        scores[key] = (value as? JsonPrimitive)?.asScoreOrZero() ?: 0.0
     }
-    return runCatching {
-        val jsonObject: com.google.gson.JsonObject = JsonParser.parseString(raw).asJsonObject
-        val scores = mutableMapOf<String, Double>()
-        jsonObject.entrySet().forEach { (key, value) ->
-            scores[key] = value.takeIf { it.isJsonPrimitive }?.asDouble ?: 0.0
-        }
-        scores
-    }.getOrDefault(emptyMap())
+    return scores
 }
+
+/** Accepts only genuine JSON numbers; strings, booleans, and null degrade to 0.0. */
+private fun JsonPrimitive.asScoreOrZero(): Double = if (isString) 0.0 else content.toDoubleOrNull() ?: 0.0

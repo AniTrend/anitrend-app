@@ -300,7 +300,7 @@ private val coreModule = module {
             ) as NotificationManager?,
         )
     }
-    single(createdAtStart = true) {
+    single {
         EmojiManager.create(
             context = androidContext(),
             serializer = GsonDeserializer(),
@@ -308,7 +308,6 @@ private val coreModule = module {
     }
     single(
         qualifier = named("ua"),
-        createdAtStart = true,
     ) {
         WebSettings.getDefaultUserAgent(androidContext())
     }

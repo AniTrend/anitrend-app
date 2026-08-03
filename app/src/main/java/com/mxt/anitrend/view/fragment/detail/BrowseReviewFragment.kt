@@ -155,6 +155,7 @@ class BrowseReviewFragment : FragmentBaseList<ReviewRecord, PageContainer<Review
     }
 
     override fun onStart() {
+        super.onStart()
         showLoading()
         if ((reviewAdapter?.itemCount ?: 0) < 1) {
             onRefresh()
@@ -209,16 +210,11 @@ class BrowseReviewFragment : FragmentBaseList<ReviewRecord, PageContainer<Review
             setPageInfo(value.pageInfo)
         }
         if (!value.isEmpty) {
-            reviewAdapter?.submitList(value.pageData)
-            updateUI()
+            reviewAdapter?.submitList(value.pageData) { updateUI() }
         } else if (replaceExisting) {
-            reviewAdapter?.submitList(emptyList())
-            updateUI()
+            reviewAdapter?.submitList(emptyList()) { updateUI() }
         } else if (isPager) {
             setLimitReached()
-        }
-        if ((reviewAdapter?.itemCount ?: 0) < 1) {
-            showEmpty(getString(R.string.layout_empty_response))
         }
     }
 
