@@ -7,6 +7,7 @@ data class MediaSummaryRecord(
     val titleEnglish: String?,
     val titleOriginal: String?,
     val coverImage: String?,
+    val bannerImage: String? = null,
     val type: String?,
     val format: String? = null,
     val episodes: Int,
@@ -17,4 +18,5 @@ data class MediaSummaryRecord(
     val isFavourite: Boolean = false,
     val startDate: FuzzyDateRecord? = null,
     val nextAiringEpisode: AiringScheduleRecord? = null,
+    val averageScore: Int? = null,
 )

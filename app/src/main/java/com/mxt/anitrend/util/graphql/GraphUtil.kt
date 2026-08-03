@@ -1,7 +1,6 @@
 package com.mxt.anitrend.util.graphql
 
 import com.mxt.anitrend.model.entity.anilist.FeedList
-import com.mxt.anitrend.model.entity.anilist.Notification
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.Settings
@@ -28,23 +27,6 @@ object GraphUtil {
             feedLists
                 .filter { f -> !f.type.isNullOrBlank() }
         presenter.getPageInfo()?.perPage = filteredList.size
-        return filteredList
-    }
-
-    /**
-     * Remove empty json object responses, to resolve undefined content errors
-     */
-    @Deprecated("Will be deprecated once AL sorts out their notification issues")
-    fun filterNotificationList(
-        presenter: BasePresenter,
-        notifications: List<Notification>,
-    ): List<Notification> {
-        val filteredList =
-            notifications
-                .filter { f -> !f.type.isNullOrBlank() }
-        if (presenter.getPageInfo() != null) {
-            presenter.getPageInfo()?.perPage = filteredList.size
-        }
         return filteredList
     }
 }

@@ -1,6 +1,5 @@
 package com.mxt.anitrend.view.fragment.favourite
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -135,11 +134,7 @@ class MediaFavouriteFragment : FragmentBaseList<MediaBase, ConnectionContainer<F
         when (target.id) {
             R.id.container -> {
                 val host = activity ?: return
-                val intent =
-                    Intent(host, MediaActivity::class.java).apply {
-                        putExtra(KeyUtil.arg_id, data.value.id)
-                        putExtra(KeyUtil.arg_mediaType, data.value.type)
-                    }
+                val intent = MediaActivity.newIntent(host, data.value.id, data.value.type)
                 CompatUtil.startRevealAnim(host, target, intent)
             }
         }

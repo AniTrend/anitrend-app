@@ -12,14 +12,16 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
-import com.mxt.anitrend.adapter.recycler.detail.NotificationAdapter
+import com.mxt.anitrend.adapter.recycler.detail.NotificationListAdapter
 import com.mxt.anitrend.base.custom.async.ThreadPool
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
 import com.mxt.anitrend.data.DatabaseHelper
-import com.mxt.anitrend.model.entity.anilist.Notification
+import com.mxt.anitrend.data.mapper.toPageInfo
+import com.mxt.anitrend.domain.model.NotificationItemUiModel
+import com.mxt.anitrend.domain.model.NotificationPageResult
+import com.mxt.anitrend.domain.model.toNotificationItemUiModel
 import com.mxt.anitrend.model.entity.base.NotificationHistory
 import com.mxt.anitrend.model.entity.base.NotificationHistory_
-import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
@@ -36,14 +38,30 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 /**
  * Created by max on 2017/12/06.
  * NotificationFragment
+ *
+ * Migrated to the immutable [NotificationItemUiModel] / [NotificationPageResult]
+ * lane. The fragment remains on the legacy [FragmentBaseList] shell for the list
+ * layout, swipe-to-refresh, and pagination scaffolding; it supplies read state
+ * from the ObjectBox `NotificationHistory` box and renders through the
+ * [NotificationListAdapter]. Do not migrate back to the mutable
+ * `Notification` entity lane.
  */
 
-class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notification>>() {
+class NotificationFragment : FragmentBaseList<NotificationItemUiModel, NotificationPageResult>() {
 
     private val settings: Settings by inject()
     private val databaseHelper by inject<DatabaseHelper>()
 
     private val notificationViewModel: NotificationViewModel by viewModel()
+
+    private lateinit var notificationAdapter: NotificationListAdapter
+
+    /**
+     * Every successfully loaded page projected into immutable UI models. Appends
+     * on pagination, replaced on refresh, and re-projected whenever the read
+     * state changes.
+     */
+    private var loadedItems: List<NotificationItemUiModel> = emptyList()
 
     /**
      * Override and set presenter, mColumnSize, and fetch argument/s
@@ -52,11 +70,14 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val ctx = requireContext()
         mColumnSize = R.integer.single_list_x1
         isPager = true
         setInflateMenu(R.menu.notification_menu)
-        mAdapter = NotificationAdapter(ctx)
+        notificationAdapter =
+            NotificationListAdapter(
+                onItemClick = ::onNotificationClick,
+                onItemLongClick = ::onNotificationLongClick,
+            )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -81,6 +102,27 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        @Suppress("DEPRECATION")
+        if (!isMenuDisabled) {
+            setHasOptionsMenu(true)
+        }
+        showLoading()
+        if (notificationAdapter.itemCount < 1) {
+            onRefresh()
+        } else {
+            updateUI()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (this::notificationAdapter.isInitialized) {
+            refreshReadStates()
+        }
+    }
+
     /**
      * Is automatically called in the @onStart Method if overridden in list implementation
      */
@@ -90,12 +132,25 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
             if (historyItems < 1) {
                 markAllNotificationsAsRead()
             }
-            injectAdapter()
 
             currentUser?.also {
                 it.unreadNotificationCount = 0
                 currentUser = it
             }
+        }
+
+        if (notificationAdapter.itemCount > 0) {
+            if (recyclerView.adapter !== notificationAdapter) {
+                recyclerView.adapter = notificationAdapter
+            }
+            if (swipeRefreshLayout.isRefreshing()) {
+                swipeRefreshLayout.setRefreshing(false)
+            } else if (swipeRefreshLayout.isLoading()) {
+                swipeRefreshLayout.setLoading(false)
+            }
+            showContent()
+        } else {
+            showEmpty(getString(R.string.layout_empty_response))
         }
     }
 
@@ -110,7 +165,7 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_mark_all -> {
-                if (mAdapter.itemCount > 0) {
+                if (notificationAdapter.itemCount > 0) {
                     ThreadPool.execute { markAllNotificationsAsRead() }
                 } else {
                     context?.also {
@@ -124,115 +179,72 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onResume() {
-        super.onResume()
-        if (this::mAdapter.isInitialized) {
-            mAdapter.notifyDataSetChanged()
-        }
-    }
-
     override fun makeRequest() {
         notificationViewModel.load(page = mScrollListener.currentPage)
     }
 
-    private fun handleSuccess(value: PageContainer<Notification>) {
-        if (value.hasPageInfo()) {
-            setPageInfo(value.pageInfo)
+    private fun handleSuccess(value: NotificationPageResult) {
+        value.pageInfo?.let { setPageInfo(it.toPageInfo()) }
+        val readIds = readNotificationIds()
+        val pageItems = value.notifications.mapNotNull { record ->
+            record.toNotificationItemUiModel(isRead = record.id in readIds)
         }
-        if (!value.isEmpty) {
-            @Suppress("DEPRECATION")
-            val filtered = value.pageData.filter { !it.type.isNullOrBlank() }
-            mScrollListener.getPageInfo()?.perPage = filtered.size
-            onPostProcessed(filtered)
+        loadedItems =
+            if (isPager && !swipeRefreshLayout.isRefreshing() && loadedItems.isNotEmpty()) {
+                loadedItems + pageItems
+            } else {
+                pageItems
+            }
+        mScrollListener.getPageInfo()?.perPage = pageItems.size
+        if (loadedItems.isEmpty()) {
+            notificationAdapter.submitList(emptyList())
+            setLimitReached()
+            showEmpty(getString(R.string.layout_empty_response))
         } else {
-            onPostProcessed(emptyList())
-        }
-        if (mAdapter.itemCount < 1) {
-            onPostProcessed(null)
+            // updateUI is deferred to the submit commit callback so the adapter's
+            // itemCount has settled before the content/empty teardown runs.
+            notificationAdapter.submitList(loadedItems) { updateUI() }
         }
     }
 
     /** No-op: StateFlow collector above handles the response. */
-    override fun onChanged(value: PageContainer<Notification>?) = Unit
+    override fun onChanged(value: NotificationPageResult?) = Unit
 
-    /**
-     * Ran on a background thread to assure we don't skip frames
-     * @see ThreadPool
-     */
-    private fun setItemAsRead(data: Notification) {
-        ThreadPool.execute {
-            val isNotificationRead = databaseHelper.getBoxStore(NotificationHistory::class.java)
-                .query().equal(NotificationHistory_.id, data.id).build().count() != 0L
-            if (!isNotificationRead) {
-                val dismissibleNotifications = mAdapter.data
-                    .filter { item -> item.activityId != 0L && item.activityId == data.activityId }
-                    .map { item -> NotificationHistory(item.id) }
+    /** Click and long-click affordances are forwarded through the adapter callbacks. */
+    override fun onItemClick(target: View, data: IndexedValue<NotificationItemUiModel>) = Unit
 
-                if (!CompatUtil.isEmpty(dismissibleNotifications)) {
-                    databaseHelper.getBoxStore(NotificationHistory::class.java)
-                        .put(dismissibleNotifications)
-                } else {
-                    databaseHelper.getBoxStore(NotificationHistory::class.java)
-                        .put(NotificationHistory(data.id))
-                }
-            }
-        }
-    }
+    override fun onItemLongClick(target: View, data: IndexedValue<NotificationItemUiModel>) = Unit
 
-    /**
-     * Ran on a background thread to assure we don't skip frames
-     * @see ThreadPool
-     */
-    private fun markAllNotificationsAsRead() {
-        val notificationHistories = mAdapter.data
-            .map { notification -> NotificationHistory(notification.id) }
-
-        databaseHelper.getBoxStore(NotificationHistory::class.java)
-            .put(notificationHistories)
-
-        activity?.runOnUiThread {
-            if (this::mAdapter.isInitialized) {
-                mAdapter.notifyDataSetChanged()
-            }
-        }
-    }
-
-    /**
-     * When the target view from [View.OnClickListener]
-     * is clicked from a view holder this method will be called
-     *
-     * @param target view that has been clicked
-     * @param data   the model that at the click index
-     */
-    override fun onItemClick(target: View, data: IndexedValue<Notification>) {
+    private fun onNotificationClick(target: View, item: NotificationItemUiModel) {
         val host = activity ?: return
+        val record = item.record
         val intent: Intent
-        setItemAsRead(data.value)
+        setItemAsRead(item)
         if (target.id == R.id.notification_img &&
-            !CompatUtil.equals(data.value.type, KeyUtil.AIRING) &&
-            !CompatUtil.equals(data.value.type, KeyUtil.RELATED_MEDIA_ADDITION) &&
-            !CompatUtil.equals(data.value.type, KeyUtil.MEDIA_DATA_CHANGE) &&
-            !CompatUtil.equals(data.value.type, KeyUtil.MEDIA_DELETION) &&
-            !CompatUtil.equals(data.value.type, KeyUtil.MEDIA_MERGE)
+            !CompatUtil.equals(record.type, KeyUtil.AIRING) &&
+            !CompatUtil.equals(record.type, KeyUtil.RELATED_MEDIA_ADDITION) &&
+            !CompatUtil.equals(record.type, KeyUtil.MEDIA_DATA_CHANGE) &&
+            !CompatUtil.equals(record.type, KeyUtil.MEDIA_DELETION) &&
+            !CompatUtil.equals(record.type, KeyUtil.MEDIA_MERGE)
         ) {
             intent = Intent(host, ProfileActivity::class.java)
-            intent.putExtra(KeyUtil.arg_id, data.value.user.id)
+            intent.putExtra(KeyUtil.arg_id, record.user?.id ?: 0L)
             startActivity(intent)
         } else {
-            when (data.value.type) {
+            when (record.type) {
                 KeyUtil.ACTIVITY_MESSAGE -> {
                     intent = Intent(host, CommentActivity::class.java)
-                    intent.putExtra(KeyUtil.arg_id, data.value.activityId)
+                    intent.putExtra(KeyUtil.arg_id, record.activityId ?: 0L)
                     startActivity(intent)
                 }
                 KeyUtil.FOLLOWING -> {
                     intent = Intent(host, ProfileActivity::class.java)
-                    intent.putExtra(KeyUtil.arg_id, data.value.user.id)
+                    intent.putExtra(KeyUtil.arg_id, record.user?.id ?: 0L)
                     startActivity(intent)
                 }
                 KeyUtil.ACTIVITY_MENTION -> {
                     intent = Intent(host, CommentActivity::class.java)
-                    intent.putExtra(KeyUtil.arg_id, data.value.activityId)
+                    intent.putExtra(KeyUtil.arg_id, record.activityId ?: 0L)
                     startActivity(intent)
                 }
                 KeyUtil.AIRING,
@@ -241,27 +253,25 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
                 KeyUtil.MEDIA_DELETION,
                 KeyUtil.MEDIA_MERGE,
                 -> {
-                    intent = Intent(host, MediaActivity::class.java)
-                    intent.putExtra(KeyUtil.arg_id, data.value.media?.id)
-                    intent.putExtra(KeyUtil.arg_mediaType, data.value.media?.type)
+                    intent = MediaActivity.newIntent(host, record.media?.id ?: 0L, record.media?.type)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    if (data.value.media != null) {
+                    if (record.media != null) {
                         startActivity(intent)
                     }
                 }
                 KeyUtil.ACTIVITY_LIKE -> {
                     intent = Intent(host, CommentActivity::class.java)
-                    intent.putExtra(KeyUtil.arg_id, data.value.activityId)
+                    intent.putExtra(KeyUtil.arg_id, record.activityId ?: 0L)
                     startActivity(intent)
                 }
                 KeyUtil.ACTIVITY_REPLY, KeyUtil.ACTIVITY_REPLY_SUBSCRIBED -> {
                     intent = Intent(host, CommentActivity::class.java)
-                    intent.putExtra(KeyUtil.arg_id, data.value.activityId)
+                    intent.putExtra(KeyUtil.arg_id, record.activityId ?: 0L)
                     startActivity(intent)
                 }
                 KeyUtil.ACTIVITY_REPLY_LIKE -> {
                     intent = Intent(host, CommentActivity::class.java)
-                    intent.putExtra(KeyUtil.arg_id, data.value.activityId)
+                    intent.putExtra(KeyUtil.arg_id, record.activityId ?: 0L)
                     startActivity(intent)
                 }
                 KeyUtil.THREAD_SUBSCRIBED,
@@ -270,7 +280,7 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
                     intent = Intent(Intent.ACTION_VIEW)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     intent.data = Uri.parse(
-                        "https://anilist.co/forum/thread/${data.value.thread.id}",
+                        "https://anilist.co/forum/thread/${record.threadId ?: 0L}",
                     )
                     startActivity(intent)
                 }
@@ -280,7 +290,7 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
                 -> {
                     intent = Intent(Intent.ACTION_VIEW)
                     intent.data = Uri.parse(
-                        "https://anilist.co/forum/thread/${data.value.thread.id}/comment/${data.value.commentId}",
+                        "https://anilist.co/forum/thread/${record.threadId ?: 0L}/comment/${record.commentId ?: 0L}",
                     )
                     startActivity(intent)
                 }
@@ -288,17 +298,11 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
         }
     }
 
-    /**
-     * When the target view from [View.OnLongClickListener]
-     * is clicked from a view holder this method will be called
-     *
-     * @param target view that has been long clicked
-     * @param data   the model that at the long click index
-     */
-    override fun onItemLongClick(target: View, data: IndexedValue<Notification>) {
-        if (CompatUtil.equals(data.value.type, KeyUtil.AIRING)) {
-            setItemAsRead(data.value)
-            data.value.media?.also {
+    private fun onNotificationLongClick(target: View, item: NotificationItemUiModel) {
+        val record = item.record
+        if (CompatUtil.equals(record.type, KeyUtil.AIRING)) {
+            setItemAsRead(item)
+            record.media?.also {
                 if (settings.isAuthenticated) {
                     val host = activity ?: return
                     mediaActionUtil = MediaActionUtil.Builder()
@@ -307,6 +311,64 @@ class NotificationFragment : FragmentBaseList<Notification, PageContainer<Notifi
                 }
             }
         }
+    }
+
+    /**
+     * Ran on a background thread to assure we don't skip frames
+     * @see ThreadPool
+     */
+    private fun setItemAsRead(data: NotificationItemUiModel) {
+        ThreadPool.execute {
+            val isNotificationRead = databaseHelper.getBoxStore(NotificationHistory::class.java)
+                .query().equal(NotificationHistory_.id, data.record.id).build().count() != 0L
+            if (!isNotificationRead) {
+                val dismissibleNotifications = loadedItems
+                    .map { item -> item.record }
+                    .filter { item -> item.activityId != null && item.activityId != 0L && item.activityId == data.record.activityId }
+                    .map { item -> NotificationHistory(item.id) }
+
+                if (!CompatUtil.isEmpty(dismissibleNotifications)) {
+                    databaseHelper.getBoxStore(NotificationHistory::class.java)
+                        .put(dismissibleNotifications)
+                } else {
+                    databaseHelper.getBoxStore(NotificationHistory::class.java)
+                        .put(NotificationHistory(data.record.id))
+                }
+                activity?.runOnUiThread { refreshReadStates() }
+            }
+        }
+    }
+
+    /**
+     * Ran on a background thread to assure we don't skip frames
+     * @see ThreadPool
+     */
+    private fun markAllNotificationsAsRead() {
+        val notificationHistories = loadedItems
+            .map { item -> NotificationHistory(item.record.id) }
+
+        databaseHelper.getBoxStore(NotificationHistory::class.java)
+            .put(notificationHistories)
+
+        activity?.runOnUiThread { refreshReadStates() }
+    }
+
+    /**
+     * Reads the current read-state ids from the `NotificationHistory` box.
+     */
+    private fun readNotificationIds(): Set<Long> = databaseHelper.getBoxStore(NotificationHistory::class.java).all.mapTo(mutableSetOf()) { it.id }
+
+    /**
+     * Re-projects the loaded rows with the current read state and re-submits so
+     * the unread indicators stay in sync after marks-as-read and on resume. The
+     * canonical fragment list is updated in place before submitting so it never
+     * diverges from the adapter list.
+     */
+    private fun refreshReadStates() {
+        if (!this::notificationAdapter.isInitialized) return
+        val readIds = readNotificationIds()
+        loadedItems = loadedItems.map { item -> item.copy(isRead = item.id in readIds) }
+        notificationAdapter.submitList(loadedItems)
     }
 
     companion object {

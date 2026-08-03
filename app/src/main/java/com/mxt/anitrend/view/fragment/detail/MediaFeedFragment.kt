@@ -50,7 +50,7 @@ class MediaFeedFragment : FeedListFragment() {
                             // Loading is handled by swipeRefreshLayout in the base class
                         }
                         is MediaFeedViewModel.UiState.Success -> {
-                            handleSuccess(state.content, state.items, state.replaceExisting)
+                            handleSuccess(state.items, state.pageInfo)
                         }
                         is MediaFeedViewModel.UiState.Error -> {
                             showError(state.message)
@@ -68,6 +68,7 @@ class MediaFeedFragment : FeedListFragment() {
             isFollowing = args.getBoolean(KeyUtil.arg_isFollowing, true),
             page = mScrollListener.currentPage,
             pageLimit = args.getInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT),
+            currentUserId = currentUserId(),
         )
     }
 
@@ -78,6 +79,4 @@ class MediaFeedFragment : FeedListFragment() {
     override fun onDeleteFeed(feedId: Long) {
         mediaFeedViewModel.deleteFeed(feedId)
     }
-
-    override fun currentRenderedFeeds() = (mediaFeedViewModel.state.value as? MediaFeedViewModel.UiState.Success)?.content?.pageData.orEmpty()
 }

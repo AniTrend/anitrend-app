@@ -40,7 +40,7 @@ class StudioRepositoryTest {
     )
 
     @Test
-    fun `getStudioBase success maps GraphContainer data to StudioEntity`() = runTest {
+    fun `getStudioBase success maps GraphContainer data to StudioRecord`() = runTest {
         val call = studioBaseCall()
         val request = StudioBase.request(id = 5)
         `when`(service.getStudioBase(request)).thenReturn(call)

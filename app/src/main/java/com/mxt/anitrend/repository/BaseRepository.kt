@@ -7,6 +7,7 @@ import com.mxt.anitrend.base.interfaces.dao.BoxQuery
 import com.mxt.anitrend.data.mapper.toUserSummaryRecords
 import com.mxt.anitrend.data.store.feed.FeedStore
 import com.mxt.anitrend.data.store.feed.FeedStoreChange
+import com.mxt.anitrend.domain.model.UserSummaryRecord
 import com.mxt.anitrend.graphql.generated.GenreCollection
 import com.mxt.anitrend.graphql.generated.GenreCollectionData
 import com.mxt.anitrend.graphql.generated.LikeableType
@@ -134,6 +135,59 @@ class BaseRepository(
                     }
                 }
                 result
+            } else {
+                throw RuntimeException(response.apiError())
+            }
+        }
+    }
+
+    // Record-typed additive surface for the feed/reply like boundary (Lane C).
+    //
+    // Preserves the exact transport, request parameters, like replacement,
+    // revision-token, stale-response, and failure semantics of the legacy
+    // entity-typed toggleLike above, but returns the like summary records that
+    // are committed to the FeedStore.
+    suspend fun toggleLikeRecords(
+        id: Long,
+        type: LikeableType,
+        commitToStore: Boolean = true,
+        replyFeedId: Long? = null,
+        revision: Long = 0L,
+    ): Result<List<UserSummaryRecord>> = withContext(ioDispatcher) {
+        runCatching {
+            val request = ToggleLike.request(id = id.toInt(), type = type)
+            val response = baseService.toggleLike(request).execute()
+            if (response.isSuccessful) {
+                val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                val likes = result.toUserSummaryRecords()
+                if (commitToStore) {
+                    when (type) {
+                        LikeableType.ACTIVITY -> {
+                            feedStore?.apply(
+                                FeedStoreChange.FeedLikesReplaced(
+                                    feedId = id,
+                                    likes = likes,
+                                    revision = revision,
+                                ),
+                            )
+                        }
+                        LikeableType.ACTIVITY_REPLY -> {
+                            val parentFeedId = replyFeedId ?: feedStore?.state?.value?.repliesById?.get(id)?.activityId
+                            if (parentFeedId != null) {
+                                feedStore?.apply(
+                                    FeedStoreChange.ReplyLikesReplaced(
+                                        feedId = parentFeedId,
+                                        replyId = id,
+                                        likes = likes,
+                                        revision = revision,
+                                    ),
+                                )
+                            }
+                        }
+                        else -> Unit
+                    }
+                }
+                likes
             } else {
                 throw RuntimeException(response.apiError())
             }

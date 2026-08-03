@@ -1,9 +1,9 @@
 package com.mxt.anitrend.data.store.review
 
-import com.mxt.anitrend.model.entity.anilist.Review
+import com.mxt.anitrend.domain.model.ReviewRecord
 
 data class ReviewStoreRecord(
-    val review: Review,
+    val review: ReviewRecord,
     val revision: Long,
 )
 

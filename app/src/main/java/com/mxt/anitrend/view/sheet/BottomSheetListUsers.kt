@@ -20,7 +20,11 @@ import com.mxt.anitrend.base.interfaces.event.ISearchDelegate
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener
 import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener
 import com.mxt.anitrend.data.DatabaseHelper
+import com.mxt.anitrend.data.store.user.UserStore
 import com.mxt.anitrend.databinding.BottomSheetListBinding
+import com.mxt.anitrend.domain.model.ToggleUserFollowCommand
+import com.mxt.anitrend.domain.model.UserRecord
+import com.mxt.anitrend.domain.user.interactor.ToggleUserFollowInteractor
 import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.model.entity.container.body.PageContainer
@@ -57,6 +61,8 @@ class BottomSheetListUsers :
     private var requestType: Int = 0
 
     private val databaseHelper: DatabaseHelper by inject()
+    private val userStore: UserStore by inject()
+    private val toggleUserFollowInteractor: ToggleUserFollowInteractor by inject()
 
     private val userListViewModel: UserListViewModel by viewModel()
 
@@ -84,10 +90,48 @@ class BottomSheetListUsers :
         mAdapter = UserAdapter(
             context = ctx,
             currentUser = databaseHelper.currentUser,
-            onToggleFollowAction = userListViewModel::toggleFollow,
+            onToggleFollowAction = ::toggleFollow,
         )
         isPager = true
         mColumnSize = resources.getInteger(R.integer.single_list_x1)
+        observeUserStore()
+    }
+
+    /**
+     * Fire-and-forget delivery from the render-only [FollowStateWidget]. The legacy adapter
+     * still passes a result callback slot, which is intentionally ignored: the mutation result
+     * is applied by observing [UserStore] below.
+     */
+    private fun toggleFollow(
+        userId: Long,
+        @Suppress("UNUSED_PARAMETER") onResult: (Result<UserBase>) -> Unit,
+    ) {
+        lifecycleScope.launch {
+            toggleUserFollowInteractor(ToggleUserFollowCommand(userId = userId))
+        }
+    }
+
+    /**
+     * Smallest behavior-preserving bridge between the canonical [UserStore] and the legacy
+     * adapter: committed follow changes for users in the list are written back onto the
+     * existing item so the widget re-renders the authoritative state. A failed mutation
+     * commits nothing, so the displayed state stays unchanged.
+     */
+    private fun observeUserStore() {
+        lifecycleScope.launch {
+            userStore.state.collect { state ->
+                state.usersById.values.forEach(::rebindUserIfPresent)
+            }
+        }
+    }
+
+    private fun rebindUserIfPresent(record: UserRecord) {
+        val position = mAdapter.data.indexOfFirst { it.id == record.id }
+        if (position < 0) return
+        val current = mAdapter.data[position]
+        if (current.rebindFollowState(record)) {
+            mAdapter.onItemChanged(current, position)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -333,4 +377,17 @@ class BottomSheetListUsers :
             return this
         }
     }
+}
+
+/**
+ * Converges a legacy list item's follow state to the authoritative committed [UserRecord].
+ * Returns true when the item's follow state actually changed (successful mutation state
+ * convergence), false when the record is absent (a failed mutation commits nothing, so the
+ * displayed state must stay unchanged), belongs to another user, or already matches (no
+ * spurious re-render).
+ */
+internal fun UserBase.rebindFollowState(record: UserRecord?): Boolean {
+    if (record == null || record.id != id || isFollowing == record.isFollowing) return false
+    isFollowing = record.isFollowing
+    return true
 }

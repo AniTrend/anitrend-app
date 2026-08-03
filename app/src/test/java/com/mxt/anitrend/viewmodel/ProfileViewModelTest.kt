@@ -1,5 +1,6 @@
 package com.mxt.anitrend.viewmodel
 
+import com.mxt.anitrend.domain.user.model.UserStatisticsRecord
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.repository.UserRepository
 import kotlinx.coroutines.Dispatchers
@@ -115,5 +116,37 @@ class ProfileViewModelTest {
     fun `GraphQL error message is surfaced in Error state`() {
         val state = ProfileViewModel.UiState.Error("User not found")
         assertEquals("User not found", state.message)
+    }
+
+    // ── loadStats ──
+
+    @Test
+    fun `loadStats returns the stats record from the repository`() = runTest {
+        val stats = UserStatisticsRecord(
+            anime = UserStatisticsRecord.Anime(count = 3, minutesWatched = 1_200),
+            manga = UserStatisticsRecord.Manga(chaptersRead = 40),
+        )
+        doReturn(Result.success(stats))
+            .`when`(userRepository)
+            .getUserStats(id = 1L, userName = null)
+        val vm = ProfileViewModel(userRepository = userRepository, ioDispatcher = testDispatcher)
+
+        val result = vm.loadStats(userId = 1L, userName = null)
+
+        assertTrue(result.isSuccess)
+        assertEquals(stats, result.getOrThrow())
+    }
+
+    @Test
+    fun `loadStats forwards a repository failure`() = runTest {
+        doReturn(Result.failure<UserStatisticsRecord>(RuntimeException("Stats failed")))
+            .`when`(userRepository)
+            .getUserStats(id = null, userName = "profile")
+        val vm = ProfileViewModel(userRepository = userRepository, ioDispatcher = testDispatcher)
+
+        val result = vm.loadStats(userId = 0L, userName = "profile")
+
+        assertTrue(result.isFailure)
+        assertEquals("Stats failed", result.exceptionOrNull()?.message)
     }
 }

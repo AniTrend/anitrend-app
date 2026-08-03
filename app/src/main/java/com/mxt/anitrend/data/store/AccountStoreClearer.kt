@@ -1,16 +1,20 @@
 package com.mxt.anitrend.data.store
 
+import com.mxt.anitrend.data.store.favourite.FavouriteStore
 import com.mxt.anitrend.data.store.feed.FeedStore
 import com.mxt.anitrend.data.store.medialist.MediaListStore
 import com.mxt.anitrend.data.store.mutation.MutationRegistry
 import com.mxt.anitrend.data.store.mutation.SessionEpoch
 import com.mxt.anitrend.data.store.review.ReviewStore
+import com.mxt.anitrend.data.store.user.UserStore
 import kotlinx.coroutines.runBlocking
 
 class AccountStoreClearer(
     private val feedStore: FeedStore,
     private val mediaListStore: MediaListStore,
     private val reviewStore: ReviewStore,
+    private val userStore: UserStore,
+    private val favouriteStore: FavouriteStore,
     private val mutationRegistry: MutationRegistry,
     private val sessionEpoch: SessionEpoch,
 ) {
@@ -25,6 +29,8 @@ class AccountStoreClearer(
             feedStore.clear()
             mediaListStore.clear()
             reviewStore.clear()
+            userStore.clear()
+            favouriteStore.clear()
             mutationRegistry.clearAll()
         }
     }

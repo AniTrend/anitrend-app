@@ -3,10 +3,11 @@ package com.mxt.anitrend.data.store
 import com.mxt.anitrend.data.store.review.InMemoryReviewStore
 import com.mxt.anitrend.data.store.review.ReviewQueryKey
 import com.mxt.anitrend.data.store.review.ReviewStoreChange
+import com.mxt.anitrend.domain.model.MediaSummaryRecord
 import com.mxt.anitrend.domain.model.PageInfoRecord
+import com.mxt.anitrend.domain.model.ReviewRecord
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.graphql.generated.ReviewSort
-import com.mxt.anitrend.model.entity.anilist.Review
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -97,13 +98,41 @@ class ReviewStoreTest {
     private fun review(
         id: Long,
         rating: Int = 0,
-    ): Review = Review().apply {
-        this.id = id
-        this.rating = rating
-        media.id = 100L + id
-        media.type = MediaType.ANIME.name
-        mediaType = MediaType.ANIME.name
-    }
+    ): ReviewRecord = ReviewRecord(
+        id = id,
+        summary = null,
+        mediaType = MediaType.ANIME.name,
+        body = null,
+        rating = rating,
+        ratingAmount = 0,
+        userRating = null,
+        score = 0,
+        isPrivate = false,
+        createdAt = 0L,
+        user = null,
+        media = mediaSummary(100L + id),
+        revision = 0L,
+    )
+
+    private fun mediaSummary(id: Long): MediaSummaryRecord = MediaSummaryRecord(
+        id = id,
+        titleUserPreferred = null,
+        titleRomaji = null,
+        titleEnglish = null,
+        titleOriginal = null,
+        coverImage = null,
+        type = MediaType.ANIME.name,
+        format = null,
+        episodes = 0,
+        chapters = 0,
+        volumes = 0,
+        status = null,
+        siteUrl = null,
+        isFavourite = false,
+        startDate = null,
+        nextAiringEpisode = null,
+        averageScore = null,
+    )
 
     private fun pageInfo(currentPage: Int): PageInfoRecord = PageInfoRecord(
         currentPage = currentPage,

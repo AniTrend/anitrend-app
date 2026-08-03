@@ -4,14 +4,14 @@ import android.content.Context
 import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
 import com.mxt.anitrend.base.interfaces.dao.BoxQuery
+import com.mxt.anitrend.domain.model.NotificationPageResult
+import com.mxt.anitrend.domain.model.NotificationRecord
 import com.mxt.anitrend.model.entity.anilist.Genre
 import com.mxt.anitrend.model.entity.anilist.MediaTag
-import com.mxt.anitrend.model.entity.anilist.Notification
 import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.model.entity.anilist.WebToken
 import com.mxt.anitrend.model.entity.base.AuthBase
 import com.mxt.anitrend.model.entity.base.VersionBase
-import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.repository.BaseRepository
 import com.mxt.anitrend.repository.UserRepository
@@ -114,9 +114,10 @@ class WorkerRepositoryRoutingTest {
     @Test
     fun `NotificationWorker gets current user and notifications from repository on success`() = runTest {
         val user = User().apply { unreadNotificationCount = 1 }
-        val notifications = PageContainer<Notification>().apply {
-            pageData = listOf(Notification().apply { id = 100 })
-        }
+        val notifications = NotificationPageResult(
+            notifications = listOf(NotificationRecord(id = 100)),
+            pageInfo = null,
+        )
         doReturn(true).`when`(settings).isAuthenticated
         doReturn(Result.success(user)).`when`(userRepository).getCurrentUser(asHtml = false)
         doReturn(Result.success(notifications))
@@ -142,9 +143,10 @@ class WorkerRepositoryRoutingTest {
     @Test
     fun `ClearNotificationWorker gets current user and notifications from repository on success`() = runTest {
         val user = User().apply { unreadNotificationCount = 1 }
-        val notifications = PageContainer<Notification>().apply {
-            pageData = listOf(Notification().apply { id = 200 })
-        }
+        val notifications = NotificationPageResult(
+            notifications = listOf(NotificationRecord(id = 200)),
+            pageInfo = null,
+        )
         doReturn(true).`when`(settings).isAuthenticated
         doReturn(Result.success(user)).`when`(userRepository).getCurrentUser(asHtml = false)
         doReturn(Result.success(notifications))

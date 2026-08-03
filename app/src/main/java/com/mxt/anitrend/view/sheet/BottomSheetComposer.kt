@@ -8,12 +8,15 @@ import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
 import com.mxt.anitrend.base.custom.view.editor.ComposerWidget
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener
+import com.mxt.anitrend.data.store.mutation.MutationResult
 import com.mxt.anitrend.databinding.BottomSheetComposerBinding
+import com.mxt.anitrend.domain.feed.interactor.SaveFeedInteractor
+import com.mxt.anitrend.domain.model.FeedItemUiModel
 import com.mxt.anitrend.extension.hideKeyboard
 import com.mxt.anitrend.extension.parcelable
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.base.UserBase
-import com.mxt.anitrend.repository.FeedRepository
+import com.mxt.anitrend.navigation.model.FeedComposerScreenParam
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import kotlinx.coroutines.launch
@@ -22,9 +25,15 @@ import org.koin.core.component.inject
 
 /**
  * Created by max on 2017/12/13.
+ *
+ * Feed composer bottom sheet for text and message activities. The sheet receives only
+ * the immutable [FeedComposerScreenParam] (feed id, draft text, recipient identity) and
+ * routes every save through [SaveFeedInteractor], which commits to the canonical feed
+ * store only after a server success. The sheet never holds or mutates a parceled
+ * legacy [FeedList].
  */
 class BottomSheetComposer :
-    BottomSheetBase<FeedList>(),
+    BottomSheetBase<Unit>(),
     ItemClickListener<Any>,
     KoinComponent {
     private var binding: BottomSheetComposerBinding? = null
@@ -35,10 +44,9 @@ class BottomSheetComposer :
 
     private var mBottomSheet: BottomSheetBase<*>? = null
 
-    private var feedList: FeedList? = null
-    private var user: UserBase? = null
+    private var composerParam: FeedComposerScreenParam? = null
 
-    private val feedRepository: FeedRepository by inject()
+    private val saveFeedInteractor: SaveFeedInteractor by inject()
 
     companion object {
         @JvmStatic
@@ -50,9 +58,8 @@ class BottomSheetComposer :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let { args ->
-            feedList = args.parcelable(KeyUtil.arg_model)
+            composerParam = args.parcelable(KeyUtil.arg_model)
             requestType = args.getInt(KeyUtil.arg_request_type)
-            user = args.parcelable(KeyUtil.arg_user_model)
         }
     }
 
@@ -70,22 +77,13 @@ class BottomSheetComposer :
         super.onStart()
         when (requestType) {
             KeyUtil.MUT_SAVE_TEXT_FEED -> {
-                val currentFeed = feedList
-                if (currentFeed != null) {
-                    composerWidget?.setModel(currentFeed, KeyUtil.MUT_SAVE_TEXT_FEED)
-                    composerWidget?.setText(currentFeed.text)
-                } else {
-                    composerWidget?.requestType = KeyUtil.MUT_SAVE_TEXT_FEED
-                }
+                composerParam?.draftText?.let { composerWidget?.setText(it) }
+                composerWidget?.requestType = KeyUtil.MUT_SAVE_TEXT_FEED
             }
             KeyUtil.MUT_SAVE_MESSAGE_FEED -> {
-                toolbarTitle?.text = getString(mTitle, user?.name ?: "")
-                val currentFeed = feedList
-                if (currentFeed != null) {
-                    composerWidget?.setText(currentFeed.text)
-                    composerWidget?.setModel(currentFeed)
-                }
-                user?.let { composerWidget?.setModel(it, KeyUtil.MUT_SAVE_MESSAGE_FEED) }
+                toolbarTitle?.text = getString(mTitle, composerParam?.recipientName ?: "")
+                composerParam?.draftText?.let { composerWidget?.setText(it) }
+                composerWidget?.requestType = KeyUtil.MUT_SAVE_MESSAGE_FEED
             }
         }
         composerWidget?.itemClickListener = this
@@ -96,30 +94,13 @@ class BottomSheetComposer :
                 @KeyUtil.RequestType requestType: Int,
                 onResult: (Boolean) -> Unit,
             ) {
+                val request = buildComposerSaveRequest(requestType, composerParam, text)
+                if (request == null) {
+                    onResult(false)
+                    return
+                }
                 lifecycleScope.launch {
-                    val success = when (requestType) {
-                        KeyUtil.MUT_SAVE_TEXT_FEED -> {
-                            val currentFeed = feedList
-                            if (currentFeed != null) {
-                                currentFeed.text = text
-                                feedRepository.saveTextActivity(id = currentFeed.id, text = text, asHtml = false).isSuccess
-                            } else {
-                                feedRepository.saveTextActivity(id = null, text = text, asHtml = false).isSuccess
-                            }
-                        }
-                        KeyUtil.MUT_SAVE_MESSAGE_FEED -> {
-                            val currentFeed = feedList
-                            val recipientId = user?.id ?: 0L
-                            if (currentFeed != null) {
-                                currentFeed.text = text
-                                feedRepository.saveMessageActivity(id = currentFeed.id, message = text, recipientId = recipientId, asHtml = false).isSuccess
-                            } else {
-                                feedRepository.saveMessageActivity(id = null, message = text, recipientId = recipientId, asHtml = false).isSuccess
-                            }
-                        }
-                        else -> false
-                    }
-                    onResult(success)
+                    onResult(saveFeedInteractor(request) is MutationResult.Success)
                 }
             }
         })
@@ -176,13 +157,59 @@ class BottomSheetComposer :
             return this
         }
 
+        /**
+         * Legacy compatibility bridge: extracts only the stable feed id and initial draft
+         * text from a [FeedList] and stores them in the typed [FeedComposerScreenParam].
+         * The entity itself is never parceled into the fragment bundle.
+         */
         fun setUserActivity(feedList: FeedList): Builder {
-            bundle.putParcelable(KeyUtil.arg_model, feedList)
+            val current = bundle.parcelable<FeedComposerScreenParam>(KeyUtil.arg_model) ?: FeedComposerScreenParam()
+            bundle.putParcelable(
+                KeyUtil.arg_model,
+                current.copy(
+                    feedId = feedList.id,
+                    draftText = feedList.text,
+                ),
+            )
             return this
         }
 
+        /**
+         * Typed record/UI-model bridge for the feed list edit path. Extracts only the
+         * stable feed id and draft text from the immutable [FeedItemUiModel] rendered by
+         * the store-backed feed adapters. Any recipient identity already present in the
+         * bundle (set via [setUserModel]) is preserved. The model itself is never
+         * parceled into the fragment bundle.
+         */
+        fun setUserActivity(feedItem: FeedItemUiModel): Builder {
+            val current = bundle.parcelable<FeedComposerScreenParam>(KeyUtil.arg_model) ?: FeedComposerScreenParam()
+            bundle.putParcelable(KeyUtil.arg_model, feedItem.toComposerParam(current))
+            return this
+        }
+
+        /**
+         * Legacy compatibility bridge: extracts only the recipient identity (id and name)
+         * from a [UserBase] and stores them in the typed [FeedComposerScreenParam].
+         * The entity itself is never parceled into the fragment bundle.
+         */
         fun setUserModel(userModel: UserBase): Builder {
-            bundle.putParcelable(KeyUtil.arg_user_model, userModel)
+            val current = bundle.parcelable<FeedComposerScreenParam>(KeyUtil.arg_model) ?: FeedComposerScreenParam()
+            bundle.putParcelable(
+                KeyUtil.arg_model,
+                current.copy(
+                    recipientId = userModel.id,
+                    recipientName = userModel.name,
+                ),
+            )
+            return this
+        }
+
+        /**
+         * Typed identity/draft contract for the composer. Prefer this over the legacy
+         * entity bridges once callers can supply identity-only values.
+         */
+        fun setComposerParam(composerParam: FeedComposerScreenParam): Builder {
+            bundle.putParcelable(KeyUtil.arg_model, composerParam)
             return this
         }
     }

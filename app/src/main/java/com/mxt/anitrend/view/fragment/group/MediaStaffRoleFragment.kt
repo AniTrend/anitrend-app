@@ -1,6 +1,5 @@
 package com.mxt.anitrend.view.fragment.group
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -126,11 +125,7 @@ class MediaStaffRoleFragment : FragmentBaseList<RecyclerItem, ConnectionContaine
             R.id.container -> {
                 val media = data.value as? MediaBase ?: return
                 val host = activity ?: return
-                val intent =
-                    Intent(host, MediaActivity::class.java).apply {
-                        putExtra(KeyUtil.arg_id, media.id)
-                        putExtra(KeyUtil.arg_mediaType, media.type)
-                    }
+                val intent = MediaActivity.newIntent(host, media.id, media.type)
                 CompatUtil.startRevealAnim(host, target, intent)
             }
         }

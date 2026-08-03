@@ -12,10 +12,11 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.pager.detail.StaffPageAdapter
 import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget
+import com.mxt.anitrend.base.custom.view.widget.FavouriteWidgetRenderState
 import com.mxt.anitrend.databinding.ActivityPagerGenericBinding
+import com.mxt.anitrend.domain.model.StaffRecord
 import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.extension.serializableExtra
-import com.mxt.anitrend.model.entity.base.StaffBase
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.IntentBundleUtil
@@ -25,6 +26,7 @@ import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.selectedIndex
 import com.mxt.anitrend.view.activity.CommonActivity
 import com.mxt.anitrend.viewmodel.StaffViewModel
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.Locale
@@ -37,7 +39,7 @@ class StaffActivity : CommonActivity() {
 
     private lateinit var binding: ActivityPagerGenericBinding
 
-    private var model: StaffBase? = null
+    private var model: StaffRecord? = null
     private var staffId: Long = 0
     private var onList: Boolean? = null
 
@@ -91,6 +93,24 @@ class StaffActivity : CommonActivity() {
                 }
             }
         }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                // Observe the canonical favourite store through the ViewModel and
+                // re-render after every committed mutation (or in-flight loading change).
+                combine(
+                    staffViewModel.favouriteFlag,
+                    staffViewModel.favouriteLoading,
+                ) { flag, loading ->
+                    FavouriteWidgetRenderState.fromFlag(
+                        flag = flag,
+                        fallbackIsFavourite = model?.isFavourite ?: false,
+                        isLoading = loading,
+                    )
+                }.collect { renderState ->
+                    favouriteWidget?.render(renderState)
+                }
+            }
+        }
     }
 
     private fun setUpPager() {
@@ -120,26 +140,26 @@ class StaffActivity : CommonActivity() {
             if (favouriteWidget == null) {
                 favouriteMenuItem.isVisible = false
             } else {
-                model?.let { m ->
-                    favouriteWidget?.setModel(m)
+                favouriteWidget?.setOnToggleAction {
+                    staffViewModel.toggleFavouriteStaff(staffId)
                 }
-                favouriteWidget?.setListener(object : FavouriteToolbarWidget.Listener {
-                    override fun onToggleFavourite(
-                        animeId: Int?,
-                        mangaId: Int?,
-                        characterId: Int?,
-                        staffId: Int?,
-                        studioId: Int?,
-                        onResult: (Result<Unit>) -> Unit,
-                    ) {
-                        lifecycleScope.launch {
-                            onResult(staffViewModel.toggleFavourite(animeId, mangaId, characterId, staffId, studioId))
-                        }
-                    }
-                })
+                // The widget is created after the observeViewModel collectors start, so
+                // render once with the current values and let the collector re-render on
+                // any subsequent store or loading change.
+                renderFavouriteWidget()
             }
         }
         return true
+    }
+
+    private fun renderFavouriteWidget() {
+        favouriteWidget?.render(
+            FavouriteWidgetRenderState.fromFlag(
+                flag = staffViewModel.favouriteFlag.value,
+                fallbackIsFavourite = model?.isFavourite ?: false,
+                isLoading = staffViewModel.favouriteLoading.value,
+            ),
+        )
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -158,8 +178,8 @@ class StaffActivity : CommonActivity() {
                                 String.format(
                                     Locale.getDefault(),
                                     "%s - %s",
-                                    current.name?.fullName.orEmpty(),
-                                    current.siteUrl.orEmpty(),
+                                    current.name ?: "",
+                                    current.siteUrl ?: "",
                                 ),
                             )
                             type = "text/plain"
@@ -214,8 +234,7 @@ class StaffActivity : CommonActivity() {
 
     private fun updateUI() {
         model?.let { current ->
-            favouriteWidget?.setModel(current)
-            supportActionBar?.title = current.name?.fullName
+            supportActionBar?.title = current.name
         }
     }
 
@@ -240,7 +259,7 @@ class StaffActivity : CommonActivity() {
     }
 
     override fun onDestroy() {
-        favouriteWidget?.setListener(null)
+        favouriteWidget?.setOnToggleAction(null)
         super.onDestroy()
     }
 }

@@ -23,7 +23,7 @@ internal fun Project.configureGraphQLCodegen() {
         scalars {
             map("CountryCode", "kotlin.String")
             map("FuzzyDateInt", "kotlin.Int")
-            map("Json", "kotlin.String")
+            map("Json", "kotlinx.serialization.json.JsonElement")
         }
     }
 }

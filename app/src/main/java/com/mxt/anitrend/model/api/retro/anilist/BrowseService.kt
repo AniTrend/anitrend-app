@@ -1,10 +1,12 @@
 package com.mxt.anitrend.model.api.retro.anilist
 
 import co.anitrend.retrofit.graphql.model.GraphQLRequest
+import co.anitrend.retrofit.graphql.model.body.GraphContainer
 import com.mxt.anitrend.graphql.generated.DeleteMediaListEntryVariables
 import com.mxt.anitrend.graphql.generated.DeleteReviewVariables
 import com.mxt.anitrend.graphql.generated.MediaBrowseVariables
 import com.mxt.anitrend.graphql.generated.MediaListBrowseVariables
+import com.mxt.anitrend.graphql.generated.MediaListCollectionData
 import com.mxt.anitrend.graphql.generated.MediaListCollectionVariables
 import com.mxt.anitrend.graphql.generated.MediaListVariables
 import com.mxt.anitrend.graphql.generated.MediaWithListVariables
@@ -14,7 +16,6 @@ import com.mxt.anitrend.graphql.generated.SaveMediaListEntryVariables
 import com.mxt.anitrend.graphql.generated.SaveReviewVariables
 import com.mxt.anitrend.graphql.generated.UpdateMediaListEntriesVariables
 import com.mxt.anitrend.model.entity.anilist.MediaList
-import com.mxt.anitrend.model.entity.anilist.MediaListCollection
 import com.mxt.anitrend.model.entity.anilist.Review
 import com.mxt.anitrend.model.entity.anilist.meta.DeleteState
 import com.mxt.anitrend.model.entity.base.MediaBase
@@ -34,7 +35,7 @@ interface BrowseService {
     @Headers("Content-Type: application/json")
     fun getMediaListCollection(
         @Body request: GraphQLRequest<MediaListCollectionVariables>,
-    ): Call<AniListContainer<PageContainer<MediaListCollection>>>
+    ): Call<GraphContainer<MediaListCollectionData>>
 
     @POST("/")
     @Headers("Content-Type: application/json")

@@ -1,5 +1,7 @@
 package com.mxt.anitrend.viewmodel
 
+import com.mxt.anitrend.data.store.user.InMemoryUserStore
+import com.mxt.anitrend.domain.user.interactor.ToggleUserFollowInteractor
 import com.mxt.anitrend.graphql.generated.CharacterSort
 import com.mxt.anitrend.graphql.generated.MediaSort
 import com.mxt.anitrend.graphql.generated.MediaType
@@ -13,7 +15,6 @@ import com.mxt.anitrend.model.entity.base.StudioBase
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.repository.SearchRepository
-import com.mxt.anitrend.repository.UserRepository
 import com.mxt.anitrend.util.KeyUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -34,13 +35,11 @@ class SearchViewModelTest {
 
     private val testDispatcher = UnconfinedTestDispatcher()
     private lateinit var searchRepository: SearchRepository
-    private lateinit var userRepository: UserRepository
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
         searchRepository = mock(SearchRepository::class.java)
-        userRepository = mock(UserRepository::class.java)
     }
 
     @After
@@ -163,7 +162,11 @@ class SearchViewModelTest {
                 perPage = KeyUtil.PAGING_LIMIT,
                 sort = listOf(UserSort.SEARCH_MATCH),
             )
-        val viewModel = UserSearchViewModel(searchRepository = searchRepository, userRepository = userRepository)
+        val viewModel = UserSearchViewModel(
+            searchRepository = searchRepository,
+            toggleUserFollowInteractor = mock(ToggleUserFollowInteractor::class.java),
+            userStore = InMemoryUserStore(),
+        )
 
         viewModel.load(search = "max", page = 5)
 

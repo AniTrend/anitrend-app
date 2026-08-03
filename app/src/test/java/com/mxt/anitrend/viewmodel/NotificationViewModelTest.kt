@@ -1,7 +1,7 @@
 package com.mxt.anitrend.viewmodel
 
-import com.mxt.anitrend.model.entity.anilist.Notification
-import com.mxt.anitrend.model.entity.container.body.PageContainer
+import com.mxt.anitrend.domain.model.NotificationPageResult
+import com.mxt.anitrend.domain.model.NotificationRecord
 import com.mxt.anitrend.repository.UserRepository
 import com.mxt.anitrend.util.KeyUtil
 import kotlinx.coroutines.Dispatchers
@@ -12,7 +12,6 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -44,10 +43,14 @@ class NotificationViewModelTest {
     }
 
     @Test
-    fun `load emits Success from repository result`() = runTest {
-        val content = PageContainer<Notification>().apply {
-            pageData = listOf(Notification().apply { id = 1L })
-        }
+    fun `load emits Success exposing the page result directly`() = runTest {
+        val content = NotificationPageResult(
+            notifications = listOf(
+                NotificationRecord(id = 1L, type = "FOLLOWING"),
+                NotificationRecord(id = 2L, type = "AIRING"),
+            ),
+            pageInfo = null,
+        )
         doReturn(Result.success(content))
             .`when`(userRepository)
             .getUserNotifications(
@@ -60,7 +63,9 @@ class NotificationViewModelTest {
         vm.load(page = 2)
 
         val state = vm.state.value as NotificationViewModel.UiState.Success
-        assertSame(content, state.content)
+        assertEquals(content, state.content)
+        assertEquals(listOf(1L, 2L), state.content.notifications.map { it.id })
+        assertEquals("FOLLOWING", state.content.notifications.first().type)
         verify(userRepository).getUserNotifications(
             page = 2,
             perPage = KeyUtil.PAGING_LIMIT,
@@ -70,7 +75,7 @@ class NotificationViewModelTest {
 
     @Test
     fun `load emits Error from repository failure`() = runTest {
-        doReturn(Result.failure<PageContainer<Notification>>(RuntimeException("Notifications failed")))
+        doReturn(Result.failure<NotificationPageResult>(RuntimeException("Notifications failed")))
             .`when`(userRepository)
             .getUserNotifications(
                 page = 1,

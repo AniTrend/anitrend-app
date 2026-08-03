@@ -1,6 +1,8 @@
 package com.mxt.anitrend.model.api.retro.anilist
 
 import co.anitrend.retrofit.graphql.model.GraphQLRequest
+import co.anitrend.retrofit.graphql.model.body.GraphContainer
+import com.mxt.anitrend.graphql.generated.StaffBaseData
 import com.mxt.anitrend.graphql.generated.StaffBaseVariables
 import com.mxt.anitrend.graphql.generated.StaffCharactersVariables
 import com.mxt.anitrend.graphql.generated.StaffMediaVariables
@@ -28,7 +30,7 @@ interface StaffService {
     @Headers("Content-Type: application/json")
     fun getStaffBase(
         @Body request: GraphQLRequest<StaffBaseVariables>,
-    ): Call<AniListContainer<StaffBase>>
+    ): Call<GraphContainer<StaffBaseData>>
 
     @POST("/")
     @Headers("Content-Type: application/json")

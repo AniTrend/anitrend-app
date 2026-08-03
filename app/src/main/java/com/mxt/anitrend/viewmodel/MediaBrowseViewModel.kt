@@ -61,6 +61,7 @@ class MediaBrowseViewModel(
         val lastRequestedPage: Int = 1,
         val isLoading: Boolean = false,
         val errorMessage: String? = null,
+        val hasEverLoaded: Boolean = false,
     )
 
     private val screenState = MutableStateFlow(ScreenState())
@@ -142,6 +143,7 @@ class MediaBrowseViewModel(
                         currentPageInfo = if (content.hasPageInfo()) content.pageInfo else null,
                         isLoading = false,
                         errorMessage = null,
+                        hasEverLoaded = true,
                     )
                 }
             }.onFailure { throwable ->
@@ -179,7 +181,9 @@ class MediaBrowseViewModel(
                 screen.errorMessage != null -> {
                     UiState.Error(screen.errorMessage)
                 }
-                screen.isLoading && updatedMedia.isEmpty() -> {
+                // Never-loaded idle state must not masquerade as a genuine empty
+                // response; keep emitting Loading until the first success arrives.
+                !screen.hasEverLoaded || (screen.isLoading && updatedMedia.isEmpty()) -> {
                     UiState.Loading
                 }
                 else -> {

@@ -16,12 +16,16 @@ import com.mxt.anitrend.domain.feed.interactor.DeleteReplyInteractor
 import com.mxt.anitrend.domain.feed.interactor.SaveFeedInteractor
 import com.mxt.anitrend.domain.feed.interactor.SaveReplyInteractor
 import com.mxt.anitrend.domain.like.interactor.ToggleLikeInteractor
+import com.mxt.anitrend.domain.model.FeedItemUiModel
+import com.mxt.anitrend.domain.model.toFeedItemUiModel
 import com.mxt.anitrend.graphql.generated.LikeableType
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.anilist.FeedReply
 import com.mxt.anitrend.model.entity.anilist.meta.DeleteState
+import com.mxt.anitrend.model.entity.anilist.meta.ImageBase
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.repository.BaseRepository
+import com.mxt.anitrend.repository.FeedDetailResult
 import com.mxt.anitrend.repository.FeedRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -96,6 +100,116 @@ class CommentViewModelTest {
     }
 
     @Test
+    fun `state feed is a FeedRecord and feedItem is the canonical projection`() = runTest {
+        val collector = backgroundScope.launch { viewModel.state.collect {} }
+        val feed = feed(1L, replyCount = 1)
+        val reply = reply(10L, activityId = 1L, text = "first")
+        stubDetailLoad(feed, listOf(reply))
+
+        viewModel.load(1L)
+        advanceUntilIdle()
+
+        val state = viewModel.state.value
+        val record = requireNotNull(state.feed)
+        assertEquals("feed-1", record.text)
+        // The header projection is precomputed from the store record.
+        val expected =
+            record.toFeedItemUiModel(
+                isLikePending = false,
+                isDeletePending = false,
+                currentUserId = null,
+            )
+        assertEquals(expected, state.feedItem)
+        assertTrue(state.feedItem is FeedItemUiModel)
+        collector.cancel()
+    }
+
+    @Test
+    fun `active state carries no legacy entity reverse mapping`() = runTest {
+        val collector = backgroundScope.launch { viewModel.state.collect {} }
+        val feed = feed(1L, replyCount = 1)
+        val reply = reply(10L, activityId = 1L, text = "first")
+        stubDetailLoad(feed, listOf(reply))
+
+        viewModel.load(1L)
+        advanceUntilIdle()
+
+        val state = viewModel.state.value
+        // State surface is record-backed: the feed field is the exact store
+        // record, not a reverse-mapped legacy FeedList entity.
+        assertEquals(store.state.value.feedsById.getValue(1L), state.feed)
+        assertFalse(state.replies.isEmpty())
+        assertEquals(listOf(10L), state.replies.map { it.id })
+        assertEquals("first", state.replies.first().reply)
+        collector.cancel()
+    }
+
+    @Test
+    fun `canonical feed item precomputes like state from current user id`() = runTest {
+        val collector = backgroundScope.launch { viewModel.state.collect {} }
+        val feed = feed(1L, replyCount = 0).apply {
+            likes = listOf(userWithAvatar(99L, "max"), userWithAvatar(5L, "other"))
+        }
+        stubDetailLoad(feed, emptyList())
+
+        viewModel.load(1L, currentUserId = 99L)
+        advanceUntilIdle()
+
+        val state = viewModel.state.value
+        assertTrue(state.feedItem?.isLikedByCurrentUser == true)
+        assertEquals(2, state.feedItem?.likeCount)
+        assertEquals(listOf(99L, 5L), state.feedItem?.likes?.map { it.id })
+        collector.cancel()
+    }
+
+    @Test
+    fun `reply like state is precomputed from current user id`() = runTest {
+        val collector = backgroundScope.launch { viewModel.state.collect {} }
+        val feed = feed(1L, replyCount = 1)
+        val reply = reply(10L, activityId = 1L, text = "first").apply {
+            likes = listOf(userWithAvatar(99L, "max"), userWithAvatar(5L, "other"))
+        }
+        stubDetailLoad(feed, listOf(reply))
+
+        viewModel.load(1L, currentUserId = 99L)
+        advanceUntilIdle()
+
+        val replyModel = viewModel.state.value.replies.first()
+        assertTrue(replyModel.isLikedByCurrentUser)
+        assertEquals(2, replyModel.likeCount)
+
+        // A different current user renders the same row as not liked.
+        viewModel.load(1L, currentUserId = 7L)
+        advanceUntilIdle()
+        assertFalse(viewModel.state.value.replies.first().isLikedByCurrentUser)
+        collector.cancel()
+    }
+
+    @Test
+    fun `reply ordering follows store order and new replies append`() = runTest {
+        val collector = backgroundScope.launch { viewModel.state.collect {} }
+        val feed = feed(1L, replyCount = 2)
+        val first = reply(10L, activityId = 1L, text = "first")
+        val second = reply(11L, activityId = 1L, text = "second")
+        stubDetailLoad(feed, listOf(first, second))
+
+        viewModel.load(1L)
+        advanceUntilIdle()
+        assertEquals(listOf(10L, 11L), viewModel.state.value.replies.map { it.id })
+
+        doReturn(Result.success(reply(12L, activityId = 1L, text = "new reply")))
+            .`when`(feedRepository)
+            .saveActivityReply(null, 1L, "new reply", false, false, 1L)
+
+        val result = viewModel.submitReply(feedId = 1L, text = "new reply")
+        advanceUntilIdle()
+
+        assertEquals(MutationResult.Success, result)
+        assertEquals(listOf(10L, 11L, 12L), viewModel.state.value.replies.map { it.id })
+        collector.cancel()
+    }
+
+    @Test
     fun `submit reply commits store update`() = runTest {
         val collector = backgroundScope.launch { viewModel.state.collect {} }
         val feed = feed(1L, replyCount = 0)
@@ -117,7 +231,7 @@ class CommentViewModelTest {
     }
 
     @Test
-    fun `delete reply commits store update`() = runTest {
+    fun `delete reply commits store update and converges state`() = runTest {
         val collector = backgroundScope.launch { viewModel.state.collect {} }
         val feed = feed(1L, replyCount = 1)
         val reply = reply(10L, activityId = 1L, text = "reply")
@@ -135,11 +249,12 @@ class CommentViewModelTest {
         assertEquals(MutationResult.Success, result)
         assertFalse(store.state.value.repliesById.containsKey(10L))
         assertEquals(0, store.state.value.feedsById.getValue(1L).replyCount)
+        assertTrue(viewModel.state.value.replies.isEmpty())
         collector.cancel()
     }
 
     @Test
-    fun `like reply commits store update`() = runTest {
+    fun `like reply commits store update and converges like state`() = runTest {
         val collector = backgroundScope.launch { viewModel.state.collect {} }
         val feed = feed(1L, replyCount = 1)
         val reply = reply(10L, activityId = 1L, text = "reply")
@@ -149,7 +264,7 @@ class CommentViewModelTest {
             .`when`(baseRepository)
             .toggleLike(10L, LikeableType.ACTIVITY_REPLY, false, 1L, 1L)
 
-        viewModel.load(1L)
+        viewModel.load(1L, currentUserId = 77L)
         advanceUntilIdle()
 
         val result = viewModel.toggleReplyLike(10L)
@@ -157,6 +272,9 @@ class CommentViewModelTest {
 
         assertEquals(MutationResult.Success, result)
         assertEquals(listOf(77L), store.state.value.repliesById.getValue(10L).likes.map { it.id })
+        val replyModel = viewModel.state.value.replies.first()
+        assertEquals(1, replyModel.likeCount)
+        assertTrue(replyModel.isLikedByCurrentUser)
         collector.cancel()
     }
 
@@ -190,9 +308,16 @@ class CommentViewModelTest {
                 ),
             )
 
-            doReturn(Result.success(feed.apply { this.replies = replies }))
+            doReturn(
+                Result.success(
+                    FeedDetailResult(
+                        feed = feed.toFeedRecord(revision = 0L),
+                        replies = replies.map { it.toFeedReplyRecord(activityId = feed.id, revision = 0L) },
+                    ),
+                ),
+            )
                 .`when`(feedRepository)
-                .getFeedListReply(1L, false, true, 0L)
+                .getFeedListReplyRecords(1L, false, true, 0L, 0L)
         }
     }
 
@@ -213,5 +338,10 @@ class CommentViewModelTest {
 
     private fun user(id: Long, name: String): UserBase = UserBase(name = name).apply {
         this.id = id
+    }
+
+    private fun userWithAvatar(id: Long, name: String): UserBase = UserBase(name = name).also {
+        it.id = id
+        it.avatar = ImageBase(extraLarge = null, large = "https://avatar-$id", medium = null)
     }
 }

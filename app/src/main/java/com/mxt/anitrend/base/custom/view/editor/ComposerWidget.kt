@@ -14,6 +14,8 @@ import com.mxt.anitrend.R
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener
 import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.databinding.WidgetComposerBinding
+import com.mxt.anitrend.domain.feed.model.FeedRecord
+import com.mxt.anitrend.domain.feed.model.FeedReplyRecord
 import com.mxt.anitrend.extension.getLayoutInflater
 import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.model.entity.anilist.FeedList
@@ -56,6 +58,8 @@ class ComposerWidget :
     private var recipient: UserBase? = null
     private var feedList: FeedList? = null
     private var feedReply: FeedReply? = null
+    private var feedRecord: FeedRecord? = null
+    private var feedReplyRecord: FeedReplyRecord? = null
 
     @KeyUtil.RequestType
     var requestType: Int = 0
@@ -139,6 +143,24 @@ class ComposerWidget :
 
     fun setModel(feedReply: FeedReply, @KeyUtil.RequestType requestType: Int) {
         this.feedReply = feedReply
+        this.requestType = requestType
+    }
+
+    /**
+     * Record-typed additive overload for the comment/reply migration lane.
+     * Preserves the legacy entity overloads for unrelated callers.
+     */
+    fun setModel(feedRecord: FeedRecord, @KeyUtil.RequestType requestType: Int) {
+        this.feedRecord = feedRecord
+        this.requestType = requestType
+    }
+
+    /**
+     * Record-typed additive overload for the comment/reply migration lane.
+     * Preserves the legacy entity overloads for unrelated callers.
+     */
+    fun setModel(feedReplyRecord: FeedReplyRecord, @KeyUtil.RequestType requestType: Int) {
+        this.feedReplyRecord = feedReplyRecord
         this.requestType = requestType
     }
 
@@ -235,6 +257,15 @@ class ComposerWidget :
 
     fun mentionUserFrom(feedReply: FeedReply) {
         val userName = feedReply.user?.name.orEmpty()
+        appendText(String.format(Locale.getDefault(), "@%s ", userName))
+    }
+
+    /**
+     * Record-typed additive overload for the comment/reply migration lane.
+     * Preserves the legacy entity overload for unrelated callers.
+     */
+    fun mentionUserFrom(feedReplyRecord: FeedReplyRecord) {
+        val userName = feedReplyRecord.user?.name.orEmpty()
         appendText(String.format(Locale.getDefault(), "@%s ", userName))
     }
 

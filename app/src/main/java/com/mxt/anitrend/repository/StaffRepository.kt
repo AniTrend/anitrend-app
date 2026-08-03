@@ -1,8 +1,12 @@
 package com.mxt.anitrend.repository
 
+import co.anitrend.retrofit.graphql.model.body.GraphContainer
+import com.mxt.anitrend.data.mapper.toStaffRecord
+import com.mxt.anitrend.domain.model.StaffRecord
 import com.mxt.anitrend.graphql.generated.MediaSort
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.graphql.generated.StaffBase
+import com.mxt.anitrend.graphql.generated.StaffBaseData
 import com.mxt.anitrend.graphql.generated.StaffCharacters
 import com.mxt.anitrend.graphql.generated.StaffMedia
 import com.mxt.anitrend.graphql.generated.StaffOverview
@@ -24,16 +28,24 @@ class StaffRepository(
     ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : AbstractRepository(ioDispatcher) {
 
-    suspend fun getStaffBase(id: Long): Result<StaffEntity> = withContext(ioDispatcher) {
+    suspend fun getStaffBase(id: Long): Result<StaffRecord> = withContext(ioDispatcher) {
         runCatching {
             val request = StaffBase.request(id = id.toInt())
             val response = staffService.getStaffBase(request).execute()
             if (response.isSuccessful) {
-                handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                handleStaffBase(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
                 throw RuntimeException(response.apiError())
             }
         }
+    }
+
+    private fun handleStaffBase(body: GraphContainer<StaffBaseData>): StaffRecord {
+        val graphErrors = body.errors
+        if (!graphErrors.isNullOrEmpty()) {
+            throw RuntimeException(graphErrors.first().message ?: "GraphQL error")
+        }
+        return body.data?.staff?.toStaffRecord() ?: throw IllegalStateException("Empty response body")
     }
 
     suspend fun getStaffOverview(id: Long, asHtml: Boolean = false): Result<StaffEntity> = withContext(ioDispatcher) {

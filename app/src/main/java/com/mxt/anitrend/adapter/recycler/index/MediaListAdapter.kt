@@ -23,12 +23,7 @@ import com.mxt.anitrend.databinding.AdapterSeriesAiringBinding
 import com.mxt.anitrend.databinding.AdapterSeriesAiringCompactBinding
 import com.mxt.anitrend.domain.model.MediaListItemUiModel
 import com.mxt.anitrend.domain.model.matchesFilter
-import com.mxt.anitrend.model.entity.anilist.MediaList
-import com.mxt.anitrend.model.entity.anilist.meta.AiringSchedule
-import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate
-import com.mxt.anitrend.model.entity.anilist.meta.ImageBase
-import com.mxt.anitrend.model.entity.anilist.meta.MediaTitle
-import com.mxt.anitrend.model.entity.base.MediaBase
+import com.mxt.anitrend.domain.model.toRenderModel
 import com.mxt.anitrend.util.KeyUtil
 
 class MediaListAdapter(
@@ -147,10 +142,10 @@ class MediaListAdapter(
         model: MediaListItemUiModel,
     ) {
         val renderModel = model.toRenderModel()
-        AspectImageView.setImage(binding.seriesImage, renderModel.media.coverImage)
+        AspectImageView.setImage(binding.seriesImage, model.mediaCoverImage)
         SeriesStatusWidget.setAiringStatus(binding.seriesStatus, renderModel)
-        AiringTextView.setAiring(binding.seriesAiring, renderModel.media)
-        SeriesYearTypeTextView.htmlText(binding.seriesYearType, renderModel.media)
+        AiringTextView.setAiring(binding.seriesAiring, renderModel)
+        SeriesYearTypeTextView.htmlText(binding.seriesYearType, renderModel)
         binding.customRatingWidget.setAverageRating(renderModel)
         binding.seriesTitle.text = model.mediaTitle
         binding.seriesEpisodes.render(model.toAutoIncrementWidgetState())
@@ -164,10 +159,10 @@ class MediaListAdapter(
         model: MediaListItemUiModel,
     ) {
         val renderModel = model.toRenderModel()
-        AspectImageView.setImage(binding.seriesImage, renderModel.media.coverImage)
+        AspectImageView.setImage(binding.seriesImage, model.mediaCoverImage)
         SeriesStatusWidget.setAiringStatus(binding.seriesStatus, renderModel)
-        AiringTextView.setAiring(binding.seriesAiring, renderModel.media)
-        SeriesYearTypeTextView.htmlText(binding.seriesYearType, renderModel.media)
+        AiringTextView.setAiring(binding.seriesAiring, renderModel)
+        SeriesYearTypeTextView.htmlText(binding.seriesYearType, renderModel)
         binding.customRatingWidget.setAverageRating(renderModel)
         binding.seriesTitle.text = model.mediaTitle
         binding.seriesEpisodes.render(model.toAutoIncrementWidgetState())
@@ -199,51 +194,6 @@ class MediaListAdapter(
             status = mediaStatus,
             mediaType = mediaType,
         )
-    }
-
-    private fun MediaListItemUiModel.toRenderModel(): MediaList = MediaList().apply {
-        id = this@toRenderModel.id
-        mediaId = this@toRenderModel.mediaId
-        status = this@toRenderModel.status
-        score = this@toRenderModel.score.toFloat()
-        progress = this@toRenderModel.progress
-        progressVolumes = this@toRenderModel.progressVolumes
-        repeat = this@toRenderModel.repeat
-        media = MediaBase().apply {
-            id = this@toRenderModel.mediaId
-            title = MediaTitle(
-                romajiRaw = this@toRenderModel.mediaTitle,
-                englishRaw = this@toRenderModel.mediaTitleEnglish,
-                originalRaw = this@toRenderModel.mediaTitleOriginal,
-                userPreferredRaw = this@toRenderModel.mediaTitle,
-            )
-            coverImage = ImageBase(
-                extraLarge = this@toRenderModel.mediaCoverImage,
-                large = this@toRenderModel.mediaCoverImage,
-                medium = this@toRenderModel.mediaCoverImage,
-            )
-            type = this@toRenderModel.mediaType
-            format = this@toRenderModel.mediaFormat
-            status = this@toRenderModel.mediaStatus
-            episodes = this@toRenderModel.mediaEpisodes
-            chapters = this@toRenderModel.mediaChapters
-            volumes = this@toRenderModel.mediaVolumes
-            startDate = this@toRenderModel.mediaStartDate?.let { start ->
-                FuzzyDate(
-                    day = start.day ?: 0,
-                    month = start.month ?: 0,
-                    year = start.year ?: 0,
-                )
-            }
-            nextAiringEpisode = this@toRenderModel.nextAiringEpisode?.let { airing ->
-                AiringSchedule(
-                    airingAt = airing.airingAt,
-                    timeUntilAiring = airing.timeUntilAiring,
-                    episode = airing.episode,
-                )
-            }
-            isFavourite = this@toRenderModel.mediaIsFavourite
-        }
     }
 
     companion object {

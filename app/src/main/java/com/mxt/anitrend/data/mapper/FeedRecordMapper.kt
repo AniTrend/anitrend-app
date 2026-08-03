@@ -63,6 +63,7 @@ fun MediaBase.toMediaSummaryRecord(): MediaSummaryRecord = MediaSummaryRecord(
     titleEnglish = title?.english,
     titleOriginal = title?.original,
     coverImage = coverImage?.extraLarge ?: coverImage?.large ?: coverImage?.medium,
+    bannerImage = bannerImage,
     type = type,
     format = format,
     episodes = episodes,
@@ -73,6 +74,7 @@ fun MediaBase.toMediaSummaryRecord(): MediaSummaryRecord = MediaSummaryRecord(
     isFavourite = isFavourite,
     startDate = startDate?.toFuzzyDateRecord(),
     nextAiringEpisode = nextAiringEpisode?.toAiringScheduleRecord(),
+    averageScore = averageScore,
 )
 
 fun FuzzyDate.toFuzzyDateRecord(): FuzzyDateRecord = FuzzyDateRecord(
@@ -145,6 +147,7 @@ fun MediaSummaryRecord.toMediaBase(): MediaBase = MediaBase().apply {
     isFavourite = this@toMediaBase.isFavourite
     startDate = this@toMediaBase.startDate?.toFuzzyDate()
     nextAiringEpisode = this@toMediaBase.nextAiringEpisode?.toAiringSchedule()
+    averageScore = this@toMediaBase.averageScore ?: 0
 }
 
 fun AiringSchedule.toAiringScheduleRecord(): AiringScheduleRecord = AiringScheduleRecord(

@@ -21,6 +21,7 @@ import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.doReturn
@@ -188,6 +189,75 @@ class MediaBrowseViewModelStoreObservationTest {
 
         state = viewModel.state.value as MediaBrowseViewModel.UiState.Success
         assertEquals(11, state.content.pageData.single().mediaListEntry?.progress)
+        collector.cancel()
+    }
+
+    @Test
+    fun `never loaded idle state emits Loading instead of an empty Success`() = runTest(testDispatcher) {
+        val viewModel = MediaBrowseViewModel(
+            baseRepository = baseRepository,
+            browseRepository = browseRepository,
+            mediaListStore = mediaListStore,
+            ioDispatcher = testDispatcher,
+        )
+        val collector = backgroundScope.launch { viewModel.state.collect {} }
+        advanceUntilIdle()
+
+        assertTrue(
+            "Idle never-loaded state must stay Loading, not Success(empty)",
+            viewModel.state.value is MediaBrowseViewModel.UiState.Loading,
+        )
+        collector.cancel()
+    }
+
+    @Test
+    fun `genuine empty successful response emits Success with empty content`() = runTest(testDispatcher) {
+        doReturn(Result.success(pageContainer())).`when`(browseRepository).getMediaBrowse(
+            id = null,
+            page = 1,
+            perPage = 50,
+            seasonYear = null,
+            type = MediaType.ANIME,
+            format = null,
+            startDateLike = null,
+            endDateLike = null,
+            season = null,
+            genres = null,
+            genresExclude = null,
+            isAdult = false,
+            sort = null,
+            onList = null,
+            status = null,
+            tags = null,
+            tagsExclude = null,
+        )
+
+        val viewModel = MediaBrowseViewModel(
+            baseRepository = baseRepository,
+            browseRepository = browseRepository,
+            mediaListStore = mediaListStore,
+            ioDispatcher = testDispatcher,
+        )
+        val collector = backgroundScope.launch { viewModel.state.collect {} }
+
+        viewModel.load(
+            type = MediaType.ANIME,
+            page = 1,
+            pageLimit = 50,
+            season = null,
+            sort = null,
+            isAdult = false,
+            format = null,
+            seasonYear = null,
+            startDateLike = null,
+            status = null,
+            genres = emptyList(),
+            tags = emptyList(),
+        )
+        advanceUntilIdle()
+
+        val state = viewModel.state.value as MediaBrowseViewModel.UiState.Success
+        assertTrue("First successful empty response must surface as an empty Success", state.content.pageData.isEmpty())
         collector.cancel()
     }
 

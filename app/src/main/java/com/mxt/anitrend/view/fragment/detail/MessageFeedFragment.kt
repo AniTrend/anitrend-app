@@ -6,7 +6,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
-import com.mxt.anitrend.model.entity.anilist.FeedList
+import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.view.fragment.list.FeedListFragment
 import com.mxt.anitrend.view.sheet.BottomSheetComposer
@@ -62,7 +62,7 @@ class MessageFeedFragment : FeedListFragment() {
                             // Loading is handled by swipeRefreshLayout in the base class
                         }
                         is MessageFeedViewModel.UiState.Success -> {
-                            handleSuccess(state.content, state.items, state.replaceExisting)
+                            handleSuccess(state.items, state.pageInfo)
                         }
                         is MessageFeedViewModel.UiState.Error -> {
                             showError(state.message)
@@ -80,6 +80,7 @@ class MessageFeedFragment : FeedListFragment() {
             page = mScrollListener.currentPage,
             pageLimit = args.getInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT),
             messageType = messageType,
+            currentUserId = currentUserId(),
         )
     }
 
@@ -91,15 +92,14 @@ class MessageFeedFragment : FeedListFragment() {
         messageFeedViewModel.deleteFeed(feedId)
     }
 
-    override fun currentRenderedFeeds(): List<FeedList> = (messageFeedViewModel.state.value as? MessageFeedViewModel.UiState.Success)?.content?.pageData.orEmpty()
-
     override fun editFeed(feedId: Long) {
-        val feed = currentRenderedFeeds().firstOrNull { it.id == feedId } ?: return
-        val recipient = feed.recipient ?: return
+        val feedItem = currentRenderedFeedItems().firstOrNull { it.id == feedId } ?: return
+        val recipientId = feedItem.recipientId ?: return
+        val recipient = UserBase(name = feedItem.recipientName).apply { id = recipientId }
         mBottomSheet =
             BottomSheetComposer
                 .Builder()
-                .setUserActivity(feed)
+                .setUserActivity(feedItem)
                 .setRequestMode(KeyUtil.MUT_SAVE_MESSAGE_FEED)
                 .setUserModel(recipient)
                 .setTitle(R.string.edit_status_title)

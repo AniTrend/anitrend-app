@@ -13,8 +13,8 @@ import com.google.android.material.snackbar.Snackbar
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.databinding.WidgetProfileStatsBinding
+import com.mxt.anitrend.domain.user.model.UserStatisticsRecord
 import com.mxt.anitrend.extension.getCompatColor
-import com.mxt.anitrend.model.entity.anilist.user.UserStatisticTypes
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.view.activity.detail.MediaListActivity
 import java.util.Locale
@@ -35,7 +35,7 @@ constructor(
 
     private lateinit var binding: WidgetProfileStatsBinding
 
-    private var model: UserStatisticTypes? = null
+    private var model: UserStatisticsRecord? = null
 
     private var bundle: Bundle? = null
     private val tagName = ProfileStatsWidget::class.java.simpleName
@@ -89,7 +89,7 @@ constructor(
         this.bundle = bundle
     }
 
-    fun setStats(stats: UserStatisticTypes?) {
+    fun setStats(stats: UserStatisticsRecord?) {
         model = stats
         updateUI()
     }

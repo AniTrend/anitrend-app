@@ -35,12 +35,16 @@ import com.mxt.anitrend.base.plugin.text.TextConfigurationPlugin
 import com.mxt.anitrend.data.DatabaseHelper
 import com.mxt.anitrend.data.store.AccountStoreClearer
 import com.mxt.anitrend.data.store.mutation.RequestSequence
+import com.mxt.anitrend.data.store.favourite.FavouriteStore
+import com.mxt.anitrend.data.store.favourite.InMemoryFavouriteStore
 import com.mxt.anitrend.data.store.feed.FeedStore
 import com.mxt.anitrend.data.store.feed.InMemoryFeedStore
 import com.mxt.anitrend.data.store.medialist.InMemoryMediaListStore
 import com.mxt.anitrend.data.store.medialist.MediaListStore
 import com.mxt.anitrend.data.store.review.InMemoryReviewStore
 import com.mxt.anitrend.data.store.review.ReviewStore
+import com.mxt.anitrend.data.store.user.InMemoryUserStore
+import com.mxt.anitrend.data.store.user.UserStore
 import com.mxt.anitrend.data.store.mutation.DefaultMutationExecutor
 import com.mxt.anitrend.data.store.mutation.DefaultMutationRegistry
 import com.mxt.anitrend.data.store.mutation.DefaultOperationIdGenerator
@@ -50,6 +54,7 @@ import com.mxt.anitrend.data.store.mutation.MutationRegistry
 import com.mxt.anitrend.data.store.mutation.OperationIdGenerator
 import com.mxt.anitrend.data.store.mutation.SessionEpoch
 import com.mxt.anitrend.extension.logFile
+import com.mxt.anitrend.domain.favourite.interactor.ToggleFavouriteInteractor
 import com.mxt.anitrend.domain.feed.interactor.DeleteFeedInteractor
 import com.mxt.anitrend.domain.feed.interactor.DeleteReplyInteractor
 import com.mxt.anitrend.domain.feed.interactor.SaveFeedInteractor
@@ -59,6 +64,7 @@ import com.mxt.anitrend.domain.medialist.interactor.DeleteMediaListEntryInteract
 import com.mxt.anitrend.domain.medialist.interactor.IncrementMediaProgressInteractor
 import com.mxt.anitrend.domain.medialist.interactor.SaveMediaListEntryInteractor
 import com.mxt.anitrend.domain.review.interactor.RateReviewInteractor
+import com.mxt.anitrend.domain.user.interactor.ToggleUserFollowInteractor
 import com.mxt.anitrend.graphql.generated.GeneratedGraphQLRegistry
 import com.mxt.anitrend.model.api.converter.AniGraphConverter
 import com.mxt.anitrend.model.api.interceptor.AuthInterceptor
@@ -294,7 +300,7 @@ private val coreModule = module {
             ) as NotificationManager?,
         )
     }
-    single(createdAtStart = true) {
+    single {
         EmojiManager.create(
             context = androidContext(),
             serializer = GsonDeserializer(),
@@ -302,7 +308,6 @@ private val coreModule = module {
     }
     single(
         qualifier = named("ua"),
-        createdAtStart = true,
     ) {
         WebSettings.getDefaultUserAgent(androidContext())
     }
@@ -591,7 +596,9 @@ private val repositoryModule = module {
     single<FeedStore> { InMemoryFeedStore() }
     single<MediaListStore> { InMemoryMediaListStore() }
     single<ReviewStore> { InMemoryReviewStore() }
-    single { AccountStoreClearer(feedStore = get(), mediaListStore = get(), reviewStore = get(), mutationRegistry = get(), sessionEpoch = get()) }
+    single<UserStore> { InMemoryUserStore() }
+    single<FavouriteStore> { InMemoryFavouriteStore() }
+    single { AccountStoreClearer(feedStore = get(), mediaListStore = get(), reviewStore = get(), userStore = get(), favouriteStore = get(), mutationRegistry = get(), sessionEpoch = get()) }
     single { BrowseRepository(browseService = get(), mediaListStore = get(), reviewStore = get()) }
     single { CharacterRepository(characterService = get()) }
     single { StaffRepository(staffService = get()) }
@@ -615,6 +622,7 @@ private val repositoryModule = module {
         )
     }
     single { ToggleLikeInteractor(baseRepository = get(), mutationExecutor = get(), feedStore = get(), requestSequence = get()) }
+    single { ToggleFavouriteInteractor(baseRepository = get(), mutationExecutor = get(), favouriteStore = get(), requestSequence = get()) }
     single { SaveFeedInteractor(feedRepository = get(), mutationExecutor = get(), feedStore = get(), requestSequence = get()) }
     single { DeleteFeedInteractor(feedRepository = get(), mutationExecutor = get(), feedStore = get(), requestSequence = get()) }
     single { SaveReplyInteractor(feedRepository = get(), mutationExecutor = get(), feedStore = get(), requestSequence = get()) }
@@ -623,6 +631,7 @@ private val repositoryModule = module {
     single { DeleteMediaListEntryInteractor(browseRepository = get(), mutationExecutor = get(), mediaListStore = get(), requestSequence = get()) }
     single { IncrementMediaProgressInteractor(saveMediaListEntryInteractor = get()) }
     single { RateReviewInteractor(browseRepository = get(), mutationExecutor = get(), reviewStore = get(), requestSequence = get()) }
+    single { ToggleUserFollowInteractor(userRepository = get(), mutationExecutor = get(), userStore = get(), requestSequence = get()) }
 }
 
 private val mediaFeatureModule = module {
@@ -650,7 +659,7 @@ private val mediaFeatureModule = module {
     viewModel { MediaRelationViewModel(mediaRepository = get()) }
     viewModel { MediaStaffViewModel(mediaRepository = get()) }
     viewModel { MediaStatsViewModel(mediaRepository = get()) }
-    viewModel { MediaViewModel(mediaRepository = get(), baseRepository = get(), mediaListStore = get()) }
+    viewModel { MediaViewModel(mediaRepository = get(), baseRepository = get(), mediaListStore = get(), favouriteStore = get(), toggleFavouriteInteractor = get()) }
     viewModel { MediaSearchViewModel(searchRepository = get()) }
     viewModel { MediaFavouritesViewModel(userRepository = get()) }
 }
@@ -669,7 +678,7 @@ private val userFeatureModule = module {
         )
     }
     viewModel { UserListViewModel(userRepository = get()) }
-    viewModel { UserSearchViewModel(searchRepository = get(), userRepository = get()) }
+    viewModel { UserSearchViewModel(searchRepository = get(), toggleUserFollowInteractor = get(), userStore = get()) }
     viewModel { NotificationViewModel(userRepository = get()) }
     viewModel { ProfileViewModel(userRepository = get()) }
     viewModel {
@@ -708,7 +717,7 @@ private val userFeatureModule = module {
 }
 
 private val characterFeatureModule = module {
-    viewModel { CharacterViewModel(characterRepository = get(), baseRepository = get()) }
+    viewModel { CharacterViewModel(characterRepository = get(), baseRepository = get(), favouriteStore = get(), toggleFavouriteInteractor = get()) }
     viewModel { CharacterOverviewViewModel(characterRepository = get()) }
     viewModel { CharacterActorsViewModel(characterRepository = get()) }
     viewModel { CharacterSearchViewModel(searchRepository = get()) }
@@ -716,7 +725,7 @@ private val characterFeatureModule = module {
 }
 
 private val staffFeatureModule = module {
-    viewModel { StaffViewModel(staffRepository = get(), baseRepository = get()) }
+    viewModel { StaffViewModel(staffRepository = get(), baseRepository = get(), favouriteStore = get(), toggleFavouriteInteractor = get()) }
     viewModel { StaffOverviewViewModel(staffRepository = get()) }
     viewModel { StaffSearchViewModel(searchRepository = get()) }
     viewModel { StaffFavouritesViewModel(userRepository = get()) }
@@ -726,7 +735,7 @@ private val staffFeatureModule = module {
 }
 
 private val studioFeatureModule = module {
-    viewModel { StudioViewModel(studioRepository = get(), baseRepository = get()) }
+    viewModel { StudioViewModel(studioRepository = get(), baseRepository = get(), favouriteStore = get(), toggleFavouriteInteractor = get()) }
     viewModel { StudioMediaViewModel(studioRepository = get()) }
     viewModel { StudioSearchViewModel(searchRepository = get()) }
     viewModel { StudioFavouritesViewModel(userRepository = get()) }

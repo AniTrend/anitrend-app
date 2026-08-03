@@ -1,0 +1,10 @@
+app/src/main/java/com/mxt/anitrend/domain/like/interactor/ToggleLikeInteractor.kt:import com.mxt.anitrend.graphql.generated.LikeableType
+app/src/main/java/com/mxt/anitrend/domain/medialist/interactor/SaveMediaListEntryInteractor.kt:import com.mxt.anitrend.graphql.generated.ScoreFormat
+app/src/main/java/com/mxt/anitrend/domain/model/IncrementMediaProgressCommand.kt:import com.mxt.anitrend.graphql.generated.FuzzyDateInput
+app/src/main/java/com/mxt/anitrend/domain/model/IncrementMediaProgressCommand.kt:import com.mxt.anitrend.graphql.generated.MediaListStatus
+app/src/main/java/com/mxt/anitrend/domain/model/MediaListDraft.kt:import com.mxt.anitrend.graphql.generated.FuzzyDateInput
+app/src/main/java/com/mxt/anitrend/domain/model/MediaListDraft.kt:import com.mxt.anitrend.graphql.generated.MediaListStatus
+app/src/main/java/com/mxt/anitrend/domain/model/SaveMediaListEntryCommand.kt:import com.mxt.anitrend.graphql.generated.FuzzyDateInput
+app/src/main/java/com/mxt/anitrend/domain/model/SaveMediaListEntryCommand.kt:import com.mxt.anitrend.graphql.generated.MediaListStatus
+app/src/main/java/com/mxt/anitrend/domain/model/ToggleLikeCommand.kt:import com.mxt.anitrend.graphql.generated.LikeableType
+app/src/main/java/com/mxt/anitrend/domain/review/interactor/RateReviewInteractor.kt:import com.mxt.anitrend.graphql.generated.ReviewRating

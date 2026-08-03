@@ -1,5 +1,6 @@
 package com.mxt.anitrend.domain.review.interactor
 
+import com.mxt.anitrend.data.mapper.toReviewRecord
 import com.mxt.anitrend.data.store.mutation.MutationExecutor
 import com.mxt.anitrend.data.store.mutation.MutationResult
 import com.mxt.anitrend.data.store.mutation.OperationKey
@@ -34,7 +35,7 @@ class RateReviewInteractor(
                 context.ensureSessionActive()
                 reviewStore.apply(
                     ReviewStoreChange.ReviewRated(
-                        review = review,
+                        review = review.toReviewRecord(revision = revision),
                         revision = revision,
                     ),
                 )

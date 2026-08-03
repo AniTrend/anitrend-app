@@ -1,5 +1,6 @@
 package com.mxt.anitrend.viewmodel
 
+import com.mxt.anitrend.data.mapper.toReviewRecord
 import com.mxt.anitrend.data.store.mutation.RequestSequence
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.data.store.review.InMemoryReviewStore
@@ -68,7 +69,7 @@ class ReviewViewModelTest {
                 queryKey = queryKey,
                 page = 1,
                 token = 1L,
-                reviews = listOf(review),
+                reviews = listOf(review.toReviewRecord(revision = 1L)),
                 pageInfo = null,
             ),
         )
@@ -147,7 +148,7 @@ class ReviewViewModelTest {
                 queryKey = queryKey,
                 page = 1,
                 token = 1L,
-                reviews = listOf(review),
+                reviews = listOf(review.toReviewRecord(revision = 1L)),
                 pageInfo = null,
             ),
         )

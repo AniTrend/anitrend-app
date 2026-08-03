@@ -31,10 +31,6 @@ constructor(
     @field:Convert(converter = ImageBaseConverter::class, dbType = String::class)
     var avatar: ImageBase? = null
 
-    fun toggleFollow() {
-        isFollowing = !isFollowing
-    }
-
     override fun equals(other: Any?): Boolean {
         if (other is UserBase) {
             return other.id == id

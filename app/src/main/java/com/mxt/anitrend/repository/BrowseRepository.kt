@@ -1,5 +1,6 @@
 package com.mxt.anitrend.repository
 
+import co.anitrend.retrofit.graphql.model.body.GraphContainer
 import com.mxt.anitrend.graphql.generated.DeleteMediaListEntry
 import com.mxt.anitrend.graphql.generated.DeleteReview
 import com.mxt.anitrend.graphql.generated.FuzzyDateInput
@@ -8,6 +9,7 @@ import com.mxt.anitrend.graphql.generated.MediaFormat
 import com.mxt.anitrend.graphql.generated.MediaList
 import com.mxt.anitrend.graphql.generated.MediaListBrowse
 import com.mxt.anitrend.graphql.generated.MediaListCollection
+import com.mxt.anitrend.graphql.generated.MediaListCollectionData
 import com.mxt.anitrend.graphql.generated.MediaListSort
 import com.mxt.anitrend.graphql.generated.MediaListStatus
 import com.mxt.anitrend.graphql.generated.MediaSeason
@@ -22,14 +24,17 @@ import com.mxt.anitrend.graphql.generated.ReviewSort
 import com.mxt.anitrend.graphql.generated.SaveMediaListEntry
 import com.mxt.anitrend.graphql.generated.SaveReview
 import com.mxt.anitrend.graphql.generated.ScoreFormat
+import com.mxt.anitrend.data.mapper.toMediaListCollectionPageResult
 import com.mxt.anitrend.data.mapper.toMediaListRecord
 import com.mxt.anitrend.data.mapper.toPageInfoRecord
+import com.mxt.anitrend.data.mapper.toReviewRecord
 import com.mxt.anitrend.data.store.medialist.MediaListQueryKey
 import com.mxt.anitrend.data.store.medialist.MediaListStore
 import com.mxt.anitrend.data.store.medialist.MediaListStoreChange
 import com.mxt.anitrend.data.store.review.ReviewQueryKey
 import com.mxt.anitrend.data.store.review.ReviewStore
 import com.mxt.anitrend.data.store.review.ReviewStoreChange
+import com.mxt.anitrend.domain.medialist.model.MediaListCollectionPageResult
 import com.mxt.anitrend.model.api.retro.anilist.BrowseService
 import com.mxt.anitrend.model.entity.anilist.Review
 import com.mxt.anitrend.model.entity.anilist.meta.DeleteState
@@ -39,7 +44,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import com.mxt.anitrend.model.entity.anilist.MediaList as MediaEntityList
-import com.mxt.anitrend.model.entity.anilist.MediaListCollection as MediaListCollectionEntity
 
 class BrowseRepository(
     private val browseService: BrowseService,
@@ -59,7 +63,7 @@ class BrowseRepository(
         commitToStore: Boolean = true,
         queryKey: MediaListQueryKey? = null,
         readToken: Long = 0L,
-    ): Result<PageContainer<MediaListCollectionEntity>> = withContext(ioDispatcher) {
+    ): Result<MediaListCollectionPageResult> = withContext(ioDispatcher) {
         runCatching {
             val request = MediaListCollection.request(
                 userId = userId?.toInt(),
@@ -72,7 +76,7 @@ class BrowseRepository(
             )
             val response = browseService.getMediaListCollection(request).execute()
             if (response.isSuccessful) {
-                val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                val result = handleMediaListCollection(response.body() ?: throw IllegalStateException("Empty response body"))
                 val resolvedQueryKey = queryKey ?: MediaListQueryKey(
                     userId = userId,
                     userName = userName,
@@ -86,14 +90,14 @@ class BrowseRepository(
                         MediaListStoreChange.CollectionLoaded(
                             queryKey = resolvedQueryKey,
                             token = readToken,
-                            entries = result.pageData.flatMap { it.entries.orEmpty() }.map {
-                                it.toMediaListRecord(
+                            entries = result.entries.map { entry ->
+                                entry.copy(
                                     revision = readToken,
                                     ownerUserId = resolvedQueryKey.userId,
                                     ownerUserName = resolvedQueryKey.userName,
                                 )
                             },
-                            pageInfo = result.takeIf { it.hasPageInfo() }?.pageInfo?.toPageInfoRecord(),
+                            pageInfo = result.pageInfo,
                         ),
                     )
                 }
@@ -103,6 +107,15 @@ class BrowseRepository(
                 throw RuntimeException(response.apiError())
             }
         }
+    }
+
+    private fun handleMediaListCollection(body: GraphContainer<MediaListCollectionData>): MediaListCollectionPageResult {
+        val graphErrors = body.errors
+        if (!graphErrors.isNullOrEmpty()) {
+            throw RuntimeException(graphErrors.first().message ?: "GraphQL error")
+        }
+        return body.data?.mediaListCollection?.toMediaListCollectionPageResult()
+            ?: throw IllegalStateException("Empty response body")
     }
 
     suspend fun getMediaBrowse(
@@ -171,7 +184,7 @@ class BrowseRepository(
                             queryKey = resolvedQueryKey,
                             page = pageInfo?.currentPage ?: page ?: 1,
                             token = readToken,
-                            reviews = result.pageData,
+                            reviews = result.pageData.map { it.toReviewRecord(revision = readToken) },
                             pageInfo = pageInfo,
                         ),
                     )
@@ -362,7 +375,7 @@ class BrowseRepository(
                 if (commitToStore) {
                     reviewStore?.apply(
                         ReviewStoreChange.ReviewRated(
-                            review = result,
+                            review = result.toReviewRecord(revision = revision),
                             revision = revision,
                         ),
                     )
@@ -393,7 +406,7 @@ class BrowseRepository(
                 if (commitToStore) {
                     reviewStore?.apply(
                         ReviewStoreChange.ReviewSaved(
-                            review = result,
+                            review = result.toReviewRecord(revision = revision),
                             revision = revision,
                         ),
                     )

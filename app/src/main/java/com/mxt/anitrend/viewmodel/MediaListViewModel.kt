@@ -2,22 +2,20 @@ package com.mxt.anitrend.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mxt.anitrend.data.mapper.toMediaList
-import com.mxt.anitrend.data.mapper.toPageInfo
 import com.mxt.anitrend.data.store.medialist.MediaListQueryKey
 import com.mxt.anitrend.data.store.medialist.MediaListStore
 import com.mxt.anitrend.data.store.mutation.MutationRegistry
 import com.mxt.anitrend.data.store.mutation.OperationKey
 import com.mxt.anitrend.data.store.mutation.OperationStatus
 import com.mxt.anitrend.data.store.mutation.RequestSequence
+import com.mxt.anitrend.domain.medialist.model.MediaListRecord
 import com.mxt.anitrend.domain.model.MediaListItemUiModel
+import com.mxt.anitrend.domain.model.PageInfoRecord
 import com.mxt.anitrend.domain.model.toMediaListItemUiModel
 import com.mxt.anitrend.graphql.generated.MediaListSort
 import com.mxt.anitrend.graphql.generated.MediaListStatus
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.graphql.generated.ScoreFormat
-import com.mxt.anitrend.model.entity.anilist.MediaList
-import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.repository.BrowseRepository
 import com.mxt.anitrend.repository.UserRepository
 import com.mxt.anitrend.util.CompatUtil
@@ -51,10 +49,9 @@ class MediaListViewModel(
     sealed interface UiState {
         data object Loading : UiState
         data class Success(
-            val content: PageContainer<MediaList>,
-            val items: List<MediaList>,
+            val entries: List<MediaListRecord>,
             val renderedItems: List<MediaListItemUiModel>,
-            val pageInfo: com.mxt.anitrend.model.entity.container.attribute.PageInfo?,
+            val pageInfo: PageInfoRecord?,
             val isEmpty: Boolean,
         ) : UiState
         data class Error(val message: String) : UiState
@@ -95,7 +92,6 @@ class MediaListViewModel(
                             canIncrement = entry.canIncrement(currentScreen.isCurrentUser),
                         )
                     }
-                    val contentItems = sortedEntries.map { it.toMediaList() }
                     when {
                         currentScreen.errorMessage != null -> {
                             UiState.Error(currentScreen.errorMessage)
@@ -105,13 +101,9 @@ class MediaListViewModel(
                         }
                         else -> {
                             UiState.Success(
-                                content = PageContainer<MediaList>().apply {
-                                    query.pageInfo?.toPageInfo()?.let { pageInfo = it }
-                                    pageData = contentItems
-                                },
-                                items = contentItems,
+                                entries = sortedEntries,
                                 renderedItems = renderedItems,
-                                pageInfo = query.pageInfo?.toPageInfo(),
+                                pageInfo = query.pageInfo,
                                 isEmpty = renderedItems.isEmpty(),
                             )
                         }
@@ -230,7 +222,7 @@ class MediaListViewModel(
                 ?: (userId != 0L && userRepository.cachedCurrentUser?.id == userId)
             )
 
-    private fun sortEntriesIfNeeded(entries: List<com.mxt.anitrend.domain.medialist.model.MediaListRecord>): List<com.mxt.anitrend.domain.medialist.model.MediaListRecord> {
+    private fun sortEntriesIfNeeded(entries: List<MediaListRecord>): List<MediaListRecord> {
         val mediaListSort = settings.mediaListSort ?: KeyUtil.PROGRESS
         if (!MediaListUtil.isTitleSort(mediaListSort)) {
             return entries
@@ -264,7 +256,7 @@ class MediaListViewModel(
         entryId.takeIf { it > 0 }?.let(OperationKey::mediaListDelete),
     ).any { this[it] is OperationStatus.Running }
 
-    private fun com.mxt.anitrend.domain.medialist.model.MediaListRecord.canIncrement(isCurrentUser: Boolean): Boolean {
+    private fun MediaListRecord.canIncrement(isCurrentUser: Boolean): Boolean {
         if (!isCurrentUser) {
             return false
         }

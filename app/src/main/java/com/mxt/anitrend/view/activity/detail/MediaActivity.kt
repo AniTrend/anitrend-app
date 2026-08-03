@@ -1,5 +1,6 @@
 package com.mxt.anitrend.view.activity.detail
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -17,9 +18,13 @@ import com.mxt.anitrend.adapter.pager.detail.MangaPageAdapter
 import com.mxt.anitrend.base.custom.pager.BaseStatePageAdapter
 import com.mxt.anitrend.base.custom.view.image.WideImageView
 import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget
+import com.mxt.anitrend.base.custom.view.widget.FavouriteWidgetRenderState
 import com.mxt.anitrend.databinding.ActivitySeriesBinding
 import com.mxt.anitrend.extension.getCompatDrawable
-import com.mxt.anitrend.model.entity.base.MediaBase
+import com.mxt.anitrend.domain.mediadetail.model.MediaDetailRecord
+import com.mxt.anitrend.navigation.extension.putScreenParam
+import com.mxt.anitrend.navigation.extension.screenParam
+import com.mxt.anitrend.navigation.model.MediaScreenParam
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.IntentBundleUtil
 import com.mxt.anitrend.util.KeyUtil
@@ -29,6 +34,7 @@ import com.mxt.anitrend.util.TutorialUtil
 import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.view.activity.CommonActivity
 import com.mxt.anitrend.viewmodel.MediaViewModel
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.Locale
@@ -41,12 +47,49 @@ class MediaActivity :
     CommonActivity(),
     View.OnClickListener {
 
+    companion object {
+        fun newIntent(context: Context, param: MediaScreenParam): Intent = Intent(context, MediaActivity::class.java).apply {
+            putScreenParam(param)
+            // Interim boundary: the pager and its fragments still consume the legacy
+            // wire keys from the activity extras, so keep them alongside the typed param.
+            putExtra(KeyUtil.arg_id, param.mediaId)
+            putExtra(KeyUtil.arg_mediaType, param.mediaType)
+        }
+
+        /**
+         * Compatibility overload preserving the legacy id/type-based callers. Bridges into
+         * the typed parameter so navigation always uses [MediaScreenParam].
+         */
+        fun newIntent(context: Context, mediaId: Long, mediaType: String?): Intent = newIntent(context, MediaScreenParam(mediaId = mediaId, mediaType = mediaType))
+
+        /**
+         * Resolves the typed parameter from the intent.
+         *
+         * The typed parameter is read first. Deep links (injected by
+         * [IntentBundleUtil.checkIntentData]) still write the legacy [KeyUtil.arg_id] and
+         * [KeyUtil.arg_mediaType] extras, so those values are bridged here into
+         * [MediaScreenParam]. The bridge is a scalar conversion point inside the activity,
+         * not a parcel path for the media entity.
+         */
+        fun fromIntent(intent: Intent): MediaScreenParam? {
+            intent.screenParam<MediaScreenParam>()?.let { param ->
+                return if (param.mediaId > 0) param else null
+            }
+            val id = intent.getLongExtra(KeyUtil.arg_id, -1)
+            return if (id > 0) {
+                MediaScreenParam(mediaId = id, mediaType = intent.getStringExtra(KeyUtil.arg_mediaType))
+            } else {
+                null
+            }
+        }
+    }
+
     private lateinit var binding: ActivitySeriesBinding
 
     @KeyUtil.MediaType
     private var mediaType: String? = null
 
-    private var model: MediaBase? = null
+    private var model: MediaDetailRecord? = null
     private var mediaId: Long = 0
 
     private var favouriteWidget: FavouriteToolbarWidget? = null
@@ -74,12 +117,21 @@ class MediaActivity :
         )
         binding.seriesBanner.setOnClickListener(this)
 
-        if (intent.hasExtra(KeyUtil.arg_id)) {
-            mediaId = intent.getLongExtra(KeyUtil.arg_id, -1)
+        // Resolve the destination through the typed parameter, falling back to the
+        // legacy wire keys for deep links and pre-bridge callers.
+        val args = fromIntent(intent)
+        if (args == null) {
+            NotifyUtil.makeText(
+                this,
+                R.string.text_error_request,
+                R.drawable.ic_warning_white_18dp,
+                Toast.LENGTH_SHORT,
+            ).show()
+            finish()
+            return
         }
-        if (intent.hasExtra(KeyUtil.arg_mediaType)) {
-            mediaType = intent.getStringExtra(KeyUtil.arg_mediaType)
-        }
+        mediaId = args.mediaId
+        mediaType = args.mediaType
 
         observeViewModel()
         setUpPager()
@@ -104,6 +156,24 @@ class MediaActivity :
                             ).show()
                         }
                     }
+                }
+            }
+        }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                // Observe the canonical favourite store through the ViewModel and
+                // re-render after every committed mutation (or in-flight loading change).
+                combine(
+                    mediaViewModel.favouriteFlag,
+                    mediaViewModel.favouriteLoading,
+                ) { flag, loading ->
+                    FavouriteWidgetRenderState.fromFlag(
+                        flag = flag,
+                        fallbackIsFavourite = model?.isFavourite ?: false,
+                        isLoading = loading,
+                    )
+                }.collect { renderState ->
+                    favouriteWidget?.render(renderState)
                 }
             }
         }
@@ -157,24 +227,26 @@ class MediaActivity :
             if (favouriteWidget == null) {
                 favouriteMenuItem.isVisible = false
             } else {
-                setFavouriteWidgetMenuItemIcon()
-                favouriteWidget?.setListener(object : FavouriteToolbarWidget.Listener {
-                    override fun onToggleFavourite(
-                        animeId: Int?,
-                        mangaId: Int?,
-                        characterId: Int?,
-                        staffId: Int?,
-                        studioId: Int?,
-                        onResult: (Result<Unit>) -> Unit,
-                    ) {
-                        lifecycleScope.launch {
-                            onResult(mediaViewModel.toggleFavourite(animeId, mangaId, characterId, staffId, studioId))
-                        }
-                    }
-                })
+                favouriteWidget?.setOnToggleAction {
+                    mediaViewModel.toggleFavouriteMedia(mediaId, mediaType)
+                }
+                // The widget is created after the observeViewModel collectors start, so
+                // render once with the current values and let the collector re-render on
+                // any subsequent store or loading change.
+                renderFavouriteWidget()
             }
         }
         return true
+    }
+
+    private fun renderFavouriteWidget() {
+        favouriteWidget?.render(
+            FavouriteWidgetRenderState.fromFlag(
+                flag = mediaViewModel.favouriteFlag.value,
+                fallbackIsFavourite = model?.isFavourite ?: false,
+                isLoading = mediaViewModel.favouriteLoading.value,
+            ),
+        )
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -202,7 +274,7 @@ class MediaActivity :
                                 String.format(
                                     Locale.getDefault(),
                                     "%s - %s",
-                                    current.title?.userPreferred ?: "",
+                                    current.titleUserPreferred ?: "",
                                     current.siteUrl,
                                 ),
                             )
@@ -255,7 +327,6 @@ class MediaActivity :
     private fun updateUI() {
         model?.let { current ->
             WideImageView.setImage(binding.seriesBanner, current.bannerImage)
-            setFavouriteWidgetMenuItemIcon()
             setMenuItemIcons()
             if (settings.isAuthenticated) {
                 val favouritesPrompt =
@@ -289,7 +360,7 @@ class MediaActivity :
     }
 
     override fun onDestroy() {
-        favouriteWidget?.setListener(null)
+        favouriteWidget?.setOnToggleAction(null)
         favouriteWidget?.onViewRecycled()
         mediaActionUtil?.onDestroy()
         super.onDestroy()
@@ -300,13 +371,7 @@ class MediaActivity :
             if (current.mediaListEntry != null && manageMenuItem != null) {
                 manageMenuItem?.icon = getCompatDrawable(R.drawable.ic_mode_edit_white_24dp)
             }
-            malMenuItem?.isVisible = current.idMal > 0
-        }
-    }
-
-    private fun setFavouriteWidgetMenuItemIcon() {
-        model?.let { current ->
-            favouriteWidget?.setModel(current)
+            malMenuItem?.isVisible = (current.idMal ?: 0) > 0
         }
     }
 }

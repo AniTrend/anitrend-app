@@ -2,16 +2,15 @@ package com.mxt.anitrend.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mxt.anitrend.domain.mediadetail.model.MediaOverviewRecord
+import com.mxt.anitrend.domain.mediadetail.model.MediaOverviewStudioRecord
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.model.entity.anilist.Genre
-import com.mxt.anitrend.model.entity.anilist.Media
-import com.mxt.anitrend.model.entity.base.StudioBase
-import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.repository.MediaRepository
 import com.mxt.anitrend.util.CompatUtil
+import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.date.DateUtil
-import com.mxt.anitrend.util.media.MediaUtil
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,14 +27,14 @@ class MediaOverviewViewModel(
 
     sealed interface UiState {
         data object Loading : UiState
-        data class Success(val media: Media) : UiState
+        data class Success(val record: MediaOverviewRecord) : UiState
         data class Error(val message: String) : UiState
     }
 
     data class MediaOverviewDisplayData(
         val hashTagHtml: String?,
         val mainStudioName: String?,
-        val mainStudio: StudioBase?,
+        val mainStudio: MediaOverviewStudioRecord?,
         val formatText: String?,
         val seasonText: String?,
         val sourceText: String?,
@@ -64,13 +63,13 @@ class MediaOverviewViewModel(
             _state.value = UiState.Loading
             val type = mediaType?.let { runCatching { MediaType.valueOf(it) }.getOrNull() }
             val isAdult: Boolean? = if (settings.displayAdultContent) null else false
-            repository.getMediaOverview(
+            repository.getMediaOverviewRecord(
                 id = mediaId,
                 type = type,
                 isAdult = isAdult,
-            ).onSuccess { media ->
-                _displayData.value = transformToDisplayData(media)
-                _state.value = UiState.Success(media)
+            ).onSuccess { record ->
+                _displayData.value = transformToDisplayData(record)
+                _state.value = UiState.Success(record)
                 loadedOnce = true
             }.onFailure { throwable ->
                 Timber.e(throwable, "MediaOverviewViewModel load failed")
@@ -81,8 +80,8 @@ class MediaOverviewViewModel(
         }
     }
 
-    private fun transformToDisplayData(media: Media): MediaOverviewDisplayData {
-        val hashTag = media.hashTag
+    private fun transformToDisplayData(record: MediaOverviewRecord): MediaOverviewDisplayData {
+        val hashTag = record.hashtag
         val hashTagHtml = if (!hashTag.isNullOrEmpty()) {
             String.format(
                 "<a href=\"https://twitter.com/search?q=%%23%s&src=typd\">%s</a>",
@@ -93,39 +92,38 @@ class MediaOverviewViewModel(
             null
         }
 
-        val studioContainer: ConnectionContainer<List<StudioBase>>? = media.studios
-        val mainStudio = studioContainer?.connection?.firstOrNull()
+        val mainStudio = record.studios?.firstOrNull()
         val mainStudioName = mainStudio?.name
 
-        val formatText = if (!media.format.isNullOrEmpty()) {
-            CompatUtil.capitalizeWords(media.format)
+        val formatText = if (!record.format.isNullOrEmpty()) {
+            CompatUtil.capitalizeWords(record.format)
         } else {
             null
         }
 
-        val seasonText: String? = media.startDate?.let { startDate ->
+        val seasonText: String? = record.startDate?.let { startDate ->
             if (startDate.isValidDate) DateUtil.getMediaSeason(startDate) else null
         }
 
-        val sourceText = if (!media.source.isNullOrEmpty()) {
-            CompatUtil.capitalizeWords(media.source)
+        val sourceText = if (!record.source.isNullOrEmpty()) {
+            CompatUtil.capitalizeWords(record.source)
         } else {
             null
         }
 
-        val statusText = if (!media.status.isNullOrEmpty()) {
-            CompatUtil.capitalizeWords(media.status)
+        val statusText = if (!record.status.isNullOrEmpty()) {
+            CompatUtil.capitalizeWords(record.status)
         } else {
             null
         }
 
-        val genres = media.genres
+        val genres = record.genres
             .orEmpty()
-            .takeWhile { it.isNotEmpty() }
+            .takeWhile { !it.isNullOrEmpty() }
             .map { Genre(it) }
 
-        val isManga = MediaUtil.isMangaType(media)
-        val isAnime = MediaUtil.isAnimeType(media)
+        val isManga = record.type == KeyUtil.MANGA
+        val isAnime = record.type == KeyUtil.ANIME
 
         return MediaOverviewDisplayData(
             hashTagHtml = hashTagHtml,
@@ -138,11 +136,11 @@ class MediaOverviewViewModel(
             genres = genres,
             isManga = isManga,
             isAnime = isAnime,
-            episodeDuration = if (media.duration != null && media.duration > 0) media.duration else null,
-            episodeCount = if (media.episodes != null && media.episodes > 0) media.episodes else null,
-            volumeCount = if (media.volumes != null && media.volumes > 0) media.volumes else null,
-            chapterCount = if (media.chapters != null && media.chapters > 0) media.chapters else null,
-            meanScore = media.meanScore,
+            episodeDuration = if (record.duration != null && record.duration > 0) record.duration else null,
+            episodeCount = if (record.episodes != null && record.episodes > 0) record.episodes else null,
+            volumeCount = if (record.volumes != null && record.volumes > 0) record.volumes else null,
+            chapterCount = if (record.chapters != null && record.chapters > 0) record.chapters else null,
+            meanScore = record.meanScore,
         )
     }
 }

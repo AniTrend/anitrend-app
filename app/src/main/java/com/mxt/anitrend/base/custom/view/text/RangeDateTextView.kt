@@ -2,6 +2,7 @@ package com.mxt.anitrend.base.custom.view.text
 
 import android.content.Context
 import android.util.AttributeSet
+import com.mxt.anitrend.domain.model.FuzzyDateRecord
 import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate
 import com.mxt.anitrend.util.date.DateUtil
 
@@ -30,10 +31,38 @@ constructor(
                 )
         }
 
+        /** Same layout rules as the [FuzzyDate] overload, driven by the immutable domain record. */
+        @JvmStatic
+        fun setStartDate(
+            view: RangeDateTextView,
+            fuzzyDate: FuzzyDateRecord?,
+        ) {
+            view.text =
+                String.format(
+                    "%s: %s",
+                    DateUtil.getStartTitle(fuzzyDate),
+                    DateUtil.convertDate(fuzzyDate),
+                )
+        }
+
         @JvmStatic
         fun setEndDate(
             view: RangeDateTextView,
             fuzzyDate: FuzzyDate?,
+        ) {
+            view.text =
+                String.format(
+                    "%s: %s",
+                    DateUtil.getEndTitle(fuzzyDate),
+                    DateUtil.convertDate(fuzzyDate),
+                )
+        }
+
+        /** Same layout rules as the [FuzzyDate] overload, driven by the immutable domain record. */
+        @JvmStatic
+        fun setEndDate(
+            view: RangeDateTextView,
+            fuzzyDate: FuzzyDateRecord?,
         ) {
             view.text =
                 String.format(

@@ -40,7 +40,7 @@ class CharacterRepositoryTest {
     )
 
     @Test
-    fun `getCharacterBase success maps GraphContainer data to CharacterEntity`() = runTest {
+    fun `getCharacterBase success maps GraphContainer data to CharacterRecord`() = runTest {
         val call = characterBaseCall()
         val request = CharacterBase.request(id = 1)
         `when`(service.getCharacterBase(request)).thenReturn(call)
@@ -58,8 +58,8 @@ class CharacterRepositoryTest {
         assertTrue(result.isSuccess)
         val character = result.getOrThrow()
         assertEquals(1L, character.id)
-        assertEquals("Spike", character.name?.first)
-        assertEquals("large.jpg", character.image?.large)
+        assertEquals("Spike Spiegel", character.name)
+        assertEquals("https://anilist.co/character/1", character.siteUrl)
         assertTrue(character.isFavourite)
     }
 

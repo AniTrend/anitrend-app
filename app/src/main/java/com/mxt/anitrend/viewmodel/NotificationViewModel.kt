@@ -2,8 +2,7 @@ package com.mxt.anitrend.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mxt.anitrend.model.entity.anilist.Notification
-import com.mxt.anitrend.model.entity.container.body.PageContainer
+import com.mxt.anitrend.domain.model.NotificationPageResult
 import com.mxt.anitrend.repository.UserRepository
 import com.mxt.anitrend.util.KeyUtil
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +17,7 @@ class NotificationViewModel(
 
     sealed interface UiState {
         data object Loading : UiState
-        data class Success(val content: PageContainer<Notification>) : UiState
+        data class Success(val content: NotificationPageResult) : UiState
         data class Error(val message: String) : UiState
     }
 
@@ -27,6 +26,10 @@ class NotificationViewModel(
 
     /**
      * Loads user notifications. Repeatable for pagination; no loadedOnce guard.
+     *
+     * The repository boundary returns immutable [NotificationPageResult] records;
+     * the fragment projects them into read-aware UI models and owns the local
+     * `NotificationHistory` read state.
      */
     fun load(page: Int) {
         viewModelScope.launch {
@@ -37,8 +40,8 @@ class NotificationViewModel(
                     perPage = KeyUtil.PAGING_LIMIT,
                     resetNotificationCount = true,
                 ).getOrThrow()
-            }.onSuccess { content ->
-                _state.value = UiState.Success(content)
+            }.onSuccess { result ->
+                _state.value = UiState.Success(result)
             }.onFailure { throwable ->
                 Timber.e(throwable, "NotificationViewModel load failed")
                 _state.value = UiState.Error(

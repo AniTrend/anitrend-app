@@ -7,6 +7,7 @@ import android.widget.FrameLayout
 import androidx.annotation.RequiresApi
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.interfaces.view.CustomView
+import com.mxt.anitrend.domain.model.MediaListItemRenderModel
 import com.mxt.anitrend.extension.getCompatColor
 import com.mxt.anitrend.model.entity.anilist.Media
 import com.mxt.anitrend.model.entity.anilist.MediaList
@@ -50,11 +51,11 @@ constructor(
     companion object {
         private fun applyStatus(
             view: SeriesStatusWidget,
-            model: MediaBase?,
+            mediaStatus: String?,
         ) {
-            val mediaStatus = model?.status ?: KeyUtil.NOT_YET_RELEASED
+            val resolvedStatus = mediaStatus ?: KeyUtil.NOT_YET_RELEASED
             val colorRes =
-                when (mediaStatus) {
+                when (resolvedStatus) {
                     KeyUtil.RELEASING -> R.color.colorStateBlue
                     KeyUtil.FINISHED -> R.color.colorStateGreen
                     KeyUtil.NOT_YET_RELEASED -> R.color.colorStateOrange
@@ -69,7 +70,7 @@ constructor(
             view: SeriesStatusWidget,
             model: MediaBase?,
         ) {
-            applyStatus(view, model)
+            applyStatus(view, model?.status)
         }
 
         /** Give the current airing status of the series */
@@ -78,7 +79,7 @@ constructor(
             view: SeriesStatusWidget,
             model: Media?,
         ) {
-            applyStatus(view, model)
+            applyStatus(view, model?.status)
         }
 
         /** Give the current airing status of the series */
@@ -92,19 +93,27 @@ constructor(
 
         /** Give the current airing status of the series */
         @JvmStatic
+        fun setStatus(
+            view: SeriesStatusWidget,
+            mediaStatus: String?,
+        ) {
+            applyStatus(view, mediaStatus)
+        }
+
+        /** Give the current airing status of the series */
+        @JvmStatic
         fun setAiringStatus(
             view: SeriesStatusWidget,
-            mediaList: MediaList?,
+            model: MediaListItemRenderModel?,
         ) {
-            val media = mediaList?.media
-            val nextAiring = media?.nextAiringEpisode
-            if (mediaList != null && nextAiring != null) {
-                if (nextAiring.episode - mediaList.progress > 1) {
+            val nextAiring = model?.nextAiringEpisode
+            if (model != null && nextAiring != null) {
+                if (nextAiring.episode - model.progress > 1) {
                     view.setBackgroundColor(view.context.getCompatColor(R.color.colorStateYellow))
                     return
                 }
             }
-            setStatus(view, mediaList)
+            setStatus(view, model?.mediaStatus)
         }
     }
 }

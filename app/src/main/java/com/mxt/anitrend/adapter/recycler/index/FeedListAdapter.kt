@@ -21,6 +21,12 @@ import com.mxt.anitrend.extension.getLayoutInflater
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.date.DateUtil
 
+/**
+ * UI projection boundary for the feed screen. Renders exclusively from the
+ * immutable [FeedItemUiModel] produced by the feed store records and never
+ * resolves repositories, stores, or legacy `FeedList` entities. All mutations
+ * are forwarded to the fragment through the constructor callbacks.
+ */
 class FeedListAdapter(
     private val experimentalMarkdown: Boolean,
     private val onToggleLikeAction: (Long) -> Unit,

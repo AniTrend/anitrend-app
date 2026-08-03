@@ -2,7 +2,7 @@ package com.mxt.anitrend.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mxt.anitrend.model.entity.anilist.user.UserStatisticTypes
+import com.mxt.anitrend.domain.user.model.UserStatisticsRecord
 import com.mxt.anitrend.repository.UserRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -61,14 +61,11 @@ class ProfileViewModel(
     suspend fun loadStats(
         userId: Long,
         userName: String?,
-    ): Result<UserStatisticTypes> = withContext(ioDispatcher) {
+    ): Result<UserStatisticsRecord> = withContext(ioDispatcher) {
         userRepository.getUserStats(
             id = if (userId > 0) userId else null,
             userName = userName,
         )
-            .mapCatching { connectionContainer ->
-                connectionContainer.connection
-            }
     }
 
     fun isCurrentUser(userId: Long, userName: String?) = userRepository.isCurrentUser(

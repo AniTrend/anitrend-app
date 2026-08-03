@@ -48,7 +48,7 @@ class UserSearchFragment : FragmentBaseList<UserBase, PageContainer<UserBase>>()
         mAdapter = UserAdapter(
             context = ctx,
             currentUser = databaseHelper.currentUser,
-            onToggleFollowAction = userSearchViewModel::toggleFollow,
+            onToggleFollowAction = { userId, _ -> userSearchViewModel.toggleFollow(userId) },
         )
     }
 
@@ -71,6 +71,27 @@ class UserSearchFragment : FragmentBaseList<UserBase, PageContainer<UserBase>>()
                     }
                 }
             }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                userSearchViewModel.followStates.collect(::rebindFollowStates)
+            }
+        }
+    }
+
+    /**
+     * Committed follow states from the canonical [com.mxt.anitrend.data.store.user.UserStore]
+     * are written back onto existing adapter items so the render-only widget re-renders the
+     * authoritative state. Items not present in the current page are skipped.
+     */
+    private fun rebindFollowStates(followStates: Map<Long, Boolean>) {
+        followStates.forEach { (userId, isFollowing) ->
+            val position = mAdapter.data.indexOfFirst { it.id == userId }
+            if (position < 0) return@forEach
+            val current = mAdapter.data[position]
+            if (current.isFollowing == isFollowing) return@forEach
+            current.isFollowing = isFollowing
+            mAdapter.onItemChanged(current, position)
         }
     }
 
