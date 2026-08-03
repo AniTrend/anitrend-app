@@ -21,7 +21,7 @@ import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget
 import com.mxt.anitrend.base.custom.view.widget.FavouriteWidgetRenderState
 import com.mxt.anitrend.databinding.ActivitySeriesBinding
 import com.mxt.anitrend.extension.getCompatDrawable
-import com.mxt.anitrend.model.entity.base.MediaBase
+import com.mxt.anitrend.domain.mediadetail.model.MediaDetailRecord
 import com.mxt.anitrend.navigation.extension.putScreenParam
 import com.mxt.anitrend.navigation.extension.screenParam
 import com.mxt.anitrend.navigation.model.MediaScreenParam
@@ -90,7 +90,7 @@ class MediaActivity :
     @KeyUtil.MediaType
     private var mediaType: String? = null
 
-    private var model: MediaBase? = null
+    private var model: MediaDetailRecord? = null
     private var mediaId: Long = 0
 
     private var favouriteWidget: FavouriteToolbarWidget? = null
@@ -270,15 +270,15 @@ class MediaActivity :
                 R.id.action_share -> {
                     val intent =
                         Intent(Intent.ACTION_SEND).apply {
-                            putExtra(
-                                Intent.EXTRA_TEXT,
-                                String.format(
-                                    Locale.getDefault(),
-                                    "%s - %s",
-                                    current.title?.userPreferred ?: "",
-                                    current.siteUrl,
-                                ),
-                            )
+                                putExtra(
+                                    Intent.EXTRA_TEXT,
+                                    String.format(
+                                        Locale.getDefault(),
+                                        "%s - %s",
+                                        current.titleUserPreferred ?: "",
+                                        current.siteUrl,
+                                    ),
+                                )
                             type = "text/plain"
                         }
                     startActivity(
@@ -372,7 +372,7 @@ class MediaActivity :
             if (current.mediaListEntry != null && manageMenuItem != null) {
                 manageMenuItem?.icon = getCompatDrawable(R.drawable.ic_mode_edit_white_24dp)
             }
-            malMenuItem?.isVisible = current.idMal > 0
+            malMenuItem?.isVisible = (current.idMal ?: 0) > 0
         }
     }
 }

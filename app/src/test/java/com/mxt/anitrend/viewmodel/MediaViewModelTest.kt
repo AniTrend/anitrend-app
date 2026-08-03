@@ -3,6 +3,7 @@ package com.mxt.anitrend.viewmodel
 import com.mxt.anitrend.data.store.favourite.FavouriteStoreChange
 import com.mxt.anitrend.data.store.favourite.InMemoryFavouriteStore
 import com.mxt.anitrend.data.store.medialist.InMemoryMediaListStore
+import com.mxt.anitrend.data.store.medialist.MediaListStoreChange
 import com.mxt.anitrend.data.store.mutation.DefaultMutationExecutor
 import com.mxt.anitrend.data.store.mutation.DefaultMutationRegistry
 import com.mxt.anitrend.data.store.mutation.DefaultOperationIdGenerator
@@ -12,11 +13,12 @@ import com.mxt.anitrend.data.store.mutation.RequestSequence
 import com.mxt.anitrend.data.store.mutation.SessionEpoch
 import com.mxt.anitrend.domain.favourite.interactor.ToggleFavouriteInteractor
 import com.mxt.anitrend.domain.favourite.model.FavouriteKey
+import com.mxt.anitrend.domain.mediadetail.model.MediaDetailRecord
+import com.mxt.anitrend.domain.mediadetail.model.MediaListEntryRecord
 import com.mxt.anitrend.domain.model.ToggleFavouriteCommand
-import com.mxt.anitrend.fixture.MediaListFixtures.aMediaList
-import com.mxt.anitrend.fixture.MediaListFixtures.aMangaMediaBase
-import com.mxt.anitrend.fixture.MediaListFixtures.anAnimeMediaBase
-import com.mxt.anitrend.model.entity.base.MediaBase
+import com.mxt.anitrend.fixture.MediaListFixtures.aMangaMediaDetailRecord
+import com.mxt.anitrend.fixture.MediaListFixtures.aMediaListRecord
+import com.mxt.anitrend.fixture.MediaListFixtures.anAnimeMediaDetailRecord
 import com.mxt.anitrend.repository.BaseRepository
 import com.mxt.anitrend.repository.MediaRepository
 import com.mxt.anitrend.util.KeyUtil
@@ -74,10 +76,16 @@ class MediaViewModelTest {
 
     @Test
     fun `UiState Success holds media instance`() {
-        val media = MediaBase().apply {
-            id = 1L
-            siteUrl = "https://anilist.co/anime/1"
-        }
+        val media = MediaDetailRecord(
+            id = 1L,
+            idMal = null,
+            titleUserPreferred = null,
+            type = null,
+            bannerImage = null,
+            isFavourite = false,
+            siteUrl = "https://anilist.co/anime/1",
+            mediaListEntry = null,
+        )
         val state = MediaViewModel.UiState.Success(media)
         assertEquals(1L, state.media.id)
         assertEquals("https://anilist.co/anime/1", state.media.siteUrl)
@@ -103,12 +111,19 @@ class MediaViewModelTest {
     }
 
     @Test
-    fun `loaded media uses media list entry from store`() = runTest(testDispatcher) {
-        val media = anAnimeMediaBase(id = 100L)
-        media.mediaListEntry = aMediaList(id = 5, mediaId = 100, progress = 7, media = media)
+    fun `loaded media projects media list entry from store`() = runTest(testDispatcher) {
+        val media = anAnimeMediaDetailRecord(id = 100L)
         doReturn(Result.success(media))
             .`when`(mediaRepository)
-            .getMediaBase(100L, null, false)
+            .getMediaBaseRecord(100L, null, false)
+
+        val canonical = aMediaListRecord(
+            id = 5L,
+            mediaId = 100L,
+            status = KeyUtil.CURRENT,
+            progress = 7,
+        )
+        mediaListStore.apply(MediaListStoreChange.EntryUpserted(canonical))
 
         val vm = viewModel()
         val collector = backgroundScope.launch { vm.state.collect {} }
@@ -118,19 +133,45 @@ class MediaViewModelTest {
 
         val state = vm.state.value as MediaViewModel.UiState.Success
         assertEquals(5L, state.media.mediaListEntry?.id)
-        assertEquals(7, state.media.mediaListEntry?.progress)
+        assertEquals(KeyUtil.CURRENT, state.media.mediaListEntry?.status)
         assertEquals(7, mediaListStore.state.value.entriesById.getValue(5L).progress)
-        verify(mediaRepository).getMediaBase(100L, null, false)
+        verify(mediaRepository).getMediaBaseRecord(100L, null, false)
+        collector.cancel()
+    }
+
+    @Test
+    fun `loaded media preserves the initial media list entry when the store has none`() = runTest(testDispatcher) {
+        val media = anAnimeMediaDetailRecord(
+            id = 100L,
+            mediaListEntry = MediaListEntryRecord(id = 5L, status = KeyUtil.CURRENT),
+        )
+        doReturn(Result.success(media))
+            .`when`(mediaRepository)
+            .getMediaBaseRecord(100L, null, false)
+
+        val vm = viewModel()
+        val collector = backgroundScope.launch { vm.state.collect {} }
+
+        vm.load(mediaId = 100L, mediaType = null, showAdult = false)
+        advanceUntilIdle()
+
+        val state = vm.state.value as MediaViewModel.UiState.Success
+        assertEquals(5L, state.media.mediaListEntry?.id)
+        assertEquals(KeyUtil.CURRENT, state.media.mediaListEntry?.status)
+        assertTrue(mediaListStore.state.value.entriesById.isEmpty())
+        verify(mediaRepository).getMediaBaseRecord(100L, null, false)
         collector.cancel()
     }
 
     @Test
     fun `load skips repeated fetches after first success`() = runTest(testDispatcher) {
-        val media = anAnimeMediaBase(id = 100L)
-        media.mediaListEntry = aMediaList(id = 1, mediaId = 100, progress = 5, media = media)
+        val media = anAnimeMediaDetailRecord(
+            id = 100L,
+            mediaListEntry = MediaListEntryRecord(id = 1L, status = KeyUtil.CURRENT),
+        )
         doReturn(Result.success(media))
             .`when`(mediaRepository)
-            .getMediaBase(100L, null, false)
+            .getMediaBaseRecord(100L, null, false)
 
         val vm = viewModel()
         val collector = backgroundScope.launch { vm.state.collect {} }
@@ -139,22 +180,22 @@ class MediaViewModelTest {
         advanceUntilIdle()
 
         var state = vm.state.value as MediaViewModel.UiState.Success
-        assertEquals(5, state.media.mediaListEntry?.progress)
+        assertEquals(KeyUtil.CURRENT, state.media.mediaListEntry?.status)
 
         vm.load(mediaId = 100L, mediaType = null, showAdult = false)
         advanceUntilIdle()
 
         state = vm.state.value as MediaViewModel.UiState.Success
-        assertEquals(5, state.media.mediaListEntry?.progress)
-        verify(mediaRepository).getMediaBase(100L, null, false)
+        assertEquals(KeyUtil.CURRENT, state.media.mediaListEntry?.status)
+        verify(mediaRepository).getMediaBaseRecord(100L, null, false)
         collector.cancel()
     }
 
     @Test
     fun `load failure emits Error state`() = runTest(testDispatcher) {
-        doReturn(Result.failure<MediaBase>(IllegalStateException("Media failed")))
+        doReturn(Result.failure<MediaDetailRecord>(IllegalStateException("Media failed")))
             .`when`(mediaRepository)
-            .getMediaBase(100L, null, false)
+            .getMediaBaseRecord(100L, null, false)
 
         val vm = viewModel()
         val collector = backgroundScope.launch { vm.state.collect {} }
@@ -172,8 +213,8 @@ class MediaViewModelTest {
     @Test
     fun `load seeds the favourite store with an Anime key from an anime media`() = runTest {
         val store = InMemoryFavouriteStore()
-        val media = anAnimeMediaBase(id = 100L).apply { isFavourite = true }
-        doReturn(Result.success(media)).`when`(mediaRepository).getMediaBase(100L, null, false)
+        val media = anAnimeMediaDetailRecord(id = 100L).copy(isFavourite = true)
+        doReturn(Result.success(media)).`when`(mediaRepository).getMediaBaseRecord(100L, null, false)
         val vm = viewModel(favouriteStore = store)
 
         vm.load(mediaId = 100L, mediaType = null, showAdult = false)
@@ -188,8 +229,8 @@ class MediaViewModelTest {
     @Test
     fun `load seeds the favourite store with a Manga key from a manga media`() = runTest {
         val store = InMemoryFavouriteStore()
-        val media = aMangaMediaBase(id = 100L).apply { isFavourite = true }
-        doReturn(Result.success(media)).`when`(mediaRepository).getMediaBase(100L, null, false)
+        val media = aMangaMediaDetailRecord(id = 100L).copy(isFavourite = true)
+        doReturn(Result.success(media)).`when`(mediaRepository).getMediaBaseRecord(100L, null, false)
         val vm = viewModel(favouriteStore = store)
 
         vm.load(mediaId = 100L, mediaType = null, showAdult = false)
@@ -211,8 +252,8 @@ class MediaViewModelTest {
                 revision = 1L,
             ),
         )
-        val media = anAnimeMediaBase(id = 100L).apply { isFavourite = true }
-        doReturn(Result.success(media)).`when`(mediaRepository).getMediaBase(100L, null, false)
+        val media = anAnimeMediaDetailRecord(id = 100L).copy(isFavourite = true)
+        doReturn(Result.success(media)).`when`(mediaRepository).getMediaBaseRecord(100L, null, false)
         val vm = viewModel(favouriteStore = store)
 
         vm.load(mediaId = 100L, mediaType = null, showAdult = false)
@@ -225,8 +266,8 @@ class MediaViewModelTest {
     @Test
     fun `favouriteFlag mirrors committed store state after load`() = runTest {
         val store = InMemoryFavouriteStore()
-        val media = anAnimeMediaBase(id = 100L).apply { isFavourite = true }
-        doReturn(Result.success(media)).`when`(mediaRepository).getMediaBase(100L, null, false)
+        val media = anAnimeMediaDetailRecord(id = 100L).copy(isFavourite = true)
+        doReturn(Result.success(media)).`when`(mediaRepository).getMediaBaseRecord(100L, null, false)
         val vm = viewModel(favouriteStore = store)
 
         vm.load(mediaId = 100L, mediaType = null, showAdult = false)
@@ -242,8 +283,8 @@ class MediaViewModelTest {
         doReturn(MutationResult.Success)
             .`when`(interactor)
             .invoke(ToggleFavouriteCommand(FavouriteKey.Anime(100L)))
-        val media = anAnimeMediaBase(id = 100L)
-        doReturn(Result.success(media)).`when`(mediaRepository).getMediaBase(100L, null, false)
+        val media = anAnimeMediaDetailRecord(id = 100L)
+        doReturn(Result.success(media)).`when`(mediaRepository).getMediaBaseRecord(100L, null, false)
         val vm = viewModel(toggleFavouriteInteractor = interactor)
 
         vm.load(mediaId = 100L, mediaType = null, showAdult = false)
@@ -260,8 +301,8 @@ class MediaViewModelTest {
         doReturn(MutationResult.Success)
             .`when`(interactor)
             .invoke(ToggleFavouriteCommand(FavouriteKey.Manga(101L)))
-        val media = aMangaMediaBase(id = 101L)
-        doReturn(Result.success(media)).`when`(mediaRepository).getMediaBase(101L, null, false)
+        val media = aMangaMediaDetailRecord(id = 101L)
+        doReturn(Result.success(media)).`when`(mediaRepository).getMediaBaseRecord(101L, null, false)
         val vm = viewModel(toggleFavouriteInteractor = interactor)
 
         vm.load(mediaId = 101L, mediaType = null, showAdult = false)
@@ -319,8 +360,8 @@ class MediaViewModelTest {
             favouriteStore = store,
             requestSequence = RequestSequence(),
         )
-        val media = anAnimeMediaBase(id = 7L)
-        doReturn(Result.success(media)).`when`(mediaRepository).getMediaBase(7L, null, false)
+        val media = anAnimeMediaDetailRecord(id = 7L)
+        doReturn(Result.success(media)).`when`(mediaRepository).getMediaBaseRecord(7L, null, false)
         val vm = viewModel(favouriteStore = store, toggleFavouriteInteractor = interactor)
 
         vm.load(mediaId = 7L, mediaType = null, showAdult = false)
@@ -344,8 +385,8 @@ class MediaViewModelTest {
         doReturn(MutationResult.Failure(message = "Unable to toggle favourite"))
             .`when`(interactor)
             .invoke(ToggleFavouriteCommand(FavouriteKey.Anime(7L)))
-        val media = anAnimeMediaBase(id = 7L).apply { isFavourite = true }
-        doReturn(Result.success(media)).`when`(mediaRepository).getMediaBase(7L, null, false)
+        val media = anAnimeMediaDetailRecord(id = 7L).copy(isFavourite = true)
+        doReturn(Result.success(media)).`when`(mediaRepository).getMediaBaseRecord(7L, null, false)
         val vm = viewModel(favouriteStore = store, toggleFavouriteInteractor = interactor)
 
         vm.load(mediaId = 7L, mediaType = null, showAdult = false)

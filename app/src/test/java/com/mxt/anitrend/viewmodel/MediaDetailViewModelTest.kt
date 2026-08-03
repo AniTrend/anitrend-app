@@ -5,12 +5,12 @@ import com.mxt.anitrend.data.store.favourite.InMemoryFavouriteStore
 import com.mxt.anitrend.data.store.feed.InMemoryFeedStore
 import com.mxt.anitrend.data.store.medialist.InMemoryMediaListStore
 import com.mxt.anitrend.domain.favourite.interactor.ToggleFavouriteInteractor
+import com.mxt.anitrend.domain.mediadetail.model.MediaDetailRecord
 import com.mxt.anitrend.domain.model.RecommendationPageResult
 import com.mxt.anitrend.model.entity.anilist.Media
 import com.mxt.anitrend.model.entity.anilist.edge.CharacterEdge
 import com.mxt.anitrend.model.entity.anilist.edge.MediaEdge
 import com.mxt.anitrend.model.entity.anilist.edge.StaffEdge
-import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.container.body.EdgeContainer
 import com.mxt.anitrend.repository.BaseRepository
@@ -60,10 +60,19 @@ class MediaDetailViewModelTest {
 
     @Test
     fun `MediaViewModel routes load through MediaRepository`() = runTest {
-        val content = MediaBase()
+        val content = MediaDetailRecord(
+            id = 1L,
+            idMal = null,
+            titleUserPreferred = null,
+            type = "ANIME",
+            bannerImage = null,
+            isFavourite = false,
+            siteUrl = null,
+            mediaListEntry = null,
+        )
         doReturn(Result.success(content))
             .`when`(mediaRepository)
-            .getMediaBase(1L, MediaType.ANIME, false)
+            .getMediaBaseRecord(1L, MediaType.ANIME, false)
         val viewModel = MediaViewModel(
             mediaRepository = mediaRepository,
             baseRepository = baseRepository,
@@ -79,7 +88,7 @@ class MediaDetailViewModelTest {
 
         val state = viewModel.state.value as MediaViewModel.UiState.Success
         assertEquals(content.id, state.media.id)
-        verify(mediaRepository).getMediaBase(1L, MediaType.ANIME, false)
+        verify(mediaRepository).getMediaBaseRecord(1L, MediaType.ANIME, false)
         collector.cancel()
     }
 

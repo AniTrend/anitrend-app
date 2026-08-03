@@ -2,15 +2,14 @@ package com.mxt.anitrend.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mxt.anitrend.data.mapper.toMediaList
-import com.mxt.anitrend.data.mapper.toMediaListRecord
 import com.mxt.anitrend.data.store.favourite.FavouriteFlag
 import com.mxt.anitrend.data.store.favourite.FavouriteStore
 import com.mxt.anitrend.data.store.favourite.FavouriteStoreChange
 import com.mxt.anitrend.data.store.medialist.MediaListStore
-import com.mxt.anitrend.data.store.medialist.MediaListStoreChange
 import com.mxt.anitrend.domain.favourite.interactor.ToggleFavouriteInteractor
 import com.mxt.anitrend.domain.favourite.model.FavouriteKey
+import com.mxt.anitrend.domain.mediadetail.model.MediaDetailRecord
+import com.mxt.anitrend.domain.mediadetail.model.MediaListEntryRecord
 import com.mxt.anitrend.domain.model.ToggleFavouriteCommand
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.repository.BaseRepository
@@ -37,7 +36,7 @@ class MediaViewModel(
 
     sealed interface UiState {
         data object Loading : UiState
-        data class Success(val media: com.mxt.anitrend.model.entity.base.MediaBase) : UiState
+        data class Success(val media: MediaDetailRecord) : UiState
         data class Error(val message: String) : UiState
     }
 
@@ -96,21 +95,25 @@ class MediaViewModel(
                         }
                     }
                     val isAdult: Boolean? = if (showAdult) null else false
-                    mediaRepository.getMediaBase(mediaId, typeEnum, isAdult).getOrThrow()
+                    mediaRepository.getMediaBaseRecord(mediaId, typeEnum, isAdult).getOrThrow()
                 }
             }.onSuccess { media ->
-                media.mediaListEntry?.let { mediaListEntry ->
-                    mediaListStore.apply(
-                        MediaListStoreChange.EntryUpserted(
-                            entry = mediaListEntry.toMediaListRecord(revision = 0L),
-                        ),
-                    )
-                }
+                // The GraphQL mediaListEntry projection is minimal (id/status), so it
+                // cannot be promoted to a canonical MediaListRecord. The canonical
+                // media-list store is observed below and its committed entry is
+                // projected back into the state as a minimal id/status record.
                 storeObservationJob?.cancel()
                 storeObservationJob = viewModelScope.launch {
                     mediaListStore.observeEntryByMediaId(media.id).collect { entry ->
                         mutableState.value = UiState.Success(
-                            media.copyWithMediaListEntry(entry?.toMediaList()),
+                            media.copyWithMediaListEntry(
+                                entry = entry?.let { canonical ->
+                                    MediaListEntryRecord(
+                                        id = canonical.id,
+                                        status = canonical.status,
+                                    )
+                                },
+                            ),
                         )
                     }
                 }
@@ -159,8 +162,9 @@ class MediaViewModel(
     ): FavouriteKey = if (mediaType == KeyUtil.ANIME) FavouriteKey.Anime(mediaId) else FavouriteKey.Manga(mediaId)
 
     /**
-     * Seeds the canonical store from the initially loaded [com.mxt.anitrend.model.entity.base.MediaBase.isFavourite]
-     * only when no committed store value exists yet. The legacy model is never mutated.
+     * Seeds the canonical store from the initially loaded [MediaDetailRecord.isFavourite]
+     * only when no committed store value exists yet. The record is immutable and is
+     * never mutated.
      */
     private suspend fun seedFavouriteFlag(
         key: FavouriteKey,
@@ -185,32 +189,14 @@ class MediaViewModel(
         }
     }
 
-    private fun com.mxt.anitrend.model.entity.base.MediaBase.copyWithMediaListEntry(
-        entry: com.mxt.anitrend.model.entity.anilist.MediaList?,
-    ): com.mxt.anitrend.model.entity.base.MediaBase = com.mxt.anitrend.model.entity.base.MediaBase().also { copy ->
-        copy.id = id
-        copy.idMal = idMal
-        copy.title = title
-        copy.coverImage = coverImage
-        copy.bannerImage = bannerImage
-        copy.type = type
-        copy.format = format
-        copy.season = season
-        copy.status = status
-        copy.siteUrl = siteUrl
-        copy.meanScore = meanScore
-        copy.averageScore = averageScore
-        copy.startDate = startDate
-        copy.endDate = endDate
-        copy.episodes = episodes
-        copy.duration = duration
-        copy.chapters = chapters
-        copy.volumes = volumes
-        copy.isAdult = isAdult
-        copy.isFavourite = isFavourite
-        copy.nextAiringEpisode = nextAiringEpisode
-        copy.mediaListEntry = entry
-    }
+    /**
+     * Replaces the media-list entry projection with the canonical store projection when
+     * the observed store has a committed entry for the media. When the store has no
+     * entry, the initial [MediaListEntryRecord] from the loaded media is preserved.
+     */
+    private fun MediaDetailRecord.copyWithMediaListEntry(
+        entry: MediaListEntryRecord?,
+    ): MediaDetailRecord = copy(mediaListEntry = entry ?: mediaListEntry)
 
     companion object {
         /**
