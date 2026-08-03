@@ -31,33 +31,29 @@ fun MediaStatsData.Media.toMediaStatsRecord(): MediaStatsRecord = MediaStatsReco
     rankings = rankings?.mapNotNull { it?.toMediaStatsRankingRecord() },
 )
 
-private fun MediaStatsData.MediaExternalLinks.toMediaStatsExternalLinkRecord(): MediaStatsExternalLinkRecord =
-    MediaStatsExternalLinkRecord(
-        id = id.toLong(),
-        url = url,
-        site = site,
-    )
+private fun MediaStatsData.MediaExternalLinks.toMediaStatsExternalLinkRecord(): MediaStatsExternalLinkRecord = MediaStatsExternalLinkRecord(
+    id = id.toLong(),
+    url = url,
+    site = site,
+)
 
-private fun MediaStatsData.MediaStatsScoreDistribution.toMediaStatsScoreDistributionRecord(): MediaStatsScoreDistributionRecord =
-    MediaStatsScoreDistributionRecord(
-        score = score,
-        amount = amount,
-    )
+private fun MediaStatsData.MediaStatsScoreDistribution.toMediaStatsScoreDistributionRecord(): MediaStatsScoreDistributionRecord = MediaStatsScoreDistributionRecord(
+    score = score,
+    amount = amount,
+)
 
-private fun MediaStatsData.MediaStatsStatusDistribution.toMediaStatsStatusDistributionRecord(): MediaStatsStatusDistributionRecord =
-    MediaStatsStatusDistributionRecord(
-        status = status?.name,
-        amount = amount,
-    )
+private fun MediaStatsData.MediaStatsStatusDistribution.toMediaStatsStatusDistributionRecord(): MediaStatsStatusDistributionRecord = MediaStatsStatusDistributionRecord(
+    status = status?.name,
+    amount = amount,
+)
 
-private fun MediaStatsData.MediaRankings.toMediaStatsRankingRecord(): MediaStatsRankingRecord =
-    MediaStatsRankingRecord(
-        id = id.toLong(),
-        rank = rank,
-        type = type.name,
-        format = format.name,
-        year = year,
-        season = season?.name,
-        allTime = allTime,
-        context = context,
-    )
+private fun MediaStatsData.MediaRankings.toMediaStatsRankingRecord(): MediaStatsRankingRecord = MediaStatsRankingRecord(
+    id = id.toLong(),
+    rank = rank,
+    type = type.name,
+    format = format.name,
+    year = year,
+    season = season?.name,
+    allTime = allTime,
+    context = context,
+)

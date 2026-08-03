@@ -230,8 +230,7 @@ class MediaRelationsRecordRepositoryTest {
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun mediaRelationsCall(): Call<GraphContainer<MediaRelationsData>> =
-        mock(Call::class.java) as Call<GraphContainer<MediaRelationsData>>
+    private fun mediaRelationsCall(): Call<GraphContainer<MediaRelationsData>> = mock(Call::class.java) as Call<GraphContainer<MediaRelationsData>>
 
     private fun mediaRelationsData(
         edges: List<MediaRelationsData.MediaRelationsEdges?>? = null,

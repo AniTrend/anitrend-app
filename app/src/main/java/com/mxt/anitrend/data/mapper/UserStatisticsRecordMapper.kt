@@ -392,8 +392,7 @@ private fun UserStatsData.UserStatisticsMangaVoiceActorsVoiceActorName.toStaffNa
     return fullName
 }
 
-private inline fun <T, R> List<T?>?.mapStatItems(transform: (T) -> R): List<R>? =
-    this?.mapNotNull { it?.let(transform) }
+private inline fun <T, R> List<T?>?.mapStatItems(transform: (T) -> R): List<R>? = this?.mapNotNull { it?.let(transform) }
 
 // ── Legacy cached DTO lane ───────────────────────────────────────────────────
 

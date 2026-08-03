@@ -35,42 +35,41 @@ class ReviewAdapterDiffTest {
         assertFalse(ReviewAdapter.DIFF_CALLBACK.areContentsTheSame(original, original.copy(userRating = "DOWN_VOTE")))
     }
 
-    private fun record(id: Long) =
-        ReviewRecord(
-            id = id,
-            summary = "summary",
-            mediaType = "ANIME",
-            body = "body",
-            rating = 80,
-            ratingAmount = 100,
-            userRating = "UP_VOTE",
-            score = 90,
-            isPrivate = false,
-            createdAt = 1_600_000_000L,
-            user =
-                UserSummaryRecord(
-                    id = 7L,
-                    name = "alice",
-                    avatar = "https://avatar",
-                    siteUrl = null,
-                ),
-            media =
-                MediaSummaryRecord(
-                    id = 44L,
-                    titleUserPreferred = "Preferred",
-                    titleRomaji = null,
-                    titleEnglish = null,
-                    titleOriginal = null,
-                    coverImage = "https://cover",
-                    bannerImage = "https://banner",
-                    type = "ANIME",
-                    format = null,
-                    episodes = 12,
-                    chapters = 0,
-                    volumes = 0,
-                    status = null,
-                    siteUrl = null,
-                ),
-            revision = 1L,
-        )
+    private fun record(id: Long) = ReviewRecord(
+        id = id,
+        summary = "summary",
+        mediaType = "ANIME",
+        body = "body",
+        rating = 80,
+        ratingAmount = 100,
+        userRating = "UP_VOTE",
+        score = 90,
+        isPrivate = false,
+        createdAt = 1_600_000_000L,
+        user =
+        UserSummaryRecord(
+            id = 7L,
+            name = "alice",
+            avatar = "https://avatar",
+            siteUrl = null,
+        ),
+        media =
+        MediaSummaryRecord(
+            id = 44L,
+            titleUserPreferred = "Preferred",
+            titleRomaji = null,
+            titleEnglish = null,
+            titleOriginal = null,
+            coverImage = "https://cover",
+            bannerImage = "https://banner",
+            type = "ANIME",
+            format = null,
+            episodes = 12,
+            chapters = 0,
+            volumes = 0,
+            status = null,
+            siteUrl = null,
+        ),
+        revision = 1L,
+    )
 }

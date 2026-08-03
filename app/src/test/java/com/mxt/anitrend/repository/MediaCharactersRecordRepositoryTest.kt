@@ -265,8 +265,7 @@ class MediaCharactersRecordRepositoryTest {
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun mediaCharactersCall(): Call<GraphContainer<MediaCharactersData>> =
-        mock(Call::class.java) as Call<GraphContainer<MediaCharactersData>>
+    private fun mediaCharactersCall(): Call<GraphContainer<MediaCharactersData>> = mock(Call::class.java) as Call<GraphContainer<MediaCharactersData>>
 
     private fun mediaCharactersData(
         edges: List<MediaCharactersData.MediaCharactersEdges?>? = null,

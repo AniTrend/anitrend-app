@@ -36,11 +36,10 @@ fun MediaStaffData.Media.toMediaStaffRecord(): MediaStaffRecord = MediaStaffReco
     pageInfo = staff?.pageInfo?.toPageInfoRecord(),
 )
 
-private fun MediaStaffData.MediaStaffEdges.toMediaStaffEdgeRecord(): MediaStaffEdgeRecord =
-    MediaStaffEdgeRecord(
-        role = role,
-        node = node?.toStaffRecord(),
-    )
+private fun MediaStaffData.MediaStaffEdges.toMediaStaffEdgeRecord(): MediaStaffEdgeRecord = MediaStaffEdgeRecord(
+    role = role,
+    node = node?.toStaffRecord(),
+)
 
 private fun MediaStaffData.MediaStaffEdgesNode.toStaffRecord(): StaffRecord = StaffRecord(
     id = id.toLong(),

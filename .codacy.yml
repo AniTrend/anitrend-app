@@ -1,0 +1,9 @@
+---
+# Analyze production Kotlin only. Tests, Java sources, resources, and generated
+# or build output are intentionally outside the Codacy analysis scope.
+exclude_paths:
+  - "**/*"
+include_paths:
+  - "app/src/main/**/*.kt"
+  - "app/src/app/**/*.kt"
+  - "app/src/github/**/*.kt"

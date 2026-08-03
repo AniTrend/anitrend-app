@@ -21,9 +21,8 @@ fun MediaEpisodesData.Media.toMediaEpisodesRecord(): MediaEpisodesRecord = Media
     externalLinks = externalLinks?.mapNotNull { it?.toMediaEpisodesExternalLinkRecord() },
 )
 
-private fun MediaEpisodesData.MediaExternalLinks.toMediaEpisodesExternalLinkRecord(): MediaEpisodesExternalLinkRecord =
-    MediaEpisodesExternalLinkRecord(
-        id = id.toLong(),
-        url = url,
-        site = site,
-    )
+private fun MediaEpisodesData.MediaExternalLinks.toMediaEpisodesExternalLinkRecord(): MediaEpisodesExternalLinkRecord = MediaEpisodesExternalLinkRecord(
+    id = id.toLong(),
+    url = url,
+    site = site,
+)

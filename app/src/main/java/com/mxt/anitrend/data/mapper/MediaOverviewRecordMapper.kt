@@ -63,13 +63,12 @@ fun MediaOverviewData.Media.toMediaOverviewRecord(): MediaOverviewRecord = Media
     description = description,
 )
 
-private fun MediaOverviewData.MediaCoverImage.toMediaOverviewCoverImageRecord(): MediaOverviewCoverImageRecord =
-    MediaOverviewCoverImageRecord(
-        color = color,
-        extraLarge = extraLarge,
-        large = large,
-        medium = medium,
-    )
+private fun MediaOverviewData.MediaCoverImage.toMediaOverviewCoverImageRecord(): MediaOverviewCoverImageRecord = MediaOverviewCoverImageRecord(
+    color = color,
+    extraLarge = extraLarge,
+    large = large,
+    medium = medium,
+)
 
 private fun MediaOverviewData.MediaStartDate.toFuzzyDateRecord(): FuzzyDateRecord = FuzzyDateRecord(
     year = year,
@@ -104,18 +103,16 @@ private fun MediaOverviewData.MediaTags.toMediaOverviewTagRecord(): MediaOvervie
     isAdult = isAdult ?: false,
 )
 
-private fun MediaOverviewData.MediaStudiosNodes.toMediaOverviewStudioRecord(): MediaOverviewStudioRecord =
-    MediaOverviewStudioRecord(
-        id = id.toLong(),
-        name = name,
-        isAnimationStudio = isAnimationStudio,
-        siteUrl = siteUrl,
-        isFavourite = isFavourite,
-    )
+private fun MediaOverviewData.MediaStudiosNodes.toMediaOverviewStudioRecord(): MediaOverviewStudioRecord = MediaOverviewStudioRecord(
+    id = id.toLong(),
+    name = name,
+    isAnimationStudio = isAnimationStudio,
+    siteUrl = siteUrl,
+    isFavourite = isFavourite,
+)
 
-private fun MediaOverviewData.MediaTrailer.toMediaOverviewTrailerRecord(): MediaOverviewTrailerRecord =
-    MediaOverviewTrailerRecord(
-        id = id,
-        site = site,
-        thumbnail = thumbnail,
-    )
+private fun MediaOverviewData.MediaTrailer.toMediaOverviewTrailerRecord(): MediaOverviewTrailerRecord = MediaOverviewTrailerRecord(
+    id = id,
+    site = site,
+    thumbnail = thumbnail,
+)

@@ -326,8 +326,7 @@ class BrowseMediaListCollectionRepositoryTest {
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun collectionCall(): Call<GraphContainer<MediaListCollectionData>> =
-        mock(Call::class.java) as Call<GraphContainer<MediaListCollectionData>>
+    private fun collectionCall(): Call<GraphContainer<MediaListCollectionData>> = mock(Call::class.java) as Call<GraphContainer<MediaListCollectionData>>
 
     private fun collectionRequest() = MediaListCollection.request(
         userId = 42,

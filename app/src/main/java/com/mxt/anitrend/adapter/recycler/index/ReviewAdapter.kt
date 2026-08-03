@@ -49,8 +49,7 @@ class ReviewAdapter(
         ) = onRateReviewAction(id, rating)
     }
 
-    override fun getItemViewType(position: Int): Int =
-        if (!isMediaType) VIEW_TYPE_BANNER else VIEW_TYPE_DEFAULT
+    override fun getItemViewType(position: Int): Int = if (!isMediaType) VIEW_TYPE_BANNER else VIEW_TYPE_DEFAULT
 
     override fun onCreateViewHolder(
         parent: ViewGroup,

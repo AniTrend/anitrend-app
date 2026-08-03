@@ -24,13 +24,12 @@ import kotlinx.serialization.json.JsonPrimitive
  * is intentionally null: the collection operation does not request it, matching the
  * legacy collection lane.
  */
-fun MediaListCollectionData.MediaListCollection.toMediaListCollectionPageResult(): MediaListCollectionPageResult =
-    MediaListCollectionPageResult(
-        entries = lists.orEmpty()
-            .flatMap { list -> list?.entries.orEmpty() }
-            .filterNotNull()
-            .map { it.toMediaListRecord() },
-    )
+fun MediaListCollectionData.MediaListCollection.toMediaListCollectionPageResult(): MediaListCollectionPageResult = MediaListCollectionPageResult(
+    entries = lists.orEmpty()
+        .flatMap { list -> list?.entries.orEmpty() }
+        .filterNotNull()
+        .map { it.toMediaListRecord() },
+)
 
 fun MediaListCollectionData.MediaListCollectionListsEntries.toMediaListRecord(
     revision: Long = 0L,

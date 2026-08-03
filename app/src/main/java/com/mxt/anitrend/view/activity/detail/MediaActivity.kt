@@ -60,8 +60,7 @@ class MediaActivity :
          * Compatibility overload preserving the legacy id/type-based callers. Bridges into
          * the typed parameter so navigation always uses [MediaScreenParam].
          */
-        fun newIntent(context: Context, mediaId: Long, mediaType: String?): Intent =
-            newIntent(context, MediaScreenParam(mediaId = mediaId, mediaType = mediaType))
+        fun newIntent(context: Context, mediaId: Long, mediaType: String?): Intent = newIntent(context, MediaScreenParam(mediaId = mediaId, mediaType = mediaType))
 
         /**
          * Resolves the typed parameter from the intent.
@@ -270,15 +269,15 @@ class MediaActivity :
                 R.id.action_share -> {
                     val intent =
                         Intent(Intent.ACTION_SEND).apply {
-                                putExtra(
-                                    Intent.EXTRA_TEXT,
-                                    String.format(
-                                        Locale.getDefault(),
-                                        "%s - %s",
-                                        current.titleUserPreferred ?: "",
-                                        current.siteUrl,
-                                    ),
-                                )
+                            putExtra(
+                                Intent.EXTRA_TEXT,
+                                String.format(
+                                    Locale.getDefault(),
+                                    "%s - %s",
+                                    current.titleUserPreferred ?: "",
+                                    current.siteUrl,
+                                ),
+                            )
                             type = "text/plain"
                         }
                     startActivity(

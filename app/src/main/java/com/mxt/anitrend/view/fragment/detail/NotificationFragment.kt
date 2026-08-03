@@ -356,8 +356,7 @@ class NotificationFragment : FragmentBaseList<NotificationItemUiModel, Notificat
     /**
      * Reads the current read-state ids from the `NotificationHistory` box.
      */
-    private fun readNotificationIds(): Set<Long> =
-        databaseHelper.getBoxStore(NotificationHistory::class.java).all.mapTo(mutableSetOf()) { it.id }
+    private fun readNotificationIds(): Set<Long> = databaseHelper.getBoxStore(NotificationHistory::class.java).all.mapTo(mutableSetOf()) { it.id }
 
     /**
      * Re-projects the loaded rows with the current read state and re-submits so

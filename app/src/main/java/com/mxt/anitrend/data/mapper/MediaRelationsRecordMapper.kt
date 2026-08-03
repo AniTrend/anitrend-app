@@ -32,47 +32,44 @@ fun MediaRelationsData.Media.toMediaRelationsRecord(): MediaRelationsRecord = Me
     pageInfo = relations?.pageInfo?.toPageInfoRecord(),
 )
 
-private fun MediaRelationsData.MediaRelationsEdges.toMediaRelationsEdgeRecord(): MediaRelationsEdgeRecord =
-    MediaRelationsEdgeRecord(
-        relationType = relationType?.name,
-        node = node?.toMediaRelationsNodeRecord(),
-    )
+private fun MediaRelationsData.MediaRelationsEdges.toMediaRelationsEdgeRecord(): MediaRelationsEdgeRecord = MediaRelationsEdgeRecord(
+    relationType = relationType?.name,
+    node = node?.toMediaRelationsNodeRecord(),
+)
 
-private fun MediaRelationsData.MediaRelationsEdgesNode.toMediaRelationsNodeRecord(): MediaRelationsNodeRecord =
-    MediaRelationsNodeRecord(
-        id = id.toLong(),
-        titleUserPreferred = title?.userPreferred,
-        titleRomaji = title?.romaji,
-        titleEnglish = title?.english,
-        titleOriginal = title?.native,
-        bannerImage = bannerImage,
-        coverImage = coverImage?.toMediaRelationsCoverImageRecord(),
-        type = type?.name,
-        format = format?.name,
-        season = season?.name,
-        status = status?.name,
-        meanScore = meanScore,
-        averageScore = averageScore,
-        startDate = startDate?.toFuzzyDateRecord(),
-        endDate = endDate?.toFuzzyDateRecord(),
-        episodes = episodes,
-        chapters = chapters,
-        volumes = volumes,
-        isAdult = isAdult,
-        isFavourite = isFavourite,
-        nextAiringEpisode = nextAiringEpisode?.toAiringScheduleRecord(),
-        mediaListEntry = mediaListEntry?.toMediaListEntryRecord(),
-        siteUrl = siteUrl,
-        updatedAt = updatedAt?.toLong(),
-    )
+private fun MediaRelationsData.MediaRelationsEdgesNode.toMediaRelationsNodeRecord(): MediaRelationsNodeRecord = MediaRelationsNodeRecord(
+    id = id.toLong(),
+    titleUserPreferred = title?.userPreferred,
+    titleRomaji = title?.romaji,
+    titleEnglish = title?.english,
+    titleOriginal = title?.native,
+    bannerImage = bannerImage,
+    coverImage = coverImage?.toMediaRelationsCoverImageRecord(),
+    type = type?.name,
+    format = format?.name,
+    season = season?.name,
+    status = status?.name,
+    meanScore = meanScore,
+    averageScore = averageScore,
+    startDate = startDate?.toFuzzyDateRecord(),
+    endDate = endDate?.toFuzzyDateRecord(),
+    episodes = episodes,
+    chapters = chapters,
+    volumes = volumes,
+    isAdult = isAdult,
+    isFavourite = isFavourite,
+    nextAiringEpisode = nextAiringEpisode?.toAiringScheduleRecord(),
+    mediaListEntry = mediaListEntry?.toMediaListEntryRecord(),
+    siteUrl = siteUrl,
+    updatedAt = updatedAt?.toLong(),
+)
 
-private fun MediaRelationsData.MediaRelationsEdgesNodeCoverImage.toMediaRelationsCoverImageRecord(): MediaRelationsCoverImageRecord =
-    MediaRelationsCoverImageRecord(
-        color = color,
-        extraLarge = extraLarge,
-        large = large,
-        medium = medium,
-    )
+private fun MediaRelationsData.MediaRelationsEdgesNodeCoverImage.toMediaRelationsCoverImageRecord(): MediaRelationsCoverImageRecord = MediaRelationsCoverImageRecord(
+    color = color,
+    extraLarge = extraLarge,
+    large = large,
+    medium = medium,
+)
 
 private fun MediaRelationsData.MediaRelationsEdgesNodeStartDate.toFuzzyDateRecord(): FuzzyDateRecord = FuzzyDateRecord(
     year = year,

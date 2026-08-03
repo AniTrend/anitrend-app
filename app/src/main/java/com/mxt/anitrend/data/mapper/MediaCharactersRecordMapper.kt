@@ -36,11 +36,10 @@ fun MediaCharactersData.Media.toMediaCharactersRecord(): MediaCharactersRecord =
     pageInfo = characters?.pageInfo?.toPageInfoRecord(),
 )
 
-private fun MediaCharactersData.MediaCharactersEdges.toMediaCharactersEdgeRecord(): MediaCharactersEdgeRecord =
-    MediaCharactersEdgeRecord(
-        role = role?.name,
-        node = node?.toCharacterRecord(),
-    )
+private fun MediaCharactersData.MediaCharactersEdges.toMediaCharactersEdgeRecord(): MediaCharactersEdgeRecord = MediaCharactersEdgeRecord(
+    role = role?.name,
+    node = node?.toCharacterRecord(),
+)
 
 private fun MediaCharactersData.MediaCharactersEdgesNode.toCharacterRecord(): CharacterRecord = CharacterRecord(
     id = id.toLong(),

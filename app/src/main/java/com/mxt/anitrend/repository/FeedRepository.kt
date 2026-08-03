@@ -48,11 +48,9 @@ data class FeedDetailResult(
     val replies: List<FeedReplyRecord>,
 )
 
-internal fun PageContainer<FeedListEntity>.toFeedRecords(revision: Long): List<FeedRecord> =
-    pageData.map { it.toFeedRecord(revision = revision) }
+internal fun PageContainer<FeedListEntity>.toFeedRecords(revision: Long): List<FeedRecord> = pageData.map { it.toFeedRecord(revision = revision) }
 
-internal fun PageContainer<FeedListEntity>.toRecordPageInfo(): PageInfoRecord? =
-    takeIf { it.hasPageInfo() }?.pageInfo?.toPageInfoRecord()
+internal fun PageContainer<FeedListEntity>.toRecordPageInfo(): PageInfoRecord? = takeIf { it.hasPageInfo() }?.pageInfo?.toPageInfoRecord()
 
 class FeedRepository(
     private val feedService: FeedService,

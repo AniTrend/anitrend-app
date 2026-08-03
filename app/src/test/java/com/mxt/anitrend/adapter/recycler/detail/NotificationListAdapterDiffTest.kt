@@ -51,12 +51,12 @@ class NotificationListAdapterDiffTest {
     ): NotificationItemUiModel = NotificationItemUiModel(
         id = id,
         record =
-            NotificationRecord(
-                id = id,
-                type = "FOLLOWING",
-                createdAt = 1_700_000_000L,
-                context = "followed you",
-            ),
+        NotificationRecord(
+            id = id,
+            type = "FOLLOWING",
+            createdAt = 1_700_000_000L,
+            context = "followed you",
+        ),
         isRead = isRead,
     )
 }

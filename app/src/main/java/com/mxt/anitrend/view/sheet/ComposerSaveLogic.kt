@@ -44,8 +44,7 @@ internal fun buildComposerSaveRequest(
  * [current]. This is the record/UI-model bridge used by the feed list edit path:
  * only the stable feed id and the draft text are copied, never the model itself.
  */
-internal fun FeedItemUiModel.toComposerParam(current: FeedComposerScreenParam = FeedComposerScreenParam()): FeedComposerScreenParam =
-    current.copy(
-        feedId = id,
-        draftText = feedText,
-    )
+internal fun FeedItemUiModel.toComposerParam(current: FeedComposerScreenParam = FeedComposerScreenParam()): FeedComposerScreenParam = current.copy(
+    feedId = id,
+    draftText = feedText,
+)

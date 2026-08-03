@@ -17,7 +17,6 @@ import com.mxt.anitrend.domain.feed.interactor.SaveFeedInteractor
 import com.mxt.anitrend.domain.feed.interactor.SaveReplyInteractor
 import com.mxt.anitrend.domain.like.interactor.ToggleLikeInteractor
 import com.mxt.anitrend.domain.model.FeedItemUiModel
-import com.mxt.anitrend.domain.model.UserSummaryRecord
 import com.mxt.anitrend.domain.model.toFeedItemUiModel
 import com.mxt.anitrend.graphql.generated.LikeableType
 import com.mxt.anitrend.model.entity.anilist.FeedList
