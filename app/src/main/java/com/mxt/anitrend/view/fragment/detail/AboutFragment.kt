@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.R
@@ -24,9 +23,7 @@ class AboutFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View {
-        return createM3View(inflater, container)
-    }
+    ): View = createM3View(inflater, container)
 
     // ── Material 3 redesigned layout ──────────────────────────────────
 

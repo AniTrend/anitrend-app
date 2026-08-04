@@ -35,30 +35,28 @@ class NotificationListAdapter(
     private val onItemLongClick: (View, NotificationItemUiModel) -> Unit,
 ) : ListAdapter<NotificationItemUiModel, NotificationListAdapter.BaseNotificationViewHolder>(DIFF_CALLBACK) {
 
-    override fun getItemViewType(position: Int): Int {
-        return when (val type = getItem(position).record.type) {
-            KeyUtil.ACTIVITY_MESSAGE,
-            KeyUtil.FOLLOWING,
-            KeyUtil.ACTIVITY_MENTION,
-            KeyUtil.ACTIVITY_LIKE,
-            KeyUtil.ACTIVITY_REPLY,
-            KeyUtil.ACTIVITY_REPLY_SUBSCRIBED,
-            KeyUtil.ACTIVITY_REPLY_LIKE,
-            -> VIEW_TYPE_SOCIAL
-            KeyUtil.AIRING,
-            KeyUtil.RELATED_MEDIA_ADDITION,
-            KeyUtil.MEDIA_DATA_CHANGE,
-            KeyUtil.MEDIA_DELETION,
-            KeyUtil.MEDIA_MERGE,
-            -> VIEW_TYPE_MEDIA
-            KeyUtil.THREAD_COMMENT_MENTION,
-            KeyUtil.THREAD_SUBSCRIBED,
-            KeyUtil.THREAD_COMMENT_REPLY,
-            KeyUtil.THREAD_LIKE,
-            KeyUtil.THREAD_COMMENT_LIKE,
-            -> VIEW_TYPE_FORUM
-            else -> VIEW_TYPE_SOCIAL
-        }
+    override fun getItemViewType(position: Int): Int = when (val type = getItem(position).record.type) {
+        KeyUtil.ACTIVITY_MESSAGE,
+        KeyUtil.FOLLOWING,
+        KeyUtil.ACTIVITY_MENTION,
+        KeyUtil.ACTIVITY_LIKE,
+        KeyUtil.ACTIVITY_REPLY,
+        KeyUtil.ACTIVITY_REPLY_SUBSCRIBED,
+        KeyUtil.ACTIVITY_REPLY_LIKE,
+        -> VIEW_TYPE_SOCIAL
+        KeyUtil.AIRING,
+        KeyUtil.RELATED_MEDIA_ADDITION,
+        KeyUtil.MEDIA_DATA_CHANGE,
+        KeyUtil.MEDIA_DELETION,
+        KeyUtil.MEDIA_MERGE,
+        -> VIEW_TYPE_MEDIA
+        KeyUtil.THREAD_COMMENT_MENTION,
+        KeyUtil.THREAD_SUBSCRIBED,
+        KeyUtil.THREAD_COMMENT_REPLY,
+        KeyUtil.THREAD_LIKE,
+        KeyUtil.THREAD_COMMENT_LIKE,
+        -> VIEW_TYPE_FORUM
+        else -> VIEW_TYPE_SOCIAL
     }
 
     override fun onCreateViewHolder(
