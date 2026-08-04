@@ -147,25 +147,23 @@ class CommentViewModel(
                 commitToStore = true,
                 readToken = token,
             ).onSuccess {
-                if (screenState.value.requestToken != token) {
-                    return@onSuccess
-                }
-                screenState.update { current ->
-                    current.copy(
-                        isLoading = false,
-                        errorMessage = null,
-                    )
+                if (screenState.value.requestToken == token) {
+                    screenState.update { current ->
+                        current.copy(
+                            isLoading = false,
+                            errorMessage = null,
+                        )
+                    }
                 }
             }.onFailure { throwable ->
-                if (screenState.value.requestToken != token) {
-                    return@onFailure
-                }
-                Timber.e(throwable, "CommentViewModel load failed")
-                screenState.update { current ->
-                    current.copy(
-                        isLoading = false,
-                        errorMessage = throwable.message ?: "Failed to load activity",
-                    )
+                if (screenState.value.requestToken == token) {
+                    Timber.e(throwable, "CommentViewModel load failed")
+                    screenState.update { current ->
+                        current.copy(
+                            isLoading = false,
+                            errorMessage = throwable.message ?: "Failed to load activity",
+                        )
+                    }
                 }
             }
         }
