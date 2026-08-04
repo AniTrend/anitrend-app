@@ -34,7 +34,7 @@
                 <com.mxt.anitrend.widget.ProgressLayout
                     android:id="@+id/stateLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content">
 
                     <com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView
                         android:id="@+id/recyclerView"
