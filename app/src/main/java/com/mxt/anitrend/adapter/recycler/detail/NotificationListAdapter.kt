@@ -310,11 +310,6 @@ class NotificationListAdapter(
         const val VIEW_TYPE_MEDIA = 1
         const val VIEW_TYPE_FORUM = 2
 
-        /**
-         * Maps the 17 known notification types to their subject line resource.
-         * Shared by the visual binding and the row content description. Unknown
-         * types fall back to [R.string.notification_default].
-         */
         private fun getNotificationSubjectResource(type: String?): Int = when (type) {
             KeyUtil.ACTIVITY_MESSAGE -> R.string.notification_user_activity_message
             KeyUtil.FOLLOWING -> R.string.notification_user_follow_activity

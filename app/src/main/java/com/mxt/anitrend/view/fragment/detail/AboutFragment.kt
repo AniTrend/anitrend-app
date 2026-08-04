@@ -112,10 +112,6 @@ class AboutFragment : Fragment() {
         return view
     }
 
-    /**
-     * Sets a click listener on an external link row and marks it as opening in a browser
-     * for accessibility services.
-     */
     private fun configureExternalLinkRow(
         view: View,
         rowId: Int,
