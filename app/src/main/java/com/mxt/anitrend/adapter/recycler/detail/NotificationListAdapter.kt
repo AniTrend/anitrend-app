@@ -151,7 +151,7 @@ class NotificationListAdapter(
 
             val header = record.user?.name.orEmpty()
             textViews.header.setTypeface(null, if (model.isRead) Typeface.NORMAL else Typeface.BOLD)
-            textViews.subject.setText(notificationSubjectResource(record.type))
+            textViews.subject.setText(getNotificationSubjectResource(record.type))
             when (record.type) {
                 KeyUtil.ACTIVITY_MESSAGE,
                 KeyUtil.FOLLOWING,
@@ -206,7 +206,7 @@ class NotificationListAdapter(
             model: NotificationItemUiModel,
         ) {
             val record = model.record
-            val subject = containerView.resources.getString(notificationSubjectResource(record.type))
+            val subject = containerView.resources.getString(getNotificationSubjectResource(record.type))
             val time = DateUtil.getPrettyDateUnix(record.createdAt)
             val header = when (record.type) {
                 KeyUtil.AIRING,
@@ -315,7 +315,7 @@ class NotificationListAdapter(
          * Shared by the visual binding and the row content description. Unknown
          * types fall back to [R.string.notification_default].
          */
-        private fun notificationSubjectResource(type: String?): Int = when (type) {
+        private fun getNotificationSubjectResource(type: String?): Int = when (type) {
             KeyUtil.ACTIVITY_MESSAGE -> R.string.notification_user_activity_message
             KeyUtil.FOLLOWING -> R.string.notification_user_follow_activity
             KeyUtil.ACTIVITY_MENTION -> R.string.notification_user_activity_mention
