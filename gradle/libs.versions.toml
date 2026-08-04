@@ -62,6 +62,7 @@ anitrend-support-markwon = "0.12.1-alpha01"
 anitrend-android-emoji = "2.2.0"
 
 androidx-media3 = "1.10.1"
+androidx-navigation = "2.9.8"
 cash-turbine = "1.2.1"
 google-firebase-core = "21.1.1"
 google-firebase-analytics = "22.5.0"
@@ -109,6 +110,9 @@ androidx-lifecycle-runTimeKtx = { module = "androidx.lifecycle:lifecycle-runtime
 androidx-lifecycle-liveDataKtx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "androix-lifecycle" }
 androidx-lifecycle-viewModelKtx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androix-lifecycle" }
 androidx-lifecycle-liveDataCoreKtx = { module = "androidx.lifecycle:lifecycle-livedata-core-ktx", version.ref = "androix-lifecycle" }
+
+androidx-navigation-fragmentKtx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "androidx-navigation" }
+androidx-navigation-uiKtx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "androidx-navigation" }
 
 androidx-preference = { module = "androidx.preference:preference", version.ref = "androidx-preference" }
 androidx-preferenceKtx = { module = "androidx.preference:preference-ktx", version.ref = "androidx-preference" }

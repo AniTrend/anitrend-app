@@ -1,0 +1,32 @@
+mutation UpdateUser(
+  $about: String
+  $airingNotifications: Boolean
+  $displayAdultContent: Boolean
+  $profileColor: String
+  $rowOrder: String
+  $scoreFormat: ScoreFormat
+  $titleLanguage: UserTitleLanguage
+) {
+  UpdateUser(
+    about: $about
+    airingNotifications: $airingNotifications
+    displayAdultContent: $displayAdultContent
+    profileColor: $profileColor
+    rowOrder: $rowOrder
+    scoreFormat: $scoreFormat
+    titleLanguage: $titleLanguage
+  ) {
+    ... UserCoreFragment
+    about
+    options {
+      titleLanguage
+      displayAdultContent
+      airingNotifications
+      profileColor
+    }
+    mediaListOptions {
+      scoreFormat
+      rowOrder
+    }
+  }
+}

@@ -757,6 +757,9 @@
     <string name="title_preview_unavailable">Preview unavailable</string>
     <string name="label_latest_release">Latest release</string>
 
+    <!-- Profile strings -->
+    <string name="profile_banner_description">Profile banner image</string>
+
     <!-- Image Preview error strings -->
     <string name="image_preview_error_character_image">The character image doesn\'t exist!</string>
     <string name="image_preview_error_profile_banner">The user has not set a banner image!</string>

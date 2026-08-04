@@ -10,6 +10,8 @@ import com.mxt.anitrend.graphql.generated.MangaFavouritesVariables
 import com.mxt.anitrend.graphql.generated.StaffFavouritesVariables
 import com.mxt.anitrend.graphql.generated.StudioFavouritesVariables
 import com.mxt.anitrend.graphql.generated.ToggleFollowVariables
+import com.mxt.anitrend.graphql.generated.UpdateUserData
+import com.mxt.anitrend.graphql.generated.UpdateUserVariables
 import com.mxt.anitrend.graphql.generated.UserBaseVariables
 import com.mxt.anitrend.graphql.generated.UserFavouriteCountVariables
 import com.mxt.anitrend.graphql.generated.UserFollowersVariables
@@ -118,4 +120,10 @@ interface UserService {
     fun toggleFollow(
         @Body request: GraphQLRequest<ToggleFollowVariables>,
     ): Call<AniListContainer<UserBase>>
+
+    @POST("/")
+    @Headers("Content-Type: application/json")
+    fun updateUser(
+        @Body request: GraphQLRequest<UpdateUserVariables>,
+    ): Call<GraphContainer<UpdateUserData>>
 }
