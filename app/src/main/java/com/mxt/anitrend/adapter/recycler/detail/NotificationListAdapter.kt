@@ -96,7 +96,8 @@ class NotificationListAdapter(
         super.onViewRecycled(holder)
     }
 
-    private data class NotificationTextViews(
+    /** Common text and indicator views shared by notification row layouts. */
+    data class NotificationTextViews(
         val subject: MaterialTextView,
         val header: MaterialTextView,
         val content: MaterialTextView,
