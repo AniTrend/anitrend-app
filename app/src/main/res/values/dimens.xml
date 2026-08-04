@@ -66,6 +66,9 @@
     <!-- Match Parent -->
     <dimen name="bottom_sheet_width">0dp</dimen>
 
+    <!-- Login card minimum width on phones -->
+    <dimen name="login_card_min_width">320dp</dimen>
+
     <!-- Manage sheet spacing -->
     <dimen name="sheet_section_margin">16dp</dimen>
     <dimen name="sheet_field_margin">12dp</dimen>

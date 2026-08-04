@@ -4,14 +4,11 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.widget.Toolbar
 import com.mxt.anitrend.R
-import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.view.activity.CommonActivity
 import com.mxt.anitrend.view.fragment.detail.ChangelogFragment
 
 /**
  * Activity that hosts the changelog screen as a full destination.
- * Used as an alternative to the changelog dialog when
- * [Settings.experimentalInitialScreens] is enabled.
  */
 class ChangelogActivity : CommonActivity() {
 

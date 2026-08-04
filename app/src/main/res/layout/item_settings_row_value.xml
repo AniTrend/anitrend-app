@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/row_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:foreground="?attr/selectableItemBackground"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
     android:gravity="center_vertical"
-    android:minHeight="64dp"
+    android:minHeight="56dp"
     android:orientation="horizontal"
     android:paddingVertical="@dimen/lg_margin">
 
@@ -27,16 +31,21 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/md_margin"
             android:textAppearance="?attr/textAppearanceBodySmall"
-            android:textColor="?attr/colorOnSurfaceVariant" />
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:visibility="gone"
+            tools:visibility="visible" />
     </LinearLayout>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/row_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/lg_margin"
+        android:layout_marginStart="@dimen/xl_margin"
         android:textAppearance="?attr/textAppearanceLabelLarge"
-        android:textColor="?attr/colorPrimary" />
+        android:textColor="?attr/colorPrimary"
+        android:visibility="gone"
+        tools:visibility="visible"
+        tools:text="Light" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/row_chevron"
@@ -44,7 +53,9 @@
         android:layout_height="20dp"
         android:layout_marginStart="@dimen/md_margin"
         android:importantForAccessibility="no"
-        android:src="@drawable/ic_link_white_24dp"
-        android:tint="?attr/colorOnSurfaceVariant" />
+        android:src="@drawable/ic_chevron_right_grey_600_24dp"
+        android:tint="?attr/colorOnSurfaceVariant"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
 </LinearLayout>

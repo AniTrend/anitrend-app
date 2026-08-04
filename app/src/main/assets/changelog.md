@@ -9,7 +9,7 @@ Read the **FAQ** for issues regarding NSFW and notifications. Goto **Options** -
 - Initial support for edge-to-edge support for Android 15+
 
 ### Current Issues
-- Gifs may show artifacts if more than one is playing at a given moment (with experimental markdown support in settings)
+- Gifs may show artifacts if more than one is playing at a given moment
 
 ## Special Thanks
 > _Translators (minna arigato) & all of you lovely people <3_

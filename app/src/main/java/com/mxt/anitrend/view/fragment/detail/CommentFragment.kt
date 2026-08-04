@@ -79,7 +79,6 @@ class CommentFragment : FragmentBaseComment() {
         mAdapter = PlaceholderReplyAdapter(ctx)
         feedAdapter =
             FeedListAdapter(
-                experimentalMarkdown = settings.experimentalMarkdown,
                 onToggleLikeAction = { feedId ->
                     viewLifecycleOwner.lifecycleScope.launch {
                         commentViewModel.toggleFeedLike(feedId)
@@ -99,7 +98,6 @@ class CommentFragment : FragmentBaseComment() {
             )
         commentListAdapter =
             CommentListAdapter(
-                experimentalMarkdown = settings.experimentalMarkdown,
                 currentUser = databaseHelper.currentUser,
                 onToggleLike = { replyId ->
                     viewLifecycleOwner.lifecycleScope.launch {

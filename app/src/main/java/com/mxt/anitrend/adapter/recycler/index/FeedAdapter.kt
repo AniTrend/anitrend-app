@@ -158,12 +158,7 @@ class FeedAdapter(
             binding.userAvatar.setImage(model.user?.avatar)
             binding.userName.text = model.user?.name
             binding.feedTime.text = DateUtil.getPrettyDateUnix(model.createdAt)
-            if (!settings.experimentalMarkdown) {
-                binding.widgetStatus.visibility = View.VISIBLE
-                binding.widgetStatus.setModel(model)
-            } else {
-                binding.widgetStatus.visibility = View.GONE
-            }
+            binding.widgetStatus.visibility = View.GONE
             binding.widgetStatusText.richMarkDown(model.text)
             renderLike(binding.widgetFavourite, model)
             binding.widgetComment.setReplyCount(model.replyCount)
@@ -205,12 +200,7 @@ class FeedAdapter(
             binding.recipientUserName.text = displayName
             binding.messengerUserName.text = displayName
             binding.feedTime.text = DateUtil.getPrettyDateUnix(model.createdAt)
-            if (!settings.experimentalMarkdown) {
-                binding.widgetStatus.visibility = View.VISIBLE
-                binding.widgetStatus.setModel(model)
-            } else {
-                binding.widgetStatus.visibility = View.GONE
-            }
+            binding.widgetStatus.visibility = View.GONE
             binding.widgetStatusText.richMarkDown(model.text)
             renderLike(binding.widgetFavourite, model)
             binding.widgetComment.setReplyCount(model.replyCount)

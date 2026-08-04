@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/colorSurfaceContainerLowest"
     android:fillViewport="true"
     tools:context="com.mxt.anitrend.view.fragment.detail.AboutFragment">
 
@@ -22,6 +23,7 @@
             android:layout_width="96dp"
             android:layout_height="96dp"
             android:layout_marginBottom="@dimen/lg_margin"
+            android:contentDescription="@string/app_name"
             android:src="@mipmap/ic_launcher"
             app:shapeAppearanceOverlay="@style/ShapeAppearance.AniTrend.Circle" />
 
@@ -34,7 +36,8 @@
             android:layout_marginBottom="@dimen/md_margin"
             android:gravity="center"
             android:text="@string/app_name"
-            android:textAppearance="?attr/textAppearanceTitleLarge" />
+            android:textAppearance="?attr/textAppearanceTitleLarge"
+            android:textColor="?attr/colorOnSurface" />
 
         <!-- Version -->
         <com.google.android.material.textview.MaterialTextView
@@ -51,18 +54,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_xs"
-            app:cardBackgroundColor="?attr/colorSurfaceContainer"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="0dp"
-            app:strokeColor="?attr/colorOutlineVariant"
-            app:strokeWidth="1dp">
+            style="@style/Widget.AniTrend.ManageSheet.SectionCard">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingHorizontal="@dimen/spacing_xs"
-                android:paddingVertical="@dimen/spacing_xs">
+                android:orientation="vertical">
 
                 <!-- Section Header -->
                 <com.google.android.material.textview.MaterialTextView
@@ -71,7 +68,7 @@
                     android:layout_marginBottom="@dimen/md_margin"
                     android:text="@string/text_about_general_information"
                     android:textAppearance="?attr/textAppearanceTitleSmall"
-                    android:textColor="?attr/colorPrimary" />
+                    android:textColor="?attr/colorOnSurface" />
 
                 <!-- App Description -->
                 <com.google.android.material.textview.MaterialTextView
@@ -89,7 +86,9 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:minHeight="56dp"
-                    android:paddingVertical="@dimen/lg_margin">
+                    android:paddingVertical="@dimen/lg_margin"
+                    android:clickable="false"
+                    android:focusable="false">
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:layout_width="24dp"
@@ -105,6 +104,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:textAppearance="?attr/textAppearanceBodyLarge"
+                        android:textColor="?attr/colorOnSurface"
                         tools:text="Version 5.0.0" />
                 </LinearLayout>
 
@@ -113,9 +113,9 @@
                     android:id="@+id/about_rate_play_store"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:minHeight="56dp"
@@ -134,7 +134,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/text_about_rate_play_store"
-                        android:textAppearance="?attr/textAppearanceBodyLarge" />
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
+                        android:textColor="?attr/colorOnSurface" />
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:layout_width="20dp"
@@ -149,9 +150,9 @@
                     android:id="@+id/about_follow_twitter"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:minHeight="56dp"
@@ -170,7 +171,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/text_about_follow_twitter"
-                        android:textAppearance="?attr/textAppearanceBodyLarge" />
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
+                        android:textColor="?attr/colorOnSurface" />
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:layout_width="20dp"
@@ -187,18 +189,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/lg_margin"
-            app:cardBackgroundColor="?attr/colorSurfaceContainer"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="0dp"
-            app:strokeColor="?attr/colorOutlineVariant"
-            app:strokeWidth="1dp">
+            style="@style/Widget.AniTrend.ManageSheet.SectionCard">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingHorizontal="@dimen/spacing_xs"
-                android:paddingVertical="@dimen/spacing_xs">
+                android:orientation="vertical">
 
                 <!-- Section Header -->
                 <com.google.android.material.textview.MaterialTextView
@@ -207,16 +203,16 @@
                     android:layout_marginBottom="@dimen/md_margin"
                     android:text="@string/text_about_additional_information"
                     android:textAppearance="?attr/textAppearanceTitleSmall"
-                    android:textColor="?attr/colorPrimary" />
+                    android:textColor="?attr/colorOnSurface" />
 
                 <!-- GitHub -->
                 <LinearLayout
                     android:id="@+id/about_github"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:minHeight="56dp"
@@ -235,7 +231,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/text_about_github"
-                        android:textAppearance="?attr/textAppearanceBodyLarge" />
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
+                        android:textColor="?attr/colorOnSurface" />
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:layout_width="20dp"
@@ -250,9 +247,9 @@
                     android:id="@+id/about_website"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:minHeight="56dp"
@@ -271,7 +268,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/text_about_website"
-                        android:textAppearance="?attr/textAppearanceBodyLarge" />
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
+                        android:textColor="?attr/colorOnSurface" />
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:layout_width="20dp"
@@ -286,9 +284,10 @@
                     android:id="@+id/about_whats_new"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
                     android:clickable="true"
+                    android:contentDescription="@string/about_whats_new_content_description"
                     android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:minHeight="56dp"
@@ -307,7 +306,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/text_what_is_new"
-                        android:textAppearance="?attr/textAppearanceBodyLarge" />
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
+                        android:textColor="?attr/colorOnSurface" />
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:layout_width="20dp"
@@ -322,9 +322,9 @@
                     android:id="@+id/about_faq"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:minHeight="56dp"
@@ -343,7 +343,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/text_about_frequently_asked_questions"
-                        android:textAppearance="?attr/textAppearanceBodyLarge" />
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
+                        android:textColor="?attr/colorOnSurface" />
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:layout_width="20dp"
@@ -360,18 +361,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/lg_margin"
-            app:cardBackgroundColor="?attr/colorSurfaceContainer"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="0dp"
-            app:strokeColor="?attr/colorOutlineVariant"
-            app:strokeWidth="1dp">
+            style="@style/Widget.AniTrend.ManageSheet.SectionCard">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingHorizontal="@dimen/spacing_xs"
-                android:paddingVertical="@dimen/spacing_xs">
+                android:orientation="vertical">
 
                 <!-- Section Header -->
                 <com.google.android.material.textview.MaterialTextView
@@ -380,16 +375,16 @@
                     android:layout_marginBottom="@dimen/md_margin"
                     android:text="@string/text_about_legal_information"
                     android:textAppearance="?attr/textAppearanceTitleSmall"
-                    android:textColor="?attr/colorPrimary" />
+                    android:textColor="?attr/colorOnSurface" />
 
                 <!-- Terms & Conditions -->
                 <LinearLayout
                     android:id="@+id/about_terms"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:minHeight="56dp"
@@ -408,7 +403,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/text_about_terms_and_conditions"
-                        android:textAppearance="?attr/textAppearanceBodyLarge" />
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
+                        android:textColor="?attr/colorOnSurface" />
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:layout_width="20dp"
@@ -423,9 +419,9 @@
                     android:id="@+id/about_code_of_conduct"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:minHeight="56dp"
@@ -444,7 +440,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/text_about_code_of_conduct"
-                        android:textAppearance="?attr/textAppearanceBodyLarge" />
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
+                        android:textColor="?attr/colorOnSurface" />
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:layout_width="20dp"

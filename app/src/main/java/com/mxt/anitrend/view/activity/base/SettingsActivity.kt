@@ -12,8 +12,6 @@ import androidx.core.content.edit
 import androidx.core.os.LocaleListCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceFragmentCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.FirebaseApp
 import com.mxt.anitrend.R
@@ -46,54 +44,9 @@ class SettingsActivity : CommonActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         if (savedInstanceState == null) {
-            if (settings.experimentalSettingsScreen) {
-                FragmentItem(
-                    fragment = MaterialSettingsFragment::class.java,
-                ).commit(R.id.settings, this)
-            } else {
-                FragmentItem(
-                    fragment = SettingsFragment::class.java,
-                ).commit(R.id.settings, this)
-            }
-        }
-    }
-
-    class SettingsFragment :
-        PreferenceFragmentCompat(),
-        SharedPreferences.OnSharedPreferenceChangeListener {
-
-        private val settings by inject<Settings>()
-        private val scheduler by inject<JobSchedulerUtil>()
-        private val presenter by inject<BasePresenter>()
-
-        private val sideEffectHandler by lazy(LazyThreadSafetyMode.NONE) {
-            SettingsPreferenceChangeHandler(settings, scheduler, presenter)
-        }
-
-        override fun onCreatePreferences(
-            savedInstanceState: Bundle?,
-            rootKey: String?,
-        ) {
-            setPreferencesFromResource(R.xml.root_preferences, rootKey)
-            findPreference<PreferenceCategory>(getString(R.string.pref_key_privacy))?.isVisible =
-                FirebaseApp.getApps(requireContext()).isNotEmpty()
-        }
-
-        override fun onResume() {
-            super.onResume()
-            settings.registerOnSharedPreferenceChangeListener(this)
-        }
-
-        override fun onPause() {
-            settings.unregisterOnSharedPreferenceChangeListener(this)
-            super.onPause()
-        }
-
-        override fun onSharedPreferenceChanged(
-            preferences: SharedPreferences?,
-            key: String?,
-        ) {
-            activity?.let { sideEffectHandler.handle(it, key) }
+            FragmentItem(
+                fragment = MaterialSettingsFragment::class.java,
+            ).commit(R.id.settings, this)
         }
     }
 
@@ -190,6 +143,7 @@ class SettingsActivity : CommonActivity() {
             val values = context.resources.getStringArray(row.valuesRes)
             val preferenceKey = context.getString(row.keyRes)
             val currentValue = settings.getString(preferenceKey, row.defaultValue) ?: row.defaultValue
+            val currentLabel = labels[values.indexOf(currentValue).coerceAtLeast(0)]
 
             rowBinding.rowTitle.setText(row.titleRes)
             rowBinding.rowSummary.apply {
@@ -200,10 +154,22 @@ class SettingsActivity : CommonActivity() {
                     visibility = View.GONE
                 }
             }
-            rowBinding.rowValue.text = labels[values.indexOf(currentValue).coerceAtLeast(0)]
+            rowBinding.rowValue.text = currentLabel
+            rowBinding.rowValue.visibility = View.VISIBLE
             rowBinding.rowChevron.visibility = if (row.enabled) View.VISIBLE else View.GONE
             rowBinding.root.isEnabled = row.enabled
-            rowBinding.root.alpha = if (row.enabled) 1f else 0.6f
+            rowBinding.root.isClickable = row.enabled
+            rowBinding.rowTitle.isEnabled = row.enabled
+            rowBinding.rowSummary.isEnabled = row.enabled
+            rowBinding.rowValue.isEnabled = row.enabled
+            rowBinding.rowChevron.isEnabled = row.enabled
+            rowBinding.root.alpha = if (row.enabled) 1f else DISABLED_ALPHA
+
+            rowBinding.root.contentDescription = context.getString(
+                R.string.settings_choice_content_description,
+                context.getString(row.titleRes),
+                currentLabel,
+            )
 
             if (row.enabled) {
                 rowBinding.root.setOnClickListener {
@@ -215,6 +181,8 @@ class SettingsActivity : CommonActivity() {
                         }.setNegativeButton(R.string.Cancel, null)
                         .show()
                 }
+            } else {
+                rowBinding.root.setOnClickListener(null)
             }
 
             container.addView(rowBinding.root)
@@ -240,9 +208,18 @@ class SettingsActivity : CommonActivity() {
                 }
             }
             rowBinding.rowSwitch.isChecked = checked
-            rowBinding.rowSwitch.isEnabled = row.enabled
             rowBinding.root.isEnabled = row.enabled
-            rowBinding.root.alpha = if (row.enabled) 1f else 0.6f
+            rowBinding.root.isClickable = row.enabled
+            rowBinding.rowTitle.isEnabled = row.enabled
+            rowBinding.rowSummary.isEnabled = row.enabled
+            rowBinding.rowSwitch.isEnabled = row.enabled
+            rowBinding.root.alpha = if (row.enabled) 1f else DISABLED_ALPHA
+
+            rowBinding.root.contentDescription = context.getString(
+                R.string.settings_toggle_content_description,
+                context.getString(row.titleRes),
+                context.getString(if (checked) R.string.accessibility_switch_on else R.string.accessibility_switch_off),
+            )
 
             if (row.enabled) {
                 rowBinding.root.setOnClickListener {
@@ -251,6 +228,9 @@ class SettingsActivity : CommonActivity() {
                 rowBinding.rowSwitch.setOnCheckedChangeListener { _, isChecked ->
                     settings.edit { putBoolean(preferenceKey, isChecked) }
                 }
+            } else {
+                rowBinding.root.setOnClickListener(null)
+                rowBinding.rowSwitch.setOnCheckedChangeListener(null)
             }
 
             container.addView(rowBinding.root)
@@ -267,13 +247,21 @@ class SettingsActivity : CommonActivity() {
             rowBinding.rowValue.visibility = View.GONE
             rowBinding.rowChevron.visibility = View.GONE
             rowBinding.root.isEnabled = false
-            rowBinding.root.alpha = 0.6f
+            rowBinding.root.isClickable = false
+            rowBinding.rowTitle.isEnabled = false
+            rowBinding.rowSummary.isEnabled = false
+            rowBinding.root.alpha = DISABLED_ALPHA
             container.addView(rowBinding.root)
         }
 
         private fun addDivider(container: LinearLayout) {
             val divider = layoutInflater.inflate(R.layout.item_settings_divider, container, false)
             container.addView(divider)
+        }
+
+        /** Alpha used to communicate disabled setting rows without hiding them. */
+        companion object {
+            private const val DISABLED_ALPHA = 0.38f
         }
     }
 
@@ -331,7 +319,6 @@ class SettingsActivity : CommonActivity() {
             appearanceSection(),
             contentSection(),
             generalSection(isUpdateChannelVisible, isAdultContentVisible),
-            experimentalSection(),
             notificationsSection(),
             dataSyncSection(),
             privacySection(isFirebaseVisible),
@@ -420,37 +407,6 @@ class SettingsActivity : CommonActivity() {
             ),
         )
 
-        private fun experimentalSection() = SettingsSection(
-            titleRes = R.string.pref_header_experimental,
-            summaryRes = R.string.pref_header_experimental_summary,
-            rows = listOf(
-                SettingsRow.Toggle(
-                    keyRes = R.string.pref_key_experimental_markdown,
-                    titleRes = R.string.pref_title_experimental_markdown,
-                    summaryRes = R.string.pref_summary_experimental_markdown,
-                    defaultValue = false,
-                ),
-                SettingsRow.Toggle(
-                    keyRes = R.string.pref_key_experimental_about_screen,
-                    titleRes = R.string.pref_title_experimental_about_screen,
-                    summaryRes = R.string.pref_summary_experimental_about_screen,
-                    defaultValue = false,
-                ),
-                SettingsRow.Toggle(
-                    keyRes = R.string.pref_key_experimental_settings_screen,
-                    titleRes = R.string.pref_title_experimental_settings_screen,
-                    summaryRes = R.string.pref_summary_experimental_settings_screen,
-                    defaultValue = false,
-                ),
-                SettingsRow.Toggle(
-                    keyRes = R.string.pref_key_experimental_initial_screens,
-                    titleRes = R.string.pref_title_experimental_initial_screens,
-                    summaryRes = R.string.pref_summary_experimental_initial_screens,
-                    defaultValue = false,
-                ),
-            ),
-        )
-
         private fun notificationsSection() = SettingsSection(
             titleRes = R.string.pref_header_notifications,
             summaryRes = R.string.pref_header_notifications_summary,
@@ -534,10 +490,6 @@ private class SettingsPreferenceChangeHandler(
         key: String?,
     ) {
         when (key) {
-            fragmentActivity.getString(R.string.pref_key_experimental_markdown),
-            fragmentActivity.getString(R.string.pref_key_experimental_about_screen),
-            fragmentActivity.getString(R.string.pref_key_experimental_settings_screen),
-            fragmentActivity.getString(R.string.pref_key_experimental_initial_screens),
             fragmentActivity.getString(R.string.pref_key_display_adult_content),
             fragmentActivity.getString(R.string.pref_key_crash_reports),
             fragmentActivity.getString(R.string.pref_key_usage_analytics),

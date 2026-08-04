@@ -5,9 +5,6 @@ import android.text.util.Linkify
 import android.util.AttributeSet
 import com.google.android.material.textview.MaterialTextView
 import com.mxt.anitrend.base.interfaces.view.CustomView
-import com.mxt.anitrend.util.Settings
-import com.mxt.anitrend.util.markdown.MarkDownUtil
-import com.mxt.anitrend.util.markdown.RegexUtil
 import io.noties.markwon.Markwon
 import me.saket.bettermovementmethod.BetterLinkMovementMethod
 import org.koin.core.component.KoinComponent
@@ -23,7 +20,6 @@ constructor(
     CustomView,
     KoinComponent {
     val markwon by inject<Markwon>()
-    val settings by inject<Settings>()
 
     init {
         onInit()
@@ -45,12 +41,6 @@ constructor(
     }
 
     fun setMarkDownText(markDownText: String?) {
-        if (!settings.experimentalMarkdown) {
-            val strippedText = RegexUtil.removeTags(markDownText)
-            val markdownSpan = MarkDownUtil.convert(context, strippedText)
-            setText(markdownSpan, BufferType.SPANNABLE)
-        } else {
-            markwon.setMarkdown(this, markDownText ?: "**No content available**")
-        }
+        markwon.setMarkdown(this, markDownText ?: "**No content available**")
     }
 }

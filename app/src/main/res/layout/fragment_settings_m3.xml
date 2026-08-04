@@ -2,13 +2,12 @@
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:background="?attr/colorSurfaceContainerLowest">
 
     <LinearLayout
         android:id="@+id/settings_sections"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorSurfaceContainerLowest"
         android:orientation="vertical"
         android:padding="@dimen/spacing_xs" />
 

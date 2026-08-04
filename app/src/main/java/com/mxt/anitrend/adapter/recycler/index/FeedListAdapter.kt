@@ -28,7 +28,6 @@ import com.mxt.anitrend.util.date.DateUtil
  * are forwarded to the fragment through the constructor callbacks.
  */
 class FeedListAdapter(
-    private val experimentalMarkdown: Boolean,
     private val onToggleLikeAction: (Long) -> Unit,
     private val onDeleteFeedAction: (Long) -> Unit,
     private val onOpenMedia: (View, Long) -> Unit,
@@ -230,13 +229,7 @@ class FeedListAdapter(
             binding.userAvatar.setImage(model.userAvatarUrl)
             binding.userName.text = model.userName
             binding.feedTime.text = DateUtil.getPrettyDateUnix(model.createdAt)
-            if (!experimentalMarkdown) {
-                binding.widgetStatus.visibility = View.VISIBLE
-                binding.widgetStatus.onViewRecycled()
-                binding.widgetStatus.setTextData(model.feedText)
-            } else {
-                binding.widgetStatus.visibility = View.GONE
-            }
+            binding.widgetStatus.visibility = View.GONE
             binding.widgetStatusText.richMarkDown(model.body?.toString())
             binding.widgetFavourite.render(
                 FavouriteWidgetState(
@@ -297,13 +290,7 @@ class FeedListAdapter(
             binding.recipientUserName.text = displayName
             binding.messengerUserName.text = displayName
             binding.feedTime.text = DateUtil.getPrettyDateUnix(model.createdAt)
-            if (!experimentalMarkdown) {
-                binding.widgetStatus.visibility = View.VISIBLE
-                binding.widgetStatus.onViewRecycled()
-                binding.widgetStatus.setTextData(model.feedText)
-            } else {
-                binding.widgetStatus.visibility = View.GONE
-            }
+            binding.widgetStatus.visibility = View.GONE
             binding.widgetStatusText.richMarkDown(model.body?.toString())
             binding.widgetFavourite.render(
                 FavouriteWidgetState(

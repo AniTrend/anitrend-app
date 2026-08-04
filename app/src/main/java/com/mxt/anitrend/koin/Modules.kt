@@ -101,7 +101,6 @@ import com.mxt.anitrend.util.ConfigurationUtil
 import com.mxt.anitrend.util.JobSchedulerUtil
 import com.mxt.anitrend.util.NotificationUtil
 import com.mxt.anitrend.util.Settings
-import com.mxt.anitrend.view.activity.base.SettingsActivity
 import com.mxt.anitrend.view.activity.base.SettingsActivity.MaterialSettingsFragment
 import com.mxt.anitrend.view.fragment.detail.AboutFragment
 import com.mxt.anitrend.view.fragment.detail.BrowseReviewFragment
@@ -769,9 +768,6 @@ private val utilityFeatureModule = module {
 private val fragmentModule = module {
     fragment {
         MaterialSettingsFragment()
-    }
-    fragment {
-        SettingsActivity.SettingsFragment()
     }
     fragment {
         BottomSheetGiphy()
