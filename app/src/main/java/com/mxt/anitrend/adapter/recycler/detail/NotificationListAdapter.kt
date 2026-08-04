@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.android.material.textview.MaterialTextView
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.view.image.AspectImageView
 import com.mxt.anitrend.databinding.ItemNotificationMediaBinding
@@ -95,8 +96,18 @@ class NotificationListAdapter(
         super.onViewRecycled(holder)
     }
 
+    private data class NotificationTextViews(
+        val subject: MaterialTextView,
+        val header: MaterialTextView,
+        val content: MaterialTextView,
+        val time: MaterialTextView,
+        val indicator: View,
+    )
+
+    /** Shared holder behavior for all notification row layouts. */
     abstract inner class BaseNotificationViewHolder(
         root: View,
+        private val textViews: NotificationTextViews,
     ) : RecyclerView.ViewHolder(root) {
 
         init {
@@ -104,8 +115,10 @@ class NotificationListAdapter(
             bindLongClickListeners(R.id.container)
         }
 
+        /** Binds a notification model to the row. */
         abstract fun bind(model: NotificationItemUiModel)
 
+        /** Releases image and row resources before the holder is recycled. */
         abstract fun recycle()
 
         private fun bindClickListeners(vararg viewIds: Int) {
@@ -130,21 +143,14 @@ class NotificationListAdapter(
             return if (position == RecyclerView.NO_POSITION) null else getItem(position)
         }
 
-        protected fun bindCommonText(
-            subjectView: com.google.android.material.textview.MaterialTextView,
-            headerView: com.google.android.material.textview.MaterialTextView,
-            contentView: com.google.android.material.textview.MaterialTextView,
-            timeView: com.google.android.material.textview.MaterialTextView,
-            indicatorView: View,
-            model: NotificationItemUiModel,
-        ) {
+        protected fun bindCommonText(model: NotificationItemUiModel) {
             val record = model.record
-            indicatorView.visibility = if (model.isRead) View.GONE else View.VISIBLE
-            timeView.text = DateUtil.getPrettyDateUnix(record.createdAt)
+            textViews.indicator.visibility = if (model.isRead) View.GONE else View.VISIBLE
+            textViews.time.text = DateUtil.getPrettyDateUnix(record.createdAt)
 
             val header = record.user?.name.orEmpty()
-            headerView.setTypeface(null, if (model.isRead) Typeface.NORMAL else Typeface.BOLD)
-            subjectView.setText(subjectResource(record.type))
+            textViews.header.setTypeface(null, if (model.isRead) Typeface.NORMAL else Typeface.BOLD)
+            textViews.subject.setText(notificationSubjectResource(record.type))
             when (record.type) {
                 KeyUtil.ACTIVITY_MESSAGE,
                 KeyUtil.FOLLOWING,
@@ -159,12 +165,12 @@ class NotificationListAdapter(
                 KeyUtil.THREAD_LIKE,
                 KeyUtil.THREAD_COMMENT_LIKE,
                 -> {
-                    headerView.text = header
-                    contentView.text = record.context
+                    textViews.header.text = header
+                    textViews.content.text = record.context
                 }
                 KeyUtil.AIRING -> {
-                    headerView.text = record.media?.titleUserPreferred
-                    contentView.text = itemView.context.getString(
+                    textViews.header.text = record.media?.titleUserPreferred
+                    textViews.content.text = itemView.context.getString(
                         R.string.notification_episode,
                         record.episode?.toString().orEmpty(),
                         record.media?.titleUserPreferred,
@@ -173,23 +179,23 @@ class NotificationListAdapter(
                 KeyUtil.RELATED_MEDIA_ADDITION,
                 KeyUtil.MEDIA_DATA_CHANGE,
                 -> {
-                    headerView.text = record.media?.titleUserPreferred
-                    contentView.text = record.context
+                    textViews.header.text = record.media?.titleUserPreferred
+                    textViews.content.text = record.context
                 }
                 KeyUtil.MEDIA_MERGE -> {
-                    headerView.text = record.deletedMediaTitles.joinToString(", ")
-                    contentView.text = record.context
+                    textViews.header.text = record.deletedMediaTitles.joinToString(", ")
+                    textViews.content.text = record.context
                 }
                 KeyUtil.MEDIA_DELETION -> {
-                    headerView.text = record.deletedMediaTitle
-                    contentView.text = record.context
+                    textViews.header.text = record.deletedMediaTitle
+                    textViews.content.text = record.context
                 }
                 // Unknown types render a safe default subject with whatever
                 // user or media identity is available so recycled rows never
                 // retain stale text from a previously bound model.
                 else -> {
-                    headerView.text = header.ifBlank { record.media?.titleUserPreferred }
-                    contentView.text = record.context
+                    textViews.header.text = header.ifBlank { record.media?.titleUserPreferred }
+                    textViews.content.text = record.context
                 }
             }
         }
@@ -199,7 +205,7 @@ class NotificationListAdapter(
             model: NotificationItemUiModel,
         ) {
             val record = model.record
-            val subject = containerView.resources.getString(subjectResource(record.type))
+            val subject = containerView.resources.getString(notificationSubjectResource(record.type))
             val time = DateUtil.getPrettyDateUnix(record.createdAt)
             val header = when (record.type) {
                 KeyUtil.AIRING,
@@ -240,18 +246,20 @@ class NotificationListAdapter(
     inner class PersonViewHolder(
         private val binding: ItemNotificationPersonBinding,
         private val fallbackDrawableRes: Int,
-    ) : BaseNotificationViewHolder(binding.root) {
+    ) : BaseNotificationViewHolder(
+        binding.root,
+        NotificationTextViews(
+            subject = binding.notificationSubject,
+            header = binding.notificationHeader,
+            content = binding.notificationContent,
+            time = binding.notificationTime,
+            indicator = binding.notificationIndicator,
+        ),
+    ) {
 
         override fun bind(model: NotificationItemUiModel) {
             val record = model.record
-            bindCommonText(
-                binding.notificationSubject,
-                binding.notificationHeader,
-                binding.notificationContent,
-                binding.notificationTime,
-                binding.notificationIndicator,
-                model,
-            )
+            bindCommonText(model)
 
             val imageUrl = record.user?.avatar?.takeIf { it.isNotBlank() }
                 ?: record.media?.coverImage
@@ -269,19 +277,22 @@ class NotificationListAdapter(
         }
     }
 
+    /** Holder for media notification rows that use a cover image. */
     inner class MediaViewHolder(
         private val binding: ItemNotificationMediaBinding,
-    ) : BaseNotificationViewHolder(binding.root) {
+    ) : BaseNotificationViewHolder(
+        binding.root,
+        NotificationTextViews(
+            subject = binding.notificationSubject,
+            header = binding.notificationHeader,
+            content = binding.notificationContent,
+            time = binding.notificationTime,
+            indicator = binding.notificationIndicator,
+        ),
+    ) {
 
         override fun bind(model: NotificationItemUiModel) {
-            bindCommonText(
-                binding.notificationSubject,
-                binding.notificationHeader,
-                binding.notificationContent,
-                binding.notificationTime,
-                binding.notificationIndicator,
-                model,
-            )
+            bindCommonText(model)
 
             AspectImageView.setImage(binding.notificationImg, model.record.media?.coverImage)
             setRowContentDescription(binding.root, model)
@@ -292,6 +303,7 @@ class NotificationListAdapter(
         }
     }
 
+    /** View types and diffing rules shared by notification rows. */
     companion object {
         const val VIEW_TYPE_SOCIAL = 0
         const val VIEW_TYPE_MEDIA = 1
@@ -302,7 +314,7 @@ class NotificationListAdapter(
          * Shared by the visual binding and the row content description. Unknown
          * types fall back to [R.string.notification_default].
          */
-        private fun subjectResource(type: String?): Int = when (type) {
+        private fun notificationSubjectResource(type: String?): Int = when (type) {
             KeyUtil.ACTIVITY_MESSAGE -> R.string.notification_user_activity_message
             KeyUtil.FOLLOWING -> R.string.notification_user_follow_activity
             KeyUtil.ACTIVITY_MENTION -> R.string.notification_user_activity_mention

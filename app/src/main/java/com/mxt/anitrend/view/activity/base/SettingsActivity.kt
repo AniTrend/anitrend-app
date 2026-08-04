@@ -259,6 +259,7 @@ class SettingsActivity : CommonActivity() {
             container.addView(divider)
         }
 
+        /** Alpha used to communicate disabled setting rows without hiding them. */
         companion object {
             private const val DISABLED_ALPHA = 0.38f
         }

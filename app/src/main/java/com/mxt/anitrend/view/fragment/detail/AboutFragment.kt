@@ -47,25 +47,25 @@ class AboutFragment : Fragment() {
         )
 
         // Wire click listeners (preserve exact same actions as legacy)
-        setExternalLinkAction(view, R.id.about_rate_play_store, R.string.text_about_rate_play_store) {
+        bindExternalLinkAction(view, R.id.about_rate_play_store, R.string.text_about_rate_play_store) {
             startActivity(
                 Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.mxt.anitrend")),
             )
         }
 
-        setExternalLinkAction(view, R.id.about_follow_twitter, R.string.text_about_follow_twitter) {
+        bindExternalLinkAction(view, R.id.about_follow_twitter, R.string.text_about_follow_twitter) {
             startActivity(
                 Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/anitrend_app")),
             )
         }
 
-        setExternalLinkAction(view, R.id.about_github, R.string.text_about_github) {
+        bindExternalLinkAction(view, R.id.about_github, R.string.text_about_github) {
             startActivity(
                 Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/AniTrend")),
             )
         }
 
-        setExternalLinkAction(view, R.id.about_website, R.string.text_about_website) {
+        bindExternalLinkAction(view, R.id.about_website, R.string.text_about_website) {
             startActivity(
                 Intent(Intent.ACTION_VIEW, Uri.parse("https://anitrend.co")),
             )
@@ -78,7 +78,7 @@ class AboutFragment : Fragment() {
             }
         }
 
-        setExternalLinkAction(view, R.id.about_faq, R.string.text_about_frequently_asked_questions) {
+        bindExternalLinkAction(view, R.id.about_faq, R.string.text_about_frequently_asked_questions) {
             startActivity(
                 Intent(
                     Intent.ACTION_VIEW,
@@ -87,7 +87,7 @@ class AboutFragment : Fragment() {
             )
         }
 
-        setExternalLinkAction(view, R.id.about_terms, R.string.text_about_terms_and_conditions) {
+        bindExternalLinkAction(view, R.id.about_terms, R.string.text_about_terms_and_conditions) {
             startActivity(
                 Intent(
                     Intent.ACTION_VIEW,
@@ -98,7 +98,7 @@ class AboutFragment : Fragment() {
             )
         }
 
-        setExternalLinkAction(view, R.id.about_code_of_conduct, R.string.text_about_code_of_conduct) {
+        bindExternalLinkAction(view, R.id.about_code_of_conduct, R.string.text_about_code_of_conduct) {
             startActivity(
                 Intent(
                     Intent.ACTION_VIEW,
@@ -116,7 +116,7 @@ class AboutFragment : Fragment() {
      * Sets a click listener on an external link row and marks it as opening in a browser
      * for accessibility services.
      */
-    private fun setExternalLinkAction(
+    private fun bindExternalLinkAction(
         view: View,
         rowId: Int,
         labelRes: Int,
