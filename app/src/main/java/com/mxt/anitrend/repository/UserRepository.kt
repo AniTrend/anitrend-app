@@ -14,6 +14,7 @@ import com.mxt.anitrend.graphql.generated.CharacterFavourites
 import com.mxt.anitrend.graphql.generated.CurrentUser
 import com.mxt.anitrend.graphql.generated.MangaFavourites
 import com.mxt.anitrend.graphql.generated.NotificationType
+import com.mxt.anitrend.graphql.generated.ScoreFormat
 import com.mxt.anitrend.graphql.generated.StaffFavourites
 import com.mxt.anitrend.graphql.generated.StudioFavourites
 import com.mxt.anitrend.graphql.generated.ToggleFollow
@@ -28,6 +29,7 @@ import com.mxt.anitrend.graphql.generated.UserNotificationsData
 import com.mxt.anitrend.graphql.generated.UserOverview
 import com.mxt.anitrend.graphql.generated.UserStats
 import com.mxt.anitrend.graphql.generated.UserStatsData
+import com.mxt.anitrend.graphql.generated.UserTitleLanguage
 import com.mxt.anitrend.model.api.retro.anilist.UserService
 import com.mxt.anitrend.model.entity.anilist.Favourite
 import com.mxt.anitrend.model.entity.anilist.User
@@ -322,8 +324,8 @@ class UserRepository(
                 displayAdultContent = update.displayAdultContent,
                 profileColor = update.profileColor,
                 rowOrder = update.rowOrder,
-                scoreFormat = update.scoreFormat,
-                titleLanguage = update.titleLanguage,
+                scoreFormat = update.scoreFormat?.let { ScoreFormat.valueOf(it) },
+                titleLanguage = update.titleLanguage?.let { UserTitleLanguage.valueOf(it) },
             )
             val response = userService.updateUser(request).execute()
             if (response.isSuccessful) {

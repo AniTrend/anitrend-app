@@ -79,7 +79,7 @@ class UserSettingsRepositoryTest {
             UserSettingsUpdate(
                 about = "New bio",
                 displayAdultContent = true,
-                scoreFormat = ScoreFormat.POINT_5,
+                scoreFormat = ScoreFormat.POINT_5.name,
             ),
         )
 
@@ -121,7 +121,7 @@ class UserSettingsRepositoryTest {
             ),
         )
 
-        val result = repository.updateUser(UserSettingsUpdate(titleLanguage = UserTitleLanguage.NATIVE))
+        val result = repository.updateUser(UserSettingsUpdate(titleLanguage = UserTitleLanguage.NATIVE.name))
 
         assertTrue(result.isSuccess)
         val record: UserSettingsRecord = result.getOrThrow()
