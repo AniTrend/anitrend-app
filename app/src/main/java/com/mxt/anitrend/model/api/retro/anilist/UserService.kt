@@ -121,6 +121,7 @@ interface UserService {
         @Body request: GraphQLRequest<ToggleFollowVariables>,
     ): Call<AniListContainer<UserBase>>
 
+    /** Sends a typed UpdateUser mutation request to AniList. */
     @POST("/")
     @Headers("Content-Type: application/json")
     fun updateUser(

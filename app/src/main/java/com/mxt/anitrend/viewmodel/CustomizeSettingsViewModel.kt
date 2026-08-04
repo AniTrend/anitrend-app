@@ -44,14 +44,17 @@ class CustomizeSettingsViewModel(
 
     val state: StateFlow<CustomizeSettingsUiState> = _state.asStateFlow()
 
+    /** Persists the selected application theme and updates the state. */
     fun setTheme(value: String) {
         persist(keys.themeKey, value) { it.copy(theme = value) }
     }
 
+    /** Persists the selected application language and updates the state. */
     fun setLanguage(value: String) {
         persist(keys.languageKey, value) { it.copy(language = value) }
     }
 
+    /** Persists the selected list style and updates the state. */
     fun setListViewStyle(value: String) {
         persist(keys.listViewStyleKey, value) { it.copy(listViewStyle = value) }
     }
@@ -67,6 +70,7 @@ class CustomizeSettingsViewModel(
         _state.update(reduce)
     }
 
+    /** Defaults used when the corresponding preference has not been written. */
     companion object {
         const val DEFAULT_LANGUAGE = "en"
         const val DEFAULT_LIST_VIEW_STYLE = "0"

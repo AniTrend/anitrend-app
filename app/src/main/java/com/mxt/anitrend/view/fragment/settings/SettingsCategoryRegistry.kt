@@ -74,6 +74,7 @@ object SettingsCategoryRegistry {
 
 /** The settings row models rendered inside a section. */
 sealed class SettingsRow(val visible: Boolean) {
+    /** A selectable preference row with string entries and values. */
     data class Choice(
         val keyRes: Int,
         val titleRes: Int,
@@ -85,6 +86,7 @@ sealed class SettingsRow(val visible: Boolean) {
         val rowVisible: Boolean = true,
     ) : SettingsRow(rowVisible)
 
+    /** A boolean preference row with optional state-specific summaries. */
     data class Toggle(
         val keyRes: Int,
         val titleRes: Int,
@@ -95,6 +97,7 @@ sealed class SettingsRow(val visible: Boolean) {
         val enabled: Boolean = true,
         val rowVisible: Boolean = true,
     ) : SettingsRow(rowVisible) {
+        /** Returns the summary resource appropriate for the current switch state. */
         fun summaryRes(checked: Boolean): Int? = when {
             checked && summaryOnRes != null -> summaryOnRes
             !checked && summaryOffRes != null -> summaryOffRes
@@ -102,6 +105,7 @@ sealed class SettingsRow(val visible: Boolean) {
         }
     }
 
+    /** A non-interactive informational row. */
     data class Info(
         val titleRes: Int,
         val summaryRes: Int,
@@ -124,6 +128,7 @@ data class SettingsSection(
  */
 object SettingsSections {
 
+    /** Builds all visible legacy-compatible settings sections. */
     fun build(
         isFirebaseVisible: Boolean,
         isUpdateChannelVisible: Boolean,

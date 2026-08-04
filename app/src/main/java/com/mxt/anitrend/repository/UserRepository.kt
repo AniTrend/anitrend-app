@@ -4,6 +4,7 @@ import co.anitrend.retrofit.graphql.model.body.GraphContainer
 import com.mxt.anitrend.base.interfaces.dao.BoxQuery
 import com.mxt.anitrend.data.mapper.toNotificationPageResult
 import com.mxt.anitrend.data.mapper.toUserSettingsRecord
+import com.mxt.anitrend.domain.user.model.UserSettingsUpdate
 import com.mxt.anitrend.data.mapper.toUserStatisticsRecord
 import com.mxt.anitrend.domain.model.NotificationPageResult
 import com.mxt.anitrend.domain.user.model.UserSettingsRecord
@@ -13,7 +14,6 @@ import com.mxt.anitrend.graphql.generated.CharacterFavourites
 import com.mxt.anitrend.graphql.generated.CurrentUser
 import com.mxt.anitrend.graphql.generated.MangaFavourites
 import com.mxt.anitrend.graphql.generated.NotificationType
-import com.mxt.anitrend.graphql.generated.ScoreFormat
 import com.mxt.anitrend.graphql.generated.StaffFavourites
 import com.mxt.anitrend.graphql.generated.StudioFavourites
 import com.mxt.anitrend.graphql.generated.ToggleFollow
@@ -28,7 +28,6 @@ import com.mxt.anitrend.graphql.generated.UserNotificationsData
 import com.mxt.anitrend.graphql.generated.UserOverview
 import com.mxt.anitrend.graphql.generated.UserStats
 import com.mxt.anitrend.graphql.generated.UserStatsData
-import com.mxt.anitrend.graphql.generated.UserTitleLanguage
 import com.mxt.anitrend.model.api.retro.anilist.UserService
 import com.mxt.anitrend.model.entity.anilist.Favourite
 import com.mxt.anitrend.model.entity.anilist.User
@@ -315,24 +314,16 @@ class UserRepository(
      * [UserSettingsRecord] is mapped from the server response, keeping this
      * mutation server-authoritative with no optimistic updates.
      */
-    suspend fun updateUser(
-        about: String? = null,
-        airingNotifications: Boolean? = null,
-        displayAdultContent: Boolean? = null,
-        profileColor: String? = null,
-        rowOrder: String? = null,
-        scoreFormat: ScoreFormat? = null,
-        titleLanguage: UserTitleLanguage? = null,
-    ): Result<UserSettingsRecord> = withContext(ioDispatcher) {
+    suspend fun updateUser(update: UserSettingsUpdate = UserSettingsUpdate()): Result<UserSettingsRecord> = withContext(ioDispatcher) {
         runCatching {
             val request = UpdateUser.request(
-                about = about,
-                airingNotifications = airingNotifications,
-                displayAdultContent = displayAdultContent,
-                profileColor = profileColor,
-                rowOrder = rowOrder,
-                scoreFormat = scoreFormat,
-                titleLanguage = titleLanguage,
+                about = update.about,
+                airingNotifications = update.airingNotifications,
+                displayAdultContent = update.displayAdultContent,
+                profileColor = update.profileColor,
+                rowOrder = update.rowOrder,
+                scoreFormat = update.scoreFormat,
+                titleLanguage = update.titleLanguage,
             )
             val response = userService.updateUser(request).execute()
             if (response.isSuccessful) {

@@ -3,6 +3,7 @@ package com.mxt.anitrend.repository
 import co.anitrend.retrofit.graphql.model.attribute.GraphError
 import co.anitrend.retrofit.graphql.model.body.GraphContainer
 import com.mxt.anitrend.domain.user.model.UserSettingsRecord
+import com.mxt.anitrend.domain.user.model.UserSettingsUpdate
 import com.mxt.anitrend.graphql.generated.ScoreFormat
 import com.mxt.anitrend.graphql.generated.UpdateUser
 import com.mxt.anitrend.graphql.generated.UpdateUserData
@@ -75,9 +76,11 @@ class UserSettingsRepositoryTest {
         )
 
         val result = repository.updateUser(
-            about = "New bio",
-            displayAdultContent = true,
-            scoreFormat = ScoreFormat.POINT_5,
+            UserSettingsUpdate(
+                about = "New bio",
+                displayAdultContent = true,
+                scoreFormat = ScoreFormat.POINT_5,
+            ),
         )
 
         assertTrue(result.isSuccess)
@@ -118,7 +121,7 @@ class UserSettingsRepositoryTest {
             ),
         )
 
-        val result = repository.updateUser(titleLanguage = UserTitleLanguage.NATIVE)
+        val result = repository.updateUser(UserSettingsUpdate(titleLanguage = UserTitleLanguage.NATIVE))
 
         assertTrue(result.isSuccess)
         val record: UserSettingsRecord = result.getOrThrow()
@@ -145,7 +148,7 @@ class UserSettingsRepositoryTest {
             ),
         )
 
-        val result = repository.updateUser(profileColor = "red")
+        val result = repository.updateUser(UserSettingsUpdate(profileColor = "red"))
 
         assertTrue(result.isFailure)
         assertEquals("Update user failed", result.exceptionOrNull()?.message)
@@ -213,7 +216,7 @@ class UserSettingsRepositoryTest {
             .toResponseBody("application/json".toMediaType())
         `when`(call.execute()).thenReturn(Response.error(500, errorBody))
 
-        val result = repository.updateUser(airingNotifications = false)
+        val result = repository.updateUser(UserSettingsUpdate(airingNotifications = false))
 
         assertTrue(result.isFailure)
         assertEquals("Server exploded", result.exceptionOrNull()?.message)

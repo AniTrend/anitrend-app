@@ -26,6 +26,7 @@ class SettingsPreferenceChangeHandler(
     private val presenter: BasePresenter,
 ) {
 
+    /** Applies the legacy side effect associated with a changed preference key. */
     fun handle(
         fragmentActivity: FragmentActivity,
         key: String?,
