@@ -42,7 +42,7 @@ class KoinModuleVerificationTest {
         12 to 7, // staffFeatureModule
         13 to 4, // studioFeatureModule
         14 to 5, // utilityFeatureModule (GiphyVM + LoginAuthVM + LoggingVM + logFile + metadata)
-        15 to 43, // fragmentModule (settings x2 + giphy sheet + 40 koin-owned fragment factories)
+        15 to 42, // fragmentModule (settings x2 + giphy sheet + 40 koin-owned fragment factories)
     )
 
     @OptIn(KoinInternalApi::class)
@@ -85,11 +85,11 @@ class KoinModuleVerificationTest {
 
     @OptIn(KoinInternalApi::class)
     @Test
-    fun `appModules combined has 176 distinct definitions`() {
+    fun `appModules combined has 175 distinct definitions`() {
         val total = appModules.includedModules.sumOf { it.mappings.values.distinct().size }
         assertEquals(
-            "Combined distinct definition count drifted. Expected 176, got $total.",
-            176,
+            "Combined distinct definition count drifted. Expected 175, got $total.",
+            175,
             total,
         )
     }

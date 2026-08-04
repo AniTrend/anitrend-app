@@ -49,7 +49,6 @@ import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.extension.requestNotificationsPermission
 import com.mxt.anitrend.extension.startNewActivity
 import com.mxt.anitrend.util.CompatUtil
-import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.date.DateUtil
@@ -592,12 +591,8 @@ class MainActivity :
             return
         }
         if (settings.isUpdated) {
-            if (settings.experimentalInitialScreens) {
-                val intent = Intent(this, ChangelogActivity::class.java)
-                startActivity(intent)
-            } else {
-                DialogUtil.createChangeLog(this)
-            }
+            val intent = Intent(this, ChangelogActivity::class.java)
+            startActivity(intent)
             settings.setUpdated()
         }
     }

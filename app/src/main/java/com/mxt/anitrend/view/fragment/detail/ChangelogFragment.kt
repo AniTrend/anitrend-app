@@ -16,8 +16,6 @@ import java.io.IOException
 
 /**
  * Fragment that renders the changelog content as a full-screen destination.
- * Used as alternative to [com.mxt.anitrend.util.DialogUtil.createChangeLog] dialog
- * when [com.mxt.anitrend.util.Settings.experimentalInitialScreens] is enabled.
  */
 class ChangelogFragment : Fragment() {
 

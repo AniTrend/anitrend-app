@@ -5,82 +5,88 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/colorSurfaceContainerLowest"
+    android:foreground="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
     tools:context=".view.activity.index.LoginActivity">
 
-        <com.mxt.anitrend.base.custom.view.container.LoginCardView
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/spacing_xs"
+        android:minWidth="@dimen/login_card_min_width"
+        style="@style/Widget.AniTrend.ManageSheet.SectionCard">
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center">
+            android:minWidth="288dp"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
 
-            <LinearLayout
+            <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/spacing_lg">
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:text="@string/anitrend_sign_in"
+                android:textAppearance="?attr/textAppearanceTitleLarge"
+                android:textColor="?attr/colorOnSurface" />
 
-                <com.mxt.anitrend.base.custom.view.text.SingleLineFontTextView
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/md_margin"
+                android:gravity="center"
+                android:text="@string/anitrend_sign_in_browser"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:textColor="?attr/colorOnSurfaceVariant" />
+
+            <ViewFlipper
+                android:id="@+id/widget_flipper"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/spacing_xs"
+                android:gravity="center"
+                android:inAnimation="@android:anim/fade_in"
+                android:outAnimation="@android:anim/fade_out">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/auth_sign_in"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-                    android:gravity="center"
-                    android:textStyle="bold"
-                    android:text="@string/anitrend_sign_in" />
+                    android:text="@string/sign_into_anilist"
+                    android:textAppearance="?attr/textAppearanceLabelLarge" />
 
-                <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:layout_width="@dimen/widget_spinner_compact_size"
+                    android:layout_height="@dimen/widget_spinner_compact_size"
                     android:layout_gravity="center"
-                    android:gravity="center"
-                    android:textColor="?colorAccent"
-                    android:text="@string/anitrend_sign_in_browser"/>
+                    android:indeterminate="true"
+                    app:indicatorColor="?attr/colorPrimary"
+                    style="@style/Widget.AniTrend.ProgressLayout.LoadingIndicator" />
 
-                <androidx.legacy.widget.Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/lg_margin" />
+            </ViewFlipper>
 
-                <ViewFlipper
-                    android:id="@+id/widget_flipper"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:inAnimation="@android:anim/fade_in"
-                    android:outAnimation="@android:anim/fade_out">
+            <com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView
+                android:id="@+id/create_account_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/spacing_xs"
+                android:gravity="center"
+                android:padding="@dimen/md_margin"
+                android:text="@string/create_new_account"
+                android:textAppearance="?attr/textAppearanceBodySmall"
+                android:textColor="?attr/colorPrimary"
+                tools:text="@string/create_account" />
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/auth_sign_in"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/sign_into_anilist"/>
+        </LinearLayout>
 
-                    <com.google.android.material.progressindicator.CircularProgressIndicator
-                        android:layout_width="@dimen/widget_spinner_compact_size"
-                        android:layout_height="@dimen/widget_spinner_compact_size"
-                        android:layout_gravity="center"
-                        android:indeterminate="true"
-                        app:indicatorColor="?colorAccent" />
+    </com.google.android.material.card.MaterialCardView>
 
-                </ViewFlipper>
-
-                <androidx.legacy.widget.Space
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/lg_margin" />
-
-                <com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView
-                    android:id="@+id/create_account_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:gravity="center"
-                    android:textAlignment="center"
-                    android:textStyle="italic"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                    android:padding="@dimen/md_margin"
-                    tools:text="@string/create_account"/>
-            </LinearLayout>
-
-        </com.mxt.anitrend.base.custom.view.container.LoginCardView>
-
-    </FrameLayout>
+</FrameLayout>

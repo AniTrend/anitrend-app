@@ -255,9 +255,6 @@
     <string name="pref_header_general">General</string>
     <string name="pref_header_general_summary">Configure basic application behavior</string>
 
-    <string name="pref_header_experimental">Experimental features</string>
-    <string name="pref_header_experimental_summary">Toggle upcoming UI and UX redesigns as they become available</string>
-
     <string name="pref_title_startup_page">Startup Page</string>
 
     <string name="pref_title_update_channel">Update Channel</string>
@@ -364,6 +361,21 @@
 
     <string name="notification_alert_title">Notifications Available</string>
     <string name="notification_alert_text">You have one or more unread notifications!</string>
+    <!-- Accessibility state announced for an unread layout row. -->
+    <string name="layout_unread_state">Unread</string>
+
+    <!-- Accessibility state announced when a settings switch is enabled. -->
+    <string name="accessibility_switch_on">On</string>
+    <!-- Accessibility state announced when a settings switch is disabled. -->
+    <string name="accessibility_switch_off">Off</string>
+    <!-- Settings choice row description; %1$s is the setting title and %2$s is its current value. -->
+    <string name="settings_choice_content_description" formatted="true">%1$s, currently %2$s</string>
+    <!-- Settings toggle row description; %1$s is the setting title and %2$s is On or Off. -->
+    <string name="settings_toggle_content_description" formatted="true">%1$s, switch %2$s</string>
+    <!-- About screen external-link row; %1$s is the link title and the text explains browser navigation. -->
+    <string name="about_external_link_content_description" formatted="true">%1$s, opens in browser</string>
+    <!-- About screen What's new row; announces that the row opens the changelog. -->
+    <string name="about_whats_new_content_description">What\'s new, opens changelog</string>
 
     <string name="title_new_features">New Features!</string>
 
@@ -801,17 +813,6 @@
     <string name="pref_title_notification_work_around">Notification workaround</string>
     <string name="title_bottom_sheet_spoiler">Spoiler</string>
     <string name="notification_action_mark_as_read">Mark as read</string>
-    <string name="pref_title_experimental_markdown">Experimental markdown support</string>
-    <string name="pref_summary_experimental_markdown">Allows the application to render AniList specific markdown better but does have some issues</string>
-
-    <string name="pref_title_experimental_about_screen">Experimental About screen</string>
-    <string name="pref_summary_experimental_about_screen">Redesigns the About screen with Material 3 components and updated icons</string>
-
-    <string name="pref_title_experimental_settings_screen">Experimental Settings screen</string>
-    <string name="pref_summary_experimental_settings_screen">Redesigns the Settings screen with Material 3 components and improved layout</string>
-
-    <string name="pref_title_experimental_initial_screens">Experimental startup screens</string>
-    <string name="pref_summary_experimental_initial_screens">Consolidates startup screens and presents changelogs as a destination instead of a dialog</string>
 
     <string name="pref_header_accessibility">Accessibility</string>
     <string name="pref_header_accessibility_summary">Adjust display for accessibility needs</string>

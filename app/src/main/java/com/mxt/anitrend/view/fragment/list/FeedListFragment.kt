@@ -74,7 +74,6 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
         mColumnSize = R.integer.single_list_x1
         feedListAdapter =
             FeedListAdapter(
-                experimentalMarkdown = settings.experimentalMarkdown,
                 onToggleLikeAction = ::onToggleLike,
                 onDeleteFeedAction = ::onDeleteFeed,
                 onOpenMedia = { target, feedId -> openFeedMedia(target, feedId) },

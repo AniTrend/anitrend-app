@@ -113,12 +113,7 @@ class UserOverviewFragment : Fragment() {
         binding.userAvatar.setImage(user.avatar)
         binding.userNameText.text = user.name
         binding.widgetStatusText.richMarkDown(user.about)
-        if (!settings.experimentalMarkdown) {
-            binding.widgetStatus.visibility = View.VISIBLE
-            binding.widgetStatus.setTextData(user.about)
-        } else {
-            binding.widgetStatus.visibility = View.GONE
-        }
+        binding.widgetStatus.visibility = View.GONE
 
         binding.userFollowStateWidget.setUserModel(user)
         binding.userAboutPanelWidget.setFragmentActivity(activity)

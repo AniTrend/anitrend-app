@@ -18,7 +18,6 @@ import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.util.date.DateUtil
 
 class CommentListAdapter(
-    private val experimentalMarkdown: Boolean,
     private val currentUser: UserBase?,
     private val onToggleLike: (Long) -> Unit,
     private val onDeleteReply: (Long) -> Unit,
@@ -60,12 +59,7 @@ class CommentListAdapter(
             binding.userAvatar.setImage(model.userAvatar)
             binding.userName.text = model.userName
             binding.feedTime.text = DateUtil.getPrettyDateUnix(model.createdAt)
-            if (!experimentalMarkdown) {
-                binding.widgetStatus.visibility = View.VISIBLE
-                binding.widgetStatus.setTextData(model.reply)
-            } else {
-                binding.widgetStatus.visibility = View.GONE
-            }
+            binding.widgetStatus.visibility = View.GONE
             binding.widgetStatusText.richMarkDown(model.reply)
 
             binding.widgetFavourite.render(

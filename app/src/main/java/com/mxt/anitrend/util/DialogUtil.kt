@@ -11,16 +11,10 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.R
-import com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView
-import com.mxt.anitrend.base.custom.view.text.SingleLineTextView
-import com.mxt.anitrend.binding.richMarkDown
 import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.extension.getCompatTintedDrawable
 import com.mxt.anitrend.util.markdown.MarkDownUtil
-import timber.log.Timber
-import java.io.IOException
 
 /**
  * Extension properties to replace MaterialDialog.selectedIndex/selectedIndices
@@ -252,30 +246,6 @@ object DialogUtil {
             .setNeutralButton(R.string.Cancel) { d, _ -> d.dismiss() }
             .setIcon(requireNotNull(context.getCompatTintedDrawable(R.drawable.ic_new_releases_white_24dp)))
             .show()
-    }
-
-    @JvmStatic
-    fun createChangeLog(context: Context) {
-        try {
-            val dialog = createDefaultDialog(context)
-                .setView(R.layout.dialog_changelog)
-                .show()
-
-            val singleLineTextView =
-                dialog.findViewById<SingleLineTextView>(R.id.changelog_version)
-            singleLineTextView?.setText(String.format("v%s", BuildConfig.versionName))
-
-            val changelog =
-                context.assets
-                    .open("changelog.md")
-                    .bufferedReader()
-                    .use { it.readText() }
-            val richMarkdownTextView =
-                dialog.findViewById<RichMarkdownTextView>(R.id.changelog_information)
-            richMarkdownTextView?.richMarkDown(changelog)
-        } catch (e: IOException) {
-            Timber.e(e)
-        }
     }
 
     /**
