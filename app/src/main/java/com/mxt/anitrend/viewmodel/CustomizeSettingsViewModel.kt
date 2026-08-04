@@ -2,7 +2,6 @@ package com.mxt.anitrend.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.core.content.edit
-import com.mxt.anitrend.model.entity.settings.CustomizeSettingsUiState
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.Settings
 import kotlinx.coroutines.flow.MutableStateFlow

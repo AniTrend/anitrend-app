@@ -14,7 +14,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mxt.anitrend.R
 import com.mxt.anitrend.databinding.FragmentSettingsM3Binding
 import com.mxt.anitrend.databinding.ItemSettingsRowValueBinding
-import com.mxt.anitrend.model.entity.settings.CustomizeSettingsUiState
+import com.mxt.anitrend.viewmodel.CustomizeSettingsUiState
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.JobSchedulerUtil
 import com.mxt.anitrend.util.Settings

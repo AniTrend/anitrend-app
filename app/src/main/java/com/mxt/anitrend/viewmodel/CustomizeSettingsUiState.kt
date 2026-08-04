@@ -1,4 +1,4 @@
-package com.mxt.anitrend.model.entity.settings
+package com.mxt.anitrend.viewmodel
 
 /**
  * Immutable state of the Customize settings category.
