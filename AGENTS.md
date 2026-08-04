@@ -97,3 +97,10 @@ The full specification lives at `docs/architecture/state-synchronization-and-mut
 - Consult `@DESIGN.md` before any UI/UX work: new screens, layout changes, component selection, styling, spacing, color usage, typography choices, dialog or sheet design, custom view creation, or any visual refactor.
 - The manage list editor (`BottomSheetSeriesManage`) is the reference implementation of this design language. Future design passes must carry the same philosophy across the whole app.
 - When a design decision changes (new component pattern, revised token usage, updated spacing convention), update `@DESIGN.md` in the same PR so it stays the source of truth.
+
+## First-render regression guardrails
+- For async list-backed screens, verify first open separately from refresh. A refresh-only test can hide timing and measurement regressions.
+- When content visibility depends on an async adapter commit, update loading/content state from the adapter commit callback rather than immediately after `submitList`.
+- Do not combine nested `RecyclerView` `wrap_content` measurement with `setHasFixedSize(true)`.
+- When debugging a blank first render, inspect the request result, ViewModel item count, adapter item count, measured bounds, and accessibility tree in that order.
+- See `docs/retrospectives/2026-08-04-comment-reply-first-render.md` for the incident evidence and verification record.
