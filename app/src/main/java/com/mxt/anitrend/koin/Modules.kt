@@ -701,6 +701,7 @@ private val userFeatureModule = module {
             deleteReplyInteractor = get(),
             deleteFeedInteractor = get(),
             saveFeedInteractor = get(),
+            requestSequence = get(),
         )
     }
     viewModel {

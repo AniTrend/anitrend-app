@@ -285,8 +285,15 @@ class CommentFragment : FragmentBaseComment() {
         // The ViewModel precomputes the canonical feed projection; the header
         // renders exactly what the store-backed state emits.
         val headerItems = listOfNotNull(state.feedItem)
-        feedAdapter.submitList(headerItems)
-        commentListAdapter.submitList(state.replies)
+        // ListAdapter commits asynchronously. Chain the submissions so the
+        // empty/content decision runs only after both adapter item counts have
+        // settled; otherwise the first load briefly sees 0/0 and leaves the
+        // reply list behind the empty-state overlay until re-entry.
+        feedAdapter.submitList(headerItems) {
+            commentListAdapter.submitList(state.replies) {
+                updateUI()
+            }
+        }
 
         if (state.feed != null && composerMode == null) {
             setReplyComposer(state.feed)

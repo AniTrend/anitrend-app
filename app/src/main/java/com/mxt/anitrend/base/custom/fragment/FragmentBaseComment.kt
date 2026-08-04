@@ -86,7 +86,6 @@ abstract class FragmentBaseComment :
         originRecycler = requireNotNull(binding).commentOrigin
         stateLayout = requireNotNull(binding).stateLayout
         composerWidget = requireNotNull(binding).composerWidget
-        recyclerView.setHasFixedSize(true)
         recyclerView.isNestedScrollingEnabled = false
         mLayoutManager =
             StaggeredGridLayoutManager(

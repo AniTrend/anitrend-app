@@ -7,6 +7,7 @@ import com.mxt.anitrend.data.store.mutation.MutationRegistry
 import com.mxt.anitrend.data.store.mutation.MutationResult
 import com.mxt.anitrend.data.store.mutation.OperationKey
 import com.mxt.anitrend.data.store.mutation.OperationStatus
+import com.mxt.anitrend.data.store.mutation.RequestSequence
 import com.mxt.anitrend.domain.feed.interactor.DeleteFeedInteractor
 import com.mxt.anitrend.domain.feed.interactor.DeleteReplyInteractor
 import com.mxt.anitrend.domain.feed.interactor.SaveFeedInteractor
@@ -51,6 +52,7 @@ class CommentViewModel(
     private val deleteReplyInteractor: DeleteReplyInteractor,
     private val deleteFeedInteractor: DeleteFeedInteractor,
     private val saveFeedInteractor: SaveFeedInteractor,
+    private val requestSequence: RequestSequence,
 ) : ViewModel() {
 
     data class CommentUiState(
@@ -65,6 +67,7 @@ class CommentViewModel(
     private data class ScreenState(
         val feedId: Long? = null,
         val currentUserId: Long? = null,
+        val requestToken: Long = 0L,
         val isLoading: Boolean = false,
         val hasAttemptedLoad: Boolean = false,
         val errorMessage: String? = null,
@@ -125,10 +128,12 @@ class CommentViewModel(
             return
         }
 
+        val token = requestSequence.next()
         screenState.update {
             it.copy(
                 feedId = feedId,
                 currentUserId = currentUserId,
+                requestToken = token,
                 isLoading = true,
                 hasAttemptedLoad = true,
                 errorMessage = null,
@@ -140,20 +145,25 @@ class CommentViewModel(
                 id = feedId,
                 asHtml = false,
                 commitToStore = true,
+                readToken = token,
             ).onSuccess {
-                screenState.update { current ->
-                    current.copy(
-                        isLoading = false,
-                        errorMessage = null,
-                    )
+                if (screenState.value.requestToken == token) {
+                    screenState.update { current ->
+                        current.copy(
+                            isLoading = false,
+                            errorMessage = null,
+                        )
+                    }
                 }
             }.onFailure { throwable ->
-                Timber.e(throwable, "CommentViewModel load failed")
-                screenState.update { current ->
-                    current.copy(
-                        isLoading = false,
-                        errorMessage = throwable.message ?: "Failed to load activity",
-                    )
+                if (screenState.value.requestToken == token) {
+                    Timber.e(throwable, "CommentViewModel load failed")
+                    screenState.update { current ->
+                        current.copy(
+                            isLoading = false,
+                            errorMessage = throwable.message ?: "Failed to load activity",
+                        )
+                    }
                 }
             }
         }

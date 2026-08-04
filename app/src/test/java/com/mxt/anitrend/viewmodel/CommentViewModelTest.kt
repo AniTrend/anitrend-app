@@ -46,6 +46,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.doReturn
 import org.mockito.Mockito.mock
+import org.mockito.Mockito.verify
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class CommentViewModelTest {
@@ -75,6 +76,7 @@ class CommentViewModelTest {
             deleteReplyInteractor = DeleteReplyInteractor(feedRepository, mutationExecutor, store, RequestSequence()),
             deleteFeedInteractor = DeleteFeedInteractor(feedRepository, mutationExecutor, store, RequestSequence()),
             saveFeedInteractor = SaveFeedInteractor(feedRepository, mutationExecutor, store, RequestSequence()),
+            requestSequence = RequestSequence(),
         )
     }
 
@@ -179,6 +181,16 @@ class CommentViewModelTest {
         assertEquals(2, replyModel.likeCount)
 
         // A different current user renders the same row as not liked.
+        doReturn(
+            Result.success(
+                FeedDetailResult(
+                    feed = feed.toFeedRecord(revision = 2L),
+                    replies = listOf(reply.toFeedReplyRecord(activityId = 1L, revision = 2L)),
+                ),
+            ),
+        )
+            .`when`(feedRepository)
+            .getFeedListReplyRecords(1L, false, true, 0L, 2L)
         viewModel.load(1L, currentUserId = 7L)
         advanceUntilIdle()
         assertFalse(viewModel.state.value.replies.first().isLikedByCurrentUser)
@@ -299,25 +311,105 @@ class CommentViewModelTest {
         collector.cancel()
     }
 
+    @Test
+    fun `detail response with fresh request token is not rejected as stale after revision 1 feed list commit`() = runTest {
+        val collector = backgroundScope.launch { viewModel.state.collect {} }
+        val feed = feed(1L, replyCount = 1)
+        val reply = reply(10L, activityId = 1L, text = "first")
+
+        // A feed list query previously committed this feed at revision 1 (the
+        // FeedListViewModel RequestSequence token). A detail response stamped
+        // with the default token 0 is rejected by the store staleness guard,
+        // which is the reply loading bug under test.
+        runBlocking {
+            store.apply(FeedStoreChange.FeedUpserted(feed = feed.toFeedRecord(revision = 1L)))
+        }
+
+        // The comment detail commit carries a fresh RequestSequence token (1L)
+        // and must not be rejected as stale over the existing revision 1 feed.
+        runBlocking {
+            store.apply(
+                FeedStoreChange.FeedDetailLoaded(
+                    feed = feed.toFeedRecord(revision = 1L),
+                    replies = listOf(reply.toFeedReplyRecord(activityId = feed.id, revision = 1L)),
+                ),
+            )
+        }
+        assertEquals(1L, store.state.value.feedsById.getValue(1L).revision)
+        assertEquals(listOf(10L), store.state.value.replyIdsByFeedId.getValue(1L))
+
+        // The ViewModel must request the detail with that same fresh token so
+        // a real repository commit carries revision >= 1 and clears the guard.
+        doReturn(
+            Result.success(
+                FeedDetailResult(
+                    feed = feed.toFeedRecord(revision = 1L),
+                    replies = listOf(reply.toFeedReplyRecord(activityId = feed.id, revision = 1L)),
+                ),
+            ),
+        )
+            .`when`(feedRepository)
+            .getFeedListReplyRecords(1L, false, true, 0L, 1L)
+
+        viewModel.load(1L)
+        advanceUntilIdle()
+
+        verify(feedRepository).getFeedListReplyRecords(1L, false, true, 0L, 1L)
+        assertFalse(viewModel.state.value.isLoading)
+        assertEquals(listOf(10L), viewModel.state.value.replies.map { it.id })
+        collector.cancel()
+    }
+
+    @Test
+    fun `refresh issues a fresh request token instead of being suppressed`() = runTest {
+        val collector = backgroundScope.launch { viewModel.state.collect {} }
+        val feed = feed(1L, replyCount = 1)
+        stubDetailLoad(feed, listOf(reply(10L, activityId = 1L, text = "first")))
+
+        viewModel.load(1L)
+        advanceUntilIdle()
+
+        doReturn(
+            Result.success(
+                FeedDetailResult(
+                    feed = feed.toFeedRecord(revision = 2L),
+                    replies = listOf(reply(11L, activityId = 1L, text = "second").toFeedReplyRecord(activityId = 1L, revision = 2L)),
+                ),
+            ),
+        )
+            .`when`(feedRepository)
+            .getFeedListReplyRecords(1L, false, true, 0L, 2L)
+
+        viewModel.load(1L)
+        advanceUntilIdle()
+
+        // Pull-to-refresh is not gated behind isLoading: a second load issues
+        // a new request token, and the newer token is used for the request.
+        verify(feedRepository).getFeedListReplyRecords(1L, false, true, 0L, 1L)
+        verify(feedRepository).getFeedListReplyRecords(1L, false, true, 0L, 2L)
+        assertFalse(viewModel.state.value.isLoading)
+        collector.cancel()
+    }
+
     private fun stubDetailLoad(feed: FeedList, replies: List<FeedReply>) {
         runBlocking {
             store.apply(
                 FeedStoreChange.FeedDetailLoaded(
-                    feed = feed.toFeedRecord(revision = 0L),
-                    replies = replies.map { it.toFeedReplyRecord(activityId = feed.id, revision = 0L) },
+                    feed = feed.toFeedRecord(revision = 1L),
+                    replies = replies.map { it.toFeedReplyRecord(activityId = feed.id, revision = 1L) },
                 ),
             )
 
             doReturn(
                 Result.success(
                     FeedDetailResult(
-                        feed = feed.toFeedRecord(revision = 0L),
-                        replies = replies.map { it.toFeedReplyRecord(activityId = feed.id, revision = 0L) },
+                        feed = feed.toFeedRecord(revision = 1L),
+                        replies = replies.map { it.toFeedReplyRecord(activityId = feed.id, revision = 1L) },
                     ),
                 ),
             )
                 .`when`(feedRepository)
-                .getFeedListReplyRecords(1L, false, true, 0L, 0L)
+                .getFeedListReplyRecords(1L, false, true, 0L, 1L)
         }
     }
 
