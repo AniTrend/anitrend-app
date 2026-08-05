@@ -20,7 +20,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorSurfaceContainerHighest"
+
             app:titleTextAppearance="?attr/textAppearanceTitleLarge" />
 
         <!-- Text identity tier: character name on a surface container.

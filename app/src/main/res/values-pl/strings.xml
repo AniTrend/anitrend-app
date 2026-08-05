@@ -150,15 +150,13 @@
         ]]>
     </string>
 
-    <string name="app_intro_guide">
-        <![CDATA[
-        <p>Możesz wyświetlać powyższe tytuły poprzez tapnięcie na obrazek lub karte,
-        możesz też zalogować się do aplikacji używając konta AniList żeby uzyskać dostęp do większej ilości funkcji</p>
-
-        Jeśli nie masz konta AniList aplikacja da ci opcję zarejestrowania się z ekranu logowania
-        ]]>
-    </string>
-    <string name="app_intro_title">Jak?</string>
+    <!-- translators: This copy is shown on the full-screen onboarding card (the final
+     welcome card). It explains that tapping a card lets users explore anime and
+     manga, and that signing in with AniList lets them manage their lists. -->
+    <string name="app_intro_guide">Dotknij karty, aby odkrywać anime i mangi. Zaloguj się na AniList, aby zarządzać swoimi listami.</string>
+    <!-- translators: Heading for the full-screen onboarding card, shown directly above
+         the guide text. -->
+    <string name="app_intro_title">Zacznij</string>
 
     <string name="login_welcome_title">Witaj %s</string>
 

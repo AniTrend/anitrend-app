@@ -150,15 +150,13 @@ elementos de tus favoritos al presionar en el icono del corazón .
         ]]>
 	</string>
 
-    <string name="app_intro_guide">
-		<![CDATA[
-        <p> Visualiza más información acerca de un anime o un manga al tocar en la imagen o en la tarjeta del listado.
-        ¡Inicia sesión con tu cuenta de Anilist para acceder a más características!</p>
-
-        Si aún no estás registrado en Anilist puedes crear una cuenta directamente desde la opción "Ingresar" de la aplicación
-        ]]>
-	</string>
-    <string name="app_intro_title">¿Qué puedo hacer?</string>
+    <!-- translators: This copy is shown on the full-screen onboarding card (the final
+     welcome card). It explains that tapping a card lets users explore anime and
+     manga, and that signing in with AniList lets them manage their lists. -->
+    <string name="app_intro_guide">Toca una tarjeta para explorar anime y manga. Inicia sesión con AniList para gestionar tus listas.</string>
+    <!-- translators: Heading for the full-screen onboarding card, shown directly above
+         the guide text. -->
+    <string name="app_intro_title">Empezar</string>
 
     <string name="login_welcome_title">Bienvenido/a %s</string>
 

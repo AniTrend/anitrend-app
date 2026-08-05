@@ -8,7 +8,7 @@
     style="@style/Widget.Material3.TabLayout.OnSurface"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
-    android:background="?attr/colorSurfaceContainerHighest"
+
     app:tabGravity="center"
     app:tabIndicatorColor="?attr/colorPrimary"
     app:tabIndicatorHeight="3dp"

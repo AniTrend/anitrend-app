@@ -139,13 +139,13 @@ You can translate this just try to keep the meaning consistent :) -->
 
         Ebenso kannst du Anime & Manga zu deinen Favoriten hinzufügen oder entfernen, indem du auf das Herz tippst.
         ]]></string>
-    <string name="app_intro_guide"><![CDATA[
-        <p>Du kannst dir die Details zu jedem der oben aufgeführten Einträge ansehen, indem du einfach auf das Bild oder die Karte tippst.
-        Du kannst dich außerdem mit deinem AniList Account anmelden, um noch mehr Features verwenden zu können!</p>
-
-        Wenn du noch keinen AniList Account hast, kannst du dich direkt vom Login Bildschirm aus registrieren!
-        ]]></string>
-    <string name="app_intro_title">"Wie funktioniert das?"</string>
+    <!-- translators: This copy is shown on the full-screen onboarding card (the final
+     welcome card). It explains that tapping a card lets users explore anime and
+     manga, and that signing in with AniList lets them manage their lists. -->
+    <string name="app_intro_guide">Tippe auf eine Karte, um Anime und Manga zu entdecken. Melde dich mit AniList an, um deine Listen zu verwalten.</string>
+    <!-- translators: Heading for the full-screen onboarding card, shown directly above
+         the guide text. -->
+    <string name="app_intro_title">Loslegen</string>
     <string name="login_welcome_title">"Wilkommen %s"</string>
     <string name="login_welcome_text">"Erfolgreich angemeldet"</string>
 

@@ -127,8 +127,6 @@ class MainActivity :
 
     private var tabMediator: TabLayoutMediator? = null
 
-    private var hasCheckedInstallation = false
-
     private val mainViewModel: MainViewModel by viewModel()
 
     private lateinit var menuItems: Menu
@@ -568,28 +566,14 @@ class MainActivity :
             mHeaderView.setImageResource(R.drawable.reg_bg)
         }
 
-        checkNewInstallation()
+        checkUpdatedVersion()
     }
 
     fun makeRequest() {
         launchUpdateWorker(menuItems)
     }
 
-    private fun checkNewInstallation() {
-        if (hasCheckedInstallation) return
-        hasCheckedInstallation = true
-        if (settings.isFreshInstall) {
-            settings.isFreshInstall = false
-            mBottomSheet =
-                BottomSheetMessage
-                    .Builder()
-                    .setText(R.string.app_intro_guide)
-                    .setTitle(R.string.app_intro_title)
-                    .setNegativeText(R.string.Ok)
-                    .build()
-            showBottomSheet()
-            return
-        }
+    private fun checkUpdatedVersion() {
         if (settings.isUpdated) {
             val intent = Intent(this, ChangelogActivity::class.java)
             startActivity(intent)
