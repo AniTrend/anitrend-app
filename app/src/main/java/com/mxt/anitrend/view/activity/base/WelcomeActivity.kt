@@ -7,7 +7,9 @@ import androidx.core.content.ContextCompat
 import com.codemybrainsout.onboarder.AhoyOnboarderActivity
 import com.codemybrainsout.onboarder.AhoyOnboarderCard
 import com.mxt.anitrend.R
+import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.util.CompatUtil
+import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.view.activity.index.MainActivity
 
 /**
@@ -51,6 +53,11 @@ class WelcomeActivity : AhoyOnboarderActivity() {
                     getString(R.string.app_intro_search_text),
                     searchIcon,
                 ),
+                AhoyOnboarderCard(
+                    getString(R.string.app_intro_title),
+                    getString(R.string.app_intro_guide),
+                    R.mipmap.ic_launcher,
+                ),
             ).map(::applyStyle)
 
         setFinishButtonDrawableStyle(ContextCompat.getDrawable(this, R.drawable.finish_button_style))
@@ -65,6 +72,7 @@ class WelcomeActivity : AhoyOnboarderActivity() {
     }
 
     override fun onFinishButtonPressed() {
+        koinOf<Settings>().isFreshInstall = false
         val target = findViewById<View>(R.id.btn_skip)
         CompatUtil.startRevealAnim(this, target, Intent(this, MainActivity::class.java), true)
     }
