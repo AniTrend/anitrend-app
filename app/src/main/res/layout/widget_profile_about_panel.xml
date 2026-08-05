@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Profile about panel (followers / following / favourites). Three
+     tappable stat columns with M3 onSurface tokens. Used inside the
+     overview tab, not the profile header. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,7 +14,6 @@
         android:id="@+id/user_following_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/lg_margin"
         android:layout_weight="1"
         android:clickable="true"
         android:contentDescription="@string/following"
@@ -19,23 +21,24 @@
         android:foreground="?attr/selectableItemBackground"
         android:gravity="center"
         android:minHeight="48dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingVertical="@dimen/lg_margin">
 
-        <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/following"
-            android:textAppearance="?attr/textAppearanceLabelSmall"
-            android:textColor="?attr/colorOnSurface"
-            android:textStyle="bold" />
+            android:textAppearance="?attr/textAppearanceLabelMedium"
+            android:textColor="?attr/colorOnSurfaceVariant" />
 
-        <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/user_following_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:layout_marginTop="@dimen/sm_margin"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
             android:textColor="?attr/colorOnSurface"
             tools:text=".." />
 
@@ -45,7 +48,6 @@
         android:id="@+id/user_followers_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/lg_margin"
         android:layout_weight="1"
         android:clickable="true"
         android:contentDescription="@string/followers"
@@ -53,23 +55,24 @@
         android:foreground="?attr/selectableItemBackground"
         android:gravity="center"
         android:minHeight="48dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingVertical="@dimen/lg_margin">
 
-        <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/followers"
-            android:textAppearance="?attr/textAppearanceLabelSmall"
-            android:textColor="?attr/colorOnSurface"
-            android:textStyle="bold" />
+            android:textAppearance="?attr/textAppearanceLabelMedium"
+            android:textColor="?attr/colorOnSurfaceVariant" />
 
-        <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/user_followers_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:layout_marginTop="@dimen/sm_margin"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
             android:textColor="?attr/colorOnSurface"
             tools:text=".." />
 
@@ -79,7 +82,6 @@
         android:id="@+id/user_favourites_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/lg_margin"
         android:layout_weight="1"
         android:clickable="true"
         android:contentDescription="@string/favourites"
@@ -87,23 +89,24 @@
         android:foreground="?attr/selectableItemBackground"
         android:gravity="center"
         android:minHeight="48dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingVertical="@dimen/lg_margin">
 
-        <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+        <com.google.android.material.textview.MaterialTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/favourites"
-            android:textAppearance="?attr/textAppearanceLabelSmall"
-            android:textColor="?attr/colorOnSurface"
-            android:textStyle="bold" />
+            android:textAppearance="?attr/textAppearanceLabelMedium"
+            android:textColor="?attr/colorOnSurfaceVariant" />
 
-        <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/user_favourites_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:layout_marginTop="@dimen/sm_margin"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
             android:textColor="?attr/colorOnSurface"
             tools:text=".." />
 

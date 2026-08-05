@@ -1,19 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Settings hub category card. A filled M3 section card with a leading
+     icon in a tinted circular container, a title + summary column, and a
+     trailing chevron. The whole card is a single 48dp+ touch target. -->
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/lg_margin"
+    android:layout_marginBottom="@dimen/sheet_section_margin"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground"
+    app:rippleColor="?attr/colorSecondaryContainer"
     style="@style/Widget.AniTrend.ManageSheet.SectionCard">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
+        android:minHeight="48dp"
         android:orientation="horizontal">
+
+        <!-- Leading icon in a tinted circular container -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/category_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="@dimen/xl_margin"
+            android:background="?attr/colorSecondaryContainer"
+            android:contentDescription="@null"
+            android:padding="@dimen/lg_margin"
+            android:scaleType="fitCenter"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.AniTrend.Circle"
+            app:tint="?attr/colorOnSecondaryContainer" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -38,12 +56,12 @@
         </LinearLayout>
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_marginStart="@dimen/md_margin"
-            android:importantForAccessibility="no"
+            android:contentDescription="@null"
             android:src="@drawable/ic_chevron_right_grey_600_24dp"
-            android:tint="?attr/colorOnSurfaceVariant" />
+            app:tint="?attr/colorOnSurfaceVariant" />
     </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>

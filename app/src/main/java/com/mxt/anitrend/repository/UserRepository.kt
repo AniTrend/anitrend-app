@@ -2,6 +2,7 @@ package com.mxt.anitrend.repository
 
 import co.anitrend.retrofit.graphql.model.body.GraphContainer
 import com.mxt.anitrend.base.interfaces.dao.BoxQuery
+import com.mxt.anitrend.data.mapper.applyUserSettingsTo
 import com.mxt.anitrend.data.mapper.toNotificationPageResult
 import com.mxt.anitrend.data.mapper.toUserSettingsRecord
 import com.mxt.anitrend.domain.user.model.UserSettingsUpdate
@@ -315,6 +316,10 @@ class UserRepository(
      * (the AniList backend treats them as "leave unchanged"), and the returned
      * [UserSettingsRecord] is mapped from the server response, keeping this
      * mutation server-authoritative with no optimistic updates.
+     *
+     * On success the response slice is also merged into the cached current user
+     * through [saveCurrentUser] (see `applyUserSettingsTo`), so cached settings
+     * stay in sync with the server without a full `CurrentUser` refetch.
      */
     suspend fun updateUser(update: UserSettingsUpdate = UserSettingsUpdate()): Result<UserSettingsRecord> = withContext(ioDispatcher) {
         runCatching {
@@ -341,6 +346,19 @@ class UserRepository(
         if (!graphErrors.isNullOrEmpty()) {
             throw RuntimeException(graphErrors.first().message ?: "GraphQL error")
         }
-        return body.data?.updateUser?.toUserSettingsRecord() ?: throw IllegalStateException("Empty response body")
+        val updatedUser = body.data?.updateUser ?: throw IllegalStateException("Empty response body")
+        mergeUserSettingsIntoCache(updatedUser)
+        return updatedUser.toUserSettingsRecord()
+    }
+
+    /**
+     * Merges the settings slice returned by the `UpdateUser` mutation into the
+     * cached current user, if one exists. The merge is a no-op when there is no
+     * cached user, and it only touches fields returned by the mutation.
+     */
+    private fun mergeUserSettingsIntoCache(updatedUser: UpdateUserData.UpdateUser) {
+        val cachedUser = boxQuery.currentUser ?: return
+        updatedUser.applyUserSettingsTo(cachedUser)
+        saveCurrentUser(cachedUser)
     }
 }

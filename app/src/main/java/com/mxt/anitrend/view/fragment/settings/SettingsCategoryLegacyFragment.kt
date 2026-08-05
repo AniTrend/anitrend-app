@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.annotation.DrawableRes
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -87,10 +88,12 @@ class SettingsCategoryLegacyFragment :
             isUpdateChannelVisible = resources.getBoolean(R.bool.display_update_channel_pref),
             isAdultContentVisible = resources.getBoolean(R.bool.display_adult_content_pref),
         ) ?: return
+        activity?.title = getString(section.titleRes)
 
         val sectionBinding = ItemSettingsSectionCardBinding.inflate(layoutInflater, sectionHost, false)
         sectionBinding.sectionTitle.setText(section.titleRes)
         sectionBinding.sectionSummary.setText(section.summaryRes)
+        sectionBinding.sectionIcon.setImageResource(iconForSection(section.id))
 
         val visibleRows = section.rows.filter { it.visible }
         visibleRows.forEachIndexed { index, row ->
@@ -231,6 +234,19 @@ class SettingsCategoryLegacyFragment :
     private fun addDivider(container: LinearLayout) {
         val divider = layoutInflater.inflate(R.layout.item_settings_divider, container, false)
         container.addView(divider)
+    }
+
+    @DrawableRes
+    private fun iconForSection(categoryId: String): Int = when (categoryId) {
+        SettingsCategoryRegistry.CUSTOMIZE -> R.drawable.ic_format_color_fill_grey_600_24dp
+        SettingsCategoryRegistry.APPEARANCE -> R.drawable.ic_format_size_grey_600_24dp
+        SettingsCategoryRegistry.CONTENT -> R.drawable.ic_format_list_bulleted_grey_600_24dp
+        SettingsCategoryRegistry.GENERAL -> R.drawable.ic_build_grey_600_24dp
+        SettingsCategoryRegistry.NOTIFICATIONS -> R.drawable.ic_notifications_active_grey_600_24dp
+        SettingsCategoryRegistry.DATA_SYNC -> R.drawable.ic_sync_grey_600_24dp
+        SettingsCategoryRegistry.PRIVACY -> R.drawable.ic_privacy_grey_600_24dp
+        SettingsCategoryRegistry.ACCESSIBILITY -> R.drawable.ic_touch_app_grey_600_24dp
+        else -> R.drawable.ic_build_grey_600_24dp
     }
 
     /** Alpha used to communicate disabled setting rows without hiding them. */

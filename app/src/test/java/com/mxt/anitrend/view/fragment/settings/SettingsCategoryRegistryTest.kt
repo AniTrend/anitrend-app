@@ -58,6 +58,55 @@ class SettingsCategoryRegistryTest {
         assertFalse(categories.any { it.id == SettingsCategoryRegistry.PRIVACY })
     }
 
+    // ── account category (authenticated) ──
+
+    @Test
+    fun `categories lists the account category first when authenticated`() {
+        val categories = SettingsCategoryRegistry.categories(
+            isFirebaseVisible = true,
+            isAuthenticated = true,
+        )
+
+        assertEquals(9, categories.size)
+        assertEquals(SettingsCategoryRegistry.ACCOUNT, categories.first().id)
+        // The legacy eight keep their relative order after the account entry.
+        assertEquals(
+            listOf(
+                SettingsCategoryRegistry.ACCOUNT,
+                SettingsCategoryRegistry.CUSTOMIZE,
+                SettingsCategoryRegistry.APPEARANCE,
+                SettingsCategoryRegistry.CONTENT,
+                SettingsCategoryRegistry.GENERAL,
+                SettingsCategoryRegistry.NOTIFICATIONS,
+                SettingsCategoryRegistry.DATA_SYNC,
+                SettingsCategoryRegistry.PRIVACY,
+                SettingsCategoryRegistry.ACCESSIBILITY,
+            ),
+            categories.map { it.id },
+        )
+    }
+
+    @Test
+    fun `categories omit the account category when not authenticated`() {
+        val categories = SettingsCategoryRegistry.categories(
+            isFirebaseVisible = true,
+            isAuthenticated = false,
+        )
+
+        assertEquals(8, categories.size)
+        assertFalse(categories.any { it.id == SettingsCategoryRegistry.ACCOUNT })
+    }
+
+    @Test
+    fun `account category is known as a navigation argument`() {
+        assertTrue(SettingsCategoryRegistry.isKnown(SettingsCategoryRegistry.ACCOUNT))
+    }
+
+    @Test
+    fun `sectionFor returns null for the account category since it has a dedicated destination`() {
+        assertNull(sectionFor(SettingsCategoryRegistry.ACCOUNT))
+    }
+
     @Test
     fun `every hub category resolves to a title and summary`() {
         SettingsCategoryRegistry.categories(isFirebaseVisible = true).forEach { category ->

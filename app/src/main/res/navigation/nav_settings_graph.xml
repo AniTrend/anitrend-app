@@ -10,6 +10,10 @@
         android:label="@string/title_activity_settings">
 
         <action
+            android:id="@+id/action_settings_hub_to_account"
+            app:destination="@id/accountSettingsFragment" />
+
+        <action
             android:id="@+id/action_settings_hub_to_customize"
             app:destination="@id/customizeSettingsFragment" />
 
@@ -17,6 +21,11 @@
             android:id="@+id/action_settings_hub_to_category"
             app:destination="@id/settingsCategoryFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/accountSettingsFragment"
+        android:name="com.mxt.anitrend.view.fragment.settings.AccountSettingsFragment"
+        android:label="@string/pref_header_account" />
 
     <fragment
         android:id="@+id/customizeSettingsFragment"

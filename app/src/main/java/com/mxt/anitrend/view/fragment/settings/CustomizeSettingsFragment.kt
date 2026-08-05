@@ -14,6 +14,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mxt.anitrend.R
 import com.mxt.anitrend.databinding.FragmentSettingsM3Binding
 import com.mxt.anitrend.databinding.ItemSettingsRowValueBinding
+import com.mxt.anitrend.databinding.ItemSettingsSectionCardBinding
 import com.mxt.anitrend.viewmodel.CustomizeSettingsUiState
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.JobSchedulerUtil
@@ -86,9 +87,14 @@ class CustomizeSettingsFragment :
 
     private fun renderRows(state: CustomizeSettingsUiState) {
         val binding = binding ?: return
-        val context = requireContext()
         val sectionHost = binding.settingsSections
         sectionHost.removeAllViews()
+
+        val sectionBinding = ItemSettingsSectionCardBinding.inflate(layoutInflater, sectionHost, false)
+        sectionBinding.sectionTitle.setText(R.string.pref_header_customize)
+        sectionBinding.sectionSummary.setText(R.string.pref_header_customize_summary)
+        sectionBinding.sectionIcon.setImageResource(R.drawable.ic_format_color_fill_grey_600_24dp)
+        val content = sectionBinding.sectionContent
 
         val rows = listOf(
             SettingsRow.Choice(
@@ -116,7 +122,7 @@ class CustomizeSettingsFragment :
         )
 
         rows.forEachIndexed { index, (row, currentValue) ->
-            bindChoiceRow(sectionHost, row, currentValue) { selectedValue ->
+            bindChoiceRow(content, row, currentValue) { selectedValue ->
                 when (row.keyRes) {
                     R.string.pref_key_app_theme -> customizeSettingsViewModel.setTheme(selectedValue)
                     R.string.pref_key_selected_language -> customizeSettingsViewModel.setLanguage(selectedValue)
@@ -124,9 +130,11 @@ class CustomizeSettingsFragment :
                 }
             }
             if (index < rows.lastIndex) {
-                addDivider(sectionHost)
+                addDivider(content)
             }
         }
+
+        sectionHost.addView(sectionBinding.root)
     }
 
     private fun bindChoiceRow(

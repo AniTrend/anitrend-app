@@ -24,6 +24,7 @@ data class SettingsCategory(
  */
 object SettingsCategoryRegistry {
 
+    const val ACCOUNT = "account"
     const val CUSTOMIZE = "customize"
     const val APPEARANCE = "appearance"
     const val CONTENT = "content"
@@ -37,23 +38,40 @@ object SettingsCategoryRegistry {
     const val ARG_CATEGORY_ID = "categoryId"
 
     /**
-     * The category hub entries in display order. The privacy category is
-     * hidden when the Firebase build is not present, mirroring the legacy
-     * single-screen visibility rule.
+     * The category hub entries in display order.
+     *
+     * The authenticated [ACCOUNT] category is listed first when
+     * [isAuthenticated] is true, and omitted entirely otherwise so it never
+     * appears for signed-out users. The privacy category is hidden when the
+     * Firebase build is not present, mirroring the legacy single-screen
+     * visibility rule. All other categories keep their existing order.
      */
-    fun categories(isFirebaseVisible: Boolean): List<SettingsCategory> = listOf(
-        SettingsCategory(CUSTOMIZE, R.string.pref_header_customize, R.string.pref_header_customize_summary),
-        SettingsCategory(APPEARANCE, R.string.pref_header_appearance, R.string.pref_header_appearance_summary),
-        SettingsCategory(CONTENT, R.string.pref_header_content, R.string.pref_header_content_summary),
-        SettingsCategory(GENERAL, R.string.pref_header_general, R.string.pref_header_general_summary),
-        SettingsCategory(NOTIFICATIONS, R.string.pref_header_notifications, R.string.pref_header_notifications_summary),
-        SettingsCategory(DATA_SYNC, R.string.pref_header_data_sync, R.string.pref_header_data_sync_summary),
-        SettingsCategory(PRIVACY, R.string.pref_header_privacy, R.string.pref_header_privacy_summary, visible = isFirebaseVisible),
-        SettingsCategory(ACCESSIBILITY, R.string.pref_header_accessibility, R.string.pref_header_accessibility_summary),
-    ).filter { it.visible }
+    fun categories(isFirebaseVisible: Boolean, isAuthenticated: Boolean = false): List<SettingsCategory> = buildList {
+        if (isAuthenticated) {
+            add(
+                SettingsCategory(
+                    id = ACCOUNT,
+                    titleRes = R.string.pref_header_account,
+                    summaryRes = R.string.pref_header_account_summary,
+                ),
+            )
+        }
+        addAll(
+            listOf(
+                SettingsCategory(CUSTOMIZE, R.string.pref_header_customize, R.string.pref_header_customize_summary),
+                SettingsCategory(APPEARANCE, R.string.pref_header_appearance, R.string.pref_header_appearance_summary),
+                SettingsCategory(CONTENT, R.string.pref_header_content, R.string.pref_header_content_summary),
+                SettingsCategory(GENERAL, R.string.pref_header_general, R.string.pref_header_general_summary),
+                SettingsCategory(NOTIFICATIONS, R.string.pref_header_notifications, R.string.pref_header_notifications_summary),
+                SettingsCategory(DATA_SYNC, R.string.pref_header_data_sync, R.string.pref_header_data_sync_summary),
+                SettingsCategory(PRIVACY, R.string.pref_header_privacy, R.string.pref_header_privacy_summary, visible = isFirebaseVisible),
+                SettingsCategory(ACCESSIBILITY, R.string.pref_header_accessibility, R.string.pref_header_accessibility_summary),
+            ),
+        )
+    }.filter { it.visible }
 
     /** Whether [categoryId] is a known category, i.e. a valid navigation argument. */
-    fun isKnown(categoryId: String?): Boolean = categories(isFirebaseVisible = true).any { it.id == categoryId }
+    fun isKnown(categoryId: String?): Boolean = categories(isFirebaseVisible = true, isAuthenticated = true).any { it.id == categoryId }
 
     /**
      * Resolves the settings section rendered for [categoryId], honoring the

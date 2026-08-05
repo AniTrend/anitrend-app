@@ -146,6 +146,7 @@ import com.mxt.anitrend.view.fragment.settings.SettingsCategoryLegacyFragment
 import com.mxt.anitrend.view.fragment.settings.SettingsHubFragment
 import com.mxt.anitrend.view.fragment.youtube.YouTubeEmbedFragment
 import com.mxt.anitrend.view.sheet.BottomSheetGiphy
+import com.mxt.anitrend.viewmodel.AccountSettingsViewModel
 import com.mxt.anitrend.viewmodel.AiringListViewModel
 import com.mxt.anitrend.viewmodel.BrowseReviewViewModel
 import com.mxt.anitrend.viewmodel.CharacterActorsViewModel
@@ -719,6 +720,7 @@ private val userFeatureModule = module {
         )
     }
     viewModel { LoginUserViewModel(userRepository = get()) }
+    viewModel { AccountSettingsViewModel(userRepository = get()) }
 }
 
 private val characterFeatureModule = module {

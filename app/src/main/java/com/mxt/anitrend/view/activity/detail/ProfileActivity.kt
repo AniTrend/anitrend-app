@@ -5,10 +5,15 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.Toast
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.pager.detail.ProfilePageAdapter
@@ -22,6 +27,7 @@ import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.TutorialUtil
 import com.mxt.anitrend.view.activity.CommonActivity
+import com.mxt.anitrend.view.activity.base.SettingsActivity
 import com.mxt.anitrend.view.sheet.BottomSheetComposer
 import com.mxt.anitrend.viewmodel.ProfileViewModel
 import kotlinx.coroutines.launch
@@ -55,6 +61,7 @@ class ProfileActivity :
 
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.profileIdentityTier.visibility = GONE
         setSupportActionBar(binding.toolbar.toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -62,6 +69,9 @@ class ProfileActivity :
             getCompatDrawable(R.drawable.ic_arrow_back_white_24dp),
         )
         binding.profileBanner.setOnClickListener(this)
+        binding.profileErrorRetry.setOnClickListener {
+            profileViewModel.load(userId, userName)
+        }
 
         if (intent.hasExtra(KeyUtil.arg_id)) {
             userId = intent.getLongExtra(KeyUtil.arg_id, -1)
@@ -79,7 +89,12 @@ class ProfileActivity :
         }
 
         observeViewModel()
-        setUpPager()
+        if (hasProfileIdentity()) {
+            setUpPager()
+        } else {
+            binding.smartTab.smartTab.visibility = GONE
+            binding.pageContainer.pageContainer.visibility = GONE
+        }
     }
 
     private fun observeViewModel() {
@@ -87,18 +102,14 @@ class ProfileActivity :
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 profileViewModel.state.collect { state ->
                     when (state) {
-                        is ProfileViewModel.UiState.Loading -> { /* content loads below */ }
+                        is ProfileViewModel.UiState.Loading -> showLoadingState()
                         is ProfileViewModel.UiState.Success -> {
                             model = state.user
+                            showContentState()
                             updateUI()
                         }
                         is ProfileViewModel.UiState.Error -> {
-                            NotifyUtil.makeText(
-                                this@ProfileActivity,
-                                state.message,
-                                R.drawable.ic_warning_white_18dp,
-                                Toast.LENGTH_LONG,
-                            ).show()
+                            showErrorState(state.message)
                         }
                     }
                 }
@@ -123,8 +134,12 @@ class ProfileActivity :
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.profile_menu, menu)
+        // The notification overflow item and the settings entry are only
+        // relevant for the current signed-in user. Share stays available for
+        // any profile. Deep-link handling above already resolved the target.
         if (!isCurrentUser(userId, userName)) {
             menu.findItem(R.id.action_notification).isVisible = false
+            menu.findItem(R.id.action_settings).isVisible = false
         }
         return true
     }
@@ -190,24 +205,24 @@ class ProfileActivity :
                 }
                 true
             }
+            R.id.action_settings -> {
+                startActivity(Intent(this@ProfileActivity, SettingsActivity::class.java))
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
     override fun onResume() {
         super.onResume()
-        if (userId == -1L && userName == null) {
-            NotifyUtil.createAlerter(
-                this,
-                R.string.text_user_model,
-                R.string.layout_empty_response,
-                R.drawable.ic_warning_white_18dp,
-                R.color.colorStateRed,
-            )
+        if (!hasProfileIdentity()) {
+            showErrorState(getString(R.string.profile_error_no_user), retryEnabled = false)
         } else {
             profileViewModel.load(userId, userName)
         }
     }
+
+    private fun hasProfileIdentity(): Boolean = userId > 0L || !userName.isNullOrBlank()
 
     private fun updateUI() {
         val current = model ?: return
@@ -222,6 +237,17 @@ class ProfileActivity :
                 }
         }
         WideImageView.setImage(binding.profileBanner, current.bannerImage)
+
+        // Identity tier
+        binding.profileDisplayName.text = current.name
+        current.name?.let { binding.profileHandle.text = "@$it" }
+        Glide.with(this)
+            .load(current.avatar?.large)
+            .apply(RequestOptions.circleCropTransform())
+            .apply(RequestOptions.placeholderOf(R.drawable.avatar_placeholder))
+            .transition(DrawableTransitionOptions.withCrossFade(150))
+            .into(binding.profileAvatar)
+        binding.profileIdentityTier.visibility = VISIBLE
 
         if (isCurrentUser(current.id)) {
             TutorialUtil()
@@ -265,5 +291,26 @@ class ProfileActivity :
     private fun isCurrentUser(userId: Long, userName: String? = null): Boolean {
         if (!settings.isAuthenticated) return false
         return profileViewModel.isCurrentUser(userId, userName)
+    }
+
+    private fun showLoadingState() {
+        binding.profileStateOverlay.visibility = VISIBLE
+        binding.profileLoadingState.visibility = VISIBLE
+        binding.profileErrorState.visibility = GONE
+        binding.profileStateOverlay.contentDescription =
+            getString(R.string.profile_loading_content_description)
+    }
+
+    private fun showContentState() {
+        binding.profileStateOverlay.visibility = GONE
+    }
+
+    private fun showErrorState(message: String, retryEnabled: Boolean = true) {
+        binding.profileStateOverlay.visibility = VISIBLE
+        binding.profileLoadingState.visibility = GONE
+        binding.profileErrorState.visibility = VISIBLE
+        binding.profileErrorText.text = message
+        binding.profileErrorRetry.visibility = if (retryEnabled) VISIBLE else GONE
+        binding.profileStateOverlay.contentDescription = message
     }
 }

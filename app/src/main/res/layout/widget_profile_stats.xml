@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Profile stats widget (secondary tier). Four tappable stat columns
+     (anime count, anime time, manga count, manga chapters) on a surface
+     container. Uses M3 onSurface tokens since it sits on a surface, not
+     over the banner. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -6,7 +10,6 @@
     android:orientation="horizontal"
     android:baselineAligned="false"
     android:weightSum="4"
-    android:background="@drawable/gradient_shadow"
     tools:showIn="@layout/activity_profile"
     tools:context=".view.activity.detail.ProfileActivity">
 
@@ -14,7 +17,6 @@
         android:id="@+id/user_anime_total_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/lg_margin"
         android:layout_weight="1"
         android:clickable="true"
         android:contentDescription="@string/anime"
@@ -22,23 +24,24 @@
         android:foreground="?attr/selectableItemBackground"
         android:gravity="center"
         android:minHeight="48dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingVertical="@dimen/lg_margin">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/anime"
-            android:textAppearance="?attr/textAppearanceLabelSmall"
-            android:textColor="?attr/colorOnSurface"
-            android:textStyle="bold" />
+            android:textAppearance="?attr/textAppearanceLabelMedium"
+            android:textColor="?attr/colorOnSurfaceVariant" />
 
         <TextView
             android:id="@+id/user_anime_total"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:layout_marginTop="@dimen/sm_margin"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
             android:textColor="?attr/colorOnSurface"
             tools:text="5K" />
 
@@ -48,7 +51,6 @@
         android:id="@+id/user_anime_time_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/lg_margin"
         android:layout_weight="1"
         android:clickable="true"
         android:contentDescription="@string/anime_time"
@@ -56,23 +58,24 @@
         android:foreground="?attr/selectableItemBackground"
         android:gravity="center"
         android:minHeight="48dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingVertical="@dimen/lg_margin">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/anime_time"
-            android:textAppearance="?attr/textAppearanceLabelSmall"
-            android:textColor="?attr/colorOnSurface"
-            android:textStyle="bold" />
+            android:textAppearance="?attr/textAppearanceLabelMedium"
+            android:textColor="?attr/colorOnSurfaceVariant" />
 
         <TextView
             android:id="@+id/user_anime_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:layout_marginTop="@dimen/sm_margin"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
             android:textColor="?attr/colorOnSurface"
             tools:text="5 Hours" />
 
@@ -82,7 +85,6 @@
         android:id="@+id/user_manga_total_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/lg_margin"
         android:layout_weight="1"
         android:clickable="true"
         android:contentDescription="@string/manga"
@@ -90,23 +92,24 @@
         android:foreground="?attr/selectableItemBackground"
         android:gravity="center"
         android:minHeight="48dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingVertical="@dimen/lg_margin">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/manga"
-            android:textAppearance="?attr/textAppearanceLabelSmall"
-            android:textColor="?attr/colorOnSurface"
-            android:textStyle="bold" />
+            android:textAppearance="?attr/textAppearanceLabelMedium"
+            android:textColor="?attr/colorOnSurfaceVariant" />
 
         <TextView
             android:id="@+id/user_manga_total"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:layout_marginTop="@dimen/sm_margin"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
             android:textColor="?attr/colorOnSurface"
             tools:text="50" />
 
@@ -116,7 +119,6 @@
         android:id="@+id/user_manga_chaps_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/lg_margin"
         android:layout_weight="1"
         android:clickable="true"
         android:contentDescription="@string/chapters"
@@ -124,23 +126,24 @@
         android:foreground="?attr/selectableItemBackground"
         android:gravity="center"
         android:minHeight="48dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingVertical="@dimen/lg_margin">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/chapters"
-            android:textAppearance="?attr/textAppearanceLabelSmall"
-            android:textColor="?attr/colorOnSurface"
-            android:textStyle="bold" />
+            android:textAppearance="?attr/textAppearanceLabelMedium"
+            android:textColor="?attr/colorOnSurfaceVariant" />
 
         <TextView
             android:id="@+id/user_manga_chaps"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:layout_marginTop="@dimen/sm_margin"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
             android:textColor="?attr/colorOnSurface"
             tools:text="200" />
 

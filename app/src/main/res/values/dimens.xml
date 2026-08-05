@@ -77,4 +77,8 @@
 
     <dimen name="search_icon_padding">12dp</dimen>
     <dimen name="search_view_text_padding">0dp</dimen>
+
+    <!-- Profile header -->
+    <dimen name="profile_header_height">240dp</dimen>
+    <dimen name="profile_avatar_size">64dp</dimen>
 </resources>
