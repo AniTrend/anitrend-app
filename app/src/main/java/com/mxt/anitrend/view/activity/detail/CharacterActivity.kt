@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.Toast
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -13,7 +15,7 @@ import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.pager.detail.CharacterPageAdapter
 import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget
 import com.mxt.anitrend.base.custom.view.widget.FavouriteWidgetRenderState
-import com.mxt.anitrend.databinding.ActivityPagerGenericBinding
+import com.mxt.anitrend.databinding.ActivityCharacterBinding
 import com.mxt.anitrend.domain.model.CharacterRecord
 import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.util.IntentBundleUtil
@@ -33,7 +35,7 @@ import java.util.Locale
  */
 class CharacterActivity : CommonActivity() {
 
-    private lateinit var binding: ActivityPagerGenericBinding
+    private lateinit var binding: ActivityCharacterBinding
 
     private var model: CharacterRecord? = null
     private var characterId: Long = 0
@@ -48,10 +50,13 @@ class CharacterActivity : CommonActivity() {
         // ActivityBase.onCreate -> IntentBundleUtil.checkIntentData.
         IntentBundleUtil(intent).checkIntentData(this)
 
-        binding = ActivityPagerGenericBinding.inflate(layoutInflater)
+        binding = ActivityCharacterBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setSupportActionBar(binding.customToolbar.toolbar)
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        binding.characterErrorRetry.setOnClickListener {
+            characterViewModel.load(characterId)
+        }
 
         if (intent.hasExtra(KeyUtil.arg_id)) {
             characterId = intent.getLongExtra(KeyUtil.arg_id, -1)
@@ -66,17 +71,14 @@ class CharacterActivity : CommonActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 characterViewModel.state.collect { state ->
                     when (state) {
-                        is CharacterViewModel.UiState.Loading -> { /* content loads below */ }
+                        is CharacterViewModel.UiState.Loading -> showLoadingState()
                         is CharacterViewModel.UiState.Success -> {
                             model = state.character
+                            showContentState()
+                            updateUI()
                         }
                         is CharacterViewModel.UiState.Error -> {
-                            NotifyUtil.makeText(
-                                this@CharacterActivity,
-                                state.message,
-                                R.drawable.ic_warning_white_18dp,
-                                Toast.LENGTH_LONG,
-                            ).show()
+                            showErrorState(state.message)
                         }
                     }
                 }
@@ -191,6 +193,33 @@ class CharacterActivity : CommonActivity() {
     override fun onResume() {
         super.onResume()
         characterViewModel.load(characterId)
+    }
+
+    private fun updateUI() {
+        model?.let { current ->
+            binding.characterDisplayName.text = current.name
+            binding.characterIdentityTier.visibility = VISIBLE
+        }
+    }
+
+    private fun showLoadingState() {
+        binding.characterStateOverlay.visibility = VISIBLE
+        binding.characterLoadingState.visibility = VISIBLE
+        binding.characterErrorState.visibility = GONE
+        binding.characterStateOverlay.contentDescription =
+            getString(R.string.character_loading_content_description)
+    }
+
+    private fun showContentState() {
+        binding.characterStateOverlay.visibility = GONE
+    }
+
+    private fun showErrorState(message: String) {
+        binding.characterStateOverlay.visibility = VISIBLE
+        binding.characterLoadingState.visibility = GONE
+        binding.characterErrorState.visibility = VISIBLE
+        binding.characterErrorText.text = message
+        binding.characterStateOverlay.contentDescription = message
     }
 
     override fun onDestroy() {

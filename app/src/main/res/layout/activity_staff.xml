@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Staff detail screen. A screen-specific layout with an M3 toolbar,
+     a text identity tier (staff name on a surface container, no image
+     since StaffRecord has none), pinned tabs, and a ViewPager2. The
+     content_main include preserves the page_container ID so the existing
+     StaffPageAdapter, TabLayoutMediator, and reloadViewPager work
+     unchanged. The staff On My List filter and share actions stay in
+     the overflow menu. -->
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:fitsSystemWindows="true"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorSurfaceContainerLowest">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorSurfaceContainerHighest"
+            app:titleTextAppearance="?attr/textAppearanceTitleLarge" />
+
+        <!-- Text identity tier: staff name on a surface container.
+             Shown when the activity ViewModel succeeds, hidden until then. -->
+        <LinearLayout
+            android:id="@+id/staff_identity_tier"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorSurfaceContainerHigh"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/spacing_xs"
+            android:paddingVertical="@dimen/mg_margin"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/staff_display_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textAppearance="?attr/textAppearanceHeadlineSmall"
+                android:textColor="?attr/colorOnSurface"
+                tools:text="Tomokazu Sugita" />
+        </LinearLayout>
+
+        <!-- Pinned tab row -->
+        <include
+            android:id="@+id/custom_tab"
+            layout="@layout/custom_tab" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- ViewPager content. Include preserves content_main / page_container IDs. -->
+    <include
+        android:id="@+id/content_main"
+        layout="@layout/content_main" />
+
+    <!-- State overlay (loading / error) covers the content area -->
+    <FrameLayout
+        android:id="@+id/staff_state_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/colorSurfaceContainerLowest"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:visibility="gone">
+
+        <!-- Loading state -->
+        <LinearLayout
+            android:id="@+id/staff_loading_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_xs">
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/staff_loading_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                app:indicatorSize="40dp"
+                app:trackThickness="4dp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/staff_loading_caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/lg_margin"
+                android:text="@string/staff_loading"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:textColor="?attr/colorOnSurfaceVariant" />
+        </LinearLayout>
+
+        <!-- Error state -->
+        <LinearLayout
+            android:id="@+id/staff_error_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_xs"
+            android:visibility="gone">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_emoji_sweat"
+                app:tint="?attr/colorOnSurfaceVariant" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/staff_error_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/lg_margin"
+                android:gravity="center"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                tools:text="Couldn\'t load staff" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/staff_error_retry"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/xl_margin"
+                android:minHeight="48dp"
+                android:text="@string/staff_retry" />
+        </LinearLayout>
+    </FrameLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.Toast
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -13,7 +15,7 @@ import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.pager.detail.StaffPageAdapter
 import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget
 import com.mxt.anitrend.base.custom.view.widget.FavouriteWidgetRenderState
-import com.mxt.anitrend.databinding.ActivityPagerGenericBinding
+import com.mxt.anitrend.databinding.ActivityStaffBinding
 import com.mxt.anitrend.domain.model.StaffRecord
 import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.extension.serializableExtra
@@ -37,7 +39,7 @@ import java.util.Locale
  */
 class StaffActivity : CommonActivity() {
 
-    private lateinit var binding: ActivityPagerGenericBinding
+    private lateinit var binding: ActivityStaffBinding
 
     private var model: StaffRecord? = null
     private var staffId: Long = 0
@@ -57,10 +59,13 @@ class StaffActivity : CommonActivity() {
         // ActivityBase.onCreate -> IntentBundleUtil.checkIntentData.
         IntentBundleUtil(intent).checkIntentData(this)
 
-        binding = ActivityPagerGenericBinding.inflate(layoutInflater)
+        binding = ActivityStaffBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setSupportActionBar(binding.customToolbar.toolbar)
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        binding.staffErrorRetry.setOnClickListener {
+            staffViewModel.load(staffId)
+        }
 
         if (intent.hasExtra(KeyUtil.arg_id)) {
             staffId = intent.getLongExtra(KeyUtil.arg_id, -1)
@@ -76,18 +81,14 @@ class StaffActivity : CommonActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 staffViewModel.state.collect { state ->
                     when (state) {
-                        is StaffViewModel.UiState.Loading -> { /* content loads below */ }
+                        is StaffViewModel.UiState.Loading -> showLoadingState()
                         is StaffViewModel.UiState.Success -> {
                             model = state.staff
+                            showContentState()
                             updateUI()
                         }
                         is StaffViewModel.UiState.Error -> {
-                            NotifyUtil.makeText(
-                                this@StaffActivity,
-                                state.message,
-                                R.drawable.ic_warning_white_18dp,
-                                Toast.LENGTH_LONG,
-                            ).show()
+                            showErrorState(state.message)
                         }
                     }
                 }
@@ -234,8 +235,29 @@ class StaffActivity : CommonActivity() {
 
     private fun updateUI() {
         model?.let { current ->
-            supportActionBar?.title = current.name
+            binding.staffDisplayName.text = current.name
+            binding.staffIdentityTier.visibility = VISIBLE
         }
+    }
+
+    private fun showLoadingState() {
+        binding.staffStateOverlay.visibility = VISIBLE
+        binding.staffLoadingState.visibility = VISIBLE
+        binding.staffErrorState.visibility = GONE
+        binding.staffStateOverlay.contentDescription =
+            getString(R.string.staff_loading_content_description)
+    }
+
+    private fun showContentState() {
+        binding.staffStateOverlay.visibility = GONE
+    }
+
+    private fun showErrorState(message: String) {
+        binding.staffStateOverlay.visibility = VISIBLE
+        binding.staffLoadingState.visibility = GONE
+        binding.staffErrorState.visibility = VISIBLE
+        binding.staffErrorText.text = message
+        binding.staffStateOverlay.contentDescription = message
     }
 
     private fun reloadViewPager() {

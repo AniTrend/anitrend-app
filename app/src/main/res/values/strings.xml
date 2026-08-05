@@ -772,6 +772,36 @@
     <!-- TalkBack description for the profile loading indicator -->
     <string name="profile_loading_content_description">Loading profile</string>
 
+    <!-- Studio detail strings -->
+    <!-- Loading caption shown while the studio is being fetched -->
+    <string name="studio_loading">Loading studio…</string>
+    <!-- Retry button shown on the studio error state -->
+    <string name="studio_retry">Retry</string>
+    <!-- Generic error shown when the studio request fails -->
+    <string name="studio_error_generic">Couldn\'t load this studio</string>
+    <!-- TalkBack description for the studio loading indicator -->
+    <string name="studio_loading_content_description">Loading studio</string>
+
+    <!-- Character detail strings -->
+    <!-- Loading caption shown while the character is being fetched -->
+    <string name="character_loading">Loading character…</string>
+    <!-- Retry button shown on the character error state -->
+    <string name="character_retry">Retry</string>
+    <!-- Generic error shown when the character request fails -->
+    <string name="character_error_generic">Couldn\'t load this character</string>
+    <!-- TalkBack description for the character loading indicator -->
+    <string name="character_loading_content_description">Loading character</string>
+
+    <!-- Staff detail strings -->
+    <!-- Loading caption shown while the staff member is being fetched -->
+    <string name="staff_loading">Loading staff…</string>
+    <!-- Retry button shown on the staff error state -->
+    <string name="staff_retry">Retry</string>
+    <!-- Generic error shown when the staff request fails -->
+    <string name="staff_error_generic">Couldn\'t load this staff member</string>
+    <!-- TalkBack description for the staff loading indicator -->
+    <string name="staff_loading_content_description">Loading staff</string>
+
     <!-- Image Preview error strings -->
     <string name="image_preview_error_character_image">The character image doesn\'t exist!</string>
     <string name="image_preview_error_profile_banner">The user has not set a banner image!</string>
