@@ -27,6 +27,7 @@ import com.google.gson.GsonBuilder
 import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.analytics.AnalyticsLogging
 import com.mxt.anitrend.analytics.contract.ISupportAnalytics
+import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.async.WebTokenRequest
 import com.mxt.anitrend.base.interfaces.dao.BoxQuery
 import com.mxt.anitrend.base.plugin.image.GlideImagePlugin
@@ -101,7 +102,6 @@ import com.mxt.anitrend.util.ConfigurationUtil
 import com.mxt.anitrend.util.JobSchedulerUtil
 import com.mxt.anitrend.util.NotificationUtil
 import com.mxt.anitrend.util.Settings
-import com.mxt.anitrend.view.activity.base.SettingsActivity.MaterialSettingsFragment
 import com.mxt.anitrend.view.fragment.detail.AboutFragment
 import com.mxt.anitrend.view.fragment.detail.BrowseReviewFragment
 import com.mxt.anitrend.view.fragment.detail.ChangelogFragment
@@ -141,8 +141,12 @@ import com.mxt.anitrend.view.fragment.search.MediaSearchFragment
 import com.mxt.anitrend.view.fragment.search.StaffSearchFragment
 import com.mxt.anitrend.view.fragment.search.StudioSearchFragment
 import com.mxt.anitrend.view.fragment.search.UserSearchFragment
+import com.mxt.anitrend.view.fragment.settings.CustomizeSettingsFragment
+import com.mxt.anitrend.view.fragment.settings.SettingsCategoryLegacyFragment
+import com.mxt.anitrend.view.fragment.settings.SettingsHubFragment
 import com.mxt.anitrend.view.fragment.youtube.YouTubeEmbedFragment
 import com.mxt.anitrend.view.sheet.BottomSheetGiphy
+import com.mxt.anitrend.viewmodel.AccountSettingsViewModel
 import com.mxt.anitrend.viewmodel.AiringListViewModel
 import com.mxt.anitrend.viewmodel.BrowseReviewViewModel
 import com.mxt.anitrend.viewmodel.CharacterActorsViewModel
@@ -150,6 +154,8 @@ import com.mxt.anitrend.viewmodel.CharacterFavouritesViewModel
 import com.mxt.anitrend.viewmodel.CharacterOverviewViewModel
 import com.mxt.anitrend.viewmodel.CharacterSearchViewModel
 import com.mxt.anitrend.viewmodel.CharacterViewModel
+import com.mxt.anitrend.viewmodel.CustomizePreferenceKeys
+import com.mxt.anitrend.viewmodel.CustomizeSettingsViewModel
 import com.mxt.anitrend.viewmodel.CommentViewModel
 import com.mxt.anitrend.viewmodel.FeedListViewModel
 import com.mxt.anitrend.viewmodel.GiphyViewModel
@@ -714,6 +720,7 @@ private val userFeatureModule = module {
         )
     }
     viewModel { LoginUserViewModel(userRepository = get()) }
+    viewModel { AccountSettingsViewModel(userRepository = get()) }
 }
 
 private val characterFeatureModule = module {
@@ -750,6 +757,16 @@ private val utilityFeatureModule = module {
             metadataProvider = get<MetadataProvider>(),
         )
     }
+    viewModel {
+        CustomizeSettingsViewModel(
+            settings = get(),
+            keys = CustomizePreferenceKeys(
+                themeKey = androidContext().getString(R.string.pref_key_app_theme),
+                languageKey = androidContext().getString(R.string.pref_key_selected_language),
+                listViewStyleKey = androidContext().getString(R.string.pref_key_list_view_style),
+            ),
+        )
+    }
     factory<File>(named("logFile")) {
         androidContext().logFile()
     }
@@ -767,7 +784,13 @@ private val utilityFeatureModule = module {
 
 private val fragmentModule = module {
     fragment {
-        MaterialSettingsFragment()
+        SettingsHubFragment()
+    }
+    fragment {
+        CustomizeSettingsFragment()
+    }
+    fragment {
+        SettingsCategoryLegacyFragment()
     }
     fragment {
         BottomSheetGiphy()

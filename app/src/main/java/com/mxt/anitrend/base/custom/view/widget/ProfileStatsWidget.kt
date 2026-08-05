@@ -14,7 +14,6 @@ import com.mxt.anitrend.R
 import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.databinding.WidgetProfileStatsBinding
 import com.mxt.anitrend.domain.user.model.UserStatisticsRecord
-import com.mxt.anitrend.extension.getCompatColor
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.view.activity.detail.MediaListActivity
 import java.util.Locale
@@ -64,12 +63,6 @@ constructor(
         binding.userMangaChaps.text = placeHolder
         binding.userAnimeTotal.text = placeHolder
         binding.userMangaTotal.text = placeHolder
-
-        val textColor = context.getCompatColor(R.color.white)
-        binding.userAnimeTime.setTextColor(textColor)
-        binding.userMangaChaps.setTextColor(textColor)
-        binding.userAnimeTotal.setTextColor(textColor)
-        binding.userMangaTotal.setTextColor(textColor)
 
         binding.userAnimeTotalContainer.setOnClickListener(this)
         binding.userAnimeTimeContainer.setOnClickListener(this)

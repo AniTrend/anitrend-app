@@ -60,6 +60,10 @@ internal fun Project.configureDependencies() {
     dependencies.implementation(libs.androidx.lifecycle.viewModelKtx)
     dependencies.implementation(libs.androidx.lifecycle.liveDataCoreKtx)
 
+    /** AndroidX Navigation 2 (Fragment/XML host inside SettingsActivity) */
+    dependencies.implementation(libs.androidx.navigation.fragmentKtx)
+    dependencies.implementation(libs.androidx.navigation.uiKtx)
+
     /** Koin AndroidX Dependency Injection */
     dependencies.implementation(libs.koin.core)
     dependencies.implementation(libs.koin.android)

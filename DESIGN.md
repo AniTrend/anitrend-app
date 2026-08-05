@@ -36,6 +36,14 @@ Legacy compat: `colorAccent` resolves to `colorPrimary`, `colorPrimaryDark` reso
 
 Dark and black themes keep the same role names. `AppThemeBlack` flattens surfaces to black, but containers still provide grouping. Do not invent new black-only color names.
 
+### Image overlay text
+
+Profile and media hero images may use white overlay text when a dark scrim is
+present beneath the text and the image cannot provide a stable surface token.
+The scrim is responsible for contrast across dynamic artwork and all three
+themes. Keep this exception limited to image-overlay content; regular screen
+text must continue using the M3 `colorOnSurface*` roles.
+
 ## 3. Typography
 
 All text uses the `TextAppearance.AniTrend.*` overrides. The family is condensed. Reference tokens through `?attr/textAppearance*` and never set raw `android:textSize` or `android:textColor`.

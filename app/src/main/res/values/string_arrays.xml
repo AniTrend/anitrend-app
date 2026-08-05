@@ -231,4 +231,74 @@
         <item>@string/pref_selected_theme_title_black</item>
     </string-array>
 
+    <!-- Account settings: profile color display labels. Keep order in sync with account_profile_color_values -->
+    <string-array name="account_profile_color_titles">
+        <item>Blue</item>
+        <item>Purple</item>
+        <item>Pink</item>
+        <item>Orange</item>
+        <item>Red</item>
+        <item>Green</item>
+        <item>Gray</item>
+    </string-array>
+
+    <!-- Account settings: profile color wire tokens sent to AniList. Do not translate -->
+    <string-array name="account_profile_color_values" translatable="false">
+        <item>blue</item>
+        <item>purple</item>
+        <item>pink</item>
+        <item>orange</item>
+        <item>red</item>
+        <item>green</item>
+        <item>gray</item>
+    </string-array>
+
+    <!-- Account settings: score format display labels. Keep order in sync with account_score_format_values -->
+    <string-array name="account_score_format_titles">
+        <item>100 point</item>
+        <item>10 point decimal</item>
+        <item>10 point</item>
+        <item>5 point</item>
+        <item>3 point</item>
+    </string-array>
+
+    <!-- Account settings: score format wire tokens sent to AniList. Do not translate -->
+    <string-array name="account_score_format_values" translatable="false">
+        <item>POINT_100</item>
+        <item>POINT_10_DECIMAL</item>
+        <item>POINT_10</item>
+        <item>POINT_5</item>
+        <item>POINT_3</item>
+    </string-array>
+
+    <!-- Account settings: preferred title language display labels. Keep order in sync with account_title_language_values -->
+    <string-array name="account_title_language_titles">
+        <item>Romaji</item>
+        <item>English</item>
+        <item>Native</item>
+        <item>Romaji (stylised)</item>
+        <item>English (stylised)</item>
+        <item>Native (stylised)</item>
+    </string-array>
+
+    <!-- Account settings: preferred title language wire tokens sent to AniList. Do not translate -->
+    <string-array name="account_title_language_values" translatable="false">
+        <item>ROMAJI</item>
+        <item>ENGLISH</item>
+        <item>NATIVE</item>
+        <item>ROMAJI_STYLISED</item>
+        <item>ENGLISH_STYLISED</item>
+        <item>NATIVE_STYLISED</item>
+    </string-array>
+
+    <!-- Account settings: list row order display labels. Keep order in sync with account_row_order_values -->
+    <string-array name="account_row_order_titles">
+        <item>Custom</item>
+    </string-array>
+
+    <!-- Account settings: list row order wire tokens sent to AniList. Do not translate -->
+    <string-array name="account_row_order_values" translatable="false">
+        <item>CUSTOM</item>
+    </string-array>
+
 </resources>

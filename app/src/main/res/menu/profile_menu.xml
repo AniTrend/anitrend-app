@@ -23,4 +23,13 @@
         android:icon="@drawable/ic_share_white_24dp"
         app:showAsAction="always"/>
 
+    <!-- Current-user only: visibility is gated in ProfileActivity so it never
+         appears when viewing another user's profile. Launches SettingsActivity. -->
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="103"
+        android:title="@string/title_activity_settings"
+        android:icon="@drawable/ic_build_grey_600_24dp"
+        app:showAsAction="never" />
+
 </menu>

@@ -757,6 +757,21 @@
     <string name="title_preview_unavailable">Preview unavailable</string>
     <string name="label_latest_release">Latest release</string>
 
+    <!-- Profile strings -->
+    <string name="profile_banner_description">Profile banner image</string>
+    <!-- TalkBack description for the profile avatar image -->
+    <string name="profile_avatar_description">Profile avatar image</string>
+    <!-- Loading caption shown while the profile is being fetched -->
+    <string name="profile_loading">Loading profile…</string>
+    <!-- Retry button shown on the profile error state -->
+    <string name="profile_retry">Retry</string>
+    <!-- Generic error shown when the profile request fails -->
+    <string name="profile_error_generic">Couldn\'t load this profile</string>
+    <!-- Error shown when the profile was opened without a valid user id or name -->
+    <string name="profile_error_no_user">This profile could not be found</string>
+    <!-- TalkBack description for the profile loading indicator -->
+    <string name="profile_loading_content_description">Loading profile</string>
+
     <!-- Image Preview error strings -->
     <string name="image_preview_error_character_image">The character image doesn\'t exist!</string>
     <string name="image_preview_error_profile_banner">The user has not set a banner image!</string>
@@ -833,4 +848,67 @@
 
     <string name="search_hint">Search</string>
     <string name="patreon">https://www.patreon.com/wax911</string>
+
+    <!-- ============================================================ -->
+    <!-- Account settings (Phase 2 UI lane)                          -->
+    <!-- Strings for the current-user AniList account settings slice. -->
+    <!-- ============================================================ -->
+
+    <!-- Settings hub category for the signed-in user's AniList account options -->
+    <string name="pref_header_account">Account</string>
+    <!-- Summary line under the Account settings hub category -->
+    <string name="pref_header_account_summary">Manage your AniList account profile and list preferences</string>
+
+    <!-- Section header for the profile fields on the account settings screen -->
+    <string name="account_section_profile">Profile</string>
+    <!-- Section header for the list and content fields on the account settings screen -->
+    <string name="account_section_lists_content">Lists &amp; content</string>
+
+    <!-- Label for the public about/bio field on the account settings screen -->
+    <string name="account_title_about">About</string>
+    <!-- Helper text under the about field explaining where it is shown -->
+    <string name="account_helper_about">Public bio shown on your AniList profile</string>
+    <!-- Label for the profile color picker on the account settings screen -->
+    <string name="account_title_profile_color">Profile color</string>
+    <!-- Helper text under the profile color picker -->
+    <string name="account_summary_profile_color">Accent color of your AniList profile</string>
+
+    <!-- Label for the list row order picker on the account settings screen -->
+    <string name="account_title_row_order">List row order</string>
+    <!-- Helper text under the list row order picker -->
+    <string name="account_summary_row_order">Order of entries in your anime and manga lists</string>
+    <!-- Label for the airing notifications switch on the account settings screen -->
+    <string name="account_title_airing_notifications">Airing notifications</string>
+    <!-- Helper text under the airing notifications switch -->
+    <string name="account_summary_airing_notifications">Get notified when a tracked series airs a new episode</string>
+    <!-- Label for the server-side adult content switch. Must read as an AniList account setting, not the local app toggle -->
+    <string name="account_title_display_adult_content">Adult content (AniList account)</string>
+    <!-- Helper text clarifying the adult content switch edits the server-side AniList account, separate from the app local setting -->
+    <string name="account_summary_display_adult_content">Controls whether adult content is shown on your AniList account. This is separate from the app\'s local adult content setting.</string>
+
+    <!-- Shown for the list row order value when the server has not set a custom order -->
+    <string name="account_row_order_default">Default</string>
+
+    <!-- Title of the dialog asking the user to confirm discarding unsaved account changes -->
+    <string name="account_dialog_discard_title">Discard changes?</string>
+    <!-- Message body of the discard changes confirmation dialog -->
+    <string name="account_dialog_discard_message">You have unsaved account changes. Discard them and close?</string>
+    <!-- Positive action of the discard changes dialog. Throws away the edits -->
+    <string name="account_action_discard">Discard</string>
+    <!-- Negative action of the discard changes dialog. Returns to the form -->
+    <string name="account_action_keep_editing">Keep editing</string>
+
+    <!-- Save button label shown while a save is in flight -->
+    <string name="account_saving">Saving…</string>
+    <!-- Loading indicator caption shown while account settings are being fetched -->
+    <string name="account_loading">Loading…</string>
+    <!-- Retry button shown next to the account settings error banner -->
+    <string name="account_action_retry">Retry</string>
+    <!-- Generic error shown when the account settings request fails and no specific message is available -->
+    <string name="account_error_generic">Couldn\'t complete the request</string>
+
+    <!-- TalkBack description for the account settings loading indicator -->
+    <string name="account_loading_content_description">Loading account settings</string>
+    <!-- TalkBack description for the account settings saving indicator -->
+    <string name="account_saving_content_description">Saving account settings</string>
 </resources>
