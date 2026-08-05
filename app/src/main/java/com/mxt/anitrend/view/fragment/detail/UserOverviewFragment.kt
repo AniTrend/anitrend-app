@@ -140,12 +140,6 @@ class UserOverviewFragment : Fragment() {
         showRingStats()
     }
 
-    /**
-     * Re-renders only the follow CTA from the ViewModel's committed follow state.
-     * Null means no committed record exists yet, so the server-loaded follow value
-     * on the loaded [model] stays the fallback. The loaded [User] is never mutated;
-     * a lightweight render-only model is pushed into the widget instead.
-     */
     private fun renderFollowCta(committedFollowState: Boolean?) {
         val user = model ?: return
         val isFollowing = committedFollowState ?: user.isFollowing

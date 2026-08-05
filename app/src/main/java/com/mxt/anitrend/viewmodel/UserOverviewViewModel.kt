@@ -12,6 +12,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -30,12 +31,13 @@ class UserOverviewViewModel(
     private val _state = MutableStateFlow<UiState>(UiState.Loading)
     val state: StateFlow<UiState> = _state.asStateFlow()
 
+    private val _isFollowing = MutableStateFlow<Boolean?>(null)
+
     /**
      * Committed follow state of the displayed profile, derived from the canonical
      * [UserStore]. Null means no committed record exists yet, so the server-loaded
      * follow value from the overview response stays the fallback.
      */
-    private val _isFollowing = MutableStateFlow<Boolean?>(null)
     val isFollowing: StateFlow<Boolean?> = _isFollowing.asStateFlow()
 
     /** Snapshot of the authenticated user used for render-only widget wiring. */
@@ -74,23 +76,19 @@ class UserOverviewViewModel(
         }
     }
 
-    /**
-     * Observes the displayed profile's committed follow state in [UserStore]. A previous
-     * observation is cancelled and replaced. Null records are ignored so the server-loaded
-     * follow value remains the fallback, and records for other users are rejected defensively.
-     */
     private fun observeCommittedFollowState(userId: Long) {
         if (userId <= 0L) return
         displayedUserId = userId
         _isFollowing.value = null
         followObservationJob?.cancel()
         followObservationJob = viewModelScope.launch {
-            userStore.observeUser(userId).collect { record ->
-                if (record == null || record.id != userId || userId != displayedUserId) {
-                    return@collect
+            userStore.observeUser(userId)
+                .filterNotNull()
+                .collect { record ->
+                    if (record.id == userId && userId == displayedUserId) {
+                        _isFollowing.value = record.isFollowing
+                    }
                 }
-                _isFollowing.value = record.isFollowing
-            }
         }
     }
 
