@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.Toast
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -12,7 +14,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget
 import com.mxt.anitrend.base.custom.view.widget.FavouriteWidgetRenderState
-import com.mxt.anitrend.databinding.ActivityFrameGenericBinding
+import com.mxt.anitrend.databinding.ActivityStudioBinding
 import com.mxt.anitrend.domain.model.StudioRecord
 import com.mxt.anitrend.navigation.extension.putScreenParam
 import com.mxt.anitrend.navigation.extension.screenParam
@@ -64,7 +66,7 @@ class StudioActivity : CommonActivity() {
         }
     }
 
-    private lateinit var binding: ActivityFrameGenericBinding
+    private lateinit var binding: ActivityStudioBinding
 
     private var model: StudioRecord? = null
     private var studioId: Long = 0
@@ -79,10 +81,13 @@ class StudioActivity : CommonActivity() {
         // ActivityBase.onCreate → IntentBundleUtil.checkIntentData.
         IntentBundleUtil(intent).checkIntentData(this)
 
-        binding = ActivityFrameGenericBinding.inflate(layoutInflater)
+        binding = ActivityStudioBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setSupportActionBar(binding.customToolbar.toolbar)
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        binding.studioErrorRetry.setOnClickListener {
+            studioViewModel.load(studioId)
+        }
 
         val args = fromIntent(intent)
         if (args == null) {
@@ -107,18 +112,14 @@ class StudioActivity : CommonActivity() {
                 launch {
                     studioViewModel.state.collect { state ->
                         when (state) {
-                            is StudioViewModel.UiState.Loading -> { /* content loads below */ }
+                            is StudioViewModel.UiState.Loading -> showLoadingState()
                             is StudioViewModel.UiState.Success -> {
                                 model = state.studio
+                                showContentState()
                                 updateUI()
                             }
                             is StudioViewModel.UiState.Error -> {
-                                NotifyUtil.makeText(
-                                    this@StudioActivity,
-                                    state.message,
-                                    R.drawable.ic_warning_white_18dp,
-                                    Toast.LENGTH_LONG,
-                                ).show()
+                                showErrorState(state.message)
                             }
                         }
                     }
@@ -231,6 +232,26 @@ class StudioActivity : CommonActivity() {
         model?.let { current ->
             supportActionBar?.title = current.name
         }
+    }
+
+    private fun showLoadingState() {
+        binding.studioStateOverlay.visibility = VISIBLE
+        binding.studioLoadingState.visibility = VISIBLE
+        binding.studioErrorState.visibility = GONE
+        binding.studioStateOverlay.contentDescription =
+            getString(R.string.studio_loading_content_description)
+    }
+
+    private fun showContentState() {
+        binding.studioStateOverlay.visibility = GONE
+    }
+
+    private fun showErrorState(message: String) {
+        binding.studioStateOverlay.visibility = VISIBLE
+        binding.studioLoadingState.visibility = GONE
+        binding.studioErrorState.visibility = VISIBLE
+        binding.studioErrorText.text = message
+        binding.studioStateOverlay.contentDescription = message
     }
 
     override fun onDestroy() {
