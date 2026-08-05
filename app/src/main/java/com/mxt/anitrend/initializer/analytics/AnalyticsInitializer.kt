@@ -6,6 +6,7 @@ import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.initializer.contract.AbstractInitializer
 import timber.log.Timber
 
+/** Plants the analytics logging tree after the Koin graph has been initialized. */
 class AnalyticsInitializer : AbstractInitializer<Unit>() {
     /**
      * Plants the analytics logging tree resolved from Koin, if the resolved
