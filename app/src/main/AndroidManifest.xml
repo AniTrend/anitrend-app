@@ -275,6 +275,8 @@
                 android:value="androidx.startup" />
             <meta-data  android:name="com.mxt.anitrend.initializer.scheduler.SchedulerInitializer"
                 android:value="androidx.startup" />
+            <meta-data  android:name="com.mxt.anitrend.initializer.analytics.AnalyticsInitializer"
+                android:value="androidx.startup" />
             <meta-data android:name="androidx.work.WorkManagerInitializer"
                 android:value="androidx.startup"
                 tools:node="remove" />
