@@ -351,11 +351,6 @@ class UserRepository(
         return updatedUser.toUserSettingsRecord()
     }
 
-    /**
-     * Merges the settings slice returned by the `UpdateUser` mutation into the
-     * cached current user, if one exists. The merge is a no-op when there is no
-     * cached user, and it only touches fields returned by the mutation.
-     */
     private fun applyServerUserSettingsToCachedUser(updatedUser: UpdateUserData.UpdateUser) {
         val cachedUser = boxQuery.currentUser ?: return
         updatedUser.applyUserSettingsTo(cachedUser)
