@@ -17,6 +17,7 @@ import com.mxt.anitrend.extension.getCompatColorAttr
 import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.model.entity.base.StatsRing
+import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.repository.UserRepository
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
@@ -100,6 +101,14 @@ class UserOverviewFragment : Fragment() {
             }
         }
 
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                userOverviewViewModel.isFollowing.collect { committedFollowState ->
+                    renderFollowCta(committedFollowState)
+                }
+            }
+        }
+
         loadUser()
     }
 
@@ -115,11 +124,34 @@ class UserOverviewFragment : Fragment() {
         binding.widgetStatusText.richMarkDown(user.about)
         binding.widgetStatus.visibility = View.GONE
 
+        binding.userFollowStateWidget.setListener { userId ->
+            userOverviewViewModel.toggleFollow(userId)
+        }
+        binding.userFollowStateWidget.setCurrentUser(userOverviewViewModel.currentUserSnapshot)
         binding.userFollowStateWidget.setUserModel(user)
+        // Reconcile the CTA with the currently committed follow state so a pre-existing
+        // store record is never lost when the independent state and follow-state
+        // collectors race: the follow-state collector may have consumed and rendered
+        // its emission before [model] was available to render it.
+        renderFollowCta(userOverviewViewModel.isFollowing.value)
         binding.userAboutPanelWidget.setFragmentActivity(activity)
         binding.userAboutPanelWidget.setUserId(user.id, lifecycle)
         loadPanelStats(user.id)
         showRingStats()
+    }
+
+    /**
+     * Re-renders only the follow CTA from the ViewModel's committed follow state.
+     * Null means no committed record exists yet, so the server-loaded follow value
+     * on the loaded [model] stays the fallback. The loaded [User] is never mutated;
+     * a lightweight render-only model is pushed into the widget instead.
+     */
+    private fun renderFollowCta(committedFollowState: Boolean?) {
+        val user = model ?: return
+        val isFollowing = committedFollowState ?: user.isFollowing
+        binding.userFollowStateWidget.setUserModel(
+            UserBase(name = user.name, isFollowing = isFollowing).apply { id = user.id },
+        )
     }
 
     private fun loadPanelStats(userId: Long) {
@@ -201,6 +233,9 @@ class UserOverviewFragment : Fragment() {
     }
 
     override fun onDestroyView() {
+        binding.userFollowStateWidget.setListener(null)
+        binding.userFollowStateWidget.setCurrentUser(null)
+        binding.userFollowStateWidget.onViewRecycled()
         binding.userAboutPanelWidget.onViewRecycled()
         super.onDestroyView()
         _binding = null
