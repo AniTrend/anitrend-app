@@ -103,7 +103,8 @@ class SettingsCategoryLegacyFragment :
                 is SettingsRow.Toggle -> bindToggleRow(sectionBinding.sectionContent, row)
             }
             if (index < visibleRows.lastIndex) {
-                addDivider(sectionBinding.sectionContent)
+                val divider = layoutInflater.inflate(R.layout.item_settings_divider, sectionBinding.sectionContent, false)
+                sectionBinding.sectionContent.addView(divider)
             }
         }
 
@@ -229,11 +230,6 @@ class SettingsCategoryLegacyFragment :
         rowBinding.rowSummary.isEnabled = false
         rowBinding.root.alpha = DISABLED_ALPHA
         container.addView(rowBinding.root)
-    }
-
-    private fun addDivider(container: LinearLayout) {
-        val divider = layoutInflater.inflate(R.layout.item_settings_divider, container, false)
-        container.addView(divider)
     }
 
     @DrawableRes

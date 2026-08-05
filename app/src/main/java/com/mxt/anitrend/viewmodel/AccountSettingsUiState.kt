@@ -1,7 +1,12 @@
 package com.mxt.anitrend.viewmodel
 
+import com.mxt.anitrend.domain.user.model.UserSettingsRecord
+import com.mxt.anitrend.domain.user.model.UserSettingsUpdate
 import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.util.KeyUtil
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.getAndUpdate
+import kotlinx.coroutines.flow.update
 
 /**
  * Constrained server-backed account setting values.
@@ -114,6 +119,13 @@ data class AccountSettingsUiState(
     val hasDirtyFields: Boolean
         get() = dirtyFields.isNotEmpty()
 
+    /**
+     * Entry point for building the form state from the cached current user.
+     *
+     * [from] is safe for a missing cache (defaults are used) and is the single
+     * factory used both at construction time and when reseeding the form after
+     * a refresh or discard.
+     */
     companion object {
 
         /**
@@ -135,4 +147,91 @@ data class AccountSettingsUiState(
             )
         }
     }
+}
+
+/**
+ * Updates the form through [MutableStateFlow.update], clearing
+ * [AccountSettingsUiState.errorMessage] unless the reducer returned the same
+ * instance (a no-op selection keeps the state fully unchanged).
+ */
+internal fun MutableStateFlow<AccountSettingsUiState>.updateDirty(
+    reduce: (AccountSettingsUiState) -> AccountSettingsUiState,
+) {
+    update { current ->
+        val reduced = reduce(current)
+        // A no-op selection returns the same instance; keep the state fully
+        // unchanged (dirty flags and error message) in that case.
+        if (reduced === current) reduced else reduced.copy(errorMessage = null)
+    }
+}
+
+/**
+ * Atomically transitions the form into the loading phase.
+ *
+ * The guard is folded into a single [MutableStateFlow.getAndUpdate] call, so
+ * concurrent [AccountSettingsViewModel.refresh] calls cannot both pass the
+ * check before either one publishes the loading state.
+ *
+ * @return true when this caller performed the transition (the state was not
+ * loading before); false when a refresh is already in flight.
+ */
+internal fun MutableStateFlow<AccountSettingsUiState>.beginRefreshIfIdle(): Boolean {
+    val previous = getAndUpdate { state ->
+        if (state.isLoading) state else state.copy(isLoading = true, errorMessage = null)
+    }
+    return !previous.isLoading
+}
+
+/**
+ * Builds the sparse `UpdateUser` wire payload containing only the dirty fields.
+ */
+internal fun AccountSettingsUiState.toSparseUserSettingsUpdate(): UserSettingsUpdate = UserSettingsUpdate(
+    about = if (AccountSettingsField.ABOUT in dirtyFields) about else null,
+    profileColor = if (AccountSettingsField.PROFILE_COLOR in dirtyFields) profileColor else null,
+    scoreFormat = if (AccountSettingsField.SCORE_FORMAT in dirtyFields) scoreFormat else null,
+    titleLanguage = if (AccountSettingsField.TITLE_LANGUAGE in dirtyFields) titleLanguage else null,
+    rowOrder = if (AccountSettingsField.ROW_ORDER in dirtyFields) rowOrder else null,
+    airingNotifications = if (AccountSettingsField.AIRING_NOTIFICATIONS in dirtyFields) airingNotifications else null,
+    displayAdultContent = if (AccountSettingsField.DISPLAY_ADULT_CONTENT in dirtyFields) displayAdultContent else null,
+)
+
+/**
+ * Reduces the form to the server record for the fields that were saved.
+ * Fields edited again while the save was in flight keep their current values
+ * unless they were part of the saved set; non-saved fields are untouched.
+ * Null record values preserve the current form value.
+ */
+internal fun AccountSettingsUiState.mergeServerRecord(
+    record: UserSettingsRecord,
+    savedFields: Set<AccountSettingsField>,
+): AccountSettingsUiState {
+    var next = copy(isSaving = false, errorMessage = null)
+    if (AccountSettingsField.ABOUT in savedFields) {
+        next = next.copy(about = record.about.orEmpty(), aboutDirty = false)
+    }
+    if (AccountSettingsField.PROFILE_COLOR in savedFields) {
+        next = next.copy(profileColor = record.profileColor ?: next.profileColor, profileColorDirty = false)
+    }
+    if (AccountSettingsField.SCORE_FORMAT in savedFields) {
+        next = next.copy(scoreFormat = record.scoreFormat ?: next.scoreFormat, scoreFormatDirty = false)
+    }
+    if (AccountSettingsField.TITLE_LANGUAGE in savedFields) {
+        next = next.copy(titleLanguage = record.titleLanguage ?: next.titleLanguage, titleLanguageDirty = false)
+    }
+    if (AccountSettingsField.ROW_ORDER in savedFields) {
+        next = next.copy(rowOrder = record.rowOrder ?: next.rowOrder, rowOrderDirty = false)
+    }
+    if (AccountSettingsField.AIRING_NOTIFICATIONS in savedFields) {
+        next = next.copy(
+            airingNotifications = record.airingNotifications ?: next.airingNotifications,
+            airingNotificationsDirty = false,
+        )
+    }
+    if (AccountSettingsField.DISPLAY_ADULT_CONTENT in savedFields) {
+        next = next.copy(
+            displayAdultContent = record.displayAdultContent ?: next.displayAdultContent,
+            displayAdultContentDirty = false,
+        )
+    }
+    return next
 }
