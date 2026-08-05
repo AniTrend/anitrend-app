@@ -671,7 +671,7 @@ private val mediaFeatureModule = module {
 
 private val userFeatureModule = module {
     viewModel { MainViewModel(userRepository = get()) }
-    viewModel { UserOverviewViewModel(userRepository = get()) }
+    viewModel { UserOverviewViewModel(userRepository = get(), toggleUserFollowInteractor = get(), userStore = get()) }
     viewModel {
         UserFeedViewModel(
             feedRepository = get(),
