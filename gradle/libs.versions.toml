@@ -34,7 +34,7 @@ jetbrains-kotlin = "2.4.10"
 jetbrains-kotlinx-coroutines = "1.11.0"
 jetbrains-kotlinx-serialization = "1.11.0"
 
-mpandroidchartVersion = "v3.1.0"
+mpandroidchartVersion = "2.2.4"
 noties-markwon = "4.6.2"
 org-mockito = "5.23.0"
 squareup-retrofit = "3.0.0"
