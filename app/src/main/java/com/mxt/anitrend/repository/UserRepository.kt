@@ -347,7 +347,7 @@ class UserRepository(
             throw RuntimeException(graphErrors.first().message ?: "GraphQL error")
         }
         val updatedUser = body.data?.updateUser ?: throw IllegalStateException("Empty response body")
-        mergeCachedUserSettings(updatedUser)
+        applyServerUserSettingsToCachedUser(updatedUser)
         return updatedUser.toUserSettingsRecord()
     }
 
@@ -356,7 +356,7 @@ class UserRepository(
      * cached current user, if one exists. The merge is a no-op when there is no
      * cached user, and it only touches fields returned by the mutation.
      */
-    private fun mergeCachedUserSettings(updatedUser: UpdateUserData.UpdateUser) {
+    private fun applyServerUserSettingsToCachedUser(updatedUser: UpdateUserData.UpdateUser) {
         val cachedUser = boxQuery.currentUser ?: return
         updatedUser.applyUserSettingsTo(cachedUser)
         saveCurrentUser(cachedUser)

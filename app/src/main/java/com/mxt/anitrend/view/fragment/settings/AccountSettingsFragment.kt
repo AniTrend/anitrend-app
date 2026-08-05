@@ -42,20 +42,16 @@ class AccountSettingsFragment : Fragment() {
     private data class ChoiceOptions(
         val titles: Array<String>,
         val values: Array<String>,
+        val fallbackLabel: String? = null,
     )
 
     private var binding: FragmentAccountSettingsBinding? = null
 
     private val accountSettingsViewModel: AccountSettingsViewModel by viewModel()
 
-    /** True while the ViewModel is loading or saving, used to gate input. */
-    private var isInputBlocked: Boolean = false
-
-    /** Guards the about field watcher while the form is being reseeded. */
-    private var isReseedingAbout: Boolean = false
-
-    /** Tracks the previous save state to detect a successful save transition. */
-    private var wasSavingOnLastRender: Boolean = false
+    private var isInputDisabledDuringLoadOrSave: Boolean = false
+    private var isBindingAboutTextFromState: Boolean = false
+    private var wasSavingInPreviousRender: Boolean = false
 
     private val backCallback = object : OnBackPressedCallback(false) {
         override fun handleOnBackPressed() {
@@ -86,6 +82,7 @@ class AccountSettingsFragment : Fragment() {
         ChoiceOptions(
             titles = resources.getStringArray(R.array.account_row_order_titles),
             values = resources.getStringArray(R.array.account_row_order_values),
+            fallbackLabel = getString(R.string.account_row_order_default),
         )
     }
 
@@ -144,7 +141,7 @@ class AccountSettingsFragment : Fragment() {
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
 
                 override fun afterTextChanged(s: Editable?) {
-                    if (isReseedingAbout) return
+                    if (isBindingAboutTextFromState) return
                     accountSettingsViewModel.setAbout(s?.toString().orEmpty())
                 }
             },
@@ -156,26 +153,26 @@ class AccountSettingsFragment : Fragment() {
         bindChoiceRowClick(binding.accountRowOrderRow, R.string.account_title_row_order, rowOrderChoices, { accountSettingsViewModel.state.value.rowOrder }) { accountSettingsViewModel.setRowOrder(it) }
 
         binding.accountAiringRow.setOnClickListener {
-            if (!isInputBlocked) binding.accountAiringSwitch.isChecked = !binding.accountAiringSwitch.isChecked
+            if (!isInputDisabledDuringLoadOrSave) binding.accountAiringSwitch.isChecked = !binding.accountAiringSwitch.isChecked
         }
         binding.accountAiringSwitch.setOnCheckedChangeListener { _, checked ->
             accountSettingsViewModel.setAiringNotifications(checked)
         }
         binding.accountAdultRow.setOnClickListener {
-            if (!isInputBlocked) binding.accountAdultSwitch.isChecked = !binding.accountAdultSwitch.isChecked
+            if (!isInputDisabledDuringLoadOrSave) binding.accountAdultSwitch.isChecked = !binding.accountAdultSwitch.isChecked
         }
         binding.accountAdultSwitch.setOnCheckedChangeListener { _, checked ->
             accountSettingsViewModel.setDisplayAdultContent(checked)
         }
 
         binding.accountSaveButton.setOnClickListener {
-            if (!isInputBlocked) accountSettingsViewModel.save()
+            if (!isInputDisabledDuringLoadOrSave) accountSettingsViewModel.save()
         }
         binding.accountCancelButton.setOnClickListener {
-            if (!isInputBlocked) confirmDiscardAndClose()
+            if (!isInputDisabledDuringLoadOrSave) confirmDiscardAndClose()
         }
         binding.accountErrorRetry.setOnClickListener {
-            if (!isInputBlocked) accountSettingsViewModel.refresh()
+            if (!isInputDisabledDuringLoadOrSave) accountSettingsViewModel.refresh()
         }
     }
 
@@ -187,7 +184,7 @@ class AccountSettingsFragment : Fragment() {
         onSelected: (String) -> Unit,
     ) {
         row.setOnClickListener {
-            if (!isInputBlocked) {
+            if (!isInputDisabledDuringLoadOrSave) {
                 val checkedIndex = options.values.indexOf(currentValue()).coerceAtLeast(0)
                 MaterialAlertDialogBuilder(requireContext())
                     .setTitle(titleRes)
@@ -205,14 +202,14 @@ class AccountSettingsFragment : Fragment() {
 
     private fun render(state: AccountSettingsUiState) {
         val binding = binding ?: return
-        isInputBlocked = state.isLoading || state.isSaving
+        isInputDisabledDuringLoadOrSave = state.isLoading || state.isSaving
 
         // About: reseed only when it actually differs, preserving the caret.
-        isReseedingAbout = true
+        isBindingAboutTextFromState = true
         if (binding.accountAboutEdit.text?.toString() != state.about) {
             binding.accountAboutEdit.setText(state.about)
         }
-        isReseedingAbout = false
+        isBindingAboutTextFromState = false
 
         renderSettingRows(binding, state)
 
@@ -246,7 +243,7 @@ class AccountSettingsFragment : Fragment() {
         renderChoiceRow(binding.accountProfileColorRow, binding.accountProfileColorValue, R.string.account_title_profile_color, profileColorChoices, state.profileColor)
         renderChoiceRow(binding.accountScoreFormatRow, binding.accountScoreFormatValue, R.string.pref_title_score_format, scoreFormatChoices, state.scoreFormat)
         renderChoiceRow(binding.accountTitleLanguageRow, binding.accountTitleLanguageValue, R.string.pref_title_title_language, titleLanguageChoices, state.titleLanguage)
-        renderChoiceRow(binding.accountRowOrderRow, binding.accountRowOrderValue, R.string.account_title_row_order, rowOrderChoices, state.rowOrder, getString(R.string.account_row_order_default))
+        renderChoiceRow(binding.accountRowOrderRow, binding.accountRowOrderValue, R.string.account_title_row_order, rowOrderChoices, state.rowOrder)
 
         // Switches. Detach/reattach to avoid the listener firing on reseed.
         binding.accountAiringSwitch.setOnCheckedChangeListener(null)
@@ -277,12 +274,11 @@ class AccountSettingsFragment : Fragment() {
         @androidx.annotation.StringRes titleRes: Int,
         options: ChoiceOptions,
         value: String?,
-        fallbackLabel: String? = null,
     ) {
         val index = options.values.indexOf(value)
         val label = when {
             index >= 0 -> options.titles[index]
-            fallbackLabel != null -> fallbackLabel
+            options.fallbackLabel != null -> options.fallbackLabel
             else -> options.titles[0.coerceIn(0, options.titles.lastIndex)]
         }
         valueView.text = label
@@ -298,7 +294,7 @@ class AccountSettingsFragment : Fragment() {
         state: AccountSettingsUiState,
     ) {
         // Action bar + field enabled state.
-        val editable = !isInputBlocked
+        val editable = !isInputDisabledDuringLoadOrSave
         binding.accountAboutEdit.isEnabled = editable
         binding.accountProfileColorRow.isEnabled = editable
         binding.accountScoreFormatRow.isEnabled = editable
@@ -316,12 +312,12 @@ class AccountSettingsFragment : Fragment() {
         backCallback.isEnabled = state.hasDirtyFields
 
         // Success snackbar: fire once when a save completes cleanly.
-        if (wasSavingOnLastRender && !state.isSaving && state.errorMessage == null) {
+        if (wasSavingInPreviousRender && !state.isSaving && state.errorMessage == null) {
             view?.let { root ->
                 Snackbar.make(root, R.string.text_changes_saved, Snackbar.LENGTH_SHORT).show()
             }
         }
-        wasSavingOnLastRender = state.isSaving
+        wasSavingInPreviousRender = state.isSaving
     }
 
     // ── dialogs and navigation ──
