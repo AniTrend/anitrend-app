@@ -57,8 +57,7 @@ class MediaFavouriteFragment : FragmentBaseList<MediaBase, ConnectionContainer<F
         )
 
         @VisibleForTesting
-        internal fun resolve(legacyId: Long, legacyType: String?): MediaFavouritesLegacyArgs =
-            MediaFavouritesLegacyArgs(userId = legacyId, mediaType = legacyType)
+        internal fun resolve(legacyId: Long, legacyType: String?): MediaFavouritesLegacyArgs = MediaFavouritesLegacyArgs(userId = legacyId, mediaType = legacyType)
 
         @JvmStatic
         fun newInstance(

@@ -20,7 +20,6 @@ import com.mxt.anitrend.view.fragment.group.MediaRecommendationsFragment
 import com.mxt.anitrend.view.fragment.group.MediaRelationFragment
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertNull
 import org.junit.Test
 
 /**

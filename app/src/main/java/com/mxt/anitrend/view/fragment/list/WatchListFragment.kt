@@ -81,8 +81,7 @@ class WatchListFragment :
         )
 
         @VisibleForTesting
-        internal fun resolve(legacyId: Long, legacyType: String?): MediaScreenParam =
-            MediaScreenParam(mediaId = legacyId, mediaType = legacyType)
+        internal fun resolve(legacyId: Long, legacyType: String?): MediaScreenParam = MediaScreenParam(mediaId = legacyId, mediaType = legacyType)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

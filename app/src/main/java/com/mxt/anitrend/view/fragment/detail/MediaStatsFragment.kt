@@ -101,7 +101,6 @@ class MediaStatsFragment : Fragment() {
             return MediaScreenParam(mediaId = legacyId, mediaType = legacyType)
         }
 
-
         @JvmStatic
         fun newInstance(args: Bundle): MediaStatsFragment = MediaStatsFragment().apply {
             arguments = args

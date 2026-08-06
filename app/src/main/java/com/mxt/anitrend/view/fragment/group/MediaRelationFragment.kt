@@ -68,7 +68,6 @@ class MediaRelationFragment : FragmentBaseList<RecyclerItem, ConnectionContainer
             return MediaScreenParam(mediaId = legacyId, mediaType = legacyType)
         }
 
-
         @JvmStatic
         fun newInstance(args: Bundle): MediaRelationFragment = MediaRelationFragment().apply {
             arguments = args

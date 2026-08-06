@@ -57,8 +57,7 @@ class MediaSearchFragment : FragmentBaseList<MediaBase, PageContainer<MediaBase>
         )
 
         @VisibleForTesting
-        internal fun resolve(legacyQuery: String?, legacyType: String?): SearchQueryLegacyArgs =
-            SearchQueryLegacyArgs(searchQuery = legacyQuery, mediaType = legacyType)
+        internal fun resolve(legacyQuery: String?, legacyType: String?): SearchQueryLegacyArgs = SearchQueryLegacyArgs(searchQuery = legacyQuery, mediaType = legacyType)
 
         @JvmStatic
         fun newInstance(

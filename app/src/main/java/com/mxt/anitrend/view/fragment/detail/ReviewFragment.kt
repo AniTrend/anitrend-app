@@ -74,7 +74,6 @@ class ReviewFragment : FragmentBaseList<ReviewRecord, PageContainer<ReviewRecord
             return MediaScreenParam(mediaId = legacyId, mediaType = legacyType)
         }
 
-
         @JvmStatic
         fun newInstance(args: Bundle): ReviewFragment = ReviewFragment().apply {
             arguments = args

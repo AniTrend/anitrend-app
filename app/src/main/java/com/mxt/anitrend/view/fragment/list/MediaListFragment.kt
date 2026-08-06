@@ -79,8 +79,7 @@ open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, MediaListC
         )
 
         @VisibleForTesting
-        internal fun resolve(legacyId: Long, legacyName: String?): UserScreenParam =
-            UserScreenParam(userId = legacyId, initialName = legacyName)
+        internal fun resolve(legacyId: Long, legacyName: String?): UserScreenParam = UserScreenParam(userId = legacyId, initialName = legacyName)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

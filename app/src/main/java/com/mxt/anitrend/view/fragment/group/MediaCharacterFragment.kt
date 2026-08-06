@@ -65,7 +65,6 @@ class MediaCharacterFragment : FragmentBaseList<RecyclerItem, ConnectionContaine
             return MediaScreenParam(mediaId = legacyId, mediaType = legacyType)
         }
 
-
         @JvmStatic
         fun newInstance(args: Bundle): MediaCharacterFragment = MediaCharacterFragment().apply {
             arguments = args

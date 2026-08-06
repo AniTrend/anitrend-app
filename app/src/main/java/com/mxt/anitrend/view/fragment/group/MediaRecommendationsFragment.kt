@@ -63,7 +63,6 @@ class MediaRecommendationsFragment : FragmentBaseList<RecommendationItemUiModel,
             return MediaScreenParam(mediaId = legacyId, mediaType = legacyType)
         }
 
-
         @JvmStatic
         fun newInstance(args: Bundle): MediaRecommendationsFragment = MediaRecommendationsFragment().apply {
             arguments = args
