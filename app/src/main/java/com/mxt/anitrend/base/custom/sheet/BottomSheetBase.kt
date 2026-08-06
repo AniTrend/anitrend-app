@@ -79,6 +79,8 @@ abstract class BottomSheetBase<T> :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Toolbar presentation state (string-resource ids), not navigation identity:
+        // intentionally kept on the legacy bundle channel like other presentation reads.
         arguments?.let { args ->
             mTitle = args.getInt(KeyUtil.arg_title)
             mText = args.getInt(KeyUtil.arg_text)

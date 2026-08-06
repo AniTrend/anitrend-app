@@ -19,6 +19,9 @@ class MediaBrowseActivity : CommonActivity() {
         setSupportActionBar(binding.customToolbar.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        // The browse destination has no identity of its own; the toolbar title and
+        // all browse filters travel through the legacy extras (transitional channel)
+        // until the fragment arguments migrate to typed parameters (Phase 2).
         intent.getStringExtra(KeyUtil.arg_activity_tag)?.let { tag ->
             supportActionBar?.title = MarkDownUtil.convert(this, tag)
         }

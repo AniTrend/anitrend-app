@@ -3,6 +3,7 @@ package com.mxt.anitrend.view.fragment.favourite
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -38,6 +39,27 @@ class MediaFavouriteFragment : FragmentBaseList<MediaBase, ConnectionContainer<F
     private val mediaFavouritesViewModel: MediaFavouritesViewModel by viewModel()
 
     companion object {
+        /**
+         * Documented legacy channel: the favourites host activity writes only legacy
+         * wire extras (arg_id / arg_mediaType). The media-type value is filter state,
+         * not identity, so both values stay on the legacy channel. Reads mirror the
+         * pre-refactor getters exactly (absent id resolves to 0, type to null).
+         */
+        fun fromBundle(bundle: Bundle?): MediaFavouritesLegacyArgs? = resolve(
+            legacyId = bundle?.getLong(KeyUtil.arg_id) ?: 0L,
+            legacyType = bundle?.getString(KeyUtil.arg_mediaType),
+        )
+
+        /** Exact legacy read result for the media favourites destination. */
+        data class MediaFavouritesLegacyArgs(
+            val userId: Long,
+            val mediaType: String?,
+        )
+
+        @VisibleForTesting
+        internal fun resolve(legacyId: Long, legacyType: String?): MediaFavouritesLegacyArgs =
+            MediaFavouritesLegacyArgs(userId = legacyId, mediaType = legacyType)
+
         @JvmStatic
         fun newInstance(
             params: Bundle,
@@ -55,9 +77,9 @@ class MediaFavouriteFragment : FragmentBaseList<MediaBase, ConnectionContainer<F
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let { args ->
-            userId = args.getLong(KeyUtil.arg_id)
-            mediaType = args.getString(KeyUtil.arg_mediaType)
+        fromBundle(arguments)?.let { args ->
+            userId = args.userId
+            mediaType = args.mediaType
         }
         val ctx = requireContext()
         mAdapter = MediaAdapter(ctx, true)

@@ -58,6 +58,10 @@ class BottomSheetComposer :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let { args ->
+            // Documented legacy channel: the composer bundle is a local draft and
+            // navigation bundle that predates the ScreenParam wire-key contract. The
+            // FeedComposerScreenParam (feed id, recipient identity, draft text) stays
+            // on KeyUtil.arg_model; draft text is local mutation state, not identity.
             composerParam = args.parcelable(KeyUtil.arg_model)
             requestType = args.getInt(KeyUtil.arg_request_type)
         }
@@ -206,7 +210,8 @@ class BottomSheetComposer :
 
         /**
          * Typed identity/draft contract for the composer. Prefer this over the legacy
-         * entity bridges once callers can supply identity-only values.
+         * entity bridges once callers can supply identity-only values. Kept on the
+         * documented legacy arg_model channel (see onCreate).
          */
         fun setComposerParam(composerParam: FeedComposerScreenParam): Builder {
             bundle.putParcelable(KeyUtil.arg_model, composerParam)

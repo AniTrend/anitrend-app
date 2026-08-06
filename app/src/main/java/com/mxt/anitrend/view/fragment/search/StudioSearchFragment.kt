@@ -2,6 +2,7 @@ package com.mxt.anitrend.view.fragment.search
 
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -26,6 +27,16 @@ class StudioSearchFragment : FragmentBaseList<StudioBase, PageContainer<StudioBa
     private val studioSearchViewModel: StudioSearchViewModel by viewModel()
 
     companion object {
+        /**
+         * Documented legacy channel: the search query is caller state, not identity.
+         * It stays on arg_search until a search-state model is designed. Reads mirror
+         * the pre-refactor getter exactly (absent resolves to null).
+         */
+        fun fromBundle(bundle: Bundle?): String? = resolveLegacyQuery(bundle?.getString(KeyUtil.arg_search))
+
+        @VisibleForTesting
+        internal fun resolveLegacyQuery(raw: String?): String? = raw
+
         @JvmStatic
         fun newInstance(args: Bundle): StudioSearchFragment = StudioSearchFragment().apply {
             arguments = args
@@ -35,9 +46,7 @@ class StudioSearchFragment : FragmentBaseList<StudioBase, PageContainer<StudioBa
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val ctx = requireContext()
-        arguments?.let { args ->
-            searchQuery = args.getString(KeyUtil.arg_search)
-        }
+        searchQuery = fromBundle(arguments)
         mColumnSize = R.integer.grid_list_x2
         isPager = true
         mAdapter = StudioAdapter(ctx)

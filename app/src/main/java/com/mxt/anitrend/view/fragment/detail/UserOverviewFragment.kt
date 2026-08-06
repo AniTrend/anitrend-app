@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.VisibleForTesting
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -18,6 +19,8 @@ import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.model.entity.base.StatsRing
 import com.mxt.anitrend.model.entity.base.UserBase
+import com.mxt.anitrend.navigation.extension.screenParam
+import com.mxt.anitrend.navigation.model.UserScreenParam
 import com.mxt.anitrend.repository.UserRepository
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
@@ -52,13 +55,32 @@ class UserOverviewFragment : Fragment() {
             fragment.arguments = args
             return fragment
         }
+
+        /**
+         * Resolves the user identity from the fragment arguments.
+         *
+         * The typed [UserScreenParam] wins when present; otherwise the legacy
+         * [KeyUtil.arg_id] / [KeyUtil.arg_userName] extras are bridged with their
+         * exact pre-refactor defaults (id 0, empty name).
+         */
+        fun fromBundle(bundle: Bundle?): UserScreenParam? = resolve(
+            typed = bundle?.screenParam<UserScreenParam>(),
+            legacyId = bundle?.getLong(KeyUtil.arg_id, 0L) ?: 0L,
+            legacyName = bundle?.getString(KeyUtil.arg_userName, "") ?: "",
+        )
+
+        @VisibleForTesting
+        internal fun resolve(typed: UserScreenParam?, legacyId: Long, legacyName: String): UserScreenParam? {
+            typed?.let { return it }
+            return UserScreenParam(userId = legacyId, initialName = legacyName)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let { args ->
-            userId = args.getLong(KeyUtil.arg_id, 0L)
-            userName = args.getString(KeyUtil.arg_userName, "")
+        fromBundle(arguments)?.let { args ->
+            userId = args.userId
+            userName = args.initialName.orEmpty()
         }
     }
 

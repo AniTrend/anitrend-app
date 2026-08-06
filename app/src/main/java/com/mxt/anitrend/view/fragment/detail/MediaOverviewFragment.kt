@@ -31,6 +31,9 @@ import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.model.entity.anilist.Genre
 import com.mxt.anitrend.model.entity.anilist.MediaTag
 import com.mxt.anitrend.model.entity.anilist.meta.MediaTrailer
+import com.mxt.anitrend.navigation.extension.screenParam
+import com.mxt.anitrend.navigation.model.MediaScreenParam
+import com.mxt.anitrend.navigation.model.TrailerScreenParam
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
@@ -43,6 +46,7 @@ import com.mxt.anitrend.viewmodel.MediaOverviewViewModel
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import androidx.annotation.VisibleForTesting
 
 /**
  * Created by max on 2017/12/31.
@@ -71,9 +75,11 @@ class MediaOverviewFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (arguments != null) {
-            mediaId = arguments?.getLong(KeyUtil.arg_id) ?: 0
-            mediaType = arguments?.getString(KeyUtil.arg_mediaType)
+        // Resolve the destination through the typed media parameter, falling back to
+        // the legacy wire keys forwarded by the pager/activity for pre-bridge callers.
+        fromBundle(arguments)?.let { args ->
+            mediaId = args.mediaId
+            mediaType = args.mediaType
         }
     }
 
@@ -152,8 +158,15 @@ class MediaOverviewFragment : Fragment() {
         val ctx = requireContext()
         val trailer = record.trailer?.let { MediaTrailer(id = it.id, site = it.site) }
         if (activity != null && trailer != null && CompatUtil.equals(trailer.site, "youtube")) {
+            // Identity-only navigation: the trailer entity is never parceled; only the
+            // stable trailer id and site travel in TrailerScreenParam.
             childFragmentManager.beginTransaction()
-                .replace(R.id.youtube_view, YouTubeEmbedFragment.newInstance(trailer))
+                .replace(
+                    R.id.youtube_view,
+                    YouTubeEmbedFragment.newInstance(
+                        TrailerScreenParam(trailerId = trailer.id.orEmpty(), site = trailer.site.orEmpty()),
+                    ),
+                )
                 .commit()
         } else {
             binding.youtubeView.visibility = View.GONE
@@ -367,6 +380,30 @@ class MediaOverviewFragment : Fragment() {
             val fragment = MediaOverviewFragment()
             fragment.arguments = args
             return fragment
+        }
+
+        /**
+         * Resolves the media identity from the fragment arguments.
+         *
+         * The typed [MediaScreenParam] wins when present and valid; otherwise the
+         * legacy [KeyUtil.arg_id] / [KeyUtil.arg_mediaType] extras are bridged with
+         * their exact raw values (0 or negative ids pass through, mirroring the
+         * pre-refactor getter). A typed param present but invalid falls back to the
+         * legacy raw values.
+         */
+        fun fromBundle(bundle: Bundle?): MediaScreenParam? = resolve(
+            typed = bundle?.screenParam<MediaScreenParam>(),
+            legacyId = bundle?.getLong(KeyUtil.arg_id) ?: 0L,
+            legacyType = bundle?.getString(KeyUtil.arg_mediaType),
+        )
+
+        @VisibleForTesting
+        internal fun resolve(typed: MediaScreenParam?, legacyId: Long, legacyType: String?): MediaScreenParam? {
+            typed?.let { param ->
+                if (param.mediaId > 0) return param
+                // Typed param present but invalid: fall through to the exact raw legacy values.
+            }
+            return MediaScreenParam(mediaId = legacyId, mediaType = legacyType)
         }
     }
 }

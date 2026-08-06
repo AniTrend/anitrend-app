@@ -6,12 +6,20 @@ import android.os.Bundle
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.mxt.anitrend.navigation.extension.asBundle
 import com.mxt.anitrend.navigation.extension.screenParam
+import com.mxt.anitrend.navigation.model.CharacterScreenParam
 import com.mxt.anitrend.navigation.model.CommentScreenParam
-import com.mxt.anitrend.navigation.model.FeedComposerScreenParam
+import com.mxt.anitrend.navigation.model.GiphyPreviewScreenParam
+import com.mxt.anitrend.navigation.model.ImagePreviewScreenParam
 import com.mxt.anitrend.navigation.model.MediaScreenParam
 import com.mxt.anitrend.navigation.model.ReviewScreenParam
+import com.mxt.anitrend.navigation.model.ScreenParam
+import com.mxt.anitrend.navigation.model.SettingsCategoryScreenParam
+import com.mxt.anitrend.navigation.model.StaffScreenParam
 import com.mxt.anitrend.navigation.model.StudioScreenParam
+import com.mxt.anitrend.navigation.model.TrailerScreenParam
+import com.mxt.anitrend.navigation.model.UserListScreenParam
 import com.mxt.anitrend.navigation.model.UserScreenParam
+import com.mxt.anitrend.navigation.model.VideoPlayerScreenParam
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test
@@ -61,25 +69,51 @@ class ScreenParamRoundTripTest {
     }
 
     @Test
-    fun feedComposerScreenParamBundleRoundTripRetainsAllFields() {
-        val original = FeedComposerScreenParam(
-            feedId = 12L,
-            draftText = "draft",
-            recipientId = 8L,
-            recipientName = "Raki",
-        )
-        assertEquals(original, original.asBundle().screenParam<FeedComposerScreenParam>())
+    fun characterScreenParamBundleRoundTripRetainsAllFields() {
+        val original = CharacterScreenParam(characterId = 123L)
+        assertEquals(original, original.asBundle().screenParam<CharacterScreenParam>())
     }
 
     @Test
-    fun feedComposerScreenParamNullFieldsSurviveRoundTrip() {
-        val original = FeedComposerScreenParam()
-        val restored = original.asBundle().screenParam<FeedComposerScreenParam>()
-        assertEquals(original, restored)
-        assertNull(restored?.feedId)
-        assertNull(restored?.draftText)
-        assertNull(restored?.recipientId)
-        assertNull(restored?.recipientName)
+    fun staffScreenParamBundleRoundTripRetainsAllFields() {
+        val original = StaffScreenParam(staffId = 456L)
+        assertEquals(original, original.asBundle().screenParam<StaffScreenParam>())
+    }
+
+    @Test
+    fun imagePreviewScreenParamBundleRoundTripRetainsAllFields() {
+        val original = ImagePreviewScreenParam(url = "https://example.com/image.png")
+        assertEquals(original, original.asBundle().screenParam<ImagePreviewScreenParam>())
+    }
+
+    @Test
+    fun giphyPreviewScreenParamBundleRoundTripRetainsAllFields() {
+        val original = GiphyPreviewScreenParam(url = "https://example.com/preview.gif")
+        assertEquals(original, original.asBundle().screenParam<GiphyPreviewScreenParam>())
+    }
+
+    @Test
+    fun videoPlayerScreenParamBundleRoundTripRetainsAllFields() {
+        val original = VideoPlayerScreenParam(url = "https://example.com/video.mp4")
+        assertEquals(original, original.asBundle().screenParam<VideoPlayerScreenParam>())
+    }
+
+    @Test
+    fun userListScreenParamBundleRoundTripRetainsAllFields() {
+        val original = UserListScreenParam(userId = 15L, requestType = 2)
+        assertEquals(original, original.asBundle().screenParam<UserListScreenParam>())
+    }
+
+    @Test
+    fun trailerScreenParamBundleRoundTripRetainsAllFields() {
+        val original = TrailerScreenParam(trailerId = "abc123", site = "youtube")
+        assertEquals(original, original.asBundle().screenParam<TrailerScreenParam>())
+    }
+
+    @Test
+    fun settingsCategoryScreenParamBundleRoundTripRetainsAllFields() {
+        val original = SettingsCategoryScreenParam(categoryId = "general")
+        assertEquals(original, original.asBundle().screenParam<SettingsCategoryScreenParam>())
     }
 
     @Test

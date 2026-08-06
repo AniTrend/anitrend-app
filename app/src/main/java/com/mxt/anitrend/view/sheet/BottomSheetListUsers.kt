@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -28,6 +29,9 @@ import com.mxt.anitrend.domain.user.interactor.ToggleUserFollowInteractor
 import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.model.entity.container.body.PageContainer
+import com.mxt.anitrend.navigation.extension.screenParam
+import com.mxt.anitrend.navigation.extension.screenParamKey
+import com.mxt.anitrend.navigation.model.UserListScreenParam
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.view.activity.detail.ProfileActivity
@@ -77,16 +81,40 @@ class BottomSheetListUsers :
         fun newInstance(bundle: Bundle): BottomSheetListUsers = BottomSheetListUsers().apply {
             arguments = bundle
         }
+
+        /**
+         * Resolves the user-list identity from the sheet arguments.
+         *
+         * The typed [UserListScreenParam] takes precedence only when valid (positive
+         * user id); otherwise the legacy [KeyUtil.arg_userId] / [KeyUtil.arg_request_type]
+         * extras are bridged with their exact raw values (absent resolves to 0,
+         * explicit zero or negative ids pass through, mirroring the pre-refactor
+         * getter). The model count stays on the legacy channel (toolbar presentation).
+         */
+        fun fromBundle(bundle: Bundle?): UserListScreenParam? = resolve(
+            typed = bundle?.screenParam<UserListScreenParam>(),
+            legacyUserId = bundle?.getLong(KeyUtil.arg_userId) ?: 0L,
+            legacyRequestType = bundle?.getInt(KeyUtil.arg_request_type) ?: 0,
+        )
+
+        @VisibleForTesting
+        internal fun resolve(typed: UserListScreenParam?, legacyUserId: Long, legacyRequestType: Int): UserListScreenParam? {
+            typed?.let { param ->
+                if (param.userId > 0) return param
+                // Typed param present but invalid: fall through to the exact raw legacy values.
+            }
+            return UserListScreenParam(userId = legacyUserId, requestType = legacyRequestType)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val ctx = requireContext()
-        arguments?.let { args ->
-            count = args.getInt(KeyUtil.arg_model)
-            userId = args.getLong(KeyUtil.arg_userId)
-            requestType = args.getInt(KeyUtil.arg_request_type)
+        fromBundle(arguments)?.let { args ->
+            userId = args.userId
+            requestType = args.requestType
         }
+        count = arguments?.getInt(KeyUtil.arg_model) ?: 0
         mAdapter = UserAdapter(
             context = ctx,
             currentUser = databaseHelper.currentUser,
@@ -358,7 +386,18 @@ class BottomSheetListUsers :
     ) = Unit
 
     class Builder : BottomSheetBuilder() {
-        override fun build(): BottomSheetBase<*> = newInstance(bundle)
+        override fun build(): BottomSheetBase<*> {
+            // Typed identity write at the production entry point, derived from the
+            // legacy setters; the legacy keys are retained for pre-migration readers.
+            bundle.putParcelable(
+                screenParamKey<UserListScreenParam>(),
+                UserListScreenParam(
+                    userId = bundle.getLong(KeyUtil.arg_userId, 0L),
+                    requestType = bundle.getInt(KeyUtil.arg_request_type, 0),
+                ),
+            )
+            return newInstance(bundle)
+        }
 
         fun setUserId(userId: Long): Builder {
             bundle.putLong(KeyUtil.arg_userId, userId)

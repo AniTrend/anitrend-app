@@ -16,6 +16,9 @@ import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.container.body.EdgeContainer
 import com.mxt.anitrend.model.entity.group.RecyclerItem
 import com.mxt.anitrend.util.CompatUtil
+import androidx.annotation.VisibleForTesting
+import com.mxt.anitrend.navigation.extension.screenParam
+import com.mxt.anitrend.navigation.model.MediaScreenParam
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.Settings
@@ -41,6 +44,31 @@ class MediaRelationFragment : FragmentBaseList<RecyclerItem, ConnectionContainer
     private val mediaRelationViewModel: MediaRelationViewModel by viewModel()
 
     companion object {
+        /**
+         * Resolves the media identity from the fragment arguments.
+         *
+         * The typed [MediaScreenParam] wins when present and valid; otherwise the
+         * legacy [KeyUtil.arg_id] / [KeyUtil.arg_mediaType] extras are bridged with
+         * their exact raw values (0 or negative ids pass through, mirroring the
+         * pre-refactor getter). A typed param present but invalid falls back to the
+         * legacy raw values.
+         */
+        fun fromBundle(bundle: Bundle?): MediaScreenParam? = resolve(
+            typed = bundle?.screenParam<MediaScreenParam>(),
+            legacyId = bundle?.getLong(KeyUtil.arg_id) ?: 0L,
+            legacyType = bundle?.getString(KeyUtil.arg_mediaType),
+        )
+
+        @VisibleForTesting
+        internal fun resolve(typed: MediaScreenParam?, legacyId: Long, legacyType: String?): MediaScreenParam? {
+            typed?.let { param ->
+                if (param.mediaId > 0) return param
+                // Typed param present but invalid: fall through to the exact raw legacy values.
+            }
+            return MediaScreenParam(mediaId = legacyId, mediaType = legacyType)
+        }
+
+
         @JvmStatic
         fun newInstance(args: Bundle): MediaRelationFragment = MediaRelationFragment().apply {
             arguments = args
@@ -50,9 +78,9 @@ class MediaRelationFragment : FragmentBaseList<RecyclerItem, ConnectionContainer
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val ctx = requireContext()
-        arguments?.let { args ->
-            mediaId = args.getLong(KeyUtil.arg_id)
-            mediaType = args.getString(KeyUtil.arg_mediaType)
+        fromBundle(arguments)?.let { args ->
+            mediaId = args.mediaId
+            mediaType = args.mediaType
         }
         mColumnSize = R.integer.grid_giphy_x3
         mAdapter = GroupSeriesAdapter(ctx)

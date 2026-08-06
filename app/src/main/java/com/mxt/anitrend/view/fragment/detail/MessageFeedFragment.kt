@@ -39,14 +39,20 @@ class MessageFeedFragment : FeedListFragment() {
                 arguments = args
             }
         }
+
+        /**
+         * Documented legacy channel: the message host activity and pager write only
+         * legacy wire extras (arg_userId, arg_message_type), so the identity read
+         * stays on the transitional channel. Reads mirror the pre-refactor getter
+         * exactly (absent resolves to 0).
+         */
+        fun fromBundle(bundle: Bundle?): Long = bundle?.getLong(KeyUtil.arg_userId) ?: 0L
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let { args ->
-            messageType = args.getInt(KeyUtil.arg_message_type)
-            userId = args.getLong(KeyUtil.arg_userId)
-        }
+        userId = fromBundle(arguments)
+        messageType = arguments?.getInt(KeyUtil.arg_message_type) ?: 0
         isMenuDisabled = true
         isFeed = false
     }

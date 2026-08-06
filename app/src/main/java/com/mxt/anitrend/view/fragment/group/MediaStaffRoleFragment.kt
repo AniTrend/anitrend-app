@@ -44,15 +44,20 @@ class MediaStaffRoleFragment : FragmentBaseList<RecyclerItem, ConnectionContaine
         fun newInstance(args: Bundle): MediaStaffRoleFragment = MediaStaffRoleFragment().apply {
             arguments = args
         }
+
+        /**
+         * Documented legacy channel: the hosting pager adapters (media/staff) write
+         * only legacy wire extras, so the owner-id read stays on the transitional
+         * channel. Reads mirror the pre-refactor getter exactly (absent resolves to 0).
+         */
+        fun fromBundle(bundle: Bundle?): Long = bundle?.getLong(KeyUtil.arg_id) ?: 0L
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val ctx = requireContext()
-        arguments?.let { args ->
-            id = args.getLong(KeyUtil.arg_id)
-            onList = args.serializable(KeyUtil.arg_onList)
-        }
+        id = fromBundle(arguments)
+        onList = arguments?.serializable(KeyUtil.arg_onList)
         mColumnSize = R.integer.grid_giphy_x3
         isPager = true
         mAdapter = GroupSeriesAdapter(ctx)

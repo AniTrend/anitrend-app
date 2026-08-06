@@ -27,6 +27,10 @@ class StudioFavouriteFragment : FragmentBaseList<StudioBase, ConnectionContainer
     private val studioFavouritesViewModel: StudioFavouritesViewModel by viewModel()
 
     companion object {
+        // Documented legacy channel: the favourites host activity writes only the
+        // legacy wire extras (arg_id), so the read stays on the transitional channel
+        // until the host navigates with typed parameters.
+
         @JvmStatic
         fun newInstance(params: Bundle): StudioFavouriteFragment {
             val args = Bundle(params)

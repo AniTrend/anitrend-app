@@ -2,8 +2,6 @@ package com.mxt.anitrend.navigation
 
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.base.UserBase
-import com.mxt.anitrend.navigation.extension.ARG_FEED_COMPOSER_SCREEN
-import com.mxt.anitrend.navigation.extension.screenParamKey
 import com.mxt.anitrend.navigation.model.FeedComposerScreenParam
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -11,18 +9,15 @@ import org.junit.Assert.assertNull
 import org.junit.Test
 
 /**
- * Focused tests for the feed composer screen parameter (ADR Phase 2 lane A).
+ * Focused tests for the feed composer draft argument.
  *
- * The composer argument is a dedicated identity/draft contract: it carries only stable
- * ids and display/draft strings and never a canonical [FeedList] or [UserBase]. The
- * real parcel round trip lives in [com.mxt.anitrend.navigation.ScreenParamRoundTripTest].
+ * The composer argument is a legacy parcelable local draft contract, NOT identity
+ * navigation: it lives on the legacy `arg_model` channel (BottomSheetComposer) and
+ * carries only stable ids and display/draft strings, never a canonical [FeedList]
+ * or [UserBase]. The real parcel round trip lives in instrumentation
+ * ([com.mxt.anitrend.navigation.FragmentBundleRoundTripTest]).
  */
 class FeedComposerScreenParamTest {
-
-    @Test
-    fun `composer param resolves to stable wire key`() {
-        assertEquals(ARG_FEED_COMPOSER_SCREEN, screenParamKey<FeedComposerScreenParam>())
-    }
 
     @Test
     fun `composer param holds only identity and draft values`() {
@@ -55,5 +50,12 @@ class FeedComposerScreenParamTest {
 
         assertFalse(fieldTypes.contains(FeedList::class.java))
         assertFalse(fieldTypes.contains(UserBase::class.java))
+    }
+
+    @Test
+    fun `composer param is not part of the ScreenParam family`() {
+        // The composer draft is a legacy parcelable local argument; it must not
+        // resolve through the ScreenParam wire-key contract.
+        assertFalse(FeedComposerScreenParam::class.java.interfaces.any { it.simpleName == "ScreenParam" })
     }
 }

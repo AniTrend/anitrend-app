@@ -3,6 +3,7 @@ package com.mxt.anitrend.view.fragment.group
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -14,6 +15,9 @@ import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.model.entity.group.RecyclerItem
+import com.mxt.anitrend.navigation.extension.screenParam
+import com.mxt.anitrend.navigation.model.CharacterScreenParam
+import com.mxt.anitrend.navigation.model.StaffScreenParam
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
@@ -55,13 +59,46 @@ class MediaFormatFragment : FragmentBaseList<RecyclerItem, ConnectionContainer<P
                 arguments = args
             }
         }
+
+        /**
+         * Resolves the owner identity from the fragment arguments.
+         *
+         * The format tab is shared by the character and staff detail pagers. The
+         * character pager forwards CharacterActivity's intent extras (typed
+         * [CharacterScreenParam] + legacy arg_id); the staff pager forwards
+         * StaffActivity's intent extras (typed [StaffScreenParam] + legacy arg_id)
+         * when present, or fresh legacy bundles otherwise. The typed identity of the
+         * hosting family wins when present and valid; otherwise the exact raw legacy
+         * id is used (0 or negative values pass through, mirroring the pre-refactor
+         * getter). requestType / mediaType / onList stay on the legacy pager channels.
+         */
+        fun fromBundle(bundle: Bundle?): Long? = resolve(
+            character = bundle?.screenParam<CharacterScreenParam>(),
+            staff = bundle?.screenParam<StaffScreenParam>(),
+            legacyId = bundle?.getLong(KeyUtil.arg_id) ?: 0L,
+        )
+
+        @VisibleForTesting
+        internal fun resolve(character: CharacterScreenParam?, staff: StaffScreenParam?, legacyId: Long): Long? {
+            character?.let { param ->
+                if (param.characterId > 0) return param.characterId
+                // Typed param present but invalid: fall through to the next source.
+            }
+            staff?.let { param ->
+                if (param.staffId > 0) return param.staffId
+                // Typed param present but invalid: fall through to the exact raw legacy value.
+            }
+            return legacyId
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let { args ->
             requestType = args.getInt(KeyUtil.arg_request_type)
-            id = args.getLong(KeyUtil.arg_id)
+        }
+        fromBundle(arguments)?.let { args ->
+            id = args
         }
         mColumnSize = R.integer.grid_giphy_x3
         isPager = true

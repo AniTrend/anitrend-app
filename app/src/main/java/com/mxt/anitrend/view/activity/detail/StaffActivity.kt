@@ -1,5 +1,6 @@
 package com.mxt.anitrend.view.activity.detail
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -7,6 +8,7 @@ import android.view.MenuItem
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.Toast
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -19,6 +21,9 @@ import com.mxt.anitrend.databinding.ActivityStaffBinding
 import com.mxt.anitrend.domain.model.StaffRecord
 import com.mxt.anitrend.extension.KoinExt
 import com.mxt.anitrend.extension.serializableExtra
+import com.mxt.anitrend.navigation.extension.putScreenParam
+import com.mxt.anitrend.navigation.extension.screenParam
+import com.mxt.anitrend.navigation.model.StaffScreenParam
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.IntentBundleUtil
@@ -38,6 +43,53 @@ import java.util.Locale
  * staff activity
  */
 class StaffActivity : CommonActivity() {
+
+    companion object {
+        fun newIntent(context: Context, param: StaffScreenParam): Intent = Intent(context, StaffActivity::class.java).apply {
+            putScreenParam(param)
+        }
+
+        /**
+         * Compatibility overload preserving the legacy id-based callers. Bridges into
+         * the typed parameter so navigation always uses [StaffScreenParam].
+         */
+        fun newIntent(context: Context, id: Long): Intent = newIntent(context, StaffScreenParam(staffId = id))
+
+        /**
+         * Resolves the typed parameter from the intent.
+         *
+         * The typed parameter is read first. Deep links (injected by
+         * [IntentBundleUtil.checkIntentData]) and pre-bridge callers still write the
+         * legacy [KeyUtil.arg_id] extra, so that value is bridged here into
+         * [StaffScreenParam] via [resolve]. The bridge is a scalar conversion point
+         * inside the activity, not a parcel path for the staff entity. The tri-state
+         * [KeyUtil.arg_onList] filter stays on the legacy transitional channel and is
+         * read directly by the activity.
+         *
+         * A null result keeps the pre-refactor invalid-ID behaviour: the activity
+         * renders its in-layout error state (via the ViewModel) instead of finishing.
+         */
+        fun fromIntent(intent: Intent): StaffScreenParam? = resolve(
+            typed = intent.screenParam<StaffScreenParam>(),
+            legacyId = intent.getLongExtra(KeyUtil.arg_id, -1),
+        )
+
+        /**
+         * Production parsing rule for the staff destination.
+         *
+         * A present typed parameter wins; it is accepted only when it carries a
+         * positive id. Otherwise the legacy [KeyUtil.arg_id] extra is bridged when
+         * positive. Missing or non-positive ids resolve to null so the activity
+         * keeps its default (invalid) state.
+         */
+        @VisibleForTesting
+        internal fun resolve(typed: StaffScreenParam?, legacyId: Long): StaffScreenParam? {
+            typed?.let { param ->
+                return if (param.staffId > 0) param else null
+            }
+            return if (legacyId > 0) StaffScreenParam(staffId = legacyId) else null
+        }
+    }
 
     private lateinit var binding: ActivityStaffBinding
 
@@ -67,8 +119,13 @@ class StaffActivity : CommonActivity() {
             staffViewModel.load(staffId)
         }
 
-        if (intent.hasExtra(KeyUtil.arg_id)) {
-            staffId = intent.getLongExtra(KeyUtil.arg_id, -1)
+        // Resolve the destination through the typed parameter, falling back to the
+        // legacy wire key for deep links and pre-bridge callers. A null result keeps
+        // the pre-refactor invalid-ID behaviour: the id stays 0 and the ViewModel
+        // renders the in-layout error state. The onList filter is read directly from
+        // the legacy transitional channel.
+        fromIntent(intent)?.let { args ->
+            staffId = args.staffId
         }
         onList = intent.serializableExtra(KeyUtil.arg_onList)
 

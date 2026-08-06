@@ -18,7 +18,7 @@ import com.mxt.anitrend.data.mapper.toPageInfo
 import com.mxt.anitrend.data.mapper.toUserBase
 import com.mxt.anitrend.domain.model.FeedItemUiModel
 import com.mxt.anitrend.domain.model.PageInfoRecord
-import com.mxt.anitrend.graphql.generated.ActivityType
+import com.mxt.anitrend.navigation.extension.NavigationArgs
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.util.CompatUtil
@@ -164,10 +164,10 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
         val args = arguments ?: return
         feedListViewModel.load(
             page = mScrollListener.currentPage,
-            pageLimit = args.getInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT),
-            isFollowing = if (args.containsKey(KeyUtil.arg_isFollowing)) args.getBoolean(KeyUtil.arg_isFollowing) else null,
-            type = args.getString(KeyUtil.arg_type)?.let { runCatching { ActivityType.valueOf(it) }.getOrNull() },
-            isMixed = if (args.containsKey(KeyUtil.arg_isMixed)) args.getBoolean(KeyUtil.arg_isMixed) else null,
+            pageLimit = NavigationArgs.intWithDefault(args.containsKey(KeyUtil.arg_page_limit), args.getInt(KeyUtil.arg_page_limit), KeyUtil.PAGING_LIMIT),
+            isFollowing = NavigationArgs.optionalBoolean(args.containsKey(KeyUtil.arg_isFollowing), args.getBoolean(KeyUtil.arg_isFollowing)),
+            type = NavigationArgs.resolveActivityType(args.getString(KeyUtil.arg_type)),
+            isMixed = NavigationArgs.optionalBoolean(args.containsKey(KeyUtil.arg_isMixed), args.getBoolean(KeyUtil.arg_isMixed)),
             currentUserId = currentUserId(),
         )
     }

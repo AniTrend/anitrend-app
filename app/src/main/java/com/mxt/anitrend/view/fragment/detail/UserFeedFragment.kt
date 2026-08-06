@@ -2,10 +2,13 @@ package com.mxt.anitrend.view.fragment.detail
 
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.mxt.anitrend.graphql.generated.ActivityType
+import com.mxt.anitrend.navigation.extension.NavigationArgs
+import com.mxt.anitrend.navigation.extension.screenParam
+import com.mxt.anitrend.navigation.model.UserScreenParam
 import com.mxt.anitrend.repository.UserRepository
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.Settings
@@ -36,16 +39,42 @@ class UserFeedFragment : FeedListFragment() {
                 arguments = args
             }
         }
+
+        /**
+         * Resolves the user identity from the fragment arguments.
+         *
+         * The typed [UserScreenParam] wins when present; otherwise the legacy
+         * containsKey semantics are preserved exactly: an explicit `arg_id` extra
+         * resolves by id, otherwise the `arg_userName` extra resolves by name.
+         */
+        fun fromBundle(bundle: Bundle?): UserScreenParam? = resolve(
+            typed = bundle?.screenParam<UserScreenParam>(),
+            hasLegacyId = bundle?.containsKey(KeyUtil.arg_id) == true,
+            legacyId = bundle?.getLong(KeyUtil.arg_id, 0L) ?: 0L,
+            legacyName = bundle?.getString(KeyUtil.arg_userName),
+        )
+
+        @VisibleForTesting
+        internal fun resolve(
+            typed: UserScreenParam?,
+            hasLegacyId: Boolean,
+            legacyId: Long,
+            legacyName: String?,
+        ): UserScreenParam? {
+            typed?.let { return it }
+            return if (hasLegacyId) {
+                UserScreenParam(userId = legacyId)
+            } else {
+                UserScreenParam(userId = 0L, initialName = legacyName)
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let { args ->
-            if (args.containsKey(KeyUtil.arg_id)) {
-                userId = args.getLong(KeyUtil.arg_id)
-            } else {
-                userName = args.getString(KeyUtil.arg_userName)
-            }
+        fromBundle(arguments)?.let { args ->
+            userId = args.userId
+            userName = args.initialName
         }
         isMenuDisabled = true
         isFeed = false
@@ -90,10 +119,10 @@ class UserFeedFragment : FeedListFragment() {
             userFeedViewModel.load(
                 userId = userId.toInt(),
                 page = mScrollListener.currentPage,
-                pageLimit = args.getInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT),
-                isFollowing = if (args.containsKey(KeyUtil.arg_isFollowing)) args.getBoolean(KeyUtil.arg_isFollowing) else null,
-                type = args.getString(KeyUtil.arg_type)?.let { runCatching { ActivityType.valueOf(it) }.getOrNull() },
-                isMixed = if (args.containsKey(KeyUtil.arg_isMixed)) args.getBoolean(KeyUtil.arg_isMixed) else null,
+                pageLimit = NavigationArgs.intWithDefault(args.containsKey(KeyUtil.arg_page_limit), args.getInt(KeyUtil.arg_page_limit), KeyUtil.PAGING_LIMIT),
+                isFollowing = NavigationArgs.optionalBoolean(args.containsKey(KeyUtil.arg_isFollowing), args.getBoolean(KeyUtil.arg_isFollowing)),
+                type = NavigationArgs.resolveActivityType(args.getString(KeyUtil.arg_type)),
+                isMixed = NavigationArgs.optionalBoolean(args.containsKey(KeyUtil.arg_isMixed), args.getBoolean(KeyUtil.arg_isMixed)),
                 currentUserId = currentUserId(),
             )
         }

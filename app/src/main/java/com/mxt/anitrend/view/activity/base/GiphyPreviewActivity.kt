@@ -17,6 +17,9 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.mxt.anitrend.R
 import com.mxt.anitrend.databinding.ActivityGiphyPreviewBinding
+import com.mxt.anitrend.navigation.extension.putScreenParam
+import com.mxt.anitrend.navigation.extension.screenParam
+import com.mxt.anitrend.navigation.model.GiphyPreviewScreenParam
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
@@ -26,18 +29,52 @@ class GiphyPreviewActivity :
     CommonActivity(),
     RequestListener<Drawable> {
 
-    data class Args(val modelUrl: String)
-
     companion object {
-        fun newIntent(context: Context, modelUrl: String): Intent = Intent(context, GiphyPreviewActivity::class.java).apply {
-            putExtra(KeyUtil.arg_model, modelUrl)
+        fun newIntent(context: Context, param: GiphyPreviewScreenParam): Intent = Intent(context, GiphyPreviewActivity::class.java).apply {
+            putScreenParam(param)
+            // Interim boundary: keep the legacy wire key alongside the typed param
+            // until all pre-bridge callers and fixtures migrate.
+            putExtra(KeyUtil.arg_model, param.url)
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
         }
 
-        fun fromIntent(intent: Intent): Args? = parseArgs(intent.getStringExtra(KeyUtil.arg_model))
+        /**
+         * Compatibility overload preserving the legacy URL-based callers. Bridges
+         * into the typed parameter so navigation always uses [GiphyPreviewScreenParam].
+         */
+        fun newIntent(context: Context, modelUrl: String): Intent = newIntent(context, GiphyPreviewScreenParam(url = modelUrl))
+
+        /**
+         * Resolves the typed parameter from the intent.
+         *
+         * The typed parameter is read first. Pre-bridge callers still write the
+         * legacy [KeyUtil.arg_model] extra, so that value is bridged here via
+         * [resolve]. The bridge is a scalar conversion point inside the activity,
+         * not a parcel path for any remote model.
+         */
+        fun fromIntent(intent: Intent): GiphyPreviewScreenParam? = resolve(
+            typed = intent.screenParam<GiphyPreviewScreenParam>(),
+            legacyUrl = intent.getStringExtra(KeyUtil.arg_model),
+        )
+
+        /**
+         * Production parsing rule for the Giphy preview destination.
+         *
+         * A present typed parameter wins; it is accepted only when it carries a
+         * non-empty url. Otherwise the legacy [KeyUtil.arg_model] extra is bridged
+         * via [parseUrl]. Blank strings remain valid, preserving the pre-refactor
+         * `isNullOrEmpty` contract.
+         */
+        @VisibleForTesting
+        internal fun resolve(typed: GiphyPreviewScreenParam?, legacyUrl: String?): GiphyPreviewScreenParam? {
+            typed?.let { param ->
+                return if (param.url.isNotEmpty()) param else null
+            }
+            return parseUrl(legacyUrl)
+        }
 
         @VisibleForTesting
-        internal fun parseArgs(raw: String?): Args? = if (!raw.isNullOrEmpty()) Args(raw) else null
+        internal fun parseUrl(raw: String?): GiphyPreviewScreenParam? = if (!raw.isNullOrEmpty()) GiphyPreviewScreenParam(url = raw) else null
     }
 
     private lateinit var binding: ActivityGiphyPreviewBinding
@@ -59,7 +96,7 @@ class GiphyPreviewActivity :
         if (args != null) {
             Glide
                 .with(this)
-                .load(args.modelUrl)
+                .load(args.url)
                 .listener(this)
                 .into(binding.previewImage)
         } else {

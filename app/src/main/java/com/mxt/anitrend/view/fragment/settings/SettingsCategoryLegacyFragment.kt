@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
+import androidx.annotation.VisibleForTesting
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -16,6 +17,8 @@ import com.mxt.anitrend.databinding.FragmentSettingsM3Binding
 import com.mxt.anitrend.databinding.ItemSettingsRowSwitchBinding
 import com.mxt.anitrend.databinding.ItemSettingsRowValueBinding
 import com.mxt.anitrend.databinding.ItemSettingsSectionCardBinding
+import com.mxt.anitrend.navigation.extension.screenParam
+import com.mxt.anitrend.navigation.model.SettingsCategoryScreenParam
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.JobSchedulerUtil
 import com.mxt.anitrend.util.Settings
@@ -82,8 +85,9 @@ class SettingsCategoryLegacyFragment :
         val sectionHost = binding.settingsSections
         sectionHost.removeAllViews()
 
+        val categoryId = fromBundle(arguments)?.categoryId ?: return
         val section = SettingsCategoryRegistry.sectionFor(
-            categoryId = arguments?.getString(SettingsCategoryRegistry.ARG_CATEGORY_ID),
+            categoryId = categoryId,
             isFirebaseVisible = FirebaseApp.getApps(requireContext()).isNotEmpty(),
             isUpdateChannelVisible = resources.getBoolean(R.bool.display_update_channel_pref),
             isAdultContentVisible = resources.getBoolean(R.bool.display_adult_content_pref),
@@ -248,5 +252,22 @@ class SettingsCategoryLegacyFragment :
     /** Alpha used to communicate disabled setting rows without hiding them. */
     companion object {
         private const val DISABLED_ALPHA = 0.38f
+
+        /**
+         * Resolves the settings category from the fragment arguments.
+         *
+         * The typed [SettingsCategoryScreenParam] wins when present; otherwise the
+         * legacy [SettingsCategoryRegistry.ARG_CATEGORY_ID] extra is bridged.
+         */
+        fun fromBundle(bundle: Bundle?): SettingsCategoryScreenParam? = resolve(
+            typed = bundle?.screenParam<SettingsCategoryScreenParam>(),
+            legacyCategoryId = bundle?.getString(SettingsCategoryRegistry.ARG_CATEGORY_ID),
+        )
+
+        @VisibleForTesting
+        internal fun resolve(typed: SettingsCategoryScreenParam?, legacyCategoryId: String?): SettingsCategoryScreenParam? {
+            typed?.let { return it }
+            return legacyCategoryId?.let { SettingsCategoryScreenParam(categoryId = it) }
+        }
     }
 }

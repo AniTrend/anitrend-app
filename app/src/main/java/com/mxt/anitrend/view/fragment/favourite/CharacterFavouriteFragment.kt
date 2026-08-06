@@ -31,6 +31,10 @@ class CharacterFavouriteFragment : FragmentBaseList<RecyclerItem, ConnectionCont
     private val characterFavouritesViewModel: CharacterFavouritesViewModel by viewModel()
 
     companion object {
+        // Documented legacy channel: the favourites host activity writes only the
+        // legacy wire extras (arg_id), so the read stays on the transitional channel
+        // until the host navigates with typed parameters.
+
         @JvmStatic
         fun newInstance(params: Bundle): CharacterFavouriteFragment {
             val args = Bundle(params)
