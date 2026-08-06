@@ -35,13 +35,20 @@ class StaffOverviewFragment : Fragment() {
         fun newInstance(args: Bundle): StaffOverviewFragment = StaffOverviewFragment().apply {
             arguments = args
         }
+
+        /**
+         * Documented legacy channel: the staff pager builds fresh bundles from the
+         * legacy arg_id/arg_onList extras (StaffActivity.buildPagerParams), so the
+         * identity read stays on the transitional channel. Reads mirror the
+         * pre-refactor getter exactly (absent resolves to 0).
+         */
+        fun fromBundle(bundle: Bundle?): Long = bundle?.getLong(KeyUtil.arg_id) ?: 0L
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let { args ->
-            staffId = args.getLong(KeyUtil.arg_id)
-        }
+        // Documented legacy channel: see fromBundle.
+        staffId = fromBundle(arguments)
     }
 
     override fun onCreateView(

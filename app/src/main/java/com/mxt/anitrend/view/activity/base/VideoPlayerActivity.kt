@@ -11,6 +11,9 @@ import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import com.mxt.anitrend.R
 import com.mxt.anitrend.databinding.ActivityVideoPlayerBinding
+import com.mxt.anitrend.navigation.extension.putScreenParam
+import com.mxt.anitrend.navigation.extension.screenParam
+import com.mxt.anitrend.navigation.model.VideoPlayerScreenParam
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.view.activity.CommonActivity
@@ -18,22 +21,52 @@ import timber.log.Timber
 
 class VideoPlayerActivity : CommonActivity() {
 
-    /**
-     * Navigation args for [VideoPlayerActivity]. Use [newIntent] to build and
-     * [fromIntent] to read. Wire format key: [KeyUtil.arg_model].
-     */
-    data class Args(val contentLink: String)
-
     companion object {
-        fun newIntent(context: Context, contentLink: String): Intent = Intent(context, VideoPlayerActivity::class.java).apply {
-            putExtra(KeyUtil.arg_model, contentLink)
+        fun newIntent(context: Context, param: VideoPlayerScreenParam): Intent = Intent(context, VideoPlayerActivity::class.java).apply {
+            putScreenParam(param)
+            // Interim boundary: keep the legacy wire key alongside the typed param
+            // until all pre-bridge callers and fixtures migrate.
+            putExtra(KeyUtil.arg_model, param.url)
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
         }
 
-        fun fromIntent(intent: Intent): Args? = parseArgs(intent.getStringExtra(KeyUtil.arg_model))
+        /**
+         * Compatibility overload preserving the legacy URL-based callers. Bridges
+         * into the typed parameter so navigation always uses [VideoPlayerScreenParam].
+         */
+        fun newIntent(context: Context, contentLink: String): Intent = newIntent(context, VideoPlayerScreenParam(url = contentLink))
+
+        /**
+         * Resolves the typed parameter from the intent.
+         *
+         * The typed parameter is read first. Pre-bridge callers still write the
+         * legacy [KeyUtil.arg_model] extra, so that value is bridged here via
+         * [resolve]. The bridge is a scalar conversion point inside the activity,
+         * not a parcel path for any remote model.
+         */
+        fun fromIntent(intent: Intent): VideoPlayerScreenParam? = resolve(
+            typed = intent.screenParam<VideoPlayerScreenParam>(),
+            legacyUrl = intent.getStringExtra(KeyUtil.arg_model),
+        )
+
+        /**
+         * Production parsing rule for the video player destination.
+         *
+         * A present typed parameter wins; it is accepted only when it carries a
+         * non-empty url. Otherwise the legacy [KeyUtil.arg_model] extra is bridged
+         * via [parseUrl]. Blank strings remain valid, preserving the pre-refactor
+         * `isNullOrEmpty` contract.
+         */
+        @VisibleForTesting
+        internal fun resolve(typed: VideoPlayerScreenParam?, legacyUrl: String?): VideoPlayerScreenParam? {
+            typed?.let { param ->
+                return if (param.url.isNotEmpty()) param else null
+            }
+            return parseUrl(legacyUrl)
+        }
 
         @VisibleForTesting
-        internal fun parseArgs(raw: String?): Args? = if (!raw.isNullOrEmpty()) Args(raw) else null
+        internal fun parseUrl(raw: String?): VideoPlayerScreenParam? = if (!raw.isNullOrEmpty()) VideoPlayerScreenParam(url = raw) else null
     }
 
     private var contentLink: String? = null
@@ -48,8 +81,8 @@ class VideoPlayerActivity : CommonActivity() {
 
         val args = fromIntent(intent)
         if (args != null) {
-            contentLink = args.contentLink
-            startPlayer(args.contentLink)
+            contentLink = args.url
+            startPlayer(args.url)
         } else {
             NotifyUtil.makeText(
                 this,

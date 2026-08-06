@@ -31,40 +31,27 @@ class MediaAnimeRoleFragment : FragmentBaseList<RecyclerItem, ConnectionContaine
     private var id: Long = 0
     private var onList: Boolean? = null
 
-    @KeyUtil.MediaType
-    private var mediaType: String? = null
-
-    @KeyUtil.RequestType
-    private var requestType: Int = 0
-
     private val mediaAnimeRoleViewModel: MediaAnimeRoleViewModel by viewModel()
 
     companion object {
         @JvmStatic
-        fun newInstance(
-            params: Bundle,
-            @KeyUtil.MediaType mediaType: String,
-            @KeyUtil.RequestType requestType: Int,
-        ): MediaAnimeRoleFragment {
-            val args =
-                Bundle(params).apply {
-                    putString(KeyUtil.arg_mediaType, mediaType)
-                    putInt(KeyUtil.arg_request_type, requestType)
-                }
-            return MediaAnimeRoleFragment().apply {
-                arguments = args
-            }
+        fun newInstance(params: Bundle): MediaAnimeRoleFragment = MediaAnimeRoleFragment().apply {
+            arguments = params
         }
+
+        /**
+         * Documented legacy channel: the hosting pager adapters (character/staff)
+         * write only legacy wire extras, so the owner-id read stays on the
+         * transitional channel. Reads mirror the pre-refactor getter exactly
+         * (absent resolves to 0).
+         */
+        fun fromBundle(bundle: Bundle?): Long = bundle?.getLong(KeyUtil.arg_id) ?: 0L
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let { args ->
-            requestType = args.getInt(KeyUtil.arg_request_type)
-            id = args.getLong(KeyUtil.arg_id)
-            onList = args.serializable(KeyUtil.arg_onList)
-            mediaType = args.getString(KeyUtil.arg_mediaType)
-        }
+        id = fromBundle(arguments)
+        onList = arguments?.serializable(KeyUtil.arg_onList)
         mColumnSize = R.integer.grid_giphy_x3
         isPager = true
         val ctx = requireContext()

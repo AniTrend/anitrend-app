@@ -7,6 +7,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -61,14 +62,23 @@ class BrowseReviewFragment : FragmentBaseList<ReviewRecord, PageContainer<Review
                 arguments = args
             }
         }
+
+        /**
+         * Documented legacy channel: the review media type is filter state, not
+         * identity. It stays on arg_mediaType (set per tab by ReviewPageAdapter)
+         * until a browse-review state model is designed. Reads mirror the
+         * pre-refactor getter exactly (absent → null).
+         */
+        fun fromBundle(bundle: Bundle?): String? = resolveLegacyType(bundle?.getString(KeyUtil.arg_mediaType))
+
+        @VisibleForTesting
+        internal fun resolveLegacyType(raw: String?): String? = raw
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val ctx = requireContext()
-        arguments?.let { args ->
-            mediaType = args.getString(KeyUtil.arg_mediaType)
-        }
+        mediaType = fromBundle(arguments)
         isPager = true
         mColumnSize = R.integer.single_list_x1
         isFilterableEnabled = true

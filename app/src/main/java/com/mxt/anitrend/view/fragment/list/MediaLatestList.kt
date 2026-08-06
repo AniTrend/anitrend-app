@@ -7,8 +7,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.MediaLatestAdapter
-import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.model.entity.base.MediaBase
+import com.mxt.anitrend.navigation.extension.NavigationArgs
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.Settings
@@ -63,20 +63,18 @@ class MediaLatestList : MediaBrowseFragment() {
     }
 
     override fun makeRequest() {
-        val type = requestArgs.getString(KeyUtil.arg_mediaType)?.let {
-            runCatching { MediaType.valueOf(it) }.getOrNull()
-        }
-        val sort = requestArgs.getString(KeyUtil.arg_sort)
+        val type = NavigationArgs.resolveMediaType(requestArgs.getString(KeyUtil.arg_mediaType))
+        val sort = NavigationArgs.optionalString(requestArgs.containsKey(KeyUtil.arg_sort), requestArgs.getString(KeyUtil.arg_sort))
         val isAdult: Boolean? =
             if (!settings.displayAdultContent) {
                 false
             } else {
-                requestArgs.takeIf { it.containsKey(KeyUtil.arg_isAdult) }?.getBoolean(KeyUtil.arg_isAdult)
+                NavigationArgs.optionalBoolean(requestArgs.containsKey(KeyUtil.arg_isAdult), requestArgs.getBoolean(KeyUtil.arg_isAdult))
             }
         mediaLatestViewModel.load(
             type = type,
             page = mScrollListener.currentPage,
-            pageLimit = requestArgs.getInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT),
+            pageLimit = NavigationArgs.intWithDefault(requestArgs.containsKey(KeyUtil.arg_page_limit), requestArgs.getInt(KeyUtil.arg_page_limit), KeyUtil.PAGING_LIMIT),
             sort = sort,
             isAdult = isAdult,
         )

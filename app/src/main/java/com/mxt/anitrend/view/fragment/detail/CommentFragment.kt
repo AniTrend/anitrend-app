@@ -67,11 +67,19 @@ class CommentFragment : FragmentBaseComment() {
         fun newInstance(params: Bundle): CommentFragment = CommentFragment().apply {
             arguments = params
         }
+
+        /**
+         * Documented legacy channel: the comment host activity (CommentActivity)
+         * writes only the legacy arg_id extra, so the thread-id read stays on the
+         * transitional channel. Reads mirror the pre-refactor getter exactly
+         * (absent resolves to 0).
+         */
+        fun fromBundle(bundle: Bundle?): Long = bundle?.getLong(KeyUtil.arg_id) ?: 0L
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        userActivityId = arguments?.getLong(KeyUtil.arg_id) ?: 0L
+        userActivityId = fromBundle(arguments)
         mColumnSize = R.integer.single_list_x1
         setInflateMenu(R.menu.custom_menu)
 

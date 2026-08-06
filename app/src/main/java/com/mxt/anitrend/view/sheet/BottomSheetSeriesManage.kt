@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -566,7 +567,18 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
     }
 
     companion object {
-        private const val ARG_MEDIA_BASE = "arg_media_base"
+        /**
+         * Entity navigation boundary (documented Phase 2 decision): this sheet
+         * edits the media-list entry state derived from the full [MediaBase]
+         * (mediaListEntry, titles, episode/volume counts), so an identity-only
+         * param cannot reconstruct it without a repository fetch. The only caller
+         * (MediaDialogUtil) is outside the navigation-migration scope, so the
+         * entity channel is kept as a compatibility bridge with its stable wire
+         * key unchanged. Revisit when callers can supply identity-only values and
+         * the sheet resolves entry state from a store.
+         */
+        @VisibleForTesting
+        internal const val ARG_MEDIA_BASE = "arg_media_base"
 
         fun newInstance(mediaBase: MediaBase): BottomSheetSeriesManage = BottomSheetSeriesManage().apply {
             arguments = Bundle().apply {

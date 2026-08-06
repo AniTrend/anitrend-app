@@ -3,6 +3,7 @@ package com.mxt.anitrend.view.fragment.search
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -38,6 +39,26 @@ class MediaSearchFragment : FragmentBaseList<MediaBase, PageContainer<MediaBase>
     private val mediaSearchViewModel: MediaSearchViewModel by viewModel()
 
     companion object {
+        /**
+         * Documented legacy channel: the search query is caller state, not identity.
+         * It stays on arg_search (with the media type for the media destination) until
+         * a search-state model is designed. Reads mirror the pre-refactor getters
+         * exactly (absent values resolve to null).
+         */
+        fun fromBundle(bundle: Bundle?): SearchQueryLegacyArgs? = resolve(
+            legacyQuery = bundle?.getString(KeyUtil.arg_search),
+            legacyType = bundle?.getString(KeyUtil.arg_mediaType),
+        )
+
+        /** Exact legacy read result for the media search destination. */
+        data class SearchQueryLegacyArgs(
+            val searchQuery: String?,
+            val mediaType: String?,
+        )
+
+        @VisibleForTesting
+        internal fun resolve(legacyQuery: String?, legacyType: String?): SearchQueryLegacyArgs = SearchQueryLegacyArgs(searchQuery = legacyQuery, mediaType = legacyType)
+
         @JvmStatic
         fun newInstance(
             bundle: Bundle,
@@ -55,9 +76,9 @@ class MediaSearchFragment : FragmentBaseList<MediaBase, PageContainer<MediaBase>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let { args ->
-            searchQuery = args.getString(KeyUtil.arg_search)
-            mediaType = args.getString(KeyUtil.arg_mediaType)
+        fromBundle(arguments)?.let { args ->
+            searchQuery = args.searchQuery
+            mediaType = args.mediaType
         }
         mColumnSize = R.integer.grid_giphy_x3
         isPager = true

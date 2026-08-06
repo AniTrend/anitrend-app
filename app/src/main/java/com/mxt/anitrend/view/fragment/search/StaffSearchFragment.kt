@@ -3,6 +3,7 @@ package com.mxt.anitrend.view.fragment.search
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -27,6 +28,16 @@ class StaffSearchFragment : FragmentBaseList<StaffBase, PageContainer<StaffBase>
     private val staffSearchViewModel: StaffSearchViewModel by viewModel()
 
     companion object {
+        /**
+         * Documented legacy channel: the search query is caller state, not identity.
+         * It stays on arg_search until a search-state model is designed. Reads mirror
+         * the pre-refactor getter exactly (absent resolves to null).
+         */
+        fun fromBundle(bundle: Bundle?): String? = resolveLegacyQuery(bundle?.getString(KeyUtil.arg_search))
+
+        @VisibleForTesting
+        internal fun resolveLegacyQuery(raw: String?): String? = raw
+
         @JvmStatic
         fun newInstance(args: Bundle): StaffSearchFragment = StaffSearchFragment().apply {
             arguments = args
@@ -36,9 +47,7 @@ class StaffSearchFragment : FragmentBaseList<StaffBase, PageContainer<StaffBase>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val ctx = requireContext()
-        arguments?.let { args ->
-            searchQuery = args.getString(KeyUtil.arg_search)
-        }
+        searchQuery = fromBundle(arguments)
         mColumnSize = R.integer.grid_giphy_x3
         isPager = true
         mAdapter = StaffAdapter(ctx)

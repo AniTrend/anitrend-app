@@ -7,6 +7,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -19,6 +20,7 @@ import com.mxt.anitrend.domain.medialist.model.MediaListRecord
 import com.mxt.anitrend.domain.model.MediaListItemUiModel
 import com.mxt.anitrend.domain.model.buildIncrementMediaProgressCommand
 import com.mxt.anitrend.graphql.generated.MediaType
+import com.mxt.anitrend.navigation.model.UserScreenParam
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
@@ -64,13 +66,29 @@ open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, MediaListC
                 arguments = args
             }
         }
+
+        /**
+         * Documented legacy channel: the media-list host activity (MediaListActivity)
+         * writes only legacy wire extras (arg_id, arg_userName, arg_mediaType,
+         * arg_statusIn), so the identity read stays on the transitional channel.
+         * Reads mirror the pre-refactor getters exactly (absent id resolves to 0).
+         */
+        fun fromBundle(bundle: Bundle?): UserScreenParam? = resolve(
+            legacyId = bundle?.getLong(KeyUtil.arg_id) ?: 0L,
+            legacyName = bundle?.getString(KeyUtil.arg_userName),
+        )
+
+        @VisibleForTesting
+        internal fun resolve(legacyId: Long, legacyName: String?): UserScreenParam = UserScreenParam(userId = legacyId, initialName = legacyName)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        fromBundle(arguments)?.let { args ->
+            userId = args.userId
+            userName = args.initialName
+        }
         arguments?.let { args ->
-            userId = args.getLong(KeyUtil.arg_id)
-            userName = args.getString(KeyUtil.arg_userName)
             statusIn = args.getString(KeyUtil.arg_statusIn)
             mediaType = args.getString(KeyUtil.arg_mediaType)
         }

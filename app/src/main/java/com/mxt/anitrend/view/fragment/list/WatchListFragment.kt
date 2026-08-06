@@ -2,6 +2,7 @@ package com.mxt.anitrend.view.fragment.list
 
 import android.os.Bundle
 import android.os.Parcelable
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import com.mxt.anitrend.BuildConfig
@@ -10,6 +11,7 @@ import com.mxt.anitrend.adapter.recycler.index.EpisodeAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentChannelBase
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.model.entity.anilist.ExternalLink
+import com.mxt.anitrend.navigation.model.MediaScreenParam
 import com.mxt.anitrend.repository.CrunchyrollRepository
 import com.mxt.anitrend.repository.MediaRepository
 import com.mxt.anitrend.util.KeyUtil
@@ -66,14 +68,31 @@ class WatchListFragment :
                 arguments = args
             }
         }
+
+        /**
+         * Documented legacy channel: the airing pager host (MainActivity) writes no
+         * typed media parameter, so the media identity stays on the legacy arg_id /
+         * arg_mediaType extras. Reads mirror the pre-refactor getters exactly
+         * (absent resolves to id 0 / null type).
+         */
+        fun fromBundle(bundle: Bundle?): MediaScreenParam? = resolve(
+            legacyId = bundle?.getLong(KeyUtil.arg_id) ?: 0L,
+            legacyType = bundle?.getString(KeyUtil.arg_mediaType),
+        )
+
+        @VisibleForTesting
+        internal fun resolve(legacyId: Long, legacyType: String?): MediaScreenParam = MediaScreenParam(mediaId = legacyId, mediaType = legacyType)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val ctx = requireContext()
-        arguments?.let { args ->
-            mediaId = args.getLong(KeyUtil.arg_id)
-            mediaType = args.getString(KeyUtil.arg_mediaType)
+        // Documented legacy channel: see fromBundle. The popular flag and the
+        // external-links list stay on the legacy channel (read by FragmentChannelBase)
+        // because they are presentation/data state, not destination identity.
+        fromBundle(arguments)?.let { args ->
+            mediaId = args.mediaId
+            mediaType = args.mediaType
         }
         mAdapter = EpisodeAdapter(ctx)
         mAdapter?.setClickListener(clickListener)

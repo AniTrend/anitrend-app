@@ -11,6 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
+import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.net.toUri
 import androidx.core.view.GravityCompat
@@ -47,7 +48,7 @@ import com.mxt.anitrend.extension.LAZY_MODE_UNSAFE
 import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.extension.requestNotificationsPermission
-import com.mxt.anitrend.extension.startNewActivity
+import com.mxt.anitrend.navigation.model.UserScreenParam
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
@@ -226,7 +227,7 @@ class MainActivity :
         }
 
         if (savedInstanceState == null) {
-            redirectShortcut = intent.getIntExtra(KeyUtil.arg_redirect, 0)
+            redirectShortcut = fromIntent(intent)
         }
         mNavigationView.itemBackground = getCompatDrawable(R.drawable.nav_background)
         mNavigationView.setNavigationItemSelectedListener(this)
@@ -641,10 +642,13 @@ class MainActivity :
             if (settings.isAuthenticated) {
                 val user = mainViewModel.currentUser()
                 if (user != null) {
-                    startNewActivity<ProfileActivity>(
-                        Bundle().apply {
-                            putString(KeyUtil.arg_userName, user.name)
-                        },
+                    // Name-only identity preserves the legacy redirect behaviour:
+                    // the profile resolves the current user by name, not by id.
+                    startActivity(
+                        ProfileActivity.newIntent(
+                            this,
+                            UserScreenParam(userId = 0L, initialName = user.name),
+                        ),
                     )
                 } else {
                     NotifyUtil
@@ -681,5 +685,31 @@ class MainActivity :
 
     companion object {
         private const val KEY_SEARCH_VIEW_QUERY = "SEARCH_VIEW_QUERY"
+
+        /**
+         * The legacy shortcut redirect channel is an int nav-item id targeting a
+         * drawer tab; it is launch state, not entity identity, so it stays a scalar
+         * wire value instead of a [com.mxt.anitrend.navigation.model.ScreenParam].
+         */
+        const val NO_REDIRECT = 0
+
+        /**
+         * Reads the legacy shortcut redirect target from the launch intent.
+         *
+         * Legacy launcher shortcuts (and pre-update persisted shortcut intents)
+         * write [KeyUtil.arg_redirect] with a drawer nav-item id. The value is
+         * normalized via [resolveRedirect]; the saved-state channel keeps using the
+         * same legacy key and is handled separately in onSaveInstanceState/onCreate.
+         */
+        fun fromIntent(intent: Intent): Int = resolveRedirect(intent.getIntExtra(KeyUtil.arg_redirect, NO_REDIRECT))
+
+        /**
+         * Production parsing rule for the shortcut redirect: only positive nav-item
+         * ids are valid redirects. Missing (0) or garbage (non-positive) values
+         * resolve to [NO_REDIRECT], preserving the pre-refactor default behaviour
+         * for absent extras and guarding against invalid nav ids.
+         */
+        @VisibleForTesting
+        internal fun resolveRedirect(rawRedirect: Int): Int = if (rawRedirect > 0) rawRedirect else NO_REDIRECT
     }
 }

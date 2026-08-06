@@ -2,6 +2,12 @@ package com.mxt.anitrend.ui
 
 import android.content.Context
 import android.content.Intent
+import com.mxt.anitrend.navigation.model.CharacterScreenParam
+import com.mxt.anitrend.navigation.model.GiphyPreviewScreenParam
+import com.mxt.anitrend.navigation.model.ImagePreviewScreenParam
+import com.mxt.anitrend.navigation.model.StaffScreenParam
+import com.mxt.anitrend.navigation.model.UserScreenParam
+import com.mxt.anitrend.navigation.model.VideoPlayerScreenParam
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.view.activity.base.AboutActivity
 import com.mxt.anitrend.view.activity.base.GiphyPreviewActivity
@@ -96,7 +102,7 @@ internal object EntryPointFixtures {
                 .setType("text/plain")
                 .putExtra(Intent.EXTRA_TEXT, "https://example.com")
         }),
-    )
+    ) + typedMigratedEntries(context)
 
     fun authenticated(context: Context): List<EntryPoint> = listOf(
         // SplashActivity is intentionally excluded from render smoke tests because it immediately routes onward and performs startup side effects rather than exposing a stable UI surface.
@@ -160,6 +166,34 @@ internal object EntryPointFixtures {
                 .setClass(it, SharedContentActivity::class.java)
                 .setType("text/plain")
                 .putExtra(Intent.EXTRA_TEXT, "https://example.com")
+        }),
+    ) + typedMigratedEntries(context)
+
+    /**
+     * Typed [ScreenParam] entry points for the Phase 1 migrated destinations.
+     * The legacy-extra entries above stay in place to prove the fromIntent bridge;
+     * these prove the typed navigation path end to end. MediaBrowseActivity is
+     * intentionally absent: it has no destination identity (its title and filters
+     * stay on the legacy extras until Phase 2).
+     */
+    private fun typedMigratedEntries(context: Context): List<EntryPoint> = listOf(
+        EntryPoint("ProfileActivity-typed", {
+            ProfileActivity.newIntent(context, UserScreenParam(userId = 1L, initialName = "test-user"))
+        }),
+        EntryPoint("CharacterActivity-typed", {
+            CharacterActivity.newIntent(context, CharacterScreenParam(characterId = 1L))
+        }),
+        EntryPoint("StaffActivity-typed", {
+            StaffActivity.newIntent(context, StaffScreenParam(staffId = 1L))
+        }),
+        EntryPoint("ImagePreviewActivity-typed", {
+            ImagePreviewActivity.newIntent(context, ImagePreviewScreenParam(url = "https://example.com/image.png"))
+        }),
+        EntryPoint("GiphyPreviewActivity-typed", {
+            GiphyPreviewActivity.newIntent(context, GiphyPreviewScreenParam(url = "https://example.com/preview.gif"))
+        }),
+        EntryPoint("VideoPlayerActivity-typed", {
+            VideoPlayerActivity.newIntent(context, VideoPlayerScreenParam(url = "https://example.com/video.mp4"))
         }),
     )
 }

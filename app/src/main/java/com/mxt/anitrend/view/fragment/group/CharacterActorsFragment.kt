@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -17,6 +18,8 @@ import com.mxt.anitrend.model.entity.base.StaffBase
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.container.body.EdgeContainer
 import com.mxt.anitrend.model.entity.group.RecyclerItem
+import com.mxt.anitrend.navigation.extension.screenParam
+import com.mxt.anitrend.navigation.model.CharacterScreenParam
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
@@ -46,13 +49,35 @@ class CharacterActorsFragment : FragmentBaseList<RecyclerItem, ConnectionContain
         fun newInstance(args: Bundle): CharacterActorsFragment = CharacterActorsFragment().apply {
             arguments = args
         }
+
+        /**
+         * Resolves the character identity from the fragment arguments.
+         *
+         * The typed [CharacterScreenParam] wins when present and valid; otherwise the
+         * legacy [KeyUtil.arg_id] extra is bridged with its exact raw value (0 or
+         * negative ids pass through, mirroring the pre-refactor getter).
+         */
+        fun fromBundle(bundle: Bundle?): CharacterScreenParam? = resolve(
+            typed = bundle?.screenParam<CharacterScreenParam>(),
+            legacyId = bundle?.getLong(KeyUtil.arg_id) ?: 0L,
+        )
+
+        @VisibleForTesting
+        internal fun resolve(typed: CharacterScreenParam?, legacyId: Long): CharacterScreenParam? {
+            typed?.let { param ->
+                if (param.characterId > 0) return param
+                // Typed param present but invalid: fall through to the exact raw legacy value.
+            }
+            return CharacterScreenParam(characterId = legacyId)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val args = arguments
-        if (args != null) {
-            id = args.getLong(KeyUtil.arg_id)
+        // Resolve the destination through the typed character parameter, falling back
+        // to the legacy wire key forwarded by the pager/activity for pre-bridge callers.
+        fromBundle(arguments)?.let { args ->
+            id = args.characterId
         }
         mColumnSize = R.integer.grid_giphy_x3
         isPager = true

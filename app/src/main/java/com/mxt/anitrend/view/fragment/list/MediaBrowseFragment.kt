@@ -13,7 +13,7 @@ import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.MediaAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
 import com.mxt.anitrend.extension.parcelable
-import com.mxt.anitrend.graphql.generated.MediaType
+import com.mxt.anitrend.navigation.extension.NavigationArgs
 import com.mxt.anitrend.model.entity.anilist.Genre
 import com.mxt.anitrend.model.entity.anilist.MediaTag
 import com.mxt.anitrend.model.entity.base.MediaBase
@@ -297,34 +297,37 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
     }
 
     override fun makeRequest() {
-        val type = requestArgs.getString(KeyUtil.arg_mediaType)?.let {
-            runCatching { MediaType.valueOf(it) }.getOrNull()
-        }
+        // All filter reads go through NavigationArgs so the exact containsKey /
+        // null-versus-empty semantics are captured in production helpers and are
+        // JVM-testable. The browse destination has no stable identity of its own;
+        // every value stays on the legacy bundle channel until a Phase 2+ browse
+        // configuration model is introduced.
+        val type = NavigationArgs.resolveMediaType(requestArgs.getString(KeyUtil.arg_mediaType))
         val isAdult: Boolean? =
             if (!settings.displayAdultContent) {
                 false
             } else {
-                requestArgs.takeIf { it.containsKey(KeyUtil.arg_isAdult) }?.getBoolean(KeyUtil.arg_isAdult)
+                NavigationArgs.optionalBoolean(requestArgs.containsKey(KeyUtil.arg_isAdult), requestArgs.getBoolean(KeyUtil.arg_isAdult))
             }
 
         // Bundle values are explicit caller intent. Settings only provide fallback defaults
         // when filtering is enabled and the caller did not provide that query value.
         val season =
-            requestArgs.takeIf { it.containsKey(KeyUtil.arg_season) }?.getString(KeyUtil.arg_season)
+            NavigationArgs.optionalString(requestArgs.containsKey(KeyUtil.arg_season), requestArgs.getString(KeyUtil.arg_season))
         var format =
-            requestArgs.takeIf { it.containsKey(KeyUtil.arg_format) }?.getString(KeyUtil.arg_format)
+            NavigationArgs.optionalString(requestArgs.containsKey(KeyUtil.arg_format), requestArgs.getString(KeyUtil.arg_format))
         var seasonYear =
-            requestArgs.takeIf { it.containsKey(KeyUtil.arg_seasonYear) }?.getInt(KeyUtil.arg_seasonYear)
+            NavigationArgs.optionalInt(requestArgs.containsKey(KeyUtil.arg_seasonYear), requestArgs.getInt(KeyUtil.arg_seasonYear))
         var startDateLike =
-            requestArgs.takeIf { it.containsKey(KeyUtil.arg_startDateLike) }?.getString(KeyUtil.arg_startDateLike)
+            NavigationArgs.optionalString(requestArgs.containsKey(KeyUtil.arg_startDateLike), requestArgs.getString(KeyUtil.arg_startDateLike))
         var status =
-            requestArgs.takeIf { it.containsKey(KeyUtil.arg_status) }?.getString(KeyUtil.arg_status)
+            NavigationArgs.optionalString(requestArgs.containsKey(KeyUtil.arg_status), requestArgs.getString(KeyUtil.arg_status))
         var genres: List<String>? =
-            requestArgs.takeIf { it.containsKey(KeyUtil.arg_genres) }?.getStringArrayList(KeyUtil.arg_genres)
+            NavigationArgs.optionalStringList(requestArgs.containsKey(KeyUtil.arg_genres), requestArgs.getStringArrayList(KeyUtil.arg_genres))
         var tags: List<String>? =
-            requestArgs.takeIf { it.containsKey(KeyUtil.arg_tags) }?.getStringArrayList(KeyUtil.arg_tags)
+            NavigationArgs.optionalStringList(requestArgs.containsKey(KeyUtil.arg_tags), requestArgs.getStringArrayList(KeyUtil.arg_tags))
         var sort =
-            requestArgs.takeIf { it.containsKey(KeyUtil.arg_sort) }?.getString(KeyUtil.arg_sort)
+            NavigationArgs.optionalString(requestArgs.containsKey(KeyUtil.arg_sort), requestArgs.getString(KeyUtil.arg_sort))
 
         if (isFilterableEnabled) {
             if (mediaBrowseUtil?.isBasicFilter != true) {
@@ -361,7 +364,7 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
         mediaBrowseViewModel.load(
             type = type,
             page = mScrollListener.currentPage,
-            pageLimit = requestArgs.getInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT),
+            pageLimit = NavigationArgs.intWithDefault(requestArgs.containsKey(KeyUtil.arg_page_limit), requestArgs.getInt(KeyUtil.arg_page_limit), KeyUtil.PAGING_LIMIT),
             season = season,
             sort = sort,
             isAdult = isAdult,

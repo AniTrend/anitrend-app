@@ -6,6 +6,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -15,6 +16,8 @@ import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
+import com.mxt.anitrend.navigation.extension.screenParam
+import com.mxt.anitrend.navigation.model.StudioScreenParam
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
@@ -40,13 +43,34 @@ class StudioMediaFragment : FragmentBaseList<MediaBase, ConnectionContainer<Page
         fun newInstance(args: Bundle): StudioMediaFragment = StudioMediaFragment().apply {
             arguments = args
         }
+
+        /**
+         * Resolves the studio identity from the fragment arguments.
+         *
+         * The typed [StudioScreenParam] wins when present and valid; otherwise the
+         * legacy [KeyUtil.arg_id] extra is bridged with its exact raw value (0 or
+         * negative ids pass through, mirroring the pre-refactor getter).
+         */
+        fun fromBundle(bundle: Bundle?): Long? = resolve(
+            typed = bundle?.screenParam<StudioScreenParam>(),
+            legacyId = bundle?.getLong(KeyUtil.arg_id) ?: 0L,
+        )
+
+        @VisibleForTesting
+        internal fun resolve(typed: StudioScreenParam?, legacyId: Long): Long? {
+            typed?.let { param ->
+                if (param.studioId > 0) return param.studioId
+                // Typed param present but invalid: fall through to the legacy raw value.
+            }
+            return legacyId
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val ctx = requireContext()
-        arguments?.let { args ->
-            id = args.getLong(KeyUtil.arg_id)
+        fromBundle(arguments)?.let { args ->
+            id = args
         }
         mColumnSize = R.integer.grid_giphy_x3
         isPager = true

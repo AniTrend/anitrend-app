@@ -5,13 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.FirebaseApp
 import com.mxt.anitrend.R
 import com.mxt.anitrend.databinding.FragmentSettingsM3Binding
 import com.mxt.anitrend.databinding.ItemSettingsCategoryCardBinding
+import com.mxt.anitrend.navigation.extension.asBundle
+import com.mxt.anitrend.navigation.model.SettingsCategoryScreenParam
 import com.mxt.anitrend.util.Settings
 import org.koin.android.ext.android.inject
 
@@ -89,7 +90,10 @@ class SettingsHubFragment : Fragment() {
             SettingsCategoryRegistry.CUSTOMIZE -> navController.navigate(R.id.action_settings_hub_to_customize)
             else -> navController.navigate(
                 R.id.action_settings_hub_to_category,
-                bundleOf(SettingsCategoryRegistry.ARG_CATEGORY_ID to categoryId),
+                SettingsCategoryScreenParam(categoryId = categoryId).asBundle().apply {
+                    // Interim boundary: keep the legacy key for pre-bridge readers.
+                    putString(SettingsCategoryRegistry.ARG_CATEGORY_ID, categoryId)
+                },
             )
         }
     }

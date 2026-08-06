@@ -21,6 +21,9 @@ import androidx.core.net.toUri
 import com.bumptech.glide.Glide
 import com.mxt.anitrend.R
 import com.mxt.anitrend.databinding.ActivityImagePreviewBinding
+import com.mxt.anitrend.navigation.extension.putScreenParam
+import com.mxt.anitrend.navigation.extension.screenParam
+import com.mxt.anitrend.navigation.model.ImagePreviewScreenParam
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
@@ -29,18 +32,52 @@ import timber.log.Timber
 
 class ImagePreviewActivity : CommonActivity() {
 
-    data class Args(val modelUrl: String)
-
     companion object {
-        fun newIntent(context: Context, modelUrl: String): Intent = Intent(context, ImagePreviewActivity::class.java).apply {
-            putExtra(KeyUtil.arg_model, modelUrl)
+        fun newIntent(context: Context, param: ImagePreviewScreenParam): Intent = Intent(context, ImagePreviewActivity::class.java).apply {
+            putScreenParam(param)
+            // Interim boundary: keep the legacy wire key alongside the typed param
+            // until all pre-bridge callers and fixtures migrate.
+            putExtra(KeyUtil.arg_model, param.url)
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
         }
 
-        fun fromIntent(intent: Intent): Args? = parseArgs(intent.getStringExtra(KeyUtil.arg_model))
+        /**
+         * Compatibility overload preserving the legacy URL-based callers. Bridges
+         * into the typed parameter so navigation always uses [ImagePreviewScreenParam].
+         */
+        fun newIntent(context: Context, modelUrl: String): Intent = newIntent(context, ImagePreviewScreenParam(url = modelUrl))
+
+        /**
+         * Resolves the typed parameter from the intent.
+         *
+         * The typed parameter is read first. Pre-bridge callers still write the
+         * legacy [KeyUtil.arg_model] extra, so that value is bridged here via
+         * [resolve]. The bridge is a scalar conversion point inside the activity,
+         * not a parcel path for any remote model.
+         */
+        fun fromIntent(intent: Intent): ImagePreviewScreenParam? = resolve(
+            typed = intent.screenParam<ImagePreviewScreenParam>(),
+            legacyUrl = intent.getStringExtra(KeyUtil.arg_model),
+        )
+
+        /**
+         * Production parsing rule for the image preview destination.
+         *
+         * A present typed parameter wins; it is accepted only when it carries a
+         * non-empty url. Otherwise the legacy [KeyUtil.arg_model] extra is bridged
+         * via [parseUrl]. Blank strings remain valid, preserving the pre-refactor
+         * `isNullOrEmpty` contract.
+         */
+        @VisibleForTesting
+        internal fun resolve(typed: ImagePreviewScreenParam?, legacyUrl: String?): ImagePreviewScreenParam? {
+            typed?.let { param ->
+                return if (param.url.isNotEmpty()) param else null
+            }
+            return parseUrl(legacyUrl)
+        }
 
         @VisibleForTesting
-        internal fun parseArgs(raw: String?): Args? = if (!raw.isNullOrEmpty()) Args(raw) else null
+        internal fun parseUrl(raw: String?): ImagePreviewScreenParam? = if (!raw.isNullOrEmpty()) ImagePreviewScreenParam(url = raw) else null
 
         private const val REQUEST_PERMISSION = 102
     }
@@ -74,8 +111,8 @@ class ImagePreviewActivity : CommonActivity() {
 
         val args = fromIntent(intent)
         if (args != null) {
-            imageUri = args.modelUrl
-            Glide.with(this).load(args.modelUrl).into(binding.previewImage)
+            imageUri = args.url
+            Glide.with(this).load(args.url).into(binding.previewImage)
         } else {
             NotifyUtil.makeText(
                 this,

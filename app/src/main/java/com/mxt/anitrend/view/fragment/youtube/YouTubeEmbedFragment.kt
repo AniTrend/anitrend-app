@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.VisibleForTesting
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -15,6 +16,9 @@ import com.mxt.anitrend.R
 import com.mxt.anitrend.databinding.AdapterFeedSlideBinding
 import com.mxt.anitrend.extension.parcelable
 import com.mxt.anitrend.model.entity.anilist.meta.MediaTrailer
+import com.mxt.anitrend.navigation.extension.asBundle
+import com.mxt.anitrend.navigation.extension.screenParam
+import com.mxt.anitrend.navigation.model.TrailerScreenParam
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.markdown.RegexUtil
@@ -37,11 +41,42 @@ class YouTubeEmbedFragment : Fragment() {
                 arguments = args
             }
         }
+
+        /**
+         * Identity-only entry point: the trailer entity is never parceled; the stable
+         * trailer id and site are enough for the embed to resolve its video URL.
+         */
+        @JvmStatic
+        fun newInstance(param: TrailerScreenParam): YouTubeEmbedFragment = YouTubeEmbedFragment().apply {
+            arguments = param.asBundle()
+        }
+
+        /**
+         * Resolves the trailer identity from the fragment arguments.
+         *
+         * The typed [TrailerScreenParam] wins when present; otherwise the legacy
+         * [KeyUtil.arg_media_trailer] entity extra is bridged by extracting only the
+         * stable id and site.
+         */
+        fun fromBundle(bundle: Bundle?): TrailerScreenParam? = resolve(
+            typed = bundle?.screenParam<TrailerScreenParam>(),
+            legacyTrailer = bundle?.parcelable(KeyUtil.arg_media_trailer),
+        )
+
+        @VisibleForTesting
+        internal fun resolve(typed: TrailerScreenParam?, legacyTrailer: MediaTrailer?): TrailerScreenParam? {
+            typed?.let { return it }
+            val trailer = legacyTrailer ?: return null
+            val trailerId = trailer.id ?: return null
+            return TrailerScreenParam(trailerId = trailerId, site = trailer.site.orEmpty())
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mediaTrailer = arguments?.parcelable(KeyUtil.arg_media_trailer)
+        mediaTrailer = fromBundle(arguments)?.let { param ->
+            MediaTrailer(id = param.trailerId, site = param.site)
+        }
     }
 
     override fun onCreateView(
