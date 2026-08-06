@@ -81,4 +81,45 @@ class FollowStateWidgetInstrumentationTest {
         database.invalidateBoxStores()
         Settings(androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().targetContext).isAuthenticated = false
     }
+
+    @Test
+    fun clickWithoutListener_keepsContentState() {
+        val database = KoinExt.get(DatabaseHelper::class.java)
+        ActivityScenario.launch(ProgressLayoutTestActivity::class.java).use { scenario ->
+            Settings(androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().targetContext).isAuthenticated = true
+            database.currentUser = User().apply {
+                id = 1L
+                name = "current-user"
+            }
+
+            val targetUser = UserBase(name = "other-user", isFollowing = false).apply {
+                id = 2L
+            }
+
+            scenario.onActivity { activity ->
+                val container = FrameLayout(activity)
+                activity.setContentView(container)
+
+                val widget = FollowStateWidget(activity)
+                container.addView(widget)
+                widget.setCurrentUser(
+                    UserBase(name = "current-user").apply {
+                        id = 1L
+                    },
+                )
+                widget.setUserModel(targetUser)
+
+                // No listener configured: the tap has no callback target, so the
+                // widget must neither dispatch nor leave the content state.
+                val flipper = widget.findViewById<ViewFlipper>(R.id.widget_flipper)
+                flipper.performClick()
+
+                assertEquals(WidgetState.CONTENT_STATE, flipper.displayedChild)
+                // Render-only contract preserved: the bound entity is never mutated.
+                assertFalse(targetUser.isFollowing)
+            }
+        }
+        database.invalidateBoxStores()
+        Settings(androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().targetContext).isAuthenticated = false
+    }
 }

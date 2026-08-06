@@ -135,8 +135,9 @@ constructor(
                         resetLoadingState()
                         return
                     }
+                    val configuredListener = listener ?: return
                     showLoadingState()
-                    listener?.onToggleFollow(currentModel.id)
+                    configuredListener.onToggleFollow(currentModel.id)
                 } else {
                     NotifyUtil
                         .makeText(
