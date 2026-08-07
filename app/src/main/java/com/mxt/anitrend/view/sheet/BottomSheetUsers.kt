@@ -69,9 +69,8 @@ class BottomSheetUsers :
          * `@IgnoredOnParcel` id and break follow dispatch and store rebinding.
          */
         @VisibleForTesting
-        internal fun resolveUsers(bundle: Bundle?): List<UserBase>? =
-            bundle?.parcelableArrayList<UserSheetModel>(KeyUtil.arg_list_model)
-                ?.map(UserSheetModel::toUserBase)
+        internal fun resolveUsers(bundle: Bundle?): List<UserBase>? = bundle?.parcelableArrayList<UserSheetModel>(KeyUtil.arg_list_model)
+            ?.map(UserSheetModel::toUserBase)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

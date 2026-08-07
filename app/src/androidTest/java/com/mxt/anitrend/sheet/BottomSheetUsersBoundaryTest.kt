@@ -15,7 +15,6 @@ import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.view.sheet.BottomSheetUsers
 import com.mxt.anitrend.view.sheet.UserSheetModel
-import com.mxt.anitrend.view.sheet.toUserSheetModel
 import com.mxt.anitrend.widget.ProgressLayoutTestActivity
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
@@ -147,10 +146,9 @@ class BottomSheetUsersBoundaryTest {
         assertTrue(roundTrippedUser.id == 42L)
     }
 
-    private fun UserSheetModel.toBundleRoundTrip(): UserSheetModel =
-        Bundle().apply {
-            putParcelableArrayList(KeyUtil.arg_list_model, arrayListOf(this@toBundleRoundTrip))
-        }.toParcelRoundTrip().parcelableArrayList<UserSheetModel>(KeyUtil.arg_list_model)!!.single()
+    private fun UserSheetModel.toBundleRoundTrip(): UserSheetModel = Bundle().apply {
+        putParcelableArrayList(KeyUtil.arg_list_model, arrayListOf(this@toBundleRoundTrip))
+    }.toParcelRoundTrip().parcelableArrayList<UserSheetModel>(KeyUtil.arg_list_model)!!.single()
 
     private fun Bundle.toParcelRoundTrip(): Bundle {
         val parcel = Parcel.obtain()

@@ -41,8 +41,6 @@ fun Review.toReviewRecord(revision: Long = 0L): ReviewRecord = ReviewRecord(
     revision = revision,
 )
 
-private fun UserBase?.toUserSummaryRecordOrNull(): UserSummaryRecord? =
-    if (this == null || (id == 0L && name == null)) null else toUserSummaryRecord()
+private fun UserBase?.toUserSummaryRecordOrNull(): UserSummaryRecord? = if (this == null || (id == 0L && name == null)) null else toUserSummaryRecord()
 
-private fun MediaBase?.toMediaSummaryRecordOrNull(): MediaSummaryRecord? =
-    if (this == null || id == 0L) null else toMediaSummaryRecord()
+private fun MediaBase?.toMediaSummaryRecordOrNull(): MediaSummaryRecord? = if (this == null || id == 0L) null else toMediaSummaryRecord()

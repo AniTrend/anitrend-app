@@ -197,9 +197,8 @@ constructor(
  * Loaded counts (including zero) open the normal destination or list sheet;
  * not-yet-loaded and failed counts keep the loading toast.
  */
-internal fun AboutPanelWidget.StatState.resolveStatClick(): AboutPanelWidget.StatClickAction =
-    if (this is AboutPanelWidget.StatState.Loaded) {
-        AboutPanelWidget.StatClickAction.Open
-    } else {
-        AboutPanelWidget.StatClickAction.ShowLoading
-    }
+internal fun AboutPanelWidget.StatState.resolveStatClick(): AboutPanelWidget.StatClickAction = if (this is AboutPanelWidget.StatState.Loaded) {
+    AboutPanelWidget.StatClickAction.Open
+} else {
+    AboutPanelWidget.StatClickAction.ShowLoading
+}

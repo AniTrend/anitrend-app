@@ -190,27 +190,23 @@ class BottomSheetListUsersDialogStateTest {
             .show(activity.supportFragmentManager, SHEET_TAG)
     }
 
-    private fun install(repository: UserRepository): Module =
-        module {
-            single<UserRepository> { repository }
-        }.also { module ->
-            overrideModules += module
-            loadKoinModules(module)
-        }
+    private fun install(repository: UserRepository): Module = module {
+        single<UserRepository> { repository }
+    }.also { module ->
+        overrideModules += module
+        loadKoinModules(module)
+    }
 
-    private fun sheetFragment(activity: FragmentActivity): BottomSheetListUsers? =
-        activity.supportFragmentManager.findFragmentByTag(SHEET_TAG) as? BottomSheetListUsers
+    private fun sheetFragment(activity: FragmentActivity): BottomSheetListUsers? = activity.supportFragmentManager.findFragmentByTag(SHEET_TAG) as? BottomSheetListUsers
 
-    private fun progressLayout(sheet: BottomSheetListUsers?): ProgressLayout? =
-        sheet?.dialog?.findViewById(R.id.stateLayout)
+    private fun progressLayout(sheet: BottomSheetListUsers?): ProgressLayout? = sheet?.dialog?.findViewById(R.id.stateLayout)
 
     private fun clearScrollListeners(sheet: BottomSheetListUsers?) {
         sheet?.dialog?.findViewById<StatefulRecyclerView>(R.id.recyclerView)
             ?.clearOnScrollListeners()
     }
 
-    private fun adapterItemCount(sheet: BottomSheetListUsers?): Int? =
-        sheet?.dialog?.findViewById<StatefulRecyclerView>(R.id.recyclerView)?.adapter?.itemCount
+    private fun adapterItemCount(sheet: BottomSheetListUsers?): Int? = sheet?.dialog?.findViewById<StatefulRecyclerView>(R.id.recyclerView)?.adapter?.itemCount
 
     private inline fun <T> readOnMain(crossinline block: () -> T): T {
         var result: T? = null
@@ -237,10 +233,9 @@ class BottomSheetListUsersDialogStateTest {
         this.id = id
     }
 
-    private fun containerOf(vararg users: UserBase): PageContainer<UserBase> =
-        PageContainer<UserBase>().apply {
-            pageData = users.toList()
-        }
+    private fun containerOf(vararg users: UserBase): PageContainer<UserBase> = PageContainer<UserBase>().apply {
+        pageData = users.toList()
+    }
 
     private companion object {
         const val SHEET_TAG = "users-list-sheet-state-test"
