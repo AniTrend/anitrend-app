@@ -12,24 +12,56 @@ categories:
   - title: '🧰 Maintenance'
     labels:
       - 'refactor'
+      - 'chore'
+      - 'ci'
+      - 'platform'
       - 'dependencies'
+      - 'architecture'
 autolabeler:
   - label: 'docs'
     files:
       - '*.md'
     branch:
       - '/docs{0,1}\/.+/'
+    title:
+      - '/^docs(\(.+\))?!?: /'
   - label: 'bugfix'
     branch:
       - '/fix\/.+/'
       - '/hotfix\/.+/'
+    title:
+      - '/^(fix|hotfix)(\(.+\))?!?: /'
   - label: 'enhancement'
     branch:
       - '/feature\/.+/'
+      - '/feat\/.+/'
+    title:
+      - '/^(feat|feature)(\(.+\))?!?: /'
+  - label: 'refactor'
+    branch:
+      - '/refactor\/.+/'
+    title:
+      - '/^refactor(\(.+\))?!?: /'
+  - label: 'chore'
+    branch:
+      - '/chore\/.+/'
+    title:
+      - '/^chore(\(.+\))?!?: /'
+  - label: 'ci'
+    branch:
+      - '/ci\/.+/'
+    title:
+      - '/^ci(\(.+\))?!?: /'
+  - label: 'platform'
+    branch:
+      - '/platform\/.+/'
   - label: 'dependencies'
     branch:
       - '/dependencies\/.+/'
       - '/renovate\/.+/'
+    title:
+      - '/^build\(deps\)!?: /'
+      - '/^chore\(deps\)!?: /'
 change-template: '- $TITLE by @$AUTHOR in #$NUMBER'
 change-title-escapes: '\<*_&' # You can add # and @ to disable mentions, and add ` to disable code blocks.
 version-resolver:
@@ -48,6 +80,10 @@ version-resolver:
       - 'hotfix'
       - 'dependencies'
       - 'refactor'
+      - 'chore'
+      - 'ci'
+      - 'platform'
+      - 'architecture'
   default: patch
   exclude-labels:
     - 'skip-changelog'

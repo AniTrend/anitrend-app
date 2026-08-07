@@ -16,6 +16,22 @@ Please ensure your pull request adheres to the following guidelines:
 - Be sure not to stage any files in excluded in .gitignore
 - Check your spelling and grammar.
 
+## Pull Request Branch Naming
+
+Pull request branches should follow the `<type>/<short-description>` convention (for example `fix/login-crash` or `feat/manga-timeline`). Supported types are:
+
+- `feat/` (legacy alias `feature/`): new features
+- `fix/` and `hotfix/`: bug fixes
+- `refactor/`: code restructuring that does not change behaviour
+- `chore/`: routine maintenance
+- `ci/`: CI/CD pipeline changes
+- `platform/`: platform and build configuration changes
+- `docs/`: documentation
+- `dependencies/`: dependency updates
+- `renovate/`: dependency updates managed by Renovate automation
+
+Branch names and pull request titles should use one of these types so Release Drafter can classify each pull request into the correct changelog category.
+
 ## Code of Conduct
 
 ### Our Pledge
