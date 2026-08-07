@@ -1,7 +1,9 @@
 package com.mxt.anitrend.data.store
 
+import com.mxt.anitrend.data.mapper.toFeedList
 import com.mxt.anitrend.data.mapper.toFeedRecord
 import com.mxt.anitrend.data.mapper.toFeedReplyRecord
+import com.mxt.anitrend.data.mapper.toUserBase
 import com.mxt.anitrend.data.mapper.toUserSummaryRecord
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.anilist.FeedReply
@@ -10,7 +12,9 @@ import com.mxt.anitrend.model.entity.anilist.meta.MediaTitle
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.base.UserBase
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class FeedRecordMapperTest {
@@ -97,6 +101,42 @@ class FeedRecordMapperTest {
         assertEquals("summary-user", record.name)
         assertEquals("https://avatar-large", record.avatar)
         assertNull(record.siteUrl)
+        assertFalse(record.isFollowing)
+    }
+
+    @Test
+    fun `map UserBase isFollowing into UserSummaryRecord`() {
+        val user = createUser(8L, "summary-user", isFollowing = true)
+
+        val record = user.toUserSummaryRecord()
+
+        assertTrue(record.isFollowing)
+    }
+
+    @Test
+    fun `map UserSummaryRecord back to UserBase preserves isFollowing`() {
+        val record =
+            createUser(8L, "summary-user", isFollowing = true)
+                .toUserSummaryRecord()
+
+        val user = record.toUserBase()
+
+        assertEquals(8L, user.id)
+        assertEquals("summary-user", user.name)
+        assertEquals("https://avatar-large", user.avatar?.large)
+        assertTrue(user.isFollowing)
+    }
+
+    @Test
+    fun `feed likes carry isFollowing into FeedRecord and back`() {
+        val liker = createUser(8L, "liker", isFollowing = true)
+        val feed = createFeed(likes = mutableListOf(liker))
+
+        val record = feed.toFeedRecord(revision = 1L)
+        assertTrue(record.likes.single().isFollowing)
+
+        val restored = record.toFeedList()
+        assertTrue(restored.likes.orEmpty().single().isFollowing)
     }
 
     private fun createFeed(likes: MutableList<UserBase> = mutableListOf(createUser(7L, "bob"), createUser(8L, "eve"))): FeedList = FeedList(
@@ -114,7 +154,11 @@ class FeedRecordMapperTest {
         siteUrl = "https://feed",
     )
 
-    private fun createUser(id: Long, name: String): UserBase = UserBase(name = name).also {
+    private fun createUser(
+        id: Long,
+        name: String,
+        isFollowing: Boolean = false,
+    ): UserBase = UserBase(name = name, isFollowing = isFollowing).also {
         it.id = id
         it.avatar = ImageBase(
             extraLarge = "https://avatar-extra-large",

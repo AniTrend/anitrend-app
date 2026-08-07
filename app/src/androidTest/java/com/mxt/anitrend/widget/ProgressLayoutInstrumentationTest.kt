@@ -42,6 +42,11 @@ class ProgressLayoutInstrumentationTest {
                     "Loading indicator should use Material 3 LoadingIndicator",
                     loadingIndicator is LoadingIndicator,
                 )
+                assertEquals(
+                    "Loading indicator should use the compact visual size",
+                    activity.resources.getDimensionPixelSize(R.dimen.widget_spinner_compact_size),
+                    (loadingIndicator as LoadingIndicator).indicatorSize,
+                )
                 assertTrue(
                     "Error surface should use Material 3 MaterialCardView",
                     errorCard is MaterialCardView,

@@ -15,6 +15,7 @@ import com.mxt.anitrend.base.custom.view.widget.VoteWidget
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener
 import com.mxt.anitrend.binding.markDown
 import com.mxt.anitrend.binding.setImage
+import com.mxt.anitrend.data.store.mutation.MutationResult
 import com.mxt.anitrend.databinding.AdapterReviewBinding
 import com.mxt.anitrend.databinding.AdapterSeriesReviewBinding
 import com.mxt.anitrend.domain.model.ReviewRecord
@@ -42,11 +43,34 @@ class ReviewAdapter(
 
     var clickListener: ItemClickListener<ReviewRecord>? = null
 
+    /**
+     * Currently bound holders keyed by stable review id, so mutation outcomes arriving
+     * after the list settled can still converge the visible vote controls without
+     * re-submitting the immutable list.
+     */
+    private val holderRegistry = ReviewHolderRegistry<RecyclerView.ViewHolder>()
+
     private val voteListener = object : VoteWidget.Listener {
         override fun onRateReview(
             id: Long,
             rating: ReviewRating?,
         ) = onRateReviewAction(id, rating)
+    }
+
+    /**
+     * Forwards a rate mutation outcome to the bound vote control for the review.
+     * The canonical store rebinding already converges success; this mainly resets the
+     * vote loading state and surfaces failures on the visible holder.
+     */
+    fun onRateReviewResult(
+        reviewId: Long,
+        result: MutationResult,
+    ) {
+        val holder = holderRegistry.holderFor(reviewId) ?: return
+        when (holder) {
+            is ReviewBanner -> holder.binding.reviewVote.onRateReviewResult(result)
+            is ReviewDefault -> holder.binding.reviewVote.onRateReviewResult(result)
+        }
     }
 
     override fun getItemViewType(position: Int): Int = if (!isMediaType) VIEW_TYPE_BANNER else VIEW_TYPE_DEFAULT
@@ -69,6 +93,7 @@ class ReviewAdapter(
         position: Int,
     ) {
         val record = getItem(position)
+        holderRegistry.onBound(record.id, holder)
         when (holder) {
             is ReviewBanner -> holder.bind(record)
             is ReviewDefault -> holder.bind(record)
@@ -77,6 +102,7 @@ class ReviewAdapter(
 
     override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
         super.onViewRecycled(holder)
+        holderRegistry.onRecycled(holder)
         when (holder) {
             is ReviewBanner -> holder.recycle()
             is ReviewDefault -> holder.recycle()
@@ -84,7 +110,7 @@ class ReviewAdapter(
     }
 
     inner class ReviewBanner(
-        private val binding: AdapterReviewBinding,
+        val binding: AdapterReviewBinding,
     ) : RecyclerView.ViewHolder(binding.root),
         View.OnClickListener,
         View.OnLongClickListener {
@@ -122,7 +148,7 @@ class ReviewAdapter(
     }
 
     inner class ReviewDefault(
-        private val binding: AdapterSeriesReviewBinding,
+        val binding: AdapterSeriesReviewBinding,
     ) : RecyclerView.ViewHolder(binding.root),
         View.OnClickListener,
         View.OnLongClickListener {
@@ -198,5 +224,47 @@ class ReviewAdapter(
                 newItem: ReviewRecord,
             ): Boolean = oldItem == newItem
         }
+    }
+}
+
+/**
+ * Tracks which holder is currently bound to which review id so mutation outcomes can be
+ * routed to the visible vote control without re-submitting the immutable list.
+ *
+ * A holder may be rebound from one review to another without being recycled first, so
+ * every bind removes the holder's prior mapping and records the review id it is now bound
+ * to. Outcome routing resolves through [holderFor], which only returns a holder that is
+ * still bound to the requested review id; a stale outcome for a previously bound review
+ * can therefore never reach a holder that was rebound to a different review.
+ */
+internal class ReviewHolderRegistry<H : Any> {
+
+    private val holdersByReviewId = mutableMapOf<Long, H>()
+    private val boundReviewIdByHolder = mutableMapOf<H, Long>()
+
+    fun onBound(
+        reviewId: Long,
+        holder: H,
+    ) {
+        boundReviewIdByHolder.remove(holder)?.let { priorReviewId ->
+            if (holdersByReviewId[priorReviewId] === holder) {
+                holdersByReviewId.remove(priorReviewId)
+            }
+        }
+        boundReviewIdByHolder[holder] = reviewId
+        holdersByReviewId[reviewId] = holder
+    }
+
+    fun onRecycled(holder: H) {
+        boundReviewIdByHolder.remove(holder)?.let { reviewId ->
+            if (holdersByReviewId[reviewId] === holder) {
+                holdersByReviewId.remove(reviewId)
+            }
+        }
+    }
+
+    fun holderFor(reviewId: Long): H? {
+        val holder = holdersByReviewId[reviewId] ?: return null
+        return holder.takeIf { boundReviewIdByHolder[it] == reviewId }
     }
 }

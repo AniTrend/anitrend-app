@@ -1,6 +1,8 @@
 package com.mxt.anitrend.base.custom.view.widget
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +13,7 @@ import androidx.annotation.DrawableRes
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.view.text.SingleLineTextView
 import com.mxt.anitrend.base.interfaces.view.CustomView
+import com.mxt.anitrend.data.store.mutation.MutationResult
 import com.mxt.anitrend.databinding.WidgetVoteBinding
 import com.mxt.anitrend.domain.model.ReviewRecord
 import com.mxt.anitrend.extension.getCompatColor
@@ -49,6 +52,17 @@ constructor(
     private var listener: Listener? = null
     private var recycled = false
     private var currentUser: UserBase? = null
+    private val mainHandler = Handler(Looper.getMainLooper())
+
+    /**
+     * Bounded fallback so a vote mutation can never leave the widget permanently in the
+     * loading state when no outcome reaches it (for example when the owning screen is not
+     * collecting the ViewModel outcome). The authoritative convergence path is the
+     * canonical store rebinding on success and [onRateReviewResult] on failure.
+     */
+    private val loadingFallback = Runnable {
+        resetFlipperState()
+    }
 
     fun setListener(listener: Listener?) {
         this.listener = listener
@@ -74,10 +88,10 @@ constructor(
             resetFlipperState()
             return
         }
+        // The tapped thumb stays in the loading state until the mutation outcome arrives:
+        // the canonical store rebinding resets it on success, [onRateReviewResult] resets
+        // it on failure, and the bounded fallback guarantees convergence in between.
         listener?.onRateReview(currentModel.id, rating)
-        if (!recycled && isAttachedToWindow) {
-            resetFlipperState()
-        }
     }
 
     override fun onClick(view: View) {
@@ -86,6 +100,7 @@ constructor(
                 R.id.widget_thumb_up_flipper -> {
                     if (binding.widgetThumbUpFlipper.displayedChild == CONTENT_STATE) {
                         binding.widgetThumbUpFlipper.showNext()
+                        showLoadingState()
                         val current = model?.userRating
                         val rating = nextRating(current, KeyUtil.UP_VOTE)
                         performRating(rating)
@@ -101,6 +116,7 @@ constructor(
                 R.id.widget_thumb_down_flipper -> {
                     if (binding.widgetThumbDownFlipper.displayedChild == CONTENT_STATE) {
                         binding.widgetThumbDownFlipper.showNext()
+                        showLoadingState()
                         val current = model?.userRating
                         val rating = nextRating(current, KeyUtil.DOWN_VOTE)
                         performRating(rating)
@@ -126,6 +142,28 @@ constructor(
     }
 
     /**
+     * Converges the widget from the outcome of the pending vote mutation. A failure is
+     * surfaced explicitly and the loading state is always reset; a success is primarily
+     * converged by the canonical store rebinding, so this only resets the loading state.
+     */
+    fun onRateReviewResult(result: MutationResult) {
+        if (result is MutationResult.Failure) {
+            NotifyUtil
+                .makeText(
+                    context,
+                    result.message,
+                    Toast.LENGTH_SHORT,
+                ).show()
+        }
+        resetFlipperState()
+    }
+
+    private fun showLoadingState() {
+        mainHandler.removeCallbacks(loadingFallback)
+        mainHandler.postDelayed(loadingFallback, LOADING_FALLBACK_TIMEOUT_MS)
+    }
+
+    /**
      * Optionally included when constructing custom views
      */
     override fun onInit() {
@@ -145,6 +183,7 @@ constructor(
     }
 
     private fun resetFlipperState() {
+        mainHandler.removeCallbacks(loadingFallback)
         if (binding.widgetThumbUpFlipper.displayedChild == LOADING_STATE) {
             binding.widgetThumbUpFlipper.displayedChild = CONTENT_STATE
         }
@@ -233,6 +272,8 @@ constructor(
     companion object {
         const val CONTENT_STATE = 0
         const val LOADING_STATE = 1
+
+        const val LOADING_FALLBACK_TIMEOUT_MS = 10_000L
 
         fun convertToText(count: Int): String = String.format(Locale.getDefault(), " %d ", count)
 

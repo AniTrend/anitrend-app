@@ -84,8 +84,10 @@ class UserAdapter(
         override fun onBindViewHolder(model: UserBase) {
             binding.userAvatar.setImage(model.avatar)
             binding.userName.text = model.name
-            binding.userFollowStateWidget.setUserModel(model)
+            // Current-user context first: the widget evaluates control visibility on
+            // model bind, so a fresh row must never evaluate against a null context.
             binding.userFollowStateWidget.setCurrentUser(currentUser)
+            binding.userFollowStateWidget.setUserModel(model)
             binding.userFollowStateWidget.setListener(followListener)
         }
 

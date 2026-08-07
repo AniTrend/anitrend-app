@@ -162,6 +162,14 @@ class BrowseReviewFragment : FragmentBaseList<ReviewRecord, PageContainer<Review
                 }
             }
         }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                browseReviewViewModel.rateReviewEvents.collect { outcome ->
+                    reviewAdapter?.onRateReviewResult(outcome.reviewId, outcome.result)
+                }
+            }
+        }
     }
 
     override fun onStart() {

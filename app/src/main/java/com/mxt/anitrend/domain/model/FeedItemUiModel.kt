@@ -167,4 +167,5 @@ private fun UserBase.toUserSummaryRecord(): UserSummaryRecord = UserSummaryRecor
     name = name,
     avatar = avatarUrl(),
     siteUrl = null,
+    isFollowing = isFollowing,
 )

@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
+import android.widget.Toast
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -17,6 +19,7 @@ import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
 import com.mxt.anitrend.base.interfaces.event.ISearchDelegate
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener
 import com.mxt.anitrend.data.DatabaseHelper
+import com.mxt.anitrend.data.store.mutation.MutationResult
 import com.mxt.anitrend.data.store.user.UserStore
 import com.mxt.anitrend.databinding.BottomSheetListBinding
 import com.mxt.anitrend.domain.model.ToggleUserFollowCommand
@@ -26,6 +29,7 @@ import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.extension.parcelableArrayList
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.util.KeyUtil
+import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.view.activity.detail.ProfileActivity
 import com.mxt.anitrend.widget.ProgressLayout
 import kotlinx.coroutines.launch
@@ -54,6 +58,19 @@ class BottomSheetUsers :
         fun newInstance(bundle: Bundle): BottomSheetUsers = BottomSheetUsers().apply {
             arguments = bundle
         }
+
+        /**
+         * Identity-preserving read of the users sheet payload.
+         *
+         * The bundle carries [UserSheetModel] entries (parcel-safe by construction,
+         * see [UserBase.toUserSheetModel]) and is converted back to in-memory
+         * [UserBase] items with their real ids, avatars, and initial follow state
+         * restored. Reading [UserBase] directly from the bundle would zero every
+         * `@IgnoredOnParcel` id and break follow dispatch and store rebinding.
+         */
+        @VisibleForTesting
+        internal fun resolveUsers(bundle: Bundle?): List<UserBase>? = bundle?.parcelableArrayList<UserSheetModel>(KeyUtil.arg_list_model)
+            ?.map(UserSheetModel::toUserBase)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,7 +82,7 @@ class BottomSheetUsers :
             currentUser = databaseHelper.currentUser,
             onToggleFollowAction = ::toggleFollow,
         )
-        val baseList = arguments?.parcelableArrayList<UserBase>(KeyUtil.arg_list_model)
+        val baseList = resolveUsers(arguments)
         if (!baseList.isNullOrEmpty()) {
             mAdapter.onItemsInserted(baseList)
         }
@@ -74,15 +91,26 @@ class BottomSheetUsers :
 
     /**
      * Fire-and-forget delivery from the render-only [FollowStateWidget]. The legacy adapter
-     * still passes a result callback slot, which is intentionally ignored: the mutation result
-     * is applied by observing [UserStore] below.
+     * still passes a result callback slot, which is intentionally ignored: the committed
+     * result is applied by observing [UserStore] below. Request failures are reported
+     * explicitly because a failed mutation commits nothing and would otherwise stay silent.
      */
     private fun toggleFollow(
         userId: Long,
         @Suppress("UNUSED_PARAMETER") onResult: (Result<UserBase>) -> Unit,
     ) {
         lifecycleScope.launch {
-            toggleUserFollowInteractor(ToggleUserFollowCommand(userId = userId))
+            val result = toggleUserFollowInteractor(ToggleUserFollowCommand(userId = userId))
+            if (result is MutationResult.Failure) {
+                context?.let {
+                    NotifyUtil
+                        .makeText(
+                            it,
+                            result.message,
+                            Toast.LENGTH_SHORT,
+                        ).show()
+                }
+            }
         }
     }
 
@@ -103,9 +131,9 @@ class BottomSheetUsers :
         val position = mAdapter.data.indexOfFirst { it.id == record.id }
         if (position < 0) return
         val current = mAdapter.data[position]
-        if (current.isFollowing == record.isFollowing) return
-        current.isFollowing = record.isFollowing
-        mAdapter.onItemChanged(current, position)
+        if (current.rebindFollowState(record)) {
+            mAdapter.onItemChanged(current, position)
+        }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -198,8 +226,17 @@ class BottomSheetUsers :
     class Builder : BottomSheetBuilder() {
         override fun build(): BottomSheetBase<*> = newInstance(bundle)
 
+        /**
+         * Writes the user list through the parcel-safe [UserSheetModel] boundary.
+         * [UserBase] itself cannot be parceled without losing its `@IgnoredOnParcel`
+         * id (and avatar), so the identity is captured here while the entities are
+         * still alive in memory and restored on read by [resolveUsers].
+         */
         fun setModel(model: List<UserBase>): Builder {
-            bundle.putParcelableArrayList(KeyUtil.arg_list_model, ArrayList(model))
+            bundle.putParcelableArrayList(
+                KeyUtil.arg_list_model,
+                ArrayList(model.map(UserBase::toUserSheetModel)),
+            )
             return this
         }
     }

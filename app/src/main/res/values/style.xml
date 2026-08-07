@@ -319,6 +319,7 @@
     <style name="Widget.AniTrend.ProgressLayout.LoadingIndicator" parent="Widget.Material3.LoadingIndicator.Contained">
         <item name="indicatorColor">?attr/colorAccent</item>
         <item name="containerColor">?attr/cardColor</item>
+        <item name="indicatorSize">@dimen/widget_spinner_compact_size</item>
     </style>
 
     <style name="ThemeOverlay.AniTrend.ProgressLayout.Material3" parent="Theme.Material3.Light.NoActionBar">
