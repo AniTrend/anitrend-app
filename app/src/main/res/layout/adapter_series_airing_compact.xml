@@ -49,7 +49,7 @@
                     android:textSize="15sp"
                     tools:text="Gintama."/>
 
-                <androidx.legacy.widget.Space
+                <Space
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/lg_margin" />
 
@@ -60,7 +60,7 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                     tools:text="EP 31: 4 days from now"/>
 
-                <androidx.legacy.widget.Space
+                <Space
                     android:layout_width="match_parent"
                     android:layout_height="0dp" />
 

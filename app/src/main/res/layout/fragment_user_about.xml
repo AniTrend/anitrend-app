@@ -71,7 +71,7 @@
 
                         </FrameLayout>
 
-                        <androidx.legacy.widget.Space
+                        <Space
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/lg_margin" />
 
@@ -87,7 +87,7 @@
                             android:padding="@dimen/md_margin"
                             tools:text="@string/text_error_login" />
 
-                        <androidx.legacy.widget.Space
+                        <Space
                             android:layout_width="wrap_content"
                             android:layout_height="@dimen/lg_margin" />
 
@@ -96,7 +96,7 @@
                 </com.mxt.anitrend.base.custom.view.container.CardViewBase>
 
 
-                <androidx.legacy.widget.Space
+                <Space
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/md_margin" />
 
@@ -114,7 +114,7 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                     android:text="@string/text_tap_on_item_below_to_view_stats" />
 
-                <androidx.legacy.widget.Space
+                <Space
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/md_margin" />
 

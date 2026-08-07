@@ -34,7 +34,7 @@
 
     </FrameLayout>
 
-    <androidx.legacy.widget.Space
+    <Space
         android:layout_width="match_parent"
         android:layout_height="@dimen/md_margin" />
 </LinearLayout>

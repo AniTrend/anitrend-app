@@ -61,7 +61,7 @@
 
             </LinearLayout>
 
-            <androidx.legacy.widget.Space
+            <Space
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/lg_margin" />
 
@@ -86,7 +86,7 @@
                         android:ellipsize="end"
                         tools:text="Gintama." />
 
-                    <androidx.legacy.widget.Space
+                    <Space
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/lg_margin" />
 
@@ -98,7 +98,7 @@
                         android:textStyle="italic"
                         tools:text="Amazing show with a well thought out plot" />
 
-                    <androidx.legacy.widget.Space
+                    <Space
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/lg_margin" />
 

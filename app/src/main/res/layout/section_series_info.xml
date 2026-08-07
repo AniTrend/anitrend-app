@@ -42,7 +42,7 @@
                 android:textIsSelectable="true"
                 tools:text="Gintama, Gin Tama, Silver Soul, Yorinuki Gintama-san"/>
 
-            <androidx.legacy.widget.Space
+            <Space
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/lg_margin" />
 
@@ -52,7 +52,7 @@
                 android:layout_height="@dimen/sm_margin"
                 tools:background="@color/colorStateBlue"/>
 
-            <androidx.legacy.widget.Space
+            <Space
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/lg_margin" />
 
@@ -69,7 +69,7 @@
                 android:textIsSelectable="true"
                 tools:text="Gintama" />
 
-            <androidx.legacy.widget.Space
+            <Space
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/md_margin" />
 
@@ -81,7 +81,7 @@
                 android:textIsSelectable="true"
                 tools:text="Series Type: TV"/>
 
-            <androidx.legacy.widget.Space
+            <Space
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/md_margin" />
 
