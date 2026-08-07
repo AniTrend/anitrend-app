@@ -155,3 +155,7 @@ playstore-service-account.json
 
 # Deepwork session state
 .slim/deepwork/
+
+# Python cache files
+__pycache__/
+*.pyc
