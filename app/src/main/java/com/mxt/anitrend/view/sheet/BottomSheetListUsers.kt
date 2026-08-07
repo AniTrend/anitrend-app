@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -21,6 +22,7 @@ import com.mxt.anitrend.base.interfaces.event.ISearchDelegate
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener
 import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener
 import com.mxt.anitrend.data.DatabaseHelper
+import com.mxt.anitrend.data.store.mutation.MutationResult
 import com.mxt.anitrend.data.store.user.UserStore
 import com.mxt.anitrend.databinding.BottomSheetListBinding
 import com.mxt.anitrend.domain.model.ToggleUserFollowCommand
@@ -34,6 +36,7 @@ import com.mxt.anitrend.navigation.extension.screenParamKey
 import com.mxt.anitrend.navigation.model.UserListScreenParam
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
+import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.view.activity.detail.ProfileActivity
 import com.mxt.anitrend.viewmodel.UserListViewModel
 import com.mxt.anitrend.widget.ProgressLayout
@@ -123,19 +126,32 @@ class BottomSheetListUsers :
         isPager = true
         mColumnSize = resources.getInteger(R.integer.single_list_x1)
         observeUserStore()
+        observeViewModelState()
     }
 
     /**
      * Fire-and-forget delivery from the render-only [FollowStateWidget]. The legacy adapter
-     * still passes a result callback slot, which is intentionally ignored: the mutation result
-     * is applied by observing [UserStore] below.
+     * still passes a result callback slot, which is intentionally ignored: the committed
+     * result is applied by observing [UserStore] below. Request failures are reported
+     * explicitly because a failed mutation commits nothing and would otherwise stay silent
+     * until the widget's bounded loading fallback expires.
      */
     private fun toggleFollow(
         userId: Long,
         @Suppress("UNUSED_PARAMETER") onResult: (Result<UserBase>) -> Unit,
     ) {
         lifecycleScope.launch {
-            toggleUserFollowInteractor(ToggleUserFollowCommand(userId = userId))
+            val result = toggleUserFollowInteractor(ToggleUserFollowCommand(userId = userId))
+            reportFollowFailure(result) { message ->
+                context?.let {
+                    NotifyUtil
+                        .makeText(
+                            it,
+                            message,
+                            Toast.LENGTH_SHORT,
+                        ).show()
+                }
+            }
         }
     }
 
@@ -162,11 +178,20 @@ class BottomSheetListUsers :
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+    /**
+     * Renders the ViewModel's terminal states into the dialog's content.
+     *
+     * This dialog attaches its content in [onCreateDialog] via `dialog.setContentView`
+     * and never creates a fragment view, so [onViewCreated] (and with it
+     * `viewLifecycleOwner`) never runs. Collection therefore starts on the fragment
+     * lifecycle from [onCreate]: [repeatOnLifecycle] begins collecting exactly when the
+     * dialog is started and cancels when it is dismissed, so a terminal state is
+     * rendered while the dialog is visible, a dismissed dialog never renders a late
+     * response, and no collector outlives the fragment.
+     */
+    private fun observeViewModelState() {
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 userListViewModel.state.collect { state ->
                     when (state) {
                         is UserListViewModel.UiState.Loading -> {
@@ -429,4 +454,23 @@ internal fun UserBase.rebindFollowState(record: UserRecord?): Boolean {
     if (record == null || record.id != id || isFollowing == record.isFollowing) return false
     isFollowing = record.isFollowing
     return true
+}
+
+/**
+ * Surfaces a failed follow mutation through the sheet's notification convention.
+ *
+ * A successful mutation commits to [com.mxt.anitrend.data.store.user.UserStore] and
+ * converges the displayed rows via [BottomSheetListUsers.observeUserStore], so only
+ * failures need explicit reporting here: a failed mutation commits nothing and would
+ * otherwise stay silent until the widget's bounded loading fallback expires. Success
+ * results are intentionally not surfaced.
+ */
+@VisibleForTesting
+internal fun reportFollowFailure(
+    result: MutationResult,
+    notify: (String) -> Unit,
+) {
+    if (result is MutationResult.Failure) {
+        notify(result.message)
+    }
 }

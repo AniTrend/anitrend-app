@@ -13,12 +13,15 @@ import com.mxt.anitrend.graphql.generated.ReviewRating
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.repository.BrowseRepository
 import com.mxt.anitrend.util.KeyUtil
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -49,6 +52,19 @@ class ReviewViewModel(
     )
 
     private val screenState = MutableStateFlow(ScreenState())
+
+    private val _rateReviewEvents = Channel<ReviewRateOutcome>(Channel.BUFFERED)
+
+    /**
+     * One-shot outcomes of [rateReview] calls. The canonical committed state is delivered
+     * through the [state] flow (store rebinding); these events only drive widget
+     * convergence (reset the vote loading state, surface a failure message).
+     *
+     * A buffered single-consumer channel is used so an outcome emitted while the fragment
+     * collector is inactive (for example when the view left STARTED mid-mutation) is
+     * retained and delivered when the next collector subscribes, instead of being dropped.
+     */
+    val rateReviewEvents: Flow<ReviewRateOutcome> = _rateReviewEvents.receiveAsFlow()
 
     val state: StateFlow<UiState> =
         screenState
@@ -138,7 +154,16 @@ class ReviewViewModel(
 
     fun rateReview(reviewId: Long, rating: ReviewRating?) {
         viewModelScope.launch {
-            rateReviewInteractor(reviewId, rating)
+            val outcome = ReviewRateOutcome(
+                reviewId = reviewId,
+                result = rateReviewInteractor(reviewId, rating),
+            )
+            _rateReviewEvents.send(outcome)
         }
+    }
+
+    override fun onCleared() {
+        _rateReviewEvents.close()
+        super.onCleared()
     }
 }

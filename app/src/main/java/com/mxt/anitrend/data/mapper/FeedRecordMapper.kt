@@ -54,6 +54,7 @@ fun UserBase.toUserSummaryRecord(): UserSummaryRecord = UserSummaryRecord(
     name = name,
     avatar = avatar?.large ?: avatar?.medium ?: avatar?.extraLarge,
     siteUrl = null,
+    isFollowing = isFollowing,
 )
 
 fun MediaBase.toMediaSummaryRecord(): MediaSummaryRecord = MediaSummaryRecord(
@@ -122,6 +123,7 @@ fun UserSummaryRecord.toUserBase(): UserBase = UserBase(name = name).apply {
         large = this@toUserBase.avatar,
         medium = this@toUserBase.avatar,
     )
+    isFollowing = this@toUserBase.isFollowing
 }
 
 fun MediaSummaryRecord.toMediaBase(): MediaBase = MediaBase().apply {

@@ -14,7 +14,6 @@ import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
 import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.databinding.WidgetProfileAboutPanelBinding
-import com.mxt.anitrend.model.entity.container.attribute.PageInfo
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.WidgetState
@@ -43,15 +42,39 @@ constructor(
 
     private var lastSynced: Long = 0L
 
-    private var followers: PageInfo? = null
-    private var following: PageInfo? = null
-    private var favourites: Int = 0
+    private var followers: StatState = StatState.NotLoaded
+    private var following: StatState = StatState.NotLoaded
+    private var favourites: StatState = StatState.NotLoaded
     private var lastAppliedFollowState: Boolean? = null
 
     private var bottomSheet: BottomSheetBase<*>? = null
     private var fragmentManager: FragmentManager? = null
 
     private val placeHolder = ".."
+
+    /**
+     * Loaded-state contract for a profile stat container (Favourite, Following, Followers).
+     *
+     * The widget must distinguish not-yet-loaded, failed, and loaded counts so a legitimate
+     * zero count never falls back to the loading toast: loaded counts (including zero) open
+     * the normal destination or list sheet, while not-yet-loaded and failed counts keep the
+     * loading toast.
+     */
+    sealed interface StatState {
+        data object NotLoaded : StatState
+        data object Failed : StatState
+        data class Loaded(val total: Int) : StatState
+    }
+
+    /**
+     * Resolves the click behavior of a profile stat container from its loaded state.
+     * Loaded counts (including zero) open the destination or list sheet; not-yet-loaded
+     * and failed counts keep the loading toast.
+     */
+    enum class StatClickAction {
+        Open,
+        ShowLoading,
+    }
 
     init {
         onInit()
@@ -78,27 +101,30 @@ constructor(
             binding.userFavouritesCount.text = placeHolder
             binding.userFollowersCount.text = placeHolder
             binding.userFollowingCount.text = placeHolder
+            followers = StatState.NotLoaded
+            following = StatState.NotLoaded
+            favourites = StatState.NotLoaded
 
             lastSynced = System.currentTimeMillis()
         }
     }
 
     fun setStats(
-        followersTotal: Int?,
-        followingTotal: Int?,
-        favouritesTotal: Int?,
+        followers: StatState,
+        following: StatState,
+        favourites: StatState,
     ) {
-        if (followersTotal != null) {
-            binding.userFollowersCount.text =
-                WidgetState.valueFormatter(followersTotal)
+        this.followers = followers
+        this.following = following
+        this.favourites = favourites
+        (followers as? StatState.Loaded)?.let { state ->
+            binding.userFollowersCount.text = WidgetState.valueFormatter(state.total)
         }
-        if (followingTotal != null) {
-            binding.userFollowingCount.text =
-                WidgetState.valueFormatter(followingTotal)
+        (following as? StatState.Loaded)?.let { state ->
+            binding.userFollowingCount.text = WidgetState.valueFormatter(state.total)
         }
-        if (favouritesTotal != null) {
-            binding.userFavouritesCount.text =
-                WidgetState.valueFormatter(favouritesTotal)
+        (favourites as? StatState.Loaded)?.let { state ->
+            binding.userFavouritesCount.text = WidgetState.valueFormatter(state.total)
         }
     }
 
@@ -113,47 +139,49 @@ constructor(
     override fun onClick(view: View) {
         when (view.id) {
             R.id.user_favourites_container -> {
-                if (favourites < 1) {
-                    NotifyUtil.makeText(context, R.string.text_activity_loading, Toast.LENGTH_SHORT).show()
-                } else {
+                if (favourites.resolveStatClick() == StatClickAction.Open) {
                     val intent =
                         Intent(context, FavouriteActivity::class.java).apply {
                             flags = Intent.FLAG_ACTIVITY_NEW_TASK
                             putExtra(KeyUtil.arg_id, userId)
                         }
                     context.startActivity(intent)
+                } else {
+                    NotifyUtil.makeText(context, R.string.text_activity_loading, Toast.LENGTH_SHORT).show()
                 }
             }
             R.id.user_followers_container -> {
-                if (followers == null || (followers?.total ?: 0) < 1) {
-                    NotifyUtil.makeText(context, R.string.text_activity_loading, Toast.LENGTH_SHORT).show()
-                } else {
+                if (followers.resolveStatClick() == StatClickAction.Open) {
+                    val loaded = followers as StatState.Loaded
                     val manager = fragmentManager ?: return
                     bottomSheet =
                         BottomSheetListUsers
                             .Builder()
                             .setUserId(userId)
-                            .setModelCount(followers?.total ?: 0)
+                            .setModelCount(loaded.total)
                             .setRequestType(KeyUtil.USER_FOLLOWERS_REQ)
                             .setTitle(R.string.title_bottom_sheet_followers)
                             .build()
                     bottomSheet?.show(manager, bottomSheet?.tag)
+                } else {
+                    NotifyUtil.makeText(context, R.string.text_activity_loading, Toast.LENGTH_SHORT).show()
                 }
             }
             R.id.user_following_container -> {
-                if (following == null || (following?.total ?: 0) < 1) {
-                    NotifyUtil.makeText(context, R.string.text_activity_loading, Toast.LENGTH_SHORT).show()
-                } else {
+                if (following.resolveStatClick() == StatClickAction.Open) {
+                    val loaded = following as StatState.Loaded
                     val manager = fragmentManager ?: return
                     bottomSheet =
                         BottomSheetListUsers
                             .Builder()
                             .setUserId(userId)
-                            .setModelCount(following?.total ?: 0)
+                            .setModelCount(loaded.total)
                             .setRequestType(KeyUtil.USER_FOLLOWING_REQ)
                             .setTitle(R.string.title_bottom_sheet_following)
                             .build()
                     bottomSheet?.show(manager, bottomSheet?.tag)
+                } else {
+                    NotifyUtil.makeText(context, R.string.text_activity_loading, Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -163,3 +191,15 @@ constructor(
         fragmentManager = activity?.supportFragmentManager
     }
 }
+
+/**
+ * Resolves the click behavior of a profile stat container from its loaded state.
+ * Loaded counts (including zero) open the normal destination or list sheet;
+ * not-yet-loaded and failed counts keep the loading toast.
+ */
+internal fun AboutPanelWidget.StatState.resolveStatClick(): AboutPanelWidget.StatClickAction =
+    if (this is AboutPanelWidget.StatState.Loaded) {
+        AboutPanelWidget.StatClickAction.Open
+    } else {
+        AboutPanelWidget.StatClickAction.ShowLoading
+    }

@@ -11,6 +11,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
+import com.mxt.anitrend.base.custom.view.widget.AboutPanelWidget.StatState
 import com.mxt.anitrend.binding.richMarkDown
 import com.mxt.anitrend.binding.setImage
 import com.mxt.anitrend.databinding.FragmentUserAboutBinding
@@ -176,22 +177,30 @@ class UserOverviewFragment : Fragment() {
             val followingDef = async { userRepository.getFollowing(id = userId, perPage = 1) }
             val favsDef = async { userRepository.getFavouritesCount(id = userId, perPage = 1) }
 
-            val followersTotal = followersDef.await().getOrNull()?.pageInfo?.total
-            val followingTotal = followingDef.await().getOrNull()?.pageInfo?.total
-            val favConnection = favsDef.await().getOrNull()?.connection
-            val favouritesTotal = if (favConnection != null) {
-                listOfNotNull(
-                    favConnection.anime?.pageInfo?.total,
-                    favConnection.manga?.pageInfo?.total,
-                    favConnection.characters?.pageInfo?.total,
-                    favConnection.staff?.pageInfo?.total,
-                    favConnection.studios?.pageInfo?.total,
-                ).sum()
-            } else {
-                null
-            }
+            val followersState = followersDef.await().fold(
+                onSuccess = { result -> StatState.Loaded(result.pageInfo?.total ?: 0) },
+                onFailure = { StatState.Failed },
+            )
+            val followingState = followingDef.await().fold(
+                onSuccess = { result -> StatState.Loaded(result.pageInfo?.total ?: 0) },
+                onFailure = { StatState.Failed },
+            )
+            val favouritesState = favsDef.await().fold(
+                onSuccess = { container ->
+                    StatState.Loaded(
+                        listOfNotNull(
+                            container.connection.anime?.pageInfo?.total,
+                            container.connection.manga?.pageInfo?.total,
+                            container.connection.characters?.pageInfo?.total,
+                            container.connection.staff?.pageInfo?.total,
+                            container.connection.studios?.pageInfo?.total,
+                        ).sum(),
+                    )
+                },
+                onFailure = { StatState.Failed },
+            )
 
-            binding.userAboutPanelWidget.setStats(followersTotal, followingTotal, favouritesTotal)
+            binding.userAboutPanelWidget.setStats(followersState, followingState, favouritesState)
         }
     }
 

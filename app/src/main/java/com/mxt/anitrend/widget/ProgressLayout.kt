@@ -61,6 +61,20 @@ constructor(
         applyState()
     }
 
+    /**
+     * Capture the content baseline as soon as a non-overlay child is attached, before any
+     * state transition can overwrite its visibility. Children are added programmatically
+     * after construction (e.g. via [addView]), which means [onFinishInflate] never sees
+     * them; without this, a child hidden before [showLoading] would have that hidden state
+     * recorded as its baseline and never be restored.
+     */
+    override fun onViewAdded(child: View) {
+        super.onViewAdded(child)
+        if (child.id !in overlayIds) {
+            initialContentVisibility.putIfAbsent(child, child.visibility)
+        }
+    }
+
     @MainThread
     fun showLoading() {
         if (!isMainThread()) {

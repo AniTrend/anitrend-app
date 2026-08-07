@@ -120,6 +120,14 @@ class ReviewFragment : FragmentBaseList<ReviewRecord, PageContainer<ReviewRecord
                 }
             }
         }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                reviewViewModel.rateReviewEvents.collect { outcome ->
+                    reviewAdapter?.onRateReviewResult(outcome.reviewId, outcome.result)
+                }
+            }
+        }
     }
 
     override fun onStart() {

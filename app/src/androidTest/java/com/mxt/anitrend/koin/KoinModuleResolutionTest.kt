@@ -23,7 +23,7 @@ class KoinModuleResolutionTest {
 
     @Suppress("DEPRECATION")
     @Test
-    fun `verify all Koin modules resolve correctly`() {
+    fun verifyAllKoinModulesResolveCorrectly() {
         startKoin {
             androidContext(ApplicationProvider.getApplicationContext())
             modules(appModules)

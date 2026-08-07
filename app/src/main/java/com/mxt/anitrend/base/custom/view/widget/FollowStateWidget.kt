@@ -63,6 +63,13 @@ constructor(
 
     fun setCurrentUser(user: UserBase?) {
         this.currentUser = user
+        // The model may already be bound: adapters commonly bind the row model before
+        // the current-user context on the first pass, and the visibility decision in
+        // setUserModel then runs against a still-null current user. Re-evaluate so a
+        // control is never left hidden because the user context arrived afterwards.
+        if (model != null) {
+            applyVisibilityState()
+        }
     }
 
     init {
@@ -74,7 +81,12 @@ constructor(
      */
     override fun onInit() {
         binding = WidgetButtonStateBinding.inflate(context.getLayoutInflater(), this, true)
+        // The inner button state text is the actual tap target Android delivers
+        // touches (and accessibility activations) to, so it must carry the same
+        // listener as the flipper. The CONTENT_STATE guard in [onClick] makes a
+        // single tap dispatch at most one mutation even if both paths ever fire.
         binding.widgetFlipper.setOnClickListener(this)
+        binding.buttonStateText.setOnClickListener(this)
     }
 
     fun setUserModel(model: UserBase) {
@@ -83,8 +95,19 @@ constructor(
         // A newly bound state always reflects the latest committed render source,
         // so a pending mutation loading state is reset.
         resetLoadingState()
+        applyVisibilityState()
+    }
+
+    /**
+     * Decides whether the follow control is rendered for the bound model:
+     * hidden when there is no authenticated current user context or when the row
+     * is the current user themself, visible otherwise.
+     */
+    private fun applyVisibilityState() {
+        val currentModel = model ?: return
         if (currentUser != null) {
-            if (!isCurrentUser(model)) {
+            if (!isCurrentUser(currentModel)) {
+                visibility = VISIBLE
                 setControlText()
             } else {
                 visibility = GONE
@@ -129,7 +152,9 @@ constructor(
 
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.widget_flipper -> {
+            R.id.widget_flipper,
+            R.id.button_state_text,
+            -> {
                 if (binding.widgetFlipper.displayedChild == CONTENT_STATE) {
                     val currentModel = model ?: run {
                         resetLoadingState()
