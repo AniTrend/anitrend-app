@@ -80,7 +80,7 @@
 
         </LinearLayout>
 
-        <androidx.legacy.widget.Space
+        <Space
             android:layout_width="wrap_content"
             android:layout_height="@dimen/mg_margin" />
 
@@ -106,7 +106,7 @@
 
         </LinearLayout>
 
-        <androidx.legacy.widget.Space
+        <Space
             android:layout_width="wrap_content"
             android:layout_height="@dimen/mg_margin" />
 

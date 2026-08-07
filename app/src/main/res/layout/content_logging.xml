@@ -38,7 +38,7 @@
                     android:textIsSelectable="true"
                     tools:text="v1.2.0 (build 123)" />
 
-                <androidx.legacy.widget.Space
+                <Space
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/md_margin" />
 
@@ -50,7 +50,7 @@
                     android:textIsSelectable="true"
                     tools:text="Google Pixel 6" />
 
-                <androidx.legacy.widget.Space
+                <Space
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/md_margin" />
 

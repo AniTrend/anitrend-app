@@ -20,7 +20,7 @@
                     android:layout_height="@dimen/xl_margin"
                     tools:src="@drawable/ic_close_grey_600_24dp" />
 
-                <androidx.legacy.widget.Space
+                <Space
                     android:layout_width="@dimen/lg_margin"
                     android:layout_height="wrap_content" />
 

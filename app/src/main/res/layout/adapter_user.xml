@@ -21,7 +21,7 @@
             android:layout_height="@dimen/avatar_size_md"
             tools:src="@drawable/avatar_placeholder"/>
 
-        <androidx.legacy.widget.Space
+        <Space
             android:layout_width="@dimen/xl_margin"
             android:layout_height="wrap_content" />
 
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             tools:text="Loath57"/>
 
-        <androidx.legacy.widget.Space
+        <Space
             android:layout_width="@dimen/xl_margin"
             android:layout_height="wrap_content" />
 

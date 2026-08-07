@@ -23,7 +23,7 @@
                 app:srcCompat="@drawable/ic_link_white_24dp"
                 app:tint="?colorAccent"/>
 
-            <androidx.legacy.widget.Space
+            <Space
                 android:layout_width="@dimen/xl_margin"
                 android:layout_height="wrap_content" />
 

@@ -15,7 +15,7 @@
             android:textColor="@color/white"
             tools:text="4.35"/>
 
-        <androidx.legacy.widget.Space
+        <Space
             android:layout_width="@dimen/md_margin"
             android:layout_height="wrap_content" />
 
