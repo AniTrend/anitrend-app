@@ -115,7 +115,7 @@ private fun ApplicationExtension.setUpWith(project: Project) {
     defaultConfig {
         applicationId = "com.mxt.anitrend"
         minSdk = 23
-        targetSdk = 36
+        targetSdk = 37
         versionCode = project.props[PropertyTypes.CODE].toInt()
         versionName = project.props[PropertyTypes.VERSION]
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
