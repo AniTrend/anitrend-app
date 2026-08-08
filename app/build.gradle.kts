@@ -28,9 +28,6 @@ dependencies {
     /** Photo View */
     implementation(libs.photoview)
 
-    /** On-boarding Experience */
-    implementation(libs.onboarder)
-
     /** Charts */
     implementation(libs.mpandroidchart)
 

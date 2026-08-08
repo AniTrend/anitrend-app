@@ -146,6 +146,7 @@ import com.mxt.anitrend.view.fragment.settings.SettingsCategoryLegacyFragment
 import com.mxt.anitrend.view.fragment.settings.SettingsHubFragment
 import com.mxt.anitrend.view.fragment.youtube.YouTubeEmbedFragment
 import com.mxt.anitrend.view.sheet.BottomSheetGiphy
+import com.mxt.anitrend.view.activity.base.OnboardingViewModel
 import com.mxt.anitrend.viewmodel.AccountSettingsViewModel
 import com.mxt.anitrend.viewmodel.AiringListViewModel
 import com.mxt.anitrend.viewmodel.BrowseReviewViewModel
@@ -749,6 +750,7 @@ private val studioFeatureModule = module {
 }
 
 private val utilityFeatureModule = module {
+    viewModel { OnboardingViewModel(settings = get()) }
     viewModel { GiphyViewModel(giphyService = get()) }
     viewModel { LoginAuthViewModel() }
     viewModel {

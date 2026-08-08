@@ -2,79 +2,84 @@ package com.mxt.anitrend.view.activity.base
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import androidx.core.content.ContextCompat
-import com.codemybrainsout.onboarder.AhoyOnboarderActivity
-import com.codemybrainsout.onboarder.AhoyOnboarderCard
+import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.children
+import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import com.mxt.anitrend.R
-import com.mxt.anitrend.extension.koinOf
+import com.mxt.anitrend.databinding.ActivityWelcomeBinding
+import com.mxt.anitrend.databinding.ItemOnboardingPageBinding
 import com.mxt.anitrend.util.CompatUtil
-import com.mxt.anitrend.util.Settings
+import com.mxt.anitrend.view.activity.CommonActivity
 import com.mxt.anitrend.view.activity.index.MainActivity
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-/**
- * Created by max on 2017/11/09.
- */
-class WelcomeActivity : AhoyOnboarderActivity() {
-    private lateinit var ahoyPages: List<AhoyOnboarderCard>
+/** Hosts the first-run onboarding flow and routes users into the main activity. */
+class WelcomeActivity : CommonActivity() {
 
-    private fun applyStyle(card: AhoyOnboarderCard): AhoyOnboarderCard {
-        card.setBackgroundColor(R.color.black_transparent)
-        card.setTitleColor(R.color.grey_200)
-        card.setDescriptionColor(R.color.grey_300)
-        return card
-    }
+    private val onboardingViewModel by viewModel<OnboardingViewModel>()
+    private lateinit var binding: ActivityWelcomeBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val paintIcon = R.drawable.ic_format_paint_white_24dp
-        val chartIcon = R.drawable.ic_bubble_chart_white_24dp
-        val searchIcon = R.drawable.ic_search_white_24dp
+        binding = ActivityWelcomeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        ahoyPages =
-            listOf(
-                AhoyOnboarderCard(
-                    getString(R.string.app_name),
-                    "${getString(R.string.app_greeting)} ${getString(R.string.app_provider)}",
-                    R.mipmap.ic_launcher,
-                ),
-                AhoyOnboarderCard(
-                    getString(R.string.app_intro_colors_title),
-                    getString(R.string.app_intro_colors_text),
-                    paintIcon,
-                ),
-                AhoyOnboarderCard(
-                    getString(R.string.app_intro_content_title),
-                    getString(R.string.app_intro_content_text),
-                    chartIcon,
-                ),
-                AhoyOnboarderCard(
-                    getString(R.string.app_intro_search_title),
-                    getString(R.string.app_intro_search_text),
-                    searchIcon,
-                ),
-                AhoyOnboarderCard(
-                    getString(R.string.app_intro_title),
-                    getString(R.string.app_intro_guide),
-                    R.mipmap.ic_launcher,
-                ),
-            ).map(::applyStyle)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val pagerParams = binding.viewPager.layoutParams as ConstraintLayout.LayoutParams
+            pagerParams.topMargin =
+                resources.getDimensionPixelSize(R.dimen.activity_vertical_margin) + systemBars.top
+            binding.viewPager.layoutParams = pagerParams
 
-        setFinishButtonDrawableStyle(ContextCompat.getDrawable(this, R.drawable.finish_button_style))
+            val buttonParams = binding.actionButton.layoutParams as ConstraintLayout.LayoutParams
+            buttonParams.bottomMargin =
+                resources.getDimensionPixelSize(R.dimen.activity_vertical_margin) + systemBars.bottom
+            binding.actionButton.layoutParams = buttonParams
+            insets
+        }
+        ViewCompat.requestApplyInsets(binding.root)
+
+        val adapter = OnboardingAdapter(onboardingViewModel.pages)
+        binding.viewPager.adapter = adapter
+
+        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                updatePageIndicator(position)
+                if (position == onboardingViewModel.pages.size - 1) {
+                    binding.actionButton.setText(R.string.get_started)
+                } else {
+                    binding.actionButton.setText(R.string.action_onboarding_continue)
+                }
+            }
+        })
+        updatePageIndicator(binding.viewPager.currentItem)
+
+        binding.actionButton.setOnClickListener {
+            val currentItem = binding.viewPager.currentItem
+            if (currentItem < onboardingViewModel.pages.size - 1) {
+                binding.viewPager.currentItem = currentItem + 1
+            } else {
+                onFinishButtonPressed()
+            }
+        }
     }
 
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
-        setFinishButtonTitle(R.string.get_started)
-        showNavigationControls(true)
-        setGradientBackground()
-        setOnboardPages(ahoyPages)
+    private fun updatePageIndicator(position: Int) {
+        binding.indicatorContainer.children.forEachIndexed { index, view ->
+            view.isSelected = index == position
+        }
     }
 
-    override fun onFinishButtonPressed() {
-        koinOf<Settings>().isFreshInstall = false
-        val target = findViewById<View>(R.id.btn_skip)
-        CompatUtil.startRevealAnim(this, target, Intent(this, MainActivity::class.java), true)
+    private fun onFinishButtonPressed() {
+        onboardingViewModel.onPostFreshInstall()
+        CompatUtil.startRevealAnim(this, binding.actionButton, Intent(this, MainActivity::class.java), true)
     }
 
     @Suppress("DEPRECATION")
@@ -87,5 +92,32 @@ class WelcomeActivity : AhoyOnboarderActivity() {
                 View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
                 View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         }
+    }
+
+    private class OnboardingAdapter(
+        private val pages: List<OnboardingViewModel.OnboardingPage>,
+    ) : RecyclerView.Adapter<OnboardingAdapter.ViewHolder>() {
+
+        class ViewHolder(val binding: ItemOnboardingPageBinding) : RecyclerView.ViewHolder(binding.root)
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+            val binding = ItemOnboardingPageBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false,
+            )
+            return ViewHolder(binding)
+        }
+
+        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+            val page = pages[position]
+            holder.binding.title.setText(page.titleRes)
+            holder.binding.description.setText(page.descriptionRes)
+            holder.binding.heroContainer.removeAllViews()
+            LayoutInflater.from(holder.binding.root.context)
+                .inflate(page.heroLayoutRes, holder.binding.heroContainer, true)
+        }
+
+        override fun getItemCount() = pages.size
     }
 }
