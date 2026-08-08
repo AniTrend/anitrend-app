@@ -4,6 +4,9 @@ import androidx.lifecycle.ViewModel
 import com.mxt.anitrend.R
 import com.mxt.anitrend.util.Settings
 
+/**
+ * Defines the pages shown during first-run onboarding and records completion.
+ */
 class OnboardingViewModel(
     private val settings: Settings,
 ) : ViewModel() {
@@ -36,10 +39,12 @@ class OnboardingViewModel(
         ),
     )
 
+    /** Marks onboarding as completed so it is not shown on the next launch. */
     fun onPostFreshInstall() {
         settings.isFreshInstall = false
     }
 
+    /** Immutable resources used to render one onboarding page. */
     data class OnboardingPage(
         val titleRes: Int,
         val descriptionRes: Int,

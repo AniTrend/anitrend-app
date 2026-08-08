@@ -19,6 +19,7 @@ import com.mxt.anitrend.view.activity.CommonActivity
 import com.mxt.anitrend.view.activity.index.MainActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+/** Hosts the first-run onboarding flow and routes users into the main activity. */
 class WelcomeActivity : CommonActivity() {
 
     private val onboardingViewModel by viewModel<OnboardingViewModel>()
