@@ -90,6 +90,8 @@
 
     <!--First time usage intro screen-->
     <string name="get_started">Get Started</string>
+    <!-- Action label on the onboarding button before the final page; advances to the next page -->
+    <string name="action_onboarding_continue">Continue</string>
     <string name="app_intro_colors_title">Color States</string>
     <string name="app_intro_colors_text">Colors Representing Anime/Manga Status!</string>
     <string name="app_intro_content_title">Content</string>
@@ -99,6 +101,39 @@
     <string name="app_intro_videos_title">Videos</string>
     <string name="app_intro_videos_text">Using Builtin Youtube Video Player!</string>
     <string name="app_greeting">Welcome to AniTrend, this is not a streaming app!</string>
+
+    <!-- Status chip label in the onboarding heroes; shows the "watching" list status -->
+    <string name="label_onboarding_status_watching">Watching</string>
+    <!-- Status chip label in the onboarding heroes; shows the "completed" list status -->
+    <string name="label_onboarding_status_completed">Completed</string>
+    <!-- Status chip label in the onboarding heroes; shows the "plan to watch" list status -->
+    <string name="label_onboarding_status_plan_to_watch">Plan to Watch</string>
+    <!-- Status chip label in the onboarding heroes; shows the "dropped" list status -->
+    <string name="label_onboarding_status_dropped">Dropped</string>
+    <!-- Status chip label in the onboarding heroes; shows the "on hold" list status -->
+    <string name="label_onboarding_status_on_hold">On Hold</string>
+    <!-- Status chip label in the onboarding heroes; shows the "rewatching" list status -->
+    <string name="label_onboarding_status_rewatching">Rewatching</string>
+
+    <!-- Placeholder text in the search bar mockup of the onboarding searching hero -->
+    <string name="placeholder_onboarding_search">Search anime, manga...</string>
+    <!-- Example search result in the onboarding searching hero; Jujutsu Kaisen is an anime title -->
+    <string name="label_onboarding_search_result_jujutsu_kaisen">Jujutsu Kaisen</string>
+    <!-- Example search result in the onboarding searching hero; One Piece is an anime title -->
+    <string name="label_onboarding_search_result_one_piece">One Piece</string>
+
+    <!-- First onboarding page description; friendly benefit-led copy about discovering, tracking, and organizing anime and manga -->
+    <string name="description_onboarding_welcome">Discover new favourites, track your progress, and keep every anime and manga list in one place.</string>
+    <!-- Colors page description; explains the color coding of anime/manga list statuses -->
+    <string name="description_onboarding_colors">Quickly identify what you\'re watching, completed, or planning to watch with intuitive color coding at a glance.</string>
+    <!-- Content page description; explains the browsable catalog -->
+    <string name="description_onboarding_content">Browse thousands of titles with detailed info, ratings, seasonal charts, and staff credits - updated daily.</string>
+    <!-- Searching page description; explains search and filter capabilities -->
+    <string name="description_onboarding_searching">Powerful search with filters by genre, year, studio, and status - find exactly what you\'re looking for.</string>
+    <!-- Final onboarding page title; introduces managing anime and manga lists -->
+    <string name="title_onboarding_manage">Manage Your List</string>
+    <!-- Final onboarding page description; long-pressing an anime or manga item opens list management for status, progress, and details -->
+    <string name="description_onboarding_manage">Long-press any anime or manga to manage its status, progress, and details.</string>
 
     <!--Filter menu entry these are the dialog titles-->
     <string name="app_filter_sort">Sort By?</string>

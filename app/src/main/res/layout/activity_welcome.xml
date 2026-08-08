@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/onboarding_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorSurface">
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        app:layout_constraintBottom_toTopOf="@id/indicator_container"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/indicator_container"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:accessibilityLiveRegion="polite"
+        android:gravity="center"
+        android:importantForAccessibility="no"
+        android:layout_marginBottom="@dimen/spacing_xs"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/action_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintVertical_bias="0.5">
+
+        <View
+            android:layout_width="14dp"
+            android:layout_height="10dp"
+            android:layout_marginStart="@dimen/md_margin"
+            android:layout_marginEnd="@dimen/md_margin"
+            android:background="@drawable/sel_onboarding_dot"
+            android:contentDescription="@null" />
+        <View
+            android:layout_width="14dp"
+            android:layout_height="10dp"
+            android:layout_marginStart="@dimen/md_margin"
+            android:layout_marginEnd="@dimen/md_margin"
+            android:background="@drawable/sel_onboarding_dot"
+            android:contentDescription="@null" />
+        <View
+            android:layout_width="14dp"
+            android:layout_height="10dp"
+            android:layout_marginStart="@dimen/md_margin"
+            android:layout_marginEnd="@dimen/md_margin"
+            android:background="@drawable/sel_onboarding_dot"
+            android:contentDescription="@null" />
+        <View
+            android:layout_width="14dp"
+            android:layout_height="10dp"
+            android:layout_marginStart="@dimen/md_margin"
+            android:layout_marginEnd="@dimen/md_margin"
+            android:background="@drawable/sel_onboarding_dot"
+            android:contentDescription="@null" />
+        <View
+            android:layout_width="14dp"
+            android:layout_height="10dp"
+            android:layout_marginStart="@dimen/md_margin"
+            android:layout_marginEnd="@dimen/md_margin"
+            android:background="@drawable/sel_onboarding_dot"
+            android:contentDescription="@null" />
+
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/action_button"
+        style="@style/Widget.Material3.Button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:minHeight="56dp"
+        android:text="@string/get_started"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

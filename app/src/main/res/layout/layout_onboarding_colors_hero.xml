@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_xs"
+        android:layout_marginEnd="@dimen/spacing_xs"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="@string/label_onboarding_status_watching"
+            app:chipBackgroundColor="?attr/colorSecondaryContainer"
+            app:chipIcon="@drawable/ic_remove_red_eye_white_18dp"
+            app:chipIconTint="?attr/colorOnSecondaryContainer" />
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="@string/label_onboarding_status_completed"
+            app:chipBackgroundColor="?attr/colorTertiaryContainer"
+            app:chipIcon="@drawable/ic_check_circle_white_24dp"
+            app:chipIconTint="?attr/colorOnTertiaryContainer" />
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="@string/label_onboarding_status_plan_to_watch"
+            app:chipBackgroundColor="?attr/colorPrimaryContainer"
+            app:chipIcon="@drawable/ic_time_white_18dp"
+            app:chipIconTint="?attr/colorOnPrimaryContainer" />
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="@string/label_onboarding_status_dropped"
+            app:chipBackgroundColor="?attr/colorErrorContainer"
+            app:chipIcon="@drawable/ic_delete_red_600_18dp"
+            app:chipIconTint="?attr/colorOnErrorContainer" />
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="@string/label_onboarding_status_on_hold"
+            app:chipBackgroundColor="?attr/colorSecondaryContainer"
+            app:chipIcon="@drawable/ic_pause_white_18dp"
+            app:chipIconTint="?attr/colorOnSecondaryContainer" />
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="@string/label_onboarding_status_rewatching"
+            app:chipBackgroundColor="?attr/colorPrimaryContainer"
+            app:chipIcon="@drawable/ic_repeat_white_18dp"
+            app:chipIconTint="?attr/colorPrimary" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
