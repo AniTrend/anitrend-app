@@ -100,6 +100,41 @@
     <string name="app_intro_videos_text">¡Facilita la visualización de vídeos de Youtube a través del reproductor integrado!</string>
     <string name="app_greeting">¡Bienvenido/a a AniTrend, this is not a streaming app!</string>
 
+    <!-- Action label on the onboarding button before the final page; advances to the next page -->
+    <string name="action_onboarding_continue">Continuar</string>
+    <!-- Status chip label in the onboarding heroes; shows the "watching" list status -->
+    <string name="label_onboarding_status_watching">Viendo</string>
+    <!-- Status chip label in the onboarding heroes; shows the "completed" list status -->
+    <string name="label_onboarding_status_completed">Completado</string>
+    <!-- Status chip label in the onboarding heroes; shows the "plan to watch" list status -->
+    <string name="label_onboarding_status_plan_to_watch">Pendiente</string>
+    <!-- Status chip label in the onboarding heroes; shows the "dropped" list status -->
+    <string name="label_onboarding_status_dropped">Abandonado</string>
+    <!-- Status chip label in the onboarding heroes; shows the "on hold" list status -->
+    <string name="label_onboarding_status_on_hold">En pausa</string>
+    <!-- Status chip label in the onboarding heroes; shows the "rewatching" list status -->
+    <string name="label_onboarding_status_rewatching">Volviendo a ver</string>
+
+    <!-- Placeholder text in the search bar mockup of the onboarding searching hero -->
+    <string name="placeholder_onboarding_search">Buscar anime, manga...</string>
+    <!-- Example search result in the onboarding searching hero; Jujutsu Kaisen is an anime title -->
+    <string name="label_onboarding_search_result_jujutsu_kaisen">Jujutsu Kaisen</string>
+    <!-- Example search result in the onboarding searching hero; One Piece is an anime title -->
+    <string name="label_onboarding_search_result_one_piece">One Piece</string>
+
+    <!-- First onboarding page description; friendly benefit-led copy about discovering, tracking, and organizing anime and manga -->
+    <string name="description_onboarding_welcome">Descubre nuevos favoritos, sigue tu progreso y mantén todas tus listas de anime y manga en un solo lugar.</string>
+    <!-- Colors page description; explains the color coding of anime/manga list statuses -->
+    <string name="description_onboarding_colors">Identifica rápidamente lo que estás viendo, has completado o planeas ver con un código de colores intuitivo.</string>
+    <!-- Content page description; explains the browsable catalog -->
+    <string name="description_onboarding_content">Explora miles de títulos con información detallada, valoraciones, listas de temporada y créditos del equipo, actualizados a diario.</string>
+    <!-- Searching page description; explains search and filter capabilities -->
+    <string name="description_onboarding_searching">Búsqueda potente con filtros por género, año, estudio y estado para encontrar exactamente lo que buscas.</string>
+    <!-- Final onboarding page title; introduces managing anime and manga lists -->
+    <string name="title_onboarding_manage">Gestiona tu lista</string>
+    <!-- Final onboarding page description; long-pressing an anime or manga item opens list management for status, progress, and details -->
+    <string name="description_onboarding_manage">Mantén pulsado cualquier anime o manga para gestionar su estado, progreso y detalles.</string>
+
     <!--Filter menu entry these are the dialog titles-->
     <string name="app_filter_sort">Ordenar Por:</string>
     <string name="app_filter_on_list">On My List?</string>
@@ -728,7 +763,8 @@ elementos de tus favoritos al presionar en el icono del corazón .
     <string name="show_spoiler_tags">Show Spoiler Tags</string>
     <string name="notification_media_added">New Related Media Added</string>
     <string name="drawer_section_extras">Extras</string>
-    <string name="app_intro_videos_title">Videos</string>
+    <!-- Section title on the first-time intro screen; shows the videos feature -->
+    <string name="app_intro_videos_title">Vídeos</string>
     <string name="pref_header_general">General</string>
     <string name="text_error_auth_token">Invalid session, please log out and back in</string>
     <string name="text_migration_in_progress">Application is upgrading, please wait</string>

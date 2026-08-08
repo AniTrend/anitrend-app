@@ -99,6 +99,41 @@
     <string name="app_intro_videos_text">Usando um Player Embutido do Youtube!</string>
     <string name="app_greeting">Bem-vindo ao AniTrend, this is not a streaming app!</string>
 
+    <!-- Action label on the onboarding button before the final page; advances to the next page -->
+    <string name="action_onboarding_continue">Continuar</string>
+    <!-- Status chip label in the onboarding heroes; shows the "watching" list status -->
+    <string name="label_onboarding_status_watching">Assistindo</string>
+    <!-- Status chip label in the onboarding heroes; shows the "completed" list status -->
+    <string name="label_onboarding_status_completed">Concluído</string>
+    <!-- Status chip label in the onboarding heroes; shows the "plan to watch" list status -->
+    <string name="label_onboarding_status_plan_to_watch">Planejado para assistir</string>
+    <!-- Status chip label in the onboarding heroes; shows the "dropped" list status -->
+    <string name="label_onboarding_status_dropped">Abandonado</string>
+    <!-- Status chip label in the onboarding heroes; shows the "on hold" list status -->
+    <string name="label_onboarding_status_on_hold">Em espera</string>
+    <!-- Status chip label in the onboarding heroes; shows the "rewatching" list status -->
+    <string name="label_onboarding_status_rewatching">Assistindo novamente</string>
+
+    <!-- Placeholder text in the search bar mockup of the onboarding searching hero -->
+    <string name="placeholder_onboarding_search">Pesquisar anime, mangá...</string>
+    <!-- Example search result in the onboarding searching hero; Jujutsu Kaisen is an anime title -->
+    <string name="label_onboarding_search_result_jujutsu_kaisen">Jujutsu Kaisen</string>
+    <!-- Example search result in the onboarding searching hero; One Piece is an anime title -->
+    <string name="label_onboarding_search_result_one_piece">One Piece</string>
+
+    <!-- First onboarding page description; friendly benefit-led copy about discovering, tracking, and organizing anime and manga -->
+    <string name="description_onboarding_welcome">Descubra novos favoritos, acompanhe seu progresso e mantenha todas as suas listas de anime e mangá em um só lugar.</string>
+    <!-- Colors page description; explains the color coding of anime/manga list statuses -->
+    <string name="description_onboarding_colors">Identifique rapidamente o que você está assistindo, concluiu ou planeja assistir com um código de cores intuitivo.</string>
+    <!-- Content page description; explains the browsable catalog -->
+    <string name="description_onboarding_content">Explore milhares de títulos com informações detalhadas, avaliações, calendários sazonais e créditos da equipe, atualizados diariamente.</string>
+    <!-- Searching page description; explains search and filter capabilities -->
+    <string name="description_onboarding_searching">Pesquisa poderosa com filtros por gênero, ano, estúdio e status para encontrar exatamente o que você procura.</string>
+    <!-- Final onboarding page title; introduces managing anime and manga lists -->
+    <string name="title_onboarding_manage">Gerencie sua lista</string>
+    <!-- Final onboarding page description; long-pressing an anime or manga item opens list management for status, progress, and details -->
+    <string name="description_onboarding_manage">Mantenha pressionado qualquer anime ou mangá para gerenciar seu status, progresso e detalhes.</string>
+
     <!--Filter menu entry these are the dialog titles-->
     <string name="app_filter_sort">Classificar por?</string>
     <string name="app_filter_on_list">On My List?</string>
@@ -730,7 +765,8 @@
     <string name="tip_messages_title">Messages</string>
     <string name="nav_home">Home</string>
     <string name="drawer_section_extras">Extras</string>
-    <string name="app_intro_videos_title">Videos</string>
+    <!-- Section title on the first-time intro screen; shows the videos feature -->
+    <string name="app_intro_videos_title">Vídeos</string>
     <string name="text_error_auth_token">Invalid session, please log out and back in</string>
     <string name="text_migration_in_progress">Application is upgrading, please wait</string>
     <string name="title_migration_failed">Upgrade Failed</string>
