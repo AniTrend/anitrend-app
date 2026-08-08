@@ -88,6 +88,41 @@
     <string name="app_intro_videos_text">Les vidéos peuvent être visionner dans l\'application !</string>
     <string name="app_greeting">Bienvenue sur AniTrend, this is not a streaming app!</string>
 
+    <!-- Action label on the onboarding button before the final page; advances to the next page -->
+    <string name="action_onboarding_continue">Continuer</string>
+    <!-- Status chip label in the onboarding heroes; shows the "watching" list status -->
+    <string name="label_onboarding_status_watching">En cours</string>
+    <!-- Status chip label in the onboarding heroes; shows the "completed" list status -->
+    <string name="label_onboarding_status_completed">Terminé</string>
+    <!-- Status chip label in the onboarding heroes; shows the "plan to watch" list status -->
+    <string name="label_onboarding_status_plan_to_watch">À regarder</string>
+    <!-- Status chip label in the onboarding heroes; shows the "dropped" list status -->
+    <string name="label_onboarding_status_dropped">Abandonné</string>
+    <!-- Status chip label in the onboarding heroes; shows the "on hold" list status -->
+    <string name="label_onboarding_status_on_hold">En pause</string>
+    <!-- Status chip label in the onboarding heroes; shows the "rewatching" list status -->
+    <string name="label_onboarding_status_rewatching">À revoir</string>
+
+    <!-- Placeholder text in the search bar mockup of the onboarding searching hero -->
+    <string name="placeholder_onboarding_search">Rechercher un anime, un manga...</string>
+    <!-- Example search result in the onboarding searching hero; Jujutsu Kaisen is an anime title -->
+    <string name="label_onboarding_search_result_jujutsu_kaisen">Jujutsu Kaisen</string>
+    <!-- Example search result in the onboarding searching hero; One Piece is an anime title -->
+    <string name="label_onboarding_search_result_one_piece">One Piece</string>
+
+    <!-- First onboarding page description; friendly benefit-led copy about discovering, tracking, and organizing anime and manga -->
+    <string name="description_onboarding_welcome">Découvrez de nouveaux favoris, suivez votre progression et gardez toutes vos listes d\'animes et de mangas au même endroit.</string>
+    <!-- Colors page description; explains the color coding of anime/manga list statuses -->
+    <string name="description_onboarding_colors">Identifiez rapidement ce que vous regardez, avez terminé ou prévoyez de regarder grâce à un code couleur intuitif.</string>
+    <!-- Content page description; explains the browsable catalog -->
+    <string name="description_onboarding_content">Parcourez des milliers de titres avec des informations détaillées, des notes, des classements saisonniers et les crédits de l\'équipe, mis à jour chaque jour.</string>
+    <!-- Searching page description; explains search and filter capabilities -->
+    <string name="description_onboarding_searching">Recherche puissante avec des filtres par genre, année, studio et statut pour trouver exactement ce que vous cherchez.</string>
+    <!-- Final onboarding page title; introduces managing anime and manga lists -->
+    <string name="title_onboarding_manage">Gérer votre liste</string>
+    <!-- Final onboarding page description; long-pressing an anime or manga item opens list management for status, progress, and details -->
+    <string name="description_onboarding_manage">Maintenez appuyé sur un anime ou un manga pour gérer son statut, sa progression et ses détails.</string>
+
     <!--Filter menu entry these are the dialog titles-->
     <string name="app_filter_sort">Trier par ?</string>
     <string name="app_filter_on_list">On My List?</string>

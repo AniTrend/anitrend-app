@@ -100,6 +100,41 @@
     <string name="app_intro_videos_text">Använda Inbyggd Youtube Video Player!</string>
     <string name="app_greeting">Välkommen till AniTrend, this is not a streaming app!</string>
 
+    <!-- Action label on the onboarding button before the final page; advances to the next page -->
+    <string name="action_onboarding_continue">Fortsätt</string>
+    <!-- Status chip label in the onboarding heroes; shows the "watching" list status -->
+    <string name="label_onboarding_status_watching">Tittar på</string>
+    <!-- Status chip label in the onboarding heroes; shows the "completed" list status -->
+    <string name="label_onboarding_status_completed">Slutförd</string>
+    <!-- Status chip label in the onboarding heroes; shows the "plan to watch" list status -->
+    <string name="label_onboarding_status_plan_to_watch">Planerad</string>
+    <!-- Status chip label in the onboarding heroes; shows the "dropped" list status -->
+    <string name="label_onboarding_status_dropped">Övergiven</string>
+    <!-- Status chip label in the onboarding heroes; shows the "on hold" list status -->
+    <string name="label_onboarding_status_on_hold">Pausad</string>
+    <!-- Status chip label in the onboarding heroes; shows the "rewatching" list status -->
+    <string name="label_onboarding_status_rewatching">Tittar igen</string>
+
+    <!-- Placeholder text in the search bar mockup of the onboarding searching hero -->
+    <string name="placeholder_onboarding_search">Sök anime, manga...</string>
+    <!-- Example search result in the onboarding searching hero; Jujutsu Kaisen is an anime title -->
+    <string name="label_onboarding_search_result_jujutsu_kaisen">Jujutsu Kaisen</string>
+    <!-- Example search result in the onboarding searching hero; One Piece is an anime title -->
+    <string name="label_onboarding_search_result_one_piece">One Piece</string>
+
+    <!-- First onboarding page description; friendly benefit-led copy about discovering, tracking, and organizing anime and manga -->
+    <string name="description_onboarding_welcome">Upptäck nya favoriter, följ dina framsteg och samla alla dina anime- och mangalistor på ett ställe.</string>
+    <!-- Colors page description; explains the color coding of anime/manga list statuses -->
+    <string name="description_onboarding_colors">Se snabbt vad du tittar på, har slutfört eller planerar att titta på med intuitiv färgkodning.</string>
+    <!-- Content page description; explains the browsable catalog -->
+    <string name="description_onboarding_content">Bläddra bland tusentals titlar med detaljerad information, betyg, säsongslistor och uppgifter om medverkande, uppdaterade dagligen.</string>
+    <!-- Searching page description; explains search and filter capabilities -->
+    <string name="description_onboarding_searching">Kraftfull sökning med filter för genre, år, studio och status så att du hittar exakt det du söker.</string>
+    <!-- Final onboarding page title; introduces managing anime and manga lists -->
+    <string name="title_onboarding_manage">Hantera din lista</string>
+    <!-- Final onboarding page description; long-pressing an anime or manga item opens list management for status, progress, and details -->
+    <string name="description_onboarding_manage">Tryck och håll på valfri anime eller manga för att hantera status, framsteg och detaljer.</string>
+
     <!--Filter menu entry these are the dialog titles-->
     <string name="app_filter_sort">Sortera efter?</string>
     <string name="app_filter_on_list">On My List?</string>

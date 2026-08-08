@@ -104,6 +104,41 @@
     <string name="app_intro_videos_text">يستخدم مشغل مقاطع الفيديو الخاص بيوتيوب مدمج معه!</string>
     <string name="app_greeting">أهلا بك في AniTrend, this is not a streaming app!</string>
 
+    <!-- Action label on the onboarding button before the final page; advances to the next page -->
+    <string name="action_onboarding_continue">متابعة</string>
+    <!-- Status chip label in the onboarding heroes; shows the "watching" list status -->
+    <string name="label_onboarding_status_watching">قيد المشاهدة</string>
+    <!-- Status chip label in the onboarding heroes; shows the "completed" list status -->
+    <string name="label_onboarding_status_completed">مكتمل</string>
+    <!-- Status chip label in the onboarding heroes; shows the "plan to watch" list status -->
+    <string name="label_onboarding_status_plan_to_watch">مخطط للمشاهدة</string>
+    <!-- Status chip label in the onboarding heroes; shows the "dropped" list status -->
+    <string name="label_onboarding_status_dropped">متروك</string>
+    <!-- Status chip label in the onboarding heroes; shows the "on hold" list status -->
+    <string name="label_onboarding_status_on_hold">متوقف مؤقتًا</string>
+    <!-- Status chip label in the onboarding heroes; shows the "rewatching" list status -->
+    <string name="label_onboarding_status_rewatching">إعادة المشاهدة</string>
+
+    <!-- Placeholder text in the search bar mockup of the onboarding searching hero -->
+    <string name="placeholder_onboarding_search">ابحث عن أنمي أو مانغا...</string>
+    <!-- Example search result in the onboarding searching hero; Jujutsu Kaisen is an anime title -->
+    <string name="label_onboarding_search_result_jujutsu_kaisen">Jujutsu Kaisen</string>
+    <!-- Example search result in the onboarding searching hero; One Piece is an anime title -->
+    <string name="label_onboarding_search_result_one_piece">One Piece</string>
+
+    <!-- First onboarding page description; friendly benefit-led copy about discovering, tracking, and organizing anime and manga -->
+    <string name="description_onboarding_welcome">اكتشف أعمالًا جديدة، وتابع تقدمك، واحتفظ بكل قوائم الأنمي والمانغا في مكان واحد.</string>
+    <!-- Colors page description; explains the color coding of anime/manga list statuses -->
+    <string name="description_onboarding_colors">حدد بسرعة ما تشاهده وما أكملته وما تخطط لمشاهدته باستخدام ترميز لوني واضح.</string>
+    <!-- Content page description; explains the browsable catalog -->
+    <string name="description_onboarding_content">تصفح آلاف العناوين مع معلومات مفصلة وتقييمات ومخططات موسمية وبيانات فريق العمل، مع تحديثات يومية.</string>
+    <!-- Searching page description; explains search and filter capabilities -->
+    <string name="description_onboarding_searching">ابحث باستخدام فلاتر النوع والسنة والاستوديو والحالة، واعثر على ما تبحث عنه بدقة.</string>
+    <!-- Final onboarding page title; introduces managing anime and manga lists -->
+    <string name="title_onboarding_manage">إدارة قائمتك</string>
+    <!-- Final onboarding page description; long-pressing an anime or manga item opens list management for status, progress, and details -->
+    <string name="description_onboarding_manage">اضغط مطولًا على أي أنمي أو مانغا لإدارة حالته وتقدمه وتفاصيله.</string>
+
     <!--Filter menu entry these are the dialog titles-->
     <string name="app_filter_sort">الفرز حسب:</string>
     <string name="app_filter_on_list">On My List?</string>
