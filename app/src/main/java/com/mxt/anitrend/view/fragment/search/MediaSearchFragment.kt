@@ -2,23 +2,17 @@ package com.mxt.anitrend.view.fragment.search
 
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.VisibleForTesting
-import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.paging.CombinedLoadStates
-import androidx.paging.LoadState
-import androidx.paging.LoadStateAdapter
-import androidx.recyclerview.widget.RecyclerView
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.search.MediaSearchAdapter
+import com.mxt.anitrend.adapter.recycler.shared.LoadStateFooterAdapter
+import com.mxt.anitrend.adapter.recycler.shared.PagingLoadStateRenderer
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
-import com.mxt.anitrend.databinding.ItemMediaSearchLoadStateFooterBinding
 import com.mxt.anitrend.domain.model.MediaSearchItemUiModel
-import com.mxt.anitrend.extension.getLayoutInflater
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.container.body.PageContainer
@@ -119,9 +113,19 @@ class MediaSearchFragment : FragmentBaseList<MediaSearchItemUiModel, PageContain
         // Append errors render in a load-state footer; the pull-up "load more"
         // gesture of the base swipe layout is disabled for this screen.
         swipeRefreshLayout.setPermitLoad(false)
-        val footer = MediaSearchLoadStateAdapter(retry = adapter::retry)
+        val footer = LoadStateFooterAdapter(retry = adapter::retry)
         recyclerView.adapter = adapter.withLoadStateFooter(footer)
-        val loadStateRenderer = PagingLoadStateRenderer(itemCount = { adapter.itemCount })
+        val loadStateRenderer =
+            PagingLoadStateRenderer(
+                itemCount = { adapter.itemCount },
+                showLoading = ::showLoading,
+                showContent = ::showContent,
+                showError = ::showError,
+                showEmpty = ::showEmpty,
+                stopRefreshIndicators = ::stopRefreshIndicators,
+                errorMessage = { getString(R.string.text_error_request) },
+                emptyMessage = { getString(R.string.layout_empty_response) },
+            )
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -172,44 +176,12 @@ class MediaSearchFragment : FragmentBaseList<MediaSearchItemUiModel, PageContain
     /** No-op: the PagingData collection in onViewCreated handles the stream. */
     override fun onChanged(value: PageContainer<MediaBase>?) = Unit
 
-    /**
-     * Renders Paging load states onto the base-class screen surfaces: the base
-     * progress/error/empty states for refresh, and the load-state footer for
-     * append. Keeps the swipe-refresh indicators in sync with the refresh state.
-     */
-    private inner class PagingLoadStateRenderer(
-        private val itemCount: () -> Int,
-    ) {
-        fun render(loadStates: CombinedLoadStates) {
-            val refresh = loadStates.refresh
-            when {
-                itemCount() > 0 -> {
-                    // Keep the swipe spinner while a refresh is in flight; otherwise stop it.
-                    if (refresh !is LoadState.Loading) {
-                        stopRefreshIndicators()
-                    }
-                    showContent()
-                }
-                refresh is LoadState.Loading -> showLoading()
-                refresh is LoadState.Error -> {
-                    stopRefreshIndicators()
-                    showError(refresh.error.message ?: getString(R.string.text_error_request))
-                }
-                loadStates.append.endOfPaginationReached -> {
-                    stopRefreshIndicators()
-                    showEmpty(getString(R.string.layout_empty_response))
-                }
-                else -> showLoading()
-            }
+    private fun stopRefreshIndicators() {
+        if (swipeRefreshLayout.isRefreshing()) {
+            swipeRefreshLayout.setRefreshing(false)
         }
-
-        private fun stopRefreshIndicators() {
-            if (swipeRefreshLayout.isRefreshing()) {
-                swipeRefreshLayout.setRefreshing(false)
-            }
-            if (swipeRefreshLayout.isLoading()) {
-                swipeRefreshLayout.setLoading(false)
-            }
+        if (swipeRefreshLayout.isLoading()) {
+            swipeRefreshLayout.setLoading(false)
         }
     }
 
@@ -263,46 +235,4 @@ class MediaSearchFragment : FragmentBaseList<MediaSearchItemUiModel, PageContain
         target: View,
         data: IndexedValue<MediaSearchItemUiModel>,
     ) = Unit
-}
-
-/**
- * Append load-state footer for the media search screen: shows a spinner while the
- * next page loads and a retry action when the append failed.
- */
-private class MediaSearchLoadStateAdapter(
-    private val retry: () -> Unit,
-) : LoadStateAdapter<MediaSearchLoadStateAdapter.LoadStateViewHolder>() {
-
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        loadState: LoadState,
-    ): LoadStateViewHolder = LoadStateViewHolder(
-        ItemMediaSearchLoadStateFooterBinding.inflate(
-            parent.context.getLayoutInflater(),
-            parent,
-            false,
-        ),
-    )
-
-    override fun onBindViewHolder(
-        holder: LoadStateViewHolder,
-        loadState: LoadState,
-    ) {
-        holder.bind(loadState)
-    }
-
-    inner class LoadStateViewHolder(
-        private val binding: ItemMediaSearchLoadStateFooterBinding,
-    ) : RecyclerView.ViewHolder(binding.root) {
-        init {
-            binding.retryButton.setOnClickListener { retry() }
-        }
-
-        fun bind(loadState: LoadState) {
-            val loading = loadState is LoadState.Loading
-            binding.loadingProgress.isVisible = loading
-            binding.loadingText.isVisible = loading
-            binding.retryButton.isVisible = loadState is LoadState.Error
-        }
-    }
 }
