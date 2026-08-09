@@ -18,6 +18,7 @@ interface EpisodeService {
     @GET("crunchyroll/rss")
     suspend fun getLatestFeed(): Response<Rss>
 
+    /** Fetches the Crunchyroll episode feed from the given URL as RSS. */
     @GET
     suspend fun getRssByUrl(
         @Url link: String?,
