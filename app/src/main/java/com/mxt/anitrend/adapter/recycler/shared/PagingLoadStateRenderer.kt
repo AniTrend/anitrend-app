@@ -8,18 +8,12 @@ import androidx.paging.LoadState
  * progress/error/empty states for refresh, and the load-state footer for
  * append. Keeps the swipe-refresh indicators in sync with the refresh state.
  *
- * Effects are injected as callbacks so the decision logic stays framework-free
- * and unit-testable.
+ * Effects are injected through [Callbacks] so the decision logic stays
+ * framework-free and unit-testable.
  */
 class PagingLoadStateRenderer(
     private val itemCount: () -> Int,
-    private val showLoading: () -> Unit,
-    private val showContent: () -> Unit,
-    private val showError: (String) -> Unit,
-    private val showEmpty: (String) -> Unit,
-    private val stopRefreshIndicators: () -> Unit,
-    private val errorMessage: () -> String,
-    private val emptyMessage: () -> String,
+    private val callbacks: Callbacks,
 ) {
     /** Projects the current combined state onto the injected screen surfaces. */
     fun render(loadStates: CombinedLoadStates) {
@@ -28,20 +22,35 @@ class PagingLoadStateRenderer(
             itemCount() > 0 -> {
                 // Keep the swipe spinner while a refresh is in flight; otherwise stop it.
                 if (refresh !is LoadState.Loading) {
-                    stopRefreshIndicators()
+                    callbacks.stopRefreshIndicators()
                 }
-                showContent()
+                callbacks.showContent()
             }
-            refresh is LoadState.Loading -> showLoading()
+            refresh is LoadState.Loading -> callbacks.showLoading()
             refresh is LoadState.Error -> {
-                stopRefreshIndicators()
-                showError(refresh.error.message ?: errorMessage())
+                callbacks.stopRefreshIndicators()
+                callbacks.showError(refresh.error.message ?: callbacks.errorMessage())
             }
             loadStates.append.endOfPaginationReached -> {
-                stopRefreshIndicators()
-                showEmpty(emptyMessage())
+                callbacks.stopRefreshIndicators()
+                callbacks.showEmpty(callbacks.emptyMessage())
             }
-            else -> showLoading()
+            else -> callbacks.showLoading()
         }
     }
+
+    /**
+     * Configuration holder for the fragment UI effects the renderer drives:
+     * the base-class state surfaces, the swipe-refresh indicator settling, and
+     * the fallback error and empty texts.
+     */
+    class Callbacks(
+        val showLoading: () -> Unit,
+        val showContent: () -> Unit,
+        val showError: (String) -> Unit,
+        val showEmpty: (String) -> Unit,
+        val stopRefreshIndicators: () -> Unit,
+        val errorMessage: () -> String,
+        val emptyMessage: () -> String,
+    )
 }

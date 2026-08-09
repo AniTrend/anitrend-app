@@ -118,13 +118,22 @@ class MediaSearchFragment : FragmentBaseList<MediaSearchItemUiModel, PageContain
         val loadStateRenderer =
             PagingLoadStateRenderer(
                 itemCount = { adapter.itemCount },
-                showLoading = ::showLoading,
-                showContent = ::showContent,
-                showError = ::showError,
-                showEmpty = ::showEmpty,
-                stopRefreshIndicators = ::stopRefreshIndicators,
-                errorMessage = { getString(R.string.text_error_request) },
-                emptyMessage = { getString(R.string.layout_empty_response) },
+                callbacks = PagingLoadStateRenderer.Callbacks(
+                    showLoading = ::showLoading,
+                    showContent = ::showContent,
+                    showError = ::showError,
+                    showEmpty = ::showEmpty,
+                    stopRefreshIndicators = {
+                        if (swipeRefreshLayout.isRefreshing()) {
+                            swipeRefreshLayout.setRefreshing(false)
+                        }
+                        if (swipeRefreshLayout.isLoading()) {
+                            swipeRefreshLayout.setLoading(false)
+                        }
+                    },
+                    errorMessage = { getString(R.string.text_error_request) },
+                    emptyMessage = { getString(R.string.layout_empty_response) },
+                ),
             )
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -175,15 +184,6 @@ class MediaSearchFragment : FragmentBaseList<MediaSearchItemUiModel, PageContain
 
     /** No-op: the PagingData collection in onViewCreated handles the stream. */
     override fun onChanged(value: PageContainer<MediaBase>?) = Unit
-
-    private fun stopRefreshIndicators() {
-        if (swipeRefreshLayout.isRefreshing()) {
-            swipeRefreshLayout.setRefreshing(false)
-        }
-        if (swipeRefreshLayout.isLoading()) {
-            swipeRefreshLayout.setLoading(false)
-        }
-    }
 
     /**
      * Media item click actions for this screen: opens the media detail screen

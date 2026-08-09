@@ -111,13 +111,15 @@ class MediaRecommendationsFragment : FragmentBaseList<RecommendationItemUiModel,
         val loadStateRenderer =
             PagingLoadStateRenderer(
                 itemCount = { adapter.itemCount },
-                showLoading = ::showLoading,
-                showContent = ::showContent,
-                showError = ::showError,
-                showEmpty = ::showEmpty,
-                stopRefreshIndicators = ::stopRefreshIndicators,
-                errorMessage = { getString(R.string.text_error_request) },
-                emptyMessage = { getString(R.string.layout_empty_response) },
+                callbacks = PagingLoadStateRenderer.Callbacks(
+                    showLoading = ::showLoading,
+                    showContent = ::showContent,
+                    showError = ::showError,
+                    showEmpty = ::showEmpty,
+                    stopRefreshIndicators = ::stopRefreshIndicators,
+                    errorMessage = { getString(R.string.text_error_request) },
+                    emptyMessage = { getString(R.string.layout_empty_response) },
+                ),
             )
 
         viewLifecycleOwner.lifecycleScope.launch {

@@ -80,13 +80,15 @@ class PagingLoadStateRendererTest {
         private val renderer =
             PagingLoadStateRenderer(
                 itemCount = { itemCount },
-                showLoading = { calls += "showLoading" },
-                showContent = { calls += "showContent" },
-                showError = { message -> calls += "showError($message)" },
-                showEmpty = { message -> calls += "showEmpty($message)" },
-                stopRefreshIndicators = { calls += "stopRefreshIndicators" },
-                errorMessage = { "generic error" },
-                emptyMessage = { "no results" },
+                callbacks = PagingLoadStateRenderer.Callbacks(
+                    showLoading = { calls += "showLoading" },
+                    showContent = { calls += "showContent" },
+                    showError = { message -> calls += "showError($message)" },
+                    showEmpty = { message -> calls += "showEmpty($message)" },
+                    stopRefreshIndicators = { calls += "stopRefreshIndicators" },
+                    errorMessage = { "generic error" },
+                    emptyMessage = { "no results" },
+                ),
             )
 
         fun render(
