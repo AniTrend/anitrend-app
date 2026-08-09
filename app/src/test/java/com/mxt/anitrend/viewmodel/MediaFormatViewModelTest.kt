@@ -1,7 +1,7 @@
 package com.mxt.anitrend.viewmodel
 
-import co.anitrend.retrofit.graphql.model.GraphQLRequest
 import co.anitrend.retrofit.graphql.model.body.GraphContainer
+import co.anitrend.retrofit.graphql.model.request.GraphQLOperationRequest
 import com.mxt.anitrend.graphql.generated.CharacterActorsVariables
 import com.mxt.anitrend.graphql.generated.CharacterBaseData
 import com.mxt.anitrend.graphql.generated.CharacterBaseVariables
@@ -701,7 +701,7 @@ private class GatedCharacterService : CharacterService {
     }
 
     override fun getCharacterMedia(
-        request: GraphQLRequest<CharacterMediaVariables>,
+        request: GraphQLOperationRequest<CharacterMediaVariables>,
     ): Call<AniListContainer<ConnectionContainer<PageContainer<MediaBase>>>> {
         val page = request.variables?.page ?: 0
         requestedPages.add(page)
@@ -733,11 +733,11 @@ private class GatedCharacterService : CharacterService {
         }
     }
 
-    override fun getCharacterBase(request: GraphQLRequest<CharacterBaseVariables>): Call<GraphContainer<CharacterBaseData>> = error("unused")
+    override fun getCharacterBase(request: GraphQLOperationRequest<CharacterBaseVariables>): Call<GraphContainer<CharacterBaseData>> = error("unused")
 
-    override fun getCharacterOverview(request: GraphQLRequest<CharacterOverviewVariables>): Call<GraphContainer<CharacterOverviewData>> = error("unused")
+    override fun getCharacterOverview(request: GraphQLOperationRequest<CharacterOverviewVariables>): Call<GraphContainer<CharacterOverviewData>> = error("unused")
 
-    override fun getCharacterActors(request: GraphQLRequest<CharacterActorsVariables>): Call<AniListContainer<ConnectionContainer<EdgeContainer<MediaEdge>>>> = error("unused")
+    override fun getCharacterActors(request: GraphQLOperationRequest<CharacterActorsVariables>): Call<AniListContainer<ConnectionContainer<EdgeContainer<MediaEdge>>>> = error("unused")
 
     private companion object {
         const val TIMEOUT_MILLIS = 5_000L

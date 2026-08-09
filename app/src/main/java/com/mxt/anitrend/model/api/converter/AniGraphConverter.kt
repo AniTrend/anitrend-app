@@ -1,10 +1,13 @@
 package com.mxt.anitrend.model.api.converter
 
 import co.anitrend.retrofit.graphql.converter.GraphConverter
+import co.anitrend.retrofit.graphql.converter.GraphQLConverterFactory
 import co.anitrend.retrofit.graphql.converter.response.GraphResponseConverter
 import co.anitrend.retrofit.graphql.model.GraphQLDocumentRegistry
 import co.anitrend.retrofit.graphql.model.GraphQLJson
 import co.anitrend.retrofit.graphql.model.body.GraphContainer
+import co.anitrend.retrofit.graphql.model.request.GraphQLOperationRequest
+import co.anitrend.retrofit.graphql.serialization.kotlinx.KotlinxGraphQLTransportCodec
 import com.google.gson.Gson
 import com.mxt.anitrend.model.api.converter.response.AniGraphResponseConverter
 import okhttp3.RequestBody
@@ -20,6 +23,16 @@ class AniGraphConverter(
 ) : Converter.Factory() {
     private val delegate: GraphConverter = GraphConverter.create(
         json = json,
+        registry = registry,
+    )
+
+    /**
+     * Backend-neutral request delegate for generated [GraphQLOperationRequest] bodies,
+     * used only when the raw request type is a generated operation request. All other
+     * request types keep flowing through the legacy compat [delegate].
+     */
+    private val neutralRequestDelegate: GraphQLConverterFactory = GraphQLConverterFactory.create(
+        codec = KotlinxGraphQLTransportCodec(),
         registry = registry,
     )
 
@@ -51,5 +64,9 @@ class AniGraphConverter(
         parameterAnnotations: Array<out Annotation>,
         methodAnnotations: Array<out Annotation>,
         retrofit: Retrofit,
-    ): Converter<*, RequestBody>? = delegate.requestBodyConverter(type, parameterAnnotations, methodAnnotations, retrofit)
+    ): Converter<*, RequestBody>? = if (getRawType(type) == GraphQLOperationRequest::class.java) {
+        neutralRequestDelegate.requestBodyConverter(type, parameterAnnotations, methodAnnotations, retrofit)
+    } else {
+        delegate.requestBodyConverter(type, parameterAnnotations, methodAnnotations, retrofit)
+    }
 }

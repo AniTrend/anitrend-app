@@ -8,10 +8,12 @@ import com.mxt.anitrend.domain.feed.model.FeedReplyRecord
 import com.mxt.anitrend.domain.model.UserSummaryRecord
 import com.mxt.anitrend.graphql.generated.LikeableType
 import com.mxt.anitrend.graphql.generated.ToggleLike
+import com.mxt.anitrend.graphql.generated.ToggleLikeVariables
 import com.mxt.anitrend.model.api.retro.anilist.BaseService
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.model.entity.container.body.AniListContainer
 import com.mxt.anitrend.model.entity.container.body.DataContainer
+import co.anitrend.retrofit.graphql.model.request.GraphQLOperationRequest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
@@ -131,7 +133,7 @@ class BaseRepositoryLikeRecordsTest {
     }
 
     private fun stubLikeResponse(
-        request: co.anitrend.retrofit.graphql.model.GraphQLRequest<com.mxt.anitrend.graphql.generated.ToggleLikeVariables>,
+        request: GraphQLOperationRequest<ToggleLikeVariables>,
         likes: List<UserBase>,
     ) {
         val call = responseCall(AniListContainer(DataContainer(likes), errors = null))

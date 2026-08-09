@@ -56,7 +56,7 @@ junit = "4.13.2"
 threeTenBp = "1.4.9"
 timber-runtime = "5.0.1"
 
-anitrend-retrofit-graphql = "0.13.0"
+anitrend-retrofit-graphql = "0.14.0"
 anitrend-support-markwon = "0.12.1-alpha01"
 
 anitrend-android-emoji = "2.2.0"
@@ -144,6 +144,7 @@ anitrend-retrofit-graphql-runtime = { module = "com.github.AniTrend.retrofit-gra
 anitrend-retrofit-graphql-api = { module = "com.github.AniTrend.retrofit-graphql:api", version.ref = "anitrend-retrofit-graphql" }
 anitrend-retrofit-graphql-serialization-kotlinx = { module = "com.github.AniTrend.retrofit-graphql:serialization-kotlinx", version.ref = "anitrend-retrofit-graphql" }
 anitrend-retrofit-graphql-gradle-plugin = { module = "com.github.AniTrend.retrofit-graphql:co.anitrend.retrofit.graphql.codegen.gradle.plugin", version.ref = "anitrend-retrofit-graphql" }
+anitrend-retrofit-graphql-compat = { module = "com.github.AniTrend.retrofit-graphql:compat", version.ref = "anitrend-retrofit-graphql" }
 
 cash-turbine = { module = "app.cash.turbine:turbine", version.ref = "cash-turbine" }
 

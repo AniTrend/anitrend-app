@@ -120,6 +120,7 @@ internal fun Project.configureDependencies() {
     dependencies.implementation(libs.anitrend.retrofit.graphql.runtime)
     dependencies.implementation(libs.anitrend.retrofit.graphql.api)
     dependencies.implementation(libs.anitrend.retrofit.graphql.serialization.kotlinx)
+    dependencies.implementation(libs.anitrend.retrofit.graphql.compat)
 
     /** Testing-only dependencies */
     dependencies.testImplementation(libs.junit)
