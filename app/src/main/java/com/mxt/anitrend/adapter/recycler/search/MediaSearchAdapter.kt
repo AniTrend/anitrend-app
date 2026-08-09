@@ -104,6 +104,10 @@ class MediaSearchAdapter(
         }
     }
 
+    /**
+     * Shared adapter configuration: the [DiffUtil.ItemCallback] that diffs
+     * submitted media items.
+     */
     companion object {
         /** [DiffUtil.ItemCallback] diffing on stable media ids, with full equality for content. */
         val DIFF_CALLBACK =

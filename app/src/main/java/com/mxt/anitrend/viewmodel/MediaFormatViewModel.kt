@@ -45,49 +45,18 @@ class MediaFormatViewModel(
         val onList: Boolean?,
     )
 
-    /**
-     * Complete deduplicated media snapshot keyed explicitly by [MediaBase.id].
-     * First-seen order is preserved; a repeated id's later server object replaces
-     * the previously stored value.
-     */
     private val acceptedMediaById = linkedMapOf<Long, MediaBase>()
 
-    /**
-     * Monotonic request generation advanced by every accepted page-one/reset load.
-     * Successes and failures from older generations are ignored so a refresh cannot
-     * be overwritten by a pre-refresh in-flight response.
-     */
     private var requestGeneration = 0L
 
-    /** Query of the current generation; established by page-one loads. */
     private var activeQueryKey: QueryKey? = null
 
-    /**
-     * Highest page whose response was accepted for the active generation, or 0 before
-     * any acceptance. Only the next contiguous page is ever launched; lower or
-     * duplicate pages are ignored once progress exists.
-     */
     private var lastAcceptedPage = 0
 
-    /**
-     * Whether the active generation ended with an empty or explicit no-next-page
-     * response. Further page loads are rejected until a page-one refresh starts a
-     * new generation.
-     */
     private var generationEnded = false
 
-    /**
-     * Page currently in flight for the active generation, or null. At most one page
-     * per generation is in flight, so accepted pages always apply in order and the
-     * highest accepted page's metadata is never overwritten by a lower page.
-     */
     private var pageInFlight: Int? = null
 
-    /**
-     * Ordered, deduplicated set of pages requested beyond the next contiguous page.
-     * They are queued even when nothing is in flight and launched one at a time as
-     * their predecessor is accepted, so no requested page is skipped.
-     */
     private val queuedPages = sortedSetOf<Int>()
 
     /**
@@ -179,32 +148,31 @@ class MediaFormatViewModel(
             }
             result.fold(
                 onSuccess = { container ->
-                    acceptPage(container, query, page, issuedGeneration)
+                    applyAcceptedPage(container, query, page, issuedGeneration)
                 },
                 onFailure = { throwable ->
-                    rejectPage(throwable, query, page, issuedGeneration)
+                    applyFailedPage(throwable, query, page, issuedGeneration)
                 },
             )
         }
     }
 
-    /**
-     * Applies an accepted page response to the active generation state.
-     *
-     * Responses that are no longer current are dropped: the generation moved on,
-     * the query changed, or the page is no longer the one in flight.
-     */
-    private fun acceptPage(
+    private fun applyAcceptedPage(
         container: ConnectionContainer<PageContainer<MediaBase>>,
         query: QueryKey,
         page: Int,
         issuedGeneration: Long,
     ) {
+        // Ignore responses that are no longer current: the generation moved on,
+        // the query changed, or the page is no longer the one in flight, so a
+        // refresh cannot be overwritten by a pre-refresh in-flight response.
         if (issuedGeneration != requestGeneration || query != activeQueryKey || page != pageInFlight) return
         pageInFlight = null
         val pageContainer = container.connection
         val pageInfo = pageContainer?.let { if (it.hasPageInfo()) it.pageInfo else null }
         if (pageContainer != null && !pageContainer.isEmpty) {
+            // First-seen order is preserved; a repeated id's later server object
+            // replaces the previously stored value.
             pageContainer.pageData.forEach { media ->
                 acceptedMediaById[media.id] = media
             }
@@ -225,21 +193,17 @@ class MediaFormatViewModel(
         }
     }
 
-    /**
-     * Applies a failed page response to the active generation state.
-     *
-     * Responses that are no longer current are dropped, mirroring
-     * [acceptPage]. A failed page breaks the continuation; queued pages are
-     * dropped and the fragment's retry re-requests from the failed page.
-     */
-    private fun rejectPage(
+    private fun applyFailedPage(
         throwable: Throwable,
         query: QueryKey,
         page: Int,
         issuedGeneration: Long,
     ) {
+        // Drop responses that are no longer current, mirroring applyAcceptedPage.
         if (issuedGeneration != requestGeneration || query != activeQueryKey || page != pageInFlight) return
         pageInFlight = null
+        // A failed page breaks the continuation; queued pages are dropped and the
+        // fragment's retry re-requests from the failed page.
         queuedPages.clear()
         Timber.e(throwable, "MediaFormatViewModel load failed")
         _state.value = UiState.Error(

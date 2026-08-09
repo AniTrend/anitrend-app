@@ -41,7 +41,7 @@ import kotlinx.coroutines.sync.withLock
  * this source's generation isolation; no generation state lives here. Cancellation
  * is never wrapped: a [CancellationException] from the repository result or from
  * projection is rethrown so the load cancels instead of surfacing as a
- * [LoadResult.Error]. Non-cancellation runtime failures map to [LoadResult.Error].
+ * [LoadResult.Error]. Non-cancellation projection failures map to [LoadResult.Error].
  *
  * @param mediaRepository Repository the source pages through.
  * @param mediaId The media the recommendations belong to.
@@ -60,13 +60,8 @@ class RecommendationsPagingSource(
         RecommendationRecord::toRecommendationItemUiModel,
 ) : PagingSource<Int, RecommendationItemUiModel>() {
 
-    /** Recommendation ids already emitted by this source instance since its last refresh reset, in first-seen order. */
     private val emittedRecommendationIds = linkedSetOf<Long>()
 
-    /**
-     * Serializes the repository load and the dedup-state mutation for this source
-     * instance, so concurrent loads never interleave them.
-     */
     private val repositoryLoadMutex = Mutex()
 
     /** One-directional paging: refresh always restarts from page one, never an anchor page. */
@@ -107,8 +102,8 @@ class RecommendationsPagingSource(
             }
         } catch (cancellation: CancellationException) {
             throw cancellation
-        } catch (throwable: RuntimeException) {
-            LoadResult.Error(throwable)
+        } catch (projectionFailure: IllegalStateException) {
+            LoadResult.Error(projectionFailure)
         }
     }
 }

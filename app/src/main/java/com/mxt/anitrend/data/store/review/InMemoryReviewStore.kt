@@ -147,37 +147,6 @@ class InMemoryReviewStore : ReviewStore {
         )
     }
 
-    /**
-     * Applies one review upsert to a single query snapshot. A mutation never
-     * reorders a query: server-provided positions of existing reviews are
-     * preserved. When the mutation's changed field is the query's active sort
-     * key, the query is marked [ReviewQuerySnapshot.stale] instead of being
-     * reordered locally, and [ReviewQuerySnapshot.staleSinceRevision] records
-     * the mutation revision so pre-invalidation page loads can never clear the
-     * stale state. A review already listed by the query is treated as
-     * server-proven membership.
-     *
-     * Only a newly created absent review may be inserted, and only under the
-     * ID sorts where placement is provable from canonical review IDs:
-     * prepended for [ReviewSort.ID_DESC] and appended for [ReviewSort.ID],
-     * with each bucket kept sorted by ID so mutation response arrival order
-     * never changes the rendered order. CREATED_AT ordering depends on server
-     * tie-breaking that cannot be proven locally, so creates under
-     * [ReviewSort.CREATED_AT]/[ReviewSort.CREATED_AT_DESC] conservatively mark
-     * the query stale instead of inserting. An update of an absent review is
-     * never inserted at a boundary: neither membership nor position can be
-     * proven locally, so the query is marked stale and page-one refresh is
-     * required.
-     *
-     * @param record The upserted review together with the mutation revision
-     *   that committed it.
-     * @param snapshot The query snapshot being reduced.
-     * @param kind What the mutation changed, deciding which sort keys it can
-     *   disturb.
-     * @param queryKey Identity of the query being reduced.
-     * @param isCreate True when the upsert created a new review rather than
-     *   updating an existing one.
-     */
     private fun reduceQueryForUpsertedReview(
         record: ReviewStoreRecord,
         snapshot: ReviewQuerySnapshot,
@@ -185,6 +154,11 @@ class InMemoryReviewStore : ReviewStore {
         queryKey: ReviewQueryKey,
         isCreate: Boolean,
     ): ReviewQuerySnapshot {
+        // A mutation never reorders a query: existing reviews keep their
+        // server-proven positions. A review already listed by the query is
+        // server-proven membership; only a mutation that touches the active
+        // sort key disturbs it, so the query is marked stale and
+        // staleSinceRevision keeps pre-invalidation page loads from clearing it.
         if (snapshot.orderedReviewIds.contains(record.review.id)) {
             return if (kind.affectsSortKey(queryKey.sort)) {
                 snapshot.copy(
@@ -211,6 +185,8 @@ class InMemoryReviewStore : ReviewStore {
                     staleSinceRevision = maxOf(snapshot.staleSinceRevision ?: Long.MIN_VALUE, record.revision),
                     lastUpdatedAtMillis = System.currentTimeMillis(),
                 )
+                // Only a newly created absent review may be inserted, and only
+                // where the sort key proves placement (see createdReviewPlacement).
                 else -> when (queryKey.sort.createdReviewPlacement()) {
                     InsertPlacement.PREPEND -> snapshot.copy(
                         prependedReviewIds = (snapshot.prependedReviewIds + record.review.id).sortedDescending(),
@@ -300,17 +276,13 @@ class InMemoryReviewStore : ReviewStore {
         UNKNOWN,
     }
 
-    /**
-     * Placement of a newly created review under a sort key. Only ID-based
-     * sorts are locally provable from canonical review IDs:
-     * [ReviewSort.ID_DESC] prepends with the bucket kept sorted descending,
-     * [ReviewSort.ID] appends with the bucket kept sorted ascending.
-     * CREATED_AT ordering depends on server tie-breaking, so it cannot be
-     * proven from store data and falls through to the conservative stale path.
-     */
     private fun ReviewSort.createdReviewPlacement(): InsertPlacement = when (this) {
+        // Only ID-based sorts are locally provable from canonical review ids:
+        // ID_DESC prepends (bucket kept sorted descending), ID appends (ascending).
         ReviewSort.ID_DESC -> InsertPlacement.PREPEND
         ReviewSort.ID -> InsertPlacement.APPEND
+        // CREATED_AT ordering depends on server tie-breaking, so it cannot be
+        // proven from store data and falls through to the conservative stale path.
         ReviewSort.CREATED_AT, ReviewSort.CREATED_AT_DESC,
         ReviewSort.RATING, ReviewSort.RATING_DESC,
         ReviewSort.SCORE, ReviewSort.SCORE_DESC,
