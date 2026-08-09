@@ -16,7 +16,17 @@ data class ReviewQueryKey private constructor(
     val mediaType: MediaType?,
     val sort: ReviewSort,
 ) {
+    /**
+     * Factory for [ReviewQueryKey] instances.
+     *
+     * Normalizes a null [sort] to the server default so equivalent server
+     * queries share one key.
+     */
     companion object {
+        /**
+         * Creates a key from the raw query inputs, mapping a null [sort] to
+         * [ReviewSort.CREATED_AT_DESC] as documented on the class.
+         */
         operator fun invoke(
             mediaId: Long?,
             mediaType: MediaType?,

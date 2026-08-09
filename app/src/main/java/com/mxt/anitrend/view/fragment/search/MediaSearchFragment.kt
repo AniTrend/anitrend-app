@@ -104,11 +104,12 @@ class MediaSearchFragment : FragmentBaseList<MediaSearchItemUiModel, PageContain
         // Paging owns pagination for this screen: the base class's manual scroll
         // listener and page counter remain disabled (isPager stays false).
         val ctx = requireContext()
+        val mediaItemActions = MediaItemActionHandler()
         mediaSearchAdapter =
             MediaSearchAdapter(
                 context = ctx,
-                onOpenMedia = ::openMedia,
-                onLongPressMedia = ::onLongPressMedia,
+                onOpenMedia = mediaItemActions::open,
+                onLongPressMedia = mediaItemActions::longPress,
             )
     }
 
@@ -120,6 +121,7 @@ class MediaSearchFragment : FragmentBaseList<MediaSearchItemUiModel, PageContain
         swipeRefreshLayout.setPermitLoad(false)
         val footer = MediaSearchLoadStateAdapter(retry = adapter::retry)
         recyclerView.adapter = adapter.withLoadStateFooter(footer)
+        val loadStateRenderer = PagingLoadStateRenderer(itemCount = { adapter.itemCount })
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -129,7 +131,7 @@ class MediaSearchFragment : FragmentBaseList<MediaSearchItemUiModel, PageContain
                     }
                 }
                 launch {
-                    adapter.loadStateFlow.collect(::onLoadStateChanged)
+                    adapter.loadStateFlow.collect(loadStateRenderer::render)
                 }
             }
         }
@@ -143,43 +145,6 @@ class MediaSearchFragment : FragmentBaseList<MediaSearchItemUiModel, PageContain
         // are driven entirely by the Paging collection in onViewCreated.
         if ((mediaSearchAdapter?.itemCount ?: 0) > 0) {
             showContent()
-        }
-    }
-
-    /**
-     * Maps Paging load states to the screen surfaces: the base progress/error/empty
-     * states for refresh, and the load-state footer for append.
-     */
-    private fun onLoadStateChanged(loadStates: CombinedLoadStates) {
-        val adapter = mediaSearchAdapter ?: return
-        val refresh = loadStates.refresh
-        when {
-            adapter.itemCount > 0 -> {
-                // Keep the swipe spinner while a refresh is in flight; otherwise stop it.
-                if (refresh !is LoadState.Loading) {
-                    stopRefreshIndicators()
-                }
-                showContent()
-            }
-            refresh is LoadState.Loading -> showLoading()
-            refresh is LoadState.Error -> {
-                stopRefreshIndicators()
-                showError(refresh.error.message ?: getString(R.string.text_error_request))
-            }
-            loadStates.append.endOfPaginationReached -> {
-                stopRefreshIndicators()
-                showEmpty(getString(R.string.layout_empty_response))
-            }
-            else -> showLoading()
-        }
-    }
-
-    private fun stopRefreshIndicators() {
-        if (swipeRefreshLayout.isRefreshing()) {
-            swipeRefreshLayout.setRefreshing(false)
-        }
-        if (swipeRefreshLayout.isLoading()) {
-            swipeRefreshLayout.setLoading(false)
         }
     }
 
@@ -207,39 +172,86 @@ class MediaSearchFragment : FragmentBaseList<MediaSearchItemUiModel, PageContain
     /** No-op: the PagingData collection in onViewCreated handles the stream. */
     override fun onChanged(value: PageContainer<MediaBase>?) = Unit
 
-    private fun openMedia(
-        target: View,
-        item: MediaSearchItemUiModel,
+    /**
+     * Renders Paging load states onto the base-class screen surfaces: the base
+     * progress/error/empty states for refresh, and the load-state footer for
+     * append. Keeps the swipe-refresh indicators in sync with the refresh state.
+     */
+    private inner class PagingLoadStateRenderer(
+        private val itemCount: () -> Int,
     ) {
-        val host = activity ?: return
-        val intent = MediaActivity.newIntent(host, item.id, item.mediaType)
-        CompatUtil.startRevealAnim(host, target, intent)
+        fun render(loadStates: CombinedLoadStates) {
+            val refresh = loadStates.refresh
+            when {
+                itemCount() > 0 -> {
+                    // Keep the swipe spinner while a refresh is in flight; otherwise stop it.
+                    if (refresh !is LoadState.Loading) {
+                        stopRefreshIndicators()
+                    }
+                    showContent()
+                }
+                refresh is LoadState.Loading -> showLoading()
+                refresh is LoadState.Error -> {
+                    stopRefreshIndicators()
+                    showError(refresh.error.message ?: getString(R.string.text_error_request))
+                }
+                loadStates.append.endOfPaginationReached -> {
+                    stopRefreshIndicators()
+                    showEmpty(getString(R.string.layout_empty_response))
+                }
+                else -> showLoading()
+            }
+        }
+
+        private fun stopRefreshIndicators() {
+            if (swipeRefreshLayout.isRefreshing()) {
+                swipeRefreshLayout.setRefreshing(false)
+            }
+            if (swipeRefreshLayout.isLoading()) {
+                swipeRefreshLayout.setLoading(false)
+            }
+        }
     }
 
-    private fun onLongPressMedia(
-        target: View,
-        item: MediaSearchItemUiModel,
-    ): Boolean {
-        if (settings.isAuthenticated) {
-            val host = activity ?: return false
-            mediaActionUtil =
-                MediaActionUtil
-                    .Builder()
-                    .setId(item.id)
-                    .build(host)
-            mediaActionUtil.startSeriesAction()
+    /**
+     * Media item click actions for this screen: opens the media detail screen
+     * and starts the long-press series action sheet.
+     */
+    private inner class MediaItemActionHandler {
+        fun open(
+            target: View,
+            item: MediaSearchItemUiModel,
+        ) {
+            val host = activity ?: return
+            val intent = MediaActivity.newIntent(host, item.id, item.mediaType)
+            CompatUtil.startRevealAnim(host, target, intent)
+        }
+
+        fun longPress(
+            target: View,
+            item: MediaSearchItemUiModel,
+        ): Boolean {
+            if (settings.isAuthenticated) {
+                val host = activity ?: return false
+                mediaActionUtil =
+                    MediaActionUtil
+                        .Builder()
+                        .setId(item.id)
+                        .build(host)
+                mediaActionUtil.startSeriesAction()
+                return true
+            }
+            context?.let {
+                NotifyUtil
+                    .makeText(
+                        it,
+                        R.string.info_login_req,
+                        R.drawable.ic_group_add_grey_600_18dp,
+                        Toast.LENGTH_SHORT,
+                    ).show()
+            }
             return true
         }
-        context?.let {
-            NotifyUtil
-                .makeText(
-                    it,
-                    R.string.info_login_req,
-                    R.drawable.ic_group_add_grey_600_18dp,
-                    Toast.LENGTH_SHORT,
-                ).show()
-        }
-        return true
     }
 
     override fun onItemClick(

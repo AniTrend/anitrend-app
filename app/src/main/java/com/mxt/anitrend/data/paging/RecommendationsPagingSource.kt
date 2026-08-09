@@ -41,7 +41,7 @@ import kotlinx.coroutines.sync.withLock
  * this source's generation isolation; no generation state lives here. Cancellation
  * is never wrapped: a [CancellationException] from the repository result or from
  * projection is rethrown so the load cancels instead of surfacing as a
- * [LoadResult.Error]. Non-cancellation failures map to [LoadResult.Error].
+ * [LoadResult.Error]. Non-cancellation runtime failures map to [LoadResult.Error].
  *
  * @param mediaRepository Repository the source pages through.
  * @param mediaId The media the recommendations belong to.
@@ -60,14 +60,14 @@ class RecommendationsPagingSource(
         RecommendationRecord::toRecommendationItemUiModel,
 ) : PagingSource<Int, RecommendationItemUiModel>() {
 
-    /** Ids already emitted by this source instance since its last refresh reset, in first-seen order. */
-    private val emittedIds = linkedSetOf<Long>()
+    /** Recommendation ids already emitted by this source instance since its last refresh reset, in first-seen order. */
+    private val emittedRecommendationIds = linkedSetOf<Long>()
 
     /**
      * Serializes the repository load and the dedup-state mutation for this source
      * instance, so concurrent loads never interleave them.
      */
-    private val loadMutex = Mutex()
+    private val repositoryLoadMutex = Mutex()
 
     /** One-directional paging: refresh always restarts from page one, never an anchor page. */
     override fun getRefreshKey(state: PagingState<Int, RecommendationItemUiModel>): Int? = null
@@ -75,7 +75,7 @@ class RecommendationsPagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, RecommendationItemUiModel> {
         val page = params.key ?: 1
         return try {
-            loadMutex.withLock {
+            repositoryLoadMutex.withLock {
                 val result = mediaRepository.getMediaRecommendations(
                     id = mediaId,
                     type = type,
@@ -90,9 +90,9 @@ class RecommendationsPagingSource(
                         if (params is LoadParams.Refresh) {
                             // A refresh restarts this source's generation: reset the
                             // dedup state before re-seeding it with the new first page.
-                            emittedIds.clear()
+                            emittedRecommendationIds.clear()
                         }
-                        val pageData = items.filter { emittedIds.add(it.id) }
+                        val pageData = items.filter { emittedRecommendationIds.add(it.id) }
                         LoadResult.Page(
                             data = pageData,
                             prevKey = null,
@@ -107,7 +107,7 @@ class RecommendationsPagingSource(
             }
         } catch (cancellation: CancellationException) {
             throw cancellation
-        } catch (throwable: Exception) {
+        } catch (throwable: RuntimeException) {
             LoadResult.Error(throwable)
         }
     }

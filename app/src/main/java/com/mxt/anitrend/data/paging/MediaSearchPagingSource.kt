@@ -42,7 +42,7 @@ import kotlinx.coroutines.sync.withLock
  * this source's generation isolation; no generation state lives here. Cancellation
  * is never wrapped: a [CancellationException] from the repository result or from
  * projection is rethrown so the load cancels instead of surfacing as a
- * [LoadResult.Error]. Non-cancellation failures map to [LoadResult.Error].
+ * [LoadResult.Error]. Non-cancellation runtime failures map to [LoadResult.Error].
  *
  * @param searchRepository Repository the source pages through.
  * @param search The search text of the query identity.
@@ -59,14 +59,14 @@ class MediaSearchPagingSource(
     private val project: (MediaBase) -> MediaSearchItemUiModel = MediaBase::toMediaSearchItemUiModel,
 ) : PagingSource<Int, MediaSearchItemUiModel>() {
 
-    /** Ids already emitted by this source instance since its last refresh reset, in first-seen order. */
-    private val emittedIds = linkedSetOf<Long>()
+    /** Media ids already emitted by this source instance since its last refresh reset, in first-seen order. */
+    private val emittedMediaIds = linkedSetOf<Long>()
 
     /**
      * Serializes the repository load and the dedup-state mutation for this source
      * instance, so concurrent loads never interleave them.
      */
-    private val loadMutex = Mutex()
+    private val repositoryLoadMutex = Mutex()
 
     /** One-directional paging: refresh always restarts from page one, never an anchor page. */
     override fun getRefreshKey(state: PagingState<Int, MediaSearchItemUiModel>): Int? = null
@@ -74,7 +74,7 @@ class MediaSearchPagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MediaSearchItemUiModel> {
         val page = params.key ?: 1
         return try {
-            loadMutex.withLock {
+            repositoryLoadMutex.withLock {
                 val result = searchRepository.searchMedia(
                     search = search,
                     type = type,
@@ -89,9 +89,9 @@ class MediaSearchPagingSource(
                         if (params is LoadParams.Refresh) {
                             // A refresh restarts this source's generation: reset the
                             // dedup state before re-seeding it with the new first page.
-                            emittedIds.clear()
+                            emittedMediaIds.clear()
                         }
-                        val pageData = items.filter { emittedIds.add(it.id) }
+                        val pageData = items.filter { emittedMediaIds.add(it.id) }
                         LoadResult.Page(
                             data = pageData,
                             prevKey = null,
@@ -106,7 +106,7 @@ class MediaSearchPagingSource(
             }
         } catch (cancellation: CancellationException) {
             throw cancellation
-        } catch (throwable: Exception) {
+        } catch (throwable: RuntimeException) {
             LoadResult.Error(throwable)
         }
     }

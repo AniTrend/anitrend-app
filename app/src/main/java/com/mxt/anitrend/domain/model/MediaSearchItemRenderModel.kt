@@ -19,6 +19,10 @@ data class MediaSearchItemRenderModel(
     val isFavourite: Boolean,
 )
 
+/**
+ * Projects this UI model into the narrow [MediaSearchItemRenderModel] consumed
+ * by the shared series-card view helpers.
+ */
 fun MediaSearchItemUiModel.toRenderModel(): MediaSearchItemRenderModel = MediaSearchItemRenderModel(
     mediaStartDate = mediaStartDate,
     mediaType = mediaType,

@@ -133,11 +133,12 @@ class InMemoryReviewStore : ReviewStore {
         }
 
         reviewDeletionRevisions.remove(review.id)
+        val record = ReviewStoreRecord(review = review, revision = revision)
         val reviewsById = currentState.reviewsById.toMutableMap().apply {
-            put(review.id, ReviewStoreRecord(review = review, revision = revision))
+            put(review.id, record)
         }
         val queries = currentState.queries.mapValuesTo(linkedMapOf()) { (queryKey, snapshot) ->
-            reduceUpsertedQuery(review, snapshot, kind, queryKey, isCreate, revision)
+            reduceQueryForUpsertedReview(record, snapshot, kind, queryKey, isCreate)
         }
 
         return currentState.copy(
@@ -147,13 +148,14 @@ class InMemoryReviewStore : ReviewStore {
     }
 
     /**
-     * A mutation never reorders a query: server-provided positions of existing
-     * reviews are preserved. When the mutation's changed field is the query's
-     * active sort key, the query is marked [ReviewQuerySnapshot.stale] instead
-     * of being reordered locally, and [ReviewQuerySnapshot.staleSinceRevision]
-     * records the mutation revision so pre-invalidation page loads can never
-     * clear the stale state. A review already listed by the query is treated
-     * as server-proven membership.
+     * Applies one review upsert to a single query snapshot. A mutation never
+     * reorders a query: server-provided positions of existing reviews are
+     * preserved. When the mutation's changed field is the query's active sort
+     * key, the query is marked [ReviewQuerySnapshot.stale] instead of being
+     * reordered locally, and [ReviewQuerySnapshot.staleSinceRevision] records
+     * the mutation revision so pre-invalidation page loads can never clear the
+     * stale state. A review already listed by the query is treated as
+     * server-proven membership.
      *
      * Only a newly created absent review may be inserted, and only under the
      * ID sorts where placement is provable from canonical review IDs:
@@ -166,20 +168,28 @@ class InMemoryReviewStore : ReviewStore {
      * never inserted at a boundary: neither membership nor position can be
      * proven locally, so the query is marked stale and page-one refresh is
      * required.
+     *
+     * @param record The upserted review together with the mutation revision
+     *   that committed it.
+     * @param snapshot The query snapshot being reduced.
+     * @param kind What the mutation changed, deciding which sort keys it can
+     *   disturb.
+     * @param queryKey Identity of the query being reduced.
+     * @param isCreate True when the upsert created a new review rather than
+     *   updating an existing one.
      */
-    private fun reduceUpsertedQuery(
-        review: ReviewRecord,
+    private fun reduceQueryForUpsertedReview(
+        record: ReviewStoreRecord,
         snapshot: ReviewQuerySnapshot,
         kind: UpsertKind,
         queryKey: ReviewQueryKey,
         isCreate: Boolean,
-        revision: Long,
     ): ReviewQuerySnapshot {
-        if (snapshot.orderedReviewIds.contains(review.id)) {
+        if (snapshot.orderedReviewIds.contains(record.review.id)) {
             return if (kind.affectsSortKey(queryKey.sort)) {
                 snapshot.copy(
                     stale = true,
-                    staleSinceRevision = maxOf(snapshot.staleSinceRevision ?: Long.MIN_VALUE, revision),
+                    staleSinceRevision = maxOf(snapshot.staleSinceRevision ?: Long.MIN_VALUE, record.revision),
                     lastUpdatedAtMillis = System.currentTimeMillis(),
                 )
             } else {
@@ -187,7 +197,7 @@ class InMemoryReviewStore : ReviewStore {
             }
         }
 
-        if (!review.matches(queryKey)) {
+        if (!record.review.matches(queryKey)) {
             return snapshot
         }
 
@@ -198,21 +208,21 @@ class InMemoryReviewStore : ReviewStore {
                 // absent from the query: never insert at a boundary.
                 !isCreate -> snapshot.copy(
                     stale = true,
-                    staleSinceRevision = maxOf(snapshot.staleSinceRevision ?: Long.MIN_VALUE, revision),
+                    staleSinceRevision = maxOf(snapshot.staleSinceRevision ?: Long.MIN_VALUE, record.revision),
                     lastUpdatedAtMillis = System.currentTimeMillis(),
                 )
-                else -> when (queryKey.sort.insertPlacement()) {
+                else -> when (queryKey.sort.createdReviewPlacement()) {
                     InsertPlacement.PREPEND -> snapshot.copy(
-                        prependedReviewIds = (snapshot.prependedReviewIds + review.id).sortedDescending(),
+                        prependedReviewIds = (snapshot.prependedReviewIds + record.review.id).sortedDescending(),
                         lastUpdatedAtMillis = System.currentTimeMillis(),
                     )
                     InsertPlacement.APPEND -> snapshot.copy(
-                        appendedReviewIds = (snapshot.appendedReviewIds + review.id).sorted(),
+                        appendedReviewIds = (snapshot.appendedReviewIds + record.review.id).sorted(),
                         lastUpdatedAtMillis = System.currentTimeMillis(),
                     )
                     InsertPlacement.UNKNOWN -> snapshot.copy(
                         stale = true,
-                        staleSinceRevision = maxOf(snapshot.staleSinceRevision ?: Long.MIN_VALUE, revision),
+                        staleSinceRevision = maxOf(snapshot.staleSinceRevision ?: Long.MIN_VALUE, record.revision),
                         lastUpdatedAtMillis = System.currentTimeMillis(),
                     )
                 }
@@ -298,7 +308,7 @@ class InMemoryReviewStore : ReviewStore {
      * CREATED_AT ordering depends on server tie-breaking, so it cannot be
      * proven from store data and falls through to the conservative stale path.
      */
-    private fun ReviewSort.insertPlacement(): InsertPlacement = when (this) {
+    private fun ReviewSort.createdReviewPlacement(): InsertPlacement = when (this) {
         ReviewSort.ID_DESC -> InsertPlacement.PREPEND
         ReviewSort.ID -> InsertPlacement.APPEND
         ReviewSort.CREATED_AT, ReviewSort.CREATED_AT_DESC,

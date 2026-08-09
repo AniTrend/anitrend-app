@@ -58,20 +58,22 @@ class MediaSearchAdapter(
         super.onViewRecycled(holder)
     }
 
+    /**
+     * View holder for one media search card.
+     *
+     * Binds an immutable [MediaSearchItemUiModel] into the shared series card
+     * and forwards click and long-click actions to the adapter callbacks when
+     * the holder has a current item.
+     */
     inner class MediaSearchViewHolder(
         private val binding: AdapterSeriesBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
         init {
-            binding.root.setOnClickListener { view ->
-                val item = currentItem() ?: return@setOnClickListener
-                onOpenMedia(view, item)
-            }
-            binding.root.setOnLongClickListener { view ->
-                val item = currentItem() ?: return@setOnLongClickListener false
-                onLongPressMedia(view, item)
-            }
+            binding.root.setOnClickListener(::handleRootClick)
+            binding.root.setOnLongClickListener(::handleRootLongClick)
         }
 
+        /** Binds [model] into the card: cover image, status, year/type line, rating and title. */
         fun bind(model: MediaSearchItemUiModel) {
             val renderModel = model.toRenderModel()
             AspectImageView.setImage(binding.seriesImage, model.coverImage)
@@ -81,8 +83,19 @@ class MediaSearchAdapter(
             binding.seriesTitle.text = model.title
         }
 
+        /** Releases the card's image resources so a recycled card never shows stale art. */
         fun recycle() {
             Glide.with(appContext).clear(binding.seriesImage)
+        }
+
+        private fun handleRootClick(view: View) {
+            val item = currentItem() ?: return
+            onOpenMedia(view, item)
+        }
+
+        private fun handleRootLongClick(view: View): Boolean {
+            val item = currentItem() ?: return false
+            return onLongPressMedia(view, item)
         }
 
         private fun currentItem(): MediaSearchItemUiModel? {
@@ -92,6 +105,7 @@ class MediaSearchAdapter(
     }
 
     companion object {
+        /** [DiffUtil.ItemCallback] diffing on stable media ids, with full equality for content. */
         val DIFF_CALLBACK =
             object : DiffUtil.ItemCallback<MediaSearchItemUiModel>() {
                 override fun areItemsTheSame(

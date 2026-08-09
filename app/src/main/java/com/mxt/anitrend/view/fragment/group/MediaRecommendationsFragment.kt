@@ -97,11 +97,12 @@ class MediaRecommendationsFragment : FragmentBaseList<RecommendationItemUiModel,
         // Paging owns pagination for this screen: the base class's manual scroll
         // listener and page counter remain disabled (isPager stays false).
         mColumnSize = R.integer.grid_giphy_x3
+        val mediaItemActions = MediaItemActionHandler()
         recommendationAdapter =
             RecommendationAdapter(
                 context = ctx,
-                onOpenMedia = ::openMedia,
-                onLongPressMedia = ::onLongPressMedia,
+                onOpenMedia = mediaItemActions::open,
+                onLongPressMedia = mediaItemActions::longPress,
             )
     }
 
@@ -113,6 +114,7 @@ class MediaRecommendationsFragment : FragmentBaseList<RecommendationItemUiModel,
         swipeRefreshLayout.setPermitLoad(false)
         val footer = RecommendationsLoadStateAdapter(retry = adapter::retry)
         recyclerView.adapter = adapter.withLoadStateFooter(footer)
+        val loadStateRenderer = PagingLoadStateRenderer(itemCount = { adapter.itemCount })
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -122,7 +124,7 @@ class MediaRecommendationsFragment : FragmentBaseList<RecommendationItemUiModel,
                     }
                 }
                 launch {
-                    adapter.loadStateFlow.collect(::onLoadStateChanged)
+                    adapter.loadStateFlow.collect(loadStateRenderer::render)
                 }
             }
         }
@@ -136,43 +138,6 @@ class MediaRecommendationsFragment : FragmentBaseList<RecommendationItemUiModel,
         // are driven entirely by the Paging collection in onViewCreated.
         if ((recommendationAdapter?.itemCount ?: 0) > 0) {
             showContent()
-        }
-    }
-
-    /**
-     * Maps Paging load states to the screen surfaces: the base progress/error/empty
-     * states for refresh, and the load-state footer for append.
-     */
-    private fun onLoadStateChanged(loadStates: CombinedLoadStates) {
-        val adapter = recommendationAdapter ?: return
-        val refresh = loadStates.refresh
-        when {
-            adapter.itemCount > 0 -> {
-                // Keep the swipe spinner while a refresh is in flight; otherwise stop it.
-                if (refresh !is LoadState.Loading) {
-                    stopRefreshIndicators()
-                }
-                showContent()
-            }
-            refresh is LoadState.Loading -> showLoading()
-            refresh is LoadState.Error -> {
-                stopRefreshIndicators()
-                showError(refresh.error.message ?: getString(R.string.text_error_request))
-            }
-            loadStates.append.endOfPaginationReached -> {
-                stopRefreshIndicators()
-                showEmpty(getString(R.string.layout_empty_response))
-            }
-            else -> showLoading()
-        }
-    }
-
-    private fun stopRefreshIndicators() {
-        if (swipeRefreshLayout.isRefreshing()) {
-            swipeRefreshLayout.setRefreshing(false)
-        }
-        if (swipeRefreshLayout.isLoading()) {
-            swipeRefreshLayout.setLoading(false)
         }
     }
 
@@ -199,39 +164,86 @@ class MediaRecommendationsFragment : FragmentBaseList<RecommendationItemUiModel,
     /** No-op: the PagingData collection in onViewCreated handles the stream. */
     override fun onChanged(value: RecommendationPageResult?) = Unit
 
-    private fun openMedia(
-        target: View,
-        item: RecommendationItemUiModel,
+    /**
+     * Renders Paging load states onto the base-class screen surfaces: the base
+     * progress/error/empty states for refresh, and the load-state footer for
+     * append. Keeps the swipe-refresh indicators in sync with the refresh state.
+     */
+    private inner class PagingLoadStateRenderer(
+        private val itemCount: () -> Int,
     ) {
-        val host = activity ?: return
-        val intent = MediaActivity.newIntent(host, item.mediaId, item.mediaType)
-        CompatUtil.startRevealAnim(host, target, intent)
+        fun render(loadStates: CombinedLoadStates) {
+            val refresh = loadStates.refresh
+            when {
+                itemCount() > 0 -> {
+                    // Keep the swipe spinner while a refresh is in flight; otherwise stop it.
+                    if (refresh !is LoadState.Loading) {
+                        stopRefreshIndicators()
+                    }
+                    showContent()
+                }
+                refresh is LoadState.Loading -> showLoading()
+                refresh is LoadState.Error -> {
+                    stopRefreshIndicators()
+                    showError(refresh.error.message ?: getString(R.string.text_error_request))
+                }
+                loadStates.append.endOfPaginationReached -> {
+                    stopRefreshIndicators()
+                    showEmpty(getString(R.string.layout_empty_response))
+                }
+                else -> showLoading()
+            }
+        }
+
+        private fun stopRefreshIndicators() {
+            if (swipeRefreshLayout.isRefreshing()) {
+                swipeRefreshLayout.setRefreshing(false)
+            }
+            if (swipeRefreshLayout.isLoading()) {
+                swipeRefreshLayout.setLoading(false)
+            }
+        }
     }
 
-    private fun onLongPressMedia(
-        target: View,
-        item: RecommendationItemUiModel,
-    ): Boolean {
-        if (settings.isAuthenticated) {
-            val host = activity ?: return false
-            mediaActionUtil =
-                MediaActionUtil
-                    .Builder()
-                    .setId(item.mediaId)
-                    .build(host)
-            mediaActionUtil.startSeriesAction()
+    /**
+     * Media item click actions for this screen: opens the media detail screen
+     * and starts the long-press series action sheet.
+     */
+    private inner class MediaItemActionHandler {
+        fun open(
+            target: View,
+            item: RecommendationItemUiModel,
+        ) {
+            val host = activity ?: return
+            val intent = MediaActivity.newIntent(host, item.mediaId, item.mediaType)
+            CompatUtil.startRevealAnim(host, target, intent)
+        }
+
+        fun longPress(
+            target: View,
+            item: RecommendationItemUiModel,
+        ): Boolean {
+            if (settings.isAuthenticated) {
+                val host = activity ?: return false
+                mediaActionUtil =
+                    MediaActionUtil
+                        .Builder()
+                        .setId(item.mediaId)
+                        .build(host)
+                mediaActionUtil.startSeriesAction()
+                return true
+            }
+            context?.let {
+                NotifyUtil
+                    .makeText(
+                        it,
+                        R.string.info_login_req,
+                        R.drawable.ic_group_add_grey_600_18dp,
+                        Toast.LENGTH_SHORT,
+                    ).show()
+            }
             return true
         }
-        context?.let {
-            NotifyUtil
-                .makeText(
-                    it,
-                    R.string.info_login_req,
-                    R.drawable.ic_group_add_grey_600_18dp,
-                    Toast.LENGTH_SHORT,
-                ).show()
-        }
-        return true
     }
 
     override fun onItemClick(
