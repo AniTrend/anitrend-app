@@ -29,11 +29,11 @@ class PagingLoadStateRenderer(
             refresh is LoadState.Loading -> callbacks.showLoading()
             refresh is LoadState.Error -> {
                 callbacks.stopRefreshIndicators()
-                callbacks.showError(refresh.error.message ?: callbacks.errorMessage())
+                callbacks.showError(refresh.error.message ?: callbacks.messages.errorMessage())
             }
             loadStates.append.endOfPaginationReached -> {
                 callbacks.stopRefreshIndicators()
-                callbacks.showEmpty(callbacks.emptyMessage())
+                callbacks.showEmpty(callbacks.messages.emptyMessage())
             }
             else -> callbacks.showLoading()
         }
@@ -42,7 +42,7 @@ class PagingLoadStateRenderer(
     /**
      * Configuration holder for the fragment UI effects the renderer drives:
      * the base-class state surfaces, the swipe-refresh indicator settling, and
-     * the fallback error and empty texts.
+     * the fallback texts carried by [Messages].
      */
     class Callbacks(
         val showLoading: () -> Unit,
@@ -50,7 +50,15 @@ class PagingLoadStateRenderer(
         val showError: (String) -> Unit,
         val showEmpty: (String) -> Unit,
         val stopRefreshIndicators: () -> Unit,
-        val errorMessage: () -> String,
-        val emptyMessage: () -> String,
-    )
+        val messages: Messages,
+    ) {
+        /**
+         * Fallback texts supplied by the host screen for the error and empty
+         * branches of [render].
+         */
+        class Messages(
+            val errorMessage: () -> String,
+            val emptyMessage: () -> String,
+        )
+    }
 }

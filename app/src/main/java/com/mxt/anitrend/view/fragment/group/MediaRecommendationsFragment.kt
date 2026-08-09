@@ -117,8 +117,10 @@ class MediaRecommendationsFragment : FragmentBaseList<RecommendationItemUiModel,
                     showError = ::showError,
                     showEmpty = ::showEmpty,
                     stopRefreshIndicators = ::stopRefreshIndicators,
-                    errorMessage = { getString(R.string.text_error_request) },
-                    emptyMessage = { getString(R.string.layout_empty_response) },
+                    messages = PagingLoadStateRenderer.Callbacks.Messages(
+                        errorMessage = { getString(R.string.text_error_request) },
+                        emptyMessage = { getString(R.string.layout_empty_response) },
+                    ),
                 ),
             )
 

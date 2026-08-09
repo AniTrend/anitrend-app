@@ -131,8 +131,10 @@ class MediaSearchFragment : FragmentBaseList<MediaSearchItemUiModel, PageContain
                             swipeRefreshLayout.setLoading(false)
                         }
                     },
-                    errorMessage = { getString(R.string.text_error_request) },
-                    emptyMessage = { getString(R.string.layout_empty_response) },
+                    messages = PagingLoadStateRenderer.Callbacks.Messages(
+                        errorMessage = { getString(R.string.text_error_request) },
+                        emptyMessage = { getString(R.string.layout_empty_response) },
+                    ),
                 ),
             )
 

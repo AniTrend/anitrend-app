@@ -86,8 +86,10 @@ class PagingLoadStateRendererTest {
                     showError = { message -> calls += "showError($message)" },
                     showEmpty = { message -> calls += "showEmpty($message)" },
                     stopRefreshIndicators = { calls += "stopRefreshIndicators" },
-                    errorMessage = { "generic error" },
-                    emptyMessage = { "no results" },
+                    messages = PagingLoadStateRenderer.Callbacks.Messages(
+                        errorMessage = { "generic error" },
+                        emptyMessage = { "no results" },
+                    ),
                 ),
             )
 
