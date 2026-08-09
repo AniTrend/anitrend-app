@@ -2,6 +2,7 @@ package com.mxt.anitrend.binding
 
 import com.mxt.anitrend.base.custom.view.text.RatingTextView
 import com.mxt.anitrend.domain.model.MediaListItemRenderModel
+import com.mxt.anitrend.domain.model.MediaSearchItemRenderModel
 import com.mxt.anitrend.domain.model.RecommendationItemRenderModel
 import com.mxt.anitrend.model.entity.base.MediaBase
 
@@ -18,6 +19,12 @@ fun RatingTextView.setAverageRating(renderModel: MediaListItemRenderModel) {
 }
 
 fun RatingTextView.setAverageRating(renderModel: RecommendationItemRenderModel) {
+    setListStatus()
+    setRating(renderModel.averageScore)
+    setFavourState(renderModel.isFavourite)
+}
+
+fun RatingTextView.setAverageRating(renderModel: MediaSearchItemRenderModel) {
     setListStatus()
     setRating(renderModel.averageScore)
     setFavourState(renderModel.isFavourite)

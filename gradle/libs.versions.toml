@@ -12,7 +12,7 @@ androidx-core = "1.19.0"
 androidx-constraintlayout = "2.2.2"
 androidx-fragment = "1.8.9"
 androix-lifecycle = "2.11.0"
-androidx-paging = "2.1.2"
+androidx-paging = "3.5.0"
 androidx-preference = "1.2.1"
 androidx-startup = "1.2.0"
 androidx-test-core = "1.7.0"
@@ -113,6 +113,9 @@ androidx-lifecycle-liveDataCoreKtx = { module = "androidx.lifecycle:lifecycle-li
 
 androidx-navigation-fragmentKtx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "androidx-navigation" }
 androidx-navigation-uiKtx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "androidx-navigation" }
+
+androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "androidx-paging" }
+androidx-paging-testing = { module = "androidx.paging:paging-testing", version.ref = "androidx-paging" }
 
 androidx-preference = { module = "androidx.preference:preference", version.ref = "androidx-preference" }
 androidx-preferenceKtx = { module = "androidx.preference:preference-ktx", version.ref = "androidx-preference" }

@@ -1,5 +1,8 @@
 package com.mxt.anitrend.viewmodel
 
+import androidx.paging.testing.ErrorRecovery.RETRY
+import androidx.paging.testing.LoadErrorHandler
+import androidx.paging.testing.asSnapshot
 import com.mxt.anitrend.domain.model.FuzzyDateRecord
 import com.mxt.anitrend.domain.model.MediaSummaryRecord
 import com.mxt.anitrend.domain.model.PageInfoRecord
@@ -7,9 +10,10 @@ import com.mxt.anitrend.domain.model.RecommendationPageResult
 import com.mxt.anitrend.domain.model.RecommendationRecord
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.repository.MediaRepository
+import com.mxt.anitrend.util.KeyUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -21,12 +25,14 @@ import org.junit.Test
 import org.mockito.ArgumentMatchers.eq
 import org.mockito.Mockito.doReturn
 import org.mockito.Mockito.mock
+import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
+import kotlin.test.assertFailsWith
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class MediaRecommendationsViewModelTest {
 
-    private val testDispatcher = UnconfinedTestDispatcher()
+    private val testDispatcher = StandardTestDispatcher()
     private lateinit var mediaRepository: MediaRepository
 
     @Before
@@ -41,298 +47,305 @@ class MediaRecommendationsViewModelTest {
     }
 
     @Test
-    fun `initial state is Loading`() = runTest {
-        val vm = viewModel()
-        assertTrue(vm.state.value is MediaRecommendationsViewModel.UiState.Loading)
-    }
-
-    @Test
-    fun `load emits Success with projected UI items and pageInfo`() = runTest {
-        val page = RecommendationPageResult(
-            recommendations = listOf(
-                RecommendationRecord(
-                    id = 1L,
-                    mediaRecommendation = mediaSummary(id = 11L, title = "Alpha"),
-                    rating = 88,
-                    user = null,
-                    userRating = "RATE_UP",
-                ),
-            ),
-            pageInfo = PageInfoRecord(
-                currentPage = 1,
-                lastPage = 1,
-                perPage = 10,
-                total = 1,
-                hasNextPage = false,
-                hasPreviousPage = false,
-            ),
+    fun `load establishes the query and emits projected UI items`() = runTest(testDispatcher) {
+        stubPage(
+            id = 7L,
+            page = 1,
+            pageInfo = pageInfo(currentPage = 1, hasNextPage = false),
+            records = (1L..21L).map { recommendation(it) },
         )
-        doReturn(Result.success(page))
-            .`when`(mediaRepository)
-            .getMediaRecommendations(
-                eq(7L),
-                eq(MediaType.MANGA),
-                eq(false),
-                eq(null),
-                eq(21),
-                eq(null),
-            )
         val vm = viewModel()
 
         vm.load(mediaId = 7L, type = MediaType.MANGA, isAdult = false)
 
-        val state = vm.state.value as MediaRecommendationsViewModel.UiState.Success
-        assertEquals(1, state.items.size)
-        assertEquals(1L, state.items.single().id)
-        assertEquals(11L, state.items.single().mediaId)
-        assertEquals("Alpha", state.items.single().title)
-        assertEquals(1, state.pageInfo?.currentPage)
+        val items = vm.pagingDataFlow.asSnapshot()
+        assertEquals((1L..21L).toList(), items.map { it.id })
+        assertEquals("Alpha", items.first().title)
+        assertEquals(11L, items.first().mediaId)
         verify(mediaRepository).getMediaRecommendations(
             eq(7L),
             eq(MediaType.MANGA),
             eq(false),
-            eq(null),
-            eq(21),
+            eq(1),
+            eq(KeyUtil.PAGING_LIMIT),
             eq(null),
         )
     }
 
     @Test
-    fun `load emits Success with an empty page for an empty repository result`() = runTest {
-        val page = RecommendationPageResult(
-            recommendations = emptyList(),
-            pageInfo = null,
+    fun `empty first page emits an empty snapshot`() = runTest(testDispatcher) {
+        stubPage(
+            id = 7L,
+            page = 1,
+            pageInfo = pageInfo(currentPage = 1, hasNextPage = false),
+            records = emptyList(),
         )
-        doReturn(Result.success(page))
-            .`when`(mediaRepository)
-            .getMediaRecommendations(
-                eq(7L),
-                eq(MediaType.MANGA),
-                eq(false),
-                eq(null),
-                eq(21),
-                eq(null),
-            )
         val vm = viewModel()
 
         vm.load(mediaId = 7L, type = MediaType.MANGA, isAdult = false)
 
-        val state = vm.state.value as MediaRecommendationsViewModel.UiState.Success
-        assertTrue(state.items.isEmpty())
-        assertEquals(null, state.pageInfo)
+        val items = vm.pagingDataFlow.asSnapshot()
+        assertTrue(items.isEmpty())
     }
 
     @Test
-    fun `load emits Error when the repository fails`() = runTest {
+    fun `repository failure propagates from the paging flow`() = runTest(testDispatcher) {
         doReturn(Result.failure<RecommendationPageResult>(RuntimeException("Recommendations failed")))
             .`when`(mediaRepository)
             .getMediaRecommendations(
                 eq(7L),
                 eq(MediaType.MANGA),
                 eq(false),
-                eq(null),
-                eq(21),
-                eq(null),
-            )
-        val vm = viewModel()
-
-        vm.load(mediaId = 7L, type = MediaType.MANGA, isAdult = false)
-
-        val state = vm.state.value as MediaRecommendationsViewModel.UiState.Error
-        assertEquals("Recommendations failed", state.message)
-    }
-
-    @Test
-    fun `load falls back to generic message when the failure has no message`() = runTest {
-        doReturn(Result.failure<RecommendationPageResult>(RuntimeException()))
-            .`when`(mediaRepository)
-            .getMediaRecommendations(
-                eq(7L),
-                eq(MediaType.MANGA),
-                eq(false),
-                eq(null),
-                eq(21),
+                eq(1),
+                eq(KeyUtil.PAGING_LIMIT),
                 eq(null),
             )
         val vm = viewModel()
 
         vm.load(mediaId = 7L, type = MediaType.MANGA, isAdult = false)
 
-        val state = vm.state.value as MediaRecommendationsViewModel.UiState.Error
-        assertEquals("Failed to load recommendations", state.message)
+        val error = assertFailsWith<RuntimeException> { vm.pagingDataFlow.asSnapshot() }
+        assertEquals("Recommendations failed", error.message)
     }
 
     @Test
-    fun `load appends page two to existing items`() = runTest {
-        val pageOne = RecommendationPageResult(
-            recommendations = listOf(
-                RecommendationRecord(
-                    id = 1L,
-                    mediaRecommendation = mediaSummary(id = 11L),
-                    rating = null,
-                    user = null,
-                    userRating = null,
-                ),
-            ),
-            pageInfo = PageInfoRecord(
-                currentPage = 1,
-                lastPage = 2,
-                perPage = 1,
-                total = 2,
-                hasNextPage = true,
-                hasPreviousPage = false,
-            ),
+    fun `same query reload does not restart the generation`() = runTest(testDispatcher) {
+        stubPage(
+            id = 7L,
+            page = 1,
+            pageInfo = pageInfo(currentPage = 1, hasNextPage = false),
+            records = (1L..21L).map { recommendation(it) },
         )
-        val pageTwo = RecommendationPageResult(
-            recommendations = listOf(
-                RecommendationRecord(
-                    id = 2L,
-                    mediaRecommendation = mediaSummary(id = 12L),
-                    rating = null,
-                    user = null,
-                    userRating = null,
-                ),
-            ),
-            pageInfo = PageInfoRecord(
-                currentPage = 2,
-                lastPage = 2,
-                perPage = 1,
-                total = 2,
-                hasNextPage = false,
-                hasPreviousPage = true,
-            ),
+        val vm = viewModel()
+
+        vm.load(mediaId = 7L, type = MediaType.MANGA, isAdult = false)
+        vm.load(mediaId = 7L, type = MediaType.MANGA, isAdult = false)
+
+        val items = vm.pagingDataFlow.asSnapshot()
+        assertEquals((1L..21L).toList(), items.map { it.id })
+        verify(mediaRepository, times(1)).getMediaRecommendations(
+            eq(7L),
+            eq(MediaType.MANGA),
+            eq(false),
+            eq(1),
+            eq(KeyUtil.PAGING_LIMIT),
+            eq(null),
         )
-        doReturn(Result.success(pageOne))
-            .`when`(mediaRepository)
-            .getMediaRecommendations(
-                eq(7L),
-                eq(MediaType.MANGA),
-                eq(false),
-                eq(null),
-                eq(21),
-                eq(null),
+    }
+
+    @Test
+    fun `appending pages keeps stable item order`() = runTest(testDispatcher) {
+        stubPage(
+            id = 7L,
+            page = 1,
+            pageInfo = pageInfo(currentPage = 1, hasNextPage = true),
+            records = (1L..21L).map { recommendation(it) },
+        )
+        stubPage(
+            id = 7L,
+            page = 2,
+            pageInfo = pageInfo(currentPage = 2, hasNextPage = false),
+            records = (22L..42L).map { recommendation(it) },
+        )
+        val vm = viewModel()
+
+        vm.load(mediaId = 7L, type = MediaType.MANGA, isAdult = false)
+
+        val items = vm.pagingDataFlow.asSnapshot {
+            appendScrollWhile { it.id < 25 }
+        }
+        assertEquals((1L..42L).toList(), items.map { it.id })
+        verify(mediaRepository).getMediaRecommendations(
+            eq(7L),
+            eq(MediaType.MANGA),
+            eq(false),
+            eq(2),
+            eq(KeyUtil.PAGING_LIMIT),
+            eq(null),
+        )
+    }
+
+    @Test
+    fun `refresh at the top keeps stable item order`() = runTest(testDispatcher) {
+        stubPage(
+            id = 7L,
+            page = 1,
+            pageInfo = pageInfo(currentPage = 1, hasNextPage = false),
+            records = (1L..21L).map { recommendation(it) },
+        )
+        val vm = viewModel()
+
+        vm.load(mediaId = 7L, type = MediaType.MANGA, isAdult = false)
+
+        val items = vm.pagingDataFlow.asSnapshot {
+            refresh()
+        }
+        assertEquals((1L..21L).toList(), items.map { it.id })
+        verify(mediaRepository, times(2)).getMediaRecommendations(
+            eq(7L),
+            eq(MediaType.MANGA),
+            eq(false),
+            eq(1),
+            eq(KeyUtil.PAGING_LIMIT),
+            eq(null),
+        )
+    }
+
+    @Test
+    fun `refresh after appends restarts from page one`() = runTest(testDispatcher) {
+        stubPage(
+            id = 7L,
+            page = 1,
+            pageInfo = pageInfo(currentPage = 1, hasNextPage = true),
+            records = (1L..21L).map { recommendation(it) },
+        )
+        stubPage(
+            id = 7L,
+            page = 2,
+            pageInfo = pageInfo(currentPage = 2, hasNextPage = false),
+            records = (22L..42L).map { recommendation(it) },
+        )
+        val vm = viewModel()
+
+        vm.load(mediaId = 7L, type = MediaType.MANGA, isAdult = false)
+
+        val items = vm.pagingDataFlow.asSnapshot {
+            appendScrollWhile { it.id < 25 }
+            refresh()
+        }
+        // One-directional refresh: the source never exposes an anchor-based refresh
+        // key, so a refresh always restarts from page one in stable order.
+        assertEquals((1L..21L).toList(), items.map { it.id })
+    }
+
+    @Test
+    fun `append failure is retried through the load state and continues`() = runTest(testDispatcher) {
+        stubPage(
+            id = 7L,
+            page = 1,
+            pageInfo = pageInfo(currentPage = 1, hasNextPage = true),
+            records = (1L..21L).map { recommendation(it) },
+        )
+        doReturn(Result.failure<RecommendationPageResult>(RuntimeException("retry me")))
+            .doReturn(
+                Result.success(
+                    RecommendationPageResult(
+                        recommendations = (22L..42L).map { recommendation(it) },
+                        pageInfo = pageInfo(currentPage = 2, hasNextPage = false),
+                    ),
+                ),
             )
-        doReturn(Result.success(pageTwo))
             .`when`(mediaRepository)
             .getMediaRecommendations(
                 eq(7L),
                 eq(MediaType.MANGA),
                 eq(false),
                 eq(2),
-                eq(21),
+                eq(KeyUtil.PAGING_LIMIT),
                 eq(null),
             )
         val vm = viewModel()
 
         vm.load(mediaId = 7L, type = MediaType.MANGA, isAdult = false)
-        val firstState = vm.state.value as MediaRecommendationsViewModel.UiState.Success
-        assertEquals(1, firstState.items.size)
 
-        vm.load(mediaId = 7L, type = MediaType.MANGA, isAdult = false, page = 2)
-        val secondState = vm.state.value as MediaRecommendationsViewModel.UiState.Success
-        assertEquals(2, secondState.items.size)
-        assertEquals(2L, secondState.items[1].id)
-        assertEquals(2, secondState.pageInfo?.currentPage)
+        val items = vm.pagingDataFlow.asSnapshot(
+            onError = LoadErrorHandler { RETRY },
+        ) {
+            appendScrollWhile { it.id < 25 }
+        }
+        assertEquals((1L..42L).toList(), items.map { it.id })
+        verify(mediaRepository, times(2)).getMediaRecommendations(
+            eq(7L),
+            eq(MediaType.MANGA),
+            eq(false),
+            eq(2),
+            eq(KeyUtil.PAGING_LIMIT),
+            eq(null),
+        )
     }
 
     @Test
-    fun `load replaces current items when page is reset to one`() = runTest {
-        val pageOne = RecommendationPageResult(
-            recommendations = listOf(
-                RecommendationRecord(
-                    id = 1L,
-                    mediaRecommendation = mediaSummary(id = 11L),
-                    rating = null,
-                    user = null,
-                    userRating = null,
-                ),
-            ),
-            pageInfo = PageInfoRecord(
-                currentPage = 1,
-                lastPage = 1,
-                perPage = 1,
-                total = 1,
-                hasNextPage = false,
-                hasPreviousPage = false,
-            ),
+    fun `query switch replaces the generation with the new query items`() = runTest(testDispatcher) {
+        stubPage(
+            id = 7L,
+            page = 1,
+            pageInfo = pageInfo(currentPage = 1, hasNextPage = false),
+            records = (1L..21L).map { recommendation(it) },
         )
-        val pageTwo = RecommendationPageResult(
-            recommendations = listOf(
-                RecommendationRecord(
-                    id = 2L,
-                    mediaRecommendation = mediaSummary(id = 12L),
-                    rating = null,
-                    user = null,
-                    userRating = null,
-                ),
-            ),
-            pageInfo = PageInfoRecord(
-                currentPage = 1,
-                lastPage = 1,
-                perPage = 1,
-                total = 1,
-                hasNextPage = false,
-                hasPreviousPage = false,
-            ),
+        stubPage(
+            id = 8L,
+            page = 1,
+            pageInfo = pageInfo(currentPage = 1, hasNextPage = false),
+            records = (101L..121L).map { recommendation(it) },
         )
-        doReturn(Result.success(pageOne))
-            .doReturn(Result.success(pageTwo))
-            .`when`(mediaRepository)
-            .getMediaRecommendations(
-                eq(7L),
-                eq(MediaType.MANGA),
-                eq(false),
-                eq(null),
-                eq(21),
-                eq(null),
-            )
-        val vm = viewModel()
-
-        vm.load(mediaId = 7L, type = MediaType.MANGA, isAdult = false)
-        val firstState = vm.state.value as MediaRecommendationsViewModel.UiState.Success
-        assertEquals(1L, firstState.items.single().id)
-
-        vm.load(mediaId = 7L, type = MediaType.MANGA, isAdult = false)
-        val secondState = vm.state.value as MediaRecommendationsViewModel.UiState.Success
-        assertEquals(1, secondState.items.size)
-        assertEquals(2L, secondState.items.single().id)
-    }
-
-    @Test
-    fun `records without a media recommendation are not projected as UI items`() = runTest {
-        val page = RecommendationPageResult(
-            recommendations = listOf(
-                RecommendationRecord(
-                    id = 1L,
-                    mediaRecommendation = null,
-                    rating = null,
-                    user = null,
-                    userRating = null,
-                ),
-            ),
-            pageInfo = null,
-        )
-        doReturn(Result.success(page))
-            .`when`(mediaRepository)
-            .getMediaRecommendations(
-                eq(7L),
-                eq(MediaType.MANGA),
-                eq(false),
-                eq(null),
-                eq(21),
-                eq(null),
-            )
         val vm = viewModel()
 
         vm.load(mediaId = 7L, type = MediaType.MANGA, isAdult = false)
 
-        val state = vm.state.value as MediaRecommendationsViewModel.UiState.Success
-        assertTrue(state.items.isEmpty())
+        val items = vm.pagingDataFlow.asSnapshot {
+            vm.load(mediaId = 8L, type = MediaType.MANGA, isAdult = false)
+        }
+        assertEquals((101L..121L).toList(), items.map { it.id })
+        verify(mediaRepository, times(1)).getMediaRecommendations(
+            eq(7L),
+            eq(MediaType.MANGA),
+            eq(false),
+            eq(1),
+            eq(KeyUtil.PAGING_LIMIT),
+            eq(null),
+        )
+        verify(mediaRepository, times(1)).getMediaRecommendations(
+            eq(8L),
+            eq(MediaType.MANGA),
+            eq(false),
+            eq(1),
+            eq(KeyUtil.PAGING_LIMIT),
+            eq(null),
+        )
     }
 
-    private fun viewModel(): MediaRecommendationsViewModel = MediaRecommendationsViewModel(
-        mediaRepository = mediaRepository,
-        dispatcher = testDispatcher,
+    private fun viewModel(): MediaRecommendationsViewModel = MediaRecommendationsViewModel(mediaRepository = mediaRepository)
+
+    private suspend fun stubPage(
+        id: Long,
+        page: Int,
+        pageInfo: PageInfoRecord?,
+        records: List<RecommendationRecord>,
+    ) {
+        doReturn(Result.success(RecommendationPageResult(records, pageInfo)))
+            .`when`(mediaRepository)
+            .getMediaRecommendations(
+                eq(id),
+                eq(MediaType.MANGA),
+                eq(false),
+                eq(page),
+                eq(KeyUtil.PAGING_LIMIT),
+                eq(null),
+            )
+    }
+
+    private fun recommendation(
+        id: Long,
+        mediaId: Long = id + 10,
+        title: String = if (id == 1L) "Alpha" else "Title $mediaId",
+    ): RecommendationRecord = RecommendationRecord(
+        id = id,
+        mediaRecommendation = mediaSummary(id = mediaId, title = title),
+        rating = null,
+        user = null,
+        userRating = null,
+    )
+
+    private fun pageInfo(
+        currentPage: Int,
+        hasNextPage: Boolean,
+    ): PageInfoRecord = PageInfoRecord(
+        currentPage = currentPage,
+        lastPage = if (hasNextPage) currentPage + 1 else currentPage,
+        perPage = KeyUtil.PAGING_LIMIT,
+        total = 0,
+        hasNextPage = hasNextPage,
+        hasPreviousPage = currentPage > 1,
     )
 
     private fun mediaSummary(

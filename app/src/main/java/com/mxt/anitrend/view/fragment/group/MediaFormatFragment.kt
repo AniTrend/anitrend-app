@@ -149,23 +149,17 @@ class MediaFormatFragment : FragmentBaseList<RecyclerItem, ConnectionContainer<P
         if (state.pageInfo != null) {
             mScrollListener.setPageInfo(state.pageInfo)
         }
-        if (state.isEmpty) {
-            if (mAdapter.itemCount < 1) {
-                showEmpty(getString(R.string.layout_empty_response))
-            } else {
+        // Every success carries the complete renderable snapshot, so the adapter
+        // contents are always replaced rather than appended. Re-collecting the
+        // state flow can never replay a delta onto existing items.
+        mAdapter.onItemsInserted(state.items)
+        if (state.items.isEmpty()) {
+            showEmpty(getString(R.string.layout_empty_response))
+        } else {
+            updateUI()
+            if (state.isEmpty) {
                 setLimitReached()
             }
-        } else if (state.newItems.isNotEmpty()) {
-            if (isPager && !swipeRefreshLayout.isRefreshing()) {
-                if (mAdapter.itemCount < 1) {
-                    mAdapter.onItemsInserted(state.newItems)
-                } else {
-                    mAdapter.onItemRangeInserted(state.newItems)
-                }
-            } else {
-                mAdapter.onItemsInserted(state.newItems)
-            }
-            updateUI()
         }
     }
 

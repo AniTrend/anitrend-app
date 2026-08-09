@@ -180,4 +180,48 @@ class BrowseReviewViewModelTest {
         assertEquals(42, state.content.pageData.first().rating)
         collector.cancel()
     }
+
+    @Test
+    fun `rating sort key mutation surfaces stale in Success state`() = runTest {
+        val sortKey = ReviewQueryKey(mediaId = null, mediaType = MediaType.ANIME, sort = ReviewSort.RATING)
+        val review = Review().apply {
+            id = 11L
+            media.type = MediaType.ANIME.name
+            rating = 10
+        }
+        val content = PageContainer<Review>().apply { pageData = listOf(review) }
+        doReturn(Result.success(content))
+            .`when`(browseRepository)
+            .getReviewBrowse(
+                page = 1,
+                perPage = KeyUtil.PAGING_LIMIT,
+                type = MediaType.ANIME,
+                sort = listOf(ReviewSort.RATING),
+                asHtml = false,
+                commitToStore = true,
+                queryKey = sortKey,
+                readToken = 1L,
+            )
+        val vm = BrowseReviewViewModel(browseRepository = browseRepository, reviewStore = reviewStore, requestSequence = RequestSequence(), rateReviewInteractor = rateReviewInteractor)
+        val collector = backgroundScope.launch { vm.state.collect {} }
+
+        reviewStore.apply(
+            ReviewStoreChange.PageLoaded(
+                queryKey = sortKey,
+                page = 1,
+                token = 1L,
+                reviews = listOf(review.toReviewRecord(revision = 1L)),
+                pageInfo = null,
+            ),
+        )
+        vm.load(type = MediaType.ANIME, page = 1, sort = "RATING")
+        advanceUntilIdle()
+        reviewStore.apply(ReviewStoreChange.ReviewRated(review.toReviewRecord(revision = 2L).copy(rating = 42), revision = 2L))
+        advanceUntilIdle()
+
+        val state = vm.state.value as BrowseReviewViewModel.UiState.Success
+        assertTrue(state.isStale)
+        assertEquals(42, state.content.pageData.first().rating)
+        collector.cancel()
+    }
 }

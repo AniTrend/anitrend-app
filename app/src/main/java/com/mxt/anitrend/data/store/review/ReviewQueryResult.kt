@@ -7,4 +7,5 @@ data class ReviewQueryResult(
     val reviews: List<ReviewRecord>,
     val pageInfo: PageInfoRecord?,
     val loadedPages: Set<Int>,
+    val stale: Boolean,
 )

@@ -408,6 +408,7 @@ class BrowseRepository(
                         ReviewStoreChange.ReviewSaved(
                             review = result.toReviewRecord(revision = revision),
                             revision = revision,
+                            isCreate = id == null,
                         ),
                     )
                 }
