@@ -10,9 +10,11 @@ import retrofit2.http.Url
  */
 
 interface EpisodeService {
+    /** Fetches the popular Crunchyroll episode feed as RSS. */
     @GET("crunchyroll/rss/popular?format=xml")
     suspend fun getPopularFeed(): Response<Rss>
 
+    /** Fetches the latest Crunchyroll episode feed as RSS. */
     @GET("crunchyroll/rss")
     suspend fun getLatestFeed(): Response<Rss>
 
