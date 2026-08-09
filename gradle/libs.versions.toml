@@ -144,6 +144,7 @@ anitrend-retrofit-graphql-runtime = { module = "com.github.AniTrend.retrofit-gra
 anitrend-retrofit-graphql-api = { module = "com.github.AniTrend.retrofit-graphql:api", version.ref = "anitrend-retrofit-graphql" }
 anitrend-retrofit-graphql-serialization-kotlinx = { module = "com.github.AniTrend.retrofit-graphql:serialization-kotlinx", version.ref = "anitrend-retrofit-graphql" }
 anitrend-retrofit-graphql-gradle-plugin = { module = "com.github.AniTrend.retrofit-graphql:co.anitrend.retrofit.graphql.codegen.gradle.plugin", version.ref = "anitrend-retrofit-graphql" }
+anitrend-retrofit-graphql-compat = { module = "com.github.AniTrend.retrofit-graphql:compat", version.ref = "anitrend-retrofit-graphql" }
 
 cash-turbine = { module = "app.cash.turbine:turbine", version.ref = "cash-turbine" }
 

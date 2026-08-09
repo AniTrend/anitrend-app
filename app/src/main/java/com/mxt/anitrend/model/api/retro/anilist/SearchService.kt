@@ -1,6 +1,6 @@
 package com.mxt.anitrend.model.api.retro.anilist
 
-import co.anitrend.retrofit.graphql.model.GraphQLRequest
+import co.anitrend.retrofit.graphql.model.request.GraphQLOperationRequest
 import com.mxt.anitrend.graphql.generated.CharacterSearchVariables
 import com.mxt.anitrend.graphql.generated.MediaSearchVariables
 import com.mxt.anitrend.graphql.generated.StaffSearchVariables
@@ -23,21 +23,21 @@ interface SearchService {
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getMediaSearch(@Body request: GraphQLRequest<MediaSearchVariables>): Call<AniListContainer<PageContainer<MediaBase>>>
+    fun getMediaSearch(@Body request: GraphQLOperationRequest<MediaSearchVariables>): Call<AniListContainer<PageContainer<MediaBase>>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getStudioSearch(@Body request: GraphQLRequest<StudioSearchVariables>): Call<AniListContainer<PageContainer<StudioBase>>>
+    fun getStudioSearch(@Body request: GraphQLOperationRequest<StudioSearchVariables>): Call<AniListContainer<PageContainer<StudioBase>>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getStaffSearch(@Body request: GraphQLRequest<StaffSearchVariables>): Call<AniListContainer<PageContainer<StaffBase>>>
+    fun getStaffSearch(@Body request: GraphQLOperationRequest<StaffSearchVariables>): Call<AniListContainer<PageContainer<StaffBase>>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getCharacterSearch(@Body request: GraphQLRequest<CharacterSearchVariables>): Call<AniListContainer<PageContainer<CharacterBase>>>
+    fun getCharacterSearch(@Body request: GraphQLOperationRequest<CharacterSearchVariables>): Call<AniListContainer<PageContainer<CharacterBase>>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getUserSearch(@Body request: GraphQLRequest<UserSearchVariables>): Call<AniListContainer<PageContainer<UserBase>>>
+    fun getUserSearch(@Body request: GraphQLOperationRequest<UserSearchVariables>): Call<AniListContainer<PageContainer<UserBase>>>
 }

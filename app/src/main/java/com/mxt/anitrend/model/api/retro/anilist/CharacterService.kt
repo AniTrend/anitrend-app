@@ -1,7 +1,7 @@
 package com.mxt.anitrend.model.api.retro.anilist
 
-import co.anitrend.retrofit.graphql.model.GraphQLRequest
 import co.anitrend.retrofit.graphql.model.body.GraphContainer
+import co.anitrend.retrofit.graphql.model.request.GraphQLOperationRequest
 import com.mxt.anitrend.graphql.generated.CharacterActorsVariables
 import com.mxt.anitrend.graphql.generated.CharacterBaseData
 import com.mxt.anitrend.graphql.generated.CharacterBaseVariables
@@ -28,24 +28,24 @@ interface CharacterService {
     @POST("/")
     @Headers("Content-Type: application/json")
     fun getCharacterBase(
-        @Body request: GraphQLRequest<CharacterBaseVariables>,
+        @Body request: GraphQLOperationRequest<CharacterBaseVariables>,
     ): Call<GraphContainer<CharacterBaseData>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
     fun getCharacterOverview(
-        @Body request: GraphQLRequest<CharacterOverviewVariables>,
+        @Body request: GraphQLOperationRequest<CharacterOverviewVariables>,
     ): Call<GraphContainer<CharacterOverviewData>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
     fun getCharacterMedia(
-        @Body request: GraphQLRequest<CharacterMediaVariables>,
+        @Body request: GraphQLOperationRequest<CharacterMediaVariables>,
     ): Call<AniListContainer<ConnectionContainer<PageContainer<MediaBase>>>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
     fun getCharacterActors(
-        @Body request: GraphQLRequest<CharacterActorsVariables>,
+        @Body request: GraphQLOperationRequest<CharacterActorsVariables>,
     ): Call<AniListContainer<ConnectionContainer<EdgeContainer<MediaEdge>>>>
 }

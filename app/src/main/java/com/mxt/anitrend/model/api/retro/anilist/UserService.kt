@@ -1,7 +1,7 @@
 package com.mxt.anitrend.model.api.retro.anilist
 
-import co.anitrend.retrofit.graphql.model.GraphQLRequest
 import co.anitrend.retrofit.graphql.model.body.GraphContainer
+import co.anitrend.retrofit.graphql.model.request.GraphQLOperationRequest
 import com.mxt.anitrend.graphql.generated.AnimeFavouritesVariables
 import com.mxt.anitrend.graphql.generated.UserStatsData
 import com.mxt.anitrend.graphql.generated.CharacterFavouritesVariables
@@ -40,91 +40,91 @@ interface UserService {
     @POST("/")
     @Headers("Content-Type: application/json")
     fun getUserNotifications(
-        @Body request: GraphQLRequest<UserNotificationsVariables>,
+        @Body request: GraphQLOperationRequest<UserNotificationsVariables>,
     ): Call<GraphContainer<UserNotificationsData>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
     fun getCurrentUser(
-        @Body request: GraphQLRequest<CurrentUserVariables>,
+        @Body request: GraphQLOperationRequest<CurrentUserVariables>,
     ): Call<AniListContainer<User>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
     fun getUserBase(
-        @Body request: GraphQLRequest<UserBaseVariables>,
+        @Body request: GraphQLOperationRequest<UserBaseVariables>,
     ): Call<AniListContainer<UserBase>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
     fun getUserOverview(
-        @Body request: GraphQLRequest<UserOverviewVariables>,
+        @Body request: GraphQLOperationRequest<UserOverviewVariables>,
     ): Call<AniListContainer<User>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
     fun getUserStats(
-        @Body request: GraphQLRequest<UserStatsVariables>,
+        @Body request: GraphQLOperationRequest<UserStatsVariables>,
     ): Call<GraphContainer<UserStatsData>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
     fun getFollowers(
-        @Body request: GraphQLRequest<UserFollowersVariables>,
+        @Body request: GraphQLOperationRequest<UserFollowersVariables>,
     ): Call<AniListContainer<PageContainer<UserBase>>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
     fun getFollowing(
-        @Body request: GraphQLRequest<UserFollowingVariables>,
+        @Body request: GraphQLOperationRequest<UserFollowingVariables>,
     ): Call<AniListContainer<PageContainer<UserBase>>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
     fun getFavouritesCount(
-        @Body request: GraphQLRequest<UserFavouriteCountVariables>,
+        @Body request: GraphQLOperationRequest<UserFavouriteCountVariables>,
     ): Call<AniListContainer<ConnectionContainer<Favourite>>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
     fun getAnimeFavourites(
-        @Body request: GraphQLRequest<AnimeFavouritesVariables>,
+        @Body request: GraphQLOperationRequest<AnimeFavouritesVariables>,
     ): Call<AniListContainer<ConnectionContainer<Favourite>>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
     fun getMangaFavourites(
-        @Body request: GraphQLRequest<MangaFavouritesVariables>,
+        @Body request: GraphQLOperationRequest<MangaFavouritesVariables>,
     ): Call<AniListContainer<ConnectionContainer<Favourite>>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
     fun getCharacterFavourites(
-        @Body request: GraphQLRequest<CharacterFavouritesVariables>,
+        @Body request: GraphQLOperationRequest<CharacterFavouritesVariables>,
     ): Call<AniListContainer<ConnectionContainer<Favourite>>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
     fun getStaffFavourites(
-        @Body request: GraphQLRequest<StaffFavouritesVariables>,
+        @Body request: GraphQLOperationRequest<StaffFavouritesVariables>,
     ): Call<AniListContainer<ConnectionContainer<Favourite>>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
     fun getStudioFavourites(
-        @Body request: GraphQLRequest<StudioFavouritesVariables>,
+        @Body request: GraphQLOperationRequest<StudioFavouritesVariables>,
     ): Call<AniListContainer<ConnectionContainer<Favourite>>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
     fun toggleFollow(
-        @Body request: GraphQLRequest<ToggleFollowVariables>,
+        @Body request: GraphQLOperationRequest<ToggleFollowVariables>,
     ): Call<AniListContainer<UserBase>>
 
     /** Sends a typed UpdateUser mutation request to AniList. */
     @POST("/")
     @Headers("Content-Type: application/json")
     fun updateUser(
-        @Body request: GraphQLRequest<UpdateUserVariables>,
+        @Body request: GraphQLOperationRequest<UpdateUserVariables>,
     ): Call<GraphContainer<UpdateUserData>>
 }

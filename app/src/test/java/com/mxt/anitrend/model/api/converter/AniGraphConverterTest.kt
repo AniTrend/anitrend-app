@@ -1,15 +1,28 @@
 package com.mxt.anitrend.model.api.converter
 
+import co.anitrend.retrofit.graphql.model.EmptyGraphQLVariables
+import co.anitrend.retrofit.graphql.model.GraphQLRequest
 import co.anitrend.retrofit.graphql.model.body.GraphContainer
 import co.anitrend.retrofit.graphql.serialization.kotlinx.KotlinxGraphQLJson
 import com.google.gson.GsonBuilder
 import com.mxt.anitrend.graphql.generated.GeneratedGraphQLRegistry
+import com.mxt.anitrend.graphql.generated.GenreCollection
 import com.mxt.anitrend.graphql.generated.GenreCollectionData
+import com.mxt.anitrend.graphql.generated.LikeableType
 import com.mxt.anitrend.graphql.generated.MediaTagCollectionData
+import com.mxt.anitrend.graphql.generated.ToggleLike
+import com.mxt.anitrend.model.api.retro.anilist.BaseService
 import com.mxt.anitrend.model.entity.container.body.AniListContainer
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.Request
 import okhttp3.ResponseBody.Companion.toResponseBody
+import okio.Buffer
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import retrofit2.Retrofit
 import java.lang.reflect.ParameterizedType
@@ -28,6 +41,12 @@ class AniGraphConverterTest {
 
     private val retrofit = Retrofit.Builder()
         .baseUrl("https://example.com/")
+        .build()
+
+    /** Retrofit wired exactly like production: only [AniGraphConverter] is registered. */
+    private val converterRetrofit = Retrofit.Builder()
+        .baseUrl("https://example.com/")
+        .addConverterFactory(converter)
         .build()
 
     @Test
@@ -82,6 +101,45 @@ class AniGraphConverterTest {
         assertEquals("Cyberpunk", tag?.name)
         assertEquals("Theme", tag?.category)
         assertEquals(false, tag?.isAdult)
+    }
+
+    @Test
+    fun `serializes generated GraphQLOperationRequest bodies through toggleLike`() {
+        val service = converterRetrofit.create(BaseService::class.java)
+        val call = service.toggleLike(
+            ToggleLike.request(id = 1, type = LikeableType.ACTIVITY),
+        )
+
+        val body = jsonObject(call.request())
+
+        assertEquals("ToggleLike", body["operationName"]?.jsonPrimitive?.content)
+        assertTrue(body["query"]?.jsonPrimitive?.content?.contains("ToggleLike") == true)
+        val variables = body["variables"]?.jsonObject
+        assertEquals("1", variables?.get("id")?.jsonPrimitive?.content)
+        assertEquals("ACTIVITY", variables?.get("type")?.jsonPrimitive?.content)
+    }
+
+    @Test
+    fun `preserves manual compat GraphQLRequest serialization through getGenres`() {
+        val service = converterRetrofit.create(BaseService::class.java)
+        val call = service.getGenres(
+            GraphQLRequest<EmptyGraphQLVariables>(
+                query = GenreCollection.document,
+                operationName = GenreCollection.name,
+            ),
+        )
+
+        val body = jsonObject(call.request())
+
+        assertEquals("GenreCollection", body["operationName"]?.jsonPrimitive?.content)
+        assertTrue(body["query"]?.jsonPrimitive?.content?.contains("query GenreCollection") == true)
+    }
+
+    private fun jsonObject(request: Request): JsonObject {
+        val body = request.body ?: error("Expected a serialized request body")
+        val buffer = Buffer()
+        body.writeTo(buffer)
+        return Json.parseToJsonElement(buffer.readUtf8()).jsonObject
     }
 
     private fun parameterizedType(

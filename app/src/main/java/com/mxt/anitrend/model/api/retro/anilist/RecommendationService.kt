@@ -1,6 +1,6 @@
 package com.mxt.anitrend.model.api.retro.anilist
 
-import co.anitrend.retrofit.graphql.model.GraphQLRequest
+import co.anitrend.retrofit.graphql.model.request.GraphQLOperationRequest
 import com.mxt.anitrend.graphql.generated.RecommendationMediaListVariables
 import com.mxt.anitrend.model.entity.anilist.Recommendation
 import com.mxt.anitrend.model.entity.container.body.AniListContainer
@@ -14,6 +14,6 @@ interface RecommendationService {
     @POST("/")
     @Headers("Content-Type: application/json")
     fun getRecommendationMediaList(
-        @Body request: GraphQLRequest<RecommendationMediaListVariables>,
+        @Body request: GraphQLOperationRequest<RecommendationMediaListVariables>,
     ): Call<AniListContainer<PageContainer<Recommendation>>>
 }

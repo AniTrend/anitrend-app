@@ -3,6 +3,7 @@ package com.mxt.anitrend.model.api.retro.anilist
 import co.anitrend.retrofit.graphql.model.EmptyGraphQLVariables
 import co.anitrend.retrofit.graphql.model.GraphQLRequest
 import co.anitrend.retrofit.graphql.model.body.GraphContainer
+import co.anitrend.retrofit.graphql.model.request.GraphQLOperationRequest
 import com.mxt.anitrend.graphql.generated.GenreCollectionData
 import com.mxt.anitrend.graphql.generated.MediaTagCollectionData
 import com.mxt.anitrend.graphql.generated.ToggleFavouriteVariables
@@ -35,12 +36,12 @@ interface BaseService {
     @POST("/")
     @Headers("Content-Type: application/json")
     fun toggleLike(
-        @Body request: GraphQLRequest<ToggleLikeVariables>,
+        @Body request: GraphQLOperationRequest<ToggleLikeVariables>,
     ): Call<AniListContainer<List<UserBase>>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
     fun toggleFavourite(
-        @Body request: GraphQLRequest<ToggleFavouriteVariables>,
+        @Body request: GraphQLOperationRequest<ToggleFavouriteVariables>,
     ): Call<ResponseBody>
 }
