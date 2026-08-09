@@ -6,7 +6,7 @@ import com.mxt.anitrend.util.graphql.apiError
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import retrofit2.Call
+import retrofit2.Response
 
 class CrunchyrollRepository(
     private val feedService: EpisodeService,
@@ -14,15 +14,15 @@ class CrunchyrollRepository(
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) {
 
-    suspend fun getLatestFeed(): Result<Rss> = execute(feedService.latestFeed)
+    suspend fun getLatestFeed(): Result<Rss> = execute { feedService.getLatestFeed() }
 
-    suspend fun getPopularFeed(): Result<Rss> = execute(feedService.popularFeed)
+    suspend fun getPopularFeed(): Result<Rss> = execute { feedService.getPopularFeed() }
 
-    suspend fun getRss(link: String?): Result<Rss> = execute(crunchyrollService.getRssByUrl(link))
+    suspend fun getRss(link: String?): Result<Rss> = execute { crunchyrollService.getRssByUrl(link) }
 
-    private suspend fun execute(call: Call<Rss>): Result<Rss> = withContext(ioDispatcher) {
+    private suspend fun execute(request: suspend () -> Response<Rss>): Result<Rss> = withContext(ioDispatcher) {
         runCatching {
-            val response = call.execute()
+            val response = request()
             if (response.isSuccessful) {
                 response.body() ?: throw IllegalStateException("Empty response body")
             } else {

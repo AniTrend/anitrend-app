@@ -33,7 +33,7 @@ class CharacterRepository(
     suspend fun getCharacterBase(id: Long): Result<CharacterRecord> = withContext(ioDispatcher) {
         runCatching {
             val request = CharacterBase.request(id = id.toInt())
-            val response = characterService.getCharacterBase(request).execute()
+            val response = characterService.getCharacterBase(request)
             if (response.isSuccessful) {
                 handleCharacterBase(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -53,7 +53,7 @@ class CharacterRepository(
     suspend fun getCharacterOverview(id: Long, asHtml: Boolean = false): Result<MediaCharacter> = withContext(ioDispatcher) {
         runCatching {
             val request = CharacterOverview.request(id = id.toInt(), asHtml = asHtml)
-            val response = characterService.getCharacterOverview(request).execute()
+            val response = characterService.getCharacterOverview(request)
             if (response.isSuccessful) {
                 handleCharacterOverview(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -79,7 +79,7 @@ class CharacterRepository(
     ): Result<ConnectionContainer<PageContainer<MediaEntity>>> = withContext(ioDispatcher) {
         runCatching {
             val request = CharacterMedia.request(id = id.toInt(), page = page, perPage = perPage, sort = sort, type = type)
-            val response = characterService.getCharacterMedia(request).execute()
+            val response = characterService.getCharacterMedia(request)
             if (response.isSuccessful) {
                 handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -96,7 +96,7 @@ class CharacterRepository(
     ): Result<ConnectionContainer<EdgeContainer<MediaEdge>>> = withContext(ioDispatcher) {
         runCatching {
             val request = CharacterActors.request(id = id.toInt(), page = page, perPage = perPage, sort = sort)
-            val response = characterService.getCharacterActors(request).execute()
+            val response = characterService.getCharacterActors(request)
             if (response.isSuccessful) {
                 handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {

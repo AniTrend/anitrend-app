@@ -30,12 +30,12 @@ class UpdateWorker(
             )
     }
 
-    private fun requestUpdateInformation(): VersionBase? = if (shouldCheckForUpdate()) {
+    private suspend fun requestUpdateInformation(): VersionBase? = if (shouldCheckForUpdate()) {
         val response =
             repositoryService
                 .checkVersion(
                     presenter.settings.updateChannel,
-                ).execute()
+                )
 
         val data = response.body()
 

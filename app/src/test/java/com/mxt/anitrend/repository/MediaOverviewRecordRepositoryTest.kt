@@ -20,7 +20,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
-import retrofit2.Call
 import retrofit2.Response
 
 /**
@@ -38,10 +37,8 @@ class MediaOverviewRecordRepositoryTest {
 
     @Test
     fun `getMediaOverviewRecord success maps GraphContainer data to MediaOverviewRecord`() = runTest {
-        val call = overviewCall()
         val request = MediaOverview.request(id = 21, type = MediaType.ANIME, isAdult = false, asHtml = false)
-        `when`(service.getMediaOverviewRecord(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaOverviewRecord(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = overviewData(
@@ -74,10 +71,8 @@ class MediaOverviewRecordRepositoryTest {
 
     @Test
     fun `getMediaOverviewRecord maps optional trailer studios and tags blocks`() = runTest {
-        val call = overviewCall()
         val request = MediaOverview.request(id = 21, type = MediaType.ANIME, isAdult = false, asHtml = false)
-        `when`(service.getMediaOverviewRecord(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaOverviewRecord(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = MediaOverviewData(
@@ -134,10 +129,8 @@ class MediaOverviewRecordRepositoryTest {
 
     @Test
     fun `getMediaOverviewRecord preserves nullable optional blocks`() = runTest {
-        val call = overviewCall()
         val request = MediaOverview.request(id = 21, type = MediaType.ANIME, isAdult = false, asHtml = false)
-        `when`(service.getMediaOverviewRecord(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaOverviewRecord(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = MediaOverviewData(
@@ -162,10 +155,8 @@ class MediaOverviewRecordRepositoryTest {
 
     @Test
     fun `getMediaOverviewRecord forwards asHtml to the generated request`() = runTest {
-        val call = overviewCall()
         val request = MediaOverview.request(id = 21, type = MediaType.ANIME, isAdult = false, asHtml = true)
-        `when`(service.getMediaOverviewRecord(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaOverviewRecord(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = MediaOverviewData(
@@ -184,10 +175,8 @@ class MediaOverviewRecordRepositoryTest {
 
     @Test
     fun `getMediaOverviewRecord GraphQL error returns failed Result with message`() = runTest {
-        val call = overviewCall()
         val request = MediaOverview.request(id = 21, type = MediaType.ANIME, isAdult = false, asHtml = false)
-        `when`(service.getMediaOverviewRecord(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaOverviewRecord(request)).thenReturn(
             Response.success(
                 GraphContainer<MediaOverviewData>(
                     data = null,
@@ -204,10 +193,8 @@ class MediaOverviewRecordRepositoryTest {
 
     @Test
     fun `getMediaOverviewRecord null body returns failed Result`() = runTest {
-        val call = overviewCall()
         val request = MediaOverview.request(id = 21, type = MediaType.ANIME, isAdult = false, asHtml = false)
-        `when`(service.getMediaOverviewRecord(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(Response.success(null))
+        `when`(service.getMediaOverviewRecord(request)).thenReturn(Response.success(null))
 
         val result = repository.getMediaOverviewRecord(id = 21L, type = MediaType.ANIME, isAdult = false)
 
@@ -217,10 +204,8 @@ class MediaOverviewRecordRepositoryTest {
 
     @Test
     fun `getMediaOverviewRecord null data returns failed Result`() = runTest {
-        val call = overviewCall()
         val request = MediaOverview.request(id = 21, type = MediaType.ANIME, isAdult = false, asHtml = false)
-        `when`(service.getMediaOverviewRecord(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaOverviewRecord(request)).thenReturn(
             Response.success(
                 GraphContainer<MediaOverviewData>(
                     data = null,
@@ -237,10 +222,8 @@ class MediaOverviewRecordRepositoryTest {
 
     @Test
     fun `getMediaOverviewRecord null root media returns failed Result`() = runTest {
-        val call = overviewCall()
         val request = MediaOverview.request(id = 21, type = MediaType.ANIME, isAdult = false, asHtml = false)
-        `when`(service.getMediaOverviewRecord(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaOverviewRecord(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = MediaOverviewData(media = null),
@@ -257,21 +240,16 @@ class MediaOverviewRecordRepositoryTest {
 
     @Test
     fun `getMediaOverviewRecord HTTP error returns failed Result with server message`() = runTest {
-        val call = overviewCall()
         val request = MediaOverview.request(id = 21, type = MediaType.ANIME, isAdult = false, asHtml = false)
-        `when`(service.getMediaOverviewRecord(request)).thenReturn(call)
         val errorBody = """{"errors":[{"message":"Server exploded"}]}"""
             .toResponseBody("application/json".toMediaType())
-        `when`(call.execute()).thenReturn(Response.error(500, errorBody))
+        `when`(service.getMediaOverviewRecord(request)).thenReturn(Response.error(500, errorBody))
 
         val result = repository.getMediaOverviewRecord(id = 21L, type = MediaType.ANIME, isAdult = false)
 
         assertTrue(result.isFailure)
         assertEquals("Server exploded", result.exceptionOrNull()?.message)
     }
-
-    @Suppress("UNCHECKED_CAST")
-    private fun overviewCall(): Call<GraphContainer<MediaOverviewData>> = mock(Call::class.java) as Call<GraphContainer<MediaOverviewData>>
 
     private fun overviewData(
         id: Int,

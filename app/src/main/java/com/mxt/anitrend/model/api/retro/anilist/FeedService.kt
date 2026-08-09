@@ -14,7 +14,7 @@ import com.mxt.anitrend.model.entity.anilist.FeedReply
 import com.mxt.anitrend.model.entity.anilist.meta.DeleteState
 import com.mxt.anitrend.model.entity.container.body.AniListContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
-import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Headers
 import retrofit2.http.POST
@@ -27,49 +27,49 @@ import retrofit2.http.POST
 interface FeedService {
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getFeedList(
+    suspend fun getFeedList(
         @Body request: GraphQLOperationRequest<FeedListVariables>,
-    ): Call<AniListContainer<PageContainer<FeedList>>>
+    ): Response<AniListContainer<PageContainer<FeedList>>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getFeedListReply(
+    suspend fun getFeedListReply(
         @Body request: GraphQLOperationRequest<FeedListReplyVariables>,
-    ): Call<AniListContainer<FeedList>>
+    ): Response<AniListContainer<FeedList>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getFeedMessage(
+    suspend fun getFeedMessage(
         @Body request: GraphQLOperationRequest<FeedMessageVariables>,
-    ): Call<AniListContainer<PageContainer<FeedList>>>
+    ): Response<AniListContainer<PageContainer<FeedList>>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun saveTextActivity(
+    suspend fun saveTextActivity(
         @Body request: GraphQLOperationRequest<SaveTextActivityVariables>,
-    ): Call<AniListContainer<FeedList>>
+    ): Response<AniListContainer<FeedList>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun saveMessageActivity(
+    suspend fun saveMessageActivity(
         @Body request: GraphQLOperationRequest<SaveMessageActivityVariables>,
-    ): Call<AniListContainer<FeedList>>
+    ): Response<AniListContainer<FeedList>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun saveActivityReply(
+    suspend fun saveActivityReply(
         @Body request: GraphQLOperationRequest<SaveActivityReplyVariables>,
-    ): Call<AniListContainer<FeedReply>>
+    ): Response<AniListContainer<FeedReply>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun deleteActivity(
+    suspend fun deleteActivity(
         @Body request: GraphQLOperationRequest<DeleteActivityVariables>,
-    ): Call<AniListContainer<DeleteState>>
+    ): Response<AniListContainer<DeleteState>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun deleteActivityReply(
+    suspend fun deleteActivityReply(
         @Body request: GraphQLOperationRequest<DeleteActivityReplyVariables>,
-    ): Call<AniListContainer<DeleteState>>
+    ): Response<AniListContainer<DeleteState>>
 }

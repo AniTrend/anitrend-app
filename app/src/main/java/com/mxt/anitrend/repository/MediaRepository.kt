@@ -66,7 +66,7 @@ class MediaRepository(
     suspend fun getMediaBase(id: Long, type: MediaType?, isAdult: Boolean?): Result<MediaEntity> = withContext(ioDispatcher) {
         runCatching {
             val request = MediaBase.request(id = id.toInt(), type = type, isAdult = isAdult)
-            val response = mediaService.getMediaBase(request).execute()
+            val response = mediaService.getMediaBase(request)
             if (response.isSuccessful) {
                 handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -83,7 +83,7 @@ class MediaRepository(
     suspend fun getMediaBaseRecord(id: Long, type: MediaType?, isAdult: Boolean?): Result<MediaDetailRecord> = withContext(ioDispatcher) {
         runCatching {
             val request = MediaBase.request(id = id.toInt(), type = type, isAdult = isAdult)
-            val response = mediaService.getMediaBaseRecord(request).execute()
+            val response = mediaService.getMediaBaseRecord(request)
             if (response.isSuccessful) {
                 handleMediaBaseRecord(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -95,7 +95,7 @@ class MediaRepository(
     suspend fun getMediaOverview(id: Long, type: MediaType?, isAdult: Boolean?, asHtml: Boolean = false): Result<Media> = withContext(ioDispatcher) {
         runCatching {
             val request = MediaOverview.request(id = id.toInt(), type = type, isAdult = isAdult, asHtml = asHtml)
-            val response = mediaService.getMediaOverview(request).execute()
+            val response = mediaService.getMediaOverview(request)
             if (response.isSuccessful) {
                 handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -115,7 +115,7 @@ class MediaRepository(
     suspend fun getMediaOverviewRecord(id: Long, type: MediaType?, isAdult: Boolean?, asHtml: Boolean = false): Result<MediaOverviewRecord> = withContext(ioDispatcher) {
         runCatching {
             val request = MediaOverview.request(id = id.toInt(), type = type, isAdult = isAdult, asHtml = asHtml)
-            val response = mediaService.getMediaOverviewRecord(request).execute()
+            val response = mediaService.getMediaOverviewRecord(request)
             if (response.isSuccessful) {
                 handleMediaOverviewRecord(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -127,7 +127,7 @@ class MediaRepository(
     suspend fun getMediaRelations(id: Long, type: MediaType?, isAdult: Boolean?): Result<ConnectionContainer<EdgeContainer<MediaEdge>>> = withContext(ioDispatcher) {
         runCatching {
             val request = MediaRelations.request(id = id.toInt(), type = type, isAdult = isAdult)
-            val response = mediaService.getMediaRelations(request).execute()
+            val response = mediaService.getMediaRelations(request)
             if (response.isSuccessful) {
                 handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -146,7 +146,7 @@ class MediaRepository(
     suspend fun getMediaRelationsRecord(id: Long, type: MediaType?, isAdult: Boolean?): Result<MediaRelationsRecord> = withContext(ioDispatcher) {
         runCatching {
             val request = MediaRelations.request(id = id.toInt(), type = type, isAdult = isAdult)
-            val response = mediaService.getMediaRelationsRecord(request).execute()
+            val response = mediaService.getMediaRelationsRecord(request)
             if (response.isSuccessful) {
                 handleMediaRelationsRecord(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -158,7 +158,7 @@ class MediaRepository(
     suspend fun getMediaStats(id: Long, type: MediaType?, isAdult: Boolean?): Result<Media> = withContext(ioDispatcher) {
         runCatching {
             val request = MediaStats.request(id = id.toInt(), type = type, isAdult = isAdult)
-            val response = mediaService.getMediaStats(request).execute()
+            val response = mediaService.getMediaStats(request)
             if (response.isSuccessful) {
                 handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -177,7 +177,7 @@ class MediaRepository(
     suspend fun getMediaStatsRecord(id: Long, type: MediaType?, isAdult: Boolean?): Result<MediaStatsRecord> = withContext(ioDispatcher) {
         runCatching {
             val request = MediaStats.request(id = id.toInt(), type = type, isAdult = isAdult)
-            val response = mediaService.getMediaStatsRecord(request).execute()
+            val response = mediaService.getMediaStatsRecord(request)
             if (response.isSuccessful) {
                 handleMediaStatsRecord(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -189,7 +189,7 @@ class MediaRepository(
     suspend fun getMediaEpisodes(id: Long, type: MediaType?, isAdult: Boolean?): Result<ConnectionContainer<List<ExternalLink>>> = withContext(ioDispatcher) {
         runCatching {
             val request = MediaEpisodes.request(id = id.toInt(), type = type, isAdult = isAdult)
-            val response = mediaService.getMediaEpisodes(request).execute()
+            val response = mediaService.getMediaEpisodes(request)
             if (response.isSuccessful) {
                 handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -208,7 +208,7 @@ class MediaRepository(
     suspend fun getMediaEpisodesRecord(id: Long, type: MediaType?, isAdult: Boolean?): Result<MediaEpisodesRecord> = withContext(ioDispatcher) {
         runCatching {
             val request = MediaEpisodes.request(id = id.toInt(), type = type, isAdult = isAdult)
-            val response = mediaService.getMediaEpisodesRecord(request).execute()
+            val response = mediaService.getMediaEpisodesRecord(request)
             if (response.isSuccessful) {
                 handleMediaEpisodesRecord(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -227,7 +227,7 @@ class MediaRepository(
     ): Result<ConnectionContainer<EdgeContainer<CharacterEdge>>> = withContext(ioDispatcher) {
         runCatching {
             val request = MediaCharacters.request(id = id.toInt(), type = type, isAdult = isAdult, page = page, perPage = perPage, sort = sort)
-            val response = mediaService.getMediaCharacters(request).execute()
+            val response = mediaService.getMediaCharacters(request)
             if (response.isSuccessful) {
                 handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -253,7 +253,7 @@ class MediaRepository(
     ): Result<MediaCharactersRecord> = withContext(ioDispatcher) {
         runCatching {
             val request = MediaCharacters.request(id = id.toInt(), type = type, isAdult = isAdult, page = page, perPage = perPage, sort = sort)
-            val response = mediaService.getMediaCharactersRecord(request).execute()
+            val response = mediaService.getMediaCharactersRecord(request)
             if (response.isSuccessful) {
                 handleMediaCharactersRecord(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -272,7 +272,7 @@ class MediaRepository(
     ): Result<ConnectionContainer<EdgeContainer<StaffEdge>>> = withContext(ioDispatcher) {
         runCatching {
             val request = MediaStaff.request(id = id.toInt(), type = type, sort = sort, isAdult = isAdult, page = page, perPage = perPage)
-            val response = mediaService.getMediaStaff(request).execute()
+            val response = mediaService.getMediaStaff(request)
             if (response.isSuccessful) {
                 handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -298,7 +298,7 @@ class MediaRepository(
     ): Result<MediaStaffRecord> = withContext(ioDispatcher) {
         runCatching {
             val request = MediaStaff.request(id = id.toInt(), type = type, sort = sort, isAdult = isAdult, page = page, perPage = perPage)
-            val response = mediaService.getMediaStaffRecord(request).execute()
+            val response = mediaService.getMediaStaffRecord(request)
             if (response.isSuccessful) {
                 handleMediaStaffRecord(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -317,7 +317,7 @@ class MediaRepository(
     ): Result<RecommendationPageResult> = withContext(ioDispatcher) {
         runCatching {
             val request = RecommendationMedia.request(id = id.toInt(), type = type, isAdult = isAdult, page = page, perPage = perPage, sort = sort)
-            val response = mediaService.getMediaRecommendations(request).execute()
+            val response = mediaService.getMediaRecommendations(request)
             if (response.isSuccessful) {
                 handleMediaRecommendations(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -420,7 +420,7 @@ class MediaRepository(
     ): Result<PageContainer<FeedList>> = withContext(ioDispatcher) {
         runCatching {
             val request = MediaSocial.request(mediaId = mediaId.toInt(), isFollowing = isFollowing, page = page, perPage = perPage)
-            val response = mediaService.getMediaSocial(request).execute()
+            val response = mediaService.getMediaSocial(request)
             if (response.isSuccessful) {
                 val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
                 val pageInfo = result.takeIf { it.hasPageInfo() }?.pageInfo?.toPageInfoRecord()
@@ -469,7 +469,7 @@ class MediaRepository(
     ): Result<FeedRecordPage> = withContext(ioDispatcher) {
         runCatching {
             val request = MediaSocial.request(mediaId = mediaId.toInt(), isFollowing = isFollowing, page = page, perPage = perPage)
-            val response = mediaService.getMediaSocial(request).execute()
+            val response = mediaService.getMediaSocial(request)
             if (response.isSuccessful) {
                 val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
                 val pageInfo = result.toRecordPageInfo()

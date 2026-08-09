@@ -1,7 +1,7 @@
 package com.mxt.anitrend.model.api.retro.crunchy
 
 import com.mxt.anitrend.model.entity.crunchy.Rss
-import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Url
 
@@ -10,14 +10,14 @@ import retrofit2.http.Url
  */
 
 interface EpisodeService {
-    @get:GET("crunchyroll/rss/popular?format=xml")
-    val popularFeed: Call<Rss>
+    @GET("crunchyroll/rss/popular?format=xml")
+    suspend fun getPopularFeed(): Response<Rss>
 
-    @get:GET("crunchyroll/rss")
-    val latestFeed: Call<Rss>
+    @GET("crunchyroll/rss")
+    suspend fun getLatestFeed(): Response<Rss>
 
     @GET
-    fun getRssByUrl(
+    suspend fun getRssByUrl(
         @Url link: String?,
-    ): Call<Rss>
+    ): Response<Rss>
 }

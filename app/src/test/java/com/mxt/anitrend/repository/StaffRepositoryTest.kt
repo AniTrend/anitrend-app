@@ -15,7 +15,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
-import retrofit2.Call
 import retrofit2.Response
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -30,10 +29,8 @@ class StaffRepositoryTest {
 
     @Test
     fun `getStaffBase success maps GraphContainer data to StaffRecord`() = runTest {
-        val call = staffBaseCall()
         val request = StaffBase.request(id = 5)
-        `when`(service.getStaffBase(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getStaffBase(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = staffBaseData(),
@@ -54,10 +51,8 @@ class StaffRepositoryTest {
 
     @Test
     fun `getStaffBase GraphQL error returns failed Result with message`() = runTest {
-        val call = staffBaseCall()
         val request = StaffBase.request(id = 5)
-        `when`(service.getStaffBase(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getStaffBase(request)).thenReturn(
             Response.success(
                 GraphContainer<StaffBaseData>(
                     data = null,
@@ -74,10 +69,8 @@ class StaffRepositoryTest {
 
     @Test
     fun `getStaffBase null body returns failed Result`() = runTest {
-        val call = staffBaseCall()
         val request = StaffBase.request(id = 5)
-        `when`(service.getStaffBase(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(Response.success(null))
+        `when`(service.getStaffBase(request)).thenReturn(Response.success(null))
 
         val result = repository.getStaffBase(id = 5L)
 
@@ -87,10 +80,8 @@ class StaffRepositoryTest {
 
     @Test
     fun `getStaffBase null root returns failed Result`() = runTest {
-        val call = staffBaseCall()
         val request = StaffBase.request(id = 5)
-        `when`(service.getStaffBase(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getStaffBase(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = StaffBaseData(staff = null),
@@ -107,10 +98,8 @@ class StaffRepositoryTest {
 
     @Test
     fun `getStaffBase unmapped staff name falls back correctly`() = runTest {
-        val call = staffBaseCall()
         val request = StaffBase.request(id = 6)
-        `when`(service.getStaffBase(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getStaffBase(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = StaffBaseData(
@@ -137,9 +126,6 @@ class StaffRepositoryTest {
         assertNull(staff.siteUrl)
         assertFalse(staff.isFavourite)
     }
-
-    @Suppress("UNCHECKED_CAST")
-    private fun staffBaseCall(): Call<GraphContainer<StaffBaseData>> = mock(Call::class.java) as Call<GraphContainer<StaffBaseData>>
 
     private fun staffBaseData(): StaffBaseData = StaffBaseData(
         staff = StaffBaseData.Staff(

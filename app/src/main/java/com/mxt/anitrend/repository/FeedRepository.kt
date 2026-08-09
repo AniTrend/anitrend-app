@@ -73,7 +73,7 @@ class FeedRepository(
     ): Result<PageContainer<FeedListEntity>> = withContext(ioDispatcher) {
         runCatching {
             val request = FeedList.request(page = page, perPage = perPage, id = id?.toInt(), isFollowing = isFollowing, userId = userId?.toInt(), type = type, isMixed = isMixed, asHtml = asHtml)
-            val response = feedService.getFeedList(request).execute()
+            val response = feedService.getFeedList(request)
             if (response.isSuccessful) {
                 val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
                 val pageInfo = result.takeIf { it.hasPageInfo() }?.pageInfo?.toPageInfoRecord()
@@ -118,7 +118,7 @@ class FeedRepository(
     ): Result<FeedListEntity> = withContext(ioDispatcher) {
         runCatching {
             val request = FeedListReply.request(id = id.toInt(), asHtml = asHtml)
-            val response = feedService.getFeedListReply(request).execute()
+            val response = feedService.getFeedListReply(request)
             if (response.isSuccessful) {
                 handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body")).also { result ->
                     if (commitToStore) {
@@ -153,7 +153,7 @@ class FeedRepository(
     ): Result<PageContainer<FeedListEntity>> = withContext(ioDispatcher) {
         runCatching {
             val request = FeedMessage.request(page = page, perPage = perPage, messengerId = messengerId?.toInt(), userId = userId?.toInt(), asHtml = asHtml)
-            val response = feedService.getFeedMessage(request).execute()
+            val response = feedService.getFeedMessage(request)
             if (response.isSuccessful) {
                 val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
                 val pageInfo = result.takeIf { it.hasPageInfo() }?.pageInfo?.toPageInfoRecord()
@@ -196,7 +196,7 @@ class FeedRepository(
     ): Result<FeedListEntity> = withContext(ioDispatcher) {
         runCatching {
             val request = SaveTextActivity.request(id = id?.toInt(), text = text, asHtml = asHtml)
-            val response = feedService.saveTextActivity(request).execute()
+            val response = feedService.saveTextActivity(request)
             if (response.isSuccessful) {
                 val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
                 if (commitToStore) {
@@ -223,7 +223,7 @@ class FeedRepository(
     ): Result<FeedListEntity> = withContext(ioDispatcher) {
         runCatching {
             val request = SaveMessageActivity.request(id = id?.toInt(), message = message, recipientId = recipientId.toInt(), asHtml = asHtml)
-            val response = feedService.saveMessageActivity(request).execute()
+            val response = feedService.saveMessageActivity(request)
             if (response.isSuccessful) {
                 val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
                 if (commitToStore) {
@@ -250,7 +250,7 @@ class FeedRepository(
     ): Result<FeedReply> = withContext(ioDispatcher) {
         runCatching {
             val request = SaveActivityReply.request(id = id?.toInt(), activityId = activityId.toInt(), text = text, asHtml = asHtml)
-            val response = feedService.saveActivityReply(request).execute()
+            val response = feedService.saveActivityReply(request)
             if (response.isSuccessful) {
                 val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
                 if (commitToStore) {
@@ -275,7 +275,7 @@ class FeedRepository(
     ): Result<DeleteState> = withContext(ioDispatcher) {
         runCatching {
             val request = DeleteActivity.request(id = id.toInt())
-            val response = feedService.deleteActivity(request).execute()
+            val response = feedService.deleteActivity(request)
             if (response.isSuccessful) {
                 val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
                 if (commitToStore && result.isDeleted) {
@@ -301,7 +301,7 @@ class FeedRepository(
     ): Result<DeleteState> = withContext(ioDispatcher) {
         runCatching {
             val request = DeleteActivityReply.request(id = id.toInt())
-            val response = feedService.deleteActivityReply(request).execute()
+            val response = feedService.deleteActivityReply(request)
             if (response.isSuccessful) {
                 val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
                 if (commitToStore && result.isDeleted) {
@@ -346,7 +346,7 @@ class FeedRepository(
     ): Result<FeedRecordPage> = withContext(ioDispatcher) {
         runCatching {
             val request = FeedList.request(page = page, perPage = perPage, id = id?.toInt(), isFollowing = isFollowing, userId = userId?.toInt(), type = type, isMixed = isMixed, asHtml = asHtml)
-            val response = feedService.getFeedList(request).execute()
+            val response = feedService.getFeedList(request)
             if (response.isSuccessful) {
                 val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
                 val pageInfo = result.toRecordPageInfo()
@@ -392,7 +392,7 @@ class FeedRepository(
     ): Result<FeedDetailResult> = withContext(ioDispatcher) {
         runCatching {
             val request = FeedListReply.request(id = id.toInt(), asHtml = asHtml)
-            val response = feedService.getFeedListReply(request).execute()
+            val response = feedService.getFeedListReply(request)
             if (response.isSuccessful) {
                 val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
                 val feed = result.toFeedRecord(revision = readToken)
@@ -429,7 +429,7 @@ class FeedRepository(
     ): Result<FeedRecordPage> = withContext(ioDispatcher) {
         runCatching {
             val request = FeedMessage.request(page = page, perPage = perPage, messengerId = messengerId?.toInt(), userId = userId?.toInt(), asHtml = asHtml)
-            val response = feedService.getFeedMessage(request).execute()
+            val response = feedService.getFeedMessage(request)
             if (response.isSuccessful) {
                 val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
                 val pageInfo = result.toRecordPageInfo()
@@ -471,7 +471,7 @@ class FeedRepository(
     ): Result<FeedRecord> = withContext(ioDispatcher) {
         runCatching {
             val request = SaveTextActivity.request(id = id?.toInt(), text = text, asHtml = asHtml)
-            val response = feedService.saveTextActivity(request).execute()
+            val response = feedService.saveTextActivity(request)
             if (response.isSuccessful) {
                 val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
                 val feed = result.toFeedRecord(revision = revision)
@@ -499,7 +499,7 @@ class FeedRepository(
     ): Result<FeedRecord> = withContext(ioDispatcher) {
         runCatching {
             val request = SaveMessageActivity.request(id = id?.toInt(), message = message, recipientId = recipientId.toInt(), asHtml = asHtml)
-            val response = feedService.saveMessageActivity(request).execute()
+            val response = feedService.saveMessageActivity(request)
             if (response.isSuccessful) {
                 val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
                 val feed = result.toFeedRecord(revision = revision)
@@ -527,7 +527,7 @@ class FeedRepository(
     ): Result<FeedReplyRecord> = withContext(ioDispatcher) {
         runCatching {
             val request = SaveActivityReply.request(id = id?.toInt(), activityId = activityId.toInt(), text = text, asHtml = asHtml)
-            val response = feedService.saveActivityReply(request).execute()
+            val response = feedService.saveActivityReply(request)
             if (response.isSuccessful) {
                 val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
                 val reply = result.toFeedReplyRecord(activityId = activityId, revision = revision)

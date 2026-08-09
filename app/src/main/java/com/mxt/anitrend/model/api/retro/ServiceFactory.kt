@@ -9,6 +9,7 @@ import com.mxt.anitrend.util.graphql.apiError
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import kotlinx.coroutines.runBlocking
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import timber.log.Timber
@@ -79,15 +80,16 @@ object ServiceFactory {
                 ).addConverterFactory(GsonConverterFactory.create(gson))
                 .baseUrl(BuildConfig.API_AUTH_LINK)
                 .build()
-        val refreshTokenCall =
-            retrofit.create(AuthService::class.java).getAuthRequest(
-                KeyUtil.AUTHENTICATION_CODE,
-                BuildConfig.CLIENT_ID,
-                BuildConfig.CLIENT_SECRET,
-                BuildConfig.REDIRECT_URI,
-                code,
-            )
-        val response = refreshTokenCall.execute()
+        val response =
+            runBlocking {
+                retrofit.create(AuthService::class.java).getAuthRequest(
+                    KeyUtil.AUTHENTICATION_CODE,
+                    BuildConfig.CLIENT_ID,
+                    BuildConfig.CLIENT_SECRET,
+                    BuildConfig.REDIRECT_URI,
+                    code,
+                )
+            }
         if (!response.isSuccessful) Timber.tag("requestCodeTokenSync").w(response.apiError())
         response.body()
     } catch (e: Exception) {

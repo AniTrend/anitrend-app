@@ -27,7 +27,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
-import retrofit2.Call
 import retrofit2.Response
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -58,8 +57,8 @@ class BrowseReviewRepositoryTest {
             sort = listOf(ReviewSort.CREATED_AT_DESC),
             asHtml = false,
         )
-        val call = call(AniListContainer(DataContainer(pageContainer), null))
-        `when`(service.getReviewBrowse(request)).thenReturn(call)
+        val response = success(AniListContainer(DataContainer(pageContainer), null))
+        `when`(service.getReviewBrowse(request)).thenReturn(response)
         val queryKey = ReviewQueryKey(mediaId = 100L, mediaType = MediaType.ANIME, sort = ReviewSort.CREATED_AT_DESC)
 
         val result = repository.getReviewBrowse(
@@ -91,8 +90,8 @@ class BrowseReviewRepositoryTest {
     fun `rateReview returns legacy Review and commits ReviewRated with mapped record`() = runTest {
         val rated = review(id = 42L, mediaId = 100L, rating = 55, ratingAmount = 3, userRating = "UP_VOTE")
         val request = RateReview.request(id = 42, rating = ReviewRating.UP_VOTE, asHtml = false)
-        val call = call(AniListContainer(DataContainer(rated), null))
-        `when`(service.rateReview(request)).thenReturn(call)
+        val response = success(AniListContainer(DataContainer(rated), null))
+        `when`(service.rateReview(request)).thenReturn(response)
 
         val result = repository.rateReview(
             id = 42L,
@@ -128,8 +127,8 @@ class BrowseReviewRepositoryTest {
             privateValue = false,
             asHtml = false,
         )
-        val call = call(AniListContainer(DataContainer(saved), null))
-        `when`(service.saveReview(request)).thenReturn(call)
+        val response = success(AniListContainer(DataContainer(saved), null))
+        `when`(service.saveReview(request)).thenReturn(response)
 
         val result = repository.saveReview(
             id = null,
@@ -177,8 +176,8 @@ class BrowseReviewRepositoryTest {
             privateValue = false,
             asHtml = false,
         )
-        val call = call(AniListContainer(DataContainer(saved), null))
-        `when`(service.saveReview(request)).thenReturn(call)
+        val response = success(AniListContainer(DataContainer(saved), null))
+        `when`(service.saveReview(request)).thenReturn(response)
 
         val result = repository.saveReview(
             id = null,
@@ -223,8 +222,8 @@ class BrowseReviewRepositoryTest {
             privateValue = false,
             asHtml = false,
         )
-        val call = call(AniListContainer(DataContainer(saved), null))
-        `when`(service.saveReview(request)).thenReturn(call)
+        val response = success(AniListContainer(DataContainer(saved), null))
+        `when`(service.saveReview(request)).thenReturn(response)
 
         val result = repository.saveReview(
             id = 12,
@@ -258,8 +257,8 @@ class BrowseReviewRepositoryTest {
             ),
         )
         val request = DeleteReview.request(id = 9)
-        val call = call(AniListContainer(DataContainer(DeleteState(true)), null))
-        `when`(service.deleteReview(request)).thenReturn(call)
+        val response = success(AniListContainer(DataContainer(DeleteState(true)), null))
+        `when`(service.deleteReview(request)).thenReturn(response)
 
         val result = repository.deleteReview(id = 9L, commitToStore = true, revision = 2L)
 
@@ -289,8 +288,8 @@ class BrowseReviewRepositoryTest {
             sort = listOf(ReviewSort.CREATED_AT_DESC),
             asHtml = false,
         )
-        val call = call(AniListContainer(DataContainer(pageContainer), null))
-        `when`(service.getReviewBrowse(request)).thenReturn(call)
+        val response = success(AniListContainer(DataContainer(pageContainer), null))
+        `when`(service.getReviewBrowse(request)).thenReturn(response)
 
         repository.getReviewBrowse(
             page = 1,
@@ -312,8 +311,8 @@ class BrowseReviewRepositoryTest {
     fun `review store is never committed legacy Review entities`() = runTest {
         val rated = review(id = 55L, mediaId = 100L, rating = 77)
         val request = RateReview.request(id = 55, rating = ReviewRating.UP_VOTE, asHtml = false)
-        val call = call(AniListContainer(DataContainer(rated), null))
-        `when`(service.rateReview(request)).thenReturn(call)
+        val response = success(AniListContainer(DataContainer(rated), null))
+        `when`(service.rateReview(request)).thenReturn(response)
 
         repository.rateReview(
             id = 55L,
@@ -346,10 +345,5 @@ class BrowseReviewRepositoryTest {
         media.type = MediaType.ANIME.name
     }
 
-    @Suppress("UNCHECKED_CAST")
-    private fun <T> call(body: T): Call<T> {
-        val call = mock(Call::class.java) as Call<T>
-        `when`(call.execute()).thenReturn(Response.success(body))
-        return call
-    }
+    private fun <T> success(body: T): Response<T> = Response.success(body)
 }

@@ -22,7 +22,6 @@ import org.mockito.ArgumentMatchers.argThat
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
-import retrofit2.Call
 import retrofit2.Response
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -39,10 +38,8 @@ class UserRepositoryNotificationsTest {
 
     @Test
     fun `getUserNotifications success maps page nodes preserving order and page info`() = runTest {
-        val call = notificationsCall()
         val request = UserNotifications.request(page = null, perPage = null, type = null, typeIn = null, resetNotificationCount = false)
-        `when`(service.getUserNotifications(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getUserNotifications(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = userNotificationsData(
@@ -81,10 +78,8 @@ class UserRepositoryNotificationsTest {
 
     @Test
     fun `getUserNotifications success maps thread and deletion specific fields`() = runTest {
-        val call = notificationsCall()
         val request = UserNotifications.request(page = null, perPage = null, type = null, typeIn = null, resetNotificationCount = false)
-        `when`(service.getUserNotifications(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getUserNotifications(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = userNotificationsData(
@@ -120,10 +115,8 @@ class UserRepositoryNotificationsTest {
 
     @Test
     fun `getUserNotifications success returns empty result for empty nodes`() = runTest {
-        val call = notificationsCall()
         val request = UserNotifications.request(page = null, perPage = null, type = null, typeIn = null, resetNotificationCount = false)
-        `when`(service.getUserNotifications(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getUserNotifications(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = userNotificationsData(notifications = emptyList()),
@@ -142,10 +135,8 @@ class UserRepositoryNotificationsTest {
 
     @Test
     fun `getUserNotifications drops null nodes while preserving order`() = runTest {
-        val call = notificationsCall()
         val request = UserNotifications.request(page = null, perPage = null, type = null, typeIn = null, resetNotificationCount = false)
-        `when`(service.getUserNotifications(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getUserNotifications(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = userNotificationsData(
@@ -169,10 +160,8 @@ class UserRepositoryNotificationsTest {
 
     @Test
     fun `getUserNotifications GraphQL error returns failed Result with message`() = runTest {
-        val call = notificationsCall()
         val request = UserNotifications.request(page = null, perPage = null, type = null, typeIn = null, resetNotificationCount = false)
-        `when`(service.getUserNotifications(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getUserNotifications(request)).thenReturn(
             Response.success(
                 GraphContainer<UserNotificationsData>(
                     data = null,
@@ -189,10 +178,8 @@ class UserRepositoryNotificationsTest {
 
     @Test
     fun `getUserNotifications null body returns failed Result`() = runTest {
-        val call = notificationsCall()
         val request = UserNotifications.request(page = null, perPage = null, type = null, typeIn = null, resetNotificationCount = false)
-        `when`(service.getUserNotifications(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(Response.success(null))
+        `when`(service.getUserNotifications(request)).thenReturn(Response.success(null))
 
         val result = repository.getUserNotifications()
 
@@ -202,10 +189,8 @@ class UserRepositoryNotificationsTest {
 
     @Test
     fun `getUserNotifications null data returns failed Result`() = runTest {
-        val call = notificationsCall()
         val request = UserNotifications.request(page = null, perPage = null, type = null, typeIn = null, resetNotificationCount = false)
-        `when`(service.getUserNotifications(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getUserNotifications(request)).thenReturn(
             Response.success(
                 GraphContainer<UserNotificationsData>(
                     data = null,
@@ -222,10 +207,8 @@ class UserRepositoryNotificationsTest {
 
     @Test
     fun `getUserNotifications null page returns failed Result`() = runTest {
-        val call = notificationsCall()
         val request = UserNotifications.request(page = null, perPage = null, type = null, typeIn = null, resetNotificationCount = false)
-        `when`(service.getUserNotifications(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getUserNotifications(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = UserNotificationsData(page = null),
@@ -261,9 +244,6 @@ class UserRepositoryNotificationsTest {
             },
         )
     }
-
-    @Suppress("UNCHECKED_CAST")
-    private fun notificationsCall(): Call<GraphContainer<UserNotificationsData>> = mock(Call::class.java) as Call<GraphContainer<UserNotificationsData>>
 
     private fun userNotificationsData(
         notifications: List<UserNotificationsData.PageNotifications?>,

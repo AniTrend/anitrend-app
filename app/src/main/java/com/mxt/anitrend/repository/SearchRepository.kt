@@ -52,7 +52,7 @@ class SearchRepository(
                 genresExclude = genresExclude, isAdult = isAdult,
                 sort = sort,
             )
-            val response = searchService.getMediaSearch(request).execute()
+            val response = searchService.getMediaSearch(request)
             if (response.isSuccessful) {
                 handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -70,7 +70,7 @@ class SearchRepository(
     ): Result<PageContainer<StudioEntity>> = withContext(ioDispatcher) {
         runCatching {
             val request = StudioSearch.request(id = id, page = page, perPage = perPage, search = search, sort = sort)
-            val response = searchService.getStudioSearch(request).execute()
+            val response = searchService.getStudioSearch(request)
             if (response.isSuccessful) {
                 handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -88,7 +88,7 @@ class SearchRepository(
     ): Result<PageContainer<StaffEntity>> = withContext(ioDispatcher) {
         runCatching {
             val request = StaffSearch.request(id = id, page = page, perPage = perPage, search = search, sort = sort)
-            val response = searchService.getStaffSearch(request).execute()
+            val response = searchService.getStaffSearch(request)
             if (response.isSuccessful) {
                 handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -106,7 +106,7 @@ class SearchRepository(
     ): Result<PageContainer<CharacterEntity>> = withContext(ioDispatcher) {
         runCatching {
             val request = CharacterSearch.request(id = id, page = page, perPage = perPage, search = search, sort = sort)
-            val response = searchService.getCharacterSearch(request).execute()
+            val response = searchService.getCharacterSearch(request)
             if (response.isSuccessful) {
                 handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -124,7 +124,7 @@ class SearchRepository(
     ): Result<PageContainer<UserEntity>> = withContext(ioDispatcher) {
         runCatching {
             val request = UserSearch.request(id = id, page = page, perPage = perPage, search = search, sort = sort)
-            val response = searchService.getUserSearch(request).execute()
+            val response = searchService.getUserSearch(request)
             if (response.isSuccessful) {
                 handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {

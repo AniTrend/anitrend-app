@@ -22,7 +22,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
-import retrofit2.Call
 import retrofit2.Response
 
 /**
@@ -122,8 +121,8 @@ class BaseRepositoryLikeRecordsTest {
     fun `failed like is server authoritative and leaves store unchanged`() = runTest {
         store.apply(FeedStoreChange.FeedUpserted(createFeedRecord(id = 1L, revision = 1L)))
         val request = ToggleLike.request(id = 1, type = LikeableType.ACTIVITY)
-        val call = responseCall(AniListContainer<List<UserBase>>(data = null, errors = null))
-        `when`(service.toggleLike(request)).thenReturn(call)
+        val response = success(AniListContainer<List<UserBase>>(data = null, errors = null))
+        `when`(service.toggleLike(request)).thenReturn(response)
 
         val result = repository.toggleLikeRecords(id = 1L, type = LikeableType.ACTIVITY, revision = 2L)
 
@@ -132,12 +131,12 @@ class BaseRepositoryLikeRecordsTest {
         assertTrue(store.state.value.feedsById.getValue(1L).likes.isEmpty())
     }
 
-    private fun stubLikeResponse(
+    private suspend fun stubLikeResponse(
         request: GraphQLOperationRequest<ToggleLikeVariables>,
         likes: List<UserBase>,
     ) {
-        val call = responseCall(AniListContainer(DataContainer(likes), errors = null))
-        `when`(service.toggleLike(request)).thenReturn(call)
+        val response = success(AniListContainer(DataContainer(likes), errors = null))
+        `when`(service.toggleLike(request)).thenReturn(response)
     }
 
     private fun userEntity(id: Long, name: String): UserBase = UserBase(name = name).apply {
@@ -178,12 +177,7 @@ class BaseRepositoryLikeRecordsTest {
         revision = revision,
     )
 
-    @Suppress("UNCHECKED_CAST")
-    private fun <R> responseCall(
+    private fun <R> success(
         body: AniListContainer<R>,
-    ): Call<AniListContainer<R>> {
-        val call = mock(Call::class.java) as Call<AniListContainer<R>>
-        `when`(call.execute()).thenReturn(Response.success(body))
-        return call
-    }
+    ): Response<AniListContainer<R>> = Response.success(body)
 }

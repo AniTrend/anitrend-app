@@ -40,7 +40,7 @@ class GiphyViewModel(
                         limit = KeyUtil.PAGING_LIMIT,
                         offset = offset,
                         rating = "PG",
-                    ).execute()
+                    )
                     if (response.isSuccessful) {
                         response.body()
                             ?: throw IllegalStateException("Empty response body")
@@ -74,7 +74,7 @@ class GiphyViewModel(
                         offset = offset,
                         rating = "PG",
                         lang = "en",
-                    ).execute()
+                    )
                     if (response.isSuccessful) {
                         response.body()
                             ?: throw IllegalStateException("Empty response body")

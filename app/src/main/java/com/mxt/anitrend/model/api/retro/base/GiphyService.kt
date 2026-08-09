@@ -1,7 +1,7 @@
 package com.mxt.anitrend.model.api.retro.base
 
 import com.mxt.anitrend.model.entity.giphy.GiphyContainer
-import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -12,20 +12,20 @@ import retrofit2.http.Query
 
 interface GiphyService {
     @GET("search")
-    fun findGif(
+    suspend fun findGif(
         @Query("api_key") api_key: String,
         @Query("q") q: String?,
         @Query("limit") limit: Int,
         @Query("offset") offset: Int?,
         @Query("rating") rating: String,
         @Query("lang") lang: String?,
-    ): Call<GiphyContainer>
+    ): Response<GiphyContainer>
 
     @GET("trending")
-    fun getTrending(
+    suspend fun getTrending(
         @Query("api_key") api_key: String,
         @Query("limit") limit: Int?,
         @Query("offset") offset: Int,
         @Query("rating") rating: String?,
-    ): Call<GiphyContainer>
+    ): Response<GiphyContainer>
 }

@@ -25,7 +25,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
-import retrofit2.Call
 import retrofit2.Response
 import com.mxt.anitrend.model.entity.base.MediaBase as MediaEntity
 
@@ -41,10 +40,8 @@ class CharacterRepositoryTest {
 
     @Test
     fun `getCharacterBase success maps GraphContainer data to CharacterRecord`() = runTest {
-        val call = characterBaseCall()
         val request = CharacterBase.request(id = 1)
-        `when`(service.getCharacterBase(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getCharacterBase(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = characterBaseData(),
@@ -65,10 +62,8 @@ class CharacterRepositoryTest {
 
     @Test
     fun `getCharacterBase GraphQL error returns failed Result with message`() = runTest {
-        val call = characterBaseCall()
         val request = CharacterBase.request(id = 1)
-        `when`(service.getCharacterBase(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getCharacterBase(request)).thenReturn(
             Response.success(
                 GraphContainer<CharacterBaseData>(
                     data = null,
@@ -85,10 +80,8 @@ class CharacterRepositoryTest {
 
     @Test
     fun `getCharacterBase null body returns failed Result`() = runTest {
-        val call = characterBaseCall()
         val request = CharacterBase.request(id = 1)
-        `when`(service.getCharacterBase(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(Response.success(null))
+        `when`(service.getCharacterBase(request)).thenReturn(Response.success(null))
 
         val result = repository.getCharacterBase(id = 1L)
 
@@ -98,10 +91,8 @@ class CharacterRepositoryTest {
 
     @Test
     fun `getCharacterBase null data returns failed Result`() = runTest {
-        val call = characterBaseCall()
         val request = CharacterBase.request(id = 1)
-        `when`(service.getCharacterBase(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getCharacterBase(request)).thenReturn(
             Response.success(
                 GraphContainer<CharacterBaseData>(
                     data = null,
@@ -118,10 +109,8 @@ class CharacterRepositoryTest {
 
     @Test
     fun `getCharacterBase null root returns failed Result`() = runTest {
-        val call = characterBaseCall()
         val request = CharacterBase.request(id = 1)
-        `when`(service.getCharacterBase(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getCharacterBase(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = CharacterBaseData(character = null),
@@ -138,10 +127,8 @@ class CharacterRepositoryTest {
 
     @Test
     fun `getCharacterOverview success maps GraphContainer data to MediaCharacter`() = runTest {
-        val call = characterOverviewCall()
         val request = CharacterOverview.request(id = 2, asHtml = true)
-        `when`(service.getCharacterOverview(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getCharacterOverview(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = characterOverviewData(),
@@ -163,10 +150,8 @@ class CharacterRepositoryTest {
 
     @Test
     fun `getCharacterOverview GraphQL error returns failed Result with message`() = runTest {
-        val call = characterOverviewCall()
         val request = CharacterOverview.request(id = 2, asHtml = false)
-        `when`(service.getCharacterOverview(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getCharacterOverview(request)).thenReturn(
             Response.success(
                 GraphContainer<CharacterOverviewData>(
                     data = null,
@@ -183,10 +168,8 @@ class CharacterRepositoryTest {
 
     @Test
     fun `getCharacterOverview null body returns failed Result`() = runTest {
-        val call = characterOverviewCall()
         val request = CharacterOverview.request(id = 2, asHtml = false)
-        `when`(service.getCharacterOverview(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(Response.success(null))
+        `when`(service.getCharacterOverview(request)).thenReturn(Response.success(null))
 
         val result = repository.getCharacterOverview(id = 2L)
 
@@ -196,10 +179,8 @@ class CharacterRepositoryTest {
 
     @Test
     fun `getCharacterOverview null data returns failed Result`() = runTest {
-        val call = characterOverviewCall()
         val request = CharacterOverview.request(id = 2, asHtml = false)
-        `when`(service.getCharacterOverview(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getCharacterOverview(request)).thenReturn(
             Response.success(
                 GraphContainer<CharacterOverviewData>(
                     data = null,
@@ -216,10 +197,8 @@ class CharacterRepositoryTest {
 
     @Test
     fun `getCharacterOverview null root returns failed Result`() = runTest {
-        val call = characterOverviewCall()
         val request = CharacterOverview.request(id = 2, asHtml = false)
-        `when`(service.getCharacterOverview(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getCharacterOverview(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = CharacterOverviewData(character = null),
@@ -236,7 +215,6 @@ class CharacterRepositoryTest {
 
     @Test
     fun `getCharacterMedia keeps legacy AniListContainer response handling`() = runTest {
-        val call = characterMediaCall()
         val request = CharacterMedia.request(id = 3, page = null, perPage = null, sort = null, type = null)
         val expected = ConnectionContainer<PageContainer<MediaEntity>>().also { connection ->
             connection.connection = PageContainer<MediaEntity>().also { page ->
@@ -247,8 +225,7 @@ class CharacterRepositoryTest {
                 )
             }
         }
-        `when`(service.getCharacterMedia(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getCharacterMedia(request)).thenReturn(
             Response.success(
                 AniListContainer(
                     data = DataContainer(result = expected),
@@ -266,7 +243,6 @@ class CharacterRepositoryTest {
 
     @Test
     fun `getCharacterActors keeps legacy AniListContainer response handling`() = runTest {
-        val call = characterActorsCall()
         val request = CharacterActors.request(id = 4, page = null, perPage = null, sort = null)
         val expected = ConnectionContainer<EdgeContainer<MediaEdge>>().also { connection ->
             connection.connection = EdgeContainer<MediaEdge>().also { edgeContainer ->
@@ -277,8 +253,7 @@ class CharacterRepositoryTest {
                 )
             }
         }
-        `when`(service.getCharacterActors(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getCharacterActors(request)).thenReturn(
             Response.success(
                 AniListContainer(
                     data = DataContainer(result = expected),
@@ -293,18 +268,6 @@ class CharacterRepositoryTest {
         assertSame(expected, result.getOrThrow())
         assertEquals("MAIN", result.getOrThrow().connection.edges.single().characterRole)
     }
-
-    @Suppress("UNCHECKED_CAST")
-    private fun characterBaseCall(): Call<GraphContainer<CharacterBaseData>> = mock(Call::class.java) as Call<GraphContainer<CharacterBaseData>>
-
-    @Suppress("UNCHECKED_CAST")
-    private fun characterOverviewCall(): Call<GraphContainer<CharacterOverviewData>> = mock(Call::class.java) as Call<GraphContainer<CharacterOverviewData>>
-
-    @Suppress("UNCHECKED_CAST")
-    private fun characterMediaCall(): Call<AniListContainer<ConnectionContainer<PageContainer<MediaEntity>>>> = mock(Call::class.java) as Call<AniListContainer<ConnectionContainer<PageContainer<MediaEntity>>>>
-
-    @Suppress("UNCHECKED_CAST")
-    private fun characterActorsCall(): Call<AniListContainer<ConnectionContainer<EdgeContainer<MediaEdge>>>> = mock(Call::class.java) as Call<AniListContainer<ConnectionContainer<EdgeContainer<MediaEdge>>>>
 
     private fun characterBaseData(): CharacterBaseData = CharacterBaseData(
         character = CharacterBaseData.Character(

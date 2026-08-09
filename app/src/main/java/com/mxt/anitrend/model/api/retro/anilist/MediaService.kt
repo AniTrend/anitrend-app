@@ -30,7 +30,7 @@ import com.mxt.anitrend.model.entity.container.body.AniListContainer
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.container.body.EdgeContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
-import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Headers
 import retrofit2.http.POST
@@ -43,97 +43,97 @@ import retrofit2.http.POST
 interface MediaService {
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getMediaBase(
+    suspend fun getMediaBase(
         @Body request: GraphQLOperationRequest<MediaBaseVariables>,
-    ): Call<AniListContainer<MediaBase>>
+    ): Response<AniListContainer<MediaBase>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getMediaBaseRecord(
+    suspend fun getMediaBaseRecord(
         @Body request: GraphQLOperationRequest<MediaBaseVariables>,
-    ): Call<GraphContainer<MediaBaseData>>
+    ): Response<GraphContainer<MediaBaseData>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getMediaOverview(
+    suspend fun getMediaOverview(
         @Body request: GraphQLOperationRequest<MediaOverviewVariables>,
-    ): Call<AniListContainer<Media>>
+    ): Response<AniListContainer<Media>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getMediaOverviewRecord(
+    suspend fun getMediaOverviewRecord(
         @Body request: GraphQLOperationRequest<MediaOverviewVariables>,
-    ): Call<GraphContainer<MediaOverviewData>>
+    ): Response<GraphContainer<MediaOverviewData>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getMediaRelations(
+    suspend fun getMediaRelations(
         @Body request: GraphQLOperationRequest<MediaRelationsVariables>,
-    ): Call<AniListContainer<ConnectionContainer<EdgeContainer<MediaEdge>>>>
+    ): Response<AniListContainer<ConnectionContainer<EdgeContainer<MediaEdge>>>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getMediaRelationsRecord(
+    suspend fun getMediaRelationsRecord(
         @Body request: GraphQLOperationRequest<MediaRelationsVariables>,
-    ): Call<GraphContainer<MediaRelationsData>>
+    ): Response<GraphContainer<MediaRelationsData>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getMediaStats(
+    suspend fun getMediaStats(
         @Body request: GraphQLOperationRequest<MediaStatsVariables>,
-    ): Call<AniListContainer<Media>>
+    ): Response<AniListContainer<Media>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getMediaStatsRecord(
+    suspend fun getMediaStatsRecord(
         @Body request: GraphQLOperationRequest<MediaStatsVariables>,
-    ): Call<GraphContainer<MediaStatsData>>
+    ): Response<GraphContainer<MediaStatsData>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getMediaEpisodes(
+    suspend fun getMediaEpisodes(
         @Body request: GraphQLOperationRequest<MediaEpisodesVariables>,
-    ): Call<AniListContainer<ConnectionContainer<List<ExternalLink>>>>
+    ): Response<AniListContainer<ConnectionContainer<List<ExternalLink>>>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getMediaEpisodesRecord(
+    suspend fun getMediaEpisodesRecord(
         @Body request: GraphQLOperationRequest<MediaEpisodesVariables>,
-    ): Call<GraphContainer<MediaEpisodesData>>
+    ): Response<GraphContainer<MediaEpisodesData>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getMediaCharacters(
+    suspend fun getMediaCharacters(
         @Body request: GraphQLOperationRequest<MediaCharactersVariables>,
-    ): Call<AniListContainer<ConnectionContainer<EdgeContainer<CharacterEdge>>>>
+    ): Response<AniListContainer<ConnectionContainer<EdgeContainer<CharacterEdge>>>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getMediaCharactersRecord(
+    suspend fun getMediaCharactersRecord(
         @Body request: GraphQLOperationRequest<MediaCharactersVariables>,
-    ): Call<GraphContainer<MediaCharactersData>>
+    ): Response<GraphContainer<MediaCharactersData>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getMediaStaff(
+    suspend fun getMediaStaff(
         @Body request: GraphQLOperationRequest<MediaStaffVariables>,
-    ): Call<AniListContainer<ConnectionContainer<EdgeContainer<StaffEdge>>>>
+    ): Response<AniListContainer<ConnectionContainer<EdgeContainer<StaffEdge>>>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getMediaStaffRecord(
+    suspend fun getMediaStaffRecord(
         @Body request: GraphQLOperationRequest<MediaStaffVariables>,
-    ): Call<GraphContainer<MediaStaffData>>
+    ): Response<GraphContainer<MediaStaffData>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getMediaRecommendations(
+    suspend fun getMediaRecommendations(
         @Body request: GraphQLOperationRequest<RecommendationMediaVariables>,
-    ): Call<GraphContainer<RecommendationMediaData>>
+    ): Response<GraphContainer<RecommendationMediaData>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getMediaSocial(
+    suspend fun getMediaSocial(
         @Body request: GraphQLOperationRequest<MediaSocialVariables>,
-    ): Call<AniListContainer<PageContainer<FeedList>>>
+    ): Response<AniListContainer<PageContainer<FeedList>>>
 }

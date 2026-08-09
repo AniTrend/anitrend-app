@@ -23,7 +23,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
-import retrofit2.Call
 import retrofit2.Response
 
 /**
@@ -41,10 +40,8 @@ class MediaRelationsRecordRepositoryTest {
 
     @Test
     fun `getMediaRelationsRecord success maps GraphContainer data to MediaRelationsRecord`() = runTest {
-        val call = mediaRelationsCall()
         val request = MediaRelations.request(id = 21, type = MediaType.ANIME, isAdult = false)
-        `when`(service.getMediaRelationsRecord(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaRelationsRecord(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = mediaRelationsData(
@@ -121,10 +118,8 @@ class MediaRelationsRecordRepositoryTest {
 
     @Test
     fun `getMediaRelationsRecord preserves nullable optional blocks`() = runTest {
-        val call = mediaRelationsCall()
         val request = MediaRelations.request(id = 21, type = MediaType.ANIME, isAdult = false)
-        `when`(service.getMediaRelationsRecord(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaRelationsRecord(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = mediaRelationsData(),
@@ -143,10 +138,8 @@ class MediaRelationsRecordRepositoryTest {
 
     @Test
     fun `getMediaRelationsRecord GraphQL error returns failed Result with message`() = runTest {
-        val call = mediaRelationsCall()
         val request = MediaRelations.request(id = 21, type = MediaType.ANIME, isAdult = false)
-        `when`(service.getMediaRelationsRecord(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaRelationsRecord(request)).thenReturn(
             Response.success(
                 GraphContainer<MediaRelationsData>(
                     data = null,
@@ -163,10 +156,8 @@ class MediaRelationsRecordRepositoryTest {
 
     @Test
     fun `getMediaRelationsRecord null body returns failed Result`() = runTest {
-        val call = mediaRelationsCall()
         val request = MediaRelations.request(id = 21, type = MediaType.ANIME, isAdult = false)
-        `when`(service.getMediaRelationsRecord(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(Response.success(null))
+        `when`(service.getMediaRelationsRecord(request)).thenReturn(Response.success(null))
 
         val result = repository.getMediaRelationsRecord(id = 21L, type = MediaType.ANIME, isAdult = false)
 
@@ -176,10 +167,8 @@ class MediaRelationsRecordRepositoryTest {
 
     @Test
     fun `getMediaRelationsRecord null data returns failed Result`() = runTest {
-        val call = mediaRelationsCall()
         val request = MediaRelations.request(id = 21, type = MediaType.ANIME, isAdult = false)
-        `when`(service.getMediaRelationsRecord(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaRelationsRecord(request)).thenReturn(
             Response.success(
                 GraphContainer<MediaRelationsData>(
                     data = null,
@@ -196,10 +185,8 @@ class MediaRelationsRecordRepositoryTest {
 
     @Test
     fun `getMediaRelationsRecord null root media returns failed Result`() = runTest {
-        val call = mediaRelationsCall()
         val request = MediaRelations.request(id = 21, type = MediaType.ANIME, isAdult = false)
-        `when`(service.getMediaRelationsRecord(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaRelationsRecord(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = MediaRelationsData(media = null),
@@ -216,21 +203,16 @@ class MediaRelationsRecordRepositoryTest {
 
     @Test
     fun `getMediaRelationsRecord HTTP error returns failed Result with server message`() = runTest {
-        val call = mediaRelationsCall()
         val request = MediaRelations.request(id = 21, type = MediaType.ANIME, isAdult = false)
-        `when`(service.getMediaRelationsRecord(request)).thenReturn(call)
         val errorBody = """{"errors":[{"message":"Server exploded"}]}"""
             .toResponseBody("application/json".toMediaType())
-        `when`(call.execute()).thenReturn(Response.error(500, errorBody))
+        `when`(service.getMediaRelationsRecord(request)).thenReturn(Response.error(500, errorBody))
 
         val result = repository.getMediaRelationsRecord(id = 21L, type = MediaType.ANIME, isAdult = false)
 
         assertTrue(result.isFailure)
         assertEquals("Server exploded", result.exceptionOrNull()?.message)
     }
-
-    @Suppress("UNCHECKED_CAST")
-    private fun mediaRelationsCall(): Call<GraphContainer<MediaRelationsData>> = mock(Call::class.java) as Call<GraphContainer<MediaRelationsData>>
 
     private fun mediaRelationsData(
         edges: List<MediaRelationsData.MediaRelationsEdges?>? = null,

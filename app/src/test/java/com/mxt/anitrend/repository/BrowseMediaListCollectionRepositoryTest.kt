@@ -31,7 +31,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
-import retrofit2.Call
 import retrofit2.Response
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -55,9 +54,7 @@ class BrowseMediaListCollectionRepositoryTest {
             ioDispatcher = testDispatcher,
             mediaListStore = mediaListStore,
         )
-        val call = collectionCall()
-        `when`(service.getMediaListCollection(collectionRequest())).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaListCollection(collectionRequest())).thenReturn(
             Response.success(
                 GraphContainer(
                     data = collectionData(
@@ -102,9 +99,7 @@ class BrowseMediaListCollectionRepositoryTest {
     @Test
     fun `getMediaListCollection parses custom lists and advanced scores JSON scalars`() = runTest {
         val repository = BrowseRepository(browseService = service, ioDispatcher = testDispatcher)
-        val call = collectionCall()
-        `when`(service.getMediaListCollection(collectionRequest())).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaListCollection(collectionRequest())).thenReturn(
             Response.success(
                 GraphContainer(
                     data = collectionData(
@@ -154,9 +149,7 @@ class BrowseMediaListCollectionRepositoryTest {
     @Test
     fun `getMediaListCollection degrades null wrong-shape and non-string non-numeric JSON scalars`() = runTest {
         val repository = BrowseRepository(browseService = service, ioDispatcher = testDispatcher)
-        val call = collectionCall()
-        `when`(service.getMediaListCollection(collectionRequest())).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaListCollection(collectionRequest())).thenReturn(
             Response.success(
                 GraphContainer(
                     data = collectionData(
@@ -221,9 +214,7 @@ class BrowseMediaListCollectionRepositoryTest {
     @Test
     fun `getMediaListCollection skips null lists and null entries while preserving order`() = runTest {
         val repository = BrowseRepository(browseService = service, ioDispatcher = testDispatcher)
-        val call = collectionCall()
-        `when`(service.getMediaListCollection(collectionRequest())).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaListCollection(collectionRequest())).thenReturn(
             Response.success(
                 GraphContainer(
                     data = collectionData(
@@ -254,9 +245,7 @@ class BrowseMediaListCollectionRepositoryTest {
     @Test
     fun `getMediaListCollection GraphQL error returns failed Result with message`() = runTest {
         val repository = BrowseRepository(browseService = service, ioDispatcher = testDispatcher)
-        val call = collectionCall()
-        `when`(service.getMediaListCollection(collectionRequest())).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaListCollection(collectionRequest())).thenReturn(
             Response.success(
                 GraphContainer<MediaListCollectionData>(
                     data = null,
@@ -281,9 +270,7 @@ class BrowseMediaListCollectionRepositoryTest {
     @Test
     fun `getMediaListCollection empty body returns failed Result`() = runTest {
         val repository = BrowseRepository(browseService = service, ioDispatcher = testDispatcher)
-        val call = collectionCall()
-        `when`(service.getMediaListCollection(collectionRequest())).thenReturn(call)
-        `when`(call.execute()).thenReturn(Response.success(null))
+        `when`(service.getMediaListCollection(collectionRequest())).thenReturn(Response.success(null))
 
         val result = repository.getMediaListCollection(
             userId = 42L,
@@ -301,9 +288,7 @@ class BrowseMediaListCollectionRepositoryTest {
     @Test
     fun `getMediaListCollection null root collection returns failed Result`() = runTest {
         val repository = BrowseRepository(browseService = service, ioDispatcher = testDispatcher)
-        val call = collectionCall()
-        `when`(service.getMediaListCollection(collectionRequest())).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaListCollection(collectionRequest())).thenReturn(
             Response.success(
                 GraphContainer<MediaListCollectionData>(
                     data = MediaListCollectionData(mediaListCollection = null),
@@ -324,9 +309,6 @@ class BrowseMediaListCollectionRepositoryTest {
         assertTrue(result.isFailure)
         assertEquals("Empty response body", result.exceptionOrNull()?.message)
     }
-
-    @Suppress("UNCHECKED_CAST")
-    private fun collectionCall(): Call<GraphContainer<MediaListCollectionData>> = mock(Call::class.java) as Call<GraphContainer<MediaListCollectionData>>
 
     private fun collectionRequest() = MediaListCollection.request(
         userId = 42,

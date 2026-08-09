@@ -36,8 +36,6 @@ import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import okhttp3.Request
-import okio.Timeout
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -52,8 +50,6 @@ import org.mockito.Mockito.never
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
-import retrofit2.Call
-import retrofit2.Callback
 import retrofit2.Response
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -667,7 +663,7 @@ class MediaFormatViewModelTest {
 
 /**
  * Fake [CharacterService] serving per-page fixtures through a real [CharacterRepository].
- * A single page can be held mid-response: its Call signals entry on a latch, then
+ * A single page can be held mid-response: its suspend call signals entry on a latch, then
  * blocks on a release latch, so its reply is genuinely in flight while later pages
  * are requested. Requests are recorded in arrival order.
  */
@@ -700,44 +696,26 @@ private class GatedCharacterService : CharacterService {
         release.countDown()
     }
 
-    override fun getCharacterMedia(
+    override suspend fun getCharacterMedia(
         request: GraphQLOperationRequest<CharacterMediaVariables>,
-    ): Call<AniListContainer<ConnectionContainer<PageContainer<MediaBase>>>> {
+    ): Response<AniListContainer<ConnectionContainer<PageContainer<MediaBase>>>> {
         val page = request.variables?.page ?: 0
         requestedPages.add(page)
-        return object : Call<AniListContainer<ConnectionContainer<PageContainer<MediaBase>>>> {
-            override fun execute(): Response<AniListContainer<ConnectionContainer<PageContainer<MediaBase>>>> {
-                if (heldPage == page) {
-                    entry.countDown()
-                    if (!release.await(TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)) {
-                        error("page $page response was never released")
-                    }
-                }
-                val fixture = fixtures[page] ?: error("no fixture for page $page")
-                return Response.success(fixture)
+        if (heldPage == page) {
+            entry.countDown()
+            if (!release.await(TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)) {
+                error("page $page response was never released")
             }
-
-            override fun enqueue(callback: Callback<AniListContainer<ConnectionContainer<PageContainer<MediaBase>>>>) = Unit
-
-            override fun isExecuted(): Boolean = false
-
-            override fun cancel() = Unit
-
-            override fun isCanceled(): Boolean = false
-
-            override fun clone(): Call<AniListContainer<ConnectionContainer<PageContainer<MediaBase>>>> = this
-
-            override fun request(): Request = Request.Builder().url("https://anilist.co/").build()
-
-            override fun timeout(): Timeout = Timeout.NONE
         }
+        val fixture = fixtures[page] ?: error("no fixture for page $page")
+        return Response.success(fixture)
     }
 
-    override fun getCharacterBase(request: GraphQLOperationRequest<CharacterBaseVariables>): Call<GraphContainer<CharacterBaseData>> = error("unused")
+    override suspend fun getCharacterBase(request: GraphQLOperationRequest<CharacterBaseVariables>): Response<GraphContainer<CharacterBaseData>> = error("unused")
 
-    override fun getCharacterOverview(request: GraphQLOperationRequest<CharacterOverviewVariables>): Call<GraphContainer<CharacterOverviewData>> = error("unused")
+    override suspend fun getCharacterOverview(request: GraphQLOperationRequest<CharacterOverviewVariables>): Response<GraphContainer<CharacterOverviewData>> = error("unused")
 
-    override fun getCharacterActors(request: GraphQLOperationRequest<CharacterActorsVariables>): Call<AniListContainer<ConnectionContainer<EdgeContainer<MediaEdge>>>> = error("unused")
+    override suspend fun getCharacterActors(request: GraphQLOperationRequest<CharacterActorsVariables>): Response<AniListContainer<ConnectionContainer<EdgeContainer<MediaEdge>>>> = error("unused")
 
     private companion object {
         const val TIMEOUT_MILLIS = 5_000L

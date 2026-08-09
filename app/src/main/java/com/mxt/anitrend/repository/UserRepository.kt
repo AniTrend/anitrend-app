@@ -78,7 +78,7 @@ class UserRepository(
     suspend fun getCurrentUser(asHtml: Boolean = false): Result<User> = withContext(ioDispatcher) {
         runCatching {
             val request = CurrentUser.request(asHtml = asHtml)
-            val response = userService.getCurrentUser(request).execute()
+            val response = userService.getCurrentUser(request)
             if (response.isSuccessful) {
                 handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -92,7 +92,7 @@ class UserRepository(
     suspend fun getUserBase(id: Long? = null, userName: String? = null): Result<UserEntity> = withContext(ioDispatcher) {
         runCatching {
             val request = UserBase.request(id = id?.toInt(), userName = userName)
-            val response = userService.getUserBase(request).execute()
+            val response = userService.getUserBase(request)
             if (response.isSuccessful) {
                 handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -104,7 +104,7 @@ class UserRepository(
     suspend fun getUserOverview(id: Long? = null, userName: String? = null, asHtml: Boolean = false): Result<User> = withContext(ioDispatcher) {
         runCatching {
             val request = UserOverview.request(id = id?.toInt(), userName = userName, asHtml = asHtml)
-            val response = userService.getUserOverview(request).execute()
+            val response = userService.getUserOverview(request)
             if (response.isSuccessful) {
                 handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -116,7 +116,7 @@ class UserRepository(
     suspend fun getUserStats(id: Long? = null, userName: String? = null): Result<UserStatisticsRecord> = withContext(ioDispatcher) {
         runCatching {
             val request = UserStats.request(id = id?.toInt(), userName = userName)
-            val response = userService.getUserStats(request).execute()
+            val response = userService.getUserStats(request)
             if (response.isSuccessful) {
                 handleUserStats(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -133,7 +133,7 @@ class UserRepository(
     ): Result<PageContainer<UserEntity>> = withContext(ioDispatcher) {
         runCatching {
             val request = UserFollowers.request(id = id.toInt(), page = page, perPage = perPage, sort = sort)
-            val response = userService.getFollowers(request).execute()
+            val response = userService.getFollowers(request)
             if (response.isSuccessful) {
                 handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -150,7 +150,7 @@ class UserRepository(
     ): Result<PageContainer<UserEntity>> = withContext(ioDispatcher) {
         runCatching {
             val request = UserFollowing.request(id = id.toInt(), page = page, perPage = perPage, sort = sort)
-            val response = userService.getFollowing(request).execute()
+            val response = userService.getFollowing(request)
             if (response.isSuccessful) {
                 handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -167,7 +167,7 @@ class UserRepository(
     ): Result<ConnectionContainer<Favourite>> = withContext(ioDispatcher) {
         runCatching {
             val request = UserFavouriteCount.request(id = id?.toInt(), userName = userName, page = page, perPage = perPage)
-            val response = userService.getFavouritesCount(request).execute()
+            val response = userService.getFavouritesCount(request)
             if (response.isSuccessful) {
                 handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -184,7 +184,7 @@ class UserRepository(
     ): Result<ConnectionContainer<Favourite>> = withContext(ioDispatcher) {
         runCatching {
             val request = AnimeFavourites.request(id = id?.toInt(), userName = userName, page = page, perPage = perPage)
-            val response = userService.getAnimeFavourites(request).execute()
+            val response = userService.getAnimeFavourites(request)
             if (response.isSuccessful) {
                 handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -201,7 +201,7 @@ class UserRepository(
     ): Result<ConnectionContainer<Favourite>> = withContext(ioDispatcher) {
         runCatching {
             val request = MangaFavourites.request(id = id?.toInt(), userName = userName, page = page, perPage = perPage)
-            val response = userService.getMangaFavourites(request).execute()
+            val response = userService.getMangaFavourites(request)
             if (response.isSuccessful) {
                 handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -218,7 +218,7 @@ class UserRepository(
     ): Result<ConnectionContainer<Favourite>> = withContext(ioDispatcher) {
         runCatching {
             val request = CharacterFavourites.request(id = id?.toInt(), userName = userName, page = page, perPage = perPage)
-            val response = userService.getCharacterFavourites(request).execute()
+            val response = userService.getCharacterFavourites(request)
             if (response.isSuccessful) {
                 handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -235,7 +235,7 @@ class UserRepository(
     ): Result<ConnectionContainer<Favourite>> = withContext(ioDispatcher) {
         runCatching {
             val request = StaffFavourites.request(id = id?.toInt(), userName = userName, page = page, perPage = perPage)
-            val response = userService.getStaffFavourites(request).execute()
+            val response = userService.getStaffFavourites(request)
             if (response.isSuccessful) {
                 handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -252,7 +252,7 @@ class UserRepository(
     ): Result<ConnectionContainer<Favourite>> = withContext(ioDispatcher) {
         runCatching {
             val request = StudioFavourites.request(id = id?.toInt(), userName = userName, page = page, perPage = perPage)
-            val response = userService.getStudioFavourites(request).execute()
+            val response = userService.getStudioFavourites(request)
             if (response.isSuccessful) {
                 handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -270,7 +270,7 @@ class UserRepository(
     ): Result<NotificationPageResult> = withContext(ioDispatcher) {
         runCatching {
             val request = UserNotifications.request(page = page, perPage = perPage, type = type, typeIn = typeIn, resetNotificationCount = resetNotificationCount)
-            val response = userService.getUserNotifications(request).execute()
+            val response = userService.getUserNotifications(request)
             if (response.isSuccessful) {
                 handleUserNotifications(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -298,7 +298,7 @@ class UserRepository(
     suspend fun toggleFollow(userId: Long): Result<UserEntity> = withContext(ioDispatcher) {
         runCatching {
             val request = ToggleFollow.request(userId = userId.toInt())
-            val response = userService.toggleFollow(request).execute()
+            val response = userService.toggleFollow(request)
             if (response.isSuccessful) {
                 handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -332,7 +332,7 @@ class UserRepository(
                 scoreFormat = update.scoreFormat?.let { ScoreFormat.valueOf(it) },
                 titleLanguage = update.titleLanguage?.let { UserTitleLanguage.valueOf(it) },
             )
-            val response = userService.updateUser(request).execute()
+            val response = userService.updateUser(request)
             if (response.isSuccessful) {
                 handleUpdateUser(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
