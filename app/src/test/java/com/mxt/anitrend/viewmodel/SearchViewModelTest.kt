@@ -3,13 +3,10 @@ package com.mxt.anitrend.viewmodel
 import com.mxt.anitrend.data.store.user.InMemoryUserStore
 import com.mxt.anitrend.domain.user.interactor.ToggleUserFollowInteractor
 import com.mxt.anitrend.graphql.generated.CharacterSort
-import com.mxt.anitrend.graphql.generated.MediaSort
-import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.graphql.generated.StaffSort
 import com.mxt.anitrend.graphql.generated.StudioSort
 import com.mxt.anitrend.graphql.generated.UserSort
 import com.mxt.anitrend.model.entity.base.CharacterBase
-import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.base.StaffBase
 import com.mxt.anitrend.model.entity.base.StudioBase
 import com.mxt.anitrend.model.entity.base.UserBase
@@ -45,35 +42,6 @@ class SearchViewModelTest {
     @After
     fun tearDown() {
         Dispatchers.resetMain()
-    }
-
-    @Test
-    fun `MediaSearchViewModel routes load through SearchRepository`() = runTest {
-        val content = PageContainer<MediaBase>()
-        doReturn(Result.success(content))
-            .`when`(searchRepository)
-            .searchMedia(
-                search = "cowboy",
-                type = MediaType.ANIME,
-                page = 2,
-                perPage = KeyUtil.PAGING_LIMIT,
-                isAdult = false,
-                sort = listOf(MediaSort.SEARCH_MATCH),
-            )
-        val viewModel = MediaSearchViewModel(searchRepository = searchRepository)
-
-        viewModel.load(search = "cowboy", type = MediaType.ANIME, page = 2, isAdult = false)
-
-        val state = viewModel.state.value as MediaSearchViewModel.UiState.Success
-        assertSame(content, state.content)
-        verify(searchRepository).searchMedia(
-            search = "cowboy",
-            type = MediaType.ANIME,
-            page = 2,
-            perPage = KeyUtil.PAGING_LIMIT,
-            isAdult = false,
-            sort = listOf(MediaSort.SEARCH_MATCH),
-        )
     }
 
     @Test

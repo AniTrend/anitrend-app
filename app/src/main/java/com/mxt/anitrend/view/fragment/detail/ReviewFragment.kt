@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.google.android.material.snackbar.Snackbar
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.ReviewAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
@@ -48,6 +49,7 @@ class ReviewFragment : FragmentBaseList<ReviewRecord, PageContainer<ReviewRecord
     private val reviewViewModel: ReviewViewModel by viewModel()
 
     private var reviewAdapter: ReviewAdapter? = null
+    private var staleSnackbar: Snackbar? = null
 
     companion object {
         /**
@@ -111,6 +113,7 @@ class ReviewFragment : FragmentBaseList<ReviewRecord, PageContainer<ReviewRecord
                             // Loading is handled by swipeRefreshLayout in the base class
                         }
                         is ReviewViewModel.UiState.Success -> {
+                            renderStaleState(state.isStale)
                             handleSuccess(state.content, state.replaceExisting)
                         }
                         is ReviewViewModel.UiState.Error -> {
@@ -138,6 +141,30 @@ class ReviewFragment : FragmentBaseList<ReviewRecord, PageContainer<ReviewRecord
         } else {
             updateUI()
         }
+    }
+
+    private fun renderStaleState(isStale: Boolean) {
+        if (isStale) {
+            if (staleSnackbar?.isShown == true) return
+            staleSnackbar =
+                Snackbar
+                    .make(stateLayout, R.string.review_stale_message, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.review_stale_refresh) {
+                        staleSnackbar = null
+                        showLoading()
+                        onRefresh()
+                    }
+            staleSnackbar?.show()
+        } else {
+            staleSnackbar?.dismiss()
+            staleSnackbar = null
+        }
+    }
+
+    override fun onDestroyView() {
+        staleSnackbar?.dismiss()
+        staleSnackbar = null
+        super.onDestroyView()
     }
 
     override fun updateUI() {

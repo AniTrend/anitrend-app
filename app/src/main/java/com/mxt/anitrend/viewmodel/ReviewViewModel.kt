@@ -39,6 +39,7 @@ class ReviewViewModel(
         data class Success(
             val content: PageContainer<ReviewRecord>,
             val replaceExisting: Boolean = false,
+            val isStale: Boolean = false,
         ) : UiState
         data class Error(val message: String) : UiState
     }
@@ -87,6 +88,7 @@ class ReviewViewModel(
                                 pageData = query.reviews
                             },
                             replaceExisting = screen.lastRequestedPage <= 1,
+                            isStale = query.stale,
                         )
                     }
                 }

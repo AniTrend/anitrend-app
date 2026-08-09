@@ -261,19 +261,22 @@ Because no new ObjectBox-backed canonical store is introduced here, there is no 
 
 ## Paging 3 evaluation
 
-Decision: defer Paging 3.
+Decision: defer Paging 3 for canonical stores, with one explicit network-only pilot exception.
 
-Reasons:
+Status:
 
-- The current manual page-merging logic is already working with canonical store ownership and immutable records.
-- Paging 3 would add the most value after there is a real local query layer to page from, especially for disk-backed media-list reads.
+- Media recommendations (Phase 1 pilot): the screen runs on a genuine AndroidX Paging 3 network-only vertical slice. Paging owns network page orchestration (`PagingSource` over `MediaRepository`, `Pager` + cached `Flow<PagingData>` in the ViewModel, load states and a load-state footer in the fragment). There is no local cache, no RemoteMediator, and no shared mutable page state. This pilot is explicitly allowed as a single-screen exception and does not change the store-level decision below.
+- Canonical-store-backed paging (feed, media list, review): still deferred. Paging 3 would add the most value after there is a real local query layer to page from, especially for disk-backed media-list reads.
 - Feed and review are intentionally remaining process-lifetime only for now, so Paging 3 does not unlock enough immediate value there.
 - Media-list is the only justified persistence candidate, and that persistence layer is still evaluation-only in this phase.
 
+The pilot does not weaken the canonical-store requirements: the in-memory stores remain the exclusive mutable owners of committed entity state in their domains, and no store domain (feed, media list, review) pages through Paging 3 yet. Store-driven manual query merging stays in place for those domains.
+
 Recommendation:
 
-- Keep the current store-driven manual query merging for now.
-- Re-evaluate Paging 3 after an ObjectBox-backed media-list store and local query hydration exist.
+- Keep the current store-driven manual query merging for feed, media list, and review.
+- Re-evaluate Paging 3 for canonical stores after an ObjectBox-backed media-list store and local query hydration exist; that work would use Paging 3 with a `RemoteMediator`, which the network-only pilot deliberately does not introduce.
+- The media-recommendations pilot is the reference for the eventual network-source pattern (source over the repository, cached flow in the ViewModel, load states in the fragment) but not a template for store-backed paging.
 
 ## Phase 8 outcome
 
@@ -281,4 +284,4 @@ Recommendation:
 - Media-list is the only domain justified for future ObjectBox backing.
 - Review remains process-lifetime only for now.
 - Logout/account-switch clearing is now explicit for the in-memory canonical stores and pending mutation registry.
-- Paging 3 is deferred until local persistent query support exists.
+- Paging 3 for canonical stores is deferred until local persistent query support exists. The media-recommendations screen is the single allowed network-only Paging 3 pilot (no local cache, no RemoteMediator); it is not a precedent for store-backed paging.

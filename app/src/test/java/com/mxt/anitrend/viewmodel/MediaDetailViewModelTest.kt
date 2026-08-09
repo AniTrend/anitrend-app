@@ -1,5 +1,6 @@
 package com.mxt.anitrend.viewmodel
 
+import androidx.paging.testing.asSnapshot
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.data.store.favourite.InMemoryFavouriteStore
 import com.mxt.anitrend.data.store.feed.InMemoryFeedStore
@@ -27,6 +28,7 @@ import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertSame
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentMatchers.eq
@@ -161,25 +163,23 @@ class MediaDetailViewModelTest {
                 eq(7L),
                 eq(MediaType.MANGA),
                 eq(false),
-                isNull(),
+                eq(1),
                 eq(21),
                 isNull(),
             )
-        val viewModel = MediaRecommendationsViewModel(
-            mediaRepository = mediaRepository,
-            dispatcher = testDispatcher,
-        )
+        val viewModel = MediaRecommendationsViewModel(mediaRepository = mediaRepository)
 
         viewModel.load(mediaId = 7L, type = MediaType.MANGA, isAdult = false)
 
-        val state = viewModel.state.value as MediaRecommendationsViewModel.UiState.Success
-        assertEquals(content.recommendations, state.items)
-        assertSame(content.pageInfo, state.pageInfo)
+        // Paging owns the paging pipeline now: the ViewModel exposes the cached
+        // PagingData stream and the repository is hit with the refresh page one.
+        val items = viewModel.pagingDataFlow.asSnapshot()
+        assertTrue(items.isEmpty())
         verify(mediaRepository).getMediaRecommendations(
             eq(7L),
             eq(MediaType.MANGA),
             eq(false),
-            isNull(),
+            eq(1),
             eq(21),
             isNull(),
         )

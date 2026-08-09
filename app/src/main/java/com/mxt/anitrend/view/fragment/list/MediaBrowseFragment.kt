@@ -100,7 +100,7 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
                             // Loading is handled by swipeRefreshLayout in the base class
                         }
                         is MediaBrowseViewModel.UiState.Success -> {
-                            handleSuccess(state.content, state.replaceExisting)
+                            handleSuccess(state.content)
                         }
                         is MediaBrowseViewModel.UiState.Error -> {
                             showError(state.message)
@@ -380,28 +380,16 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
     /** No-op: StateFlow collector above handles the response. */
     override fun onChanged(value: PageContainer<MediaBase>?) = Unit
 
-    private fun handleSuccess(
-        value: PageContainer<MediaBase>,
-        replaceExisting: Boolean,
-    ) {
+    private fun handleSuccess(value: PageContainer<MediaBase>) {
         if (value.hasPageInfo()) {
             setPageInfo(value.pageInfo)
         }
-        if (!value.isEmpty) {
-            if (replaceExisting) {
-                mAdapter.onItemsInserted(value.pageData)
-                updateUI()
-            } else {
-                onPostProcessed(value.pageData)
-            }
-        } else {
-            if (replaceExisting) {
-                mAdapter.onItemsInserted(emptyList())
-                updateUI()
-            } else {
-                onPostProcessed(emptyList())
-            }
-        }
+        // The ViewModel always emits the complete accumulated deduplicated snapshot
+        // (page one, page two, and store recombination alike), so every success
+        // replaces the adapter contents. Appending would duplicate every item that
+        // was already rendered on a previous emission.
+        mAdapter.onItemsInserted(value.pageData)
+        updateUI()
         if (mAdapter.itemCount < 1) {
             onPostProcessed(null)
         }

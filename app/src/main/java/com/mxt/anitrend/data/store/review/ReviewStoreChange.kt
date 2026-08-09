@@ -15,6 +15,12 @@ sealed interface ReviewStoreChange {
     data class ReviewSaved(
         val review: ReviewRecord,
         val revision: Long,
+        /**
+         * True when the save created a new review (input id was null), false
+         * when it updated an existing review. Only a create may be inserted at
+         * a locally provable boundary; an update never is.
+         */
+        val isCreate: Boolean,
     ) : ReviewStoreChange
 
     data class ReviewRated(

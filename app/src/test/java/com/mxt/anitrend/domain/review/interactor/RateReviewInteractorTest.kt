@@ -163,7 +163,7 @@ class RateReviewInteractorTest {
             ),
             revision = 0L,
         )
-        store.apply(ReviewStoreChange.ReviewSaved(review = existing, revision = 0L))
+        store.apply(ReviewStoreChange.ReviewSaved(review = existing, revision = 0L, isCreate = false))
         // Mirrors the live defect: RateReview returns "user": null and "media": null
         // (and no body/summary/mediaType), which plain Gson writes via reflection.
         doReturn(Result.success(nullNestedRateResponse(id = 42L, rating = 55, ratingAmount = 3, userRating = "UP_VOTE")))
@@ -249,7 +249,7 @@ class RateReviewInteractorTest {
             ),
             revision = 0L,
         )
-        store.apply(ReviewStoreChange.ReviewSaved(review = existing, revision = 0L))
+        store.apply(ReviewStoreChange.ReviewSaved(review = existing, revision = 0L, isCreate = false))
         // Regression: the response carries a non-null mediaType ("ANIME") while
         // user/media are null. mediaType must not be used to treat the response
         // as full: the existing author/media/body/summary metadata must survive

@@ -44,6 +44,7 @@ internal fun Project.configureDependencies() {
     /** Architecture Components */
     dependencies.implementation(libs.androidx.constraintLayout)
     dependencies.implementation(libs.androidx.collectionKtx)
+    dependencies.implementation(libs.androidx.paging.runtime)
 
     dependencies.implementation(libs.androidx.coreKtx)
     dependencies.implementation(libs.androidx.appcompat)
@@ -125,6 +126,7 @@ internal fun Project.configureDependencies() {
     dependencies.testImplementation(libs.hamcrest)
     dependencies.testImplementation(libs.mockito.core)
     dependencies.testImplementation(libs.androidx.arch.core.testing)
+    dependencies.testImplementation(libs.androidx.paging.testing)
 
     dependencies.androidTestImplementation(libs.cash.turbine)
     dependencies.androidTestImplementation(libs.androidx.test.coreKtx)

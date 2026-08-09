@@ -324,6 +324,9 @@
     <string name="info_login_req">Please sign in to access this feature!</string>
     <string name="button_try_again">Try Again</string>
     <string name="try_again">@string/button_try_again</string>
+    <!-- Translator: Explain that the review order may have changed and offer a page-one refresh. -->
+    <string name="review_stale_message">Reviews may be out of date. Refresh to see the latest order.</string>
+    <string name="review_stale_refresh">Refresh reviews</string>
 
     <string name="title_view_likes">View Likes</string>
     <string name="input_empty_warning">Input cannot be empty!</string>

@@ -1,4 +1,4 @@
-package com.mxt.anitrend.adapter.recycler.group
+package com.mxt.anitrend.adapter.recycler.search
 
 import android.content.Context
 import android.view.View
@@ -12,24 +12,24 @@ import com.mxt.anitrend.base.custom.view.text.SeriesYearTypeTextView
 import com.mxt.anitrend.base.custom.view.widget.SeriesStatusWidget
 import com.mxt.anitrend.binding.setAverageRating
 import com.mxt.anitrend.databinding.AdapterSeriesBinding
-import com.mxt.anitrend.domain.model.RecommendationItemUiModel
+import com.mxt.anitrend.domain.model.MediaSearchItemUiModel
 import com.mxt.anitrend.domain.model.toRenderModel
 import com.mxt.anitrend.extension.getLayoutInflater
 
 /**
- * Dedicated [PagingDataAdapter] for the media recommendations screen.
+ * Dedicated [PagingDataAdapter] for the media search screen.
  *
- * Renders immutable [RecommendationItemUiModel] items into the shared
+ * Renders immutable [MediaSearchItemUiModel] items into the shared
  * [R.layout.adapter_series] card, forwards click and long-click actions, and
- * uses stable recommendation ids for diffing. Paging positions without a loaded
- * item (placeholders are disabled, but transitions can still expose empty slots)
+ * uses stable media ids for diffing. Paging positions without a loaded item
+ * (placeholders are disabled, but transitions can still expose empty slots)
  * are bound as no-ops, and clicks guard against [RecyclerView.NO_POSITION].
  */
-class RecommendationAdapter(
+class MediaSearchAdapter(
     context: Context,
-    private val onOpenMedia: (View, RecommendationItemUiModel) -> Unit,
-    private val onLongPressMedia: (View, RecommendationItemUiModel) -> Boolean,
-) : PagingDataAdapter<RecommendationItemUiModel, RecommendationAdapter.RecommendationViewHolder>(
+    private val onOpenMedia: (View, MediaSearchItemUiModel) -> Unit,
+    private val onLongPressMedia: (View, MediaSearchItemUiModel) -> Boolean,
+) : PagingDataAdapter<MediaSearchItemUiModel, MediaSearchAdapter.MediaSearchViewHolder>(
     DIFF_CALLBACK,
 ) {
     private val appContext = context.applicationContext
@@ -37,7 +37,7 @@ class RecommendationAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): RecommendationViewHolder = RecommendationViewHolder(
+    ): MediaSearchViewHolder = MediaSearchViewHolder(
         AdapterSeriesBinding.inflate(
             parent.context.getLayoutInflater(),
             parent,
@@ -46,33 +46,35 @@ class RecommendationAdapter(
     )
 
     override fun onBindViewHolder(
-        holder: RecommendationViewHolder,
+        holder: MediaSearchViewHolder,
         position: Int,
     ) {
         val item = getItem(position) ?: return
         holder.bind(item)
     }
 
-    override fun onViewRecycled(holder: RecommendationViewHolder) {
+    override fun onViewRecycled(holder: MediaSearchViewHolder) {
         holder.recycle()
         super.onViewRecycled(holder)
     }
 
-    inner class RecommendationViewHolder(
+    /**
+     * View holder for one media search card.
+     *
+     * Binds an immutable [MediaSearchItemUiModel] into the shared series card
+     * and forwards click and long-click actions to the adapter callbacks when
+     * the holder has a current item.
+     */
+    inner class MediaSearchViewHolder(
         private val binding: AdapterSeriesBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
         init {
-            binding.root.setOnClickListener { view ->
-                val item = currentItem() ?: return@setOnClickListener
-                onOpenMedia(view, item)
-            }
-            binding.root.setOnLongClickListener { view ->
-                val item = currentItem() ?: return@setOnLongClickListener false
-                onLongPressMedia(view, item)
-            }
+            binding.root.setOnClickListener(::handleRootClick)
+            binding.root.setOnLongClickListener(::handleRootLongClick)
         }
 
-        fun bind(model: RecommendationItemUiModel) {
+        /** Binds [model] into the card: cover image, status, year/type line, rating and title. */
+        fun bind(model: MediaSearchItemUiModel) {
             val renderModel = model.toRenderModel()
             AspectImageView.setImage(binding.seriesImage, model.coverImage)
             SeriesStatusWidget.setStatus(binding.seriesStatus, model.mediaStatus)
@@ -81,27 +83,43 @@ class RecommendationAdapter(
             binding.seriesTitle.text = model.title
         }
 
+        /** Releases the card's image resources so a recycled card never shows stale art. */
         fun recycle() {
             Glide.with(appContext).clear(binding.seriesImage)
         }
 
-        private fun currentItem(): RecommendationItemUiModel? {
+        private fun handleRootClick(view: View) {
+            val item = currentItem() ?: return
+            onOpenMedia(view, item)
+        }
+
+        private fun handleRootLongClick(view: View): Boolean {
+            val item = currentItem() ?: return false
+            return onLongPressMedia(view, item)
+        }
+
+        private fun currentItem(): MediaSearchItemUiModel? {
             val position = bindingAdapterPosition
             return if (position == RecyclerView.NO_POSITION) null else getItem(position)
         }
     }
 
+    /**
+     * Shared adapter configuration: the [DiffUtil.ItemCallback] that diffs
+     * submitted media items.
+     */
     companion object {
+        /** [DiffUtil.ItemCallback] diffing on stable media ids, with full equality for content. */
         val DIFF_CALLBACK =
-            object : DiffUtil.ItemCallback<RecommendationItemUiModel>() {
+            object : DiffUtil.ItemCallback<MediaSearchItemUiModel>() {
                 override fun areItemsTheSame(
-                    oldItem: RecommendationItemUiModel,
-                    newItem: RecommendationItemUiModel,
+                    oldItem: MediaSearchItemUiModel,
+                    newItem: MediaSearchItemUiModel,
                 ): Boolean = oldItem.id == newItem.id
 
                 override fun areContentsTheSame(
-                    oldItem: RecommendationItemUiModel,
-                    newItem: RecommendationItemUiModel,
+                    oldItem: MediaSearchItemUiModel,
+                    newItem: MediaSearchItemUiModel,
                 ): Boolean = oldItem == newItem
             }
     }

@@ -8,8 +8,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
-import com.mxt.anitrend.adapter.recycler.index.MediaAdapter
+import com.mxt.anitrend.adapter.recycler.search.MediaSearchAdapter
+import com.mxt.anitrend.adapter.recycler.shared.LoadStateFooterAdapter
+import com.mxt.anitrend.adapter.recycler.shared.PagingLoadStateRenderer
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
+import com.mxt.anitrend.domain.model.MediaSearchItemUiModel
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.container.body.PageContainer
@@ -20,6 +23,7 @@ import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.view.activity.detail.MediaActivity
 import com.mxt.anitrend.viewmodel.MediaSearchViewModel
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -27,8 +31,16 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 /**
  * Created by max on 2017/12/20.
  * series searching fragment
+ *
+ * Media search screen driven by the Paging 3 network-only pilot. Paging owns page
+ * orchestration through the ViewModel's cached [PagingData] stream; this fragment
+ * submits that stream with the view lifecycle, renders refresh/append load states
+ * from the adapter's load state flow, and shows append errors in a load-state
+ * footer. The base class's manual scroll listener and page counter stay disabled
+ * for this screen ([isPager] stays false); [FragmentBaseList] and
+ * [com.mxt.anitrend.base.custom.recycler.RecyclerScrollListener] are unchanged.
  */
-class MediaSearchFragment : FragmentBaseList<MediaBase, PageContainer<MediaBase>>() {
+class MediaSearchFragment : FragmentBaseList<MediaSearchItemUiModel, PageContainer<MediaBase>>() {
     private var searchQuery: String? = null
 
     @KeyUtil.MediaType
@@ -37,6 +49,8 @@ class MediaSearchFragment : FragmentBaseList<MediaBase, PageContainer<MediaBase>
     private val settings: Settings by inject()
 
     private val mediaSearchViewModel: MediaSearchViewModel by viewModel()
+
+    private var mediaSearchAdapter: MediaSearchAdapter? = null
 
     companion object {
         /**
@@ -81,36 +95,83 @@ class MediaSearchFragment : FragmentBaseList<MediaBase, PageContainer<MediaBase>
             mediaType = args.mediaType
         }
         mColumnSize = R.integer.grid_giphy_x3
-        isPager = true
+        // Paging owns pagination for this screen: the base class's manual scroll
+        // listener and page counter remain disabled (isPager stays false).
         val ctx = requireContext()
-        mAdapter = MediaAdapter(ctx, true)
+        val mediaItemActions = MediaItemActionHandler()
+        mediaSearchAdapter =
+            MediaSearchAdapter(
+                context = ctx,
+                onOpenMedia = mediaItemActions::open,
+                onLongPressMedia = mediaItemActions::longPress,
+            )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val adapter = mediaSearchAdapter ?: return
+        // Append errors render in a load-state footer; the pull-up "load more"
+        // gesture of the base swipe layout is disabled for this screen.
+        swipeRefreshLayout.setPermitLoad(false)
+        val footer = LoadStateFooterAdapter(retry = adapter::retry)
+        recyclerView.adapter = adapter.withLoadStateFooter(footer)
+        val loadStateRenderer =
+            PagingLoadStateRenderer(
+                itemCount = { adapter.itemCount },
+                callbacks = PagingLoadStateRenderer.Callbacks(
+                    showLoading = ::showLoading,
+                    showContent = ::showContent,
+                    showError = ::showError,
+                    showEmpty = ::showEmpty,
+                    stopRefreshIndicators = {
+                        if (swipeRefreshLayout.isRefreshing()) {
+                            swipeRefreshLayout.setRefreshing(false)
+                        }
+                        if (swipeRefreshLayout.isLoading()) {
+                            swipeRefreshLayout.setLoading(false)
+                        }
+                    },
+                    messages = PagingLoadStateRenderer.Callbacks.Messages(
+                        errorMessage = { getString(R.string.text_error_request) },
+                        emptyMessage = { getString(R.string.layout_empty_response) },
+                    ),
+                ),
+            )
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                mediaSearchViewModel.state.collect { state ->
-                    when (state) {
-                        is MediaSearchViewModel.UiState.Loading -> {
-                            // Loading is handled by swipeRefreshLayout in the base class
-                        }
-                        is MediaSearchViewModel.UiState.Success -> {
-                            handleSuccess(state.content)
-                        }
-                        is MediaSearchViewModel.UiState.Error -> {
-                            showError(state.message)
-                        }
+                launch {
+                    mediaSearchViewModel.pagingDataFlow.collectLatest { pagingData ->
+                        adapter.submitData(pagingData)
                     }
+                }
+                launch {
+                    adapter.loadStateFlow.collect(loadStateRenderer::render)
                 }
             }
         }
+        makeRequest()
     }
 
-    override fun updateUI() {
-        injectAdapter()
+    override fun onStart() {
+        super.onStart()
+        // The base class shows the loading state on every start; restore the
+        // content state when a generation is already presented. Loads themselves
+        // are driven entirely by the Paging collection in onViewCreated.
+        if ((mediaSearchAdapter?.itemCount ?: 0) > 0) {
+            showContent()
+        }
     }
+
+    override fun onRefresh() {
+        mediaSearchAdapter?.refresh()
+    }
+
+    /** No-op: append pagination is driven by Paging through the load-state footer. */
+    override fun onLoadMore() = Unit
+
+    /** No-op: this screen has no in-memory filtering. */
+    override fun updateUI() = Unit
 
     override fun makeRequest() {
         val query = searchQuery ?: return
@@ -119,67 +180,61 @@ class MediaSearchFragment : FragmentBaseList<MediaBase, PageContainer<MediaBase>
         mediaSearchViewModel.load(
             search = query,
             type = type,
-            page = mScrollListener.currentPage,
             isAdult = isAdult,
         )
     }
 
-    private fun handleSuccess(content: PageContainer<MediaBase>) {
-        if (content.hasPageInfo()) {
-            setPageInfo(content.pageInfo)
+    /** No-op: the PagingData collection in onViewCreated handles the stream. */
+    override fun onChanged(value: PageContainer<MediaBase>?) = Unit
+
+    /**
+     * Media item click actions for this screen: opens the media detail screen
+     * and starts the long-press series action sheet.
+     */
+    private inner class MediaItemActionHandler {
+        fun open(
+            target: View,
+            item: MediaSearchItemUiModel,
+        ) {
+            val host = activity ?: return
+            val intent = MediaActivity.newIntent(host, item.id, item.mediaType)
+            CompatUtil.startRevealAnim(host, target, intent)
         }
-        if (!content.isEmpty) {
-            onPostProcessed(content.pageData)
-        } else {
-            onPostProcessed(emptyList())
-        }
-        if (mAdapter.itemCount < 1) {
-            onPostProcessed(null)
+
+        fun longPress(
+            target: View,
+            item: MediaSearchItemUiModel,
+        ): Boolean {
+            if (settings.isAuthenticated) {
+                val host = activity ?: return false
+                mediaActionUtil =
+                    MediaActionUtil
+                        .Builder()
+                        .setId(item.id)
+                        .build(host)
+                mediaActionUtil.startSeriesAction()
+                return true
+            }
+            context?.let {
+                NotifyUtil
+                    .makeText(
+                        it,
+                        R.string.info_login_req,
+                        R.drawable.ic_group_add_grey_600_18dp,
+                        Toast.LENGTH_SHORT,
+                    ).show()
+            }
+            return true
         }
     }
-
-    /** No-op: StateFlow collector above handles the response. */
-    override fun onChanged(value: PageContainer<MediaBase>?) = Unit
 
     override fun onItemClick(
         target: View,
-        data: IndexedValue<MediaBase>,
-    ) {
-        when (target.id) {
-            R.id.container -> {
-                val host = activity ?: return
-                val intent = MediaActivity.newIntent(host, data.value.id, data.value.type)
-                CompatUtil.startRevealAnim(host, target, intent)
-            }
-        }
-    }
+        data: IndexedValue<MediaSearchItemUiModel>,
+    ) = Unit
 
     override fun onItemLongClick(
         target: View,
-        data: IndexedValue<MediaBase>,
-    ) {
-        when (target.id) {
-            R.id.container -> {
-                if (settings.isAuthenticated) {
-                    val host = activity ?: return
-                    mediaActionUtil =
-                        MediaActionUtil
-                            .Builder()
-                            .setId(data.value.id)
-                            .build(host)
-                    mediaActionUtil.startSeriesAction()
-                } else {
-                    context?.let {
-                        NotifyUtil
-                            .makeText(
-                                it,
-                                R.string.info_login_req,
-                                R.drawable.ic_group_add_grey_600_18dp,
-                                Toast.LENGTH_SHORT,
-                            ).show()
-                    }
-                }
-            }
-        }
-    }
+        data: IndexedValue<MediaSearchItemUiModel>,
+    ) = Unit
 }

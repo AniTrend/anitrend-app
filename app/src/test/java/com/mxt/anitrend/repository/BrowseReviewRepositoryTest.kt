@@ -153,6 +153,99 @@ class BrowseReviewRepositoryTest {
     }
 
     @Test
+    fun `saveReview with null id commits create and inserts at provable boundary`() = runTest {
+        val queryKey = ReviewQueryKey(mediaId = 100L, mediaType = MediaType.ANIME, sort = ReviewSort.ID_DESC)
+        reviewStore.apply(
+            ReviewStoreChange.PageLoaded(
+                queryKey = queryKey,
+                page = 1,
+                token = 1L,
+                reviews = listOf(review(id = 9L, mediaId = 100L).toReviewRecord(revision = 1L)),
+                pageInfo = null,
+            ),
+        )
+        val saved = review(id = 12L, mediaId = 100L).apply {
+            summary = "saved summary"
+            score = 80
+        }
+        val request = SaveReview.request(
+            id = null,
+            mediaId = 100,
+            body = "body",
+            summary = "saved summary",
+            score = 80,
+            privateValue = false,
+            asHtml = false,
+        )
+        val call = call(AniListContainer(DataContainer(saved), null))
+        `when`(service.saveReview(request)).thenReturn(call)
+
+        val result = repository.saveReview(
+            id = null,
+            mediaId = 100L,
+            body = "body",
+            summary = "saved summary",
+            score = 80,
+            private = false,
+            asHtml = false,
+            commitToStore = true,
+            revision = 2L,
+        )
+
+        assertTrue(result.isSuccess)
+        val snapshot = reviewStore.state.value.queries.getValue(queryKey)
+        assertEquals(listOf(12L, 9L), snapshot.orderedReviewIds)
+        assertFalse(snapshot.stale)
+    }
+
+    @Test
+    fun `saveReview with non null id commits update without local boundary insertion`() = runTest {
+        val queryKey = ReviewQueryKey(mediaId = 100L, mediaType = MediaType.ANIME, sort = ReviewSort.CREATED_AT_DESC)
+        reviewStore.apply(
+            ReviewStoreChange.PageLoaded(
+                queryKey = queryKey,
+                page = 1,
+                token = 1L,
+                reviews = listOf(review(id = 9L, mediaId = 100L).toReviewRecord(revision = 1L)),
+                pageInfo = null,
+            ),
+        )
+        val saved = review(id = 12L, mediaId = 100L).apply {
+            summary = "updated summary"
+            score = 90
+        }
+        val request = SaveReview.request(
+            id = 12,
+            mediaId = 100,
+            body = "body",
+            summary = "updated summary",
+            score = 90,
+            privateValue = false,
+            asHtml = false,
+        )
+        val call = call(AniListContainer(DataContainer(saved), null))
+        `when`(service.saveReview(request)).thenReturn(call)
+
+        val result = repository.saveReview(
+            id = 12,
+            mediaId = 100L,
+            body = "body",
+            summary = "updated summary",
+            score = 90,
+            private = false,
+            asHtml = false,
+            commitToStore = true,
+            revision = 2L,
+        )
+
+        assertTrue(result.isSuccess)
+        val snapshot = reviewStore.state.value.queries.getValue(queryKey)
+        assertEquals(listOf(9L), snapshot.orderedReviewIds)
+        assertTrue(snapshot.stale)
+        assertEquals(90, reviewStore.state.value.reviewsById.getValue(12L).review.score)
+    }
+
+    @Test
     fun `deleteReview commits ReviewDeleted when deleted`() = runTest {
         val queryKey = ReviewQueryKey(mediaId = 100L, mediaType = MediaType.ANIME, sort = ReviewSort.CREATED_AT_DESC)
         reviewStore.apply(
