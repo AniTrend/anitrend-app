@@ -56,7 +56,7 @@ junit = "4.13.2"
 threeTenBp = "1.4.9"
 timber-runtime = "5.0.1"
 
-anitrend-retrofit-graphql = "0.13.0"
+anitrend-retrofit-graphql = "0.14.0"
 anitrend-support-markwon = "0.12.1-alpha01"
 
 anitrend-android-emoji = "2.2.0"
