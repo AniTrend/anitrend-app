@@ -1,23 +1,24 @@
 package com.mxt.anitrend.repository
 
+import co.anitrend.retrofit.graphql.model.GraphQLData
+import co.anitrend.retrofit.graphql.model.GraphQLResponse
 import com.mxt.anitrend.data.mapper.toReviewRecord
 import com.mxt.anitrend.data.store.review.InMemoryReviewStore
 import com.mxt.anitrend.data.store.review.ReviewQueryKey
 import com.mxt.anitrend.data.store.review.ReviewStoreChange
 import com.mxt.anitrend.graphql.generated.DeleteReview
+import com.mxt.anitrend.graphql.generated.DeleteReviewData
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.graphql.generated.RateReview
+import com.mxt.anitrend.graphql.generated.RateReviewData
 import com.mxt.anitrend.graphql.generated.ReviewBrowse
+import com.mxt.anitrend.graphql.generated.ReviewBrowseData
 import com.mxt.anitrend.graphql.generated.ReviewRating
 import com.mxt.anitrend.graphql.generated.ReviewSort
 import com.mxt.anitrend.graphql.generated.SaveReview
+import com.mxt.anitrend.graphql.generated.SaveReviewData
 import com.mxt.anitrend.model.api.retro.anilist.BrowseService
 import com.mxt.anitrend.model.entity.anilist.Review
-import com.mxt.anitrend.model.entity.anilist.meta.DeleteState
-import com.mxt.anitrend.model.entity.container.attribute.PageInfo
-import com.mxt.anitrend.model.entity.container.body.AniListContainer
-import com.mxt.anitrend.model.entity.container.body.DataContainer
-import com.mxt.anitrend.model.entity.container.body.PageContainer
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
@@ -45,10 +46,6 @@ class BrowseReviewRepositoryTest {
     @Test
     fun `getReviewBrowse returns legacy page and commits PageLoaded with ReviewRecords`() = runTest {
         val review = review(id = 33L, mediaId = 100L, rating = 20)
-        val pageContainer = PageContainer<Review>().apply {
-            pageData = listOf(review)
-            pageInfo = PageInfo(total = 1, perPage = 1, currentPage = 1, hasNextPageValue = false)
-        }
         val request = ReviewBrowse.request(
             page = 1,
             perPage = 20,
@@ -57,7 +54,7 @@ class BrowseReviewRepositoryTest {
             sort = listOf(ReviewSort.CREATED_AT_DESC),
             asHtml = false,
         )
-        val response = success(AniListContainer(DataContainer(pageContainer), null))
+        val response = success(GraphQLResponse(data = GraphQLData.Present(reviewBrowseData(review)), errors = emptyList()))
         `when`(service.getReviewBrowse(request)).thenReturn(response)
         val queryKey = ReviewQueryKey(mediaId = 100L, mediaType = MediaType.ANIME, sort = ReviewSort.CREATED_AT_DESC)
 
@@ -87,10 +84,41 @@ class BrowseReviewRepositoryTest {
     }
 
     @Test
+    fun `getReviewBrowse with null page fails with empty response body and leaves store unchanged`() = runTest {
+        val request = ReviewBrowse.request(
+            page = 1,
+            perPage = 20,
+            mediaId = 100,
+            type = MediaType.ANIME,
+            sort = listOf(ReviewSort.CREATED_AT_DESC),
+            asHtml = false,
+        )
+        val response = success(GraphQLResponse(data = GraphQLData.Present(ReviewBrowseData(page = null)), errors = emptyList()))
+        `when`(service.getReviewBrowse(request)).thenReturn(response)
+
+        val result = repository.getReviewBrowse(
+            page = 1,
+            perPage = 20,
+            mediaId = 100L,
+            type = MediaType.ANIME,
+            sort = listOf(ReviewSort.CREATED_AT_DESC),
+            asHtml = false,
+            commitToStore = true,
+            queryKey = ReviewQueryKey(mediaId = 100L, mediaType = MediaType.ANIME, sort = ReviewSort.CREATED_AT_DESC),
+            readToken = 3L,
+        )
+
+        assertTrue(result.isFailure)
+        assertEquals("Empty response body", result.exceptionOrNull()?.message)
+        assertTrue(reviewStore.state.value.queries.isEmpty())
+        assertTrue(reviewStore.state.value.reviewsById.isEmpty())
+    }
+
+    @Test
     fun `rateReview returns legacy Review and commits ReviewRated with mapped record`() = runTest {
-        val rated = review(id = 42L, mediaId = 100L, rating = 55, ratingAmount = 3, userRating = "UP_VOTE")
+        val rated = ratedReview(id = 42L, mediaId = 100L, rating = 55, ratingAmount = 3, userRating = ReviewRating.UP_VOTE)
         val request = RateReview.request(id = 42, rating = ReviewRating.UP_VOTE, asHtml = false)
-        val response = success(AniListContainer(DataContainer(rated), null))
+        val response = success(GraphQLResponse(data = GraphQLData.Present(rated), errors = emptyList()))
         `when`(service.rateReview(request)).thenReturn(response)
 
         val result = repository.rateReview(
@@ -114,10 +142,7 @@ class BrowseReviewRepositoryTest {
 
     @Test
     fun `saveReview returns legacy Review and commits ReviewSaved with mapped record`() = runTest {
-        val saved = review(id = 12L, mediaId = 100L).apply {
-            summary = "saved summary"
-            score = 80
-        }
+        val saved = savedReview(id = 12L, mediaId = 100L, summary = "saved summary", score = 80)
         val request = SaveReview.request(
             id = null,
             mediaId = 100,
@@ -127,7 +152,7 @@ class BrowseReviewRepositoryTest {
             privateValue = false,
             asHtml = false,
         )
-        val response = success(AniListContainer(DataContainer(saved), null))
+        val response = success(GraphQLResponse(data = GraphQLData.Present(saved), errors = emptyList()))
         `when`(service.saveReview(request)).thenReturn(response)
 
         val result = repository.saveReview(
@@ -159,14 +184,11 @@ class BrowseReviewRepositoryTest {
                 queryKey = queryKey,
                 page = 1,
                 token = 1L,
-                reviews = listOf(review(id = 9L, mediaId = 100L).toReviewRecord(revision = 1L)),
+                reviews = listOf(legacyReview(id = 9L, mediaId = 100L).toReviewRecord(revision = 1L)),
                 pageInfo = null,
             ),
         )
-        val saved = review(id = 12L, mediaId = 100L).apply {
-            summary = "saved summary"
-            score = 80
-        }
+        val saved = savedReview(id = 12L, mediaId = 100L, summary = "saved summary", score = 80)
         val request = SaveReview.request(
             id = null,
             mediaId = 100,
@@ -176,7 +198,7 @@ class BrowseReviewRepositoryTest {
             privateValue = false,
             asHtml = false,
         )
-        val response = success(AniListContainer(DataContainer(saved), null))
+        val response = success(GraphQLResponse(data = GraphQLData.Present(saved), errors = emptyList()))
         `when`(service.saveReview(request)).thenReturn(response)
 
         val result = repository.saveReview(
@@ -205,14 +227,11 @@ class BrowseReviewRepositoryTest {
                 queryKey = queryKey,
                 page = 1,
                 token = 1L,
-                reviews = listOf(review(id = 9L, mediaId = 100L).toReviewRecord(revision = 1L)),
+                reviews = listOf(legacyReview(id = 9L, mediaId = 100L).toReviewRecord(revision = 1L)),
                 pageInfo = null,
             ),
         )
-        val saved = review(id = 12L, mediaId = 100L).apply {
-            summary = "updated summary"
-            score = 90
-        }
+        val saved = savedReview(id = 12L, mediaId = 100L, summary = "updated summary", score = 90)
         val request = SaveReview.request(
             id = 12,
             mediaId = 100,
@@ -222,7 +241,7 @@ class BrowseReviewRepositoryTest {
             privateValue = false,
             asHtml = false,
         )
-        val response = success(AniListContainer(DataContainer(saved), null))
+        val response = success(GraphQLResponse(data = GraphQLData.Present(saved), errors = emptyList()))
         `when`(service.saveReview(request)).thenReturn(response)
 
         val result = repository.saveReview(
@@ -252,12 +271,17 @@ class BrowseReviewRepositoryTest {
                 queryKey = queryKey,
                 page = 1,
                 token = 1L,
-                reviews = listOf(review(id = 9L, mediaId = 100L).toReviewRecord(revision = 1L)),
+                reviews = listOf(legacyReview(id = 9L, mediaId = 100L).toReviewRecord(revision = 1L)),
                 pageInfo = null,
             ),
         )
         val request = DeleteReview.request(id = 9)
-        val response = success(AniListContainer(DataContainer(DeleteState(true)), null))
+        val response = success(
+            GraphQLResponse(
+                data = GraphQLData.Present(DeleteReviewData(deleteReview = DeleteReviewData.DeleteReview(deleted = true))),
+                errors = emptyList(),
+            ),
+        )
         `when`(service.deleteReview(request)).thenReturn(response)
 
         val result = repository.deleteReview(id = 9L, commitToStore = true, revision = 2L)
@@ -271,15 +295,11 @@ class BrowseReviewRepositoryTest {
     fun `stale page load does not overwrite newer rated state`() = runTest {
         reviewStore.apply(
             ReviewStoreChange.ReviewRated(
-                review = review(id = 7L, mediaId = 100L, rating = 88).toReviewRecord(revision = 5L),
+                review = legacyReview(id = 7L, mediaId = 100L, rating = 88).toReviewRecord(revision = 5L),
                 revision = 5L,
             ),
         )
         val stale = review(id = 7L, mediaId = 100L, rating = 10)
-        val pageContainer = PageContainer<Review>().apply {
-            pageData = listOf(stale)
-            pageInfo = PageInfo(total = 1, perPage = 1, currentPage = 1, hasNextPageValue = false)
-        }
         val request = ReviewBrowse.request(
             page = 1,
             perPage = 20,
@@ -288,7 +308,7 @@ class BrowseReviewRepositoryTest {
             sort = listOf(ReviewSort.CREATED_AT_DESC),
             asHtml = false,
         )
-        val response = success(AniListContainer(DataContainer(pageContainer), null))
+        val response = success(GraphQLResponse(data = GraphQLData.Present(reviewBrowseData(stale)), errors = emptyList()))
         `when`(service.getReviewBrowse(request)).thenReturn(response)
 
         repository.getReviewBrowse(
@@ -309,12 +329,12 @@ class BrowseReviewRepositoryTest {
 
     @Test
     fun `review store is never committed legacy Review entities`() = runTest {
-        val rated = review(id = 55L, mediaId = 100L, rating = 77)
+        val rated = ratedReview(id = 55L, mediaId = 100L, rating = 77)
         val request = RateReview.request(id = 55, rating = ReviewRating.UP_VOTE, asHtml = false)
-        val response = success(AniListContainer(DataContainer(rated), null))
+        val response = success(GraphQLResponse(data = GraphQLData.Present(rated), errors = emptyList()))
         `when`(service.rateReview(request)).thenReturn(response)
 
-        repository.rateReview(
+        val result = repository.rateReview(
             id = 55L,
             rating = ReviewRating.UP_VOTE,
             asHtml = false,
@@ -326,8 +346,19 @@ class BrowseReviewRepositoryTest {
         assertEquals(55L, committed.review.id)
         assertEquals(77, committed.review.rating)
         // Legacy entity mutation after commit must not affect the immutable record.
-        rated.rating = 1
+        result.getOrThrow().rating = 1
         assertEquals(77, reviewStore.state.value.reviewsById.getValue(55L).review.rating)
+    }
+
+    private fun legacyReview(
+        id: Long,
+        mediaId: Long,
+        rating: Int = 0,
+    ): Review = Review().apply {
+        this.id = id
+        this.rating = rating
+        media.id = mediaId
+        media.type = MediaType.ANIME.name
     }
 
     private fun review(
@@ -335,15 +366,151 @@ class BrowseReviewRepositoryTest {
         mediaId: Long,
         rating: Int = 0,
         ratingAmount: Int = 0,
-        userRating: String? = null,
-    ): Review = Review().apply {
-        this.id = id
-        this.rating = rating
-        this.ratingAmount = ratingAmount
-        this.userRating = userRating
-        media.id = mediaId
-        media.type = MediaType.ANIME.name
-    }
+        userRating: ReviewRating? = null,
+    ): ReviewBrowseData.PageReviews = ReviewBrowseData.PageReviews(
+        body = null,
+        createdAt = 1,
+        id = id.toInt(),
+        media = ReviewBrowseData.PageReviewsMedia(
+            averageScore = null,
+            bannerImage = null,
+            chapters = null,
+            coverImage = null,
+            endDate = null,
+            episodes = null,
+            format = null,
+            id = mediaId.toInt(),
+            isAdult = null,
+            isFavourite = false,
+            meanScore = null,
+            mediaListEntry = null,
+            nextAiringEpisode = null,
+            season = null,
+            siteUrl = null,
+            startDate = null,
+            status = null,
+            title = null,
+            type = MediaType.ANIME,
+            updatedAt = null,
+            volumes = null,
+        ),
+        mediaType = MediaType.ANIME,
+        privateValue = false,
+        rating = rating,
+        ratingAmount = ratingAmount,
+        score = 0,
+        siteUrl = null,
+        summary = null,
+        updatedAt = 1,
+        user = null,
+        userRating = userRating,
+    )
+
+    private fun reviewBrowseData(review: ReviewBrowseData.PageReviews): ReviewBrowseData = ReviewBrowseData(
+        page = ReviewBrowseData.Page(
+            pageInfo = ReviewBrowseData.PagePageInfo(
+                currentPage = 1,
+                hasNextPage = false,
+                lastPage = 1,
+                perPage = 1,
+                total = 1,
+            ),
+            reviews = listOf(review),
+        ),
+    )
+
+    private fun ratedReview(
+        id: Long,
+        mediaId: Long,
+        rating: Int = 0,
+        ratingAmount: Int = 0,
+        userRating: ReviewRating? = null,
+    ): RateReviewData = RateReviewData(
+        rateReview = RateReviewData.RateReview(
+            body = null,
+            createdAt = 1,
+            id = id.toInt(),
+            media = RateReviewData.RateReviewMedia(
+                averageScore = null,
+                bannerImage = null,
+                chapters = null,
+                coverImage = null,
+                endDate = null,
+                episodes = null,
+                format = null,
+                id = mediaId.toInt(),
+                isAdult = null,
+                isFavourite = false,
+                meanScore = null,
+                mediaListEntry = null,
+                nextAiringEpisode = null,
+                season = null,
+                siteUrl = null,
+                startDate = null,
+                status = null,
+                title = null,
+                type = MediaType.ANIME,
+                updatedAt = null,
+                volumes = null,
+            ),
+            mediaType = MediaType.ANIME,
+            privateValue = false,
+            rating = rating,
+            ratingAmount = ratingAmount,
+            score = 0,
+            siteUrl = null,
+            summary = null,
+            updatedAt = 1,
+            user = null,
+            userRating = userRating,
+        ),
+    )
+
+    private fun savedReview(
+        id: Long,
+        mediaId: Long,
+        summary: String,
+        score: Int,
+    ): SaveReviewData = SaveReviewData(
+        saveReview = SaveReviewData.SaveReview(
+            body = null,
+            createdAt = 1,
+            id = id.toInt(),
+            media = SaveReviewData.SaveReviewMedia(
+                averageScore = null,
+                bannerImage = null,
+                chapters = null,
+                coverImage = null,
+                endDate = null,
+                episodes = null,
+                format = null,
+                id = mediaId.toInt(),
+                isAdult = null,
+                isFavourite = false,
+                meanScore = null,
+                mediaListEntry = null,
+                nextAiringEpisode = null,
+                season = null,
+                siteUrl = null,
+                startDate = null,
+                status = null,
+                title = null,
+                type = MediaType.ANIME,
+                updatedAt = null,
+                volumes = null,
+            ),
+            mediaType = MediaType.ANIME,
+            privateValue = false,
+            rating = 0,
+            ratingAmount = 0,
+            score = score,
+            siteUrl = null,
+            summary = summary,
+            updatedAt = 1,
+            user = null,
+            userRating = null,
+        ),
+    )
 
     private fun <T> success(body: T): Response<T> = Response.success(body)
 }

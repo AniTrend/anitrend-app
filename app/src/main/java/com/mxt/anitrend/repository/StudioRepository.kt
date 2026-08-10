@@ -1,6 +1,6 @@
 package com.mxt.anitrend.repository
 
-import co.anitrend.retrofit.graphql.model.body.GraphContainer
+import co.anitrend.retrofit.graphql.model.GraphQLResponse
 import com.mxt.anitrend.data.mapper.toStudioRecord
 import com.mxt.anitrend.domain.model.StudioRecord
 import com.mxt.anitrend.graphql.generated.MediaSort
@@ -37,12 +37,9 @@ class StudioRepository(
         }
     }
 
-    private fun handleStudioBase(body: GraphContainer<StudioBaseData>): StudioRecord {
-        val graphErrors = body.errors
-        if (!graphErrors.isNullOrEmpty()) {
-            throw RuntimeException(graphErrors.first().message ?: "GraphQL error")
-        }
-        return body.data?.studio?.toStudioRecord() ?: throw IllegalStateException("Empty response body")
+    private fun handleStudioBase(body: GraphQLResponse<StudioBaseData>): StudioRecord {
+        val data = handleGraphQLResponse(body)
+        return data.studio?.toStudioRecord() ?: throw IllegalStateException("Empty response body")
     }
 
     suspend fun getStudioMedia(
@@ -64,11 +61,8 @@ class StudioRepository(
 
     fun isAuthenticated() = settings.isAuthenticated
 
-    private fun handleStudioMedia(body: GraphContainer<StudioMediaData>): ConnectionContainer<PageContainer<MediaEntity>> {
-        val graphErrors = body.errors
-        if (!graphErrors.isNullOrEmpty()) {
-            throw RuntimeException(graphErrors.first().message ?: "GraphQL error")
-        }
-        return body.data?.toStudioMediaConnection() ?: throw IllegalStateException("Empty response body")
+    private fun handleStudioMedia(body: GraphQLResponse<StudioMediaData>): ConnectionContainer<PageContainer<MediaEntity>> {
+        val data = handleGraphQLResponse(body)
+        return data.toStudioMediaConnection()
     }
 }

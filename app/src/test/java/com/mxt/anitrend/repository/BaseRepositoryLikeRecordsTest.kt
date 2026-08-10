@@ -1,5 +1,8 @@
 package com.mxt.anitrend.repository
 
+import co.anitrend.retrofit.graphql.model.GraphQLData
+import co.anitrend.retrofit.graphql.model.GraphQLResponse
+import co.anitrend.retrofit.graphql.model.request.GraphQLOperationRequest
 import com.mxt.anitrend.base.interfaces.dao.BoxQuery
 import com.mxt.anitrend.data.store.feed.FeedStoreChange
 import com.mxt.anitrend.data.store.feed.InMemoryFeedStore
@@ -8,12 +11,10 @@ import com.mxt.anitrend.domain.feed.model.FeedReplyRecord
 import com.mxt.anitrend.domain.model.UserSummaryRecord
 import com.mxt.anitrend.graphql.generated.LikeableType
 import com.mxt.anitrend.graphql.generated.ToggleLike
+import com.mxt.anitrend.graphql.generated.ToggleLikeData
 import com.mxt.anitrend.graphql.generated.ToggleLikeVariables
 import com.mxt.anitrend.model.api.retro.anilist.BaseService
 import com.mxt.anitrend.model.entity.base.UserBase
-import com.mxt.anitrend.model.entity.container.body.AniListContainer
-import com.mxt.anitrend.model.entity.container.body.DataContainer
-import co.anitrend.retrofit.graphql.model.request.GraphQLOperationRequest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
@@ -121,7 +122,7 @@ class BaseRepositoryLikeRecordsTest {
     fun `failed like is server authoritative and leaves store unchanged`() = runTest {
         store.apply(FeedStoreChange.FeedUpserted(createFeedRecord(id = 1L, revision = 1L)))
         val request = ToggleLike.request(id = 1, type = LikeableType.ACTIVITY)
-        val response = success(AniListContainer<List<UserBase>>(data = null, errors = null))
+        val response = success(GraphQLResponse<ToggleLikeData>(data = GraphQLData.Absent, errors = emptyList()))
         `when`(service.toggleLike(request)).thenReturn(response)
 
         val result = repository.toggleLikeRecords(id = 1L, type = LikeableType.ACTIVITY, revision = 2L)
@@ -135,7 +136,25 @@ class BaseRepositoryLikeRecordsTest {
         request: GraphQLOperationRequest<ToggleLikeVariables>,
         likes: List<UserBase>,
     ) {
-        val response = success(AniListContainer(DataContainer(likes), errors = null))
+        val response = success(
+            GraphQLResponse(
+                data = GraphQLData.Present(
+                    ToggleLikeData(
+                        toggleLike = likes.map { user ->
+                            ToggleLikeData.ToggleLike(
+                                avatar = null,
+                                bannerImage = null,
+                                id = user.id.toInt(),
+                                isFollowing = null,
+                                name = user.name.orEmpty(),
+                                updatedAt = null,
+                            )
+                        },
+                    ),
+                ),
+                errors = emptyList(),
+            ),
+        )
         `when`(service.toggleLike(request)).thenReturn(response)
     }
 
@@ -178,6 +197,6 @@ class BaseRepositoryLikeRecordsTest {
     )
 
     private fun <R> success(
-        body: AniListContainer<R>,
-    ): Response<AniListContainer<R>> = Response.success(body)
+        body: GraphQLResponse<R>,
+    ): Response<GraphQLResponse<R>> = Response.success(body)
 }

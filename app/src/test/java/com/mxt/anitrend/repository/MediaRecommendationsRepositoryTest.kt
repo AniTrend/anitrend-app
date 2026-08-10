@@ -1,7 +1,8 @@
 package com.mxt.anitrend.repository
 
-import co.anitrend.retrofit.graphql.model.attribute.GraphError
-import co.anitrend.retrofit.graphql.model.body.GraphContainer
+import co.anitrend.retrofit.graphql.model.GraphQLData
+import co.anitrend.retrofit.graphql.model.GraphQLResponse
+import co.anitrend.retrofit.graphql.model.GraphQLResponseError
 import com.mxt.anitrend.domain.model.RecommendationPageResult
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.graphql.generated.RecommendationMedia
@@ -30,13 +31,13 @@ class MediaRecommendationsRepositoryTest {
     )
 
     @Test
-    fun `getMediaRecommendations success maps GraphContainer nodes preserving order and page info`() = runTest {
+    fun `getMediaRecommendations success maps GraphQLResponse nodes preserving order and page info`() = runTest {
         val request = RecommendationMedia.request(id = 7, type = MediaType.MANGA, isAdult = false, page = null, perPage = null, sort = null)
         `when`(service.getMediaRecommendations(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = recommendationMediaData(nodes = listOf(firstNode(), secondNode())),
-                    errors = null,
+                GraphQLResponse(
+                    data = GraphQLData.Present(recommendationMediaData(nodes = listOf(firstNode(), secondNode()))),
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -61,9 +62,9 @@ class MediaRecommendationsRepositoryTest {
         val request = RecommendationMedia.request(id = 7, type = MediaType.MANGA, isAdult = false, page = null, perPage = null, sort = null)
         `when`(service.getMediaRecommendations(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = recommendationMediaData(nodes = emptyList()),
-                    errors = null,
+                GraphQLResponse(
+                    data = GraphQLData.Present(recommendationMediaData(nodes = emptyList())),
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -81,9 +82,9 @@ class MediaRecommendationsRepositoryTest {
         val request = RecommendationMedia.request(id = 7, type = MediaType.MANGA, isAdult = false, page = null, perPage = null, sort = null)
         `when`(service.getMediaRecommendations(request)).thenReturn(
             Response.success(
-                GraphContainer<RecommendationMediaData>(
-                    data = null,
-                    errors = listOf(GraphError(message = "Recommendations failed")),
+                GraphQLResponse<RecommendationMediaData>(
+                    data = GraphQLData.Absent,
+                    errors = listOf(GraphQLResponseError(message = "Recommendations failed")),
                 ),
             ),
         )
@@ -110,9 +111,9 @@ class MediaRecommendationsRepositoryTest {
         val request = RecommendationMedia.request(id = 7, type = MediaType.MANGA, isAdult = false, page = null, perPage = null, sort = null)
         `when`(service.getMediaRecommendations(request)).thenReturn(
             Response.success(
-                GraphContainer<RecommendationMediaData>(
-                    data = null,
-                    errors = null,
+                GraphQLResponse<RecommendationMediaData>(
+                    data = GraphQLData.Absent,
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -128,9 +129,9 @@ class MediaRecommendationsRepositoryTest {
         val request = RecommendationMedia.request(id = 7, type = MediaType.MANGA, isAdult = false, page = null, perPage = null, sort = null)
         `when`(service.getMediaRecommendations(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = RecommendationMediaData(media = null),
-                    errors = null,
+                GraphQLResponse(
+                    data = GraphQLData.Present(RecommendationMediaData(media = null)),
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -146,11 +147,13 @@ class MediaRecommendationsRepositoryTest {
         val request = RecommendationMedia.request(id = 7, type = MediaType.MANGA, isAdult = false, page = null, perPage = null, sort = null)
         `when`(service.getMediaRecommendations(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = RecommendationMediaData(
-                        media = RecommendationMediaData.Media(recommendations = null),
+                GraphQLResponse(
+                    data = GraphQLData.Present(
+                        RecommendationMediaData(
+                            media = RecommendationMediaData.Media(recommendations = null),
+                        ),
                     ),
-                    errors = null,
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -166,9 +169,9 @@ class MediaRecommendationsRepositoryTest {
         val request = RecommendationMedia.request(id = 7, type = MediaType.MANGA, isAdult = false, page = null, perPage = null, sort = null)
         `when`(service.getMediaRecommendations(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = recommendationMediaData(nodes = listOf(firstNode(), null, secondNode())),
-                    errors = null,
+                GraphQLResponse(
+                    data = GraphQLData.Present(recommendationMediaData(nodes = listOf(firstNode(), null, secondNode()))),
+                    errors = emptyList(),
                 ),
             ),
         )

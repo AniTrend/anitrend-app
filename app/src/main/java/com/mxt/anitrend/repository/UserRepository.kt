@@ -1,6 +1,6 @@
 package com.mxt.anitrend.repository
 
-import co.anitrend.retrofit.graphql.model.body.GraphContainer
+import co.anitrend.retrofit.graphql.model.GraphQLResponse
 import com.mxt.anitrend.base.interfaces.dao.BoxQuery
 import com.mxt.anitrend.data.mapper.applyUserSettingsTo
 import com.mxt.anitrend.data.mapper.toNotificationPageResult
@@ -11,23 +11,35 @@ import com.mxt.anitrend.domain.model.NotificationPageResult
 import com.mxt.anitrend.domain.user.model.UserSettingsRecord
 import com.mxt.anitrend.domain.user.model.UserStatisticsRecord
 import com.mxt.anitrend.graphql.generated.AnimeFavourites
+import com.mxt.anitrend.graphql.generated.AnimeFavouritesData
 import com.mxt.anitrend.graphql.generated.CharacterFavourites
+import com.mxt.anitrend.graphql.generated.CharacterFavouritesData
 import com.mxt.anitrend.graphql.generated.CurrentUser
+import com.mxt.anitrend.graphql.generated.CurrentUserData
 import com.mxt.anitrend.graphql.generated.MangaFavourites
+import com.mxt.anitrend.graphql.generated.MangaFavouritesData
 import com.mxt.anitrend.graphql.generated.NotificationType
 import com.mxt.anitrend.graphql.generated.ScoreFormat
 import com.mxt.anitrend.graphql.generated.StaffFavourites
+import com.mxt.anitrend.graphql.generated.StaffFavouritesData
 import com.mxt.anitrend.graphql.generated.StudioFavourites
+import com.mxt.anitrend.graphql.generated.StudioFavouritesData
 import com.mxt.anitrend.graphql.generated.ToggleFollow
+import com.mxt.anitrend.graphql.generated.ToggleFollowData
 import com.mxt.anitrend.graphql.generated.UpdateUser
 import com.mxt.anitrend.graphql.generated.UpdateUserData
 import com.mxt.anitrend.graphql.generated.UserBase
+import com.mxt.anitrend.graphql.generated.UserBaseData
 import com.mxt.anitrend.graphql.generated.UserFavouriteCount
+import com.mxt.anitrend.graphql.generated.UserFavouriteCountData
 import com.mxt.anitrend.graphql.generated.UserFollowers
+import com.mxt.anitrend.graphql.generated.UserFollowersData
 import com.mxt.anitrend.graphql.generated.UserFollowing
+import com.mxt.anitrend.graphql.generated.UserFollowingData
 import com.mxt.anitrend.graphql.generated.UserNotifications
 import com.mxt.anitrend.graphql.generated.UserNotificationsData
 import com.mxt.anitrend.graphql.generated.UserOverview
+import com.mxt.anitrend.graphql.generated.UserOverviewData
 import com.mxt.anitrend.graphql.generated.UserStats
 import com.mxt.anitrend.graphql.generated.UserStatsData
 import com.mxt.anitrend.graphql.generated.UserTitleLanguage
@@ -37,6 +49,10 @@ import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.model.entity.base.NotificationHistory
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
+import com.mxt.anitrend.repository.mapper.toFavouriteConnection
+import com.mxt.anitrend.repository.mapper.toUserBaseEntity
+import com.mxt.anitrend.repository.mapper.toUserEntity
+import com.mxt.anitrend.repository.mapper.toUserPage
 import com.mxt.anitrend.util.graphql.apiError
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -80,7 +96,7 @@ class UserRepository(
             val request = CurrentUser.request(asHtml = asHtml)
             val response = userService.getCurrentUser(request)
             if (response.isSuccessful) {
-                handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                handleCurrentUser(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
                 throw RuntimeException(response.apiError())
             }
@@ -89,16 +105,26 @@ class UserRepository(
         }
     }
 
+    private fun handleCurrentUser(body: GraphQLResponse<CurrentUserData>): User {
+        val data = handleGraphQLResponse(body)
+        return data.viewer?.toUserEntity() ?: throw IllegalStateException("Empty response body")
+    }
+
     suspend fun getUserBase(id: Long? = null, userName: String? = null): Result<UserEntity> = withContext(ioDispatcher) {
         runCatching {
             val request = UserBase.request(id = id?.toInt(), userName = userName)
             val response = userService.getUserBase(request)
             if (response.isSuccessful) {
-                handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                handleUserBase(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
                 throw RuntimeException(response.apiError())
             }
         }
+    }
+
+    private fun handleUserBase(body: GraphQLResponse<UserBaseData>): UserEntity {
+        val data = handleGraphQLResponse(body)
+        return data.user?.toUserBaseEntity() ?: throw IllegalStateException("Empty response body")
     }
 
     suspend fun getUserOverview(id: Long? = null, userName: String? = null, asHtml: Boolean = false): Result<User> = withContext(ioDispatcher) {
@@ -106,11 +132,16 @@ class UserRepository(
             val request = UserOverview.request(id = id?.toInt(), userName = userName, asHtml = asHtml)
             val response = userService.getUserOverview(request)
             if (response.isSuccessful) {
-                handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                handleUserOverview(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
                 throw RuntimeException(response.apiError())
             }
         }
+    }
+
+    private fun handleUserOverview(body: GraphQLResponse<UserOverviewData>): User {
+        val data = handleGraphQLResponse(body)
+        return data.user?.toUserEntity() ?: throw IllegalStateException("Empty response body")
     }
 
     suspend fun getUserStats(id: Long? = null, userName: String? = null): Result<UserStatisticsRecord> = withContext(ioDispatcher) {
@@ -135,11 +166,16 @@ class UserRepository(
             val request = UserFollowers.request(id = id.toInt(), page = page, perPage = perPage, sort = sort)
             val response = userService.getFollowers(request)
             if (response.isSuccessful) {
-                handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                handleFollowers(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
                 throw RuntimeException(response.apiError())
             }
         }
+    }
+
+    private fun handleFollowers(body: GraphQLResponse<UserFollowersData>): PageContainer<UserEntity> {
+        val data = handleGraphQLResponse(body)
+        return data.page?.toUserPage() ?: throw IllegalStateException("Empty response body")
     }
 
     suspend fun getFollowing(
@@ -152,11 +188,16 @@ class UserRepository(
             val request = UserFollowing.request(id = id.toInt(), page = page, perPage = perPage, sort = sort)
             val response = userService.getFollowing(request)
             if (response.isSuccessful) {
-                handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                handleFollowing(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
                 throw RuntimeException(response.apiError())
             }
         }
+    }
+
+    private fun handleFollowing(body: GraphQLResponse<UserFollowingData>): PageContainer<UserEntity> {
+        val data = handleGraphQLResponse(body)
+        return data.page?.toUserPage() ?: throw IllegalStateException("Empty response body")
     }
 
     suspend fun getFavouritesCount(
@@ -169,11 +210,16 @@ class UserRepository(
             val request = UserFavouriteCount.request(id = id?.toInt(), userName = userName, page = page, perPage = perPage)
             val response = userService.getFavouritesCount(request)
             if (response.isSuccessful) {
-                handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                handleFavouritesCount(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
                 throw RuntimeException(response.apiError())
             }
         }
+    }
+
+    private fun handleFavouritesCount(body: GraphQLResponse<UserFavouriteCountData>): ConnectionContainer<Favourite> {
+        val data = handleGraphQLResponse(body)
+        return data.toFavouriteConnection()
     }
 
     suspend fun getAnimeFavourites(
@@ -186,11 +232,16 @@ class UserRepository(
             val request = AnimeFavourites.request(id = id?.toInt(), userName = userName, page = page, perPage = perPage)
             val response = userService.getAnimeFavourites(request)
             if (response.isSuccessful) {
-                handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                handleAnimeFavourites(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
                 throw RuntimeException(response.apiError())
             }
         }
+    }
+
+    private fun handleAnimeFavourites(body: GraphQLResponse<AnimeFavouritesData>): ConnectionContainer<Favourite> {
+        val data = handleGraphQLResponse(body)
+        return data.toFavouriteConnection()
     }
 
     suspend fun getMangaFavourites(
@@ -203,11 +254,16 @@ class UserRepository(
             val request = MangaFavourites.request(id = id?.toInt(), userName = userName, page = page, perPage = perPage)
             val response = userService.getMangaFavourites(request)
             if (response.isSuccessful) {
-                handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                handleMangaFavourites(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
                 throw RuntimeException(response.apiError())
             }
         }
+    }
+
+    private fun handleMangaFavourites(body: GraphQLResponse<MangaFavouritesData>): ConnectionContainer<Favourite> {
+        val data = handleGraphQLResponse(body)
+        return data.toFavouriteConnection()
     }
 
     suspend fun getCharacterFavourites(
@@ -220,11 +276,16 @@ class UserRepository(
             val request = CharacterFavourites.request(id = id?.toInt(), userName = userName, page = page, perPage = perPage)
             val response = userService.getCharacterFavourites(request)
             if (response.isSuccessful) {
-                handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                handleCharacterFavourites(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
                 throw RuntimeException(response.apiError())
             }
         }
+    }
+
+    private fun handleCharacterFavourites(body: GraphQLResponse<CharacterFavouritesData>): ConnectionContainer<Favourite> {
+        val data = handleGraphQLResponse(body)
+        return data.toFavouriteConnection()
     }
 
     suspend fun getStaffFavourites(
@@ -237,11 +298,16 @@ class UserRepository(
             val request = StaffFavourites.request(id = id?.toInt(), userName = userName, page = page, perPage = perPage)
             val response = userService.getStaffFavourites(request)
             if (response.isSuccessful) {
-                handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                handleStaffFavourites(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
                 throw RuntimeException(response.apiError())
             }
         }
+    }
+
+    private fun handleStaffFavourites(body: GraphQLResponse<StaffFavouritesData>): ConnectionContainer<Favourite> {
+        val data = handleGraphQLResponse(body)
+        return data.toFavouriteConnection()
     }
 
     suspend fun getStudioFavourites(
@@ -254,18 +320,23 @@ class UserRepository(
             val request = StudioFavourites.request(id = id?.toInt(), userName = userName, page = page, perPage = perPage)
             val response = userService.getStudioFavourites(request)
             if (response.isSuccessful) {
-                handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                handleStudioFavourites(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
                 throw RuntimeException(response.apiError())
             }
         }
     }
 
+    private fun handleStudioFavourites(body: GraphQLResponse<StudioFavouritesData>): ConnectionContainer<Favourite> {
+        val data = handleGraphQLResponse(body)
+        return data.toFavouriteConnection()
+    }
+
     suspend fun getUserNotifications(
         page: Int? = null,
         perPage: Int? = null,
         type: NotificationType? = null,
-        typeIn: List<NotificationType?>? = null,
+        typeIn: List<NotificationType>? = null,
         resetNotificationCount: Boolean? = false,
     ): Result<NotificationPageResult> = withContext(ioDispatcher) {
         runCatching {
@@ -279,20 +350,14 @@ class UserRepository(
         }
     }
 
-    private fun handleUserNotifications(body: GraphContainer<UserNotificationsData>): NotificationPageResult {
-        val graphErrors = body.errors
-        if (!graphErrors.isNullOrEmpty()) {
-            throw RuntimeException(graphErrors.first().message ?: "GraphQL error")
-        }
-        return body.data?.page?.toNotificationPageResult() ?: throw IllegalStateException("Empty response body")
+    private fun handleUserNotifications(body: GraphQLResponse<UserNotificationsData>): NotificationPageResult {
+        val data = handleGraphQLResponse(body)
+        return data.page?.toNotificationPageResult() ?: throw IllegalStateException("Empty response body")
     }
 
-    private fun handleUserStats(body: GraphContainer<UserStatsData>): UserStatisticsRecord {
-        val graphErrors = body.errors
-        if (!graphErrors.isNullOrEmpty()) {
-            throw RuntimeException(graphErrors.first().message ?: "GraphQL error")
-        }
-        return body.data?.toUserStatisticsRecord() ?: throw IllegalStateException("Empty response body")
+    private fun handleUserStats(body: GraphQLResponse<UserStatsData>): UserStatisticsRecord {
+        val data = handleGraphQLResponse(body)
+        return data.toUserStatisticsRecord()
     }
 
     suspend fun toggleFollow(userId: Long): Result<UserEntity> = withContext(ioDispatcher) {
@@ -300,11 +365,16 @@ class UserRepository(
             val request = ToggleFollow.request(userId = userId.toInt())
             val response = userService.toggleFollow(request)
             if (response.isSuccessful) {
-                handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                handleToggleFollow(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
                 throw RuntimeException(response.apiError())
             }
         }
+    }
+
+    private fun handleToggleFollow(body: GraphQLResponse<ToggleFollowData>): UserEntity {
+        val data = handleGraphQLResponse(body)
+        return data.toggleFollow?.toUserBaseEntity() ?: throw IllegalStateException("Empty response body")
     }
 
     /**
@@ -341,12 +411,9 @@ class UserRepository(
         }
     }
 
-    private fun handleUpdateUser(body: GraphContainer<UpdateUserData>): UserSettingsRecord {
-        val graphErrors = body.errors
-        if (!graphErrors.isNullOrEmpty()) {
-            throw RuntimeException(graphErrors.first().message ?: "GraphQL error")
-        }
-        val updatedUser = body.data?.updateUser ?: throw IllegalStateException("Empty response body")
+    private fun handleUpdateUser(body: GraphQLResponse<UpdateUserData>): UserSettingsRecord {
+        val data = handleGraphQLResponse(body)
+        val updatedUser = data.updateUser ?: throw IllegalStateException("Empty response body")
         applyServerUserSettingsToCachedUser(updatedUser)
         return updatedUser.toUserSettingsRecord()
     }

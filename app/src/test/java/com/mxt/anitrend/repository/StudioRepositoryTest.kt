@@ -1,7 +1,8 @@
 package com.mxt.anitrend.repository
 
-import co.anitrend.retrofit.graphql.model.attribute.GraphError
-import co.anitrend.retrofit.graphql.model.body.GraphContainer
+import co.anitrend.retrofit.graphql.model.GraphQLData
+import co.anitrend.retrofit.graphql.model.GraphQLResponse
+import co.anitrend.retrofit.graphql.model.GraphQLResponseError
 import com.mxt.anitrend.graphql.generated.MediaFormat
 import com.mxt.anitrend.graphql.generated.MediaListStatus
 import com.mxt.anitrend.graphql.generated.MediaSeason
@@ -39,21 +40,23 @@ class StudioRepositoryTest {
     )
 
     @Test
-    fun `getStudioBase success maps GraphContainer data to StudioRecord`() = runTest {
+    fun `getStudioBase success maps GraphQLResponse data to StudioRecord`() = runTest {
         val request = StudioBase.request(id = 5)
         `when`(service.getStudioBase(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = StudioBaseData(
-                        studio = StudioBaseData.Studio(
-                            id = 5,
-                            name = "Kyoto Animation",
-                            isAnimationStudio = true,
-                            isFavourite = true,
-                            siteUrl = "https://anilist.co/studio/5",
+                GraphQLResponse(
+                    data = GraphQLData.Present(
+                        StudioBaseData(
+                            studio = StudioBaseData.Studio(
+                                id = 5,
+                                name = "Kyoto Animation",
+                                isAnimationStudio = true,
+                                isFavourite = true,
+                                siteUrl = "https://anilist.co/studio/5",
+                            ),
                         ),
                     ),
-                    errors = null,
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -73,9 +76,9 @@ class StudioRepositoryTest {
         val request = StudioBase.request(id = 5)
         `when`(service.getStudioBase(request)).thenReturn(
             Response.success(
-                GraphContainer<StudioBaseData>(
-                    data = null,
-                    errors = listOf(GraphError(message = "Studio failed")),
+                GraphQLResponse<StudioBaseData>(
+                    data = GraphQLData.Absent,
+                    errors = listOf(GraphQLResponseError(message = "Studio failed")),
                 ),
             ),
         )
@@ -102,9 +105,9 @@ class StudioRepositoryTest {
         val request = StudioBase.request(id = 5)
         `when`(service.getStudioBase(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = StudioBaseData(studio = null),
-                    errors = null,
+                GraphQLResponse(
+                    data = GraphQLData.Present(StudioBaseData(studio = null)),
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -116,7 +119,7 @@ class StudioRepositoryTest {
     }
 
     @Test
-    fun `getStudioMedia success maps GraphContainer data to connection page`() = runTest {
+    fun `getStudioMedia success maps GraphQLResponse data to connection page`() = runTest {
         val request = StudioMedia.request(
             id = 5,
             page = 1,
@@ -125,22 +128,24 @@ class StudioRepositoryTest {
         )
         `when`(service.getStudioMedia(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = StudioMediaData(
-                        studio = StudioMediaData.Studio(
-                            media = StudioMediaData.StudioMedia(
-                                nodes = listOf(studioMediaNode()),
-                                pageInfo = StudioMediaData.StudioMediaPageInfo(
-                                    total = 1,
-                                    perPage = 20,
-                                    currentPage = 1,
-                                    lastPage = 1,
-                                    hasNextPage = false,
+                GraphQLResponse(
+                    data = GraphQLData.Present(
+                        StudioMediaData(
+                            studio = StudioMediaData.Studio(
+                                media = StudioMediaData.StudioMedia(
+                                    nodes = listOf(studioMediaNode()),
+                                    pageInfo = StudioMediaData.StudioMediaPageInfo(
+                                        total = 1,
+                                        perPage = 20,
+                                        currentPage = 1,
+                                        lastPage = 1,
+                                        hasNextPage = false,
+                                    ),
                                 ),
                             ),
                         ),
                     ),
-                    errors = null,
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -172,9 +177,9 @@ class StudioRepositoryTest {
         val request = StudioMedia.request(id = 5, page = null, perPage = null, sort = null)
         `when`(service.getStudioMedia(request)).thenReturn(
             Response.success(
-                GraphContainer<StudioMediaData>(
-                    data = null,
-                    errors = listOf(GraphError(message = "Studio media failed")),
+                GraphQLResponse<StudioMediaData>(
+                    data = GraphQLData.Absent,
+                    errors = listOf(GraphQLResponseError(message = "Studio media failed")),
                 ),
             ),
         )
@@ -201,9 +206,9 @@ class StudioRepositoryTest {
         val request = StudioMedia.request(id = 5, page = null, perPage = null, sort = null)
         `when`(service.getStudioMedia(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = StudioMediaData(studio = null),
-                    errors = null,
+                GraphQLResponse(
+                    data = GraphQLData.Present(StudioMediaData(studio = null)),
+                    errors = emptyList(),
                 ),
             ),
         )

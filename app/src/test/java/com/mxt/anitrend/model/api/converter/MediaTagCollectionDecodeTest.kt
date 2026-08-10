@@ -1,10 +1,12 @@
 package com.mxt.anitrend.model.api.converter
 
-import co.anitrend.retrofit.graphql.model.body.GraphContainer
-import co.anitrend.retrofit.graphql.serialization.kotlinx.KotlinxGraphQLJson
+import co.anitrend.retrofit.graphql.model.GraphQLData
+import co.anitrend.retrofit.graphql.model.GraphQLResponse
+import co.anitrend.retrofit.graphql.serialization.kotlinx.KotlinxGraphQLTransportCodec
 import com.mxt.anitrend.graphql.generated.MediaTagCollectionData
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
@@ -14,21 +16,22 @@ class MediaTagCollectionDecodeTest {
     private val type = object : ParameterizedType {
         override fun getActualTypeArguments(): Array<Type> = arrayOf(MediaTagCollectionData::class.java)
 
-        override fun getRawType(): Type = GraphContainer::class.java
+        override fun getRawType(): Type = GraphQLResponse::class.java
 
         override fun getOwnerType(): Type? = null
     }
 
-    private val json = KotlinxGraphQLJson()
+    private val codec = KotlinxGraphQLTransportCodec()
 
     @Test
     fun `decodes media tag collection data`() {
-        val container = json.decode<GraphContainer<MediaTagCollectionData>>(
+        val response = codec.decodeResponse<GraphQLResponse<MediaTagCollectionData>>(
             """{"data":{"MediaTagCollection":[{"id":1,"name":"Cyberpunk","description":"Future tech","category":"Theme","rank":80,"isGeneralSpoiler":true,"isAdult":false}]}}""",
             type,
         )
 
-        val tag = container.data?.mediaTagCollection?.firstOrNull()
+        val data = (response.data as GraphQLData.Present<*>).value as MediaTagCollectionData
+        val tag = data.mediaTagCollection?.firstOrNull()
         assertEquals(1, tag?.id)
         assertEquals("Cyberpunk", tag?.name)
         assertEquals("Future tech", tag?.description)
@@ -40,12 +43,13 @@ class MediaTagCollectionDecodeTest {
 
     @Test
     fun `decodes nullable fields and null list elements`() {
-        val container = json.decode<GraphContainer<MediaTagCollectionData>>(
+        val response = codec.decodeResponse<GraphQLResponse<MediaTagCollectionData>>(
             """{"data":{"MediaTagCollection":[null,{"id":2,"name":"Robots","description":null,"category":null,"rank":null,"isGeneralSpoiler":null,"isAdult":null}]}}""",
             type,
         )
 
-        val tags = container.data?.mediaTagCollection
+        val data = (response.data as GraphQLData.Present<*>).value as MediaTagCollectionData
+        val tags = data.mediaTagCollection
         assertNull(tags?.firstOrNull())
         assertEquals(2, tags?.get(1)?.id)
         assertEquals("Robots", tags?.get(1)?.name)
@@ -58,12 +62,12 @@ class MediaTagCollectionDecodeTest {
 
     @Test
     fun `decodes media tag collection errors`() {
-        val container = json.decode<GraphContainer<MediaTagCollectionData>>(
+        val response = codec.decodeResponse<GraphQLResponse<MediaTagCollectionData>>(
             """{"errors":[{"message":"Boom"}]}""",
             type,
         )
 
-        assertNull(container.data)
-        assertEquals("Boom", container.errors?.firstOrNull()?.message)
+        assertTrue(response.data is GraphQLData.Absent)
+        assertEquals("Boom", response.errors?.firstOrNull()?.message)
     }
 }

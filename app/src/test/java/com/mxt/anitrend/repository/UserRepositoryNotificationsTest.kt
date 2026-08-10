@@ -1,7 +1,8 @@
 package com.mxt.anitrend.repository
 
-import co.anitrend.retrofit.graphql.model.attribute.GraphError
-import co.anitrend.retrofit.graphql.model.body.GraphContainer
+import co.anitrend.retrofit.graphql.model.GraphQLData
+import co.anitrend.retrofit.graphql.model.GraphQLResponse
+import co.anitrend.retrofit.graphql.model.GraphQLResponseError
 import com.mxt.anitrend.base.interfaces.dao.BoxQuery
 import com.mxt.anitrend.domain.model.NotificationPageResult
 import com.mxt.anitrend.domain.model.NotificationRecord
@@ -41,11 +42,13 @@ class UserRepositoryNotificationsTest {
         val request = UserNotifications.request(page = null, perPage = null, type = null, typeIn = null, resetNotificationCount = false)
         `when`(service.getUserNotifications(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = userNotificationsData(
-                        notifications = listOf(activityMessageNode(id = 1, activityId = 10), airingNode(id = 4, episode = 12)),
+                GraphQLResponse(
+                    data = GraphQLData.Present(
+                        userNotificationsData(
+                            notifications = listOf(activityMessageNode(id = 1, activityId = 10), airingNode(id = 4, episode = 12)),
+                        ),
                     ),
-                    errors = null,
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -81,15 +84,17 @@ class UserRepositoryNotificationsTest {
         val request = UserNotifications.request(page = null, perPage = null, type = null, typeIn = null, resetNotificationCount = false)
         `when`(service.getUserNotifications(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = userNotificationsData(
-                        notifications = listOf(
-                            threadCommentReplyNode(id = 2, commentId = 33, threadId = 55),
-                            mediaMergeNode(id = 3, mediaId = 8),
-                            mediaDeletionNode(id = 9),
+                GraphQLResponse(
+                    data = GraphQLData.Present(
+                        userNotificationsData(
+                            notifications = listOf(
+                                threadCommentReplyNode(id = 2, commentId = 33, threadId = 55),
+                                mediaMergeNode(id = 3, mediaId = 8),
+                                mediaDeletionNode(id = 9),
+                            ),
                         ),
                     ),
-                    errors = null,
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -118,9 +123,9 @@ class UserRepositoryNotificationsTest {
         val request = UserNotifications.request(page = null, perPage = null, type = null, typeIn = null, resetNotificationCount = false)
         `when`(service.getUserNotifications(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = userNotificationsData(notifications = emptyList()),
-                    errors = null,
+                GraphQLResponse(
+                    data = GraphQLData.Present(userNotificationsData(notifications = emptyList())),
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -138,15 +143,17 @@ class UserRepositoryNotificationsTest {
         val request = UserNotifications.request(page = null, perPage = null, type = null, typeIn = null, resetNotificationCount = false)
         `when`(service.getUserNotifications(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = userNotificationsData(
-                        notifications = listOf(
-                            activityMessageNode(id = 1, activityId = 10),
-                            null,
-                            airingNode(id = 4, episode = 12),
+                GraphQLResponse(
+                    data = GraphQLData.Present(
+                        userNotificationsData(
+                            notifications = listOf(
+                                activityMessageNode(id = 1, activityId = 10),
+                                null,
+                                airingNode(id = 4, episode = 12),
+                            ),
                         ),
                     ),
-                    errors = null,
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -163,9 +170,9 @@ class UserRepositoryNotificationsTest {
         val request = UserNotifications.request(page = null, perPage = null, type = null, typeIn = null, resetNotificationCount = false)
         `when`(service.getUserNotifications(request)).thenReturn(
             Response.success(
-                GraphContainer<UserNotificationsData>(
-                    data = null,
-                    errors = listOf(GraphError(message = "Notifications failed")),
+                GraphQLResponse<UserNotificationsData>(
+                    data = GraphQLData.Absent,
+                    errors = listOf(GraphQLResponseError(message = "Notifications failed")),
                 ),
             ),
         )
@@ -192,9 +199,9 @@ class UserRepositoryNotificationsTest {
         val request = UserNotifications.request(page = null, perPage = null, type = null, typeIn = null, resetNotificationCount = false)
         `when`(service.getUserNotifications(request)).thenReturn(
             Response.success(
-                GraphContainer<UserNotificationsData>(
-                    data = null,
-                    errors = null,
+                GraphQLResponse<UserNotificationsData>(
+                    data = GraphQLData.Absent,
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -210,9 +217,9 @@ class UserRepositoryNotificationsTest {
         val request = UserNotifications.request(page = null, perPage = null, type = null, typeIn = null, resetNotificationCount = false)
         `when`(service.getUserNotifications(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = UserNotificationsData(page = null),
-                    errors = null,
+                GraphQLResponse(
+                    data = GraphQLData.Present(UserNotificationsData(page = null)),
+                    errors = emptyList(),
                 ),
             ),
         )

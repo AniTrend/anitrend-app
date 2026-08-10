@@ -1,22 +1,22 @@
 package com.mxt.anitrend.viewmodel
 
-import co.anitrend.retrofit.graphql.model.body.GraphContainer
+import co.anitrend.retrofit.graphql.model.GraphQLData
+import co.anitrend.retrofit.graphql.model.GraphQLResponse
 import co.anitrend.retrofit.graphql.model.request.GraphQLOperationRequest
+import com.mxt.anitrend.graphql.generated.CharacterActorsData
 import com.mxt.anitrend.graphql.generated.CharacterActorsVariables
 import com.mxt.anitrend.graphql.generated.CharacterBaseData
 import com.mxt.anitrend.graphql.generated.CharacterBaseVariables
+import com.mxt.anitrend.graphql.generated.CharacterMediaData
 import com.mxt.anitrend.graphql.generated.CharacterMediaVariables
 import com.mxt.anitrend.graphql.generated.CharacterOverviewData
 import com.mxt.anitrend.graphql.generated.CharacterOverviewVariables
+import com.mxt.anitrend.graphql.generated.MediaFormat
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.model.api.retro.anilist.CharacterService
-import com.mxt.anitrend.model.entity.anilist.edge.MediaEdge
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.container.attribute.PageInfo
-import com.mxt.anitrend.model.entity.container.body.AniListContainer
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
-import com.mxt.anitrend.model.entity.container.body.DataContainer
-import com.mxt.anitrend.model.entity.container.body.EdgeContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.model.entity.group.RecyclerHeaderItem
 import com.mxt.anitrend.model.entity.group.RecyclerItem
@@ -469,9 +469,9 @@ class MediaFormatViewModelTest {
         characterRepository = CharacterRepository(service, testDispatcher)
         val vm = viewModel()
 
-        service.stubPage(page = 1, container = characterPage(media(1L, "TV")))
-        service.stubPage(page = 2, container = characterPageWithInfo(page = 2, hasNextPage = true, media(2L, "TV")))
-        service.stubPage(page = 3, container = characterPageWithInfo(page = 3, hasNextPage = false, media(3L, "TV")))
+        service.stubPage(page = 1, data = characterMediaData(media = arrayOf(media(1L, "TV"))))
+        service.stubPage(page = 2, data = characterMediaData(page = 2, hasNextPage = true, media = arrayOf(media(2L, "TV"))))
+        service.stubPage(page = 3, data = characterMediaData(page = 3, hasNextPage = false, media = arrayOf(media(3L, "TV"))))
         service.holdPage(2)
 
         vm.loadPage(page = 1)
@@ -601,6 +601,53 @@ class MediaFormatViewModelTest {
             }
     }
 
+    private fun characterMediaData(
+        page: Int? = null,
+        hasNextPage: Boolean? = null,
+        vararg media: MediaBase,
+    ): CharacterMediaData = CharacterMediaData(
+        character = CharacterMediaData.Character(
+            media = CharacterMediaData.CharacterMedia(
+                nodes = media.map { entity ->
+                    CharacterMediaData.CharacterMediaNodes(
+                        id = entity.id.toInt(),
+                        title = null,
+                        coverImage = null,
+                        bannerImage = null,
+                        type = null,
+                        format = entity.format?.let { format -> MediaFormat.entries.firstOrNull { it.name == format } },
+                        season = null,
+                        status = null,
+                        siteUrl = null,
+                        meanScore = null,
+                        averageScore = null,
+                        startDate = null,
+                        endDate = null,
+                        episodes = null,
+                        chapters = null,
+                        volumes = null,
+                        isAdult = null,
+                        isFavourite = false,
+                        nextAiringEpisode = null,
+                        mediaListEntry = null,
+                        updatedAt = null,
+                    )
+                },
+                pageInfo = if (page != null) {
+                    CharacterMediaData.CharacterMediaPageInfo(
+                        currentPage = page,
+                        hasNextPage = hasNextPage,
+                        lastPage = null,
+                        perPage = null,
+                        total = null,
+                    )
+                } else {
+                    null
+                },
+            ),
+        ),
+    )
+
     private fun staffPage(vararg media: MediaBase): ConnectionContainer<PageContainer<MediaBase>> = characterPage(*media)
 
     private suspend fun stubCharacterPage(
@@ -669,7 +716,7 @@ class MediaFormatViewModelTest {
  */
 private class GatedCharacterService : CharacterService {
 
-    private val fixtures = mutableMapOf<Int, AniListContainer<ConnectionContainer<PageContainer<MediaBase>>>>()
+    private val fixtures = mutableMapOf<Int, GraphQLResponse<CharacterMediaData>>()
     private var heldPage: Int? = null
     private var entry: CountDownLatch = CountDownLatch(0)
     private var release: CountDownLatch = CountDownLatch(0)
@@ -678,9 +725,9 @@ private class GatedCharacterService : CharacterService {
 
     fun stubPage(
         page: Int,
-        container: ConnectionContainer<PageContainer<MediaBase>>,
+        data: CharacterMediaData,
     ) {
-        fixtures[page] = AniListContainer(data = DataContainer(result = container), errors = null)
+        fixtures[page] = GraphQLResponse(data = GraphQLData.Present(data), errors = emptyList())
     }
 
     fun holdPage(page: Int) {
@@ -698,7 +745,7 @@ private class GatedCharacterService : CharacterService {
 
     override suspend fun getCharacterMedia(
         request: GraphQLOperationRequest<CharacterMediaVariables>,
-    ): Response<AniListContainer<ConnectionContainer<PageContainer<MediaBase>>>> {
+    ): Response<GraphQLResponse<CharacterMediaData>> {
         val page = request.variables?.page ?: 0
         requestedPages.add(page)
         if (heldPage == page) {
@@ -711,11 +758,11 @@ private class GatedCharacterService : CharacterService {
         return Response.success(fixture)
     }
 
-    override suspend fun getCharacterBase(request: GraphQLOperationRequest<CharacterBaseVariables>): Response<GraphContainer<CharacterBaseData>> = error("unused")
+    override suspend fun getCharacterBase(request: GraphQLOperationRequest<CharacterBaseVariables>): Response<GraphQLResponse<CharacterBaseData>> = error("unused")
 
-    override suspend fun getCharacterOverview(request: GraphQLOperationRequest<CharacterOverviewVariables>): Response<GraphContainer<CharacterOverviewData>> = error("unused")
+    override suspend fun getCharacterOverview(request: GraphQLOperationRequest<CharacterOverviewVariables>): Response<GraphQLResponse<CharacterOverviewData>> = error("unused")
 
-    override suspend fun getCharacterActors(request: GraphQLOperationRequest<CharacterActorsVariables>): Response<AniListContainer<ConnectionContainer<EdgeContainer<MediaEdge>>>> = error("unused")
+    override suspend fun getCharacterActors(request: GraphQLOperationRequest<CharacterActorsVariables>): Response<GraphQLResponse<CharacterActorsData>> = error("unused")
 
     private companion object {
         const val TIMEOUT_MILLIS = 5_000L

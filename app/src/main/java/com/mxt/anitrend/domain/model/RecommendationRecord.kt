@@ -8,9 +8,7 @@ package com.mxt.anitrend.domain.model
  * Mapped from the generated GraphQL
  * `RecommendationMediaData.MediaRecommendationsNodes` type by
  * `com.mxt.anitrend.data.mapper.toRecommendationRecord`. Reuses the existing
- * [MediaSummaryRecord], [UserSummaryRecord], and [PageInfoRecord] domain values. The
- * legacy mutable [com.mxt.anitrend.model.entity.base.RecommendationBase] remains for
- * the group-series adapters and navigation consumers until they are migrated.
+ * [MediaSummaryRecord], [UserSummaryRecord], and [PageInfoRecord] domain values.
  */
 data class RecommendationRecord(
     val id: Long,

@@ -1,7 +1,8 @@
 package com.mxt.anitrend.repository
 
-import co.anitrend.retrofit.graphql.model.attribute.GraphError
-import co.anitrend.retrofit.graphql.model.body.GraphContainer
+import co.anitrend.retrofit.graphql.model.GraphQLData
+import co.anitrend.retrofit.graphql.model.GraphQLResponse
+import co.anitrend.retrofit.graphql.model.GraphQLResponseError
 import com.mxt.anitrend.domain.mediadetail.model.MediaStaffRecord
 import com.mxt.anitrend.graphql.generated.MediaStaff
 import com.mxt.anitrend.graphql.generated.MediaStaffData
@@ -36,43 +37,105 @@ class MediaStaffRecordRepositoryTest {
     )
 
     @Test
-    fun `getMediaStaffRecord success maps GraphContainer data to MediaStaffRecord`() = runTest {
+    fun `legacy getMediaStaff maps generated data back to legacy connection edges`() = runTest {
         val request = MediaStaff.request(id = 21, type = MediaType.ANIME, sort = null, isAdult = false)
         `when`(service.getMediaStaffRecord(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = mediaStaffData(
-                        edges = listOf(
-                            MediaStaffData.MediaStaffEdges(
-                                role = "MAIN",
-                                node = MediaStaffData.MediaStaffEdgesNode(
-                                    id = 123,
-                                    image = MediaStaffData.MediaStaffEdgesNodeImage(
-                                        large = "https://cdn.example.com/large.jpg",
-                                        medium = "https://cdn.example.com/medium.jpg",
+                GraphQLResponse(
+                    data = GraphQLData.Present(
+                        mediaStaffData(
+                            edges = listOf(
+                                MediaStaffData.MediaStaffEdges(
+                                    role = "MAIN",
+                                    node = MediaStaffData.MediaStaffEdgesNode(
+                                        id = 123,
+                                        image = MediaStaffData.MediaStaffEdgesNodeImage(
+                                            large = "https://cdn.example.com/large.jpg",
+                                            medium = "https://cdn.example.com/medium.jpg",
+                                        ),
+                                        isFavourite = true,
+                                        language = StaffLanguage.JAPANESE,
+                                        name = MediaStaffData.MediaStaffEdgesNodeName(
+                                            alternative = null,
+                                            first = "Shinichiro",
+                                            full = "Shinichiro Watanabe",
+                                            last = "Watanabe",
+                                            native = null,
+                                        ),
+                                        siteUrl = "https://anilist.co/staff/123",
                                     ),
-                                    isFavourite = true,
-                                    language = StaffLanguage.JAPANESE,
-                                    name = MediaStaffData.MediaStaffEdgesNodeName(
-                                        alternative = null,
-                                        first = "Shinichiro",
-                                        full = "Shinichiro Watanabe",
-                                        last = "Watanabe",
-                                        native = null,
-                                    ),
-                                    siteUrl = "https://anilist.co/staff/123",
                                 ),
                             ),
-                        ),
-                        pageInfo = MediaStaffData.MediaStaffPageInfo(
-                            currentPage = 1,
-                            hasNextPage = true,
-                            lastPage = 1,
-                            perPage = 25,
-                            total = 2,
+                            pageInfo = MediaStaffData.MediaStaffPageInfo(
+                                currentPage = 1,
+                                hasNextPage = true,
+                                lastPage = 1,
+                                perPage = 25,
+                                total = 2,
+                            ),
                         ),
                     ),
-                    errors = null,
+                    errors = emptyList(),
+                ),
+            ),
+        )
+
+        val result = repository.getMediaStaff(id = 21L, type = MediaType.ANIME, isAdult = false)
+
+        assertTrue(result.isSuccess)
+        val connection = result.getOrThrow()
+        val edge = connection.connection.edges.first()
+        assertEquals("MAIN", edge.role)
+        assertEquals(123L, edge.node.id)
+        assertEquals("Shinichiro Watanabe", edge.node.name?.fullName)
+        assertEquals("https://cdn.example.com/large.jpg", edge.node.image?.large)
+        assertEquals(true, edge.node.isFavourite)
+        assertEquals("JAPANESE", edge.node.language)
+        assertEquals("https://anilist.co/staff/123", edge.node.siteUrl)
+        assertEquals(1, connection.connection.pageInfo.currentPage)
+        assertTrue(connection.connection.pageInfo.hasNextPage())
+    }
+
+    @Test
+    fun `getMediaStaffRecord success maps GraphQLResponse data to MediaStaffRecord`() = runTest {
+        val request = MediaStaff.request(id = 21, type = MediaType.ANIME, sort = null, isAdult = false)
+        `when`(service.getMediaStaffRecord(request)).thenReturn(
+            Response.success(
+                GraphQLResponse(
+                    data = GraphQLData.Present(
+                        mediaStaffData(
+                            edges = listOf(
+                                MediaStaffData.MediaStaffEdges(
+                                    role = "MAIN",
+                                    node = MediaStaffData.MediaStaffEdgesNode(
+                                        id = 123,
+                                        image = MediaStaffData.MediaStaffEdgesNodeImage(
+                                            large = "https://cdn.example.com/large.jpg",
+                                            medium = "https://cdn.example.com/medium.jpg",
+                                        ),
+                                        isFavourite = true,
+                                        language = StaffLanguage.JAPANESE,
+                                        name = MediaStaffData.MediaStaffEdgesNodeName(
+                                            alternative = null,
+                                            first = "Shinichiro",
+                                            full = "Shinichiro Watanabe",
+                                            last = "Watanabe",
+                                            native = null,
+                                        ),
+                                        siteUrl = "https://anilist.co/staff/123",
+                                    ),
+                                ),
+                            ),
+                            pageInfo = MediaStaffData.MediaStaffPageInfo(
+                                currentPage = 1,
+                                hasNextPage = true,
+                                lastPage = 1,
+                                perPage = 25,
+                                total = 2,
+                            ),
+                        ),
+                    ),
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -107,30 +170,32 @@ class MediaStaffRecordRepositoryTest {
         )
         `when`(service.getMediaStaffRecord(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = mediaStaffData(
-                        edges = listOf(
-                            MediaStaffData.MediaStaffEdges(
-                                role = "DIRECTOR",
-                                node = MediaStaffData.MediaStaffEdgesNode(
-                                    id = 1,
-                                    image = null,
-                                    isFavourite = false,
-                                    language = null,
-                                    name = null,
-                                    siteUrl = null,
+                GraphQLResponse(
+                    data = GraphQLData.Present(
+                        mediaStaffData(
+                            edges = listOf(
+                                MediaStaffData.MediaStaffEdges(
+                                    role = "DIRECTOR",
+                                    node = MediaStaffData.MediaStaffEdgesNode(
+                                        id = 1,
+                                        image = null,
+                                        isFavourite = false,
+                                        language = null,
+                                        name = null,
+                                        siteUrl = null,
+                                    ),
                                 ),
                             ),
-                        ),
-                        pageInfo = MediaStaffData.MediaStaffPageInfo(
-                            currentPage = 3,
-                            hasNextPage = false,
-                            lastPage = 3,
-                            perPage = 50,
-                            total = 150,
+                            pageInfo = MediaStaffData.MediaStaffPageInfo(
+                                currentPage = 3,
+                                hasNextPage = false,
+                                lastPage = 3,
+                                perPage = 50,
+                                total = 150,
+                            ),
                         ),
                     ),
-                    errors = null,
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -157,9 +222,9 @@ class MediaStaffRecordRepositoryTest {
         val request = MediaStaff.request(id = 21, type = MediaType.ANIME, sort = null, isAdult = false)
         `when`(service.getMediaStaffRecord(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = mediaStaffData(),
-                    errors = null,
+                GraphQLResponse(
+                    data = GraphQLData.Present(mediaStaffData()),
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -177,9 +242,9 @@ class MediaStaffRecordRepositoryTest {
         val request = MediaStaff.request(id = 21, type = MediaType.ANIME, sort = null, isAdult = false)
         `when`(service.getMediaStaffRecord(request)).thenReturn(
             Response.success(
-                GraphContainer<MediaStaffData>(
-                    data = null,
-                    errors = listOf(GraphError(message = "Media staff failed")),
+                GraphQLResponse<MediaStaffData>(
+                    data = GraphQLData.Absent,
+                    errors = listOf(GraphQLResponseError(message = "Media staff failed")),
                 ),
             ),
         )
@@ -206,9 +271,9 @@ class MediaStaffRecordRepositoryTest {
         val request = MediaStaff.request(id = 21, type = MediaType.ANIME, sort = null, isAdult = false)
         `when`(service.getMediaStaffRecord(request)).thenReturn(
             Response.success(
-                GraphContainer<MediaStaffData>(
-                    data = null,
-                    errors = null,
+                GraphQLResponse<MediaStaffData>(
+                    data = GraphQLData.Absent,
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -224,9 +289,9 @@ class MediaStaffRecordRepositoryTest {
         val request = MediaStaff.request(id = 21, type = MediaType.ANIME, sort = null, isAdult = false)
         `when`(service.getMediaStaffRecord(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = MediaStaffData(media = null),
-                    errors = null,
+                GraphQLResponse(
+                    data = GraphQLData.Present(MediaStaffData(media = null)),
+                    errors = emptyList(),
                 ),
             ),
         )

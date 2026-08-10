@@ -1,7 +1,8 @@
 package com.mxt.anitrend.repository
 
-import co.anitrend.retrofit.graphql.model.attribute.GraphError
-import co.anitrend.retrofit.graphql.model.body.GraphContainer
+import co.anitrend.retrofit.graphql.model.GraphQLData
+import co.anitrend.retrofit.graphql.model.GraphQLResponse
+import co.anitrend.retrofit.graphql.model.GraphQLResponseError
 import com.mxt.anitrend.data.store.medialist.InMemoryMediaListStore
 import com.mxt.anitrend.data.store.medialist.MediaListQueryKey
 import com.mxt.anitrend.domain.medialist.model.MediaListCollectionPageResult
@@ -56,14 +57,16 @@ class BrowseMediaListCollectionRepositoryTest {
         )
         `when`(service.getMediaListCollection(collectionRequest())).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = collectionData(
-                        listOf(
-                            list(entries = listOf(entry(id = 1, mediaId = 100), entry(id = 2, mediaId = 200))),
-                            list(entries = listOf(entry(id = 3, mediaId = 300))),
+                GraphQLResponse(
+                    data = GraphQLData.Present(
+                        collectionData(
+                            listOf(
+                                list(entries = listOf(entry(id = 1, mediaId = 100), entry(id = 2, mediaId = 200))),
+                                list(entries = listOf(entry(id = 3, mediaId = 300))),
+                            ),
                         ),
                     ),
-                    errors = null,
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -101,29 +104,31 @@ class BrowseMediaListCollectionRepositoryTest {
         val repository = BrowseRepository(browseService = service, ioDispatcher = testDispatcher)
         `when`(service.getMediaListCollection(collectionRequest())).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = collectionData(
-                        listOf(
-                            list(
-                                entries = listOf(
-                                    entry(
-                                        id = 1,
-                                        mediaId = 100,
-                                        customLists = buildJsonArray {
-                                            add("Favourites")
-                                            add("Rewatch")
-                                        },
-                                        advancedScores = buildJsonObject {
-                                            put("Story", 9.5)
-                                            put("Art", 8.0)
-                                        },
-                                        notes = "note",
+                GraphQLResponse(
+                    data = GraphQLData.Present(
+                        collectionData(
+                            listOf(
+                                list(
+                                    entries = listOf(
+                                        entry(
+                                            id = 1,
+                                            mediaId = 100,
+                                            customLists = buildJsonArray {
+                                                add("Favourites")
+                                                add("Rewatch")
+                                            },
+                                            advancedScores = buildJsonObject {
+                                                put("Story", 9.5)
+                                                put("Art", 8.0)
+                                            },
+                                            notes = "note",
+                                        ),
                                     ),
                                 ),
                             ),
                         ),
                     ),
-                    errors = null,
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -151,43 +156,45 @@ class BrowseMediaListCollectionRepositoryTest {
         val repository = BrowseRepository(browseService = service, ioDispatcher = testDispatcher)
         `when`(service.getMediaListCollection(collectionRequest())).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = collectionData(
-                        listOf(
-                            list(
-                                entries = listOf(
-                                    entry(
-                                        id = 1,
-                                        mediaId = 100,
-                                        customLists = null,
-                                        advancedScores = null,
-                                    ),
-                                    entry(
-                                        id = 2,
-                                        mediaId = 200,
-                                        customLists = JsonPrimitive("not-an-array"),
-                                        advancedScores = buildJsonArray { add(1) },
-                                    ),
-                                    entry(
-                                        id = 3,
-                                        mediaId = 300,
-                                        customLists = buildJsonArray {
-                                            add("Favourites")
-                                            add(5)
-                                            add(JsonNull)
-                                            add("Rewatch")
-                                        },
-                                        advancedScores = buildJsonObject {
-                                            put("Story", JsonPrimitive("nope"))
-                                            put("Art", 8.0)
-                                            put("Null", JsonNull)
-                                        },
+                GraphQLResponse(
+                    data = GraphQLData.Present(
+                        collectionData(
+                            listOf(
+                                list(
+                                    entries = listOf(
+                                        entry(
+                                            id = 1,
+                                            mediaId = 100,
+                                            customLists = null,
+                                            advancedScores = null,
+                                        ),
+                                        entry(
+                                            id = 2,
+                                            mediaId = 200,
+                                            customLists = JsonPrimitive("not-an-array"),
+                                            advancedScores = buildJsonArray { add(1) },
+                                        ),
+                                        entry(
+                                            id = 3,
+                                            mediaId = 300,
+                                            customLists = buildJsonArray {
+                                                add("Favourites")
+                                                add(5)
+                                                add(JsonNull)
+                                                add("Rewatch")
+                                            },
+                                            advancedScores = buildJsonObject {
+                                                put("Story", JsonPrimitive("nope"))
+                                                put("Art", 8.0)
+                                                put("Null", JsonNull)
+                                            },
+                                        ),
                                     ),
                                 ),
                             ),
                         ),
                     ),
-                    errors = null,
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -216,15 +223,17 @@ class BrowseMediaListCollectionRepositoryTest {
         val repository = BrowseRepository(browseService = service, ioDispatcher = testDispatcher)
         `when`(service.getMediaListCollection(collectionRequest())).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = collectionData(
-                        listOf(
-                            null,
-                            list(entries = listOf(entry(id = 1, mediaId = 100), null, entry(id = 2, mediaId = 200))),
-                            list(entries = null),
+                GraphQLResponse(
+                    data = GraphQLData.Present(
+                        collectionData(
+                            listOf(
+                                null,
+                                list(entries = listOf(entry(id = 1, mediaId = 100), null, entry(id = 2, mediaId = 200))),
+                                list(entries = null),
+                            ),
                         ),
                     ),
-                    errors = null,
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -247,9 +256,9 @@ class BrowseMediaListCollectionRepositoryTest {
         val repository = BrowseRepository(browseService = service, ioDispatcher = testDispatcher)
         `when`(service.getMediaListCollection(collectionRequest())).thenReturn(
             Response.success(
-                GraphContainer<MediaListCollectionData>(
-                    data = null,
-                    errors = listOf(GraphError(message = "Media list collection failed")),
+                GraphQLResponse<MediaListCollectionData>(
+                    data = GraphQLData.Absent,
+                    errors = listOf(GraphQLResponseError(message = "Media list collection failed")),
                 ),
             ),
         )
@@ -290,9 +299,9 @@ class BrowseMediaListCollectionRepositoryTest {
         val repository = BrowseRepository(browseService = service, ioDispatcher = testDispatcher)
         `when`(service.getMediaListCollection(collectionRequest())).thenReturn(
             Response.success(
-                GraphContainer<MediaListCollectionData>(
-                    data = MediaListCollectionData(mediaListCollection = null),
-                    errors = null,
+                GraphQLResponse<MediaListCollectionData>(
+                    data = GraphQLData.Present(MediaListCollectionData(mediaListCollection = null)),
+                    errors = emptyList(),
                 ),
             ),
         )
