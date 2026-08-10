@@ -65,10 +65,8 @@ fun buildIncrementMediaProgressCommand(
         priority = record.priority,
         isPrivate = record.`private`,
         hiddenFromStatusLists = record.hiddenFromStatusLists,
-        customLists = record.customLists
-            .mapNotNull { it.takeIf(String::isNotEmpty) }
-            .takeIf { it.isNotEmpty() },
-        advancedScores = record.advancedScores.values.toList().takeIf { it.isNotEmpty() },
+        customLists = record.customLists,
+        advancedScores = record.advancedScores.values.toList(),
         notes = record.notes,
         startedAt = startedAt,
         completedAt = completedAt,

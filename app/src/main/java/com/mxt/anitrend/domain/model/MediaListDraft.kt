@@ -18,6 +18,7 @@ data class MediaListDraft(
     val isHiddenFromStatusLists: Boolean,
     val notes: String?,
     val advancedScores: Map<String, Float>?,
+    val customLists: List<String>?,
     val startedAt: FuzzyDate?,
     val completedAt: FuzzyDate?,
 )
@@ -34,6 +35,7 @@ fun MediaList.toDraft(): MediaListDraft = MediaListDraft(
     isHiddenFromStatusLists = isHiddenFromStatusLists,
     notes = notes,
     advancedScores = advancedScores?.toMap(),
+    customLists = customLists?.filter { it.isEnabled }?.mapNotNull { it.name },
     startedAt = startedAt?.copyOf(),
     completedAt = completedAt?.copyOf(),
 )
@@ -70,7 +72,6 @@ fun createEditableMediaList(
 
 fun MediaListDraft.toSaveMediaListEntryCommand(
     committedModel: MediaList,
-    customLists: List<String?>?,
 ): SaveMediaListEntryCommand = SaveMediaListEntryCommand(
     id = committedModel.id.takeIf { it > 0 }?.toInt(),
     mediaId = committedModel.mediaId.takeIf { it > 0 } ?: committedModel.media.id.takeIf { it > 0 },
@@ -83,7 +84,7 @@ fun MediaListDraft.toSaveMediaListEntryCommand(
     priority = priority,
     isPrivate = isHidden,
     hiddenFromStatusLists = isHiddenFromStatusLists,
-    customLists = customLists,
+    customLists = customLists.orEmpty(),
     advancedScores = advancedScores?.values?.map { it.toDouble() },
     notes = notes,
     startedAt = startedAt?.toInput(),

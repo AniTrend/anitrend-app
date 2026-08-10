@@ -242,6 +242,7 @@ fun buildMediaListFromForm(
     priority: Int,
     notes: String?,
     advancedScores: Map<String, Float>?,
+    customLists: List<String>?,
 ): MediaListDraft = draft.copy(
     status = statuses[statusIndex],
     score = score,
@@ -253,6 +254,7 @@ fun buildMediaListFromForm(
     isHiddenFromStatusLists = isHiddenFromStatusLists,
     notes = notes,
     advancedScores = advancedScores ?: draft.advancedScores,
+    customLists = customLists ?: draft.customLists,
     startedAt = startedAt,
     completedAt = completedAt,
 )

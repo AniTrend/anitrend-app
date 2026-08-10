@@ -1,0 +1,22 @@
+fragment MediaListCoreFragment on MediaList {
+  id
+  mediaId
+  status
+  score(format: $scoreFormat)
+  progress
+  progressVolumes
+  repeat
+  priority
+  private
+  hiddenFromStatusLists
+  advancedScores
+  customLists
+  notes
+  startedAt {
+    ... FuzzyDateFragment
+  }
+  completedAt {
+    ... FuzzyDateFragment
+  }
+  updatedAt
+}

@@ -48,7 +48,7 @@ import kotlinx.coroutines.launch
 /**
  * M3 BottomSheetDialogFragment for managing media list entries.
  *
- * Exposes all available [SaveMediaListEntry] fields including:
+ * Exposes all available [com.mxt.anitrend.graphql.generated.SaveMediaListEntryData.SaveMediaListEntry] fields including:
  * - status, score, scoreRaw, progress, repeat, dates, private, notes
  * - priority (Slider 0-255), hiddenFromStatusLists (MaterialSwitch)
  * - customLists (ChipGroup), advancedScores (dynamic Sliders per category)
@@ -439,6 +439,17 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
                 null
             }
 
+        // Build enabled custom list names directly from chips
+        val enabledCustomListNames: List<String>? =
+            if (customListsContainer.isVisible && customListsChipGroup.isNotEmpty()) {
+                (0 until customListsChipGroup.childCount)
+                    .mapNotNull { customListsChipGroup.getChildAt(it) as? Chip }
+                    .filter { it.isChecked }
+                    .mapNotNull { it.text?.toString()?.takeIf(String::isNotEmpty) }
+            } else {
+                null
+            }
+
         mediaListDraft = buildMediaListFromForm(
             draft = mediaListDraft,
             statusIndex = selectedStatusIndex,
@@ -455,24 +466,10 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
             priority = priority,
             notes = notes,
             advancedScores = collectedAdvancedScores,
+            customLists = enabledCustomListNames,
         )
 
-        // Build enabled custom list names directly from chips
-        val enabledCustomListNames: List<String?>? =
-            if (customListsContainer.isVisible && customListsChipGroup.isNotEmpty()) {
-                (0 until customListsChipGroup.childCount)
-                    .mapNotNull { customListsChipGroup.getChildAt(it) as? Chip }
-                    .filter { it.isChecked }
-                    .mapNotNull { it.text?.toString()?.takeIf(String::isNotEmpty) }
-                    .takeIf { it.isNotEmpty() }
-            } else {
-                mediaListModel.customLists
-                    ?.filter { it.isEnabled }
-                    ?.mapNotNull { it.name?.takeIf(String::isNotEmpty) }
-                    ?.takeIf { it.isNotEmpty() }
-            }
-
-        val command = mediaListDraft.toSaveMediaListEntryCommand(mediaListModel, enabledCustomListNames)
+        val command = mediaListDraft.toSaveMediaListEntryCommand(mediaListModel)
         mediaListMutationViewModel.save(command)
     }
 
