@@ -54,7 +54,7 @@ class BaseRepository(
                 query = GenreCollection.document,
                 operationName = GenreCollection.name,
             )
-            val response = baseService.getGenres(request).execute()
+            val response = baseService.getGenres(request)
             if (response.isSuccessful) {
                 handleGenreCollection(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -77,7 +77,7 @@ class BaseRepository(
                 query = MediaTagCollection.document,
                 operationName = MediaTagCollection.name,
             )
-            val response = baseService.getTags(request).execute()
+            val response = baseService.getTags(request)
             if (response.isSuccessful) {
                 handleMediaTagCollection(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -103,7 +103,7 @@ class BaseRepository(
     ): Result<List<UserEntity>> = withContext(ioDispatcher) {
         runCatching {
             val request = ToggleLike.request(id = id.toInt(), type = type)
-            val response = baseService.toggleLike(request).execute()
+            val response = baseService.toggleLike(request)
             if (response.isSuccessful) {
                 val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
                 if (commitToStore) {
@@ -156,7 +156,7 @@ class BaseRepository(
     ): Result<List<UserSummaryRecord>> = withContext(ioDispatcher) {
         runCatching {
             val request = ToggleLike.request(id = id.toInt(), type = type)
-            val response = baseService.toggleLike(request).execute()
+            val response = baseService.toggleLike(request)
             if (response.isSuccessful) {
                 val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
                 val likes = result.toUserSummaryRecords()
@@ -205,7 +205,7 @@ class BaseRepository(
     ): Result<Unit> = withContext(ioDispatcher) {
         runCatching {
             val request = ToggleFavourite.request(animeId = animeId, mangaId = mangaId, characterId = characterId, staffId = staffId, studioId = studioId, page = page, perPage = perPage)
-            val response = baseService.toggleFavourite(request).execute()
+            val response = baseService.toggleFavourite(request)
             if (!response.isSuccessful) {
                 throw RuntimeException(response.apiError())
             }

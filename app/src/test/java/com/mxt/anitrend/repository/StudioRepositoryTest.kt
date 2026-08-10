@@ -24,7 +24,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
-import retrofit2.Call
 import retrofit2.Response
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -41,10 +40,8 @@ class StudioRepositoryTest {
 
     @Test
     fun `getStudioBase success maps GraphContainer data to StudioRecord`() = runTest {
-        val call = studioBaseCall()
         val request = StudioBase.request(id = 5)
-        `when`(service.getStudioBase(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getStudioBase(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = StudioBaseData(
@@ -73,10 +70,8 @@ class StudioRepositoryTest {
 
     @Test
     fun `getStudioBase GraphQL error returns failed Result with message`() = runTest {
-        val call = studioBaseCall()
         val request = StudioBase.request(id = 5)
-        `when`(service.getStudioBase(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getStudioBase(request)).thenReturn(
             Response.success(
                 GraphContainer<StudioBaseData>(
                     data = null,
@@ -93,10 +88,8 @@ class StudioRepositoryTest {
 
     @Test
     fun `getStudioBase null body returns failed Result`() = runTest {
-        val call = studioBaseCall()
         val request = StudioBase.request(id = 5)
-        `when`(service.getStudioBase(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(Response.success(null))
+        `when`(service.getStudioBase(request)).thenReturn(Response.success(null))
 
         val result = repository.getStudioBase(id = 5L)
 
@@ -106,10 +99,8 @@ class StudioRepositoryTest {
 
     @Test
     fun `getStudioBase null root returns failed Result`() = runTest {
-        val call = studioBaseCall()
         val request = StudioBase.request(id = 5)
-        `when`(service.getStudioBase(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getStudioBase(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = StudioBaseData(studio = null),
@@ -126,15 +117,13 @@ class StudioRepositoryTest {
 
     @Test
     fun `getStudioMedia success maps GraphContainer data to connection page`() = runTest {
-        val call = studioMediaCall()
         val request = StudioMedia.request(
             id = 5,
             page = 1,
             perPage = 20,
             sort = listOf(MediaSort.POPULARITY_DESC),
         )
-        `when`(service.getStudioMedia(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getStudioMedia(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = StudioMediaData(
@@ -180,10 +169,8 @@ class StudioRepositoryTest {
 
     @Test
     fun `getStudioMedia GraphQL error returns failed Result with message`() = runTest {
-        val call = studioMediaCall()
         val request = StudioMedia.request(id = 5, page = null, perPage = null, sort = null)
-        `when`(service.getStudioMedia(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getStudioMedia(request)).thenReturn(
             Response.success(
                 GraphContainer<StudioMediaData>(
                     data = null,
@@ -200,10 +187,8 @@ class StudioRepositoryTest {
 
     @Test
     fun `getStudioMedia null body returns failed Result`() = runTest {
-        val call = studioMediaCall()
         val request = StudioMedia.request(id = 5, page = null, perPage = null, sort = null)
-        `when`(service.getStudioMedia(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(Response.success(null))
+        `when`(service.getStudioMedia(request)).thenReturn(Response.success(null))
 
         val result = repository.getStudioMedia(id = 5L)
 
@@ -213,10 +198,8 @@ class StudioRepositoryTest {
 
     @Test
     fun `getStudioMedia null root returns failed Result`() = runTest {
-        val call = studioMediaCall()
         val request = StudioMedia.request(id = 5, page = null, perPage = null, sort = null)
-        `when`(service.getStudioMedia(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getStudioMedia(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = StudioMediaData(studio = null),
@@ -230,12 +213,6 @@ class StudioRepositoryTest {
         assertTrue(result.isFailure)
         assertEquals("Empty response body", result.exceptionOrNull()?.message)
     }
-
-    @Suppress("UNCHECKED_CAST")
-    private fun studioBaseCall(): Call<GraphContainer<StudioBaseData>> = mock(Call::class.java) as Call<GraphContainer<StudioBaseData>>
-
-    @Suppress("UNCHECKED_CAST")
-    private fun studioMediaCall(): Call<GraphContainer<StudioMediaData>> = mock(Call::class.java) as Call<GraphContainer<StudioMediaData>>
 
     private fun studioMediaNode(): StudioMediaData.StudioMediaNodes = StudioMediaData.StudioMediaNodes(
         id = 10,

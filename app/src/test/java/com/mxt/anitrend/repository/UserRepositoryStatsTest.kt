@@ -14,7 +14,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
-import retrofit2.Call
 import retrofit2.Response
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -31,10 +30,8 @@ class UserRepositoryStatsTest {
 
     @Test
     fun `getUserStats success maps transport stats to record`() = runTest {
-        val call = statsCall()
         val request = UserStats.request(id = null, userName = "profile")
-        `when`(service.getUserStats(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getUserStats(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = statsData(animeCount = 6),
@@ -54,10 +51,8 @@ class UserRepositoryStatsTest {
 
     @Test
     fun `getUserStats GraphQL error returns failed Result with message`() = runTest {
-        val call = statsCall()
         val request = UserStats.request(id = null, userName = "profile")
-        `when`(service.getUserStats(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getUserStats(request)).thenReturn(
             Response.success(
                 GraphContainer<UserStatsData>(
                     data = null,
@@ -74,10 +69,8 @@ class UserRepositoryStatsTest {
 
     @Test
     fun `getUserStats null body returns failed Result`() = runTest {
-        val call = statsCall()
         val request = UserStats.request(id = null, userName = "profile")
-        `when`(service.getUserStats(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(Response.success(null))
+        `when`(service.getUserStats(request)).thenReturn(Response.success(null))
 
         val result = repository.getUserStats(userName = "profile")
 
@@ -87,10 +80,8 @@ class UserRepositoryStatsTest {
 
     @Test
     fun `getUserStats null data returns failed Result`() = runTest {
-        val call = statsCall()
         val request = UserStats.request(id = null, userName = "profile")
-        `when`(service.getUserStats(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getUserStats(request)).thenReturn(
             Response.success(
                 GraphContainer<UserStatsData>(
                     data = null,
@@ -104,9 +95,6 @@ class UserRepositoryStatsTest {
         assertTrue(result.isFailure)
         assertEquals("Empty response body", result.exceptionOrNull()?.message)
     }
-
-    @Suppress("UNCHECKED_CAST")
-    private fun statsCall(): Call<GraphContainer<UserStatsData>> = mock(Call::class.java) as Call<GraphContainer<UserStatsData>>
 
     private fun statsData(animeCount: Int): UserStatsData = UserStatsData(
         user = UserStatsData.User(

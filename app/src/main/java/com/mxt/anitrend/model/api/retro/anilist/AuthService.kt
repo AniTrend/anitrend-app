@@ -1,7 +1,7 @@
 package com.mxt.anitrend.model.api.retro.anilist
 
 import com.mxt.anitrend.model.entity.anilist.WebToken
-import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
@@ -21,11 +21,11 @@ interface AuthService {
      */
     @FormUrlEncoded
     @POST("token")
-    fun getAuthRequest(
+    suspend fun getAuthRequest(
         @Field("grant_type") grant_type: String,
         @Field("client_id") client_id: String,
         @Field("client_secret") client_secret: String,
         @Field("redirect_uri") redirect_uri: String,
         @Field("code") code: String,
-    ): Call<WebToken>
+    ): Response<WebToken>
 }

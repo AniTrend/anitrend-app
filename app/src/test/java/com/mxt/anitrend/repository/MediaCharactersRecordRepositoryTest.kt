@@ -20,7 +20,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
-import retrofit2.Call
 import retrofit2.Response
 
 /**
@@ -38,10 +37,8 @@ class MediaCharactersRecordRepositoryTest {
 
     @Test
     fun `getMediaCharactersRecord success maps GraphContainer data to MediaCharactersRecord`() = runTest {
-        val call = mediaCharactersCall()
         val request = MediaCharacters.request(id = 21, type = MediaType.ANIME, isAdult = false, sort = null)
-        `when`(service.getMediaCharactersRecord(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaCharactersRecord(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = mediaCharactersData(
@@ -97,7 +94,6 @@ class MediaCharactersRecordRepositoryTest {
 
     @Test
     fun `getMediaCharactersRecord forwards pagination and sort request inputs`() = runTest {
-        val call = mediaCharactersCall()
         val sort = listOf(CharacterSort.ROLE, CharacterSort.RELEVANCE, CharacterSort.ID)
         val request = MediaCharacters.request(
             id = 21,
@@ -107,8 +103,7 @@ class MediaCharactersRecordRepositoryTest {
             perPage = 50,
             sort = sort,
         )
-        `when`(service.getMediaCharactersRecord(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaCharactersRecord(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = mediaCharactersData(
@@ -156,10 +151,8 @@ class MediaCharactersRecordRepositoryTest {
 
     @Test
     fun `getMediaCharactersRecord preserves nullable optional blocks`() = runTest {
-        val call = mediaCharactersCall()
         val request = MediaCharacters.request(id = 21, type = MediaType.ANIME, isAdult = false, sort = null)
-        `when`(service.getMediaCharactersRecord(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaCharactersRecord(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = mediaCharactersData(),
@@ -178,10 +171,8 @@ class MediaCharactersRecordRepositoryTest {
 
     @Test
     fun `getMediaCharactersRecord GraphQL error returns failed Result with message`() = runTest {
-        val call = mediaCharactersCall()
         val request = MediaCharacters.request(id = 21, type = MediaType.ANIME, isAdult = false, sort = null)
-        `when`(service.getMediaCharactersRecord(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaCharactersRecord(request)).thenReturn(
             Response.success(
                 GraphContainer<MediaCharactersData>(
                     data = null,
@@ -198,10 +189,8 @@ class MediaCharactersRecordRepositoryTest {
 
     @Test
     fun `getMediaCharactersRecord null body returns failed Result`() = runTest {
-        val call = mediaCharactersCall()
         val request = MediaCharacters.request(id = 21, type = MediaType.ANIME, isAdult = false, sort = null)
-        `when`(service.getMediaCharactersRecord(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(Response.success(null))
+        `when`(service.getMediaCharactersRecord(request)).thenReturn(Response.success(null))
 
         val result = repository.getMediaCharactersRecord(id = 21L, type = MediaType.ANIME, isAdult = false)
 
@@ -211,10 +200,8 @@ class MediaCharactersRecordRepositoryTest {
 
     @Test
     fun `getMediaCharactersRecord null data returns failed Result`() = runTest {
-        val call = mediaCharactersCall()
         val request = MediaCharacters.request(id = 21, type = MediaType.ANIME, isAdult = false, sort = null)
-        `when`(service.getMediaCharactersRecord(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaCharactersRecord(request)).thenReturn(
             Response.success(
                 GraphContainer<MediaCharactersData>(
                     data = null,
@@ -231,10 +218,8 @@ class MediaCharactersRecordRepositoryTest {
 
     @Test
     fun `getMediaCharactersRecord null root media returns failed Result`() = runTest {
-        val call = mediaCharactersCall()
         val request = MediaCharacters.request(id = 21, type = MediaType.ANIME, isAdult = false, sort = null)
-        `when`(service.getMediaCharactersRecord(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaCharactersRecord(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = MediaCharactersData(media = null),
@@ -251,21 +236,16 @@ class MediaCharactersRecordRepositoryTest {
 
     @Test
     fun `getMediaCharactersRecord HTTP error returns failed Result with server message`() = runTest {
-        val call = mediaCharactersCall()
         val request = MediaCharacters.request(id = 21, type = MediaType.ANIME, isAdult = false, sort = null)
-        `when`(service.getMediaCharactersRecord(request)).thenReturn(call)
         val errorBody = """{"errors":[{"message":"Server exploded"}]}"""
             .toResponseBody("application/json".toMediaType())
-        `when`(call.execute()).thenReturn(Response.error(500, errorBody))
+        `when`(service.getMediaCharactersRecord(request)).thenReturn(Response.error(500, errorBody))
 
         val result = repository.getMediaCharactersRecord(id = 21L, type = MediaType.ANIME, isAdult = false)
 
         assertTrue(result.isFailure)
         assertEquals("Server exploded", result.exceptionOrNull()?.message)
     }
-
-    @Suppress("UNCHECKED_CAST")
-    private fun mediaCharactersCall(): Call<GraphContainer<MediaCharactersData>> = mock(Call::class.java) as Call<GraphContainer<MediaCharactersData>>
 
     private fun mediaCharactersData(
         edges: List<MediaCharactersData.MediaCharactersEdges?>? = null,

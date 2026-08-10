@@ -17,7 +17,6 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
-import retrofit2.Call
 import retrofit2.Response
 import java.io.IOException
 
@@ -71,12 +70,10 @@ class GiphyViewModelTest {
 
     @Test
     fun `loadTrending emits Success on successful response`() = runTest {
-        @Suppress("UNCHECKED_CAST")
-        val call = mock(Call::class.java) as Call<GiphyContainer>
         val container = GiphyContainer()
 
-        `when`(service.getTrending(BuildConfig.GIPHY_KEY, KeyUtil.PAGING_LIMIT, 0, "PG")).thenReturn(call)
-        `when`(call.execute()).thenReturn(Response.success(container))
+        `when`(service.getTrending(BuildConfig.GIPHY_KEY, KeyUtil.PAGING_LIMIT, 0, "PG"))
+            .thenReturn(Response.success(container))
 
         val vm = GiphyViewModel(
             giphyService = service,
@@ -91,9 +88,6 @@ class GiphyViewModelTest {
 
     @Test
     fun `search emits Error on request failure`() = runTest {
-        @Suppress("UNCHECKED_CAST")
-        val call = mock(Call::class.java) as Call<GiphyContainer>
-
         `when`(
             service.findGif(
                 BuildConfig.GIPHY_KEY,
@@ -103,8 +97,7 @@ class GiphyViewModelTest {
                 "PG",
                 "en",
             ),
-        ).thenReturn(call)
-        `when`(call.execute()).thenThrow(IOException("Network failed"))
+        ).thenAnswer { throw IOException("Network failed") }
 
         val vm = GiphyViewModel(
             giphyService = service,

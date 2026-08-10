@@ -21,7 +21,7 @@ import com.mxt.anitrend.model.entity.anilist.meta.DeleteState
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.container.body.AniListContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
-import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Headers
 import retrofit2.http.POST
@@ -33,73 +33,73 @@ import retrofit2.http.POST
 interface BrowseService {
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getMediaListCollection(
+    suspend fun getMediaListCollection(
         @Body request: GraphQLOperationRequest<MediaListCollectionVariables>,
-    ): Call<GraphContainer<MediaListCollectionData>>
+    ): Response<GraphContainer<MediaListCollectionData>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getMediaBrowse(
+    suspend fun getMediaBrowse(
         @Body request: GraphQLOperationRequest<MediaBrowseVariables>,
-    ): Call<AniListContainer<PageContainer<MediaBase>>>
+    ): Response<AniListContainer<PageContainer<MediaBase>>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getReviewBrowse(
+    suspend fun getReviewBrowse(
         @Body request: GraphQLOperationRequest<ReviewBrowseVariables>,
-    ): Call<AniListContainer<PageContainer<Review>>>
+    ): Response<AniListContainer<PageContainer<Review>>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getMediaListBrowse(
+    suspend fun getMediaListBrowse(
         @Body request: GraphQLOperationRequest<MediaListBrowseVariables>,
-    ): Call<AniListContainer<PageContainer<MediaList>>>
+    ): Response<AniListContainer<PageContainer<MediaList>>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getMediaList(
+    suspend fun getMediaList(
         @Body request: GraphQLOperationRequest<MediaListVariables>,
-    ): Call<AniListContainer<MediaList>>
+    ): Response<AniListContainer<MediaList>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getMediaWithList(
+    suspend fun getMediaWithList(
         @Body request: GraphQLOperationRequest<MediaWithListVariables>,
-    ): Call<AniListContainer<MediaBase>>
+    ): Response<AniListContainer<MediaBase>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun deleteMediaListEntry(
+    suspend fun deleteMediaListEntry(
         @Body request: GraphQLOperationRequest<DeleteMediaListEntryVariables>,
-    ): Call<AniListContainer<DeleteState>>
+    ): Response<AniListContainer<DeleteState>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun deleteReview(
+    suspend fun deleteReview(
         @Body request: GraphQLOperationRequest<DeleteReviewVariables>,
-    ): Call<AniListContainer<DeleteState>>
+    ): Response<AniListContainer<DeleteState>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun saveMediaListEntry(
+    suspend fun saveMediaListEntry(
         @Body request: GraphQLOperationRequest<SaveMediaListEntryVariables>,
-    ): Call<AniListContainer<MediaList>>
+    ): Response<AniListContainer<MediaList>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun updateMediaListEntries(
+    suspend fun updateMediaListEntries(
         @Body request: GraphQLOperationRequest<UpdateMediaListEntriesVariables>,
-    ): Call<AniListContainer<List<MediaList>>>
+    ): Response<AniListContainer<List<MediaList>>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun rateReview(
+    suspend fun rateReview(
         @Body request: GraphQLOperationRequest<RateReviewVariables>,
-    ): Call<AniListContainer<Review>>
+    ): Response<AniListContainer<Review>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun saveReview(
+    suspend fun saveReview(
         @Body request: GraphQLOperationRequest<SaveReviewVariables>,
-    ): Call<AniListContainer<Review>>
+    ): Response<AniListContainer<Review>>
 }

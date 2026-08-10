@@ -18,7 +18,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
-import retrofit2.Call
 import retrofit2.Response
 
 /**
@@ -41,8 +40,8 @@ class MediaSocialRecordsRepositoryTest {
     @Test
     fun `getMediaSocialRecords commits FeedRecord page to store under MEDIA scope`() = runTest {
         val request = MediaSocial.request(mediaId = 7, isFollowing = true, page = 1, perPage = 10)
-        val call = pageCall(page = 1, feeds = listOf(feedEntity(1L), feedEntity(2L)))
-        `when`(service.getMediaSocial(request)).thenReturn(call)
+        val response = pageCall(page = 1, feeds = listOf(feedEntity(1L), feedEntity(2L)))
+        `when`(service.getMediaSocial(request)).thenReturn(response)
         val mediaKey = FeedQueryKey(
             scope = FeedScope.MEDIA,
             userId = null,
@@ -75,8 +74,8 @@ class MediaSocialRecordsRepositoryTest {
     @Test
     fun `legacy getMediaSocial still returns entity typed page`() = runTest {
         val request = MediaSocial.request(mediaId = 7, isFollowing = true, page = 1, perPage = 10)
-        val call = pageCall(page = 1, feeds = listOf(feedEntity(1L), feedEntity(2L)))
-        `when`(service.getMediaSocial(request)).thenReturn(call)
+        val response = pageCall(page = 1, feeds = listOf(feedEntity(1L), feedEntity(2L)))
+        `when`(service.getMediaSocial(request)).thenReturn(response)
 
         val result = repository.getMediaSocial(
             mediaId = 7L,
@@ -93,8 +92,8 @@ class MediaSocialRecordsRepositoryTest {
     @Test
     fun `getMediaSocialRecords failure returns failed Result and does not commit`() = runTest {
         val request = MediaSocial.request(mediaId = 7, isFollowing = true, page = 1, perPage = 10)
-        val call = responseCall(AniListContainer<PageContainer<FeedList>>(data = null, errors = null))
-        `when`(service.getMediaSocial(request)).thenReturn(call)
+        val response = success(AniListContainer<PageContainer<FeedList>>(data = null, errors = null))
+        `when`(service.getMediaSocial(request)).thenReturn(response)
 
         val result = repository.getMediaSocialRecords(mediaId = 7L, isFollowing = true, page = 1, perPage = 10)
 
@@ -114,20 +113,15 @@ class MediaSocialRecordsRepositoryTest {
     private fun pageCall(
         page: Int,
         feeds: List<FeedList>,
-    ): Call<AniListContainer<PageContainer<FeedList>>> {
+    ): Response<AniListContainer<PageContainer<FeedList>>> {
         val content = PageContainer<FeedList>().apply {
             pageData = feeds
             pageInfo = PageInfo(total = feeds.size, perPage = 10, currentPage = page).apply { setHasNextPage(false) }
         }
-        return responseCall(AniListContainer(DataContainer(content), errors = null))
+        return success(AniListContainer(DataContainer(content), errors = null))
     }
 
-    @Suppress("UNCHECKED_CAST")
-    private fun <R> responseCall(
+    private fun <R> success(
         body: AniListContainer<R>,
-    ): Call<AniListContainer<R>> {
-        val call = mock(Call::class.java) as Call<AniListContainer<R>>
-        `when`(call.execute()).thenReturn(Response.success(body))
-        return call
-    }
+    ): Response<AniListContainer<R>> = Response.success(body)
 }

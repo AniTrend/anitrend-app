@@ -31,7 +31,7 @@ class StaffRepository(
     suspend fun getStaffBase(id: Long): Result<StaffRecord> = withContext(ioDispatcher) {
         runCatching {
             val request = StaffBase.request(id = id.toInt())
-            val response = staffService.getStaffBase(request).execute()
+            val response = staffService.getStaffBase(request)
             if (response.isSuccessful) {
                 handleStaffBase(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -51,7 +51,7 @@ class StaffRepository(
     suspend fun getStaffOverview(id: Long, asHtml: Boolean = false): Result<StaffEntity> = withContext(ioDispatcher) {
         runCatching {
             val request = StaffOverview.request(id = id.toInt(), asHtml = asHtml)
-            val response = staffService.getStaffOverview(request).execute()
+            val response = staffService.getStaffOverview(request)
             if (response.isSuccessful) {
                 handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -68,7 +68,7 @@ class StaffRepository(
     ): Result<ConnectionContainer<EdgeContainer<MediaEdge>>> = withContext(ioDispatcher) {
         runCatching {
             val request = StaffCharacters.request(id = id.toInt(), onList = onList, page = page, sort = sort)
-            val response = staffService.getStaffCharacters(request).execute()
+            val response = staffService.getStaffCharacters(request)
             if (response.isSuccessful) {
                 handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -87,7 +87,7 @@ class StaffRepository(
     ): Result<ConnectionContainer<PageContainer<MediaEntity>>> = withContext(ioDispatcher) {
         runCatching {
             val request = StaffMedia.request(id = id.toInt(), onList = onList, page = page, perPage = perPage, sort = sort, type = type)
-            val response = staffService.getStaffMedia(request).execute()
+            val response = staffService.getStaffMedia(request)
             if (response.isSuccessful) {
                 handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -106,7 +106,7 @@ class StaffRepository(
     ): Result<ConnectionContainer<EdgeContainer<MediaEdge>>> = withContext(ioDispatcher) {
         runCatching {
             val request = StaffRoles.request(id = id.toInt(), onList = onList, page = page, perPage = perPage, sort = sort, type = type)
-            val response = staffService.getStaffRoles(request).execute()
+            val response = staffService.getStaffRoles(request)
             if (response.isSuccessful) {
                 handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {

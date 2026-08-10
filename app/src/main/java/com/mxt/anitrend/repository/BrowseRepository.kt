@@ -74,7 +74,7 @@ class BrowseRepository(
                 statusIn = statusIn,
                 scoreFormat = scoreFormat,
             )
-            val response = browseService.getMediaListCollection(request).execute()
+            val response = browseService.getMediaListCollection(request)
             if (response.isSuccessful) {
                 val result = handleMediaListCollection(response.body() ?: throw IllegalStateException("Empty response body"))
                 val resolvedQueryKey = queryKey ?: MediaListQueryKey(
@@ -146,7 +146,7 @@ class BrowseRepository(
                 isAdult = isAdult, sort = sort, onList = onList,
                 status = status, tags = tags, tagsExclude = tagsExclude,
             )
-            val response = browseService.getMediaBrowse(request).execute()
+            val response = browseService.getMediaBrowse(request)
             if (response.isSuccessful) {
                 handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -168,7 +168,7 @@ class BrowseRepository(
     ): Result<PageContainer<Review>> = withContext(ioDispatcher) {
         runCatching {
             val request = ReviewBrowse.request(page = page, perPage = perPage, mediaId = mediaId?.toInt(), type = type, sort = sort, asHtml = asHtml)
-            val response = browseService.getReviewBrowse(request).execute()
+            val response = browseService.getReviewBrowse(request)
             if (response.isSuccessful) {
                 val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
                 val pageInfo = result.takeIf { it.hasPageInfo() }?.pageInfo?.toPageInfoRecord()
@@ -210,7 +210,7 @@ class BrowseRepository(
     ): Result<PageContainer<MediaEntityList>> = withContext(ioDispatcher) {
         runCatching {
             val request = MediaListBrowse.request(id = id, userId = userId?.toInt(), userName = userName, page = page, perPage = perPage, type = type, status = status, sort = sort, scoreFormat = scoreFormat)
-            val response = browseService.getMediaListBrowse(request).execute()
+            val response = browseService.getMediaListBrowse(request)
             if (response.isSuccessful) {
                 handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -230,7 +230,7 @@ class BrowseRepository(
     ): Result<MediaEntityList> = withContext(ioDispatcher) {
         runCatching {
             val request = MediaList.request(id = id, mediaId = mediaId?.toInt(), userName = userName, type = type, status = status, sort = sort, scoreFormat = scoreFormat)
-            val response = browseService.getMediaList(request).execute()
+            val response = browseService.getMediaList(request)
             if (response.isSuccessful) {
                 handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -247,7 +247,7 @@ class BrowseRepository(
     ): Result<com.mxt.anitrend.model.entity.base.MediaBase> = withContext(ioDispatcher) {
         runCatching {
             val request = MediaWithList.request(id = id.toInt(), type = type, onList = onList, scoreFormat = scoreFormat)
-            val response = browseService.getMediaWithList(request).execute()
+            val response = browseService.getMediaWithList(request)
             if (response.isSuccessful) {
                 handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -266,7 +266,7 @@ class BrowseRepository(
     ): Result<DeleteState> = withContext(ioDispatcher) {
         runCatching {
             val request = DeleteMediaListEntry.request(id = id.toInt())
-            val response = browseService.deleteMediaListEntry(request).execute()
+            val response = browseService.deleteMediaListEntry(request)
             if (response.isSuccessful) {
                 val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
                 if (commitToStore && result.isDeleted) {
@@ -293,7 +293,7 @@ class BrowseRepository(
     ): Result<DeleteState> = withContext(ioDispatcher) {
         runCatching {
             val request = DeleteReview.request(id = id.toInt())
-            val response = browseService.deleteReview(request).execute()
+            val response = browseService.deleteReview(request)
             if (response.isSuccessful) {
                 val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
                 if (commitToStore && result.isDeleted) {
@@ -343,7 +343,7 @@ class BrowseRepository(
                 notes = notes, scoreFormat = scoreFormat,
                 startedAt = startedAt, completedAt = completedAt,
             )
-            val response = browseService.saveMediaListEntry(request).execute()
+            val response = browseService.saveMediaListEntry(request)
             if (response.isSuccessful) {
                 val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
                 if (commitToStore) {
@@ -369,7 +369,7 @@ class BrowseRepository(
     ): Result<Review> = withContext(ioDispatcher) {
         runCatching {
             val request = RateReview.request(id = id.toInt(), rating = rating, asHtml = asHtml)
-            val response = browseService.rateReview(request).execute()
+            val response = browseService.rateReview(request)
             if (response.isSuccessful) {
                 val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
                 if (commitToStore) {
@@ -400,7 +400,7 @@ class BrowseRepository(
     ): Result<Review> = withContext(ioDispatcher) {
         runCatching {
             val request = SaveReview.request(id = id, mediaId = mediaId.toInt(), body = body, summary = summary, score = score, privateValue = private, asHtml = asHtml)
-            val response = browseService.saveReview(request).execute()
+            val response = browseService.saveReview(request)
             if (response.isSuccessful) {
                 val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
                 if (commitToStore) {

@@ -15,7 +15,7 @@ import com.mxt.anitrend.model.entity.container.body.AniListContainer
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.container.body.EdgeContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
-import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Headers
 import retrofit2.http.POST
@@ -28,31 +28,31 @@ import retrofit2.http.POST
 interface StaffService {
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getStaffBase(
+    suspend fun getStaffBase(
         @Body request: GraphQLOperationRequest<StaffBaseVariables>,
-    ): Call<GraphContainer<StaffBaseData>>
+    ): Response<GraphContainer<StaffBaseData>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getStaffOverview(
+    suspend fun getStaffOverview(
         @Body request: GraphQLOperationRequest<StaffOverviewVariables>,
-    ): Call<AniListContainer<StaffBase>>
+    ): Response<AniListContainer<StaffBase>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getStaffCharacters(
+    suspend fun getStaffCharacters(
         @Body request: GraphQLOperationRequest<StaffCharactersVariables>,
-    ): Call<AniListContainer<ConnectionContainer<EdgeContainer<MediaEdge>>>>
+    ): Response<AniListContainer<ConnectionContainer<EdgeContainer<MediaEdge>>>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getStaffMedia(
+    suspend fun getStaffMedia(
         @Body request: GraphQLOperationRequest<StaffMediaVariables>,
-    ): Call<AniListContainer<ConnectionContainer<PageContainer<MediaBase>>>>
+    ): Response<AniListContainer<ConnectionContainer<PageContainer<MediaBase>>>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getStaffRoles(
+    suspend fun getStaffRoles(
         @Body request: GraphQLOperationRequest<StaffRolesVariables>,
-    ): Call<AniListContainer<ConnectionContainer<EdgeContainer<MediaEdge>>>>
+    ): Response<AniListContainer<ConnectionContainer<EdgeContainer<MediaEdge>>>>
 }

@@ -22,7 +22,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
-import retrofit2.Call
 import retrofit2.Response
 
 /**
@@ -40,10 +39,8 @@ class MediaStatsRecordRepositoryTest {
 
     @Test
     fun `getMediaStatsRecord success maps GraphContainer data to MediaStatsRecord`() = runTest {
-        val call = mediaStatsCall()
         val request = MediaStats.request(id = 21, type = MediaType.ANIME, isAdult = false)
-        `when`(service.getMediaStatsRecord(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaStatsRecord(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = mediaStatsData(
@@ -100,10 +97,8 @@ class MediaStatsRecordRepositoryTest {
 
     @Test
     fun `getMediaStatsRecord preserves nullable optional blocks`() = runTest {
-        val call = mediaStatsCall()
         val request = MediaStats.request(id = 21, type = MediaType.ANIME, isAdult = false)
-        `when`(service.getMediaStatsRecord(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaStatsRecord(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = mediaStatsData(),
@@ -125,10 +120,8 @@ class MediaStatsRecordRepositoryTest {
 
     @Test
     fun `getMediaStatsRecord GraphQL error returns failed Result with message`() = runTest {
-        val call = mediaStatsCall()
         val request = MediaStats.request(id = 21, type = MediaType.ANIME, isAdult = false)
-        `when`(service.getMediaStatsRecord(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaStatsRecord(request)).thenReturn(
             Response.success(
                 GraphContainer<MediaStatsData>(
                     data = null,
@@ -145,10 +138,8 @@ class MediaStatsRecordRepositoryTest {
 
     @Test
     fun `getMediaStatsRecord null body returns failed Result`() = runTest {
-        val call = mediaStatsCall()
         val request = MediaStats.request(id = 21, type = MediaType.ANIME, isAdult = false)
-        `when`(service.getMediaStatsRecord(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(Response.success(null))
+        `when`(service.getMediaStatsRecord(request)).thenReturn(Response.success(null))
 
         val result = repository.getMediaStatsRecord(id = 21L, type = MediaType.ANIME, isAdult = false)
 
@@ -158,10 +149,8 @@ class MediaStatsRecordRepositoryTest {
 
     @Test
     fun `getMediaStatsRecord null data returns failed Result`() = runTest {
-        val call = mediaStatsCall()
         val request = MediaStats.request(id = 21, type = MediaType.ANIME, isAdult = false)
-        `when`(service.getMediaStatsRecord(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaStatsRecord(request)).thenReturn(
             Response.success(
                 GraphContainer<MediaStatsData>(
                     data = null,
@@ -178,10 +167,8 @@ class MediaStatsRecordRepositoryTest {
 
     @Test
     fun `getMediaStatsRecord null root media returns failed Result`() = runTest {
-        val call = mediaStatsCall()
         val request = MediaStats.request(id = 21, type = MediaType.ANIME, isAdult = false)
-        `when`(service.getMediaStatsRecord(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaStatsRecord(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = MediaStatsData(media = null),
@@ -198,21 +185,16 @@ class MediaStatsRecordRepositoryTest {
 
     @Test
     fun `getMediaStatsRecord HTTP error returns failed Result with server message`() = runTest {
-        val call = mediaStatsCall()
         val request = MediaStats.request(id = 21, type = MediaType.ANIME, isAdult = false)
-        `when`(service.getMediaStatsRecord(request)).thenReturn(call)
         val errorBody = """{"errors":[{"message":"Server exploded"}]}"""
             .toResponseBody("application/json".toMediaType())
-        `when`(call.execute()).thenReturn(Response.error(500, errorBody))
+        `when`(service.getMediaStatsRecord(request)).thenReturn(Response.error(500, errorBody))
 
         val result = repository.getMediaStatsRecord(id = 21L, type = MediaType.ANIME, isAdult = false)
 
         assertTrue(result.isFailure)
         assertEquals("Server exploded", result.exceptionOrNull()?.message)
     }
-
-    @Suppress("UNCHECKED_CAST")
-    private fun mediaStatsCall(): Call<GraphContainer<MediaStatsData>> = mock(Call::class.java) as Call<GraphContainer<MediaStatsData>>
 
     private fun mediaStatsData(
         type: MediaType? = null,

@@ -9,7 +9,7 @@ import com.mxt.anitrend.graphql.generated.UserSearchVariables
 import com.mxt.anitrend.model.entity.base.*
 import com.mxt.anitrend.model.entity.container.body.AniListContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
-import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Headers
 import retrofit2.http.POST
@@ -23,21 +23,21 @@ interface SearchService {
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getMediaSearch(@Body request: GraphQLOperationRequest<MediaSearchVariables>): Call<AniListContainer<PageContainer<MediaBase>>>
+    suspend fun getMediaSearch(@Body request: GraphQLOperationRequest<MediaSearchVariables>): Response<AniListContainer<PageContainer<MediaBase>>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getStudioSearch(@Body request: GraphQLOperationRequest<StudioSearchVariables>): Call<AniListContainer<PageContainer<StudioBase>>>
+    suspend fun getStudioSearch(@Body request: GraphQLOperationRequest<StudioSearchVariables>): Response<AniListContainer<PageContainer<StudioBase>>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getStaffSearch(@Body request: GraphQLOperationRequest<StaffSearchVariables>): Call<AniListContainer<PageContainer<StaffBase>>>
+    suspend fun getStaffSearch(@Body request: GraphQLOperationRequest<StaffSearchVariables>): Response<AniListContainer<PageContainer<StaffBase>>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getCharacterSearch(@Body request: GraphQLOperationRequest<CharacterSearchVariables>): Call<AniListContainer<PageContainer<CharacterBase>>>
+    suspend fun getCharacterSearch(@Body request: GraphQLOperationRequest<CharacterSearchVariables>): Response<AniListContainer<PageContainer<CharacterBase>>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getUserSearch(@Body request: GraphQLOperationRequest<UserSearchVariables>): Call<AniListContainer<PageContainer<UserBase>>>
+    suspend fun getUserSearch(@Body request: GraphQLOperationRequest<UserSearchVariables>): Response<AniListContainer<PageContainer<UserBase>>>
 }

@@ -29,7 +29,6 @@ import org.mockito.Mockito.mock
 import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
-import retrofit2.Call
 import retrofit2.Response
 
 /**
@@ -48,14 +47,12 @@ class UserSettingsRepositoryTest {
 
     @Test
     fun `updateUser success maps GraphContainer data to UserSettingsRecord`() = runTest {
-        val call = updateUserCall()
         val request = UpdateUser.request(
             about = "New bio",
             displayAdultContent = true,
             scoreFormat = ScoreFormat.POINT_5,
         )
-        `when`(service.updateUser(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.updateUser(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = UpdateUserData(
@@ -106,10 +103,8 @@ class UserSettingsRepositoryTest {
 
     @Test
     fun `updateUser success preserves nullable settings blocks`() = runTest {
-        val call = updateUserCall()
         val request = UpdateUser.request(titleLanguage = UserTitleLanguage.NATIVE)
-        `when`(service.updateUser(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.updateUser(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = UpdateUserData(
@@ -145,10 +140,8 @@ class UserSettingsRepositoryTest {
 
     @Test
     fun `updateUser GraphQL error returns failed Result with message`() = runTest {
-        val call = updateUserCall()
         val request = UpdateUser.request(profileColor = "red")
-        `when`(service.updateUser(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.updateUser(request)).thenReturn(
             Response.success(
                 GraphContainer<UpdateUserData>(
                     data = null,
@@ -165,10 +158,8 @@ class UserSettingsRepositoryTest {
 
     @Test
     fun `updateUser null body returns failed Result`() = runTest {
-        val call = updateUserCall()
         val request = UpdateUser.request()
-        `when`(service.updateUser(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(Response.success(null))
+        `when`(service.updateUser(request)).thenReturn(Response.success(null))
 
         val result = repository.updateUser()
 
@@ -178,10 +169,8 @@ class UserSettingsRepositoryTest {
 
     @Test
     fun `updateUser null data returns failed Result`() = runTest {
-        val call = updateUserCall()
         val request = UpdateUser.request()
-        `when`(service.updateUser(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.updateUser(request)).thenReturn(
             Response.success(
                 GraphContainer<UpdateUserData>(
                     data = null,
@@ -198,10 +187,8 @@ class UserSettingsRepositoryTest {
 
     @Test
     fun `updateUser null root user returns failed Result`() = runTest {
-        val call = updateUserCall()
         val request = UpdateUser.request()
-        `when`(service.updateUser(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.updateUser(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = UpdateUserData(updateUser = null),
@@ -218,12 +205,10 @@ class UserSettingsRepositoryTest {
 
     @Test
     fun `updateUser HTTP error returns failed Result with server message`() = runTest {
-        val call = updateUserCall()
         val request = UpdateUser.request(airingNotifications = false)
-        `when`(service.updateUser(request)).thenReturn(call)
         val errorBody = """{"errors":[{"message":"Server exploded"}]}"""
             .toResponseBody("application/json".toMediaType())
-        `when`(call.execute()).thenReturn(Response.error(500, errorBody))
+        `when`(service.updateUser(request)).thenReturn(Response.error(500, errorBody))
 
         val result = repository.updateUser(UserSettingsUpdate(airingNotifications = false))
 
@@ -243,10 +228,8 @@ class UserSettingsRepositoryTest {
             boxQuery = boxQuery,
             ioDispatcher = testDispatcher,
         )
-        val call = updateUserCall()
         val request = UpdateUser.request(about = "New bio")
-        `when`(service.updateUser(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.updateUser(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = UpdateUserData(
@@ -309,10 +292,8 @@ class UserSettingsRepositoryTest {
             boxQuery = boxQuery,
             ioDispatcher = testDispatcher,
         )
-        val call = updateUserCall()
         val request = UpdateUser.request(about = "New bio")
-        `when`(service.updateUser(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.updateUser(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = UpdateUserData(
@@ -382,7 +363,4 @@ class UserSettingsRepositoryTest {
         voiceActors = null,
         volumesRead = 0,
     )
-
-    @Suppress("UNCHECKED_CAST")
-    private fun updateUserCall(): Call<GraphContainer<UpdateUserData>> = mock(Call::class.java) as Call<GraphContainer<UpdateUserData>>
 }

@@ -17,7 +17,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
-import retrofit2.Call
 import retrofit2.Response
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -32,10 +31,8 @@ class MediaRecommendationsRepositoryTest {
 
     @Test
     fun `getMediaRecommendations success maps GraphContainer nodes preserving order and page info`() = runTest {
-        val call = recommendationCall()
         val request = RecommendationMedia.request(id = 7, type = MediaType.MANGA, isAdult = false, page = null, perPage = null, sort = null)
-        `when`(service.getMediaRecommendations(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaRecommendations(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = recommendationMediaData(nodes = listOf(firstNode(), secondNode())),
@@ -61,10 +58,8 @@ class MediaRecommendationsRepositoryTest {
 
     @Test
     fun `getMediaRecommendations success returns empty result for empty nodes`() = runTest {
-        val call = recommendationCall()
         val request = RecommendationMedia.request(id = 7, type = MediaType.MANGA, isAdult = false, page = null, perPage = null, sort = null)
-        `when`(service.getMediaRecommendations(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaRecommendations(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = recommendationMediaData(nodes = emptyList()),
@@ -83,10 +78,8 @@ class MediaRecommendationsRepositoryTest {
 
     @Test
     fun `getMediaRecommendations GraphQL error returns failed Result with message`() = runTest {
-        val call = recommendationCall()
         val request = RecommendationMedia.request(id = 7, type = MediaType.MANGA, isAdult = false, page = null, perPage = null, sort = null)
-        `when`(service.getMediaRecommendations(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaRecommendations(request)).thenReturn(
             Response.success(
                 GraphContainer<RecommendationMediaData>(
                     data = null,
@@ -103,10 +96,8 @@ class MediaRecommendationsRepositoryTest {
 
     @Test
     fun `getMediaRecommendations null body returns failed Result`() = runTest {
-        val call = recommendationCall()
         val request = RecommendationMedia.request(id = 7, type = MediaType.MANGA, isAdult = false, page = null, perPage = null, sort = null)
-        `when`(service.getMediaRecommendations(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(Response.success(null))
+        `when`(service.getMediaRecommendations(request)).thenReturn(Response.success(null))
 
         val result = repository.getMediaRecommendations(id = 7L, type = MediaType.MANGA, isAdult = false)
 
@@ -116,10 +107,8 @@ class MediaRecommendationsRepositoryTest {
 
     @Test
     fun `getMediaRecommendations null data returns failed Result`() = runTest {
-        val call = recommendationCall()
         val request = RecommendationMedia.request(id = 7, type = MediaType.MANGA, isAdult = false, page = null, perPage = null, sort = null)
-        `when`(service.getMediaRecommendations(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaRecommendations(request)).thenReturn(
             Response.success(
                 GraphContainer<RecommendationMediaData>(
                     data = null,
@@ -136,10 +125,8 @@ class MediaRecommendationsRepositoryTest {
 
     @Test
     fun `getMediaRecommendations null root media returns failed Result`() = runTest {
-        val call = recommendationCall()
         val request = RecommendationMedia.request(id = 7, type = MediaType.MANGA, isAdult = false, page = null, perPage = null, sort = null)
-        `when`(service.getMediaRecommendations(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaRecommendations(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = RecommendationMediaData(media = null),
@@ -156,10 +143,8 @@ class MediaRecommendationsRepositoryTest {
 
     @Test
     fun `getMediaRecommendations null recommendations block returns failed Result`() = runTest {
-        val call = recommendationCall()
         val request = RecommendationMedia.request(id = 7, type = MediaType.MANGA, isAdult = false, page = null, perPage = null, sort = null)
-        `when`(service.getMediaRecommendations(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaRecommendations(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = RecommendationMediaData(
@@ -178,10 +163,8 @@ class MediaRecommendationsRepositoryTest {
 
     @Test
     fun `getMediaRecommendations drops null nodes while preserving order`() = runTest {
-        val call = recommendationCall()
         val request = RecommendationMedia.request(id = 7, type = MediaType.MANGA, isAdult = false, page = null, perPage = null, sort = null)
-        `when`(service.getMediaRecommendations(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaRecommendations(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = recommendationMediaData(nodes = listOf(firstNode(), null, secondNode())),
@@ -196,9 +179,6 @@ class MediaRecommendationsRepositoryTest {
         val page: RecommendationPageResult = result.getOrThrow()
         assertEquals(listOf(1L, 4L), page.recommendations.map { it.id })
     }
-
-    @Suppress("UNCHECKED_CAST")
-    private fun recommendationCall(): Call<GraphContainer<RecommendationMediaData>> = mock(Call::class.java) as Call<GraphContainer<RecommendationMediaData>>
 
     private fun recommendationMediaData(
         nodes: List<RecommendationMediaData.MediaRecommendationsNodes?>,

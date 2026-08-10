@@ -28,7 +28,7 @@ class StudioRepository(
     suspend fun getStudioBase(id: Long): Result<StudioRecord> = withContext(ioDispatcher) {
         runCatching {
             val request = StudioBase.request(id = id.toInt())
-            val response = studioService.getStudioBase(request).execute()
+            val response = studioService.getStudioBase(request)
             if (response.isSuccessful) {
                 handleStudioBase(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
@@ -53,7 +53,7 @@ class StudioRepository(
     ): Result<ConnectionContainer<PageContainer<MediaEntity>>> = withContext(ioDispatcher) {
         runCatching {
             val request = StudioMedia.request(id = id.toInt(), page = page, perPage = perPage, sort = sort)
-            val response = studioService.getStudioMedia(request).execute()
+            val response = studioService.getStudioMedia(request)
             if (response.isSuccessful) {
                 handleStudioMedia(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {

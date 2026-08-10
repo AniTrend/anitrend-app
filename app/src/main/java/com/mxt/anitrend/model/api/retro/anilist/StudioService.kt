@@ -6,7 +6,7 @@ import com.mxt.anitrend.graphql.generated.StudioBaseData
 import com.mxt.anitrend.graphql.generated.StudioBaseVariables
 import com.mxt.anitrend.graphql.generated.StudioMediaData
 import com.mxt.anitrend.graphql.generated.StudioMediaVariables
-import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Headers
 import retrofit2.http.POST
@@ -19,13 +19,13 @@ import retrofit2.http.POST
 interface StudioService {
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getStudioBase(
+    suspend fun getStudioBase(
         @Body request: GraphQLOperationRequest<StudioBaseVariables>,
-    ): Call<GraphContainer<StudioBaseData>>
+    ): Response<GraphContainer<StudioBaseData>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getStudioMedia(
+    suspend fun getStudioMedia(
         @Body request: GraphQLOperationRequest<StudioMediaVariables>,
-    ): Call<GraphContainer<StudioMediaData>>
+    ): Response<GraphContainer<StudioMediaData>>
 }

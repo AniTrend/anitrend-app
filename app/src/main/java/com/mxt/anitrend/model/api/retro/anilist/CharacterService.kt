@@ -14,7 +14,7 @@ import com.mxt.anitrend.model.entity.container.body.AniListContainer
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.container.body.EdgeContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
-import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Headers
 import retrofit2.http.POST
@@ -27,25 +27,25 @@ import retrofit2.http.POST
 interface CharacterService {
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getCharacterBase(
+    suspend fun getCharacterBase(
         @Body request: GraphQLOperationRequest<CharacterBaseVariables>,
-    ): Call<GraphContainer<CharacterBaseData>>
+    ): Response<GraphContainer<CharacterBaseData>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getCharacterOverview(
+    suspend fun getCharacterOverview(
         @Body request: GraphQLOperationRequest<CharacterOverviewVariables>,
-    ): Call<GraphContainer<CharacterOverviewData>>
+    ): Response<GraphContainer<CharacterOverviewData>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getCharacterMedia(
+    suspend fun getCharacterMedia(
         @Body request: GraphQLOperationRequest<CharacterMediaVariables>,
-    ): Call<AniListContainer<ConnectionContainer<PageContainer<MediaBase>>>>
+    ): Response<AniListContainer<ConnectionContainer<PageContainer<MediaBase>>>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getCharacterActors(
+    suspend fun getCharacterActors(
         @Body request: GraphQLOperationRequest<CharacterActorsVariables>,
-    ): Call<AniListContainer<ConnectionContainer<EdgeContainer<MediaEdge>>>>
+    ): Response<AniListContainer<ConnectionContainer<EdgeContainer<MediaEdge>>>>
 }

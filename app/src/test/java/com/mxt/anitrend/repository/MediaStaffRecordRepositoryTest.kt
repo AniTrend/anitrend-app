@@ -20,7 +20,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
-import retrofit2.Call
 import retrofit2.Response
 
 /**
@@ -38,10 +37,8 @@ class MediaStaffRecordRepositoryTest {
 
     @Test
     fun `getMediaStaffRecord success maps GraphContainer data to MediaStaffRecord`() = runTest {
-        val call = mediaStaffCall()
         val request = MediaStaff.request(id = 21, type = MediaType.ANIME, sort = null, isAdult = false)
-        `when`(service.getMediaStaffRecord(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaStaffRecord(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = mediaStaffData(
@@ -99,7 +96,6 @@ class MediaStaffRecordRepositoryTest {
 
     @Test
     fun `getMediaStaffRecord forwards pagination and sort request inputs`() = runTest {
-        val call = mediaStaffCall()
         val sort = listOf(StaffSort.ROLE, StaffSort.RELEVANCE, StaffSort.ID)
         val request = MediaStaff.request(
             id = 21,
@@ -109,8 +105,7 @@ class MediaStaffRecordRepositoryTest {
             page = 3,
             perPage = 50,
         )
-        `when`(service.getMediaStaffRecord(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaStaffRecord(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = mediaStaffData(
@@ -159,10 +154,8 @@ class MediaStaffRecordRepositoryTest {
 
     @Test
     fun `getMediaStaffRecord preserves nullable optional blocks`() = runTest {
-        val call = mediaStaffCall()
         val request = MediaStaff.request(id = 21, type = MediaType.ANIME, sort = null, isAdult = false)
-        `when`(service.getMediaStaffRecord(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaStaffRecord(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = mediaStaffData(),
@@ -181,10 +174,8 @@ class MediaStaffRecordRepositoryTest {
 
     @Test
     fun `getMediaStaffRecord GraphQL error returns failed Result with message`() = runTest {
-        val call = mediaStaffCall()
         val request = MediaStaff.request(id = 21, type = MediaType.ANIME, sort = null, isAdult = false)
-        `when`(service.getMediaStaffRecord(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaStaffRecord(request)).thenReturn(
             Response.success(
                 GraphContainer<MediaStaffData>(
                     data = null,
@@ -201,10 +192,8 @@ class MediaStaffRecordRepositoryTest {
 
     @Test
     fun `getMediaStaffRecord null body returns failed Result`() = runTest {
-        val call = mediaStaffCall()
         val request = MediaStaff.request(id = 21, type = MediaType.ANIME, sort = null, isAdult = false)
-        `when`(service.getMediaStaffRecord(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(Response.success(null))
+        `when`(service.getMediaStaffRecord(request)).thenReturn(Response.success(null))
 
         val result = repository.getMediaStaffRecord(id = 21L, type = MediaType.ANIME, isAdult = false)
 
@@ -214,10 +203,8 @@ class MediaStaffRecordRepositoryTest {
 
     @Test
     fun `getMediaStaffRecord null data returns failed Result`() = runTest {
-        val call = mediaStaffCall()
         val request = MediaStaff.request(id = 21, type = MediaType.ANIME, sort = null, isAdult = false)
-        `when`(service.getMediaStaffRecord(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaStaffRecord(request)).thenReturn(
             Response.success(
                 GraphContainer<MediaStaffData>(
                     data = null,
@@ -234,10 +221,8 @@ class MediaStaffRecordRepositoryTest {
 
     @Test
     fun `getMediaStaffRecord null root media returns failed Result`() = runTest {
-        val call = mediaStaffCall()
         val request = MediaStaff.request(id = 21, type = MediaType.ANIME, sort = null, isAdult = false)
-        `when`(service.getMediaStaffRecord(request)).thenReturn(call)
-        `when`(call.execute()).thenReturn(
+        `when`(service.getMediaStaffRecord(request)).thenReturn(
             Response.success(
                 GraphContainer(
                     data = MediaStaffData(media = null),
@@ -254,21 +239,16 @@ class MediaStaffRecordRepositoryTest {
 
     @Test
     fun `getMediaStaffRecord HTTP error returns failed Result with server message`() = runTest {
-        val call = mediaStaffCall()
         val request = MediaStaff.request(id = 21, type = MediaType.ANIME, sort = null, isAdult = false)
-        `when`(service.getMediaStaffRecord(request)).thenReturn(call)
         val errorBody = """{"errors":[{"message":"Server exploded"}]}"""
             .toResponseBody("application/json".toMediaType())
-        `when`(call.execute()).thenReturn(Response.error(500, errorBody))
+        `when`(service.getMediaStaffRecord(request)).thenReturn(Response.error(500, errorBody))
 
         val result = repository.getMediaStaffRecord(id = 21L, type = MediaType.ANIME, isAdult = false)
 
         assertTrue(result.isFailure)
         assertEquals("Server exploded", result.exceptionOrNull()?.message)
     }
-
-    @Suppress("UNCHECKED_CAST")
-    private fun mediaStaffCall(): Call<GraphContainer<MediaStaffData>> = mock(Call::class.java) as Call<GraphContainer<MediaStaffData>>
 
     private fun mediaStaffData(
         edges: List<MediaStaffData.MediaStaffEdges?>? = null,

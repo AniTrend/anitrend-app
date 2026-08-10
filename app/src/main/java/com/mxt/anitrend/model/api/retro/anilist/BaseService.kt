@@ -11,7 +11,7 @@ import com.mxt.anitrend.graphql.generated.ToggleLikeVariables
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.model.entity.container.body.AniListContainer
 import okhttp3.ResponseBody
-import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Headers
 import retrofit2.http.POST
@@ -23,25 +23,25 @@ import retrofit2.http.POST
 interface BaseService {
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getGenres(
+    suspend fun getGenres(
         @Body request: GraphQLRequest<EmptyGraphQLVariables>,
-    ): Call<GraphContainer<GenreCollectionData>>
+    ): Response<GraphContainer<GenreCollectionData>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun getTags(
+    suspend fun getTags(
         @Body request: GraphQLRequest<EmptyGraphQLVariables>,
-    ): Call<GraphContainer<MediaTagCollectionData>>
+    ): Response<GraphContainer<MediaTagCollectionData>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun toggleLike(
+    suspend fun toggleLike(
         @Body request: GraphQLOperationRequest<ToggleLikeVariables>,
-    ): Call<AniListContainer<List<UserBase>>>
+    ): Response<AniListContainer<List<UserBase>>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
-    fun toggleFavourite(
+    suspend fun toggleFavourite(
         @Body request: GraphQLOperationRequest<ToggleFavouriteVariables>,
-    ): Call<ResponseBody>
+    ): Response<ResponseBody>
 }
