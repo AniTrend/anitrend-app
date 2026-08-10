@@ -1,7 +1,8 @@
 package com.mxt.anitrend.repository
 
-import co.anitrend.retrofit.graphql.model.attribute.GraphError
-import co.anitrend.retrofit.graphql.model.body.GraphContainer
+import co.anitrend.retrofit.graphql.model.GraphQLData
+import co.anitrend.retrofit.graphql.model.GraphQLResponse
+import co.anitrend.retrofit.graphql.model.GraphQLResponseError
 import com.mxt.anitrend.domain.mediadetail.model.MediaOverviewRecord
 import com.mxt.anitrend.graphql.generated.MediaListStatus
 import com.mxt.anitrend.graphql.generated.MediaOverview
@@ -9,6 +10,7 @@ import com.mxt.anitrend.graphql.generated.MediaOverviewData
 import com.mxt.anitrend.graphql.generated.MediaSource
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.model.api.retro.anilist.MediaService
+import com.mxt.anitrend.model.entity.anilist.Media
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
@@ -36,20 +38,89 @@ class MediaOverviewRecordRepositoryTest {
     )
 
     @Test
-    fun `getMediaOverviewRecord success maps GraphContainer data to MediaOverviewRecord`() = runTest {
+    fun `legacy getMediaOverview maps generated data back to legacy Media entity`() = runTest {
         val request = MediaOverview.request(id = 21, type = MediaType.ANIME, isAdult = false, asHtml = false)
         `when`(service.getMediaOverviewRecord(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = overviewData(
-                        id = 21,
-                        type = MediaType.ANIME,
-                        isFavourite = true,
-                        siteUrl = "https://anilist.co/anime/21",
-                        mediaListEntry = MediaOverviewData.MediaMediaListEntry(id = 99, status = MediaListStatus.CURRENT),
-                        source = MediaSource.ORIGINAL,
+                GraphQLResponse(
+                    data = GraphQLData.Present(
+                        MediaOverviewData(
+                            media = media(
+                                id = 21,
+                                type = MediaType.ANIME,
+                                isFavourite = true,
+                                siteUrl = "https://anilist.co/anime/21",
+                                description = "Overview description",
+                                genres = listOf("Action", "Adventure"),
+                                studios = MediaOverviewData.MediaStudios(
+                                    nodes = listOf(
+                                        MediaOverviewData.MediaStudiosNodes(
+                                            id = 11,
+                                            isAnimationStudio = true,
+                                            isFavourite = true,
+                                            name = "A-1 Pictures",
+                                            siteUrl = "https://anilist.co/studio/11",
+                                        ),
+                                    ),
+                                ),
+                                tags = listOf(
+                                    MediaOverviewData.MediaTags(
+                                        category = "Themes",
+                                        description = "desc",
+                                        id = 7,
+                                        isAdult = false,
+                                        isGeneralSpoiler = true,
+                                        name = "Video Games",
+                                        rank = 78,
+                                    ),
+                                ),
+                                trailer = MediaOverviewData.MediaTrailer(
+                                    id = "abc123",
+                                    site = "youtube",
+                                    thumbnail = "thumb.jpg",
+                                ),
+                            ),
+                        ),
                     ),
-                    errors = null,
+                    errors = emptyList(),
+                ),
+            ),
+        )
+
+        val result = repository.getMediaOverview(id = 21L, type = MediaType.ANIME, isAdult = false)
+
+        assertTrue(result.isSuccess)
+        val entity: Media = result.getOrThrow()
+        assertEquals(21L, entity.id)
+        assertEquals("Sword Art Online", entity.title?.userPreferred)
+        assertEquals("ANIME", entity.type)
+        assertEquals("banner.jpg", entity.bannerImage)
+        assertEquals(true, entity.isFavourite)
+        assertEquals("https://anilist.co/anime/21", entity.siteUrl)
+        assertEquals(listOf("Action", "Adventure"), entity.genres)
+        assertEquals("Video Games", entity.tags?.first()?.name)
+        assertEquals("A-1 Pictures", entity.studios?.connection?.first()?.name)
+        assertEquals("youtube", entity.trailer?.site)
+        assertEquals("Overview description", entity.description)
+    }
+
+    @Test
+    fun `getMediaOverviewRecord success maps GraphQLResponse data to MediaOverviewRecord`() = runTest {
+        val request = MediaOverview.request(id = 21, type = MediaType.ANIME, isAdult = false, asHtml = false)
+        `when`(service.getMediaOverviewRecord(request)).thenReturn(
+            Response.success(
+                GraphQLResponse(
+                    data = GraphQLData.Present(
+                        overviewData(
+                            id = 21,
+                            type = MediaType.ANIME,
+                            isFavourite = true,
+                            siteUrl = "https://anilist.co/anime/21",
+                            mediaListEntry = MediaOverviewData.MediaMediaListEntry(id = 99, status = MediaListStatus.CURRENT),
+                            source = MediaSource.ORIGINAL,
+                        ),
+                    ),
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -74,42 +145,44 @@ class MediaOverviewRecordRepositoryTest {
         val request = MediaOverview.request(id = 21, type = MediaType.ANIME, isAdult = false, asHtml = false)
         `when`(service.getMediaOverviewRecord(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = MediaOverviewData(
-                        media = media(
-                            id = 21,
-                            description = "Overview description",
-                            genres = listOf("Action", "Adventure"),
-                            studios = MediaOverviewData.MediaStudios(
-                                nodes = listOf(
-                                    MediaOverviewData.MediaStudiosNodes(
-                                        id = 11,
-                                        isAnimationStudio = true,
-                                        isFavourite = true,
-                                        name = "A-1 Pictures",
-                                        siteUrl = "https://anilist.co/studio/11",
+                GraphQLResponse(
+                    data = GraphQLData.Present(
+                        MediaOverviewData(
+                            media = media(
+                                id = 21,
+                                description = "Overview description",
+                                genres = listOf("Action", "Adventure"),
+                                studios = MediaOverviewData.MediaStudios(
+                                    nodes = listOf(
+                                        MediaOverviewData.MediaStudiosNodes(
+                                            id = 11,
+                                            isAnimationStudio = true,
+                                            isFavourite = true,
+                                            name = "A-1 Pictures",
+                                            siteUrl = "https://anilist.co/studio/11",
+                                        ),
                                     ),
                                 ),
-                            ),
-                            tags = listOf(
-                                MediaOverviewData.MediaTags(
-                                    category = "Themes",
-                                    description = "desc",
-                                    id = 7,
-                                    isAdult = false,
-                                    isGeneralSpoiler = true,
-                                    name = "Video Games",
-                                    rank = 78,
+                                tags = listOf(
+                                    MediaOverviewData.MediaTags(
+                                        category = "Themes",
+                                        description = "desc",
+                                        id = 7,
+                                        isAdult = false,
+                                        isGeneralSpoiler = true,
+                                        name = "Video Games",
+                                        rank = 78,
+                                    ),
                                 ),
-                            ),
-                            trailer = MediaOverviewData.MediaTrailer(
-                                id = "abc123",
-                                site = "youtube",
-                                thumbnail = "thumb.jpg",
+                                trailer = MediaOverviewData.MediaTrailer(
+                                    id = "abc123",
+                                    site = "youtube",
+                                    thumbnail = "thumb.jpg",
+                                ),
                             ),
                         ),
                     ),
-                    errors = null,
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -132,11 +205,13 @@ class MediaOverviewRecordRepositoryTest {
         val request = MediaOverview.request(id = 21, type = MediaType.ANIME, isAdult = false, asHtml = false)
         `when`(service.getMediaOverviewRecord(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = MediaOverviewData(
-                        media = media(id = 21, isFavourite = true),
+                GraphQLResponse(
+                    data = GraphQLData.Present(
+                        MediaOverviewData(
+                            media = media(id = 21, isFavourite = true),
+                        ),
                     ),
-                    errors = null,
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -158,11 +233,13 @@ class MediaOverviewRecordRepositoryTest {
         val request = MediaOverview.request(id = 21, type = MediaType.ANIME, isAdult = false, asHtml = true)
         `when`(service.getMediaOverviewRecord(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = MediaOverviewData(
-                        media = media(id = 21, description = "<p>html</p>"),
+                GraphQLResponse(
+                    data = GraphQLData.Present(
+                        MediaOverviewData(
+                            media = media(id = 21, description = "<p>html</p>"),
+                        ),
                     ),
-                    errors = null,
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -178,9 +255,9 @@ class MediaOverviewRecordRepositoryTest {
         val request = MediaOverview.request(id = 21, type = MediaType.ANIME, isAdult = false, asHtml = false)
         `when`(service.getMediaOverviewRecord(request)).thenReturn(
             Response.success(
-                GraphContainer<MediaOverviewData>(
-                    data = null,
-                    errors = listOf(GraphError(message = "Media overview failed")),
+                GraphQLResponse<MediaOverviewData>(
+                    data = GraphQLData.Absent,
+                    errors = listOf(GraphQLResponseError(message = "Media overview failed")),
                 ),
             ),
         )
@@ -207,9 +284,9 @@ class MediaOverviewRecordRepositoryTest {
         val request = MediaOverview.request(id = 21, type = MediaType.ANIME, isAdult = false, asHtml = false)
         `when`(service.getMediaOverviewRecord(request)).thenReturn(
             Response.success(
-                GraphContainer<MediaOverviewData>(
-                    data = null,
-                    errors = null,
+                GraphQLResponse<MediaOverviewData>(
+                    data = GraphQLData.Absent,
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -225,9 +302,9 @@ class MediaOverviewRecordRepositoryTest {
         val request = MediaOverview.request(id = 21, type = MediaType.ANIME, isAdult = false, asHtml = false)
         `when`(service.getMediaOverviewRecord(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = MediaOverviewData(media = null),
-                    errors = null,
+                GraphQLResponse(
+                    data = GraphQLData.Present(MediaOverviewData(media = null)),
+                    errors = emptyList(),
                 ),
             ),
         )

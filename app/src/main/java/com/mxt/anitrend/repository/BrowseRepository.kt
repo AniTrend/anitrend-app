@@ -1,29 +1,6 @@
 package com.mxt.anitrend.repository
 
-import co.anitrend.retrofit.graphql.model.body.GraphContainer
-import com.mxt.anitrend.graphql.generated.DeleteMediaListEntry
-import com.mxt.anitrend.graphql.generated.DeleteReview
-import com.mxt.anitrend.graphql.generated.FuzzyDateInput
-import com.mxt.anitrend.graphql.generated.MediaBrowse
-import com.mxt.anitrend.graphql.generated.MediaFormat
-import com.mxt.anitrend.graphql.generated.MediaList
-import com.mxt.anitrend.graphql.generated.MediaListBrowse
-import com.mxt.anitrend.graphql.generated.MediaListCollection
-import com.mxt.anitrend.graphql.generated.MediaListCollectionData
-import com.mxt.anitrend.graphql.generated.MediaListSort
-import com.mxt.anitrend.graphql.generated.MediaListStatus
-import com.mxt.anitrend.graphql.generated.MediaSeason
-import com.mxt.anitrend.graphql.generated.MediaSort
-import com.mxt.anitrend.graphql.generated.MediaStatus
-import com.mxt.anitrend.graphql.generated.MediaType
-import com.mxt.anitrend.graphql.generated.MediaWithList
-import com.mxt.anitrend.graphql.generated.RateReview
-import com.mxt.anitrend.graphql.generated.ReviewBrowse
-import com.mxt.anitrend.graphql.generated.ReviewRating
-import com.mxt.anitrend.graphql.generated.ReviewSort
-import com.mxt.anitrend.graphql.generated.SaveMediaListEntry
-import com.mxt.anitrend.graphql.generated.SaveReview
-import com.mxt.anitrend.graphql.generated.ScoreFormat
+import co.anitrend.retrofit.graphql.model.GraphQLResponse
 import com.mxt.anitrend.data.mapper.toMediaListCollectionPageResult
 import com.mxt.anitrend.data.mapper.toMediaListRecord
 import com.mxt.anitrend.data.mapper.toPageInfoRecord
@@ -35,15 +12,56 @@ import com.mxt.anitrend.data.store.review.ReviewQueryKey
 import com.mxt.anitrend.data.store.review.ReviewStore
 import com.mxt.anitrend.data.store.review.ReviewStoreChange
 import com.mxt.anitrend.domain.medialist.model.MediaListCollectionPageResult
+import com.mxt.anitrend.graphql.generated.DeleteMediaListEntry
+import com.mxt.anitrend.graphql.generated.DeleteMediaListEntryData
+import com.mxt.anitrend.graphql.generated.DeleteReview
+import com.mxt.anitrend.graphql.generated.DeleteReviewData
+import com.mxt.anitrend.graphql.generated.FuzzyDateInput
+import com.mxt.anitrend.graphql.generated.MediaBrowse
+import com.mxt.anitrend.graphql.generated.MediaBrowseData
+import com.mxt.anitrend.graphql.generated.MediaFormat
+import com.mxt.anitrend.graphql.generated.MediaList
+import com.mxt.anitrend.graphql.generated.MediaListBrowse
+import com.mxt.anitrend.graphql.generated.MediaListBrowseData
+import com.mxt.anitrend.graphql.generated.MediaListCollection
+import com.mxt.anitrend.graphql.generated.MediaListCollectionData
+import com.mxt.anitrend.graphql.generated.MediaListData
+import com.mxt.anitrend.graphql.generated.MediaListSort
+import com.mxt.anitrend.graphql.generated.MediaListStatus
+import com.mxt.anitrend.graphql.generated.MediaSeason
+import com.mxt.anitrend.graphql.generated.MediaSort
+import com.mxt.anitrend.graphql.generated.MediaStatus
+import com.mxt.anitrend.graphql.generated.MediaType
+import com.mxt.anitrend.graphql.generated.MediaWithList
+import com.mxt.anitrend.graphql.generated.MediaWithListData
+import com.mxt.anitrend.graphql.generated.RateReview
+import com.mxt.anitrend.graphql.generated.RateReviewData
+import com.mxt.anitrend.graphql.generated.ReviewBrowse
+import com.mxt.anitrend.graphql.generated.ReviewBrowseData
+import com.mxt.anitrend.graphql.generated.ReviewRating
+import com.mxt.anitrend.graphql.generated.ReviewSort
+import com.mxt.anitrend.graphql.generated.SaveMediaListEntry
+import com.mxt.anitrend.graphql.generated.SaveMediaListEntryData
+import com.mxt.anitrend.graphql.generated.SaveReview
+import com.mxt.anitrend.graphql.generated.SaveReviewData
+import com.mxt.anitrend.graphql.generated.ScoreFormat
 import com.mxt.anitrend.model.api.retro.anilist.BrowseService
+import com.mxt.anitrend.model.entity.anilist.MediaList as MediaEntityList
 import com.mxt.anitrend.model.entity.anilist.Review
 import com.mxt.anitrend.model.entity.anilist.meta.DeleteState
+import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.container.body.PageContainer
+import com.mxt.anitrend.repository.mapper.toDeleteState
+import com.mxt.anitrend.repository.mapper.toMediaBaseEntity
+import com.mxt.anitrend.repository.mapper.toMediaBrowsePage
+import com.mxt.anitrend.repository.mapper.toMediaListBrowsePage
+import com.mxt.anitrend.repository.mapper.toMediaListEntity
+import com.mxt.anitrend.repository.mapper.toReview
+import com.mxt.anitrend.repository.mapper.toReviewBrowsePage
 import com.mxt.anitrend.util.graphql.apiError
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import com.mxt.anitrend.model.entity.anilist.MediaList as MediaEntityList
 
 class BrowseRepository(
     private val browseService: BrowseService,
@@ -109,12 +127,9 @@ class BrowseRepository(
         }
     }
 
-    private fun handleMediaListCollection(body: GraphContainer<MediaListCollectionData>): MediaListCollectionPageResult {
-        val graphErrors = body.errors
-        if (!graphErrors.isNullOrEmpty()) {
-            throw RuntimeException(graphErrors.first().message ?: "GraphQL error")
-        }
-        return body.data?.mediaListCollection?.toMediaListCollectionPageResult()
+    private fun handleMediaListCollection(body: GraphQLResponse<MediaListCollectionData>): MediaListCollectionPageResult {
+        val data = handleGraphQLResponse(body)
+        return data.mediaListCollection?.toMediaListCollectionPageResult()
             ?: throw IllegalStateException("Empty response body")
     }
 
@@ -128,15 +143,15 @@ class BrowseRepository(
         startDateLike: String? = null,
         endDateLike: String? = null,
         season: MediaSeason? = null,
-        genres: List<String?>? = null,
-        genresExclude: List<String?>? = null,
+        genres: List<String>? = null,
+        genresExclude: List<String>? = null,
         isAdult: Boolean? = null,
         sort: List<MediaSort>? = null,
         onList: Boolean? = null,
         status: MediaStatus? = null,
-        tags: List<String?>? = null,
-        tagsExclude: List<String?>? = null,
-    ): Result<PageContainer<com.mxt.anitrend.model.entity.base.MediaBase>> = withContext(ioDispatcher) {
+        tags: List<String>? = null,
+        tagsExclude: List<String>? = null,
+    ): Result<PageContainer<MediaBase>> = withContext(ioDispatcher) {
         runCatching {
             val request = MediaBrowse.request(
                 id = id, page = page, perPage = perPage,
@@ -148,7 +163,7 @@ class BrowseRepository(
             )
             val response = browseService.getMediaBrowse(request)
             if (response.isSuccessful) {
-                handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                handleMediaBrowse(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
                 throw RuntimeException(response.apiError())
             }
@@ -170,7 +185,7 @@ class BrowseRepository(
             val request = ReviewBrowse.request(page = page, perPage = perPage, mediaId = mediaId?.toInt(), type = type, sort = sort, asHtml = asHtml)
             val response = browseService.getReviewBrowse(request)
             if (response.isSuccessful) {
-                val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                val result = handleReviewBrowse(response.body() ?: throw IllegalStateException("Empty response body"))
                 val pageInfo = result.takeIf { it.hasPageInfo() }?.pageInfo?.toPageInfoRecord()
                 val resolvedQueryKey = queryKey ?: ReviewQueryKey(
                     mediaId = mediaId,
@@ -212,7 +227,7 @@ class BrowseRepository(
             val request = MediaListBrowse.request(id = id, userId = userId?.toInt(), userName = userName, page = page, perPage = perPage, type = type, status = status, sort = sort, scoreFormat = scoreFormat)
             val response = browseService.getMediaListBrowse(request)
             if (response.isSuccessful) {
-                handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                handleMediaListBrowse(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
                 throw RuntimeException(response.apiError())
             }
@@ -232,7 +247,7 @@ class BrowseRepository(
             val request = MediaList.request(id = id, mediaId = mediaId?.toInt(), userName = userName, type = type, status = status, sort = sort, scoreFormat = scoreFormat)
             val response = browseService.getMediaList(request)
             if (response.isSuccessful) {
-                handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                handleMediaList(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
                 throw RuntimeException(response.apiError())
             }
@@ -244,12 +259,12 @@ class BrowseRepository(
         type: MediaType? = null,
         onList: Boolean? = null,
         scoreFormat: ScoreFormat = ScoreFormat.POINT_100,
-    ): Result<com.mxt.anitrend.model.entity.base.MediaBase> = withContext(ioDispatcher) {
+    ): Result<MediaBase> = withContext(ioDispatcher) {
         runCatching {
             val request = MediaWithList.request(id = id.toInt(), type = type, onList = onList, scoreFormat = scoreFormat)
             val response = browseService.getMediaWithList(request)
             if (response.isSuccessful) {
-                handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                handleMediaWithList(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
                 throw RuntimeException(response.apiError())
             }
@@ -268,7 +283,7 @@ class BrowseRepository(
             val request = DeleteMediaListEntry.request(id = id.toInt())
             val response = browseService.deleteMediaListEntry(request)
             if (response.isSuccessful) {
-                val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                val result = handleDeleteMediaListEntry(response.body() ?: throw IllegalStateException("Empty response body"))
                 if (commitToStore && result.isDeleted) {
                     val resolvedMediaId = mediaId ?: mediaListStore?.state?.value?.entriesById?.get(id)?.mediaId
                     mediaListStore?.apply(
@@ -295,7 +310,7 @@ class BrowseRepository(
             val request = DeleteReview.request(id = id.toInt())
             val response = browseService.deleteReview(request)
             if (response.isSuccessful) {
-                val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                val result = handleDeleteReview(response.body() ?: throw IllegalStateException("Empty response body"))
                 if (commitToStore && result.isDeleted) {
                     reviewStore?.apply(
                         ReviewStoreChange.ReviewDeleted(
@@ -345,7 +360,7 @@ class BrowseRepository(
             )
             val response = browseService.saveMediaListEntry(request)
             if (response.isSuccessful) {
-                val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                val result = handleSaveMediaListEntry(response.body() ?: throw IllegalStateException("Empty response body"))
                 if (commitToStore) {
                     mediaListStore?.apply(
                         MediaListStoreChange.EntryUpserted(
@@ -371,7 +386,7 @@ class BrowseRepository(
             val request = RateReview.request(id = id.toInt(), rating = rating, asHtml = asHtml)
             val response = browseService.rateReview(request)
             if (response.isSuccessful) {
-                val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                val result = handleRateReview(response.body() ?: throw IllegalStateException("Empty response body"))
                 if (commitToStore) {
                     reviewStore?.apply(
                         ReviewStoreChange.ReviewRated(
@@ -402,7 +417,7 @@ class BrowseRepository(
             val request = SaveReview.request(id = id, mediaId = mediaId.toInt(), body = body, summary = summary, score = score, privateValue = private, asHtml = asHtml)
             val response = browseService.saveReview(request)
             if (response.isSuccessful) {
-                val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                val result = handleSaveReview(response.body() ?: throw IllegalStateException("Empty response body"))
                 if (commitToStore) {
                     reviewStore?.apply(
                         ReviewStoreChange.ReviewSaved(
@@ -417,5 +432,63 @@ class BrowseRepository(
                 throw RuntimeException(response.apiError())
             }
         }
+    }
+
+    // Response handlers: unwrap the generated GraphQL response envelope at the
+    // repository boundary and delegate the generated-to-legacy mapping to
+    // BrowseMapper. GraphQL errors and absent data throw through the shared
+    // handleGraphQLResponse, and null generated roots (page/media/mutation
+    // result) throw "Empty response body", keeping the exact semantics of the
+    // legacy AniListContainer decoding. Store commits only ever see mapped
+    // legacy entities after a successful response.
+
+    private fun handleMediaBrowse(body: GraphQLResponse<MediaBrowseData>): PageContainer<MediaBase> {
+        val data = handleGraphQLResponse(body)
+        return data.toMediaBrowsePage()
+    }
+
+    private fun handleReviewBrowse(body: GraphQLResponse<ReviewBrowseData>): PageContainer<Review> {
+        val data = handleGraphQLResponse(body)
+        return data.toReviewBrowsePage()
+    }
+
+    private fun handleMediaListBrowse(body: GraphQLResponse<MediaListBrowseData>): PageContainer<MediaEntityList> {
+        val data = handleGraphQLResponse(body)
+        return data.toMediaListBrowsePage()
+    }
+
+    private fun handleMediaList(body: GraphQLResponse<MediaListData>): MediaEntityList {
+        val data = handleGraphQLResponse(body)
+        return data.toMediaListEntity()
+    }
+
+    private fun handleMediaWithList(body: GraphQLResponse<MediaWithListData>): MediaBase {
+        val data = handleGraphQLResponse(body)
+        return data.toMediaBaseEntity()
+    }
+
+    private fun handleDeleteMediaListEntry(body: GraphQLResponse<DeleteMediaListEntryData>): DeleteState {
+        val data = handleGraphQLResponse(body)
+        return data.toDeleteState()
+    }
+
+    private fun handleDeleteReview(body: GraphQLResponse<DeleteReviewData>): DeleteState {
+        val data = handleGraphQLResponse(body)
+        return data.toDeleteState()
+    }
+
+    private fun handleSaveMediaListEntry(body: GraphQLResponse<SaveMediaListEntryData>): MediaEntityList {
+        val data = handleGraphQLResponse(body)
+        return data.toMediaListEntity()
+    }
+
+    private fun handleRateReview(body: GraphQLResponse<RateReviewData>): Review {
+        val data = handleGraphQLResponse(body)
+        return data.toReview()
+    }
+
+    private fun handleSaveReview(body: GraphQLResponse<SaveReviewData>): Review {
+        val data = handleGraphQLResponse(body)
+        return data.toReview()
     }
 }

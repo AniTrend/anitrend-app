@@ -1,7 +1,8 @@
 package com.mxt.anitrend.repository
 
-import co.anitrend.retrofit.graphql.model.attribute.GraphError
-import co.anitrend.retrofit.graphql.model.body.GraphContainer
+import co.anitrend.retrofit.graphql.model.GraphQLData
+import co.anitrend.retrofit.graphql.model.GraphQLResponse
+import co.anitrend.retrofit.graphql.model.GraphQLResponseError
 import com.mxt.anitrend.domain.mediadetail.model.MediaStatsRecord
 import com.mxt.anitrend.graphql.generated.MediaFormat
 import com.mxt.anitrend.graphql.generated.MediaListStatus
@@ -11,6 +12,7 @@ import com.mxt.anitrend.graphql.generated.MediaStats
 import com.mxt.anitrend.graphql.generated.MediaStatsData
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.model.api.retro.anilist.MediaService
+import com.mxt.anitrend.model.entity.anilist.Media
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
@@ -38,40 +40,102 @@ class MediaStatsRecordRepositoryTest {
     )
 
     @Test
-    fun `getMediaStatsRecord success maps GraphContainer data to MediaStatsRecord`() = runTest {
+    fun `legacy getMediaStats maps generated data back to legacy Media entity`() = runTest {
         val request = MediaStats.request(id = 21, type = MediaType.ANIME, isAdult = false)
         `when`(service.getMediaStatsRecord(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = mediaStatsData(
-                        type = MediaType.ANIME,
-                        externalLinks = listOf(
-                            MediaStatsData.MediaExternalLinks(
-                                id = 301,
-                                site = "Crunchyroll",
-                                url = "https://www.crunchyroll.com/series/123",
+                GraphQLResponse(
+                    data = GraphQLData.Present(
+                        mediaStatsData(
+                            type = MediaType.ANIME,
+                            externalLinks = listOf(
+                                MediaStatsData.MediaExternalLinks(
+                                    id = 301,
+                                    site = "Crunchyroll",
+                                    url = "https://www.crunchyroll.com/series/123",
+                                ),
                             ),
-                        ),
-                        scoreDistribution = listOf(
-                            MediaStatsData.MediaStatsScoreDistribution(amount = 452, score = 90),
-                        ),
-                        statusDistribution = listOf(
-                            MediaStatsData.MediaStatsStatusDistribution(amount = 1200, status = MediaListStatus.COMPLETED),
-                        ),
-                        rankings = listOf(
-                            MediaStatsData.MediaRankings(
-                                allTime = true,
-                                context = "highest rated",
-                                format = MediaFormat.TV,
-                                id = 501,
-                                rank = 7,
-                                season = MediaSeason.WINTER,
-                                type = MediaRankType.RATED,
-                                year = 2012,
+                            scoreDistribution = listOf(
+                                MediaStatsData.MediaStatsScoreDistribution(amount = 452, score = 90),
+                            ),
+                            statusDistribution = listOf(
+                                MediaStatsData.MediaStatsStatusDistribution(amount = 1200, status = MediaListStatus.COMPLETED),
+                            ),
+                            rankings = listOf(
+                                MediaStatsData.MediaRankings(
+                                    allTime = true,
+                                    context = "highest rated",
+                                    format = MediaFormat.TV,
+                                    id = 501,
+                                    rank = 7,
+                                    season = MediaSeason.WINTER,
+                                    type = MediaRankType.RATED,
+                                    year = 2012,
+                                ),
                             ),
                         ),
                     ),
-                    errors = null,
+                    errors = emptyList(),
+                ),
+            ),
+        )
+
+        val result = repository.getMediaStats(id = 21L, type = MediaType.ANIME, isAdult = false)
+
+        assertTrue(result.isSuccess)
+        val entity: Media = result.getOrThrow()
+        assertEquals("ANIME", entity.type)
+        assertEquals(1, entity.externalLinks?.size)
+        assertEquals(301, entity.externalLinks?.first()?.id)
+        assertEquals("Crunchyroll", entity.externalLinks?.first()?.site)
+        assertEquals(90, entity.stats?.scoreDistribution?.first()?.score)
+        assertEquals(452, entity.stats?.scoreDistribution?.first()?.amount)
+        assertEquals("COMPLETED", entity.stats?.statusDistribution?.first()?.status)
+        assertEquals(1200, entity.stats?.statusDistribution?.first()?.amount)
+        assertEquals(1, entity.rankings?.size)
+        assertEquals(501, entity.rankings?.first()?.id)
+        assertEquals("RATED", entity.rankings?.first()?.type)
+        assertEquals("WINTER", entity.rankings?.first()?.season)
+        assertTrue(entity.rankings?.first()?.isAllTime == true)
+    }
+
+    @Test
+    fun `getMediaStatsRecord success maps GraphQLResponse data to MediaStatsRecord`() = runTest {
+        val request = MediaStats.request(id = 21, type = MediaType.ANIME, isAdult = false)
+        `when`(service.getMediaStatsRecord(request)).thenReturn(
+            Response.success(
+                GraphQLResponse(
+                    data = GraphQLData.Present(
+                        mediaStatsData(
+                            type = MediaType.ANIME,
+                            externalLinks = listOf(
+                                MediaStatsData.MediaExternalLinks(
+                                    id = 301,
+                                    site = "Crunchyroll",
+                                    url = "https://www.crunchyroll.com/series/123",
+                                ),
+                            ),
+                            scoreDistribution = listOf(
+                                MediaStatsData.MediaStatsScoreDistribution(amount = 452, score = 90),
+                            ),
+                            statusDistribution = listOf(
+                                MediaStatsData.MediaStatsStatusDistribution(amount = 1200, status = MediaListStatus.COMPLETED),
+                            ),
+                            rankings = listOf(
+                                MediaStatsData.MediaRankings(
+                                    allTime = true,
+                                    context = "highest rated",
+                                    format = MediaFormat.TV,
+                                    id = 501,
+                                    rank = 7,
+                                    season = MediaSeason.WINTER,
+                                    type = MediaRankType.RATED,
+                                    year = 2012,
+                                ),
+                            ),
+                        ),
+                    ),
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -100,9 +164,9 @@ class MediaStatsRecordRepositoryTest {
         val request = MediaStats.request(id = 21, type = MediaType.ANIME, isAdult = false)
         `when`(service.getMediaStatsRecord(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = mediaStatsData(),
-                    errors = null,
+                GraphQLResponse(
+                    data = GraphQLData.Present(mediaStatsData()),
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -123,9 +187,9 @@ class MediaStatsRecordRepositoryTest {
         val request = MediaStats.request(id = 21, type = MediaType.ANIME, isAdult = false)
         `when`(service.getMediaStatsRecord(request)).thenReturn(
             Response.success(
-                GraphContainer<MediaStatsData>(
-                    data = null,
-                    errors = listOf(GraphError(message = "Media stats failed")),
+                GraphQLResponse<MediaStatsData>(
+                    data = GraphQLData.Absent,
+                    errors = listOf(GraphQLResponseError(message = "Media stats failed")),
                 ),
             ),
         )
@@ -152,9 +216,9 @@ class MediaStatsRecordRepositoryTest {
         val request = MediaStats.request(id = 21, type = MediaType.ANIME, isAdult = false)
         `when`(service.getMediaStatsRecord(request)).thenReturn(
             Response.success(
-                GraphContainer<MediaStatsData>(
-                    data = null,
-                    errors = null,
+                GraphQLResponse<MediaStatsData>(
+                    data = GraphQLData.Absent,
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -170,9 +234,9 @@ class MediaStatsRecordRepositoryTest {
         val request = MediaStats.request(id = 21, type = MediaType.ANIME, isAdult = false)
         `when`(service.getMediaStatsRecord(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = MediaStatsData(media = null),
-                    errors = null,
+                GraphQLResponse(
+                    data = GraphQLData.Present(MediaStatsData(media = null)),
+                    errors = emptyList(),
                 ),
             ),
         )

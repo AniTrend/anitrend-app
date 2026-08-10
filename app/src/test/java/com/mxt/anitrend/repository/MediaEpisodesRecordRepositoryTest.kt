@@ -1,7 +1,8 @@
 package com.mxt.anitrend.repository
 
-import co.anitrend.retrofit.graphql.model.attribute.GraphError
-import co.anitrend.retrofit.graphql.model.body.GraphContainer
+import co.anitrend.retrofit.graphql.model.GraphQLData
+import co.anitrend.retrofit.graphql.model.GraphQLResponse
+import co.anitrend.retrofit.graphql.model.GraphQLResponseError
 import com.mxt.anitrend.domain.mediadetail.model.MediaEpisodesRecord
 import com.mxt.anitrend.graphql.generated.MediaEpisodes
 import com.mxt.anitrend.graphql.generated.MediaEpisodesData
@@ -34,26 +35,68 @@ class MediaEpisodesRecordRepositoryTest {
     )
 
     @Test
-    fun `getMediaEpisodesRecord success maps GraphContainer data to MediaEpisodesRecord`() = runTest {
+    fun `legacy getMediaEpisodes maps generated data back to legacy connection links`() = runTest {
         val request = MediaEpisodes.request(id = 21, type = MediaType.ANIME, isAdult = false)
         `when`(service.getMediaEpisodesRecord(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = mediaEpisodesData(
-                        externalLinks = listOf(
-                            MediaEpisodesData.MediaExternalLinks(
-                                id = 301,
-                                site = "Crunchyroll",
-                                url = "https://www.crunchyroll.com/series/123",
-                            ),
-                            MediaEpisodesData.MediaExternalLinks(
-                                id = 302,
-                                site = "AniList",
-                                url = null,
+                GraphQLResponse(
+                    data = GraphQLData.Present(
+                        mediaEpisodesData(
+                            externalLinks = listOf(
+                                MediaEpisodesData.MediaExternalLinks(
+                                    id = 301,
+                                    site = "Crunchyroll",
+                                    url = "https://www.crunchyroll.com/series/123",
+                                ),
+                                MediaEpisodesData.MediaExternalLinks(
+                                    id = 302,
+                                    site = "AniList",
+                                    url = null,
+                                ),
                             ),
                         ),
                     ),
-                    errors = null,
+                    errors = emptyList(),
+                ),
+            ),
+        )
+
+        val result = repository.getMediaEpisodes(id = 21L, type = MediaType.ANIME, isAdult = false)
+
+        assertTrue(result.isSuccess)
+        val links = result.getOrThrow().connection
+        assertEquals(2, links.size)
+        assertEquals(301, links.first().id)
+        assertEquals("Crunchyroll", links.first().site)
+        assertEquals("https://www.crunchyroll.com/series/123", links.first().url)
+        assertEquals(302, links.last().id)
+        assertEquals("AniList", links.last().site)
+        assertNull(links.last().url)
+    }
+
+    @Test
+    fun `getMediaEpisodesRecord success maps GraphQLResponse data to MediaEpisodesRecord`() = runTest {
+        val request = MediaEpisodes.request(id = 21, type = MediaType.ANIME, isAdult = false)
+        `when`(service.getMediaEpisodesRecord(request)).thenReturn(
+            Response.success(
+                GraphQLResponse(
+                    data = GraphQLData.Present(
+                        mediaEpisodesData(
+                            externalLinks = listOf(
+                                MediaEpisodesData.MediaExternalLinks(
+                                    id = 301,
+                                    site = "Crunchyroll",
+                                    url = "https://www.crunchyroll.com/series/123",
+                                ),
+                                MediaEpisodesData.MediaExternalLinks(
+                                    id = 302,
+                                    site = "AniList",
+                                    url = null,
+                                ),
+                            ),
+                        ),
+                    ),
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -76,9 +119,9 @@ class MediaEpisodesRecordRepositoryTest {
         val request = MediaEpisodes.request(id = 21, type = MediaType.ANIME, isAdult = false)
         `when`(service.getMediaEpisodesRecord(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = mediaEpisodesData(),
-                    errors = null,
+                GraphQLResponse(
+                    data = GraphQLData.Present(mediaEpisodesData()),
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -95,9 +138,9 @@ class MediaEpisodesRecordRepositoryTest {
         val request = MediaEpisodes.request(id = 21, type = MediaType.ANIME, isAdult = false)
         `when`(service.getMediaEpisodesRecord(request)).thenReturn(
             Response.success(
-                GraphContainer<MediaEpisodesData>(
-                    data = null,
-                    errors = listOf(GraphError(message = "Media episodes failed")),
+                GraphQLResponse<MediaEpisodesData>(
+                    data = GraphQLData.Absent,
+                    errors = listOf(GraphQLResponseError(message = "Media episodes failed")),
                 ),
             ),
         )
@@ -124,9 +167,9 @@ class MediaEpisodesRecordRepositoryTest {
         val request = MediaEpisodes.request(id = 21, type = MediaType.ANIME, isAdult = false)
         `when`(service.getMediaEpisodesRecord(request)).thenReturn(
             Response.success(
-                GraphContainer<MediaEpisodesData>(
-                    data = null,
-                    errors = null,
+                GraphQLResponse<MediaEpisodesData>(
+                    data = GraphQLData.Absent,
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -142,9 +185,9 @@ class MediaEpisodesRecordRepositoryTest {
         val request = MediaEpisodes.request(id = 21, type = MediaType.ANIME, isAdult = false)
         `when`(service.getMediaEpisodesRecord(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = MediaEpisodesData(media = null),
-                    errors = null,
+                GraphQLResponse(
+                    data = GraphQLData.Present(MediaEpisodesData(media = null)),
+                    errors = emptyList(),
                 ),
             ),
         )

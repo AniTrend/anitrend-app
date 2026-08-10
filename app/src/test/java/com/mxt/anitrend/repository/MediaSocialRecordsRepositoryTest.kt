@@ -1,14 +1,15 @@
 package com.mxt.anitrend.repository
 
+import co.anitrend.retrofit.graphql.model.GraphQLData
+import co.anitrend.retrofit.graphql.model.GraphQLResponse
 import com.mxt.anitrend.data.store.feed.FeedQueryKey
 import com.mxt.anitrend.data.store.feed.FeedScope
 import com.mxt.anitrend.data.store.feed.InMemoryFeedStore
+import com.mxt.anitrend.graphql.generated.ActivityType
 import com.mxt.anitrend.graphql.generated.MediaSocial
+import com.mxt.anitrend.graphql.generated.MediaSocialData
 import com.mxt.anitrend.model.api.retro.anilist.MediaService
 import com.mxt.anitrend.model.entity.anilist.FeedList
-import com.mxt.anitrend.model.entity.container.attribute.PageInfo
-import com.mxt.anitrend.model.entity.container.body.AniListContainer
-import com.mxt.anitrend.model.entity.container.body.DataContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -21,9 +22,10 @@ import org.mockito.Mockito.`when`
 import retrofit2.Response
 
 /**
- * Focused tests for the MediaRepository media-social record boundary (Lane C).
+ * Focused tests for the MediaRepository media-social boundary.
  *
- * Covers the record store commit and the legacy entity-typed return surface.
+ * Covers the record store commit and the legacy entity-typed return surface,
+ * both sourcing from the generated MediaSocialData transport.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 class MediaSocialRecordsRepositoryTest {
@@ -40,8 +42,8 @@ class MediaSocialRecordsRepositoryTest {
     @Test
     fun `getMediaSocialRecords commits FeedRecord page to store under MEDIA scope`() = runTest {
         val request = MediaSocial.request(mediaId = 7, isFollowing = true, page = 1, perPage = 10)
-        val response = pageCall(page = 1, feeds = listOf(feedEntity(1L), feedEntity(2L)))
-        `when`(service.getMediaSocial(request)).thenReturn(response)
+        val response = pageCall(page = 1, feeds = listOf(1L to "feed-1", 2L to "feed-2"))
+        `when`(service.getMediaSocialRecord(request)).thenReturn(response)
         val mediaKey = FeedQueryKey(
             scope = FeedScope.MEDIA,
             userId = null,
@@ -74,8 +76,8 @@ class MediaSocialRecordsRepositoryTest {
     @Test
     fun `legacy getMediaSocial still returns entity typed page`() = runTest {
         val request = MediaSocial.request(mediaId = 7, isFollowing = true, page = 1, perPage = 10)
-        val response = pageCall(page = 1, feeds = listOf(feedEntity(1L), feedEntity(2L)))
-        `when`(service.getMediaSocial(request)).thenReturn(response)
+        val response = pageCall(page = 1, feeds = listOf(1L to "feed-1", 2L to "feed-2"))
+        `when`(service.getMediaSocialRecord(request)).thenReturn(response)
 
         val result = repository.getMediaSocial(
             mediaId = 7L,
@@ -92,8 +94,13 @@ class MediaSocialRecordsRepositoryTest {
     @Test
     fun `getMediaSocialRecords failure returns failed Result and does not commit`() = runTest {
         val request = MediaSocial.request(mediaId = 7, isFollowing = true, page = 1, perPage = 10)
-        val response = success(AniListContainer<PageContainer<FeedList>>(data = null, errors = null))
-        `when`(service.getMediaSocial(request)).thenReturn(response)
+        val response = Response.success(
+            GraphQLResponse<MediaSocialData>(
+                data = GraphQLData.Absent,
+                errors = emptyList(),
+            ),
+        )
+        `when`(service.getMediaSocialRecord(request)).thenReturn(response)
 
         val result = repository.getMediaSocialRecords(mediaId = 7L, isFollowing = true, page = 1, perPage = 10)
 
@@ -102,26 +109,51 @@ class MediaSocialRecordsRepositoryTest {
         assertTrue(store.state.value.queries.isEmpty())
     }
 
-    private fun feedEntity(id: Long): FeedList = FeedList(
-        id = id,
-        type = "TEXT",
-        status = "watched",
-        text = "feed-$id",
-        replyCount = 0,
-    )
-
     private fun pageCall(
         page: Int,
-        feeds: List<FeedList>,
-    ): Response<AniListContainer<PageContainer<FeedList>>> {
-        val content = PageContainer<FeedList>().apply {
-            pageData = feeds
-            pageInfo = PageInfo(total = feeds.size, perPage = 10, currentPage = page).apply { setHasNextPage(false) }
-        }
-        return success(AniListContainer(DataContainer(content), errors = null))
-    }
+        feeds: List<Pair<Long, String>>,
+    ): Response<GraphQLResponse<MediaSocialData>> = Response.success(
+        GraphQLResponse(
+            data = GraphQLData.Present(socialData(page = page, feeds = feeds)),
+            errors = emptyList(),
+        ),
+    )
 
-    private fun <R> success(
-        body: AniListContainer<R>,
-    ): Response<AniListContainer<R>> = Response.success(body)
+    private fun socialData(
+        page: Int,
+        feeds: List<Pair<Long, String>>,
+    ): MediaSocialData = MediaSocialData(
+        page = MediaSocialData.Page(
+            activities = feeds.map { (id, text) ->
+                MediaSocialData.PageActivities.ListActivity(
+                    createdAt = 1_700_000_000,
+                    id = id.toInt(),
+                    isLocked = false,
+                    likes = null,
+                    media = null,
+                    progress = text,
+                    replies = null,
+                    replyCount = 1,
+                    siteUrl = null,
+                    status = "watched",
+                    type = ActivityType.MEDIA_LIST,
+                    user = MediaSocialData.ListActivityPageActivitiesUser(
+                        avatar = null,
+                        bannerImage = null,
+                        id = 55,
+                        isFollowing = null,
+                        name = "user-$id",
+                        updatedAt = null,
+                    ),
+                )
+            },
+            pageInfo = MediaSocialData.PagePageInfo(
+                currentPage = page,
+                hasNextPage = false,
+                lastPage = 1,
+                perPage = 10,
+                total = feeds.size,
+            ),
+        ),
+    )
 }

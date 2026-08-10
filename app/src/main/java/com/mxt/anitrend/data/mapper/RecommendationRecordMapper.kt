@@ -18,9 +18,7 @@ import com.mxt.anitrend.graphql.generated.RecommendationMediaData
  * (type, format, status, userRating) are exposed as their serialized `name`, matching
  * the legacy String-backed entity lane. The media title's original-language value is
  * mapped from the generated `native` field, matching the existing
- * [com.mxt.anitrend.data.store.medialist.InMemoryMediaListStore] sort semantics. The
- * legacy mutable [com.mxt.anitrend.model.entity.base.RecommendationBase] lane is
- * unchanged for its remaining consumers.
+ * [com.mxt.anitrend.data.store.medialist.InMemoryMediaListStore] sort semantics.
  */
 fun RecommendationMediaData.MediaRecommendationsNodes.toRecommendationRecord(): RecommendationRecord = RecommendationRecord(
     id = id.toLong(),

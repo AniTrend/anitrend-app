@@ -1,7 +1,8 @@
 package com.mxt.anitrend.repository
 
-import co.anitrend.retrofit.graphql.model.attribute.GraphError
-import co.anitrend.retrofit.graphql.model.body.GraphContainer
+import co.anitrend.retrofit.graphql.model.GraphQLData
+import co.anitrend.retrofit.graphql.model.GraphQLResponse
+import co.anitrend.retrofit.graphql.model.GraphQLResponseError
 import com.mxt.anitrend.base.interfaces.dao.BoxQuery
 import com.mxt.anitrend.graphql.generated.UserStats
 import com.mxt.anitrend.graphql.generated.UserStatsData
@@ -33,9 +34,9 @@ class UserRepositoryStatsTest {
         val request = UserStats.request(id = null, userName = "profile")
         `when`(service.getUserStats(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = statsData(animeCount = 6),
-                    errors = null,
+                GraphQLResponse(
+                    data = GraphQLData.Present(statsData(animeCount = 6)),
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -54,9 +55,9 @@ class UserRepositoryStatsTest {
         val request = UserStats.request(id = null, userName = "profile")
         `when`(service.getUserStats(request)).thenReturn(
             Response.success(
-                GraphContainer<UserStatsData>(
-                    data = null,
-                    errors = listOf(GraphError(message = "User stats failed")),
+                GraphQLResponse<UserStatsData>(
+                    data = GraphQLData.Absent,
+                    errors = listOf(GraphQLResponseError(message = "User stats failed")),
                 ),
             ),
         )
@@ -83,9 +84,9 @@ class UserRepositoryStatsTest {
         val request = UserStats.request(id = null, userName = "profile")
         `when`(service.getUserStats(request)).thenReturn(
             Response.success(
-                GraphContainer<UserStatsData>(
-                    data = null,
-                    errors = null,
+                GraphQLResponse<UserStatsData>(
+                    data = GraphQLData.Absent,
+                    errors = emptyList(),
                 ),
             ),
         )

@@ -1,6 +1,6 @@
 package com.mxt.anitrend.repository
 
-import co.anitrend.retrofit.graphql.model.body.GraphContainer
+import co.anitrend.retrofit.graphql.model.GraphQLResponse
 import com.mxt.anitrend.graphql.generated.MediaBase
 import com.mxt.anitrend.graphql.generated.MediaBaseData
 import com.mxt.anitrend.graphql.generated.MediaCharacters
@@ -12,6 +12,7 @@ import com.mxt.anitrend.graphql.generated.MediaOverviewData
 import com.mxt.anitrend.graphql.generated.MediaRelations
 import com.mxt.anitrend.graphql.generated.MediaRelationsData
 import com.mxt.anitrend.graphql.generated.MediaSocial
+import com.mxt.anitrend.graphql.generated.MediaSocialData
 import com.mxt.anitrend.graphql.generated.MediaStaff
 import com.mxt.anitrend.graphql.generated.MediaStaffData
 import com.mxt.anitrend.graphql.generated.MediaStats
@@ -51,6 +52,14 @@ import com.mxt.anitrend.model.entity.anilist.edge.StaffEdge
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.container.body.EdgeContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
+import com.mxt.anitrend.repository.mapper.toFeedPage
+import com.mxt.anitrend.repository.mapper.toMediaBaseEntity
+import com.mxt.anitrend.repository.mapper.toMediaCharactersConnection
+import com.mxt.anitrend.repository.mapper.toMediaEpisodesConnection
+import com.mxt.anitrend.repository.mapper.toMediaEntity
+import com.mxt.anitrend.repository.mapper.toMediaRelationsConnection
+import com.mxt.anitrend.repository.mapper.toMediaStaffConnection
+import com.mxt.anitrend.repository.mapper.toMediaStatsEntity
 import com.mxt.anitrend.util.graphql.apiError
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -63,23 +72,30 @@ class MediaRepository(
     private val feedStore: FeedStore? = null,
 ) : AbstractRepository(ioDispatcher) {
 
+    // Legacy entity-typed surface for the primary media detail query.
+    //
+    // Sources from the same generated transport as getMediaBaseRecord below and
+    // maps the generated data back to the legacy entity at the repository
+    // boundary (see MediaMapper.kt). GraphQL error, empty body/null root, and
+    // HTTP failure semantics match the record surface.
     suspend fun getMediaBase(id: Long, type: MediaType?, isAdult: Boolean?): Result<MediaEntity> = withContext(ioDispatcher) {
         runCatching {
             val request = MediaBase.request(id = id.toInt(), type = type, isAdult = isAdult)
-            val response = mediaService.getMediaBase(request)
+            val response = mediaService.getMediaBaseRecord(request)
             if (response.isSuccessful) {
-                handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                handleMediaBase(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
                 throw RuntimeException(response.apiError())
             }
         }
     }
 
-    // Record-typed additive surface for the primary media detail query (Lane C).
-    //
-    // Preserves the exact transport, request parameters, GraphQL error, empty
-    // body/null root, and HTTP failure semantics of the legacy entity-typed
-    // getMediaBase above, but maps at the data boundary into MediaDetailRecord.
+    private fun handleMediaBase(body: GraphQLResponse<MediaBaseData>): MediaEntity {
+        val data = handleGraphQLResponse(body)
+        return data.toMediaBaseEntity()
+    }
+
+    // Record-typed surface for the primary media detail query (Lane C).
     suspend fun getMediaBaseRecord(id: Long, type: MediaType?, isAdult: Boolean?): Result<MediaDetailRecord> = withContext(ioDispatcher) {
         runCatching {
             val request = MediaBase.request(id = id.toInt(), type = type, isAdult = isAdult)
@@ -92,26 +108,30 @@ class MediaRepository(
         }
     }
 
+    // Legacy entity-typed surface for the media overview query.
+    //
+    // Sources from the same generated transport as getMediaOverviewRecord below
+    // and maps the generated data back to the legacy entity at the repository
+    // boundary (see MediaMapper.kt). No remaining main-source consumers after
+    // the MediaOverviewViewModel migration; kept for the legacy entity lane.
     suspend fun getMediaOverview(id: Long, type: MediaType?, isAdult: Boolean?, asHtml: Boolean = false): Result<Media> = withContext(ioDispatcher) {
         runCatching {
             val request = MediaOverview.request(id = id.toInt(), type = type, isAdult = isAdult, asHtml = asHtml)
-            val response = mediaService.getMediaOverview(request)
+            val response = mediaService.getMediaOverviewRecord(request)
             if (response.isSuccessful) {
-                handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                handleMediaOverview(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
                 throw RuntimeException(response.apiError())
             }
         }
     }
 
-    // Record-typed additive surface for the media overview query (Lane C).
-    //
-    // Preserves the exact transport, request parameters, GraphQL error, empty
-    // body/null root, and HTTP failure semantics of the legacy entity-typed
-    // getMediaOverview above, but maps at the data boundary into
-    // MediaOverviewRecord. The legacy getMediaOverview below has no remaining
-    // consumers after the MediaOverviewViewModel migration and is kept only as
-    // infrastructure debt pending removal with the legacy entity lane.
+    private fun handleMediaOverview(body: GraphQLResponse<MediaOverviewData>): Media {
+        val data = handleGraphQLResponse(body)
+        return data.media?.toMediaEntity() ?: throw IllegalStateException("Empty response body")
+    }
+
+    // Record-typed surface for the media overview query (Lane C).
     suspend fun getMediaOverviewRecord(id: Long, type: MediaType?, isAdult: Boolean?, asHtml: Boolean = false): Result<MediaOverviewRecord> = withContext(ioDispatcher) {
         runCatching {
             val request = MediaOverview.request(id = id.toInt(), type = type, isAdult = isAdult, asHtml = asHtml)
@@ -124,25 +144,30 @@ class MediaRepository(
         }
     }
 
+    // Legacy entity-typed surface for the media relations query.
+    //
+    // Sources from the same generated transport as getMediaRelationsRecord below
+    // and maps the generated data back to the legacy connection/edge entities at
+    // the repository boundary (see MediaMapper.kt). Remaining consumers
+    // (MediaRelationViewModel).
     suspend fun getMediaRelations(id: Long, type: MediaType?, isAdult: Boolean?): Result<ConnectionContainer<EdgeContainer<MediaEdge>>> = withContext(ioDispatcher) {
         runCatching {
             val request = MediaRelations.request(id = id.toInt(), type = type, isAdult = isAdult)
-            val response = mediaService.getMediaRelations(request)
+            val response = mediaService.getMediaRelationsRecord(request)
             if (response.isSuccessful) {
-                handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                handleMediaRelations(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
                 throw RuntimeException(response.apiError())
             }
         }
     }
 
-    // Record-typed additive surface for the media relations query (Lane C).
-    //
-    // Preserves the exact transport, request parameters, GraphQL error, empty
-    // body/null root, page-info, and HTTP failure semantics of the legacy
-    // entity-typed getMediaRelations above, but maps at the data boundary into
-    // MediaRelationsRecord. The legacy method is unchanged for its remaining
-    // consumers (MediaRelationViewModel).
+    private fun handleMediaRelations(body: GraphQLResponse<MediaRelationsData>): ConnectionContainer<EdgeContainer<MediaEdge>> {
+        val data = handleGraphQLResponse(body)
+        return data.toMediaRelationsConnection()
+    }
+
+    // Record-typed surface for the media relations query (Lane C).
     suspend fun getMediaRelationsRecord(id: Long, type: MediaType?, isAdult: Boolean?): Result<MediaRelationsRecord> = withContext(ioDispatcher) {
         runCatching {
             val request = MediaRelations.request(id = id.toInt(), type = type, isAdult = isAdult)
@@ -155,25 +180,29 @@ class MediaRepository(
         }
     }
 
+    // Legacy entity-typed surface for the media stats query.
+    //
+    // Sources from the same generated transport as getMediaStatsRecord below and
+    // maps the generated data back to the legacy entity at the repository
+    // boundary (see MediaMapper.kt). Remaining consumers (MediaStatsViewModel).
     suspend fun getMediaStats(id: Long, type: MediaType?, isAdult: Boolean?): Result<Media> = withContext(ioDispatcher) {
         runCatching {
             val request = MediaStats.request(id = id.toInt(), type = type, isAdult = isAdult)
-            val response = mediaService.getMediaStats(request)
+            val response = mediaService.getMediaStatsRecord(request)
             if (response.isSuccessful) {
-                handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                handleMediaStats(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
                 throw RuntimeException(response.apiError())
             }
         }
     }
 
-    // Record-typed additive surface for the media stats query (Lane C).
-    //
-    // Preserves the exact transport, request parameters, GraphQL error, empty
-    // body/null root, and HTTP failure semantics of the legacy entity-typed
-    // getMediaStats above, but maps at the data boundary into
-    // MediaStatsRecord. The legacy method is unchanged for its remaining
-    // consumers (MediaStatsViewModel).
+    private fun handleMediaStats(body: GraphQLResponse<MediaStatsData>): Media {
+        val data = handleGraphQLResponse(body)
+        return data.media?.toMediaStatsEntity() ?: throw IllegalStateException("Empty response body")
+    }
+
+    // Record-typed surface for the media stats query (Lane C).
     suspend fun getMediaStatsRecord(id: Long, type: MediaType?, isAdult: Boolean?): Result<MediaStatsRecord> = withContext(ioDispatcher) {
         runCatching {
             val request = MediaStats.request(id = id.toInt(), type = type, isAdult = isAdult)
@@ -186,25 +215,30 @@ class MediaRepository(
         }
     }
 
+    // Legacy entity-typed surface for the media episodes query.
+    //
+    // Sources from the same generated transport as getMediaEpisodesRecord below
+    // and maps the generated data back to the legacy connection entity at the
+    // repository boundary (see MediaMapper.kt). Remaining consumers
+    // (WatchListFragment).
     suspend fun getMediaEpisodes(id: Long, type: MediaType?, isAdult: Boolean?): Result<ConnectionContainer<List<ExternalLink>>> = withContext(ioDispatcher) {
         runCatching {
             val request = MediaEpisodes.request(id = id.toInt(), type = type, isAdult = isAdult)
-            val response = mediaService.getMediaEpisodes(request)
+            val response = mediaService.getMediaEpisodesRecord(request)
             if (response.isSuccessful) {
-                handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                handleMediaEpisodes(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
                 throw RuntimeException(response.apiError())
             }
         }
     }
 
-    // Record-typed additive surface for the media episodes query (Lane C).
-    //
-    // Preserves the exact transport, request parameters, GraphQL error, empty
-    // body/null root, and HTTP failure semantics of the legacy entity-typed
-    // getMediaEpisodes above, but maps at the data boundary into
-    // MediaEpisodesRecord. The legacy method is unchanged for its remaining
-    // consumers (WatchListFragment).
+    private fun handleMediaEpisodes(body: GraphQLResponse<MediaEpisodesData>): ConnectionContainer<List<ExternalLink>> {
+        val data = handleGraphQLResponse(body)
+        return data.toMediaEpisodesConnection()
+    }
+
+    // Record-typed surface for the media episodes query (Lane C).
     suspend fun getMediaEpisodesRecord(id: Long, type: MediaType?, isAdult: Boolean?): Result<MediaEpisodesRecord> = withContext(ioDispatcher) {
         runCatching {
             val request = MediaEpisodes.request(id = id.toInt(), type = type, isAdult = isAdult)
@@ -217,6 +251,12 @@ class MediaRepository(
         }
     }
 
+    // Legacy entity-typed surface for the media characters query.
+    //
+    // Sources from the same generated transport as getMediaCharactersRecord below
+    // and maps the generated data back to the legacy connection/edge entities at
+    // the repository boundary (see MediaMapper.kt). Remaining consumers
+    // (MediaCharacterViewModel).
     suspend fun getMediaCharacters(
         id: Long,
         type: MediaType?,
@@ -227,22 +267,21 @@ class MediaRepository(
     ): Result<ConnectionContainer<EdgeContainer<CharacterEdge>>> = withContext(ioDispatcher) {
         runCatching {
             val request = MediaCharacters.request(id = id.toInt(), type = type, isAdult = isAdult, page = page, perPage = perPage, sort = sort)
-            val response = mediaService.getMediaCharacters(request)
+            val response = mediaService.getMediaCharactersRecord(request)
             if (response.isSuccessful) {
-                handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                handleMediaCharacters(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
                 throw RuntimeException(response.apiError())
             }
         }
     }
 
-    // Record-typed additive surface for the media characters query (Lane C).
-    //
-    // Preserves the exact transport, request parameters (including pagination and
-    // sort), GraphQL error, empty body/null root, page-info, and HTTP failure
-    // semantics of the legacy entity-typed getMediaCharacters above, but maps at
-    // the data boundary into MediaCharactersRecord. The legacy method is
-    // unchanged for its remaining consumers (MediaCharacterViewModel).
+    private fun handleMediaCharacters(body: GraphQLResponse<MediaCharactersData>): ConnectionContainer<EdgeContainer<CharacterEdge>> {
+        val data = handleGraphQLResponse(body)
+        return data.toMediaCharactersConnection()
+    }
+
+    // Record-typed surface for the media characters query (Lane C).
     suspend fun getMediaCharactersRecord(
         id: Long,
         type: MediaType?,
@@ -262,6 +301,12 @@ class MediaRepository(
         }
     }
 
+    // Legacy entity-typed surface for the media staff query.
+    //
+    // Sources from the same generated transport as getMediaStaffRecord below and
+    // maps the generated data back to the legacy connection/edge entities at the
+    // repository boundary (see MediaMapper.kt). Remaining consumers
+    // (MediaStaffViewModel).
     suspend fun getMediaStaff(
         id: Long,
         type: MediaType?,
@@ -272,22 +317,21 @@ class MediaRepository(
     ): Result<ConnectionContainer<EdgeContainer<StaffEdge>>> = withContext(ioDispatcher) {
         runCatching {
             val request = MediaStaff.request(id = id.toInt(), type = type, sort = sort, isAdult = isAdult, page = page, perPage = perPage)
-            val response = mediaService.getMediaStaff(request)
+            val response = mediaService.getMediaStaffRecord(request)
             if (response.isSuccessful) {
-                handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                handleMediaStaff(response.body() ?: throw IllegalStateException("Empty response body"))
             } else {
                 throw RuntimeException(response.apiError())
             }
         }
     }
 
-    // Record-typed additive surface for the media staff query (Lane C).
-    //
-    // Preserves the exact transport, request parameters (including pagination and
-    // sort), GraphQL error, empty body/null root, page-info, and HTTP failure
-    // semantics of the legacy entity-typed getMediaStaff above, but maps at the
-    // data boundary into MediaStaffRecord. The legacy method is unchanged for its
-    // remaining consumers (MediaStaffViewModel).
+    private fun handleMediaStaff(body: GraphQLResponse<MediaStaffData>): ConnectionContainer<EdgeContainer<StaffEdge>> {
+        val data = handleGraphQLResponse(body)
+        return data.toMediaStaffConnection()
+    }
+
+    // Record-typed surface for the media staff query (Lane C).
     suspend fun getMediaStaffRecord(
         id: Long,
         type: MediaType?,
@@ -326,82 +370,58 @@ class MediaRepository(
         }
     }
 
-    private fun handleMediaBaseRecord(body: GraphContainer<MediaBaseData>): MediaDetailRecord {
-        val graphErrors = body.errors
-        if (!graphErrors.isNullOrEmpty()) {
-            throw RuntimeException(graphErrors.first().message ?: "GraphQL error")
-        }
-        val media = body.data?.media
+    private fun handleMediaBaseRecord(body: GraphQLResponse<MediaBaseData>): MediaDetailRecord {
+        val data = handleGraphQLResponse(body)
+        val media = data.media
             ?: throw IllegalStateException("Empty response body")
         return media.toMediaDetailRecord()
     }
 
-    private fun handleMediaOverviewRecord(body: GraphContainer<MediaOverviewData>): MediaOverviewRecord {
-        val graphErrors = body.errors
-        if (!graphErrors.isNullOrEmpty()) {
-            throw RuntimeException(graphErrors.first().message ?: "GraphQL error")
-        }
-        val media = body.data?.media
+    private fun handleMediaOverviewRecord(body: GraphQLResponse<MediaOverviewData>): MediaOverviewRecord {
+        val data = handleGraphQLResponse(body)
+        val media = data.media
             ?: throw IllegalStateException("Empty response body")
         return media.toMediaOverviewRecord()
     }
 
-    private fun handleMediaStatsRecord(body: GraphContainer<MediaStatsData>): MediaStatsRecord {
-        val graphErrors = body.errors
-        if (!graphErrors.isNullOrEmpty()) {
-            throw RuntimeException(graphErrors.first().message ?: "GraphQL error")
-        }
-        val media = body.data?.media
+    private fun handleMediaStatsRecord(body: GraphQLResponse<MediaStatsData>): MediaStatsRecord {
+        val data = handleGraphQLResponse(body)
+        val media = data.media
             ?: throw IllegalStateException("Empty response body")
         return media.toMediaStatsRecord()
     }
 
-    private fun handleMediaEpisodesRecord(body: GraphContainer<MediaEpisodesData>): MediaEpisodesRecord {
-        val graphErrors = body.errors
-        if (!graphErrors.isNullOrEmpty()) {
-            throw RuntimeException(graphErrors.first().message ?: "GraphQL error")
-        }
-        val media = body.data?.media
+    private fun handleMediaEpisodesRecord(body: GraphQLResponse<MediaEpisodesData>): MediaEpisodesRecord {
+        val data = handleGraphQLResponse(body)
+        val media = data.media
             ?: throw IllegalStateException("Empty response body")
         return media.toMediaEpisodesRecord()
     }
 
-    private fun handleMediaRelationsRecord(body: GraphContainer<MediaRelationsData>): MediaRelationsRecord {
-        val graphErrors = body.errors
-        if (!graphErrors.isNullOrEmpty()) {
-            throw RuntimeException(graphErrors.first().message ?: "GraphQL error")
-        }
-        val media = body.data?.media
+    private fun handleMediaRelationsRecord(body: GraphQLResponse<MediaRelationsData>): MediaRelationsRecord {
+        val data = handleGraphQLResponse(body)
+        val media = data.media
             ?: throw IllegalStateException("Empty response body")
         return media.toMediaRelationsRecord()
     }
 
-    private fun handleMediaCharactersRecord(body: GraphContainer<MediaCharactersData>): MediaCharactersRecord {
-        val graphErrors = body.errors
-        if (!graphErrors.isNullOrEmpty()) {
-            throw RuntimeException(graphErrors.first().message ?: "GraphQL error")
-        }
-        val media = body.data?.media
+    private fun handleMediaCharactersRecord(body: GraphQLResponse<MediaCharactersData>): MediaCharactersRecord {
+        val data = handleGraphQLResponse(body)
+        val media = data.media
             ?: throw IllegalStateException("Empty response body")
         return media.toMediaCharactersRecord()
     }
 
-    private fun handleMediaStaffRecord(body: GraphContainer<MediaStaffData>): MediaStaffRecord {
-        val graphErrors = body.errors
-        if (!graphErrors.isNullOrEmpty()) {
-            throw RuntimeException(graphErrors.first().message ?: "GraphQL error")
-        }
-        val media = body.data?.media
+    private fun handleMediaStaffRecord(body: GraphQLResponse<MediaStaffData>): MediaStaffRecord {
+        val data = handleGraphQLResponse(body)
+        val media = data.media
             ?: throw IllegalStateException("Empty response body")
         return media.toMediaStaffRecord()
     }
 
-    private fun handleMediaRecommendations(body: GraphContainer<RecommendationMediaData>): RecommendationPageResult {
-        val graphErrors = body.errors
-        if (!graphErrors.isNullOrEmpty()) {
-            throw RuntimeException(graphErrors.first().message ?: "GraphQL error")
-        }
-        val recommendations = body.data?.media?.recommendations
+    private fun handleMediaRecommendations(body: GraphQLResponse<RecommendationMediaData>): RecommendationPageResult {
+        val data = handleGraphQLResponse(body)
+        val recommendations = data.media?.recommendations
             ?: throw IllegalStateException("Empty response body")
         return RecommendationPageResult(
             recommendations = recommendations.nodes.orEmpty().mapNotNull { it?.toRecommendationRecord() },
@@ -409,6 +429,12 @@ class MediaRepository(
         )
     }
 
+    // Legacy entity-typed surface for the media feed boundary.
+    //
+    // Sources from the same generated transport as getMediaSocialRecords below
+    // and maps the generated data back to the legacy feed entities at the
+    // repository boundary (see MediaMapper.kt). Remaining consumers
+    // (MediaFeedViewModel). May commit to the FeedStore.
     suspend fun getMediaSocial(
         mediaId: Long,
         isFollowing: Boolean = true,
@@ -420,9 +446,9 @@ class MediaRepository(
     ): Result<PageContainer<FeedList>> = withContext(ioDispatcher) {
         runCatching {
             val request = MediaSocial.request(mediaId = mediaId.toInt(), isFollowing = isFollowing, page = page, perPage = perPage)
-            val response = mediaService.getMediaSocial(request)
+            val response = mediaService.getMediaSocialRecord(request)
             if (response.isSuccessful) {
-                val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                val result = handleMediaSocialPage(response.body() ?: throw IllegalStateException("Empty response body"))
                 val pageInfo = result.takeIf { it.hasPageInfo() }?.pageInfo?.toPageInfoRecord()
                 val resolvedQueryKey = queryKey ?: FeedQueryKey(
                     scope = FeedScope.MEDIA,
@@ -452,7 +478,12 @@ class MediaRepository(
         }
     }
 
-    // Record-typed additive surface for the media feed boundary (Lane C).
+    private fun handleMediaSocialPage(body: GraphQLResponse<MediaSocialData>): PageContainer<FeedList> {
+        val data = handleGraphQLResponse(body)
+        return data.toFeedPage()
+    }
+
+    // Record-typed surface for the media feed boundary (Lane C).
     //
     // Preserves the exact transport, request parameters, page-info, null
     // handling, revision-token, and failure semantics of the legacy
@@ -469,9 +500,9 @@ class MediaRepository(
     ): Result<FeedRecordPage> = withContext(ioDispatcher) {
         runCatching {
             val request = MediaSocial.request(mediaId = mediaId.toInt(), isFollowing = isFollowing, page = page, perPage = perPage)
-            val response = mediaService.getMediaSocial(request)
+            val response = mediaService.getMediaSocialRecord(request)
             if (response.isSuccessful) {
-                val result = handleGraphResponse(response.body() ?: throw IllegalStateException("Empty response body"))
+                val result = handleMediaSocialPage(response.body() ?: throw IllegalStateException("Empty response body"))
                 val pageInfo = result.toRecordPageInfo()
                 val feeds = result.toFeedRecords(revision = readToken)
                 val resolvedQueryKey = queryKey ?: FeedQueryKey(

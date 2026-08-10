@@ -1,13 +1,15 @@
 package com.mxt.anitrend.repository
 
-import co.anitrend.retrofit.graphql.model.attribute.GraphError
-import co.anitrend.retrofit.graphql.model.body.GraphContainer
+import co.anitrend.retrofit.graphql.model.GraphQLData
+import co.anitrend.retrofit.graphql.model.GraphQLResponse
+import co.anitrend.retrofit.graphql.model.GraphQLResponseError
 import com.mxt.anitrend.domain.mediadetail.model.MediaDetailRecord
 import com.mxt.anitrend.graphql.generated.MediaBase
 import com.mxt.anitrend.graphql.generated.MediaBaseData
 import com.mxt.anitrend.graphql.generated.MediaListStatus
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.model.api.retro.anilist.MediaService
+import com.mxt.anitrend.model.entity.base.MediaBase as MediaBaseEntity
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
@@ -35,20 +37,58 @@ class MediaBaseRecordRepositoryTest {
     )
 
     @Test
-    fun `getMediaBaseRecord success maps GraphContainer data to MediaDetailRecord`() = runTest {
+    fun `legacy getMediaBase maps generated data back to legacy MediaBase entity`() = runTest {
         val request = MediaBase.request(id = 7, type = MediaType.ANIME, isAdult = false)
         `when`(service.getMediaBaseRecord(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = mediaBaseData(
-                        id = 7,
-                        idMal = 12345,
-                        type = MediaType.ANIME,
-                        isFavourite = true,
-                        siteUrl = "https://anilist.co/anime/7",
-                        mediaListEntry = MediaBaseData.MediaMediaListEntry(id = 99, status = MediaListStatus.CURRENT),
+                GraphQLResponse(
+                    data = GraphQLData.Present(
+                        mediaBaseData(
+                            id = 7,
+                            idMal = 12345,
+                            type = MediaType.ANIME,
+                            isFavourite = true,
+                            siteUrl = "https://anilist.co/anime/7",
+                            mediaListEntry = MediaBaseData.MediaMediaListEntry(id = 99, status = MediaListStatus.CURRENT),
+                        ),
                     ),
-                    errors = null,
+                    errors = emptyList(),
+                ),
+            ),
+        )
+
+        val result = repository.getMediaBase(id = 7L, type = MediaType.ANIME, isAdult = false)
+
+        assertTrue(result.isSuccess)
+        val entity: MediaBaseEntity = result.getOrThrow()
+        assertEquals(7L, entity.id)
+        assertEquals(12345L, entity.idMal)
+        assertEquals("Sword Art Online", entity.title?.userPreferred)
+        assertEquals("ANIME", entity.type)
+        assertEquals("banner.jpg", entity.bannerImage)
+        assertEquals(true, entity.isFavourite)
+        assertEquals("https://anilist.co/anime/7", entity.siteUrl)
+        assertEquals(99L, entity.mediaListEntry?.id)
+        assertEquals("CURRENT", entity.mediaListEntry?.status)
+    }
+
+    @Test
+    fun `getMediaBaseRecord success maps GraphQLResponse data to MediaDetailRecord`() = runTest {
+        val request = MediaBase.request(id = 7, type = MediaType.ANIME, isAdult = false)
+        `when`(service.getMediaBaseRecord(request)).thenReturn(
+            Response.success(
+                GraphQLResponse(
+                    data = GraphQLData.Present(
+                        mediaBaseData(
+                            id = 7,
+                            idMal = 12345,
+                            type = MediaType.ANIME,
+                            isFavourite = true,
+                            siteUrl = "https://anilist.co/anime/7",
+                            mediaListEntry = MediaBaseData.MediaMediaListEntry(id = 99, status = MediaListStatus.CURRENT),
+                        ),
+                    ),
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -73,12 +113,14 @@ class MediaBaseRecordRepositoryTest {
         val request = MediaBase.request(id = 7, type = MediaType.ANIME, isAdult = false)
         `when`(service.getMediaBaseRecord(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = mediaBaseData(
-                        id = 7,
-                        mediaListEntry = null,
+                GraphQLResponse(
+                    data = GraphQLData.Present(
+                        mediaBaseData(
+                            id = 7,
+                            mediaListEntry = null,
+                        ),
                     ),
-                    errors = null,
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -96,9 +138,9 @@ class MediaBaseRecordRepositoryTest {
         val request = MediaBase.request(id = 7, type = MediaType.ANIME, isAdult = false)
         `when`(service.getMediaBaseRecord(request)).thenReturn(
             Response.success(
-                GraphContainer<MediaBaseData>(
-                    data = null,
-                    errors = listOf(GraphError(message = "Media base failed")),
+                GraphQLResponse<MediaBaseData>(
+                    data = GraphQLData.Absent,
+                    errors = listOf(GraphQLResponseError(message = "Media base failed")),
                 ),
             ),
         )
@@ -125,9 +167,9 @@ class MediaBaseRecordRepositoryTest {
         val request = MediaBase.request(id = 7, type = MediaType.ANIME, isAdult = false)
         `when`(service.getMediaBaseRecord(request)).thenReturn(
             Response.success(
-                GraphContainer<MediaBaseData>(
-                    data = null,
-                    errors = null,
+                GraphQLResponse<MediaBaseData>(
+                    data = GraphQLData.Absent,
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -143,9 +185,9 @@ class MediaBaseRecordRepositoryTest {
         val request = MediaBase.request(id = 7, type = MediaType.ANIME, isAdult = false)
         `when`(service.getMediaBaseRecord(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = MediaBaseData(media = null),
-                    errors = null,
+                GraphQLResponse(
+                    data = GraphQLData.Present(MediaBaseData(media = null)),
+                    errors = emptyList(),
                 ),
             ),
         )

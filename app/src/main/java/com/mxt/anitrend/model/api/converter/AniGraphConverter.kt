@@ -2,10 +2,9 @@ package com.mxt.anitrend.model.api.converter
 
 import co.anitrend.retrofit.graphql.converter.GraphConverter
 import co.anitrend.retrofit.graphql.converter.GraphQLConverterFactory
-import co.anitrend.retrofit.graphql.converter.response.GraphResponseConverter
 import co.anitrend.retrofit.graphql.model.GraphQLDocumentRegistry
 import co.anitrend.retrofit.graphql.model.GraphQLJson
-import co.anitrend.retrofit.graphql.model.body.GraphContainer
+import co.anitrend.retrofit.graphql.model.GraphQLResponse
 import co.anitrend.retrofit.graphql.model.request.GraphQLOperationRequest
 import co.anitrend.retrofit.graphql.serialization.kotlinx.KotlinxGraphQLTransportCodec
 import com.google.gson.Gson
@@ -27,24 +26,25 @@ class AniGraphConverter(
     )
 
     /**
-     * Backend-neutral request delegate for generated [GraphQLOperationRequest] bodies,
-     * used only when the raw request type is a generated operation request. All other
-     * request types keep flowing through the legacy compat [delegate].
+     * Backend-neutral delegate for generated [GraphQLOperationRequest] request bodies and
+     * [GraphQLResponse] response envelopes. All other request and response types keep flowing
+     * through the legacy compat [delegate] and Gson [AniGraphResponseConverter] respectively.
      */
-    private val neutralRequestDelegate: GraphQLConverterFactory = GraphQLConverterFactory.create(
+    private val neutralDelegate: GraphQLConverterFactory = GraphQLConverterFactory.create(
         codec = KotlinxGraphQLTransportCodec(),
         registry = registry,
     )
 
     /**
-     * Response body conversion routes generated GraphQL containers through the retrofit-graphql
-     * JSON adapter while preserving Gson deserialization for legacy AniList DTO containers.
+     * Response body conversion routes generated [GraphQLResponse] envelopes through the
+     * retrofit-graphql transport codec while preserving Gson deserialization for legacy
+     * AniList DTO containers.
      *
      * @param annotations All the annotation applied to the requesting method
      * @param retrofit The retrofit object representing the response
      * @param type The generic type declared on the method
      *
-     * @see GraphResponseConverter
+     * @see GraphQLConverterFactory
      */
     override fun responseBodyConverter(
         type: Type,
@@ -52,8 +52,9 @@ class AniGraphConverter(
         retrofit: Retrofit,
     ): Converter<ResponseBody, *> {
         val rawType = getRawType(type)
-        return if (rawType == GraphContainer::class.java) {
-            GraphResponseConverter<Any>(type, json)
+        return if (rawType == GraphQLResponse::class.java) {
+            neutralDelegate.responseBodyConverter(type, annotations, retrofit)
+                ?: error("No response converter for GraphQLResponse type $type")
         } else {
             AniGraphResponseConverter<Any>(type, gson)
         }
@@ -65,7 +66,7 @@ class AniGraphConverter(
         methodAnnotations: Array<out Annotation>,
         retrofit: Retrofit,
     ): Converter<*, RequestBody>? = if (getRawType(type) == GraphQLOperationRequest::class.java) {
-        neutralRequestDelegate.requestBodyConverter(type, parameterAnnotations, methodAnnotations, retrofit)
+        neutralDelegate.requestBodyConverter(type, parameterAnnotations, methodAnnotations, retrofit)
     } else {
         delegate.requestBodyConverter(type, parameterAnnotations, methodAnnotations, retrofit)
     }

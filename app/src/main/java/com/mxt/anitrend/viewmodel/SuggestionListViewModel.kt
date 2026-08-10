@@ -42,8 +42,8 @@ class SuggestionListViewModel(
     fun load(
         sort: String?,
         page: Int,
-        tags: List<String?>?,
-        genres: List<String?>?,
+        tags: List<String>?,
+        genres: List<String>?,
         isAdult: Boolean?,
     ) {
         viewModelScope.launch {

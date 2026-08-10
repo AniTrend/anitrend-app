@@ -12,13 +12,13 @@ This inventory covers every production Kotlin class under:
 app/src/main/java/com/mxt.anitrend/model/entity/**
 ```
 
-95 classes were enumerated from source and each is assigned exactly one planned target role. Test sources, generated ObjectBox metadata (`NotificationHistory_`, `MyObjectBox`), and classes outside `model.entity` are out of scope. The inventory records the state of the tree at the time of writing; it must be updated by every migration PR per ADR section 10.
+93 class declarations were enumerated from source and each is assigned exactly one planned target role. The inventory counts class declarations, one per inventoried file at snapshot time; the tree currently contains 85 Kotlin files. 8 inventoried classes have been removed by migration PRs since the snapshot (`MediaListCollection`, `MediaListCollectionBase`, `Notification`, `NotificationBase`, `Thread`, `ThreadBase`, `CharacterMediaEdge`, `RecommendationEdge`) and their rows are retained only for reconciliation. Test sources, generated ObjectBox metadata (`NotificationHistory_`, `MyObjectBox`), and classes outside `model.entity` are out of scope. The inventory records the state of the tree at the time of writing; it must be updated by every migration PR per ADR section 10.
 
 ## Methodology
 
 Evidence was collected directly from source with the following searches, not inferred from class names:
 
-- File and declaration enumeration: `find ... model/entity -name '*.kt'` and a top-level `class|interface|enum class|object` scan (one declaration per file for all 95 files).
+- File and declaration enumeration: `find ... model/entity -name '*.kt'` and a top-level `class|interface|enum class|object` scan (93 declarations inventoried; 85 map to files still present in the tree).
 - ObjectBox: `@Entity`, `@Id`, `@Index`, `@Convert` annotations plus `DatabaseHelper`/`BoxQuery` box registrations.
 - Parcelable: `Parcelable.Creator`, `writeToParcel`, `describeContents`, `@Parcelize`, `@IgnoredOnParcel`.
 - Serializable: `Serializable` markers, `com.google.gson.annotations.SerializedName`, `org.simpleframework.xml.*`, generated GraphQL imports (`co.anitrend.retrofit.graphql.*`, `com.mxt.anitrend.graphql.generated.*`).
@@ -59,7 +59,6 @@ Tables are grouped by current package. The full current path is `app/src/main/ja
 | `com.mxt.anitrend.model.entity.base.MediaListCollectionBase` | model.entity.anilist (MediaListCollection subclass) | Remote (GraphQL) | None | None | Handwritten | None found | None | 4 `var`: name, isCustomList, isSplitCompletedList, status | None | 3 Remote DTO | `com.mxt.anitrend.data.remote.anilist.model` | remote->domain `MediaListCollectionRecord` | Default identity (no override) | Media-list aggregate | Remove handwritten Parcelable |
 | `com.mxt.anitrend.model.entity.base.NotificationBase` | model.entity.anilist (Notification subclass) | Remote (GraphQL) | None | None | Handwritten | None found | Extends `RecyclerItem` | 4 `var`: id, type, createdAt, context | None | 3 Remote DTO | `com.mxt.anitrend.data.remote.anilist.model` | remote->domain `NotificationRecord` | Identity by `id` (equals overridden) | Notification aggregate | Remove `RecyclerItem` and handwritten Parcelable |
 | `com.mxt.anitrend.model.entity.base.CharacterBase` | viewmodel, repository, repository/mapper, adapter/recycler/group, widgets, fragments (favourite/group/search), activity (CharacterActivity), model.entity.anilist (MediaCharacter), model.entity.anilist.edge, retro/anilist | Remote (GraphQL) | None | None | Handwritten | CharacterActivity navigates by `KeyUtil.arg_id` (no full entity) | Extends `RecyclerItem` | 5 `var`: id, name, image, isFavourite, siteUrl | `toggleFavourite()` | 3 Remote DTO | `com.mxt.anitrend.data.remote.anilist.model` | remote->domain `CharacterRecord` | Identity by `id` (equals overridden) | Character aggregate | Remove `RecyclerItem`, handwritten Parcelable, and `toggleFavourite()` |
-| `com.mxt.anitrend.model.entity.base.RecommendationBase` | retro/anilist (RecommendationService), model.entity.anilist (Recommendation), model.entity.anilist.edge, repository, view/fragment/group, viewmodel | Remote (GraphQL) | None | None | None | None found | Extends `RecyclerItem` | 5 `var`: id, mediaRecommendation, rating, user, userRating | None | 3 Remote DTO | `com.mxt.anitrend.data.remote.anilist.model` | remote->domain `RecommendationRecord` | Default identity (no override) | Recommendation aggregate | Remove `RecyclerItem` inheritance |
 | `com.mxt.anitrend.model.entity.base.VersionBase` | base/interfaces/dao, data, retro/base, worker | Mixed (remote version info cached in ObjectBox) | Entity (`@Id` assignable) | None | Handwritten | None found | None | 6 `var`: code, lastChecked, migration, releaseNotes, version, appId | `isNewerVersion()` (BuildConfig comparison) | 2 Local entity | `com.mxt.anitrend.data.local.entity` | entity->domain `VersionRecord` | Default identity (no override) | Version / update | Remove handwritten Parcelable; move BuildConfig comparison into an interactor |
 | `com.mxt.anitrend.model.entity.base.CharacterStaffBase` | adapter/recycler/group, util/collection, view/fragment/group | Remote (GraphQL) | None | None | Handwritten | None found | Extends `RecyclerItem` | 2 `lateinit var`: character, media | None | 3 Remote DTO | `com.mxt.anitrend.data.remote.anilist.model` | remote->domain combined character/staff record | Identity by contained `character.id` (equals overridden) | Character/staff aggregate | Remove `RecyclerItem` and handwritten Parcelable |
 | `com.mxt.anitrend.model.entity.base.NotificationHistory` | data, repository, view/fragment/detail | Local (ObjectBox persisted read state) | Entity (`@Id` assignable) | None | None | None found | None | 2 `var`: id, read | None | 2 Local entity | `com.mxt.anitrend.data.local.entity` | entity->domain if surfaced to UI | Default identity (no override) | Notification aggregate | Retain as local entity; confirm no UI consumer mutates `read` directly |
@@ -83,7 +82,6 @@ Tables are grouped by current package. The full current path is `app/src/main/ja
 | `com.mxt.anitrend.model.entity.anilist.Genre` | adapter/recycler/detail, dao, data, repository, util/collection, view/fragment/{detail,list}, viewmodel, worker | Mixed (GraphQL remote + ObjectBox local) | Entity (`@Id`, `@Index`) | None | `@Parcelize` | None found | None | 3 `var`: genre, id, isSelected | None | 2 Local entity | `com.mxt.anitrend.data.local.entity` | entity->domain `GenreRecord` | Default identity (no override) | Media-list / metadata | Remove `@Parcelize`; separate `isSelected` UI state from the persisted entity |
 | `com.mxt.anitrend.model.entity.anilist.Favourite` | retro/anilist, repository, view/fragment/favourite, viewmodel | Remote (GraphQL) | None | None | None | None found | None | 5 `var`: anime, manga, characters, staff, studios (PageContainer fields) | None | 3 Remote DTO | `com.mxt.anitrend.data.remote.anilist.model` | remote->domain `FavouritesRecord` | Default identity (no override) | User aggregate (favourites) | Move to remote DTO; keep PageContainer boundary isolated |
 | `com.mxt.anitrend.model.entity.anilist.MediaCharacter` | repository, repository/mapper, view/fragment/detail, viewmodel | Remote (GraphQL) | None | None | Handwritten | None found | Extends `RecyclerItem` via CharacterBase | 1 `var`: description (private set) | `applyDescription()` (mutation) | 3 Remote DTO | `com.mxt.anitrend.data.remote.anilist.model` | remote->domain `MediaCharacterRecord` | Identity by `id` (inherited override) | Character aggregate | Remove `applyDescription()` and handwritten Parcelable |
-| `com.mxt.anitrend.model.entity.anilist.Recommendation` | retro/anilist (RecommendationService) | Remote (GraphQL) | None | None | None | None found | Extends `RecyclerItem` via RecommendationBase | 1 `var`: media | None | 3 Remote DTO | `com.mxt.anitrend.data.remote.anilist.model` | remote->domain `RecommendationRecord` | Default identity (no override) | Recommendation aggregate | Remove `RecommendationBase` inheritance |
 | `com.mxt.anitrend.model.entity.anilist.FeedList` | adapter/recycler/index, widgets, editor, data/mapper, domain/model, retro/anilist, repository, util/graphql, view/fragment/{detail,list}, view/sheet (BottomSheetComposer), viewmodel | Remote (GraphQL) | None | None | `@Parcelize` | Full entity via fragment bundle (BottomSheetComposer `arg_model`) | None | 12 `var`: id, replyCount, status, text, createdAt, user, media, messenger, recipient, likes, siteUrl, replies | None | 3 Remote DTO | `com.mxt.anitrend.data.remote.anilist.model` | remote->domain `FeedRecord` | Custom cross-type by `id` (equals against FeedList and FeedReply) | Feed aggregate | Remove `@Parcelize`; replace sheet full-entity argument with `FeedScreenParam`; migrate to `FeedRecord` |
 | `com.mxt.anitrend.model.entity.anilist.WebToken` | base/custom/async, dao, data, retro, retro/anilist | Mixed (OAuth remote response + ObjectBox local) | Entity (`@Id`) | None | `@Parcelize` | None found (session state, not navigated) | None | 6 `var`: access_token, token_type, expires_in, expires, refresh_token, id | `calculateExpires()`, `clone()` returns `this`, custom `toString()` | 2 Local entity | `com.mxt.anitrend.data.local.entity` | remote->entity; entity->domain `AuthTokenRecord` | Default identity (no override) | Auth | Remove `@Parcelize`, `clone()`, and `calculateExpires()` (move expiry math into an interactor) |
 
@@ -206,10 +204,10 @@ Tables are grouped by current package. The full current path is `app/src/main/ja
 |---|---|
 | 1 Domain (local feature) | 3 |
 | 2 Local entity | 8 |
-| 3 Remote DTO | 72 |
+| 3 Remote DTO | 70 |
 | 4 UI model | 4 |
 | 6 Framework/container type | 8 |
-| **Total** | **95** |
+| **Total** | **93** |
 
 ## High-risk follow-ups
 
@@ -229,13 +227,13 @@ Tables are grouped by current package. The full current path is `app/src/main/ja
 ## Unresolved source ambiguity
 
 - `@Deprecated("Deprecated in Java")` markers: `UserStats`, `MediaTagStats`, `GenreStats`, `FormatStats`, `YearStats`, and `StatusDistribution` are whole-class deprecated, and the `User.stats` field is deprecated. They remain consumed (by `User` converters and the `UserStats` aggregate), so they keep their assigned target roles, but each should be re-checked for earlier removal during its aggregate migration.
-- `Thread`, `CharacterMediaEdge`, and `RecommendationEdge` have no importers outside the entity package in the current tree. Whether they are still produced by any active GraphQL query is unresolved; `RecommendationService` currently returns `PageContainer<Recommendation>`, not `RecommendationEdge`.
+- `Thread`, `CharacterMediaEdge`, and `RecommendationEdge` are among the 8 inventoried classes no longer present in the tree (see Scope note); whether they were still produced by any active GraphQL query at removal time is unresolved.
 - The statistics data classes are imported only via the `com.mxt.anitrend.model.entity.anilist.user.statistics.*` wildcard in `UserStatistics`, so direct per-class consumer counts could not be resolved; the inventory records them as reached through the `UserStatistics` aggregate.
 - Mutable-field counts were collected from class-body `var` declarations. Metadata classes such as `ScoreDistribution`, `FormatStats`, and `GenreStats` show no class-body `var`; primary-constructor `var` parameters were not exhaustively distinguished from `val` for every class and should be confirmed per aggregate during migration.
 
 ## Verification
 
-- Inventory row count: 95 rows, one per production Kotlin class under `app/src/main/java/com/mxt/anitrend/model/entity/**`.
-- All 95 files enumerated by `find` are represented; no class is marked domain merely because it is consumed by the UI.
-- Role counts sum to 95: 3 Domain (local feature), 8 Local entity, 72 Remote DTO, 4 UI model, 8 Framework/container type.
+- Inventory row count: 93 rows, one per inventoried class declaration under `app/src/main/java/com/mxt/anitrend/model/entity/**`.
+- The tree currently contains 85 Kotlin files (re-verified with `find` at update time); all 85 current files are represented, and the 8 rows without a matching file are the removed classes listed in the Scope note. No class is marked domain merely because it is consumed by the UI.
+- Role counts sum to 93: 3 Domain (local feature), 8 Local entity, 70 Remote DTO, 4 UI model, 8 Framework/container type.
 - Source evidence commands are listed under Methodology and were run against the current working tree.

@@ -1,6 +1,6 @@
 package com.mxt.anitrend.model.api.retro.anilist
 
-import co.anitrend.retrofit.graphql.model.body.GraphContainer
+import co.anitrend.retrofit.graphql.model.GraphQLResponse
 import co.anitrend.retrofit.graphql.model.request.GraphQLOperationRequest
 import com.mxt.anitrend.graphql.generated.StudioBaseData
 import com.mxt.anitrend.graphql.generated.StudioBaseVariables
@@ -21,11 +21,11 @@ interface StudioService {
     @Headers("Content-Type: application/json")
     suspend fun getStudioBase(
         @Body request: GraphQLOperationRequest<StudioBaseVariables>,
-    ): Response<GraphContainer<StudioBaseData>>
+    ): Response<GraphQLResponse<StudioBaseData>>
 
     @POST("/")
     @Headers("Content-Type: application/json")
     suspend fun getStudioMedia(
         @Body request: GraphQLOperationRequest<StudioMediaVariables>,
-    ): Response<GraphContainer<StudioMediaData>>
+    ): Response<GraphQLResponse<StudioMediaData>>
 }

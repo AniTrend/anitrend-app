@@ -1,8 +1,9 @@
 package com.mxt.anitrend.model.api.converter
 
 import co.anitrend.retrofit.graphql.model.EmptyGraphQLVariables
+import co.anitrend.retrofit.graphql.model.GraphQLData
 import co.anitrend.retrofit.graphql.model.GraphQLRequest
-import co.anitrend.retrofit.graphql.model.body.GraphContainer
+import co.anitrend.retrofit.graphql.model.GraphQLResponse
 import co.anitrend.retrofit.graphql.model.request.GraphQLOperationRequest
 import co.anitrend.retrofit.graphql.serialization.kotlinx.KotlinxGraphQLJson
 import com.google.gson.GsonBuilder
@@ -62,9 +63,9 @@ class AniGraphConverterTest {
     }
 
     @Test
-    fun `routes generated GraphContainer responses through Kotlinx`() {
+    fun `routes generated GraphQLResponse envelopes through Kotlinx`() {
         val responseConverter = converter.responseBodyConverter(
-            type = parameterizedType(GraphContainer::class.java, GenreCollectionData::class.java),
+            type = parameterizedType(GraphQLResponse::class.java, GenreCollectionData::class.java),
             annotations = emptyArray(),
             retrofit = retrofit,
         )
@@ -72,16 +73,17 @@ class AniGraphConverterTest {
         val response = responseConverter.convert(
             """{"data":{"GenreCollection":["Action","Comedy"]}}"""
                 .toResponseBody("application/json".toMediaType()),
-        ) as GraphContainer<*>
+        ) as GraphQLResponse<*>
 
-        val data = response.data as GenreCollectionData
-        assertEquals(listOf("Action", "Comedy"), data.genreCollection)
+        val data = response.data as GraphQLData.Present<*>
+        val genreData = data.value as GenreCollectionData
+        assertEquals(listOf("Action", "Comedy"), genreData.genreCollection)
     }
 
     @Test
-    fun `routes generated media tag GraphContainer responses through Kotlinx`() {
+    fun `routes generated media tag GraphQLResponse envelopes through Kotlinx`() {
         val responseConverter = converter.responseBodyConverter(
-            type = parameterizedType(GraphContainer::class.java, MediaTagCollectionData::class.java),
+            type = parameterizedType(GraphQLResponse::class.java, MediaTagCollectionData::class.java),
             annotations = emptyArray(),
             retrofit = retrofit,
         )
@@ -89,14 +91,32 @@ class AniGraphConverterTest {
         val response = responseConverter.convert(
             """{"data":{"MediaTagCollection":[{"id":1,"name":"Cyberpunk","description":null,"category":"Theme","rank":null,"isGeneralSpoiler":null,"isAdult":false}]}}"""
                 .toResponseBody("application/json".toMediaType()),
-        ) as GraphContainer<*>
+        ) as GraphQLResponse<*>
 
-        val data = response.data as MediaTagCollectionData
-        val tag = data.mediaTagCollection?.single()
+        val data = response.data as GraphQLData.Present<*>
+        val mediaTagData = data.value as MediaTagCollectionData
+        val tag = mediaTagData.mediaTagCollection?.single()
         assertEquals(1, tag?.id)
         assertEquals("Cyberpunk", tag?.name)
         assertEquals("Theme", tag?.category)
         assertEquals(false, tag?.isAdult)
+    }
+
+    @Test
+    fun `routes generated GraphQLResponse with absent data through Kotlinx`() {
+        val responseConverter = converter.responseBodyConverter(
+            type = parameterizedType(GraphQLResponse::class.java, GenreCollectionData::class.java),
+            annotations = emptyArray(),
+            retrofit = retrofit,
+        )
+
+        val response = responseConverter.convert(
+            """{"errors":[{"message":"Boom"}]}"""
+                .toResponseBody("application/json".toMediaType()),
+        ) as GraphQLResponse<*>
+
+        assertTrue(response.data is GraphQLData.Absent)
+        assertEquals("Boom", response.errors?.firstOrNull()?.message)
     }
 
     @Test

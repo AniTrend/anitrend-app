@@ -1,7 +1,8 @@
 package com.mxt.anitrend.repository
 
-import co.anitrend.retrofit.graphql.model.attribute.GraphError
-import co.anitrend.retrofit.graphql.model.body.GraphContainer
+import co.anitrend.retrofit.graphql.model.GraphQLData
+import co.anitrend.retrofit.graphql.model.GraphQLResponse
+import co.anitrend.retrofit.graphql.model.GraphQLResponseError
 import com.mxt.anitrend.base.interfaces.dao.BoxQuery
 import com.mxt.anitrend.domain.user.model.UserSettingsRecord
 import com.mxt.anitrend.domain.user.model.UserSettingsUpdate
@@ -46,7 +47,7 @@ class UserSettingsRepositoryTest {
     )
 
     @Test
-    fun `updateUser success maps GraphContainer data to UserSettingsRecord`() = runTest {
+    fun `updateUser success maps GraphQLResponse data to UserSettingsRecord`() = runTest {
         val request = UpdateUser.request(
             about = "New bio",
             displayAdultContent = true,
@@ -54,29 +55,31 @@ class UserSettingsRepositoryTest {
         )
         `when`(service.updateUser(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = UpdateUserData(
-                        updateUser = UpdateUserData.UpdateUser(
-                            about = "New bio",
-                            avatar = null,
-                            bannerImage = null,
-                            id = 7,
-                            isFollowing = false,
-                            mediaListOptions = UpdateUserData.UpdateUserMediaListOptions(
-                                rowOrder = "CUSTOM",
-                                scoreFormat = ScoreFormat.POINT_5,
+                GraphQLResponse(
+                    data = GraphQLData.Present(
+                        UpdateUserData(
+                            updateUser = UpdateUserData.UpdateUser(
+                                about = "New bio",
+                                avatar = null,
+                                bannerImage = null,
+                                id = 7,
+                                isFollowing = false,
+                                mediaListOptions = UpdateUserData.UpdateUserMediaListOptions(
+                                    rowOrder = "CUSTOM",
+                                    scoreFormat = ScoreFormat.POINT_5,
+                                ),
+                                name = "mxt",
+                                options = UpdateUserData.UpdateUserOptions(
+                                    airingNotifications = false,
+                                    displayAdultContent = true,
+                                    profileColor = "purple",
+                                    titleLanguage = UserTitleLanguage.ROMAJI,
+                                ),
+                                updatedAt = 1_700_000_000,
                             ),
-                            name = "mxt",
-                            options = UpdateUserData.UpdateUserOptions(
-                                airingNotifications = false,
-                                displayAdultContent = true,
-                                profileColor = "purple",
-                                titleLanguage = UserTitleLanguage.ROMAJI,
-                            ),
-                            updatedAt = 1_700_000_000,
                         ),
                     ),
-                    errors = null,
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -106,21 +109,23 @@ class UserSettingsRepositoryTest {
         val request = UpdateUser.request(titleLanguage = UserTitleLanguage.NATIVE)
         `when`(service.updateUser(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = UpdateUserData(
-                        updateUser = UpdateUserData.UpdateUser(
-                            about = null,
-                            avatar = null,
-                            bannerImage = null,
-                            id = 7,
-                            isFollowing = null,
-                            mediaListOptions = null,
-                            name = "mxt",
-                            options = null,
-                            updatedAt = null,
+                GraphQLResponse(
+                    data = GraphQLData.Present(
+                        UpdateUserData(
+                            updateUser = UpdateUserData.UpdateUser(
+                                about = null,
+                                avatar = null,
+                                bannerImage = null,
+                                id = 7,
+                                isFollowing = null,
+                                mediaListOptions = null,
+                                name = "mxt",
+                                options = null,
+                                updatedAt = null,
+                            ),
                         ),
                     ),
-                    errors = null,
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -143,9 +148,9 @@ class UserSettingsRepositoryTest {
         val request = UpdateUser.request(profileColor = "red")
         `when`(service.updateUser(request)).thenReturn(
             Response.success(
-                GraphContainer<UpdateUserData>(
-                    data = null,
-                    errors = listOf(GraphError(message = "Update user failed")),
+                GraphQLResponse<UpdateUserData>(
+                    data = GraphQLData.Absent,
+                    errors = listOf(GraphQLResponseError(message = "Update user failed")),
                 ),
             ),
         )
@@ -172,9 +177,9 @@ class UserSettingsRepositoryTest {
         val request = UpdateUser.request()
         `when`(service.updateUser(request)).thenReturn(
             Response.success(
-                GraphContainer<UpdateUserData>(
-                    data = null,
-                    errors = null,
+                GraphQLResponse<UpdateUserData>(
+                    data = GraphQLData.Absent,
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -190,9 +195,9 @@ class UserSettingsRepositoryTest {
         val request = UpdateUser.request()
         `when`(service.updateUser(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = UpdateUserData(updateUser = null),
-                    errors = null,
+                GraphQLResponse(
+                    data = GraphQLData.Present(UpdateUserData(updateUser = null)),
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -231,32 +236,34 @@ class UserSettingsRepositoryTest {
         val request = UpdateUser.request(about = "New bio")
         `when`(service.updateUser(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = UpdateUserData(
-                        updateUser = UpdateUserData.UpdateUser(
-                            about = "New bio",
-                            avatar = UpdateUserData.UpdateUserAvatar(
-                                large = "https://avatar-large",
-                                medium = "https://avatar-medium",
+                GraphQLResponse(
+                    data = GraphQLData.Present(
+                        UpdateUserData(
+                            updateUser = UpdateUserData.UpdateUser(
+                                about = "New bio",
+                                avatar = UpdateUserData.UpdateUserAvatar(
+                                    large = "https://avatar-large",
+                                    medium = "https://avatar-medium",
+                                ),
+                                bannerImage = "https://banner-new",
+                                id = 7,
+                                isFollowing = false,
+                                mediaListOptions = UpdateUserData.UpdateUserMediaListOptions(
+                                    rowOrder = "CUSTOM",
+                                    scoreFormat = ScoreFormat.POINT_5,
+                                ),
+                                name = "updated-name",
+                                options = UpdateUserData.UpdateUserOptions(
+                                    airingNotifications = false,
+                                    displayAdultContent = true,
+                                    profileColor = "purple",
+                                    titleLanguage = UserTitleLanguage.NATIVE,
+                                ),
+                                updatedAt = 1_700_000_000,
                             ),
-                            bannerImage = "https://banner-new",
-                            id = 7,
-                            isFollowing = false,
-                            mediaListOptions = UpdateUserData.UpdateUserMediaListOptions(
-                                rowOrder = "CUSTOM",
-                                scoreFormat = ScoreFormat.POINT_5,
-                            ),
-                            name = "updated-name",
-                            options = UpdateUserData.UpdateUserOptions(
-                                airingNotifications = false,
-                                displayAdultContent = true,
-                                profileColor = "purple",
-                                titleLanguage = UserTitleLanguage.NATIVE,
-                            ),
-                            updatedAt = 1_700_000_000,
                         ),
                     ),
-                    errors = null,
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -295,21 +302,23 @@ class UserSettingsRepositoryTest {
         val request = UpdateUser.request(about = "New bio")
         `when`(service.updateUser(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = UpdateUserData(
-                        updateUser = UpdateUserData.UpdateUser(
-                            about = "New bio",
-                            avatar = null,
-                            bannerImage = null,
-                            id = 7,
-                            isFollowing = null,
-                            mediaListOptions = null,
-                            name = "mxt",
-                            options = null,
-                            updatedAt = null,
+                GraphQLResponse(
+                    data = GraphQLData.Present(
+                        UpdateUserData(
+                            updateUser = UpdateUserData.UpdateUser(
+                                about = "New bio",
+                                avatar = null,
+                                bannerImage = null,
+                                id = 7,
+                                isFollowing = null,
+                                mediaListOptions = null,
+                                name = "mxt",
+                                options = null,
+                                updatedAt = null,
+                            ),
                         ),
                     ),
-                    errors = null,
+                    errors = emptyList(),
                 ),
             ),
         )

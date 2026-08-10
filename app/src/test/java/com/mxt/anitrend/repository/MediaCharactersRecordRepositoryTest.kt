@@ -1,7 +1,8 @@
 package com.mxt.anitrend.repository
 
-import co.anitrend.retrofit.graphql.model.attribute.GraphError
-import co.anitrend.retrofit.graphql.model.body.GraphContainer
+import co.anitrend.retrofit.graphql.model.GraphQLData
+import co.anitrend.retrofit.graphql.model.GraphQLResponse
+import co.anitrend.retrofit.graphql.model.GraphQLResponseError
 import com.mxt.anitrend.domain.mediadetail.model.MediaCharactersRecord
 import com.mxt.anitrend.graphql.generated.CharacterRole
 import com.mxt.anitrend.graphql.generated.CharacterSort
@@ -36,41 +37,100 @@ class MediaCharactersRecordRepositoryTest {
     )
 
     @Test
-    fun `getMediaCharactersRecord success maps GraphContainer data to MediaCharactersRecord`() = runTest {
+    fun `legacy getMediaCharacters maps generated data back to legacy connection edges`() = runTest {
         val request = MediaCharacters.request(id = 21, type = MediaType.ANIME, isAdult = false, sort = null)
         `when`(service.getMediaCharactersRecord(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = mediaCharactersData(
-                        edges = listOf(
-                            MediaCharactersData.MediaCharactersEdges(
-                                role = CharacterRole.MAIN,
-                                node = MediaCharactersData.MediaCharactersEdgesNode(
-                                    id = 123,
-                                    image = MediaCharactersData.MediaCharactersEdgesNodeImage(
-                                        large = "https://cdn.example.com/large.jpg",
-                                        medium = "https://cdn.example.com/medium.jpg",
+                GraphQLResponse(
+                    data = GraphQLData.Present(
+                        mediaCharactersData(
+                            edges = listOf(
+                                MediaCharactersData.MediaCharactersEdges(
+                                    role = CharacterRole.MAIN,
+                                    node = MediaCharactersData.MediaCharactersEdgesNode(
+                                        id = 123,
+                                        image = MediaCharactersData.MediaCharactersEdgesNodeImage(
+                                            large = "https://cdn.example.com/large.jpg",
+                                            medium = "https://cdn.example.com/medium.jpg",
+                                        ),
+                                        isFavourite = true,
+                                        name = MediaCharactersData.MediaCharactersEdgesNodeName(
+                                            alternative = null,
+                                            first = "Light",
+                                            last = "Yagami",
+                                            native = null,
+                                        ),
+                                        siteUrl = "https://anilist.co/character/123",
                                     ),
-                                    isFavourite = true,
-                                    name = MediaCharactersData.MediaCharactersEdgesNodeName(
-                                        alternative = null,
-                                        first = "Light",
-                                        last = "Yagami",
-                                        native = null,
-                                    ),
-                                    siteUrl = "https://anilist.co/character/123",
                                 ),
                             ),
-                        ),
-                        pageInfo = MediaCharactersData.MediaCharactersPageInfo(
-                            currentPage = 1,
-                            hasNextPage = true,
-                            lastPage = 1,
-                            perPage = 25,
-                            total = 2,
+                            pageInfo = MediaCharactersData.MediaCharactersPageInfo(
+                                currentPage = 1,
+                                hasNextPage = true,
+                                lastPage = 1,
+                                perPage = 25,
+                                total = 2,
+                            ),
                         ),
                     ),
-                    errors = null,
+                    errors = emptyList(),
+                ),
+            ),
+        )
+
+        val result = repository.getMediaCharacters(id = 21L, type = MediaType.ANIME, isAdult = false)
+
+        assertTrue(result.isSuccess)
+        val connection = result.getOrThrow()
+        val edge = connection.connection.edges.first()
+        assertEquals("MAIN", edge.role)
+        assertEquals(123L, edge.node.id)
+        assertEquals("Light Yagami", edge.node.name?.fullName)
+        assertEquals("https://cdn.example.com/large.jpg", edge.node.image?.large)
+        assertEquals(true, edge.node.isFavourite)
+        assertEquals("https://anilist.co/character/123", edge.node.siteUrl)
+        assertEquals(1, connection.connection.pageInfo.currentPage)
+        assertTrue(connection.connection.pageInfo.hasNextPage())
+    }
+
+    @Test
+    fun `getMediaCharactersRecord success maps GraphQLResponse data to MediaCharactersRecord`() = runTest {
+        val request = MediaCharacters.request(id = 21, type = MediaType.ANIME, isAdult = false, sort = null)
+        `when`(service.getMediaCharactersRecord(request)).thenReturn(
+            Response.success(
+                GraphQLResponse(
+                    data = GraphQLData.Present(
+                        mediaCharactersData(
+                            edges = listOf(
+                                MediaCharactersData.MediaCharactersEdges(
+                                    role = CharacterRole.MAIN,
+                                    node = MediaCharactersData.MediaCharactersEdgesNode(
+                                        id = 123,
+                                        image = MediaCharactersData.MediaCharactersEdgesNodeImage(
+                                            large = "https://cdn.example.com/large.jpg",
+                                            medium = "https://cdn.example.com/medium.jpg",
+                                        ),
+                                        isFavourite = true,
+                                        name = MediaCharactersData.MediaCharactersEdgesNodeName(
+                                            alternative = null,
+                                            first = "Light",
+                                            last = "Yagami",
+                                            native = null,
+                                        ),
+                                        siteUrl = "https://anilist.co/character/123",
+                                    ),
+                                ),
+                            ),
+                            pageInfo = MediaCharactersData.MediaCharactersPageInfo(
+                                currentPage = 1,
+                                hasNextPage = true,
+                                lastPage = 1,
+                                perPage = 25,
+                                total = 2,
+                            ),
+                        ),
+                    ),
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -105,29 +165,31 @@ class MediaCharactersRecordRepositoryTest {
         )
         `when`(service.getMediaCharactersRecord(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = mediaCharactersData(
-                        edges = listOf(
-                            MediaCharactersData.MediaCharactersEdges(
-                                role = CharacterRole.SUPPORTING,
-                                node = MediaCharactersData.MediaCharactersEdgesNode(
-                                    id = 1,
-                                    image = null,
-                                    isFavourite = false,
-                                    name = null,
-                                    siteUrl = null,
+                GraphQLResponse(
+                    data = GraphQLData.Present(
+                        mediaCharactersData(
+                            edges = listOf(
+                                MediaCharactersData.MediaCharactersEdges(
+                                    role = CharacterRole.SUPPORTING,
+                                    node = MediaCharactersData.MediaCharactersEdgesNode(
+                                        id = 1,
+                                        image = null,
+                                        isFavourite = false,
+                                        name = null,
+                                        siteUrl = null,
+                                    ),
                                 ),
                             ),
-                        ),
-                        pageInfo = MediaCharactersData.MediaCharactersPageInfo(
-                            currentPage = 3,
-                            hasNextPage = false,
-                            lastPage = 3,
-                            perPage = 50,
-                            total = 150,
+                            pageInfo = MediaCharactersData.MediaCharactersPageInfo(
+                                currentPage = 3,
+                                hasNextPage = false,
+                                lastPage = 3,
+                                perPage = 50,
+                                total = 150,
+                            ),
                         ),
                     ),
-                    errors = null,
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -154,9 +216,9 @@ class MediaCharactersRecordRepositoryTest {
         val request = MediaCharacters.request(id = 21, type = MediaType.ANIME, isAdult = false, sort = null)
         `when`(service.getMediaCharactersRecord(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = mediaCharactersData(),
-                    errors = null,
+                GraphQLResponse(
+                    data = GraphQLData.Present(mediaCharactersData()),
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -174,9 +236,9 @@ class MediaCharactersRecordRepositoryTest {
         val request = MediaCharacters.request(id = 21, type = MediaType.ANIME, isAdult = false, sort = null)
         `when`(service.getMediaCharactersRecord(request)).thenReturn(
             Response.success(
-                GraphContainer<MediaCharactersData>(
-                    data = null,
-                    errors = listOf(GraphError(message = "Media characters failed")),
+                GraphQLResponse<MediaCharactersData>(
+                    data = GraphQLData.Absent,
+                    errors = listOf(GraphQLResponseError(message = "Media characters failed")),
                 ),
             ),
         )
@@ -203,9 +265,9 @@ class MediaCharactersRecordRepositoryTest {
         val request = MediaCharacters.request(id = 21, type = MediaType.ANIME, isAdult = false, sort = null)
         `when`(service.getMediaCharactersRecord(request)).thenReturn(
             Response.success(
-                GraphContainer<MediaCharactersData>(
-                    data = null,
-                    errors = null,
+                GraphQLResponse<MediaCharactersData>(
+                    data = GraphQLData.Absent,
+                    errors = emptyList(),
                 ),
             ),
         )
@@ -221,9 +283,9 @@ class MediaCharactersRecordRepositoryTest {
         val request = MediaCharacters.request(id = 21, type = MediaType.ANIME, isAdult = false, sort = null)
         `when`(service.getMediaCharactersRecord(request)).thenReturn(
             Response.success(
-                GraphContainer(
-                    data = MediaCharactersData(media = null),
-                    errors = null,
+                GraphQLResponse(
+                    data = GraphQLData.Present(MediaCharactersData(media = null)),
+                    errors = emptyList(),
                 ),
             ),
         )

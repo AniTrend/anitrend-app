@@ -1,24 +1,29 @@
 package com.mxt.anitrend.repository
 
+import co.anitrend.retrofit.graphql.model.GraphQLData
+import co.anitrend.retrofit.graphql.model.GraphQLResponse
 import com.mxt.anitrend.data.store.feed.FeedQueryKey
 import com.mxt.anitrend.data.store.feed.FeedScope
 import com.mxt.anitrend.data.store.feed.FeedStoreChange
 import com.mxt.anitrend.data.store.feed.InMemoryFeedStore
 import com.mxt.anitrend.domain.feed.model.FeedRecord
 import com.mxt.anitrend.domain.feed.model.FeedReplyRecord
+import com.mxt.anitrend.graphql.generated.ActivityType
 import com.mxt.anitrend.graphql.generated.DeleteActivity
+import com.mxt.anitrend.graphql.generated.DeleteActivityData
 import com.mxt.anitrend.graphql.generated.FeedList
+import com.mxt.anitrend.graphql.generated.FeedListData
 import com.mxt.anitrend.graphql.generated.FeedListReply
+import com.mxt.anitrend.graphql.generated.FeedListReplyData
 import com.mxt.anitrend.graphql.generated.FeedMessage
+import com.mxt.anitrend.graphql.generated.FeedMessageData
 import com.mxt.anitrend.graphql.generated.SaveActivityReply
+import com.mxt.anitrend.graphql.generated.SaveActivityReplyData
 import com.mxt.anitrend.graphql.generated.SaveMessageActivity
+import com.mxt.anitrend.graphql.generated.SaveMessageActivityData
 import com.mxt.anitrend.graphql.generated.SaveTextActivity
+import com.mxt.anitrend.graphql.generated.SaveTextActivityData
 import com.mxt.anitrend.model.api.retro.anilist.FeedService
-import com.mxt.anitrend.model.entity.anilist.FeedReply
-import com.mxt.anitrend.model.entity.anilist.meta.DeleteState
-import com.mxt.anitrend.model.entity.container.attribute.PageInfo
-import com.mxt.anitrend.model.entity.container.body.AniListContainer
-import com.mxt.anitrend.model.entity.container.body.DataContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -62,7 +67,7 @@ class FeedRepositoryTest {
     @Test
     fun `getFeedListRecords success commits FeedRecord page to store`() = runTest {
         val request = FeedList.request(page = 1, perPage = 10, id = null, isFollowing = null, userId = null, type = null, isMixed = null, asHtml = false)
-        val response = pageCall(page = 1, feeds = listOf(feedEntity(1L), feedEntity(2L)))
+        val response = feedListPageCall(page = 1, feeds = listOf(textActivity(1L), textActivity(2L)))
         `when`(service.getFeedList(request)).thenReturn(response)
 
         val result = repository.getFeedListRecords(
@@ -88,7 +93,7 @@ class FeedRepositoryTest {
     @Test
     fun `legacy getFeedList still returns entity typed page`() = runTest {
         val request = FeedList.request(page = 1, perPage = 10, id = null, isFollowing = null, userId = null, type = null, isMixed = null, asHtml = false)
-        val response = pageCall(page = 1, feeds = listOf(feedEntity(1L), feedEntity(2L)))
+        val response = feedListPageCall(page = 1, feeds = listOf(textActivity(1L), textActivity(2L)))
         `when`(service.getFeedList(request)).thenReturn(response)
 
         val result = repository.getFeedList(page = 1, perPage = 10)
@@ -100,8 +105,8 @@ class FeedRepositoryTest {
 
     @Test
     fun `record page loads preserve server ordering across pages`() = runTest {
-        val firstPage = pageCall(page = 1, feeds = listOf(feedEntity(1L), feedEntity(2L)))
-        val secondPage = pageCall(page = 2, feeds = listOf(feedEntity(3L), feedEntity(4L)))
+        val firstPage = feedListPageCall(page = 1, feeds = listOf(textActivity(1L), textActivity(2L)))
+        val secondPage = feedListPageCall(page = 2, feeds = listOf(textActivity(3L), textActivity(4L)))
         `when`(service.getFeedList(FeedList.request(page = 1, perPage = 10))).thenReturn(firstPage)
         `when`(service.getFeedList(FeedList.request(page = 2, perPage = 10))).thenReturn(secondPage)
 
@@ -116,7 +121,7 @@ class FeedRepositoryTest {
     @Test
     fun `getFeedMessageRecords commits FeedRecord page to store`() = runTest {
         val request = FeedMessage.request(page = 1, perPage = 10, messengerId = 7, userId = null, asHtml = false)
-        val response = pageCall(page = 1, feeds = listOf(feedEntity(1L)))
+        val response = feedMessagePageCall(page = 1, feeds = listOf(messageActivity(1L)))
         `when`(service.getFeedMessage(request)).thenReturn(response)
         val outboxKey = FeedQueryKey(
             scope = FeedScope.MESSAGE_OUTBOX,
@@ -142,11 +147,14 @@ class FeedRepositoryTest {
 
     @Test
     fun `getFeedListReplyRecords commits feed and reply records to store`() = runTest {
-        val feed = feedEntity(5L, text = "detail", replyCount = 2).apply {
-            replies = listOf(replyEntity(10L, text = "first"), replyEntity(11L, text = "second"))
-        }
+        val feed = feedDetailData(
+            id = 5L,
+            text = "detail",
+            replyCount = 2,
+            replies = listOf(replyData(10L, text = "first"), replyData(11L, text = "second")),
+        )
         val request = FeedListReply.request(id = 5, asHtml = false)
-        val response = success(AniListContainer(DataContainer(feed), errors = null))
+        val response = success(GraphQLResponse(data = GraphQLData.Present(feed), errors = emptyList()))
         `when`(service.getFeedListReply(request)).thenReturn(response)
 
         val result = repository.getFeedListReplyRecords(id = 5L, readToken = 3L)
@@ -165,7 +173,12 @@ class FeedRepositoryTest {
     @Test
     fun `saveTextActivityRecord commits FeedUpserted with revision`() = runTest {
         val request = SaveTextActivity.request(id = null, text = "hello", asHtml = false)
-        val response = success(AniListContainer(DataContainer(feedEntity(1L, text = "hello")), errors = null))
+        val response = success(
+            GraphQLResponse(
+                data = GraphQLData.Present(saveTextActivityData(id = 1L, text = "hello")),
+                errors = emptyList(),
+            ),
+        )
         `when`(service.saveTextActivity(request)).thenReturn(response)
 
         val result = repository.saveTextActivityRecord(text = "hello", revision = 7L)
@@ -181,7 +194,12 @@ class FeedRepositoryTest {
     @Test
     fun `saveMessageActivityRecord commits FeedUpserted`() = runTest {
         val request = SaveMessageActivity.request(id = null, message = "hi", recipientId = 9, asHtml = false)
-        val response = success(AniListContainer(DataContainer(feedEntity(1L, text = "hi")), errors = null))
+        val response = success(
+            GraphQLResponse(
+                data = GraphQLData.Present(saveMessageActivityData(id = 1L, message = "hi")),
+                errors = emptyList(),
+            ),
+        )
         `when`(service.saveMessageActivity(request)).thenReturn(response)
 
         val result = repository.saveMessageActivityRecord(message = "hi", recipientId = 9L, revision = 2L)
@@ -194,7 +212,12 @@ class FeedRepositoryTest {
     fun `saveActivityReplyRecord commits ReplyUpserted under parent feed`() = runTest {
         seedFeed(id = 5L)
         val request = SaveActivityReply.request(id = null, activityId = 5, text = "thanks", asHtml = false)
-        val response = success(AniListContainer(DataContainer(replyEntity(10L, text = "thanks")), errors = null))
+        val response = success(
+            GraphQLResponse(
+                data = GraphQLData.Present(saveActivityReplyData(id = 10L, text = "thanks")),
+                errors = emptyList(),
+            ),
+        )
         `when`(service.saveActivityReply(request)).thenReturn(response)
 
         val result = repository.saveActivityReplyRecord(activityId = 5L, text = "thanks", revision = 4L)
@@ -210,13 +233,23 @@ class FeedRepositoryTest {
     @Test
     fun `deleteActivity commits FeedDeleted and converges store`() = runTest {
         val saveRequest = SaveTextActivity.request(id = null, text = "to delete", asHtml = false)
-        val saveCall = success(AniListContainer(DataContainer(feedEntity(1L, text = "to delete")), errors = null))
+        val saveCall = success(
+            GraphQLResponse(
+                data = GraphQLData.Present(saveTextActivityData(id = 1L, text = "to delete")),
+                errors = emptyList(),
+            ),
+        )
         `when`(service.saveTextActivity(saveRequest)).thenReturn(saveCall)
         repository.saveTextActivityRecord(text = "to delete", revision = 1L)
         assertTrue(store.state.value.feedsById.containsKey(1L))
 
         val deleteRequest = DeleteActivity.request(id = 1)
-        val deleteCall = success(AniListContainer(DataContainer(DeleteState(isDeleted = true)), errors = null))
+        val deleteCall = success(
+            GraphQLResponse(
+                data = GraphQLData.Present(DeleteActivityData(deleteActivity = DeleteActivityData.DeleteActivity(deleted = true))),
+                errors = emptyList(),
+            ),
+        )
         `when`(service.deleteActivity(deleteRequest)).thenReturn(deleteCall)
 
         val result = repository.deleteActivity(id = 1L, revision = 2L)
@@ -229,7 +262,7 @@ class FeedRepositoryTest {
     @Test
     fun `failed save is server authoritative and leaves store unchanged`() = runTest {
         val request = SaveTextActivity.request(id = null, text = "boom", asHtml = false)
-        val response = success(AniListContainer<FeedListEntity>(data = null, errors = null))
+        val response = success(GraphQLResponse<SaveTextActivityData>(data = GraphQLData.Absent, errors = emptyList()))
         `when`(service.saveTextActivity(request)).thenReturn(response)
 
         val result = repository.saveTextActivityRecord(text = "boom", revision = 1L)
@@ -242,12 +275,22 @@ class FeedRepositoryTest {
     @Test
     fun `stale revision save is rejected by store`() = runTest {
         val newerRequest = SaveTextActivity.request(id = null, text = "newer", asHtml = false)
-        val newerCall = success(AniListContainer(DataContainer(feedEntity(1L, text = "newer")), errors = null))
+        val newerCall = success(
+            GraphQLResponse(
+                data = GraphQLData.Present(saveTextActivityData(id = 1L, text = "newer")),
+                errors = emptyList(),
+            ),
+        )
         `when`(service.saveTextActivity(newerRequest)).thenReturn(newerCall)
         repository.saveTextActivityRecord(text = "newer", revision = 10L)
 
         val olderRequest = SaveTextActivity.request(id = null, text = "older", asHtml = false)
-        val olderCall = success(AniListContainer(DataContainer(feedEntity(1L, text = "older")), errors = null))
+        val olderCall = success(
+            GraphQLResponse(
+                data = GraphQLData.Present(saveTextActivityData(id = 1L, text = "older")),
+                errors = emptyList(),
+            ),
+        )
         `when`(service.saveTextActivity(olderRequest)).thenReturn(olderCall)
         repository.saveTextActivityRecord(text = "older", revision = 9L)
 
@@ -258,11 +301,11 @@ class FeedRepositoryTest {
 
     @Test
     fun `stale page token is rejected by store`() = runTest {
-        val freshCall = pageCall(page = 1, feeds = listOf(feedEntity(1L)))
+        val freshCall = feedListPageCall(page = 1, feeds = listOf(textActivity(1L)))
         `when`(service.getFeedList(FeedList.request(page = 1, perPage = 10))).thenReturn(freshCall)
         repository.getFeedListRecords(page = 1, perPage = 10, queryKey = globalKey, readToken = 10L)
 
-        val staleCall = pageCall(page = 1, feeds = listOf(feedEntity(1L).apply { text = "older page" }))
+        val staleCall = feedListPageCall(page = 1, feeds = listOf(textActivity(1L, text = "older page")))
         `when`(service.getFeedList(FeedList.request(page = 1, perPage = 10))).thenReturn(staleCall)
         repository.getFeedListRecords(page = 1, perPage = 10, queryKey = globalKey, readToken = 5L)
 
@@ -288,32 +331,136 @@ class FeedRepositoryTest {
         store.apply(FeedStoreChange.FeedUpserted(feed))
     }
 
-    private fun feedEntity(id: Long, text: String = "feed-$id", replyCount: Int = 0): FeedListEntity = FeedListEntity(
-        id = id,
-        type = "TEXT",
-        status = "watched",
-        text = text,
-        replyCount = replyCount,
-    )
-
-    private fun replyEntity(id: Long, text: String = "reply-$id"): FeedReply = FeedReply(
-        id = id,
-        text = text,
+    private fun textActivity(id: Long, text: String = "feed-$id", replyCount: Int = 0): FeedListData.PageActivities.TextActivity = FeedListData.PageActivities.TextActivity(
         createdAt = 0,
+        id = id.toInt(),
+        isLocked = null,
+        likes = null,
+        replies = null,
+        replyCount = replyCount,
+        siteUrl = null,
+        text = text,
+        type = ActivityType.TEXT,
+        user = null,
     )
 
-    private fun pageCall(
+    private fun messageActivity(id: Long, text: String = "feed-$id", replyCount: Int = 0): FeedMessageData.PageActivities.MessageActivity = FeedMessageData.PageActivities.MessageActivity(
+        createdAt = 0,
+        id = id.toInt(),
+        isLocked = null,
+        likes = null,
+        message = text,
+        messenger = null,
+        recipient = null,
+        replies = null,
+        replyCount = replyCount,
+        siteUrl = null,
+        type = ActivityType.MESSAGE,
+    )
+
+    private fun feedDetailData(
+        id: Long,
+        text: String,
+        replyCount: Int,
+        replies: List<FeedListReplyData.TextActivityActivityReplies>,
+    ): FeedListReplyData = FeedListReplyData(
+        activity = FeedListReplyData.Activity.TextActivity(
+            createdAt = 0,
+            id = id.toInt(),
+            isLocked = null,
+            likes = null,
+            replies = replies,
+            replyCount = replyCount,
+            siteUrl = null,
+            text = text,
+            type = ActivityType.TEXT,
+            user = null,
+        ),
+    )
+
+    private fun replyData(id: Long, text: String = "reply-$id"): FeedListReplyData.TextActivityActivityReplies = FeedListReplyData.TextActivityActivityReplies(
+        createdAt = 0,
+        id = id.toInt(),
+        likes = null,
+        text = text,
+        user = null,
+    )
+
+    private fun saveTextActivityData(id: Long, text: String): SaveTextActivityData = SaveTextActivityData(
+        saveTextActivity = SaveTextActivityData.SaveTextActivity(
+            createdAt = 0,
+            id = id.toInt(),
+            replyCount = 0,
+            text = text,
+            type = ActivityType.TEXT,
+        ),
+    )
+
+    private fun saveMessageActivityData(id: Long, message: String): SaveMessageActivityData = SaveMessageActivityData(
+        saveMessageActivity = SaveMessageActivityData.SaveMessageActivity(
+            createdAt = 0,
+            id = id.toInt(),
+            message = message,
+            replyCount = 0,
+            type = ActivityType.TEXT,
+        ),
+    )
+
+    private fun saveActivityReplyData(id: Long, text: String): SaveActivityReplyData = SaveActivityReplyData(
+        saveActivityReply = SaveActivityReplyData.SaveActivityReply(
+            createdAt = 0,
+            id = id.toInt(),
+            text = text,
+        ),
+    )
+
+    private fun feedListPageCall(
         page: Int,
-        feeds: List<FeedListEntity>,
-    ): Response<AniListContainer<PageContainer<FeedListEntity>>> {
-        val content = PageContainer<FeedListEntity>().apply {
-            pageData = feeds
-            pageInfo = PageInfo(total = feeds.size, perPage = 10, currentPage = page).apply { setHasNextPage(false) }
-        }
-        return success(AniListContainer(DataContainer(content), errors = null))
-    }
+        feeds: List<FeedListData.PageActivities>,
+    ): Response<GraphQLResponse<FeedListData>> = success(
+        GraphQLResponse(
+            data = GraphQLData.Present(
+                FeedListData(
+                    page = FeedListData.Page(
+                        activities = feeds,
+                        pageInfo = FeedListData.PagePageInfo(
+                            currentPage = page,
+                            hasNextPage = false,
+                            lastPage = 1,
+                            perPage = 10,
+                            total = feeds.size,
+                        ),
+                    ),
+                ),
+            ),
+            errors = emptyList(),
+        ),
+    )
+
+    private fun feedMessagePageCall(
+        page: Int,
+        feeds: List<FeedMessageData.PageActivities>,
+    ): Response<GraphQLResponse<FeedMessageData>> = success(
+        GraphQLResponse(
+            data = GraphQLData.Present(
+                FeedMessageData(
+                    page = FeedMessageData.Page(
+                        activities = feeds,
+                        pageInfo = FeedMessageData.PagePageInfo(
+                            currentPage = page,
+                            hasNextPage = false,
+                            lastPage = 1,
+                            perPage = 10,
+                            total = feeds.size,
+                        ),
+                    ),
+                ),
+            ),
+            errors = emptyList(),
+        ),
+    )
 
     private fun <R> success(
-        body: AniListContainer<R>,
-    ): Response<AniListContainer<R>> = Response.success(body)
+        body: GraphQLResponse<R>,
+    ): Response<GraphQLResponse<R>> = Response.success(body)
 }
