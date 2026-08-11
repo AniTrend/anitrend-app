@@ -102,7 +102,8 @@
     <string name="app_intro_search_text">أنيمي ومانغا وخصائص بحث أخرى!</string>
     <string name="app_intro_videos_title">فيديو</string>
     <string name="app_intro_videos_text">يستخدم مشغل مقاطع الفيديو الخاص بيوتيوب مدمج معه!</string>
-    <string name="app_greeting">أهلا بك في AniTrend, this is not a streaming app!</string>
+    <!-- Welcome message shown on first launch; clarifies that the app does not stream videos -->
+    <string name="app_greeting">أهلًا بك في AniTrend، هذا ليس تطبيق بث!</string>
 
     <!-- Action label on the onboarding button before the final page; advances to the next page -->
     <string name="action_onboarding_continue">متابعة</string>
@@ -141,7 +142,8 @@
 
     <!--Filter menu entry these are the dialog titles-->
     <string name="app_filter_sort">الفرز حسب:</string>
-    <string name="app_filter_on_list">On My List?</string>
+    <!-- Filter dialog question asking whether to show only entries already on the user's list -->
+    <string name="app_filter_on_list">هل هو في قائمتي؟</string>
     <string name="app_filter_order">ترتيب كـ</string>
     <string name="app_filter_genres">أختر الصنف:</string>
     <string name="app_filter_show_type">أختر النوع:</string>
@@ -363,7 +365,8 @@
         ]]>
     </string>
 
-    <string name="app_update">Get: v%s</string>
+    <!-- Update prompt button label; %s is the new version number -->
+    <string name="app_update">احصل على: v%s</string>
 
     <string name="app_no_date">لديك احدث نسخة من AniTrend!</string>
 
@@ -375,7 +378,8 @@
 
     <string name="text_confirm_exit">اضغط على زر العودة مرة اخرى للخروج من التطبيق</string>
 
-    <string name="text_url_copied_to_clipboard">Copied URL to clipboard</string>
+    <!-- Toast confirmation shown after a URL is copied to the clipboard -->
+    <string name="text_url_copied_to_clipboard">تم نسخ الرابط إلى الحافظة</string>
 
     <string name="text_filter_applying">جارٍ تطبيق التعديلات..</string>
 
@@ -575,7 +579,8 @@
     <string name="series_add_to_list">إضافة للقائمة</string>
     <string name="series_write_a_review">كتابة مراجعة</string>
     <string name="series_share">مشاركة</string>
-    <string name="series_on_my_list">On My List</string>
+    <!-- Floating action label shown when the series is already on the user's list -->
+    <string name="series_on_my_list">في قائمتي</string>
 
     <!--Start of Dialog you use to add, remove or update anime or manga listings-->
     <string name="dialog_title_status">الحالة</string>
@@ -718,86 +723,143 @@
 
     <string name="anitrend_sign_in_browser">يُنصح بأستخدام Google Chrome</string>
 
-    <!-- Privacy Settings -->
-    <string name="pref_header_privacy">Privacy</string>
-    <string name="pref_header_privacy_summary">Configure privacy settings</string>
-
-    <!-- Black Setting Related -->
+    <!-- Settings category header for privacy options -->
+    <string name="pref_header_privacy">الخصوصية</string>
+    <!-- Summary under the privacy category header -->
+    <string name="pref_header_privacy_summary">ضبط إعدادات الخصوصية</string>
 
     <!--Language preferences-->
-    <string name="pref_title_language">Application Language</string>
-    <string name="pref_title_language_summary">Override system language and set your own application specific language</string>
+    <!-- Setting label for overriding the app language -->
+    <string name="pref_title_language">لغة التطبيق</string>
+    <!-- Summary explaining that the app language overrides the system language -->
+    <string name="pref_title_language_summary">تجاوز لغة النظام وضبط لغة خاصة بالتطبيق</string>
 
-    <string name="pref_title_crash_reports">Crash Reports</string>
-    <string name="pref_crash_reports_summary_off">Application will not send crash reports, please enable this option to make bug discovery and fixing easier</string>
-    <string name="pref_crash_reports_summary_on">Application will automatically send crash reports</string>
+    <!-- Setting label for enabling crash report sharing -->
+    <string name="pref_title_crash_reports">تقارير الأعطال</string>
+    <!-- Explanation shown when crash reports are disabled -->
+    <string name="pref_crash_reports_summary_off">لن يرسل التطبيق تقارير الأعطال، يرجى تفعيل هذا الخيار لتسهيل اكتشاف الأخطاء وإصلاحها</string>
+    <!-- Explanation shown when crash reports are enabled -->
+    <string name="pref_crash_reports_summary_on">سيرسل التطبيق تقارير الأعطال تلقائيًا</string>
 
-    <string name="pref_title_usage_analytics">Usage Analytics</string>
-    <string name="pref_usage_analytics_summary_off">Application will not send any anonymous statistics on most used features, please consider enabling this option for better design choices in future</string>
-    <string name="pref_usage_analytics_summary_on">Application will only send anonymous statistics like most used features</string>
+    <!-- Setting label for sharing anonymous usage statistics -->
+    <string name="pref_title_usage_analytics">إحصائيات الاستخدام</string>
+    <!-- Explanation shown when usage analytics are disabled -->
+    <string name="pref_usage_analytics_summary_off">لن يرسل التطبيق أي إحصائيات مجهولة حول أكثر الميزات استخدامًا، يرجى تفعيل هذا الخيار لتحسين اختيارات التصميم مستقبلًا</string>
+    <!-- Explanation shown when usage analytics are enabled -->
+    <string name="pref_usage_analytics_summary_on">سيرسل التطبيق إحصائيات مجهولة فقط مثل أكثر الميزات استخدامًا</string>
 
-    <string name="dialog_title_started_at">Start Date</string>
-    <string name="dialog_title_completed_at">Finish Date</string>
-    <string name="pref_header_customize">Customize</string>
-    <string name="pref_header_customize_summary">Customize the look and feel of the app</string>
-    <string name="text_application_restart_required">Please restart the application for changes to take effect</string>
-    <string name="dialog_button_clear">Clear</string>
+    <!-- Date field label in the manage list editor -->
+    <string name="dialog_title_started_at">تاريخ البداية</string>
+    <!-- Date field label in the manage list editor -->
+    <string name="dialog_title_completed_at">تاريخ الانتهاء</string>
+    <!-- Settings category header for customization options -->
+    <string name="pref_header_customize">تخصيص</string>
+    <!-- Summary under the customization category header -->
+    <string name="pref_header_customize_summary">تخصيص مظهر التطبيق وإحساسه</string>
+    <!-- Notice shown after changing settings that need an app restart -->
+    <string name="text_application_restart_required">يرجى إعادة تشغيل التطبيق لتفعيل التغييرات</string>
+    <!-- Button that clears a date field value -->
+    <string name="dialog_button_clear">مسح</string>
 
     <!-- Image Preview strings -->
-    <string name="image_preview_title">Preview</string>
-    <string name="image_preview_download">Download</string>
-    <string name="image_preview_share">Share</string>
-    <string name="image_preview_link">Original Link</string>
+    <!-- Title of the full screen image preview -->
+    <string name="image_preview_title">معاينة</string>
+    <!-- Action that downloads the previewed image -->
+    <string name="image_preview_download">تنزيل</string>
+    <!-- Action that shares the previewed image -->
+    <string name="image_preview_share">مشاركة</string>
+    <!-- Action that opens the original image link -->
+    <string name="image_preview_link">الرابط الأصلي</string>
 
     <!-- Image Preview error strings -->
-    <string name="image_preview_error_character_image">The character image doesn\'t exist!</string>
-    <string name="image_preview_error_profile_banner">The user has not set a banner image!</string>
-    <string name="image_preview_error_series_cover">The series cover image doesn\'t exist!</string>
-    <string name="image_preview_error_series_banner">The series banner image doesn\'t exist!</string>
-    <string name="image_preview_error_staff_image">The staff image doesn\'t exist!</string>
-    <string name="image_preview_error_user_avatar">The user\'s avatar image doesn\'t exist</string>
+    <!-- Error shown when the character image cannot be displayed -->
+    <string name="image_preview_error_character_image">صورة الشخصية غير موجودة!</string>
+    <!-- Error shown when the user has not set a profile banner -->
+    <string name="image_preview_error_profile_banner">لم يحدد المستخدم صورة لافتة!</string>
+    <!-- Error shown when the series cover image cannot be displayed -->
+    <string name="image_preview_error_series_cover">صورة غلاف السلسلة غير موجودة!</string>
+    <!-- Error shown when the series banner image cannot be displayed -->
+    <string name="image_preview_error_series_banner">صورة لافتة السلسلة غير موجودة!</string>
+    <!-- Error shown when the staff image cannot be displayed -->
+    <string name="image_preview_error_staff_image">صورة طاقم العمل غير موجودة!</string>
+    <!-- Error shown when the user avatar image cannot be displayed -->
+    <string name="image_preview_error_user_avatar">صورة المستخدم الرمزية غير موجودة</string>
 
     <!-- App Log strings -->
-    <string name="app_log">App Logs</string>
-    <string name="save_bug_report">Save Bug Report</string>
-    <string name="bug_report_saved">Bug Report saved to Downloads Folder (AniTrend Logcat.txt)</string>
+    <!-- Title of the app log viewer screen -->
+    <string name="app_log">سجلات التطبيق</string>
+    <!-- Action that saves the current logs as a bug report file -->
+    <string name="save_bug_report">حفظ تقرير الخطأ</string>
+    <!-- Confirmation shown after the bug report file is saved -->
+    <string name="bug_report_saved">تم حفظ تقرير الخطأ في مجلد التنزيلات (AniTrend Logcat.txt)</string>
 
-    <string name="show_spoiler_tags">Show Spoiler Tags</string>
-    <string name="notification_media_added">New Related Media Added</string>
-    <string name="text_error_auth_token">Invalid session, please log out and back in</string>
-    <string name="text_migration_in_progress">Application is upgrading, please wait</string>
-    <string name="title_migration_failed">Upgrade Failed</string>
-    <string name="text_migration_failed"><![CDATA[The application failed to make some changes while upgrading, please clear app cache & data manually and try again]]></string>
-    <string name="text_about_general_information">General Information</string>
-    <string name="text_about_application_version">Version %s</string>
-    <string name="text_about_additional_information">Additional Information</string>
-    <string name="text_about_frequently_asked_questions">Frequently Asked Questions</string>
-    <string name="text_about_legal_information">Legal Information</string>
-    <string name="text_about_terms_and_conditions"><![CDATA[Terms & Conditions]]></string>
-    <string name="text_about_code_of_conduct">Code of Conduct</string>
-    <string name="text_migration_required">AniTrend is updating, this will take a moment</string>
-    <string name="title_activity_logging">Logging</string>
+    <!-- Setting label for showing spoiler tag markers -->
+    <string name="show_spoiler_tags">إظهار وسوم الحرق</string>
+    <!-- Notification title for newly added related media -->
+    <string name="notification_media_added">تمت إضافة وسائط ذات صلة جديدة</string>
+    <!-- Error shown when the login session has become invalid -->
+    <string name="text_error_auth_token">جلسة غير صالحة، يرجى تسجيل الخروج ثم الدخول مجددًا</string>
+    <!-- Progress message shown while the app database is being upgraded -->
+    <string name="text_migration_in_progress">يتم ترقية التطبيق، يرجى الانتظار</string>
+    <!-- Title shown when the app upgrade fails -->
+    <string name="title_migration_failed">فشلت الترقية</string>
+    <!-- Message explaining that the upgrade failed and the cache must be cleared manually -->
+    <string name="text_migration_failed"><![CDATA[فشل التطبيق في إجراء بعض التغييرات أثناء الترقية، يرجى مسح ذاكرة التخزين المؤقت والبيانات يدويًا ثم المحاولة مرة أخرى]]></string>
+    <!-- About screen section heading for general information -->
+    <string name="text_about_general_information">معلومات عامة</string>
+    <!-- About screen app version label; %s is the version number -->
+    <string name="text_about_application_version">الإصدار %s</string>
+    <!-- About screen section heading for additional information -->
+    <string name="text_about_additional_information">معلومات إضافية</string>
+    <!-- About screen link label for frequently asked questions -->
+    <string name="text_about_frequently_asked_questions">الأسئلة الشائعة</string>
+    <!-- About screen section heading for legal information -->
+    <string name="text_about_legal_information">معلومات قانونية</string>
+    <!-- About screen link label for the terms and conditions page -->
+    <string name="text_about_terms_and_conditions"><![CDATA[الشروط والأحكام]]></string>
+    <!-- About screen link label for the code of conduct page -->
+    <string name="text_about_code_of_conduct">مدونة قواعد السلوك</string>
+    <!-- Notice shown while the app database migration is in progress -->
+    <string name="text_migration_required">يقوم AniTrend بالتحديث، سيستغرق ذلك لحظة</string>
+    <!-- Title of the logging screen -->
+    <string name="title_activity_logging">السجلات</string>
 
-    <string name="pref_title_app_theme">Application Theme</string>
+    <!-- Setting label for the app theme selection -->
+    <string name="pref_title_app_theme">سمة التطبيق</string>
 
-    <string name="dialog_title_delete_activity">Delete Activity</string>
-    <string name="dialog_message_delete_activity">Are you sure you want delete this activity? This is irreversible!!</string>
+    <!-- Dialog title asking to delete an activity -->
+    <string name="dialog_title_delete_activity">حذف النشاط</string>
+    <!-- Dialog message warning that deleting an activity cannot be undone -->
+    <string name="dialog_message_delete_activity">هل أنت متأكد من حذف هذا النشاط؟ لا يمكن التراجع عن هذا الإجراء!</string>
 
-    <string name="pref_title_display_adult_content">Display Adult Content</string>
-    <string name="pref_summary_display_adult_content">Allow the application to show NSFW content, for this to work +18 content must be enabled in anilist</string>
+    <!-- Setting label for showing adult content in the app -->
+    <string name="pref_title_display_adult_content">عرض محتوى للبالغين</string>
+    <!-- Summary explaining that +18 content must also be enabled on AniList -->
+    <string name="pref_summary_display_adult_content">السماح للتطبيق بعرض محتوى NSFW، لكي يعمل هذا يجب تفعيل محتوى +18 في AniList</string>
 
-    <string name="pref_summary_clear_notification_on_dismiss">Marks notifications as read when you dismiss them from the status bar</string>
-    <string name="pref_title_clear_notification_on_dismiss">Mark all notifications as read on dismiss</string>
+    <!-- Summary for marking notifications as read when dismissed from the status bar -->
+    <string name="pref_summary_clear_notification_on_dismiss">تحديد الإشعارات كمقروءة عند إغلاقها من شريط الحالة</string>
+    <!-- Setting label for marking all notifications as read on dismiss -->
+    <string name="pref_title_clear_notification_on_dismiss">تحديد جميع الإشعارات كمقروءة عند الإغلاق</string>
 
-    <string name="pref_summary_notification_work_around">Enable this only if you\'re not getting notifications</string>
-    <string name="pref_title_notification_work_around">Notification workaround</string>
-    <string name="title_bottom_sheet_spoiler">Spoiler</string>
-    <string name="pref_title_list_view_style">List View Style</string>
-    <string name="notification_action_mark_as_read">Mark as read</string>
-    <string name="notification_media_merge">Media Merge</string>
-    <string name="notification_media_deletion">Media Deletion</string>
-    <string name="notification_media_data_change">Media Update</string>
-    <string name="title_recommendations">Recommendations</string>
+    <!-- Summary for the notification workaround setting -->
+    <string name="pref_summary_notification_work_around">فعّل هذا فقط إذا لم تكن تتلقى إشعارات</string>
+    <!-- Setting label for the notification delivery workaround -->
+    <string name="pref_title_notification_work_around">حل بديل للإشعارات</string>
+    <!-- Title of the bottom sheet that shows spoiler content -->
+    <string name="title_bottom_sheet_spoiler">حرق</string>
+    <!-- Setting label for the list view style selection -->
+    <string name="pref_title_list_view_style">نمط عرض القائمة</string>
+    <!-- Notification action that marks a notification as read -->
+    <string name="notification_action_mark_as_read">تحديد كمقروء</string>
+    <!-- Notification title for merged media entries -->
+    <string name="notification_media_merge">دمج الوسائط</string>
+    <!-- Notification title for deleted media entries -->
+    <string name="notification_media_deletion">حذف الوسائط</string>
+    <!-- Notification title for updated media entries -->
+    <string name="notification_media_data_change">تحديث الوسائط</string>
+    <!-- Section title for the recommendations list on series pages -->
+    <string name="title_recommendations">التوصيات</string>
 
     <!-- Manage list editor and validation strings -->
     <!-- Confirmation message when removing a media list entry -->
@@ -850,4 +912,217 @@
     <string name="section_privacy_priority">الخصوصية والأولوية</string>
     <!-- Section card title for notes field -->
     <string name="section_notes">ملاحظات</string>
+
+    <!-- Composer actions are spoken by screen readers and should remain concise. -->
+    <!-- TalkBack description for the add image button in the status composer -->
+    <string name="composer_add_image_description">إضافة صورة</string>
+    <!-- TalkBack description for the add video button in the status composer -->
+    <string name="composer_add_video_description">إضافة فيديو</string>
+    <!-- TalkBack description for the add link button in the status composer -->
+    <string name="composer_add_link_description">إضافة رابط</string>
+    <!-- TalkBack description for the add YouTube video button in the status composer; YouTube is a brand name -->
+    <string name="composer_add_youtube_description">إضافة فيديو يوتيوب</string>
+    <!-- TalkBack description for the add GIF button in the status composer; GIF is a technical term -->
+    <string name="composer_add_gif_description">إضافة صورة GIF</string>
+    <!-- TalkBack description for the add emoticon button in the status composer -->
+    <string name="composer_add_emoticon_description">إضافة رمز تعبيري</string>
+    <!-- TalkBack description for the overflow button with more actions in the status composer -->
+    <string name="composer_more_actions_description">مزيد من إجراءات المحرر</string>
+    <!-- Primary button label to publish a status post in the composer -->
+    <string name="composer_post">نشر</string>
+    <!-- TalkBack description for the recipient shown while composing a reply -->
+    <string name="composer_reply_recipient_description">مستلم الرد</string>
+    <!-- Composer header text while replying; %s is the user name being replied to -->
+    <string name="composer_reply_to">جارٍ الرد على %s</string>
+    <!-- Placeholder hint in the reply composer input field -->
+    <string name="composer_reply_hint">أضف إلى النقاش...</string>
+    <!-- TalkBack description for the send button in the composer -->
+    <string name="composer_send_description">إرسال</string>
+    <!-- TalkBack description announced while the composer is sending -->
+    <string name="composer_sending_description">جارٍ الإرسال</string>
+
+    <!-- Accessibility state announced when a settings switch is enabled -->
+    <string name="accessibility_switch_on">مفعّل</string>
+    <!-- Accessibility state announced when a settings switch is disabled -->
+    <string name="accessibility_switch_off">معطّل</string>
+
+    <!-- Settings choice row description; %1$s is the setting title and %2$s is its current value -->
+    <string name="settings_choice_content_description" formatted="true">%1$s، القيمة الحالية %2$s</string>
+    <!-- Settings toggle row description; %1$s is the setting title and %2$s is the On or Off state -->
+    <string name="settings_toggle_content_description" formatted="true">%1$s، المفتاح %2$s</string>
+    <!-- About screen external link row; %1$s is the link title and the text explains browser navigation -->
+    <string name="about_external_link_content_description" formatted="true">%1$s، يُفتح في المتصفح</string>
+    <!-- About screen What's new row; announces that the row opens the changelog -->
+    <string name="about_whats_new_content_description">ما الجديد، يفتح سجل التغييرات</string>
+
+    <!-- Settings hub category for the signed-in user's AniList account options -->
+    <string name="pref_header_account">الحساب</string>
+    <!-- Summary line under the Account settings hub category -->
+    <string name="pref_header_account_summary">إدارة ملفك الشخصي وتفضيلات قوائمك في AniList</string>
+    <!-- Section header for the profile fields on the account settings screen -->
+    <string name="account_section_profile">الملف الشخصي</string>
+    <!-- Section header for the list and content fields on the account settings screen -->
+    <string name="account_section_lists_content">القوائم والمحتوى</string>
+    <!-- Label for the public about/bio field on the account settings screen -->
+    <string name="account_title_about">حول</string>
+    <!-- Helper text under the about field explaining where it is shown -->
+    <string name="account_helper_about">نبذة عامة تظهر في ملفك الشخصي على AniList</string>
+    <!-- Label for the profile color picker on the account settings screen -->
+    <string name="account_title_profile_color">لون الملف الشخصي</string>
+    <!-- Helper text under the profile color picker -->
+    <string name="account_summary_profile_color">اللون المميز لملفك الشخصي على AniList</string>
+    <!-- Label for the list row order picker on the account settings screen -->
+    <string name="account_title_row_order">ترتيب صفوف القائمة</string>
+    <!-- Helper text under the list row order picker -->
+    <string name="account_summary_row_order">ترتيب الإدخالات في قوائم الأنمي والمانغا الخاصة بك</string>
+    <!-- Label for the airing notifications switch on the account settings screen -->
+    <string name="account_title_airing_notifications">إشعارات البث</string>
+    <!-- Helper text under the airing notifications switch -->
+    <string name="account_summary_airing_notifications">احصل على إشعار عند بث حلقة جديدة من سلسلة تتابعها</string>
+    <!-- Label for the server-side adult content switch; reads as an AniList account setting -->
+    <string name="account_title_display_adult_content">محتوى للبالغين (حساب AniList)</string>
+    <!-- Helper text clarifying the adult content switch edits the server-side AniList account -->
+    <string name="account_summary_display_adult_content">يتحكم في عرض محتوى البالغين على حسابك في AniList. هذا منفصل عن إعداد المحتوى المحلي في التطبيق.</string>
+    <!-- Shown for the list row order value when the server has not set a custom order -->
+    <string name="account_row_order_default">الافتراضي</string>
+    <!-- Title of the dialog asking the user to confirm discarding unsaved account changes -->
+    <string name="account_dialog_discard_title">تجاهل التغييرات؟</string>
+    <!-- Message body of the discard changes confirmation dialog -->
+    <string name="account_dialog_discard_message">لديك تغييرات غير محفوظة في الحساب. هل تريد تجاهلها وإغلاق الصفحة؟</string>
+    <!-- Positive action of the discard changes dialog; throws away the edits -->
+    <string name="account_action_discard">تجاهل</string>
+    <!-- Negative action of the discard changes dialog; returns to the form -->
+    <string name="account_action_keep_editing">مواصلة التحرير</string>
+    <!-- Save button label shown while a save is in flight -->
+    <string name="account_saving">جارٍ الحفظ…</string>
+    <!-- Loading indicator caption shown while account settings are being fetched -->
+    <string name="account_loading">جارٍ التحميل…</string>
+    <!-- Retry button shown next to the account settings error banner -->
+    <string name="account_action_retry">إعادة المحاولة</string>
+    <!-- Generic error shown when the account settings request fails and no specific message is available -->
+    <string name="account_error_generic">تعذر إكمال الطلب</string>
+    <!-- TalkBack description for the account settings loading indicator -->
+    <string name="account_loading_content_description">جارٍ تحميل إعدادات الحساب</string>
+    <!-- TalkBack description for the account settings saving indicator -->
+    <string name="account_saving_content_description">جارٍ حفظ إعدادات الحساب</string>
+
+    <!-- Loading caption shown while the profile is being fetched -->
+    <string name="profile_loading">جارٍ تحميل الملف الشخصي…</string>
+    <!-- Retry button shown on the profile error state -->
+    <string name="profile_retry">إعادة المحاولة</string>
+    <!-- Generic error shown when the profile request fails -->
+    <string name="profile_error_generic">تعذر تحميل هذا الملف الشخصي</string>
+    <!-- Error shown when the profile was opened without a valid user id or name -->
+    <string name="profile_error_no_user">تعذر العثور على هذا الملف الشخصي</string>
+    <!-- TalkBack description for the profile loading indicator -->
+    <string name="profile_loading_content_description">جارٍ تحميل الملف الشخصي</string>
+    <!-- TalkBack description for the profile banner image -->
+    <string name="profile_banner_description">صورة لافتة الملف الشخصي</string>
+    <!-- TalkBack description for the profile avatar image -->
+    <string name="profile_avatar_description">صورة رمز الملف الشخصي</string>
+
+    <!-- Loading caption shown while the studio is being fetched -->
+    <string name="studio_loading">جارٍ تحميل الاستوديو…</string>
+    <!-- Retry button shown on the studio error state -->
+    <string name="studio_retry">إعادة المحاولة</string>
+    <!-- Generic error shown when the studio request fails -->
+    <string name="studio_error_generic">تعذر تحميل هذا الاستوديو</string>
+    <!-- TalkBack description for the studio loading indicator -->
+    <string name="studio_loading_content_description">جارٍ تحميل الاستوديو</string>
+
+    <!-- Loading caption shown while the character is being fetched -->
+    <string name="character_loading">جارٍ تحميل الشخصية…</string>
+    <!-- Retry button shown on the character error state -->
+    <string name="character_retry">إعادة المحاولة</string>
+    <!-- Generic error shown when the character request fails -->
+    <string name="character_error_generic">تعذر تحميل هذه الشخصية</string>
+    <!-- TalkBack description for the character loading indicator -->
+    <string name="character_loading_content_description">جارٍ تحميل الشخصية</string>
+
+    <!-- Loading caption shown while the staff member is being fetched -->
+    <string name="staff_loading">جارٍ تحميل طاقم العمل…</string>
+    <!-- Retry button shown on the staff error state -->
+    <string name="staff_retry">إعادة المحاولة</string>
+    <!-- Generic error shown when the staff request fails -->
+    <string name="staff_error_generic">تعذر تحميل هذا العضو من طاقم العمل</string>
+    <!-- TalkBack description for the staff loading indicator -->
+    <string name="staff_loading_content_description">جارٍ تحميل طاقم العمل</string>
+
+    <!-- Settings category header for accessibility options -->
+    <string name="pref_header_accessibility">إمكانية الوصول</string>
+    <!-- Summary under the accessibility category header -->
+    <string name="pref_header_accessibility_summary">ضبط العرض وفقًا لاحتياجات إمكانية الوصول</string>
+    <!-- Settings category header for appearance options -->
+    <string name="pref_header_appearance">المظهر</string>
+    <!-- Summary under the appearance category header -->
+    <string name="pref_header_appearance_summary">تخصيص المظهر المرئي وكثافة العرض</string>
+    <!-- Settings category header for content options -->
+    <string name="pref_header_content">المحتوى</string>
+    <!-- Summary under the content category header -->
+    <string name="pref_header_content_summary">التحكم في طريقة عرض المحتوى</string>
+    <!-- Setting label for the accent color picker -->
+    <string name="pref_title_accent_color">اللون المميز</string>
+    <!-- Setting label for automatic trailer playback -->
+    <string name="pref_title_autoplay">تشغيل العروض الترويجية تلقائيًا</string>
+    <!-- Setting label for the font size scale slider -->
+    <string name="pref_title_font_scale">حجم الخط</string>
+    <!-- Setting label for the high contrast display mode -->
+    <string name="pref_title_high_contrast">وضع التباين العالي</string>
+    <!-- Setting label for the list density selector -->
+    <string name="pref_title_list_density">كثافة القائمة</string>
+    <!-- Setting label that reduces animations and motion -->
+    <string name="pref_title_reduce_motion">تقليل الحركة</string>
+    <!-- Setting label for the score display format -->
+    <string name="pref_title_score_format">تنسيق التقييم</string>
+    <!-- Setting label for how spoiler content is handled -->
+    <string name="pref_title_spoiler_behavior">سلوك الحرق</string>
+    <!-- Setting label for the preferred title language -->
+    <string name="pref_title_title_language">لغة العنوان المفضلة</string>
+    <!-- Placeholder summary shown for settings that are not implemented yet -->
+    <string name="pref_summary_placeholder">قريبًا</string>
+
+    <!-- Warning shown when the review list may be stale; offers a page refresh -->
+    <string name="review_stale_message">قد تكون المراجعات قديمة. حدّث لعرض أحدث ترتيب.</string>
+    <!-- Action button that refreshes the review list -->
+    <string name="review_stale_refresh">تحديث المراجعات</string>
+
+    <!-- Label for the newest app release on the About screen -->
+    <string name="label_latest_release">أحدث إصدار</string>
+    <!-- Accessibility state announced for an unread layout row -->
+    <string name="layout_unread_state">غير مقروء</string>
+    <!-- Field label for user notes in the manage list editor -->
+    <string name="dialog_title_notes">ملاحظات</string>
+    <!-- Log viewer filter chip for all log levels -->
+    <string name="log_filter_all">الكل</string>
+    <!-- Log viewer filter chip for error level logs -->
+    <string name="log_filter_error">خطأ</string>
+    <!-- Log viewer filter chip for warning level logs -->
+    <string name="log_filter_warning">تحذير</string>
+    <!-- Log viewer filter chip for info level logs -->
+    <string name="log_filter_info">معلومات</string>
+    <!-- Log viewer filter chip for debug level logs -->
+    <string name="log_filter_debug">تصحيح</string>
+    <!-- Placeholder hint in the search input field -->
+    <string name="search_hint">بحث</string>
+    <!-- Title of the Giphy preview screen; Giphy is a brand name -->
+    <string name="title_giphy_preview">معاينة Giphy</string>
+    <!-- Title shown when a preview cannot be displayed -->
+    <string name="title_preview_unavailable">المعاينة غير متاحة</string>
+    <!-- About screen action that opens the app's Play Store rating page -->
+    <string name="text_about_rate_play_store">قيّم على متجر Play</string>
+    <!-- About screen action that opens the app's Twitter profile; Twitter is a brand name -->
+    <string name="text_about_follow_twitter">تابعنا على تويتر</string>
+    <!-- About screen action that opens the app's website -->
+    <string name="text_about_website">الموقع الإلكتروني</string>
+
+    <!-- Pure numeric placeholder for the priority stepper; do not translate the %d token -->
+    <string name="priority_value">%d</string>
+    <!-- Patreon support page URL for the app; do not translate -->
+    <string name="patreon">https://www.patreon.com/wax911</string>
+    <!-- Product name of the MyAnimeList service; do not translate -->
+    <string name="series_mal" translatable="false">MyAnimeList</string>
+    <!-- Alias for the "Try again" button label; keep the resource reference intact -->
+    <string name="try_again">@string/button_try_again</string>
+    <!-- Brand name of the GitHub service used on the About screen; do not translate -->
+    <string name="text_about_github">GitHub</string>
 </resources>
