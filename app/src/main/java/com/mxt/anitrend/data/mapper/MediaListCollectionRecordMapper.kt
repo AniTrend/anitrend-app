@@ -104,12 +104,6 @@ private fun MediaListCollectionData.MediaListCollectionListsEntriesMediaNextAiri
     episode = episode,
 )
 
-/**
- * Maps the GraphQL `Json` scalar payload of `customLists(asArray: true)`, which the
- * generated code exposes as a kotlinx [JsonElement]. Absent, malformed, or
- * wrong-shape payloads degrade to an empty list; non-string elements are dropped,
- * matching the legacy Gson lane for absent custom lists.
- */
 private fun JsonElement?.toCustomListNames(): List<String> = when (this) {
     is JsonArray -> {
         mapNotNull { element ->

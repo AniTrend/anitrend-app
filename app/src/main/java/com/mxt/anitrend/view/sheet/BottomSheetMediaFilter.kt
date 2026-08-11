@@ -71,7 +71,21 @@ class BottomSheetMediaFilter : BottomSheetDialogFragment() {
         options = ArrayList(arguments.getStringArrayList(ARG_OPTIONS).orEmpty())
         requestId = arguments.getString(ARG_REQUEST_ID).orEmpty()
         isMultiSelect = arguments.getBoolean(ARG_MULTI_SELECT)
-        initializeDraft(arguments)
+        if (!draftInitialized) {
+            draft = if (isMultiSelect) {
+                MediaFilterSheetDraft(
+                    selectedIndices = arguments.getIntArray(ARG_SELECTED_INDICES)?.toList().orEmpty(),
+                )
+            } else {
+                MediaFilterSheetDraft(
+                    selectedIndices = arguments.getInt(ARG_SELECTED_INDEX)
+                        .takeIf { it >= 0 }
+                        ?.let(::listOf)
+                        .orEmpty(),
+                )
+            }
+            draftInitialized = true
+        }
 
         view.findViewById<com.google.android.material.textview.MaterialTextView>(R.id.sheet_filter_title)
             .setText(arguments.getInt(ARG_TITLE))
@@ -84,23 +98,6 @@ class BottomSheetMediaFilter : BottomSheetDialogFragment() {
             bindSingleSelectOptions(chipGroup, radioGroup)
         }
         bindActionButtons(view, chipGroup, radioGroup)
-    }
-
-    private fun initializeDraft(arguments: Bundle) {
-        if (draftInitialized) return
-        draft = if (isMultiSelect) {
-            MediaFilterSheetDraft(
-                selectedIndices = arguments.getIntArray(ARG_SELECTED_INDICES)?.toList().orEmpty(),
-            )
-        } else {
-            MediaFilterSheetDraft(
-                selectedIndices = arguments.getInt(ARG_SELECTED_INDEX)
-                    .takeIf { it >= 0 }
-                    ?.let(::listOf)
-                    .orEmpty(),
-            )
-        }
-        draftInitialized = true
     }
 
     private fun bindMultiSelectOptions(chipGroup: ChipGroup, radioGroup: android.widget.RadioGroup) {
@@ -178,11 +175,6 @@ class BottomSheetMediaFilter : BottomSheetDialogFragment() {
                 },
             )
         }
-    }
-
-    override fun onCancel(dialog: DialogInterface) {
-        sendResult(MediaFilterSheetResult(requestId, MediaFilterSheetResult.ACTION_CANCEL))
-        super.onCancel(dialog)
     }
 
     override fun onDismiss(dialog: DialogInterface) {
