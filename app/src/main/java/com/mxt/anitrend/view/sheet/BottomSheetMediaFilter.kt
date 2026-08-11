@@ -103,7 +103,20 @@ class BottomSheetMediaFilter : BottomSheetDialogFragment() {
     private fun bindMultiSelectOptions(chipGroup: ChipGroup, radioGroup: android.widget.RadioGroup) {
         chipGroup.visibility = View.VISIBLE
         radioGroup.visibility = View.GONE
-        populateChips(chipGroup, draft.selectedIndices.toIntArray())
+        val selected = draft.selectedIndices.toSet()
+        options.forEachIndexed { index, label ->
+            val chip = Chip(
+                ContextThemeWrapper(requireContext(), R.style.Widget_AniTrend_ManageSheet_CustomListChip),
+            ).apply {
+                id = View.generateViewId()
+                tag = index
+                text = label
+                isCheckable = true
+                isChecked = index in selected
+                setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_LabelMedium)
+            }
+            chipGroup.addView(chip)
+        }
         chipGroup.setOnCheckedStateChangeListener { _, checkedIds ->
             if (checkedIds.isNotEmpty()) {
                 draft = draft.select(checkedIds.map { chipGroup.findViewById<Chip>(it).tag as Int })
@@ -143,23 +156,6 @@ class BottomSheetMediaFilter : BottomSheetDialogFragment() {
                 ),
             )
             dismiss()
-        }
-    }
-
-    private fun populateChips(group: ChipGroup, selectedIndices: IntArray) {
-        val selected = selectedIndices.toSet()
-        options.forEachIndexed { index, label ->
-            val chip = Chip(
-                ContextThemeWrapper(requireContext(), R.style.Widget_AniTrend_ManageSheet_CustomListChip),
-            ).apply {
-                id = View.generateViewId()
-                tag = index
-                text = label
-                isCheckable = true
-                isChecked = index in selected
-                setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_LabelMedium)
-            }
-            group.addView(chip)
         }
     }
 
