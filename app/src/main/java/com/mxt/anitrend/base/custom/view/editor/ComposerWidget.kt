@@ -5,8 +5,10 @@ import android.content.Context
 import android.os.Build
 import android.util.AttributeSet
 import android.view.View
+import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.FrameLayout
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.Lifecycle
@@ -68,6 +70,7 @@ class ComposerWidget :
 
     private var listener: Listener? = null
     private var recycled = false
+    private var isSheetLayout = false
 
     fun setListener(listener: Listener?) {
         this.listener = listener
@@ -78,21 +81,33 @@ class ComposerWidget :
 
     constructor(context: Context) :
         super(context) {
+        readLayoutMode(null)
         onInit()
     }
     constructor(context: Context, attrs: AttributeSet?) :
         super(context, attrs) {
+        readLayoutMode(attrs)
         onInit()
     }
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
         super(context, attrs, defStyleAttr) {
+        readLayoutMode(attrs)
         onInit()
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) :
         super(context, attrs, defStyleAttr, defStyleRes) {
+        readLayoutMode(attrs)
         onInit()
+    }
+
+    private fun readLayoutMode(attrs: AttributeSet?) {
+        isSheetLayout = attrs?.let {
+            context.obtainStyledAttributes(it, R.styleable.ComposerWidget).use { typedArray ->
+                typedArray.getBoolean(R.styleable.ComposerWidget_sheetLayout, false)
+            }
+        } ?: false
     }
 
     override fun onAttachedToWindow() {
@@ -107,12 +122,34 @@ class ComposerWidget :
      * Optionally included when constructing custom views
      */
     override fun onInit() {
+        applySheetAwareLayoutParams()
         binding.insertImage.setOnClickListener(this)
         binding.insertWebm.setOnClickListener(this)
         binding.insertLink.setOnClickListener(this)
         binding.insertYoutube.setOnClickListener(this)
         binding.insertGif.setOnClickListener(this)
         binding.widgetFlipper.setOnClickListener(this)
+    }
+
+    private fun applySheetAwareLayoutParams() {
+        binding.root.layoutParams?.let { params ->
+            params.height =
+                if (isSheetLayout) {
+                    ViewGroup.LayoutParams.MATCH_PARENT
+                } else {
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                }
+            binding.root.layoutParams = params
+        }
+        val editorParams = binding.composerEditorScroll.layoutParams as? LinearLayout.LayoutParams ?: return
+        if (isSheetLayout) {
+            editorParams.height = 0
+            editorParams.weight = 1f
+        } else {
+            editorParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+            editorParams.weight = 0f
+        }
+        binding.composerEditorScroll.layoutParams = editorParams
     }
 
     private fun resetFlipperState() {

@@ -1,64 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="?actionBarSize">
+    android:layout_height="wrap_content"
+    android:background="?attr/colorSurfaceContainerHighest"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <com.google.android.material.bottomsheet.BottomSheetDragHandleView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:background="?cardColor">
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/sheet_inline_spacing" />
 
-        <com.mxt.anitrend.base.custom.view.text.SingleLineTextView
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/spacing_md"
+        android:paddingHorizontal="@dimen/xl_margin">
+
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/toolbar_title"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_margin="@dimen/lg_margin"
-            android:padding="@dimen/lg_margin"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:textSize="@dimen/title_text_size"
-            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:paddingVertical="@dimen/lg_margin"
+            android:textAlignment="center"
+            android:textAppearance="?attr/textAppearanceTitleLarge"
+            android:textColor="?attr/colorOnSurface"
             tools:text="Toolbar Title" />
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <ImageButton
             android:id="@+id/toolbar_search"
+            style="?attr/materialIconButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|start"
+            android:contentDescription="@string/action_search"
             android:visibility="gone"
-            android:clickable="true"
-            android:focusable="true"
-            android:layout_margin="@dimen/lg_margin"
-            android:padding="@dimen/lg_margin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:foreground="?selectableItemBackground"
-            tools:visibility="visible"
-            tools:src="@drawable/ic_search_grey_600_24dp" />
+            tools:src="@drawable/ic_search_grey_600_24dp"
+            tools:visibility="visible" />
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <ImageButton
             android:id="@+id/toolbar_state"
-            android:clickable="true"
-            android:focusable="true"
-            android:layout_margin="@dimen/lg_margin"
-            android:padding="@dimen/lg_margin"
+            style="?attr/materialIconButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:foreground="?selectableItemBackground"
+            android:layout_gravity="center|end"
+            android:contentDescription="@string/Close"
             tools:src="@drawable/ic_close_grey_600_24dp" />
-
-    </LinearLayout>
+    </FrameLayout>
 
     <com.mxt.anitrend.base.custom.view.search.MaterialSearchView
         android:id="@+id/search_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textColor="?titleColor"
-        android:textColorHint="?subtitleColor"
+        android:layout_height="wrap_content"
+        android:textColor="?attr/colorOnSurface"
+        android:textColorHint="?attr/colorOnSurfaceVariant"
         app:searchSuggestionIcon="?suggestionDrawable"
-        app:searchSuggestionBackground="?colorSurface"
+        app:searchSuggestionBackground="?attr/colorSurface"
         app:searchBackIcon="?backDrawable"
-        app:searchBackground="?colorSurface" />
-</FrameLayout>
+        app:searchBackground="?attr/colorSurface"
+        tools:visibility="gone" />
+</LinearLayout>

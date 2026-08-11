@@ -41,11 +41,15 @@ import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import org.mockito.ArgumentMatchers.anyBoolean
+import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mockito.doReturn
 import org.mockito.Mockito.mock
+import org.mockito.Mockito.never
 import org.mockito.Mockito.verify
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -388,6 +392,42 @@ class CommentViewModelTest {
         verify(feedRepository).getFeedListReplyRecords(1L, false, true, 0L, 1L)
         verify(feedRepository).getFeedListReplyRecords(1L, false, true, 0L, 2L)
         assertFalse(viewModel.state.value.isLoading)
+        collector.cancel()
+    }
+
+    @Test
+    fun `non positive feed id exposes error without issuing a request`() = runTest {
+        val collector = backgroundScope.launch { viewModel.state.collect {} }
+
+        viewModel.load(0L)
+        advanceUntilIdle()
+
+        // Notification rows without a usable activity id must never reach the
+        // repository: the notification click handler guards the id, and the
+        // ViewModel is the last line of defense against loading id 0.
+        verify(feedRepository, never()).getFeedListReplyRecords(anyLong(), anyBoolean(), anyBoolean(), anyLong(), anyLong())
+        assertEquals("Invalid feed id", viewModel.state.value.errorMessage)
+        assertFalse(viewModel.state.value.isLoading)
+        assertNull(viewModel.state.value.feed)
+        collector.cancel()
+    }
+
+    @Test
+    fun `later valid load recovers after a non positive feed id`() = runTest {
+        val collector = backgroundScope.launch { viewModel.state.collect {} }
+        viewModel.load(0L)
+        advanceUntilIdle()
+        assertEquals("Invalid feed id", viewModel.state.value.errorMessage)
+
+        val feed = feed(1L, replyCount = 1)
+        val reply = reply(10L, activityId = 1L, text = "first")
+        stubDetailLoad(feed, listOf(reply))
+        viewModel.load(1L)
+        advanceUntilIdle()
+
+        assertEquals(1L, viewModel.state.value.feed?.id)
+        assertEquals(listOf(10L), viewModel.state.value.replies.map { it.id })
+        assertNull(viewModel.state.value.errorMessage)
         collector.cancel()
     }
 

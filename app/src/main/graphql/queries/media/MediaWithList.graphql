@@ -28,24 +28,7 @@ query MediaWithList($id: Int, $type: MediaType, $onList: Boolean, $scoreFormat: 
       ... AiringScheduleFragment
     }
     mediaListEntry {
-      id
-      mediaId
-      status
-      score(format: $scoreFormat)
-      progress
-      progressVolumes
-      repeat
-      priority
-      private
-      hiddenFromStatusLists
-      customLists(asArray: true)
-      notes
-      startedAt {
-        ... FuzzyDateFragment
-      }
-      completedAt {
-        ... FuzzyDateFragment
-      }
+      ... MediaListCoreFragment
     }
   }
 }

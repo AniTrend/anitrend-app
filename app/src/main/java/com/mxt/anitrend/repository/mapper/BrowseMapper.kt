@@ -24,6 +24,7 @@ import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.booleanOrNull
 import com.mxt.anitrend.model.entity.anilist.MediaList as MediaEntityList
 import com.mxt.anitrend.model.entity.anilist.meta.DeleteState
 
@@ -520,9 +521,11 @@ private fun MediaWithListData.MediaMediaListEntry.toMediaList(): MediaEntityList
     notes = this@toMediaList.notes
     isHidden = this@toMediaList.privateValue ?: false
     isHiddenFromStatusLists = this@toMediaList.hiddenFromStatusLists ?: false
+    advancedScores = this@toMediaList.advancedScores.toAdvancedScores()
     customLists = this@toMediaList.customLists.toCustomLists()
     startedAt = this@toMediaList.startedAt?.toFuzzyDate()
     completedAt = this@toMediaList.completedAt?.toFuzzyDate()
+    updatedAt = this@toMediaList.updatedAt?.toLong() ?: 0L
     // The query does not request a nested media object, so the entry keeps the
     // default empty media like the legacy Gson lane, letting consumers fall
     // back to the separately returned media payload.
@@ -823,14 +826,24 @@ private fun SaveReviewData.SaveReviewUserAvatar.toImageBase(): ImageBase = Image
 
 // Json scalar helpers shared by the media list lanes
 
-private fun JsonElement?.toCustomLists(): List<CustomList>? {
-    if (this !is JsonArray) return null
-    return mapNotNull { element ->
-        (element as? JsonPrimitive)
-            ?.takeIf { it.isString }
-            ?.content
-            ?.let { name -> CustomList(name = name, isEnabled = true) }
+private fun JsonElement?.toCustomLists(): List<CustomList>? = when (this) {
+    is JsonArray -> {
+        mapNotNull { element ->
+            (element as? JsonPrimitive)
+                ?.takeIf { it.isString }
+                ?.content
+                ?.let { name -> CustomList(name = name, isEnabled = true) }
+        }
     }
+    is JsonObject -> {
+        entries.map { (key, value) ->
+            CustomList(
+                name = key,
+                isEnabled = (value as? JsonPrimitive)?.booleanOrNull ?: false,
+            )
+        }
+    }
+    else -> null
 }
 
 private fun JsonElement?.toAdvancedScores(): Map<String, Float>? {

@@ -1,5 +1,6 @@
 package com.mxt.anitrend.view.fragment.detail
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -19,6 +20,8 @@ import com.mxt.anitrend.data.DatabaseHelper
 import com.mxt.anitrend.data.mapper.toPageInfo
 import com.mxt.anitrend.domain.model.NotificationItemUiModel
 import com.mxt.anitrend.domain.model.NotificationPageResult
+import com.mxt.anitrend.domain.model.NotificationRecord
+import com.mxt.anitrend.domain.model.commentActivityId
 import com.mxt.anitrend.domain.model.toNotificationItemUiModel
 import com.mxt.anitrend.model.entity.base.NotificationHistory
 import com.mxt.anitrend.model.entity.base.NotificationHistory_
@@ -233,9 +236,7 @@ class NotificationFragment : FragmentBaseList<NotificationItemUiModel, Notificat
         } else {
             when (record.type) {
                 KeyUtil.ACTIVITY_MESSAGE -> {
-                    intent = Intent(host, CommentActivity::class.java)
-                    intent.putExtra(KeyUtil.arg_id, record.activityId ?: 0L)
-                    startActivity(intent)
+                    openCommentActivity(host, record)
                 }
                 KeyUtil.FOLLOWING -> {
                     intent = Intent(host, ProfileActivity::class.java)
@@ -243,9 +244,7 @@ class NotificationFragment : FragmentBaseList<NotificationItemUiModel, Notificat
                     startActivity(intent)
                 }
                 KeyUtil.ACTIVITY_MENTION -> {
-                    intent = Intent(host, CommentActivity::class.java)
-                    intent.putExtra(KeyUtil.arg_id, record.activityId ?: 0L)
-                    startActivity(intent)
+                    openCommentActivity(host, record)
                 }
                 KeyUtil.AIRING,
                 KeyUtil.RELATED_MEDIA_ADDITION,
@@ -260,19 +259,13 @@ class NotificationFragment : FragmentBaseList<NotificationItemUiModel, Notificat
                     }
                 }
                 KeyUtil.ACTIVITY_LIKE -> {
-                    intent = Intent(host, CommentActivity::class.java)
-                    intent.putExtra(KeyUtil.arg_id, record.activityId ?: 0L)
-                    startActivity(intent)
+                    openCommentActivity(host, record)
                 }
                 KeyUtil.ACTIVITY_REPLY, KeyUtil.ACTIVITY_REPLY_SUBSCRIBED -> {
-                    intent = Intent(host, CommentActivity::class.java)
-                    intent.putExtra(KeyUtil.arg_id, record.activityId ?: 0L)
-                    startActivity(intent)
+                    openCommentActivity(host, record)
                 }
                 KeyUtil.ACTIVITY_REPLY_LIKE -> {
-                    intent = Intent(host, CommentActivity::class.java)
-                    intent.putExtra(KeyUtil.arg_id, record.activityId ?: 0L)
-                    startActivity(intent)
+                    openCommentActivity(host, record)
                 }
                 KeyUtil.THREAD_SUBSCRIBED,
                 KeyUtil.THREAD_LIKE,
@@ -296,6 +289,21 @@ class NotificationFragment : FragmentBaseList<NotificationItemUiModel, Notificat
                 }
             }
         }
+    }
+
+    private fun openCommentActivity(host: Context, record: NotificationRecord) {
+        // A null activity id means the referenced activity was deleted; the comment
+        // screen cannot recover from a missing id, so show the message and stay put.
+        val activityId = record.commentActivityId()
+        if (activityId == null) {
+            context?.also {
+                NotifyUtil.makeText(it, R.string.text_activity_loading, Toast.LENGTH_SHORT).show()
+            }
+            return
+        }
+        val intent = Intent(host, CommentActivity::class.java)
+        intent.putExtra(KeyUtil.arg_id, activityId)
+        startActivity(intent)
     }
 
     private fun onNotificationLongClick(target: View, item: NotificationItemUiModel) {

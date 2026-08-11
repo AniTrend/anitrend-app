@@ -3,59 +3,78 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="?cardColor">
+    android:layout_height="match_parent"
+    android:background="?attr/colorSurfaceContainerLow"
+    android:orientation="vertical">
 
     <include layout="@layout/custom_sheet_toolbar" />
 
-    <RelativeLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/xl_margin">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
 
-        <ImageView
-            android:id="@+id/bottom_icon"
-            android:layout_width="36dp"
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.AniTrend.ManageSheet.SectionCard"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:adjustViewBounds="true"
-            android:scaleType="fitCenter"
-            android:src="@mipmap/ic_launcher_round"/>
+            android:layout_margin="@dimen/xl_margin">
 
-        <com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView
-            android:id="@+id/bottom_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/bottom_icon"
-            android:lineSpacingExtra="2dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:textSize="@dimen/content_text_size"
-            tools:text="@string/drawer_update_text"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-    </RelativeLayout>
+                <ImageView
+                    android:id="@+id/bottom_icon"
+                    android:layout_width="36dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/lg_margin"
+                    android:adjustViewBounds="true"
+                    android:importantForAccessibility="no"
+                    android:scaleType="fitCenter"
+                    android:src="@mipmap/ic_launcher_round" />
+
+                <com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView
+                    android:id="@+id/bottom_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:lineSpacingExtra="2dp"
+                    android:textAppearance="?attr/textAppearanceBodyLarge"
+                    android:textColor="?attr/colorOnSurface"
+                    tools:text="@string/drawer_update_text" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="end"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingHorizontal="@dimen/xl_margin"
+        android:paddingVertical="@dimen/lg_margin">
 
-        <androidx.appcompat.widget.AppCompatButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/bottom_negative"
-            android:textColor="?colorAccent"
-            android:layout_marginEnd="@dimen/xl_margin"
-            app:backgroundTint="?attr/cardColor"
-            style="@style/MaterialTipButton"
-            tools:text="No"/>
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/lg_margin"
+            tools:text="No" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/bottom_positive"
-            android:layout_marginEnd="@dimen/xl_margin"
-            app:backgroundTint="?colorAccent"
-            style="@style/MaterialTipButton"
-            tools:text="Yes"/>
+            style="@style/Widget.Material3.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Yes" />
 
     </LinearLayout>
 

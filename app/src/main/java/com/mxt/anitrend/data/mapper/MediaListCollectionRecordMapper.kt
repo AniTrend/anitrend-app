@@ -10,6 +10,7 @@ import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.booleanOrNull
 
 /**
  * Maps the generated `MediaListCollectionData` GraphQL types to the immutable
@@ -103,19 +104,20 @@ private fun MediaListCollectionData.MediaListCollectionListsEntriesMediaNextAiri
     episode = episode,
 )
 
-/**
- * Maps the GraphQL `Json` scalar payload of `customLists(asArray: true)`, which the
- * generated code exposes as a kotlinx [JsonElement]. Absent, malformed, or
- * wrong-shape payloads degrade to an empty list; non-string elements are dropped,
- * matching the legacy Gson lane for absent custom lists.
- */
-private fun JsonElement?.toCustomListNames(): List<String> {
-    if (this !is JsonArray) return emptyList()
-    return mapNotNull { element ->
-        (element as? JsonPrimitive)
-            ?.takeIf { it.isString }
-            ?.content
+private fun JsonElement?.toCustomListNames(): List<String> = when (this) {
+    is JsonArray -> {
+        mapNotNull { element ->
+            (element as? JsonPrimitive)
+                ?.takeIf { it.isString }
+                ?.content
+        }
     }
+    is JsonObject -> {
+        entries.filter { (_, value) ->
+            (value as? JsonPrimitive)?.booleanOrNull == true
+        }.map { it.key }
+    }
+    else -> emptyList()
 }
 
 /**

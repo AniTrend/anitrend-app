@@ -12,10 +12,8 @@ import com.mxt.anitrend.R
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.util.CompatUtil
-import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.Settings
-import com.mxt.anitrend.util.selectedIndex
 import com.mxt.anitrend.viewmodel.SuggestionListViewModel
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
@@ -114,28 +112,23 @@ class SuggestionListFragment : MediaBrowseFragment() {
         val ctx = context ?: return super.onOptionsItemSelected(item)
         when (item.itemId) {
             R.id.action_sort -> {
-                DialogUtil.createSelection(
-                    ctx,
+                showFilterSheet(
+                    BrowseFilterKind.SORT,
                     R.string.app_filter_sort,
-                    CompatUtil.getIndexOf(KeyUtil.MediaSortType, settings.mediaSort),
                     CompatUtil.capitalizeWords(KeyUtil.MediaSortType),
-                ) { dialog, _ ->
-                    settings.mediaSort = KeyUtil.MediaSortType[dialog.selectedIndex]
-                }
+                    listOf(CompatUtil.getIndexOf(KeyUtil.MediaSortType, settings.mediaSort)),
+                    multiSelect = false,
+                )
                 return true
             }
             R.id.action_order -> {
-                val sortOrders = arrayOf(KeyUtil.ASC, KeyUtil.DESC)
-                DialogUtil.createSelection(
-                    ctx,
+                showFilterSheet(
+                    BrowseFilterKind.ORDER,
                     R.string.app_filter_order,
-                    CompatUtil.getIndexOf(sortOrders, settings.sortOrder),
                     CompatUtil.getStringList(ctx, R.array.order_by_types),
-                ) { dialog, _ ->
-                    settings.saveSortOrder(
-                        sortOrders.getOrNull(dialog.selectedIndex) ?: settings.sortOrder,
-                    )
-                }
+                    listOf(CompatUtil.getIndexOf(mediaFilterSortOrders, settings.sortOrder)),
+                    multiSelect = false,
+                )
                 return true
             }
         }

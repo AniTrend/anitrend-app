@@ -42,6 +42,7 @@ class BottomSheetCancellationDoesNotMutateSourceTest {
             priority = 3,
             notes = "edited",
             advancedScores = mapOf("Story" to 9.0f),
+            customLists = null,
         )
 
         assertEquals(KeyUtil.COMPLETED, draft.status)

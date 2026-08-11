@@ -7,6 +7,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.domain.medialist.model.MediaListCollectionPageResult
+import com.mxt.anitrend.domain.model.MediaListItemUiModel
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.graphql.generated.ScoreFormat
 import com.mxt.anitrend.repository.UserRepository
@@ -91,6 +92,19 @@ class AiringListFragment : MediaListFragment() {
 
     /** StateFlow collector above handles the response. */
     override fun onChanged(value: MediaListCollectionPageResult?) = Unit
+
+    /**
+     * The base class resolves the tapped entry from its own latestEntries,
+     * which the Airing screen never populates. Resolve from the Airing
+     * ViewModel state (the source of truth) and reuse the shared dispatch.
+     */
+    override fun incrementMediaProgress(item: MediaListItemUiModel) {
+        val state = airingListViewModel.state.value as? AiringListViewModel.UiState.Success ?: return
+        val entry = state.entries.firstOrNull { record ->
+            record.id == item.id || record.mediaId == item.mediaId
+        } ?: return
+        dispatchIncrement(entry)
+    }
 
     private fun handleSuccess(state: AiringListViewModel.UiState.Success) {
         state.pageInfo?.let(::setPageInfo)

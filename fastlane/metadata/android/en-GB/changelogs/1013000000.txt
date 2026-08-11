@@ -1,0 +1,9 @@
+🚀 What's New:
+- A refreshed Material 3 experience for profiles, accounts and settings.
+- Modernised onboarding, studio, character and staff screens.
+
+🐛 Bug Fixes:
+- More reliable lists, replies and social interactions.
+
+📈 Improvements:
+- Updated networking and stability across the app.
