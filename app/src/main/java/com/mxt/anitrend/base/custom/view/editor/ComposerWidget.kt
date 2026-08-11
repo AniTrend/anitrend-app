@@ -2,6 +2,7 @@ package com.mxt.anitrend.base.custom.view.editor
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Color
 import android.os.Build
 import android.util.AttributeSet
 import android.view.View
@@ -9,10 +10,13 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Lifecycle
 import com.mxt.anitrend.R
+import com.mxt.anitrend.base.custom.view.container.CardViewBase
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener
 import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.databinding.WidgetComposerBinding
@@ -27,6 +31,7 @@ import com.mxt.anitrend.model.entity.giphy.Giphy
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.markdown.MarkDownUtil
+import com.google.android.material.color.MaterialColors
 import io.wax911.emojify.EmojiManager
 import io.wax911.emojify.parser.parseToUnicode
 import java.util.*
@@ -71,6 +76,7 @@ class ComposerWidget :
     private var listener: Listener? = null
     private var recycled = false
     private var isSheetLayout = false
+    private var isReplyContext = false
 
     fun setListener(listener: Listener?) {
         this.listener = listener
@@ -112,6 +118,13 @@ class ComposerWidget :
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
+        binding.composerSurface.setCardBackgroundColor(
+            if (parent is CardViewBase) {
+                Color.TRANSPARENT
+            } else {
+                MaterialColors.getColor(this, R.attr.colorSurfaceContainer)
+            },
+        )
     }
 
     override fun onDetachedFromWindow() {
@@ -128,7 +141,52 @@ class ComposerWidget :
         binding.insertLink.setOnClickListener(this)
         binding.insertYoutube.setOnClickListener(this)
         binding.insertGif.setOnClickListener(this)
+        binding.insertOverflow.setOnClickListener(this)
+        binding.insertEmoticon.setOnClickListener(this)
         binding.widgetFlipper.setOnClickListener(this)
+        binding.postAction.setOnClickListener(this)
+        binding.replySendIcon.setOnClickListener(this)
+        updateActionVisibility()
+        binding.comment.doAfterTextChanged {
+            if (binding.commentLayout.error != null) {
+                binding.commentLayout.error = null
+            }
+        }
+    }
+
+    override fun onSizeChanged(
+        width: Int,
+        height: Int,
+        oldWidth: Int,
+        oldHeight: Int,
+    ) {
+        super.onSizeChanged(width, height, oldWidth, oldHeight)
+        updateActionVisibility()
+    }
+
+    private fun updateActionVisibility() {
+        if (width <= 0) return
+        val narrowWidth = width < resources.getDimensionPixelSize(R.dimen.composer_action_breakpoint)
+        binding.insertOverflow.visibility = if (narrowWidth) View.VISIBLE else View.GONE
+        binding.insertLink.visibility = if (narrowWidth) View.GONE else View.VISIBLE
+        binding.insertYoutube.visibility = if (narrowWidth) View.GONE else View.VISIBLE
+        binding.insertGif.visibility = if (narrowWidth) View.GONE else View.VISIBLE
+        binding.postAction.visibility = if (isReplyContext) View.GONE else View.VISIBLE
+        binding.replySendIcon.visibility = if (isReplyContext) View.VISIBLE else View.GONE
+    }
+
+    private fun updateReplyContext(reply: Boolean, name: String?) {
+        isReplyContext = reply
+        binding.replyRecipientChip.apply {
+            visibility = if (reply && !name.isNullOrBlank()) View.VISIBLE else View.GONE
+            text = name?.let { context.getString(R.string.composer_reply_to, it) }
+            contentDescription = name?.let { context.getString(R.string.composer_reply_to, it) }
+        }
+        binding.comment.hint = context.getString(
+            if (reply) R.string.composer_reply_hint else R.string.text_hint_comment,
+        )
+        binding.comment.minLines = if (reply) 1 else 3
+        updateActionVisibility()
     }
 
     private fun applySheetAwareLayoutParams() {
@@ -141,7 +199,16 @@ class ComposerWidget :
                 }
             binding.root.layoutParams = params
         }
-        val editorParams = binding.composerEditorScroll.layoutParams as? LinearLayout.LayoutParams ?: return
+        val containerParams = binding.composerContainer.layoutParams ?: return
+        if (isSheetLayout) {
+            containerParams.height = ViewGroup.LayoutParams.MATCH_PARENT
+        } else {
+            containerParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+        }
+        binding.composerContainer.layoutParams = containerParams
+
+        val editorParams = binding.composerEditorScroll.layoutParams as? LinearLayout.LayoutParams
+            ?: return
         if (isSheetLayout) {
             editorParams.height = 0
             editorParams.weight = 1f
@@ -155,12 +222,14 @@ class ComposerWidget :
     private fun resetFlipperState() {
         if (binding.widgetFlipper.displayedChild == LOADING_STATE) {
             binding.widgetFlipper.displayedChild = CONTENT_STATE
+            binding.widgetFlipper.contentDescription = context.getString(R.string.composer_send_description)
         }
     }
 
     fun setModel(feedList: FeedList, @KeyUtil.RequestType requestType: Int) {
         this.feedList = feedList
         this.requestType = requestType
+        updateReplyContext(false, null)
     }
 
     /**
@@ -169,6 +238,7 @@ class ComposerWidget :
     fun setModel(recipient: UserBase, @KeyUtil.RequestType requestType: Int) {
         this.recipient = recipient
         this.requestType = requestType
+        updateReplyContext(false, null)
     }
 
     /**
@@ -176,11 +246,13 @@ class ComposerWidget :
      */
     fun setModel(feedList: FeedList) {
         this.feedList = feedList
+        updateReplyContext(false, null)
     }
 
     fun setModel(feedReply: FeedReply, @KeyUtil.RequestType requestType: Int) {
         this.feedReply = feedReply
         this.requestType = requestType
+        updateReplyContext(true, feedReply.user?.name)
     }
 
     /**
@@ -190,6 +262,7 @@ class ComposerWidget :
     fun setModel(feedRecord: FeedRecord, @KeyUtil.RequestType requestType: Int) {
         this.feedRecord = feedRecord
         this.requestType = requestType
+        updateReplyContext(requestType == KeyUtil.MUT_SAVE_FEED_REPLY, feedRecord.user?.name)
     }
 
     /**
@@ -199,6 +272,7 @@ class ComposerWidget :
     fun setModel(feedReplyRecord: FeedReplyRecord, @KeyUtil.RequestType requestType: Int) {
         this.feedReplyRecord = feedReplyRecord
         this.requestType = requestType
+        updateReplyContext(true, feedReplyRecord.user?.name)
     }
 
     /**
@@ -212,8 +286,13 @@ class ComposerWidget :
 
     @SuppressLint("SwitchIntDef")
     fun startRequestData() {
+        if (binding.comment.isEmpty) {
+            binding.commentLayout.error = context.getString(R.string.warning_empty_input)
+            return
+        }
         if (binding.widgetFlipper.displayedChild == CONTENT_STATE) {
             binding.widgetFlipper.showNext()
+            binding.widgetFlipper.contentDescription = context.getString(R.string.composer_sending_description)
 
             val formattedText = binding.comment.formattedText
 
@@ -224,6 +303,8 @@ class ComposerWidget :
                         resetFlipperState()
                         if (success) {
                             binding.comment.text?.clear()
+                        } else {
+                            binding.commentLayout.error = context.getString(R.string.text_error_request)
                         }
                     }
                 }
@@ -234,18 +315,47 @@ class ComposerWidget :
     }
 
     override fun onClick(view: View) {
+        if (view.id == R.id.insert_overflow) {
+            showOverflowMenu(view)
+            return
+        }
+        if (view.id == R.id.post_action || view.id == R.id.reply_send_icon) {
+            itemClickListener?.onItemClick(
+                binding.widgetFlipper,
+                IndexedValue(0, binding.widgetFlipper as Any),
+            )
+            startRequestData()
+            return
+        }
+        if (view.id == R.id.widget_flipper && binding.comment.isEmpty) {
+            binding.commentLayout.error = context.getString(R.string.warning_empty_input)
+            return
+        }
         if (itemClickListener != null) {
             itemClickListener?.onItemClick(view, IndexedValue(0, view as Any))
             when (view.id) {
                 R.id.widget_flipper -> if (!binding.comment.isEmpty) {
                     startRequestData()
-                } else {
-                    NotifyUtil.makeText(context, R.string.warning_empty_input, Toast.LENGTH_SHORT).show()
                 }
             }
         } else {
             NotifyUtil.makeText(context, R.string.dialog_action_null, Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun showOverflowMenu(anchor: View) {
+        PopupMenu(context, anchor).apply {
+            menu.add(0, R.id.insert_link, 0, R.string.composer_add_link_description)
+            menu.add(0, R.id.insert_youtube, 1, R.string.composer_add_youtube_description)
+            menu.add(0, R.id.insert_gif, 2, R.string.composer_add_gif_description)
+            setOnMenuItemClickListener { item ->
+                itemClickListener?.onItemClick(
+                    binding.root.findViewById(item.itemId),
+                    IndexedValue(0, binding.root.findViewById<View>(item.itemId)),
+                )
+                true
+            }
+        }.show()
     }
 
     fun editBoxHasFocus(releaseFocus: Boolean): Boolean {

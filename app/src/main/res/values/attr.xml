@@ -47,4 +47,7 @@
         <!-- Enables the bounded sheet viewport layout without changing shared-host sizing. -->
         <attr name="sheetLayout" format="boolean" />
     </declare-styleable>
+
+    <attr name="composerViolet" format="reference|color" />
+    <attr name="composerOnViolet" format="reference|color" />
 </resources>

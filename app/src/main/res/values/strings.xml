@@ -18,7 +18,14 @@
     <string name="composer_add_youtube_description">Add YouTube video</string>
     <string name="composer_add_gif_description">Add GIF</string>
     <string name="composer_add_emoticon_description">Add emoticon</string>
+    <string name="composer_more_actions_description">More composer actions</string>
+    <string name="composer_post">Post</string>
+    <string name="composer_reply_recipient_description">Reply recipient</string>
+    <string name="composer_avatar_description">Your avatar</string>
+    <string name="composer_reply_to">Replying to %s</string>
+    <string name="composer_reply_hint">Add to thread...</string>
     <string name="composer_send_description">Send</string>
+    <string name="composer_sending_description">Sending</string>
 
     <string name="action_mode_selected">Selected: %d</string>
 
@@ -671,9 +678,9 @@
     <string name="title_update_info">Update Info!</string>
 
     <!-- Sliding dialog that helps you select content type -->
-    <string name="sheet_share_hint">Information to share</string>
-    <string name="sheet_share_title">Format your status post</string>
-    <string name="sheet_share_body">Describe the content of the link below.</string>
+    <string name="sheet_share_hint">Link or text to share</string>
+    <string name="sheet_share_title">Add a note</string>
+    <string name="sheet_share_body">Share this link</string>
 
     <!--These are the anime time labels in your profile-->
     <string name="anime_time_hours">%.1f Hours</string>

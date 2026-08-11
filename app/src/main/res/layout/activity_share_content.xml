@@ -16,7 +16,7 @@
             android:layout_marginEnd="@dimen/bottom_sheet_width"
             android:orientation="vertical"
             app:behavior_hideable="true"
-            android:background="?attr/cardColor"
+            android:background="?attr/colorSurfaceContainerHigh"
             app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
             <include
@@ -27,22 +27,31 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/xl_margin">
+                android:paddingHorizontal="@dimen/xl_margin"
+                android:paddingTop="@dimen/xl_margin"
+                android:paddingBottom="@dimen/spacing_sm">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/sheet_share_body"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
+                    android:textAppearance="?attr/textAppearanceLabelMedium"
+                    android:textColor="?attr/colorOnSurfaceVariant" />
 
-                <Space
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/Widget.AniTrend.ManageSheet.SectionCard"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/lg_margin" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/sheet_field_margin"
+                    app:cardBackgroundColor="?attr/colorSurfaceContainer"
+                    app:contentPadding="@dimen/lg_margin"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium">
 
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/sheet_shared_resource"
@@ -52,11 +61,10 @@
                         android:singleLine="true"
                         android:ellipsize="end"
                         android:maxLines="1"
-                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"/>
-
-                    <Space
-                        android:layout_width="@dimen/lg_margin"
-                        android:layout_height="wrap_content" />
+                        android:hint="@string/sheet_share_hint"
+                        android:textAppearance="?attr/textAppearanceBodyMedium"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textColorHint="?attr/colorOnSurfaceVariant" />
 
                     <Spinner
                         android:id="@+id/sheet_share_post_type"
@@ -70,31 +78,28 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:foreground="?selectableItemBackground"
+                        android:layout_width="@dimen/composer_action_size"
+                        android:layout_height="@dimen/composer_action_size"
                         android:padding="@dimen/lg_margin"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         app:tint="?colorAccent"
                         app:srcCompat="@drawable/ic_check_circle_white_24dp" />
 
-                </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/xl_margin" />
-
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/sheet_share_title"/>
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/lg_margin" />
+                    android:layout_marginTop="@dimen/sheet_field_margin"
+                    android:text="@string/sheet_share_title"
+                    android:textAppearance="?attr/textAppearanceLabelMedium"
+                    android:textColor="?attr/colorOnSurface" />
 
                 <com.mxt.anitrend.base.custom.view.editor.ComposerWidget
                     android:id="@+id/composer_widget"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/sheet_inline_spacing" />
 
             </LinearLayout>
 

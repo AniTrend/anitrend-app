@@ -1,209 +1,235 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical"
-        android:padding="@dimen/md_margin"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/composer_surface"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipToOutline="true"
+    app:cardBackgroundColor="?attr/colorSurfaceContainerLow"
+    app:cardCornerRadius="@dimen/composer_corner_radius"
+    app:cardElevation="0dp"
+    app:strokeWidth="0dp">
+
+    <LinearLayout
+        android:id="@+id/composer_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:focusableInTouchMode="true"
-        android:focusable="true"
-        android:isScrollContainer="false">
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/composer_horizontal_padding"
+        android:paddingTop="@dimen/composer_top_padding"
+        android:paddingBottom="@dimen/composer_bottom_padding">
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/composer_editor_scroll"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:fillViewport="true">
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <com.mxt.anitrend.base.custom.view.editor.MarkdownInputEditor
-                android:id="@+id/comment"
-                android:hint="@string/text_hint_comment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textMultiLine|textAutoCorrect|textAutoComplete|textCapSentences"
-                android:textAppearance="?attr/textAppearanceBodyLarge"
-                android:overScrollMode="always"
-                android:scrollbarStyle="insideInset"
-                android:scrollbars="vertical"/>
-
-        </com.google.android.material.textfield.TextInputLayout>
-        </androidx.core.widget.NestedScrollView>
-
-        <FrameLayout
-            android:layerType="software"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/md_margin"
-            android:background="@drawable/dashed_background" />
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:fillViewport="true"
+            android:overScrollMode="never">
 
             <LinearLayout
-                android:layout_gravity="start"
-                android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/reply_recipient_chip"
+                    style="@style/Widget.Material3.Chip.Assist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/composer_reply_chip_spacing"
+                    android:contentDescription="@string/composer_reply_recipient_description"
+                    android:visibility="gone"
+                    app:chipIcon="@drawable/ic_reply_blue_600_18dp"
+                    app:chipIconTint="?attr/colorOnSurfaceVariant" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="top"
+                    android:orientation="horizontal">
+
+                    <com.mxt.anitrend.base.custom.view.image.AvatarImageView
+                        android:layout_width="@dimen/composer_avatar_size"
+                        android:layout_height="@dimen/composer_avatar_size"
+                        android:layout_marginEnd="@dimen/composer_avatar_spacing"
+                        android:contentDescription="@string/composer_avatar_description"
+                        android:scaleType="centerCrop"
+                        app:srcCompat="@drawable/avatar_placeholder" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/comment_layout"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        app:boxBackgroundMode="none">
+
+                        <com.mxt.anitrend.base.custom.view.editor.MarkdownInputEditor
+                            android:id="@+id/comment"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="top|start"
+                            android:hint="@string/text_hint_comment"
+                            android:imeOptions="flagNoExtractUi"
+                            android:inputType="textMultiLine|textAutoCorrect|textAutoComplete|textCapSentences"
+                            android:minLines="3"
+                            android:paddingVertical="@dimen/composer_editor_vertical_padding"
+                            android:paddingStart="0dp"
+                            android:paddingEnd="0dp"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:overScrollMode="always"
+                            android:scrollbarStyle="insideInset"
+                            android:scrollbars="vertical" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/composer_divider_spacing"
+            android:layout_marginBottom="@dimen/composer_action_spacing"
+            app:dividerColor="?attr/colorOutlineVariant" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/composer_actions"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start|center_vertical"
+                android:orientation="horizontal">
 
                 <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
                     android:id="@+id/insert_image"
+                    style="?attr/materialIconButtonStyle"
+                    android:layout_width="@dimen/composer_action_size"
+                    android:layout_height="@dimen/composer_action_size"
                     android:contentDescription="@string/composer_add_image_description"
-                    android:layout_gravity="center"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?selectableItemBackground"
-                    android:minWidth="@dimen/spacing_xl"
-                    android:minHeight="@dimen/spacing_xl"
-                    android:padding="@dimen/md_margin"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:tint="?attr/colorPrimary"
-                    app:srcCompat="@drawable/ic_crop_original_white_24dp" />
-
-                <Space
-                    android:layout_width="@dimen/md_margin"
-                    android:layout_height="wrap_content" />
-
-                <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
-                    android:id="@+id/insert_webm"
-                    android:contentDescription="@string/composer_add_video_description"
-                    android:layout_gravity="center"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?selectableItemBackground"
-                    android:minWidth="@dimen/spacing_xl"
-                    android:minHeight="@dimen/spacing_xl"
-                    android:padding="@dimen/md_margin"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:tint="?attr/colorPrimary"
-                    app:srcCompat="@drawable/ic_slow_motion_video_white_24dp" />
-
-                <Space
-                    android:layout_width="@dimen/md_margin"
-                    android:layout_height="wrap_content" />
-
-                <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
-                    android:id="@+id/insert_link"
-                    android:contentDescription="@string/composer_add_link_description"
-                    android:layout_gravity="center"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?selectableItemBackground"
-                    android:minWidth="@dimen/spacing_xl"
-                    android:minHeight="@dimen/spacing_xl"
-                    android:padding="@dimen/md_margin"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:tint="?attr/colorPrimary"
-                    app:srcCompat="@drawable/ic_link_white_24dp" />
-
-                <Space
-                    android:layout_width="@dimen/md_margin"
-                    android:layout_height="wrap_content" />
-
-                <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
-                    android:id="@+id/insert_youtube"
-                    android:contentDescription="@string/composer_add_youtube_description"
-                    android:layout_gravity="center"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?selectableItemBackground"
-                    android:minWidth="@dimen/spacing_xl"
-                    android:minHeight="@dimen/spacing_xl"
-                    android:padding="@dimen/md_margin"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:tint="?attr/colorError"
-                    app:srcCompat="@drawable/ic_youtube" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_gravity="end"
-                android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
-                    android:id="@+id/insert_gif"
-                    android:contentDescription="@string/composer_add_gif_description"
-                    android:layout_gravity="center"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?selectableItemBackground"
-                    android:minWidth="@dimen/spacing_xl"
-                    android:minHeight="@dimen/spacing_xl"
-                    android:padding="@dimen/md_margin"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:tint="?attr/colorPrimary"
-                    app:srcCompat="@drawable/ic_gif_white_24dp" />
-
-                <Space
-                    android:layout_width="@dimen/md_margin"
-                    android:visibility="gone"
-                    android:layout_height="wrap_content" />
+                    android:padding="@dimen/composer_icon_padding"
+                    app:srcCompat="@drawable/ic_crop_original_white_24dp"
+                    app:tint="?attr/colorOnSurfaceVariant" />
 
                 <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
                     android:id="@+id/insert_emoticon"
+                    style="?attr/materialIconButtonStyle"
+                    android:layout_width="@dimen/composer_action_size"
+                    android:layout_height="@dimen/composer_action_size"
                     android:contentDescription="@string/composer_add_emoticon_description"
                     android:visibility="gone"
-                    android:layout_gravity="center"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?selectableItemBackground"
-                    android:minWidth="@dimen/spacing_xl"
-                    android:minHeight="@dimen/spacing_xl"
-                    android:padding="@dimen/md_margin"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:tint="?attr/colorPrimary"
-                    app:srcCompat="@drawable/ic_insert_emoticon_white_24dp" />
+                    android:padding="@dimen/composer_icon_padding"
+                    app:srcCompat="@drawable/ic_insert_emoticon_white_24dp"
+                    app:tint="?attr/colorOnSurfaceVariant" />
 
-                <Space
-                    android:layout_width="@dimen/md_margin"
-                    android:layout_height="wrap_content" />
+                <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
+                    android:id="@+id/insert_link"
+                    style="?attr/materialIconButtonStyle"
+                    android:layout_width="@dimen/composer_action_size"
+                    android:layout_height="@dimen/composer_action_size"
+                    android:contentDescription="@string/composer_add_link_description"
+                    android:padding="@dimen/composer_icon_padding"
+                    app:srcCompat="@drawable/ic_link_white_24dp"
+                    app:tint="?attr/colorOnSurfaceVariant" />
 
-                <ViewFlipper
-                    android:id="@+id/widget_flipper"
-                    android:contentDescription="@string/composer_send_description"
-                    android:layout_gravity="center"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?selectableItemBackground"
-                    android:inAnimation="@android:anim/slide_in_left"
-                    android:outAnimation="@android:anim/slide_out_right"
-                    android:minWidth="@dimen/spacing_xl"
-                    android:minHeight="@dimen/spacing_xl"
-                    android:padding="@dimen/md_margin"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
+                    android:id="@+id/insert_webm"
+                    style="?attr/materialIconButtonStyle"
+                    android:layout_width="@dimen/composer_action_size"
+                    android:layout_height="@dimen/composer_action_size"
+                    android:contentDescription="@string/composer_add_video_description"
+                    android:padding="@dimen/composer_icon_padding"
+                    app:srcCompat="@drawable/ic_slow_motion_video_white_24dp"
+                    app:tint="?attr/colorOnSurfaceVariant" />
 
-                    <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:tint="?attr/colorPrimary"
-                        app:srcCompat="@drawable/ic_send_white_24dp" />
+                <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
+                    android:id="@+id/insert_youtube"
+                    style="?attr/materialIconButtonStyle"
+                    android:layout_width="@dimen/composer_action_size"
+                    android:layout_height="@dimen/composer_action_size"
+                    android:contentDescription="@string/composer_add_youtube_description"
+                    android:padding="@dimen/composer_icon_padding"
+                    app:srcCompat="@drawable/ic_youtube"
+                    app:tint="?attr/colorOnSurfaceVariant" />
 
-                    <com.google.android.material.progressindicator.CircularProgressIndicator
-                        android:layout_width="@dimen/widget_spinner_compact_size"
-                        android:layout_height="@dimen/widget_spinner_compact_size"
-                        android:layout_gravity="center"
-                        android:indeterminate="true"
-                        app:indicatorColor="?attr/colorPrimary"
-                        app:indicatorSize="@dimen/widget_spinner_compact_size" />
+                <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
+                    android:id="@+id/insert_gif"
+                    style="?attr/materialIconButtonStyle"
+                    android:layout_width="@dimen/composer_action_size"
+                    android:layout_height="@dimen/composer_action_size"
+                    android:contentDescription="@string/composer_add_gif_description"
+                    android:padding="@dimen/composer_icon_padding"
+                    app:srcCompat="@drawable/ic_gif_white_24dp"
+                    app:tint="?attr/colorOnSurfaceVariant" />
 
-                </ViewFlipper>
-
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/insert_overflow"
+                    style="?attr/materialIconButtonStyle"
+                    android:layout_width="@dimen/composer_action_size"
+                    android:layout_height="@dimen/composer_action_size"
+                    android:contentDescription="@string/composer_more_actions_description"
+                    android:visibility="gone"
+                    app:icon="@drawable/ic_menu_grey_600_24dp"
+                    app:iconTint="?attr/colorOnSurfaceVariant" />
             </LinearLayout>
 
-        </FrameLayout>
+            <ViewFlipper
+                android:id="@+id/widget_flipper"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/composer_send_size"
+                android:minWidth="@dimen/composer_send_size"
+                android:contentDescription="@string/composer_send_description"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/composer_send_background"
+                android:inAnimation="@android:anim/slide_in_left"
+                android:outAnimation="@android:anim/slide_out_right">
 
-</LinearLayout>
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/post_action"
+                        style="@style/Widget.Material3.Button"
+                        android:layout_width="@dimen/composer_post_width"
+                        android:layout_height="@dimen/composer_post_height"
+                        android:layout_gravity="center"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp"
+                        android:paddingHorizontal="@dimen/composer_post_padding_horizontal"
+                        android:text="@string/composer_post"
+                        android:textAppearance="?attr/textAppearanceLabelLarge"
+                        android:textColor="?attr/composerOnViolet"
+                        app:backgroundTint="?attr/composerViolet"
+                        app:cornerRadius="@dimen/composer_pill_radius" />
+
+                    <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
+                        android:id="@+id/reply_send_icon"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:contentDescription="@string/composer_send_description"
+                        android:padding="@dimen/composer_icon_padding"
+                        android:visibility="gone"
+                        app:srcCompat="@drawable/ic_send_white_24dp"
+                        app:tint="?attr/composerOnViolet" />
+                </FrameLayout>
+
+                <com.google.android.material.progressindicator.CircularProgressIndicator
+                    android:layout_width="@dimen/widget_spinner_compact_size"
+                    android:layout_height="@dimen/widget_spinner_compact_size"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/composer_sending_description"
+                    android:indeterminate="true"
+                    app:indicatorColor="?attr/composerOnViolet"
+                    app:indicatorSize="@dimen/widget_spinner_compact_size" />
+            </ViewFlipper>
+        </LinearLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
