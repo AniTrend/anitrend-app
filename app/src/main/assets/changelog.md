@@ -5,12 +5,13 @@ Read the **FAQ** for issues regarding NSFW and notifications. Goto **Options** -
 
 ## What's Changed
 
-- Fixed Crunchyroll RSS feed connectivity issues by updating feedburner.com endpoint URLs.
-- Initial support for edge-to-edge support for Android 15+
-- Reimagined the social composer with a compact dark surface, borderless editor, responsive action rail, smaller Post pill, and reply send affordance.
-- Removed the composer avatar and refined the share flow with compact "Share this link" and "Add a note" sections.
-- Added theme-aware composer colors, improved composer validation and accessibility, and preserved attachment and submission actions.
-- Completed translations for all current locale resources, including composer, sharing, accessibility, settings, and account strings.
+- Modernized Material 3 experiences across onboarding, account, profile, settings, studio, character, staff, media, and social interactions.
+- Improved paging, list state, replies, follow actions, profile actions, media-list editing, search, logging, startup flows, and navigation arguments.
+- Added state synchronization and mutation architecture improvements, ViewModel ownership, Koin boundary hardening, and generated GraphQL/Retrofit migrations.
+- Fixed feed and reply rendering, social interaction state, bottom-sheet and startup flows, authentication/profile actions, media browse propagation, and list stability.
+- Added Android 15 edge-to-edge support and completed AGP 9/buildSrc compatibility work.
+- Updated Kotlin, Gradle, Media3, GraphQL, Firebase, Koin, Glide, Fastlane, and related build dependencies.
+- Expanded onboarding, accessibility, settings, account, and localization coverage across supported languages.
 
 ### Current Issues
 - Gifs may show artifacts if more than one is playing at a given moment
