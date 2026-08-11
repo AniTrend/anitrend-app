@@ -678,8 +678,6 @@
     <string name="series_chapters">Chapitres :</string>
     <!-- Series detail label for the volume count. -->
     <string name="series_volumes">Volumes :</string>
-    <!-- Profile header label showing the signed-in user name. -->
-    <string name="logged_in_as">Connecté en tant que</string>
 
 
     <!-- Button label for signing in with AniList. -->

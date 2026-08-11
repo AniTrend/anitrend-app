@@ -649,7 +649,6 @@
     <string name="series_next_ep">Próximo Episódio:</string>
     <string name="series_chapters">Capítulos:</string>
     <string name="series_volumes">Volumes:</string>
-    <string name="logged_in_as">Logado como</string>
 
     <!-- Button that starts signing in with AniList -->
     <string name="sign_into_anilist">Entrar no AniList</string>

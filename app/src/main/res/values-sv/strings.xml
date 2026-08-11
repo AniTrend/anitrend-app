@@ -663,7 +663,6 @@
     <string name="series_next_ep">Nästa avsnitt:</string>
     <string name="series_chapters">Kapitel:</string>
     <string name="series_volumes">Volymer:</string>
-    <string name="logged_in_as">Inloggad som</string>
 
     <!-- Button that starts signing in with AniList -->
     <string name="sign_into_anilist">Logga in på AniList</string>

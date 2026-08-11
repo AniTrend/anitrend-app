@@ -640,7 +640,6 @@ elementos de tus favoritos al presionar en el icono del corazón .
     <string name="series_next_ep">Siguiente episodio:</string>
     <string name="series_chapters">Capítulos:</string>
     <string name="series_volumes">Tomos:</string>
-    <string name="logged_in_as">Conectado como</string>
 
     <string name="sign_into_anilist">Inicia sesión en AniList</string>
 

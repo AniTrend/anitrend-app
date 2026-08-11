@@ -548,7 +548,6 @@ These are the anime time labels in your profile -->
     <string name="series_next_ep">"Nächste Episode:"</string>
     <string name="series_chapters">"Kapitel:"</string>
     <string name="series_volumes">"Bände:"</string>
-    <string name="logged_in_as">"Eingeloggt als"</string>
     <string name="sign_into_anilist">"Bei AniList einloggen"</string>
     <string name="anitrend_sign_in">"AniTrend Login"</string>
     <string name="please_sing_in">"Bitte einloggen"</string>
