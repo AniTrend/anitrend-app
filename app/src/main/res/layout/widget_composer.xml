@@ -46,16 +46,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="top"
                     android:orientation="horizontal">
-
-                    <com.mxt.anitrend.base.custom.view.image.AvatarImageView
-                        android:layout_width="@dimen/composer_avatar_size"
-                        android:layout_height="@dimen/composer_avatar_size"
-                        android:layout_marginEnd="@dimen/composer_avatar_spacing"
-                        android:contentDescription="@string/composer_avatar_description"
-                        android:scaleType="centerCrop"
-                        app:srcCompat="@drawable/avatar_placeholder" />
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/comment_layout"

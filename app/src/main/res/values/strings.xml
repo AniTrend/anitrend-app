@@ -21,7 +21,6 @@
     <string name="composer_more_actions_description">More composer actions</string>
     <string name="composer_post">Post</string>
     <string name="composer_reply_recipient_description">Reply recipient</string>
-    <string name="composer_avatar_description">Your avatar</string>
     <string name="composer_reply_to">Replying to %s</string>
     <string name="composer_reply_hint">Add to thread...</string>
     <string name="composer_send_description">Send</string>

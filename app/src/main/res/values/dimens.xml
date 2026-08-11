@@ -35,7 +35,6 @@
     <dimen name="widget_spinner_compact_size">18dp</dimen>
 
     <!-- Composer sizing and responsive layout -->
-    <dimen name="composer_avatar_size">40dp</dimen>
     <dimen name="composer_action_size">48dp</dimen>
     <dimen name="composer_send_size">48dp</dimen>
     <dimen name="composer_post_width">64dp</dimen>
@@ -48,7 +47,6 @@
     <dimen name="composer_horizontal_padding">12dp</dimen>
     <dimen name="composer_top_padding">10dp</dimen>
     <dimen name="composer_bottom_padding">8dp</dimen>
-    <dimen name="composer_avatar_spacing">10dp</dimen>
     <dimen name="composer_reply_chip_spacing">4dp</dimen>
     <dimen name="composer_editor_vertical_padding">6dp</dimen>
     <dimen name="composer_divider_spacing">6dp</dimen>
