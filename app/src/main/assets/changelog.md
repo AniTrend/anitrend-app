@@ -7,6 +7,10 @@ Read the **FAQ** for issues regarding NSFW and notifications. Goto **Options** -
 
 - Fixed Crunchyroll RSS feed connectivity issues by updating feedburner.com endpoint URLs.
 - Initial support for edge-to-edge support for Android 15+
+- Reimagined the social composer with a compact dark surface, borderless editor, responsive action rail, smaller Post pill, and reply send affordance.
+- Removed the composer avatar and refined the share flow with compact "Share this link" and "Add a note" sections.
+- Added theme-aware composer colors, improved composer validation and accessibility, and preserved attachment and submission actions.
+- Completed translations for all current locale resources, including composer, sharing, accessibility, settings, and account strings.
 
 ### Current Issues
 - Gifs may show artifacts if more than one is playing at a given moment
