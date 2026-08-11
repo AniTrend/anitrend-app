@@ -42,3 +42,16 @@ data class NotificationPageResult(
     val notifications: List<NotificationRecord>,
     val pageInfo: PageInfoRecord?,
 )
+
+/**
+ * Resolves the activity id a comment-style notification (reply, mention,
+ * message, like) can open, or null when the record carries no usable activity
+ * reference.
+ *
+ * AniList reports `activityId` as 0 when the referenced activity was deleted
+ * after the notification was created. The comment detail screen rejects
+ * non-positive ids with an unrecoverable error state, so navigation callers
+ * must never launch it with 0; they surface the unavailable row with the
+ * established user-facing message instead.
+ */
+fun NotificationRecord.commentActivityId(): Long? = activityId?.takeIf { it > 0L }

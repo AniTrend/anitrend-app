@@ -45,8 +45,11 @@ class BottomSheetFailureDoesNotMutateSourceTest {
             priority = 4,
             notes = "edited",
             advancedScores = mapOf("Story" to 8.0f),
+            customLists = null,
         )
-        val command = draft.toSaveMediaListEntryCommand(source, customLists = listOf("Favorites"))
+        // The command reads custom lists from the draft, mirroring the current
+        // production toSaveMediaListEntryCommand signature.
+        val command = draft.copy(customLists = listOf("Favorites")).toSaveMediaListEntryCommand(source)
         val result = Result.failure<MediaList>(IllegalStateException("save failed"))
 
         result.exceptionOrNull()

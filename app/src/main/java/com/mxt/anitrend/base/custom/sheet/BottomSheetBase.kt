@@ -3,22 +3,21 @@ package com.mxt.anitrend.base.custom.sheet
 import android.app.Dialog
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageButton
+import android.widget.TextView
 import androidx.annotation.StringRes
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.Lifecycle
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.view.search.MaterialSearchView
-import com.mxt.anitrend.base.custom.view.text.SingleLineTextView
 import com.mxt.anitrend.base.interfaces.event.BottomSheetChoice
 import com.mxt.anitrend.base.interfaces.event.BottomSheetListener
 import com.mxt.anitrend.base.interfaces.event.ISearchDelegate
 import com.mxt.anitrend.base.interfaces.event.ResponseCallback
 import com.mxt.anitrend.extension.getCompatTintedDrawable
 import com.mxt.anitrend.presenter.base.BasePresenter
-import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import org.greenrobot.eventbus.EventBus
 import org.koin.android.ext.android.inject
@@ -33,9 +32,9 @@ abstract class BottomSheetBase<T> :
     BottomSheetListener,
     ResponseCallback {
 
-    protected var toolbarTitle: SingleLineTextView? = null
-    protected var toolbarState: AppCompatImageView? = null
-    protected var toolbarSearch: AppCompatImageView? = null
+    protected var toolbarTitle: TextView? = null
+    protected var toolbarState: ImageButton? = null
+    protected var toolbarSearch: ImageButton? = null
     protected var searchView: MaterialSearchView? = null
 
     protected var mSearchDelegate: ISearchDelegate? = null
@@ -95,19 +94,14 @@ abstract class BottomSheetBase<T> :
         super.onStart()
         toolbarTitle?.setText(mTitle)
         val ctx = context
-        val arrowDown = ctx?.getCompatTintedDrawable(R.drawable.ic_keyboard_arrow_down_grey_600_24dp)
         val closeIcon = ctx?.getCompatTintedDrawable(R.drawable.ic_close_grey_600_24dp)
-        if (bottomSheetBehavior?.state == BottomSheetBehavior.STATE_EXPANDED) {
-            toolbarState?.setImageDrawable(arrowDown)
-        } else {
-            toolbarState?.setImageDrawable(closeIcon)
+        bottomSheetBehavior?.apply {
+            skipCollapsed = true
+            state = BottomSheetBehavior.STATE_EXPANDED
         }
+        toolbarState?.setImageDrawable(closeIcon)
         toolbarState?.setOnClickListener {
-            when (bottomSheetBehavior?.state) {
-                BottomSheetBehavior.STATE_EXPANDED ->
-                    bottomSheetBehavior?.setState(BottomSheetBehavior.STATE_COLLAPSED)
-                else -> bottomSheetBehavior?.setState(BottomSheetBehavior.STATE_HIDDEN)
-            }
+            closeDialog()
         }
         toolbarSearch?.setImageDrawable(ctx?.getCompatTintedDrawable(R.drawable.ic_search_grey_600_24dp))
         toolbarSearch?.setOnClickListener {
@@ -146,7 +140,8 @@ abstract class BottomSheetBase<T> :
         val coordinatorBehavior = layoutParams.behavior as? BottomSheetBehavior<*> ?: return
 
         bottomSheetBehavior = coordinatorBehavior
-        bottomSheetBehavior?.peekHeight = CompatUtil.dipToPx(KeyUtil.PEEK_HEIGHT)
+        bottomSheetBehavior?.skipCollapsed = true
+        bottomSheetBehavior?.isHideable = true
         bottomSheetCallback?.let { callback ->
             bottomSheetBehavior?.addBottomSheetCallback(callback)
         }
@@ -181,9 +176,7 @@ abstract class BottomSheetBase<T> :
     }
 
     override fun onStateExpanded() {
-        toolbarState?.setImageDrawable(
-            context?.getCompatTintedDrawable(R.drawable.ic_keyboard_arrow_down_grey_600_24dp),
-        )
+        toolbarState?.setImageDrawable(context?.getCompatTintedDrawable(R.drawable.ic_close_grey_600_24dp))
     }
 
     abstract class BottomSheetBuilder {

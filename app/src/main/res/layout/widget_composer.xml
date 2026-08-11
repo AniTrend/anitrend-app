@@ -9,7 +9,15 @@
         android:focusable="true"
         android:isScrollContainer="false">
 
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/composer_editor_scroll"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:fillViewport="true">
+
         <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -19,12 +27,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textMultiLine|textAutoCorrect|textAutoComplete|textCapSentences"
-                android:textSize="@dimen/subtitle_text_size"
+                android:textAppearance="?attr/textAppearanceBodyLarge"
                 android:overScrollMode="always"
                 android:scrollbarStyle="insideInset"
                 android:scrollbars="vertical"/>
 
         </com.google.android.material.textfield.TextInputLayout>
+        </androidx.core.widget.NestedScrollView>
 
         <FrameLayout
             android:layerType="software"
@@ -44,14 +53,17 @@
 
                 <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
                     android:id="@+id/insert_image"
+                    android:contentDescription="@string/composer_add_image_description"
                     android:layout_gravity="center"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?selectableItemBackground"
+                    android:minWidth="@dimen/spacing_xl"
+                    android:minHeight="@dimen/spacing_xl"
                     android:padding="@dimen/md_margin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:tint="?colorAccent"
+                    app:tint="?attr/colorPrimary"
                     app:srcCompat="@drawable/ic_crop_original_white_24dp" />
 
                 <Space
@@ -60,14 +72,17 @@
 
                 <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
                     android:id="@+id/insert_webm"
+                    android:contentDescription="@string/composer_add_video_description"
                     android:layout_gravity="center"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?selectableItemBackground"
+                    android:minWidth="@dimen/spacing_xl"
+                    android:minHeight="@dimen/spacing_xl"
                     android:padding="@dimen/md_margin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:tint="?colorAccent"
+                    app:tint="?attr/colorPrimary"
                     app:srcCompat="@drawable/ic_slow_motion_video_white_24dp" />
 
                 <Space
@@ -76,14 +91,17 @@
 
                 <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
                     android:id="@+id/insert_link"
+                    android:contentDescription="@string/composer_add_link_description"
                     android:layout_gravity="center"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?selectableItemBackground"
+                    android:minWidth="@dimen/spacing_xl"
+                    android:minHeight="@dimen/spacing_xl"
                     android:padding="@dimen/md_margin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:tint="?colorAccent"
+                    app:tint="?attr/colorPrimary"
                     app:srcCompat="@drawable/ic_link_white_24dp" />
 
                 <Space
@@ -92,14 +110,17 @@
 
                 <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
                     android:id="@+id/insert_youtube"
+                    android:contentDescription="@string/composer_add_youtube_description"
                     android:layout_gravity="center"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?selectableItemBackground"
+                    android:minWidth="@dimen/spacing_xl"
+                    android:minHeight="@dimen/spacing_xl"
                     android:padding="@dimen/md_margin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:tint="@color/colorStateRed"
+                    app:tint="?attr/colorError"
                     app:srcCompat="@drawable/ic_youtube" />
 
             </LinearLayout>
@@ -112,14 +133,17 @@
 
                 <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
                     android:id="@+id/insert_gif"
+                    android:contentDescription="@string/composer_add_gif_description"
                     android:layout_gravity="center"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?selectableItemBackground"
+                    android:minWidth="@dimen/spacing_xl"
+                    android:minHeight="@dimen/spacing_xl"
                     android:padding="@dimen/md_margin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:tint="?colorAccent"
+                    app:tint="?attr/colorPrimary"
                     app:srcCompat="@drawable/ic_gif_white_24dp" />
 
                 <Space
@@ -129,15 +153,18 @@
 
                 <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
                     android:id="@+id/insert_emoticon"
+                    android:contentDescription="@string/composer_add_emoticon_description"
                     android:visibility="gone"
                     android:layout_gravity="center"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?selectableItemBackground"
+                    android:minWidth="@dimen/spacing_xl"
+                    android:minHeight="@dimen/spacing_xl"
                     android:padding="@dimen/md_margin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:tint="?colorAccent"
+                    app:tint="?attr/colorPrimary"
                     app:srcCompat="@drawable/ic_insert_emoticon_white_24dp" />
 
                 <Space
@@ -146,12 +173,15 @@
 
                 <ViewFlipper
                     android:id="@+id/widget_flipper"
+                    android:contentDescription="@string/composer_send_description"
                     android:layout_gravity="center"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?selectableItemBackground"
                     android:inAnimation="@android:anim/slide_in_left"
                     android:outAnimation="@android:anim/slide_out_right"
+                    android:minWidth="@dimen/spacing_xl"
+                    android:minHeight="@dimen/spacing_xl"
                     android:padding="@dimen/md_margin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
@@ -159,7 +189,7 @@
                     <com.mxt.anitrend.base.custom.view.image.AppCompatTintImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:tint="?colorAccent"
+                        app:tint="?attr/colorPrimary"
                         app:srcCompat="@drawable/ic_send_white_24dp" />
 
                     <com.google.android.material.progressindicator.CircularProgressIndicator
@@ -167,7 +197,7 @@
                         android:layout_height="@dimen/widget_spinner_compact_size"
                         android:layout_gravity="center"
                         android:indeterminate="true"
-                        app:indicatorColor="?colorAccent"
+                        app:indicatorColor="?attr/colorPrimary"
                         app:indicatorSize="@dimen/widget_spinner_compact_size" />
 
                 </ViewFlipper>

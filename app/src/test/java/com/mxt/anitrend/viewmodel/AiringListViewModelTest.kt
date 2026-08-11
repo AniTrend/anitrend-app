@@ -4,9 +4,11 @@ import com.mxt.anitrend.data.mapper.toMediaListRecord
 import com.mxt.anitrend.data.store.medialist.InMemoryMediaListStore
 import com.mxt.anitrend.data.store.medialist.MediaListQueryKey
 import com.mxt.anitrend.data.store.medialist.MediaListStoreChange
-import com.mxt.anitrend.data.store.mutation.RequestSequence
 import com.mxt.anitrend.data.store.mutation.DefaultMutationRegistry
+import com.mxt.anitrend.data.store.mutation.OperationKey
+import com.mxt.anitrend.data.store.mutation.RequestSequence
 import com.mxt.anitrend.domain.medialist.model.MediaListCollectionPageResult
+import com.mxt.anitrend.domain.model.buildIncrementMediaProgressCommand
 import com.mxt.anitrend.fixture.MediaListFixtures.aMediaList
 import com.mxt.anitrend.fixture.MediaListFixtures.anAiringMediaBase
 import com.mxt.anitrend.graphql.generated.MediaListSort
@@ -26,6 +28,8 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -248,6 +252,127 @@ class AiringListViewModelTest {
 
         val state = vm.state.value as AiringListViewModel.UiState.Error
         assertEquals("Airing failed", state.message)
+        collector.cancel()
+    }
+
+    @Test
+    fun `airing entry resolves from success state and builds increment command`() = runTest(testDispatcher) {
+        val entry = aMediaList(
+            id = 1,
+            mediaId = 100,
+            progress = 7,
+            media = anAiringMediaBase(id = 100L),
+        )
+        doReturn(Result.success(collectionResult(entry)))
+            .`when`(browseRepository)
+            .getMediaListCollection(
+                userId = 10L,
+                type = MediaType.ANIME,
+                forceSingleCompletedList = true,
+                sort = listOf(MediaListSort.UPDATED_TIME_DESC),
+                statusIn = listOf(MediaListStatus.CURRENT),
+                scoreFormat = ScoreFormat.POINT_100,
+                commitToStore = true,
+                queryKey = queryKey,
+                readToken = 1L,
+            )
+
+        val vm = AiringListViewModel(
+            browseRepository = browseRepository,
+            mediaListStore = mediaListStore,
+            mutationRegistry = DefaultMutationRegistry(),
+            requestSequence = RequestSequence(),
+        )
+        val collector = backgroundScope.launch { vm.state.collect {} }
+
+        vm.load(
+            type = MediaType.ANIME,
+            userId = 10,
+            sort = MediaListSort.UPDATED_TIME_DESC.name,
+            statusIn = MediaListStatus.CURRENT.name,
+            scoreFormat = null,
+        )
+        mediaListStore.apply(
+            MediaListStoreChange.CollectionLoaded(
+                queryKey = queryKey,
+                token = 1L,
+                entries = listOf(entry.toMediaListRecord(revision = 1L, ownerUserId = 10L)),
+                pageInfo = null,
+            ),
+        )
+        advanceUntilIdle()
+
+        val state = vm.state.value as AiringListViewModel.UiState.Success
+        val item = state.renderedItems.single()
+        // Mirrors the Airing fragment increment resolution against the ViewModel state.
+        val resolved = state.entries.firstOrNull { record ->
+            record.id == item.id || record.mediaId == item.mediaId
+        }
+        assertNotNull(resolved)
+        val command = buildIncrementMediaProgressCommand(resolved!!)
+        assertEquals(7, command.currentProgress)
+        assertEquals(8, command.requestedProgress)
+        assertEquals(100L, command.mediaId)
+        assertEquals(1, command.id)
+        collector.cancel()
+    }
+
+    @Test
+    fun `increment pending remains observable in rendered state`() = runTest(testDispatcher) {
+        val entry = aMediaList(
+            id = 1,
+            mediaId = 100,
+            progress = 7,
+            media = anAiringMediaBase(id = 100L),
+        )
+        doReturn(Result.success(collectionResult(entry)))
+            .`when`(browseRepository)
+            .getMediaListCollection(
+                userId = 10L,
+                type = MediaType.ANIME,
+                forceSingleCompletedList = true,
+                sort = listOf(MediaListSort.UPDATED_TIME_DESC),
+                statusIn = listOf(MediaListStatus.CURRENT),
+                scoreFormat = ScoreFormat.POINT_100,
+                commitToStore = true,
+                queryKey = queryKey,
+                readToken = 1L,
+            )
+
+        val mutationRegistry = DefaultMutationRegistry()
+        val vm = AiringListViewModel(
+            browseRepository = browseRepository,
+            mediaListStore = mediaListStore,
+            mutationRegistry = mutationRegistry,
+            requestSequence = RequestSequence(),
+        )
+        val collector = backgroundScope.launch { vm.state.collect {} }
+
+        vm.load(
+            type = MediaType.ANIME,
+            userId = 10,
+            sort = MediaListSort.UPDATED_TIME_DESC.name,
+            statusIn = MediaListStatus.CURRENT.name,
+            scoreFormat = null,
+        )
+        mediaListStore.apply(
+            MediaListStoreChange.CollectionLoaded(
+                queryKey = queryKey,
+                token = 1L,
+                entries = listOf(entry.toMediaListRecord(revision = 1L, ownerUserId = 10L)),
+                pageInfo = null,
+            ),
+        )
+        advanceUntilIdle()
+
+        var state = vm.state.value as AiringListViewModel.UiState.Success
+        assertFalse(state.renderedItems.single().isIncrementPending)
+
+        mutationRegistry.markRunning(OperationKey.mediaListIncrementProgress(100L), "op-1")
+        advanceUntilIdle()
+
+        state = vm.state.value as AiringListViewModel.UiState.Success
+        assertTrue(state.renderedItems.single().isIncrementPending)
         collector.cancel()
     }
 

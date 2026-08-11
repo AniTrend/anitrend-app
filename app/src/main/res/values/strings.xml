@@ -11,6 +11,15 @@
     <string name="action_filter">@string/drawer_title_filter</string>
     <string name="action_help">Help</string>
 
+    <!-- Composer actions are spoken by screen readers and should remain concise. -->
+    <string name="composer_add_image_description">Add image</string>
+    <string name="composer_add_video_description">Add video</string>
+    <string name="composer_add_link_description">Add link</string>
+    <string name="composer_add_youtube_description">Add YouTube video</string>
+    <string name="composer_add_gif_description">Add GIF</string>
+    <string name="composer_add_emoticon_description">Add emoticon</string>
+    <string name="composer_send_description">Send</string>
+
     <string name="action_mode_selected">Selected: %d</string>
 
     <string name="navigation_drawer_open">Navigation drawer opened</string>

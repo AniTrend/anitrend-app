@@ -252,6 +252,7 @@ class ManageSheetLogicTest {
             priority = 2,
             notes = "Great series!",
             advancedScores = advancedScores,
+            customLists = null,
         )
 
         assertThat(result.status, `is`(KeyUtil.COMPLETED))
@@ -286,6 +287,7 @@ class ManageSheetLogicTest {
             priority = 0,
             notes = null,
             advancedScores = null,
+            customLists = null,
         )
         assertThat(result.progressVolumes, `is`(5)) // unchanged from initial
     }
@@ -309,6 +311,7 @@ class ManageSheetLogicTest {
             priority = 0,
             notes = null,
             advancedScores = null,
+            customLists = null,
         )
         assertThat(result.progressVolumes, `is`(3))
     }
@@ -332,6 +335,7 @@ class ManageSheetLogicTest {
             priority = 0,
             notes = null,
             advancedScores = null,
+            customLists = null,
         )
         assertThat(result.status, `is`(KeyUtil.PAUSED))
     }
@@ -355,6 +359,7 @@ class ManageSheetLogicTest {
             priority = 0,
             notes = "updated notes",
             advancedScores = null,
+            customLists = null,
         )
         assertThat(result.notes, `is`("updated notes"))
     }
@@ -379,6 +384,7 @@ class ManageSheetLogicTest {
             priority = 0,
             notes = null,
             advancedScores = advancedScores,
+            customLists = null,
         )
         assertThat(result.advancedScores, `is`(advancedScores))
     }
@@ -403,6 +409,7 @@ class ManageSheetLogicTest {
             priority = 0,
             notes = null,
             advancedScores = null,
+            customLists = null,
         )
         assertThat(result.advancedScores, `is`(existingScores))
     }

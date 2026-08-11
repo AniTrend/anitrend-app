@@ -42,4 +42,9 @@
         <attr name="android:textColorHint" />
         <attr name="android:inputType" />
     </declare-styleable>
+
+    <declare-styleable name="ComposerWidget">
+        <!-- Enables the bounded sheet viewport layout without changing shared-host sizing. -->
+        <attr name="sheetLayout" format="boolean" />
+    </declare-styleable>
 </resources>

@@ -19,7 +19,6 @@ import com.mxt.anitrend.model.entity.anilist.MediaTag
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.util.CompatUtil
-import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.Settings
@@ -27,14 +26,77 @@ import com.mxt.anitrend.util.collection.GenreTagUtil
 import com.mxt.anitrend.util.date.DateUtil
 import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.util.media.MediaBrowseUtil
-import com.mxt.anitrend.util.selectedIndex
-import com.mxt.anitrend.util.selectedIndices
 import com.mxt.anitrend.view.activity.detail.MediaActivity
+import com.mxt.anitrend.view.sheet.BottomSheetMediaFilter
+import com.mxt.anitrend.view.sheet.MediaFilterSheetResult
 import com.mxt.anitrend.viewmodel.MediaBrowseViewModel
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.Locale
+import java.util.UUID
+
+/** Null-sentinel option values for the browse format filters, mirroring the legacy dialog arrays. */
+private val ANIME_FORMATS: Array<String?> =
+    arrayOf(null, KeyUtil.TV, KeyUtil.TV_SHORT, KeyUtil.MOVIE, KeyUtil.SPECIAL, KeyUtil.OVA, KeyUtil.ONA, KeyUtil.MUSIC)
+
+private val MANGA_FORMATS: Array<String?> =
+    arrayOf(null, KeyUtil.MANGA, KeyUtil.NOVEL, KeyUtil.ONE_SHOT)
+
+/** Null-sentinel option values for the browse status filter, mirroring the legacy dialog array. */
+private val MEDIA_STATUSES: Array<String?> =
+    arrayOf(null, KeyUtil.FINISHED, KeyUtil.RELEASING, KeyUtil.NOT_YET_RELEASED, KeyUtil.CANCELLED)
+
+/** Shared ASC/DESC option values for the order filters across list fragments. */
+internal val mediaFilterSortOrders: Array<String> = arrayOf(KeyUtil.ASC, KeyUtil.DESC)
+
+/**
+ * Maps a single-choice filter sheet result to the setting value that should be persisted.
+ * APPLY with a selected option returns the option value (the leading null sentinel of the
+ * format/status arrays is a real selection). APPLY without a selection reports no change.
+ * RESET reports the filter's existing default value instead of inventing a new sentinel,
+ * so hosts restore the same state the Settings getter falls back to.
+ */
+internal fun resolveSingleFilterValue(
+    action: String,
+    selectedIndex: Int,
+    values: Array<out String?>,
+    defaultValue: String?,
+): Pair<Boolean, String?> = when (action) {
+    MediaFilterSheetResult.ACTION_RESET -> true to defaultValue
+    else -> {
+        if (selectedIndex in values.indices) {
+            true to values[selectedIndex]
+        } else {
+            false to null
+        }
+    }
+}
+
+/** Year-range variant of [resolveSingleFilterValue]; RESET restores the Settings getter default. */
+internal fun resolveSingleFilterYear(
+    action: String,
+    selectedIndex: Int,
+    years: List<Int>,
+): Pair<Boolean, Int> = when (action) {
+    MediaFilterSheetResult.ACTION_RESET -> true to DateUtil.getCurrentYear(1)
+    else -> {
+        val year = years.getOrNull(selectedIndex)
+        if (year != null) true to year else false to 0
+    }
+}
+
+/**
+ * Decides whether a sheet result belongs to the host's current pending request.
+ * Acceptance requires an active pending filter identity AND an exact request ID
+ * match, so delayed or duplicate results from an earlier invocation are rejected
+ * without disturbing the pending operation.
+ */
+internal fun shouldAcceptFilterResult(
+    pendingFilterKind: String?,
+    pendingRequestId: String?,
+    result: MediaFilterSheetResult,
+): Boolean = pendingFilterKind != null && pendingRequestId != null && result.requestId == pendingRequestId
 
 /**
  * Created by max on 2018/02/03.
@@ -48,7 +110,19 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
 
     private val mediaBrowseViewModel: MediaBrowseViewModel by viewModel()
 
+    /** Distinguishes which filter an open sheet result belongs to. */
+    protected enum class BrowseFilterKind { SORT, ORDER, GENRES, TAGS, TYPE, YEAR, STATUS }
+
+    private var pendingFilter: BrowseFilterKind? = null
+
+    /** Opaque invocation ID of the sheet currently awaiting a result, paired with [pendingFilter]. */
+    private var pendingRequestId: String? = null
+
     companion object {
+        private const val STATE_PENDING_FILTER = "state_pending_filter"
+        private const val STATE_PENDING_REQUEST_ID = "state_pending_request_id"
+        private const val FILTER_SHEET_TAG = "media_filter_sheet"
+
         @JvmStatic
         fun newInstance(params: Bundle): MediaBrowseFragment {
             val args = Bundle(params)
@@ -60,6 +134,19 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        savedInstanceState?.getString(STATE_PENDING_FILTER)?.let { name ->
+            pendingFilter = runCatching { BrowseFilterKind.valueOf(name) }.getOrNull()
+        }
+        pendingRequestId = savedInstanceState?.getString(STATE_PENDING_REQUEST_ID)
+        childFragmentManager.setFragmentResultListener(
+            BottomSheetMediaFilter.RESULT_KEY,
+            this,
+        ) { _, bundle ->
+            val result =
+                bundle.parcelable<MediaFilterSheetResult>(BottomSheetMediaFilter.RESULT_BUNDLE_KEY)
+                    ?: return@setFragmentResultListener
+            applyFilterResult(result)
+        }
         requestArgs =
             Bundle(arguments ?: Bundle()).apply {
                 if (!containsKey(KeyUtil.arg_page_limit)) {
@@ -111,6 +198,102 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(STATE_PENDING_FILTER, pendingFilter?.name)
+        outState.putString(STATE_PENDING_REQUEST_ID, pendingRequestId)
+    }
+
+    /**
+     * Applies a committed sheet result to the filter that opened the sheet.
+     * A result is applied only when an active pending filter matches the exact
+     * request ID; mismatched delayed/duplicate results are ignored without
+     * clearing the pending operation. CANCEL never mutates settings.
+     */
+    private fun applyFilterResult(result: MediaFilterSheetResult) {
+        val active = pendingFilter ?: return
+        if (!shouldAcceptFilterResult(active.name, pendingRequestId, result)) return
+        pendingFilter = null
+        pendingRequestId = null
+        if (result.action == MediaFilterSheetResult.ACTION_CANCEL) return
+        val selectedIndex = result.selectedIndices.firstOrNull() ?: -1
+        when (active) {
+            BrowseFilterKind.SORT -> {
+                val (changed, value) = resolveSingleFilterValue(
+                    result.action,
+                    selectedIndex,
+                    KeyUtil.MediaSortType,
+                    KeyUtil.POPULARITY,
+                )
+                if (changed) settings.mediaSort = value
+            }
+            BrowseFilterKind.ORDER -> {
+                val (changed, value) = resolveSingleFilterValue(
+                    result.action,
+                    selectedIndex,
+                    mediaFilterSortOrders,
+                    KeyUtil.DESC,
+                )
+                if (changed && value != null) settings.saveSortOrder(value)
+            }
+            BrowseFilterKind.GENRES -> {
+                val genres = mediaBrowseViewModel.genreCollection
+                if (genres.isNotEmpty()) {
+                    settings.selectedGenres =
+                        GenreTagUtil.createGenreSelectionMap(genres, result.selectedIndices.toTypedArray())
+                }
+            }
+            BrowseFilterKind.TAGS -> {
+                val tagList = mediaBrowseViewModel.mediaTags
+                if (tagList.isNotEmpty()) {
+                    settings.selectedTags =
+                        GenreTagUtil.createTagSelectionMap(tagList, result.selectedIndices.toTypedArray())
+                }
+            }
+            BrowseFilterKind.TYPE -> {
+                val isAnime = CompatUtil.equals(requestArgs.getString(KeyUtil.arg_mediaType), KeyUtil.ANIME)
+                val formats = if (isAnime) ANIME_FORMATS else MANGA_FORMATS
+                val (changed, value) = resolveSingleFilterValue(result.action, selectedIndex, formats, null)
+                if (changed) {
+                    if (isAnime) settings.animeFormat = value else settings.mangaFormat = value
+                }
+            }
+            BrowseFilterKind.YEAR -> {
+                val (changed, year) = resolveSingleFilterYear(
+                    result.action,
+                    selectedIndex,
+                    DateUtil.getYearRanges(1950, 1),
+                )
+                if (changed) settings.saveSeasonYear(year)
+            }
+            BrowseFilterKind.STATUS -> {
+                val (changed, value) = resolveSingleFilterValue(result.action, selectedIndex, MEDIA_STATUSES, null)
+                if (changed) settings.mediaStatus = value
+            }
+        }
+    }
+
+    /**
+     * Shows the M3 selection sheet for the given filter and tracks it as the pending
+     * result owner. A new sheet is refused while a pending request is still active so
+     * results cannot be cross-correlated between overlapping invocations.
+     */
+    protected fun showFilterSheet(
+        kind: BrowseFilterKind,
+        title: Int,
+        options: List<String>,
+        selectedIndices: Collection<Int>,
+        multiSelect: Boolean,
+    ) {
+        if (pendingFilter != null) return
+        val requestId = UUID.randomUUID().toString()
+        pendingFilter = kind
+        pendingRequestId = requestId
+        BottomSheetMediaFilter
+            .newInstance(title, options, selectedIndices, multiSelect, requestId)
+            .show(childFragmentManager, FILTER_SHEET_TAG)
+    }
+
     @Deprecated("Deprecated in Java")
     override fun onCreateOptionsMenu(
         menu: Menu,
@@ -133,28 +316,23 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
         val ctx = context ?: return super.onOptionsItemSelected(item)
         when (item.itemId) {
             R.id.action_sort -> {
-                DialogUtil.createSelection(
-                    ctx,
+                showFilterSheet(
+                    BrowseFilterKind.SORT,
                     R.string.app_filter_sort,
-                    CompatUtil.getIndexOf(KeyUtil.MediaSortType, settings.mediaSort),
                     CompatUtil.capitalizeWords(KeyUtil.MediaSortType),
-                ) { dialog, _ ->
-                    settings.mediaSort = KeyUtil.MediaSortType[dialog.selectedIndex]
-                }
+                    listOf(CompatUtil.getIndexOf(KeyUtil.MediaSortType, settings.mediaSort)),
+                    multiSelect = false,
+                )
                 return true
             }
             R.id.action_order -> {
-                val sortOrders = arrayOf(KeyUtil.ASC, KeyUtil.DESC)
-                DialogUtil.createSelection(
-                    ctx,
+                showFilterSheet(
+                    BrowseFilterKind.ORDER,
                     R.string.app_filter_order,
-                    CompatUtil.getIndexOf(sortOrders, settings.sortOrder),
                     CompatUtil.getStringList(ctx, R.array.order_by_types),
-                ) { dialog, which ->
-                    settings.saveSortOrder(
-                        sortOrders.getOrNull(dialog.selectedIndex) ?: settings.sortOrder,
-                    )
-                }
+                    listOf(CompatUtil.getIndexOf(mediaFilterSortOrders, settings.sortOrder)),
+                    multiSelect = false,
+                )
                 return true
             }
             R.id.action_genre -> {
@@ -168,22 +346,13 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
                             Toast.LENGTH_SHORT,
                         ).show()
                 } else {
-                    val genresIndexMap = settings.selectedGenres.orEmpty()
-                    val selectedGenres = genresIndexMap.keys.toTypedArray()
-                    DialogUtil.createCheckList(
-                        ctx,
+                    showFilterSheet(
+                        BrowseFilterKind.GENRES,
                         R.string.app_filter_genres,
-                        genres,
-                        selectedGenres,
-                        { _, _, _ -> },
-                    ) { dialog, _ ->
-                        val selectedIndices =
-                            GenreTagUtil.createGenreSelectionMap(
-                                genres,
-                                dialog.selectedIndices,
-                            )
-                        settings.selectedGenres = selectedIndices
-                    }
+                        genres.map { it.genre.orEmpty() },
+                        settings.selectedGenres.orEmpty().keys,
+                        multiSelect = true,
+                    )
                 }
                 return true
             }
@@ -198,94 +367,51 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
                             Toast.LENGTH_SHORT,
                         ).show()
                 } else {
-                    val tagsIndexMap = settings.selectedTags.orEmpty()
-                    val selectedTags = tagsIndexMap.keys.toTypedArray()
-                    DialogUtil.createCheckList(
-                        ctx,
+                    showFilterSheet(
+                        BrowseFilterKind.TAGS,
                         R.string.app_filter_tags,
-                        tagList,
-                        selectedTags,
-                        { _, _, _ -> },
-                    ) { dialog, _ ->
-                        val selectedIndices =
-                            GenreTagUtil.createTagSelectionMap(
-                                tagList,
-                                dialog.selectedIndices,
-                            )
-                        settings.selectedTags = selectedIndices
-                    }
+                        tagList.map { it.name.orEmpty() },
+                        settings.selectedTags.orEmpty().keys,
+                        multiSelect = true,
+                    )
                 }
                 return true
             }
             R.id.action_type -> {
-                val animeFormats =
-                    arrayOf<String?>(
-                        null,
-                        KeyUtil.TV,
-                        KeyUtil.TV_SHORT,
-                        KeyUtil.MOVIE,
-                        KeyUtil.SPECIAL,
-                        KeyUtil.OVA,
-                        KeyUtil.ONA,
-                        KeyUtil.MUSIC,
-                    )
-                val mangaFormats =
-                    arrayOf<String?>(
-                        null,
-                        KeyUtil.MANGA,
-                        KeyUtil.NOVEL,
-                        KeyUtil.ONE_SHOT,
-                    )
-                if (CompatUtil.equals(requestArgs.getString(KeyUtil.arg_mediaType), KeyUtil.ANIME)) {
-                    DialogUtil.createSelection(
-                        ctx,
-                        R.string.app_filter_show_type,
-                        CompatUtil.getIndexOf(animeFormats, settings.animeFormat),
-                        CompatUtil.getStringList(ctx, R.array.anime_formats),
-                    ) { dialog, _ ->
-                        settings.animeFormat = animeFormats.getOrNull(dialog.selectedIndex)
-                    }
-                } else {
-                    DialogUtil.createSelection(
-                        ctx,
-                        R.string.app_filter_show_type,
-                        CompatUtil.getIndexOf(mangaFormats, settings.mangaFormat),
-                        CompatUtil.getStringList(ctx, R.array.manga_formats),
-                    ) { dialog, _ ->
-                        settings.mangaFormat = mangaFormats.getOrNull(dialog.selectedIndex)
-                    }
-                }
+                val isAnime = CompatUtil.equals(requestArgs.getString(KeyUtil.arg_mediaType), KeyUtil.ANIME)
+                showFilterSheet(
+                    BrowseFilterKind.TYPE,
+                    R.string.app_filter_show_type,
+                    CompatUtil.getStringList(ctx, if (isAnime) R.array.anime_formats else R.array.manga_formats),
+                    listOf(
+                        CompatUtil.getIndexOf(
+                            if (isAnime) ANIME_FORMATS else MANGA_FORMATS,
+                            if (isAnime) settings.animeFormat else settings.mangaFormat,
+                        ),
+                    ),
+                    multiSelect = false,
+                )
                 return true
             }
             R.id.action_year -> {
                 val yearRanges = DateUtil.getYearRanges(1950, 1)
-                DialogUtil.createSelection(
-                    ctx,
+                showFilterSheet(
+                    BrowseFilterKind.YEAR,
                     R.string.app_filter_year,
-                    CompatUtil.getIndexOf(yearRanges, settings.seasonYear),
-                    yearRanges,
-                ) { dialog, _ ->
-                    settings.saveSeasonYear(yearRanges[dialog.selectedIndex])
-                }
+                    yearRanges.map { it.toString() },
+                    listOf(CompatUtil.getIndexOf(yearRanges, settings.seasonYear)),
+                    multiSelect = false,
+                )
                 return true
             }
             R.id.action_status -> {
-                val mediaStatuses =
-                    arrayOf<String?>(
-                        null,
-                        KeyUtil.FINISHED,
-                        KeyUtil.RELEASING,
-                        KeyUtil.NOT_YET_RELEASED,
-                        KeyUtil.CANCELLED,
-                    )
-                DialogUtil.createSelection(
-                    ctx,
+                showFilterSheet(
+                    BrowseFilterKind.STATUS,
                     R.string.anime,
-                    CompatUtil.getIndexOf(mediaStatuses, settings.mediaStatus),
                     CompatUtil.getStringList(ctx, R.array.media_status),
-                ) { dialog, _ ->
-                    settings.mediaStatus = mediaStatuses.getOrNull(dialog.selectedIndex)
-                }
+                    listOf(CompatUtil.getIndexOf(MEDIA_STATUSES, settings.mediaStatus)),
+                    multiSelect = false,
+                )
                 return true
             }
         }

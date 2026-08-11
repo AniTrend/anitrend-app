@@ -19,23 +19,25 @@ import com.mxt.anitrend.domain.medialist.model.MediaListCollectionPageResult
 import com.mxt.anitrend.domain.medialist.model.MediaListRecord
 import com.mxt.anitrend.domain.model.MediaListItemUiModel
 import com.mxt.anitrend.domain.model.buildIncrementMediaProgressCommand
+import com.mxt.anitrend.extension.parcelable
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.navigation.model.UserScreenParam
 import com.mxt.anitrend.util.CompatUtil
-import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.util.media.MediaListUtil
-import com.mxt.anitrend.util.selectedIndex
 import com.mxt.anitrend.view.activity.detail.MediaActivity
+import com.mxt.anitrend.view.sheet.BottomSheetMediaFilter
+import com.mxt.anitrend.view.sheet.MediaFilterSheetResult
 import com.mxt.anitrend.viewmodel.MediaListMutationViewModel
 import com.mxt.anitrend.viewmodel.MediaListViewModel
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.UUID
 
 /**
  * Created by max on 2017/12/18.
@@ -55,10 +57,22 @@ open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, MediaListC
     private val mediaListViewModel: MediaListViewModel by viewModel()
     private val mediaListMutationViewModel: MediaListMutationViewModel by viewModel()
 
+    /** Distinguishes which filter an open sheet result belongs to. */
+    private enum class MediaListFilterKind { SORT, ORDER }
+
+    private var pendingFilter: MediaListFilterKind? = null
+
+    /** Opaque invocation ID of the sheet currently awaiting a result, paired with [pendingFilter]. */
+    private var pendingRequestId: String? = null
+
     protected var stateListAdapter: MediaListAdapter? = null
     private var latestEntries: List<MediaListRecord> = emptyList()
 
     companion object {
+        private const val STATE_PENDING_FILTER = "state_pending_filter"
+        private const val STATE_PENDING_REQUEST_ID = "state_pending_request_id"
+        private const val FILTER_SHEET_TAG = "media_filter_sheet"
+
         @JvmStatic
         fun newInstance(params: Bundle): MediaListFragment {
             val args = Bundle(params)
@@ -84,6 +98,19 @@ open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, MediaListC
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        savedInstanceState?.getString(STATE_PENDING_FILTER)?.let { name ->
+            pendingFilter = runCatching { MediaListFilterKind.valueOf(name) }.getOrNull()
+        }
+        pendingRequestId = savedInstanceState?.getString(STATE_PENDING_REQUEST_ID)
+        childFragmentManager.setFragmentResultListener(
+            BottomSheetMediaFilter.RESULT_KEY,
+            this,
+        ) { _, bundle ->
+            val result =
+                bundle.parcelable<MediaFilterSheetResult>(BottomSheetMediaFilter.RESULT_BUNDLE_KEY)
+                    ?: return@setFragmentResultListener
+            applyFilterResult(result)
+        }
         fromBundle(arguments)?.let { args ->
             userId = args.userId
             userName = args.initialName
@@ -135,6 +162,68 @@ open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, MediaListC
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(STATE_PENDING_FILTER, pendingFilter?.name)
+        outState.putString(STATE_PENDING_REQUEST_ID, pendingRequestId)
+    }
+
+    /**
+     * Applies a committed sheet result to the filter that opened the sheet.
+     * A result is applied only when an active pending filter matches the exact
+     * request ID; mismatched delayed/duplicate results are ignored without
+     * clearing the pending operation. CANCEL never mutates settings.
+     */
+    private fun applyFilterResult(result: MediaFilterSheetResult) {
+        val active = pendingFilter ?: return
+        if (!shouldAcceptFilterResult(active.name, pendingRequestId, result)) return
+        pendingFilter = null
+        pendingRequestId = null
+        if (result.action == MediaFilterSheetResult.ACTION_CANCEL) return
+        val selectedIndex = result.selectedIndices.firstOrNull() ?: -1
+        when (active) {
+            MediaListFilterKind.SORT -> {
+                val (changed, value) = resolveSingleFilterValue(
+                    result.action,
+                    selectedIndex,
+                    KeyUtil.MediaListSortType,
+                    KeyUtil.PROGRESS,
+                )
+                if (changed && value != null) settings.mediaListSort = value
+            }
+            MediaListFilterKind.ORDER -> {
+                val (changed, value) = resolveSingleFilterValue(
+                    result.action,
+                    selectedIndex,
+                    mediaFilterSortOrders,
+                    KeyUtil.DESC,
+                )
+                if (changed && value != null) settings.saveSortOrder(value)
+            }
+        }
+    }
+
+    /**
+     * Shows the M3 selection sheet for the given filter and tracks it as the pending
+     * result owner. A new sheet is refused while a pending request is still active so
+     * results cannot be cross-correlated between overlapping invocations.
+     */
+    private fun showFilterSheet(
+        kind: MediaListFilterKind,
+        title: Int,
+        options: List<String>,
+        selectedIndices: Collection<Int>,
+        multiSelect: Boolean,
+    ) {
+        if (pendingFilter != null) return
+        val requestId = UUID.randomUUID().toString()
+        pendingFilter = kind
+        pendingRequestId = requestId
+        BottomSheetMediaFilter
+            .newInstance(title, options, selectedIndices, multiSelect, requestId)
+            .show(childFragmentManager, FILTER_SHEET_TAG)
+    }
+
     override fun applySearchQuery(searchQuery: String?) {
         this.query = searchQuery
         if (!isPager && (stateListAdapter?.itemCount ?: 0) > 0) {
@@ -163,28 +252,23 @@ open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, MediaListC
         val ctx = context ?: return super.onOptionsItemSelected(item)
         when (item.itemId) {
             R.id.action_sort -> {
-                DialogUtil.createSelection(
-                    ctx,
+                showFilterSheet(
+                    MediaListFilterKind.SORT,
                     R.string.app_filter_sort,
-                    CompatUtil.getIndexOf(KeyUtil.MediaListSortType, settings.mediaListSort),
                     CompatUtil.capitalizeWords(KeyUtil.MediaListSortType),
-                ) { dialog, _ ->
-                    settings.mediaListSort = KeyUtil.MediaListSortType[dialog.selectedIndex]
-                }
+                    listOf(CompatUtil.getIndexOf(KeyUtil.MediaListSortType, settings.mediaListSort)),
+                    multiSelect = false,
+                )
                 return true
             }
             R.id.action_order -> {
-                val sortOrders = arrayOf(KeyUtil.ASC, KeyUtil.DESC)
-                DialogUtil.createSelection(
-                    ctx,
+                showFilterSheet(
+                    MediaListFilterKind.ORDER,
                     R.string.app_filter_order,
-                    CompatUtil.getIndexOf(sortOrders, settings.sortOrder),
                     CompatUtil.getStringList(ctx, R.array.order_by_types),
-                ) { dialog, _ ->
-                    settings.saveSortOrder(
-                        sortOrders.getOrNull(dialog.selectedIndex) ?: settings.sortOrder,
-                    )
-                }
+                    listOf(CompatUtil.getIndexOf(mediaFilterSortOrders, settings.sortOrder)),
+                    multiSelect = false,
+                )
                 return true
             }
         }
@@ -299,10 +383,19 @@ open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, MediaListC
         mediaActionUtil.startSeriesAction()
     }
 
-    private fun incrementMediaProgress(item: MediaListItemUiModel) {
+    protected open fun incrementMediaProgress(item: MediaListItemUiModel) {
         val entry = latestEntries.firstOrNull { record ->
             record.id == item.id || record.mediaId == item.mediaId
         } ?: return
+        dispatchIncrement(entry)
+    }
+
+    /**
+     * Dispatches an increment mutation through the shared mutation path.
+     * Subclasses that resolve entries from their own ViewModel state (for
+     * example the Airing list) reuse this dispatch instead of duplicating it.
+     */
+    protected fun dispatchIncrement(entry: MediaListRecord) {
         mediaListMutationViewModel.increment(buildIncrementMediaProgressCommand(entry))
     }
 }
