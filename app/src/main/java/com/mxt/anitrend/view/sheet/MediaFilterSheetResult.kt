@@ -18,6 +18,11 @@ data class MediaFilterSheetResult(
     val selectedIndices: IntArray = intArrayOf(),
     val selectedValues: ArrayList<String> = arrayListOf(),
 ) : Parcelable {
+    /**
+     * Action identifiers reported by [BottomSheetMediaFilter] results so hosts can
+     * distinguish committed selections ([ACTION_APPLY]) from a reset
+     * ([ACTION_RESET]) and from dismissal without changes ([ACTION_CANCEL]).
+     */
     companion object {
         const val ACTION_APPLY = "apply"
         const val ACTION_RESET = "reset"

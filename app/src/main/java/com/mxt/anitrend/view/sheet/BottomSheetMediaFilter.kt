@@ -71,21 +71,7 @@ class BottomSheetMediaFilter : BottomSheetDialogFragment() {
         options = ArrayList(arguments.getStringArrayList(ARG_OPTIONS).orEmpty())
         requestId = arguments.getString(ARG_REQUEST_ID).orEmpty()
         isMultiSelect = arguments.getBoolean(ARG_MULTI_SELECT)
-        if (!draftInitialized) {
-            draft = if (isMultiSelect) {
-                MediaFilterSheetDraft(
-                    selectedIndices = arguments.getIntArray(ARG_SELECTED_INDICES)?.toList().orEmpty(),
-                )
-            } else {
-                MediaFilterSheetDraft(
-                    selectedIndices = arguments.getInt(ARG_SELECTED_INDEX)
-                        .takeIf { it >= 0 }
-                        ?.let(::listOf)
-                        .orEmpty(),
-                )
-            }
-            draftInitialized = true
-        }
+        initializeDraft(arguments)
 
         view.findViewById<com.google.android.material.textview.MaterialTextView>(R.id.sheet_filter_title)
             .setText(arguments.getInt(ARG_TITLE))
@@ -93,29 +79,57 @@ class BottomSheetMediaFilter : BottomSheetDialogFragment() {
         val chipGroup = view.findViewById<ChipGroup>(R.id.sheet_filter_multi_options)
         val radioGroup = view.findViewById<android.widget.RadioGroup>(R.id.sheet_filter_single_options)
         if (isMultiSelect) {
-            chipGroup.visibility = View.VISIBLE
-            radioGroup.visibility = View.GONE
-            populateChips(chipGroup, draft.selectedIndices.toIntArray())
-            chipGroup.setOnCheckedStateChangeListener { _, checkedIds ->
-                if (checkedIds.isNotEmpty()) {
-                    draft = draft.select(checkedIds.map { chipGroup.findViewById<Chip>(it).tag as Int })
-                } else {
-                    draft = draft.copy(selectedIndices = emptyList())
-                }
-            }
+            bindMultiSelectOptions(chipGroup, radioGroup)
         } else {
-            chipGroup.visibility = View.GONE
-            radioGroup.visibility = View.VISIBLE
-            populateRadioButtons(radioGroup, draft.selectedIndices.firstOrNull() ?: -1)
-            radioGroup.setOnCheckedChangeListener { group, checkedId ->
-                if (checkedId != View.NO_ID) {
-                    draft = draft.select(listOf(group.findViewById<MaterialRadioButton>(checkedId).tag as Int))
-                } else {
-                    draft = draft.copy(selectedIndices = emptyList())
-                }
+            bindSingleSelectOptions(chipGroup, radioGroup)
+        }
+        bindActionButtons(view, chipGroup, radioGroup)
+    }
+
+    private fun initializeDraft(arguments: Bundle) {
+        if (draftInitialized) return
+        draft = if (isMultiSelect) {
+            MediaFilterSheetDraft(
+                selectedIndices = arguments.getIntArray(ARG_SELECTED_INDICES)?.toList().orEmpty(),
+            )
+        } else {
+            MediaFilterSheetDraft(
+                selectedIndices = arguments.getInt(ARG_SELECTED_INDEX)
+                    .takeIf { it >= 0 }
+                    ?.let(::listOf)
+                    .orEmpty(),
+            )
+        }
+        draftInitialized = true
+    }
+
+    private fun bindMultiSelectOptions(chipGroup: ChipGroup, radioGroup: android.widget.RadioGroup) {
+        chipGroup.visibility = View.VISIBLE
+        radioGroup.visibility = View.GONE
+        populateChips(chipGroup, draft.selectedIndices.toIntArray())
+        chipGroup.setOnCheckedStateChangeListener { _, checkedIds ->
+            if (checkedIds.isNotEmpty()) {
+                draft = draft.select(checkedIds.map { chipGroup.findViewById<Chip>(it).tag as Int })
+            } else {
+                draft = draft.copy(selectedIndices = emptyList())
             }
         }
+    }
 
+    private fun bindSingleSelectOptions(chipGroup: ChipGroup, radioGroup: android.widget.RadioGroup) {
+        chipGroup.visibility = View.GONE
+        radioGroup.visibility = View.VISIBLE
+        populateRadioButtons(radioGroup, draft.selectedIndices.firstOrNull() ?: -1)
+        radioGroup.setOnCheckedChangeListener { group, checkedId ->
+            if (checkedId != View.NO_ID) {
+                draft = draft.select(listOf(group.findViewById<MaterialRadioButton>(checkedId).tag as Int))
+            } else {
+                draft = draft.copy(selectedIndices = emptyList())
+            }
+        }
+    }
+
+    private fun bindActionButtons(view: View, chipGroup: ChipGroup, radioGroup: android.widget.RadioGroup) {
         view.findViewById<MaterialButton>(R.id.sheet_filter_reset).setOnClickListener {
             draft = draft.reset()
             if (isMultiSelect) chipGroup.clearCheck() else radioGroup.clearCheck()
@@ -185,6 +199,14 @@ class BottomSheetMediaFilter : BottomSheetDialogFragment() {
         )
     }
 
+    /**
+     * FragmentManager result channel and sheet factory contract.
+     *
+     * Hosts register a result listener on [RESULT_KEY] and receive a
+     * [MediaFilterSheetResult] parcel under [RESULT_BUNDLE_KEY]. [newInstance]
+     * keeps the caller's option labels and selection indices and pairs the
+     * emitted result with the opaque [requestId] invocation token.
+     */
     companion object {
         const val RESULT_KEY = "media_filter_sheet_result"
         const val RESULT_BUNDLE_KEY = "media_filter_sheet_result_value"

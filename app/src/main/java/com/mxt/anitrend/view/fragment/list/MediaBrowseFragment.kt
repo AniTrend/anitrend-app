@@ -36,15 +36,13 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.Locale
 import java.util.UUID
 
-/** Null-sentinel option values for the browse format filters, mirroring the legacy dialog arrays. */
-private val ANIME_FORMATS: Array<String?> =
+private val ANIME_FORMAT_FILTER_OPTIONS: Array<String?> =
     arrayOf(null, KeyUtil.TV, KeyUtil.TV_SHORT, KeyUtil.MOVIE, KeyUtil.SPECIAL, KeyUtil.OVA, KeyUtil.ONA, KeyUtil.MUSIC)
 
-private val MANGA_FORMATS: Array<String?> =
+private val MANGA_FORMAT_FILTER_OPTIONS: Array<String?> =
     arrayOf(null, KeyUtil.MANGA, KeyUtil.NOVEL, KeyUtil.ONE_SHOT)
 
-/** Null-sentinel option values for the browse status filter, mirroring the legacy dialog array. */
-private val MEDIA_STATUSES: Array<String?> =
+private val MEDIA_STATUS_FILTER_OPTIONS: Array<String?> =
     arrayOf(null, KeyUtil.FINISHED, KeyUtil.RELEASING, KeyUtil.NOT_YET_RELEASED, KeyUtil.CANCELLED)
 
 /** Shared ASC/DESC option values for the order filters across list fragments. */
@@ -114,9 +112,7 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
     protected enum class BrowseFilterKind { SORT, ORDER, GENRES, TAGS, TYPE, YEAR, STATUS }
 
     private var pendingFilter: BrowseFilterKind? = null
-
-    /** Opaque invocation ID of the sheet currently awaiting a result, paired with [pendingFilter]. */
-    private var pendingRequestId: String? = null
+    private var pendingFilterRequestId: String? = null
 
     companion object {
         private const val STATE_PENDING_FILTER = "state_pending_filter"
@@ -137,15 +133,16 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
         savedInstanceState?.getString(STATE_PENDING_FILTER)?.let { name ->
             pendingFilter = runCatching { BrowseFilterKind.valueOf(name) }.getOrNull()
         }
-        pendingRequestId = savedInstanceState?.getString(STATE_PENDING_REQUEST_ID)
+        pendingFilterRequestId = savedInstanceState?.getString(STATE_PENDING_REQUEST_ID)
         childFragmentManager.setFragmentResultListener(
             BottomSheetMediaFilter.RESULT_KEY,
             this,
         ) { _, bundle ->
             val result =
                 bundle.parcelable<MediaFilterSheetResult>(BottomSheetMediaFilter.RESULT_BUNDLE_KEY)
-                    ?: return@setFragmentResultListener
-            applyFilterResult(result)
+            if (result != null) {
+                applyFilterResult(result)
+            }
         }
         requestArgs =
             Bundle(arguments ?: Bundle()).apply {
@@ -201,76 +198,84 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(STATE_PENDING_FILTER, pendingFilter?.name)
-        outState.putString(STATE_PENDING_REQUEST_ID, pendingRequestId)
+        outState.putString(STATE_PENDING_REQUEST_ID, pendingFilterRequestId)
     }
 
-    /**
-     * Applies a committed sheet result to the filter that opened the sheet.
-     * A result is applied only when an active pending filter matches the exact
-     * request ID; mismatched delayed/duplicate results are ignored without
-     * clearing the pending operation. CANCEL never mutates settings.
-     */
     private fun applyFilterResult(result: MediaFilterSheetResult) {
         val active = pendingFilter ?: return
-        if (!shouldAcceptFilterResult(active.name, pendingRequestId, result)) return
+        if (!shouldAcceptFilterResult(active.name, pendingFilterRequestId, result)) return
         pendingFilter = null
-        pendingRequestId = null
+        pendingFilterRequestId = null
         if (result.action == MediaFilterSheetResult.ACTION_CANCEL) return
         val selectedIndex = result.selectedIndices.firstOrNull() ?: -1
         when (active) {
-            BrowseFilterKind.SORT -> {
-                val (changed, value) = resolveSingleFilterValue(
-                    result.action,
-                    selectedIndex,
-                    KeyUtil.MediaSortType,
-                    KeyUtil.POPULARITY,
-                )
-                if (changed) settings.mediaSort = value
-            }
-            BrowseFilterKind.ORDER -> {
-                val (changed, value) = resolveSingleFilterValue(
-                    result.action,
-                    selectedIndex,
-                    mediaFilterSortOrders,
-                    KeyUtil.DESC,
-                )
-                if (changed && value != null) settings.saveSortOrder(value)
-            }
-            BrowseFilterKind.GENRES -> {
-                val genres = mediaBrowseViewModel.genreCollection
-                if (genres.isNotEmpty()) {
-                    settings.selectedGenres =
-                        GenreTagUtil.createGenreSelectionMap(genres, result.selectedIndices.toTypedArray())
-                }
-            }
-            BrowseFilterKind.TAGS -> {
-                val tagList = mediaBrowseViewModel.mediaTags
-                if (tagList.isNotEmpty()) {
-                    settings.selectedTags =
-                        GenreTagUtil.createTagSelectionMap(tagList, result.selectedIndices.toTypedArray())
-                }
-            }
-            BrowseFilterKind.TYPE -> {
-                val isAnime = CompatUtil.equals(requestArgs.getString(KeyUtil.arg_mediaType), KeyUtil.ANIME)
-                val formats = if (isAnime) ANIME_FORMATS else MANGA_FORMATS
-                val (changed, value) = resolveSingleFilterValue(result.action, selectedIndex, formats, null)
-                if (changed) {
-                    if (isAnime) settings.animeFormat = value else settings.mangaFormat = value
-                }
-            }
-            BrowseFilterKind.YEAR -> {
-                val (changed, year) = resolveSingleFilterYear(
-                    result.action,
-                    selectedIndex,
-                    DateUtil.getYearRanges(1950, 1),
-                )
-                if (changed) settings.saveSeasonYear(year)
-            }
-            BrowseFilterKind.STATUS -> {
-                val (changed, value) = resolveSingleFilterValue(result.action, selectedIndex, MEDIA_STATUSES, null)
-                if (changed) settings.mediaStatus = value
-            }
+            BrowseFilterKind.SORT -> applySortFilter(result.action, selectedIndex)
+            BrowseFilterKind.ORDER -> applyOrderFilter(result.action, selectedIndex)
+            BrowseFilterKind.GENRES -> applyGenreFilter(result)
+            BrowseFilterKind.TAGS -> applyTagFilter(result)
+            BrowseFilterKind.TYPE -> applyTypeFilter(result.action, selectedIndex)
+            BrowseFilterKind.YEAR -> applyYearFilter(result.action, selectedIndex)
+            BrowseFilterKind.STATUS -> applyStatusFilter(result.action, selectedIndex)
         }
+    }
+
+    private fun applySortFilter(action: String, selectedIndex: Int) {
+        val (changed, value) = resolveSingleFilterValue(
+            action,
+            selectedIndex,
+            KeyUtil.MediaSortType,
+            KeyUtil.POPULARITY,
+        )
+        if (changed) settings.mediaSort = value
+    }
+
+    private fun applyOrderFilter(action: String, selectedIndex: Int) {
+        val (changed, value) = resolveSingleFilterValue(
+            action,
+            selectedIndex,
+            mediaFilterSortOrders,
+            KeyUtil.DESC,
+        )
+        if (changed && value != null) settings.saveSortOrder(value)
+    }
+
+    private fun applyGenreFilter(result: MediaFilterSheetResult) {
+        val genres = mediaBrowseViewModel.genreCollection
+        if (genres.isNotEmpty()) {
+            settings.selectedGenres =
+                GenreTagUtil.createGenreSelectionMap(genres, result.selectedIndices.toTypedArray())
+        }
+    }
+
+    private fun applyTagFilter(result: MediaFilterSheetResult) {
+        val tagList = mediaBrowseViewModel.mediaTags
+        if (tagList.isNotEmpty()) {
+            settings.selectedTags =
+                GenreTagUtil.createTagSelectionMap(tagList, result.selectedIndices.toTypedArray())
+        }
+    }
+
+    private fun applyTypeFilter(action: String, selectedIndex: Int) {
+        val isAnime = CompatUtil.equals(requestArgs.getString(KeyUtil.arg_mediaType), KeyUtil.ANIME)
+        val formats = if (isAnime) ANIME_FORMAT_FILTER_OPTIONS else MANGA_FORMAT_FILTER_OPTIONS
+        val (changed, value) = resolveSingleFilterValue(action, selectedIndex, formats, null)
+        if (changed) {
+            if (isAnime) settings.animeFormat = value else settings.mangaFormat = value
+        }
+    }
+
+    private fun applyYearFilter(action: String, selectedIndex: Int) {
+        val (changed, year) = resolveSingleFilterYear(
+            action,
+            selectedIndex,
+            DateUtil.getYearRanges(1950, 1),
+        )
+        if (changed) settings.saveSeasonYear(year)
+    }
+
+    private fun applyStatusFilter(action: String, selectedIndex: Int) {
+        val (changed, value) = resolveSingleFilterValue(action, selectedIndex, MEDIA_STATUS_FILTER_OPTIONS, null)
+        if (changed) settings.mediaStatus = value
     }
 
     /**
@@ -288,7 +293,7 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
         if (pendingFilter != null) return
         val requestId = UUID.randomUUID().toString()
         pendingFilter = kind
-        pendingRequestId = requestId
+        pendingFilterRequestId = requestId
         BottomSheetMediaFilter
             .newInstance(title, options, selectedIndices, multiSelect, requestId)
             .show(childFragmentManager, FILTER_SHEET_TAG)
@@ -385,7 +390,7 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
                     CompatUtil.getStringList(ctx, if (isAnime) R.array.anime_formats else R.array.manga_formats),
                     listOf(
                         CompatUtil.getIndexOf(
-                            if (isAnime) ANIME_FORMATS else MANGA_FORMATS,
+                            if (isAnime) ANIME_FORMAT_FILTER_OPTIONS else MANGA_FORMAT_FILTER_OPTIONS,
                             if (isAnime) settings.animeFormat else settings.mangaFormat,
                         ),
                     ),
@@ -409,7 +414,7 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
                     BrowseFilterKind.STATUS,
                     R.string.anime,
                     CompatUtil.getStringList(ctx, R.array.media_status),
-                    listOf(CompatUtil.getIndexOf(MEDIA_STATUSES, settings.mediaStatus)),
+                    listOf(CompatUtil.getIndexOf(MEDIA_STATUS_FILTER_OPTIONS, settings.mediaStatus)),
                     multiSelect = false,
                 )
                 return true

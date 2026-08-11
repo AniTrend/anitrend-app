@@ -110,22 +110,20 @@ private fun MediaListCollectionData.MediaListCollectionListsEntriesMediaNextAiri
  * wrong-shape payloads degrade to an empty list; non-string elements are dropped,
  * matching the legacy Gson lane for absent custom lists.
  */
-private fun JsonElement?.toCustomListNames(): List<String> {
-    return when (this) {
-        is JsonArray -> {
-            mapNotNull { element ->
-                (element as? JsonPrimitive)
-                    ?.takeIf { it.isString }
-                    ?.content
-            }
+private fun JsonElement?.toCustomListNames(): List<String> = when (this) {
+    is JsonArray -> {
+        mapNotNull { element ->
+            (element as? JsonPrimitive)
+                ?.takeIf { it.isString }
+                ?.content
         }
-        is JsonObject -> {
-            entries.filter { (_, value) ->
-                (value as? JsonPrimitive)?.booleanOrNull == true
-            }.map { it.key }
-        }
-        else -> emptyList()
     }
+    is JsonObject -> {
+        entries.filter { (_, value) ->
+            (value as? JsonPrimitive)?.booleanOrNull == true
+        }.map { it.key }
+    }
+    else -> emptyList()
 }
 
 /**

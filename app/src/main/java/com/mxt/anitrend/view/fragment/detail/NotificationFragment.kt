@@ -291,15 +291,9 @@ class NotificationFragment : FragmentBaseList<NotificationItemUiModel, Notificat
         }
     }
 
-    /**
-     * Opens the comment/reply detail screen for an activity-backed notification.
-     *
-     * AniList reports a zero activity id for notifications whose referenced
-     * activity was deleted, and the comment screen rejects non-positive ids with
-     * an unrecoverable error state. Never navigate with id 0; surface the
-     * unavailable row with the established activity-unavailable message instead.
-     */
     private fun openCommentActivity(host: Context, record: NotificationRecord) {
+        // A null activity id means the referenced activity was deleted; the comment
+        // screen cannot recover from a missing id, so show the message and stay put.
         val activityId = record.commentActivityId()
         if (activityId == null) {
             context?.also {

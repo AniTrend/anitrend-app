@@ -826,26 +826,24 @@ private fun SaveReviewData.SaveReviewUserAvatar.toImageBase(): ImageBase = Image
 
 // Json scalar helpers shared by the media list lanes
 
-private fun JsonElement?.toCustomLists(): List<CustomList>? {
-    return when (this) {
-        is JsonArray -> {
-            mapNotNull { element ->
-                (element as? JsonPrimitive)
-                    ?.takeIf { it.isString }
-                    ?.content
-                    ?.let { name -> CustomList(name = name, isEnabled = true) }
-            }
+private fun JsonElement?.toCustomLists(): List<CustomList>? = when (this) {
+    is JsonArray -> {
+        mapNotNull { element ->
+            (element as? JsonPrimitive)
+                ?.takeIf { it.isString }
+                ?.content
+                ?.let { name -> CustomList(name = name, isEnabled = true) }
         }
-        is JsonObject -> {
-            entries.map { (key, value) ->
-                CustomList(
-                    name = key,
-                    isEnabled = (value as? JsonPrimitive)?.booleanOrNull ?: false,
-                )
-            }
-        }
-        else -> null
     }
+    is JsonObject -> {
+        entries.map { (key, value) ->
+            CustomList(
+                name = key,
+                isEnabled = (value as? JsonPrimitive)?.booleanOrNull ?: false,
+            )
+        }
+    }
+    else -> null
 }
 
 private fun JsonElement?.toAdvancedScores(): Map<String, Float>? {

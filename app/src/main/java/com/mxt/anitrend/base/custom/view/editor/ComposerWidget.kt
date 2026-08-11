@@ -122,7 +122,7 @@ class ComposerWidget :
      * Optionally included when constructing custom views
      */
     override fun onInit() {
-        configureLayoutMode()
+        applySheetAwareLayoutParams()
         binding.insertImage.setOnClickListener(this)
         binding.insertWebm.setOnClickListener(this)
         binding.insertLink.setOnClickListener(this)
@@ -131,8 +131,7 @@ class ComposerWidget :
         binding.widgetFlipper.setOnClickListener(this)
     }
 
-    /** Keeps the shared widget compact while giving the sheet a bounded editor viewport. */
-    private fun configureLayoutMode() {
+    private fun applySheetAwareLayoutParams() {
         binding.root.layoutParams?.let { params ->
             params.height =
                 if (isSheetLayout) {

@@ -61,9 +61,7 @@ open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, MediaListC
     private enum class MediaListFilterKind { SORT, ORDER }
 
     private var pendingFilter: MediaListFilterKind? = null
-
-    /** Opaque invocation ID of the sheet currently awaiting a result, paired with [pendingFilter]. */
-    private var pendingRequestId: String? = null
+    private var pendingFilterRequestId: String? = null
 
     protected var stateListAdapter: MediaListAdapter? = null
     private var latestEntries: List<MediaListRecord> = emptyList()
@@ -101,15 +99,16 @@ open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, MediaListC
         savedInstanceState?.getString(STATE_PENDING_FILTER)?.let { name ->
             pendingFilter = runCatching { MediaListFilterKind.valueOf(name) }.getOrNull()
         }
-        pendingRequestId = savedInstanceState?.getString(STATE_PENDING_REQUEST_ID)
+        pendingFilterRequestId = savedInstanceState?.getString(STATE_PENDING_REQUEST_ID)
         childFragmentManager.setFragmentResultListener(
             BottomSheetMediaFilter.RESULT_KEY,
             this,
         ) { _, bundle ->
             val result =
                 bundle.parcelable<MediaFilterSheetResult>(BottomSheetMediaFilter.RESULT_BUNDLE_KEY)
-                    ?: return@setFragmentResultListener
-            applyFilterResult(result)
+            if (result != null) {
+                applyFilterResult(result)
+            }
         }
         fromBundle(arguments)?.let { args ->
             userId = args.userId
@@ -165,20 +164,14 @@ open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, MediaListC
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(STATE_PENDING_FILTER, pendingFilter?.name)
-        outState.putString(STATE_PENDING_REQUEST_ID, pendingRequestId)
+        outState.putString(STATE_PENDING_REQUEST_ID, pendingFilterRequestId)
     }
 
-    /**
-     * Applies a committed sheet result to the filter that opened the sheet.
-     * A result is applied only when an active pending filter matches the exact
-     * request ID; mismatched delayed/duplicate results are ignored without
-     * clearing the pending operation. CANCEL never mutates settings.
-     */
     private fun applyFilterResult(result: MediaFilterSheetResult) {
         val active = pendingFilter ?: return
-        if (!shouldAcceptFilterResult(active.name, pendingRequestId, result)) return
+        if (!shouldAcceptFilterResult(active.name, pendingFilterRequestId, result)) return
         pendingFilter = null
-        pendingRequestId = null
+        pendingFilterRequestId = null
         if (result.action == MediaFilterSheetResult.ACTION_CANCEL) return
         val selectedIndex = result.selectedIndices.firstOrNull() ?: -1
         when (active) {
@@ -203,11 +196,6 @@ open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, MediaListC
         }
     }
 
-    /**
-     * Shows the M3 selection sheet for the given filter and tracks it as the pending
-     * result owner. A new sheet is refused while a pending request is still active so
-     * results cannot be cross-correlated between overlapping invocations.
-     */
     private fun showFilterSheet(
         kind: MediaListFilterKind,
         title: Int,
@@ -218,7 +206,7 @@ open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, MediaListC
         if (pendingFilter != null) return
         val requestId = UUID.randomUUID().toString()
         pendingFilter = kind
-        pendingRequestId = requestId
+        pendingFilterRequestId = requestId
         BottomSheetMediaFilter
             .newInstance(title, options, selectedIndices, multiSelect, requestId)
             .show(childFragmentManager, FILTER_SHEET_TAG)
