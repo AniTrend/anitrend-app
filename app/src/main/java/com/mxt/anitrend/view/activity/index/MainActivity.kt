@@ -617,7 +617,6 @@ class MainActivity :
             mUserAvatar.onInit()
             mHeaderView.setImage(bannerImage.orEmpty())
             if (settings.shouldShowTipFor(KeyUtil.KEY_LOGIN_TIP)) {
-                NotifyUtil.createLoginToast(this@MainActivity, this)
                 settings.disableTipFor(KeyUtil.KEY_LOGIN_TIP)
                 mBottomSheet =
                     BottomSheetMessage

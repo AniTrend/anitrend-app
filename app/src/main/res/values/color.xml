@@ -77,6 +77,12 @@
 
     <color name="toolbar_transparent">#50000000</color>
 
+    <!-- Composer semantic theme values. -->
+    <color name="composer_violet_light">#7C3AED</color>
+    <color name="composer_violet_dark">#8B5CF6</color>
+    <color name="composer_on_violet_light">#FFFFFF</color>
+    <color name="composer_on_violet_dark">#FFFFFF</color>
+
     <color name="white">#FFFFFF</color>
 
 </resources>

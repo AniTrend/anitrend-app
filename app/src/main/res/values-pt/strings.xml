@@ -97,7 +97,8 @@
     <string name="app_intro_search_title">Pesquisando</string>
     <string name="app_intro_search_text">Anime, Mangá &amp; Mais Opções de Pesquisa!</string>
     <string name="app_intro_videos_text">Usando um Player Embutido do Youtube!</string>
-    <string name="app_greeting">Bem-vindo ao AniTrend, this is not a streaming app!</string>
+    <!-- Greeting shown at the end of onboarding; clarifies that the app is not a streaming service -->
+    <string name="app_greeting">Bem-vindo ao AniTrend, este não é um aplicativo de streaming!</string>
 
     <!-- Action label on the onboarding button before the final page; advances to the next page -->
     <string name="action_onboarding_continue">Continuar</string>
@@ -136,7 +137,8 @@
 
     <!--Filter menu entry these are the dialog titles-->
     <string name="app_filter_sort">Classificar por?</string>
-    <string name="app_filter_on_list">On My List?</string>
+    <!-- Dialog title asking whether the series is already on the user's list -->
+    <string name="app_filter_on_list">Está na minha lista?</string>
     <string name="app_filter_order">Ordenar por?</string>
     <string name="app_filter_genres">Gêneros da Série?</string>
     <string name="app_filter_show_type">Tipo da Série?</string>
@@ -199,7 +201,8 @@
     <string name="drawer_title_home">Feed de Status</string>
     <string name="drawer_title_anime">Descubra Animes</string>
     <string name="drawer_title_manga">Descubra Mangás</string>
-    <string name="drawer_title_trending">Tendâncias</string>
+    <!-- Navigation drawer title for the trending screen -->
+    <string name="drawer_title_trending">Tendências</string>
     <string name="drawer_title_airing">Em Lançamento</string>
 
     <string name="drawer_title_myanime">Minha Lista de Animes</string>
@@ -253,7 +256,8 @@
     <string name="attach_webm_text">Insira o link de onde o vídeo pode ser encontrado. Ex: http://dl1.webmfiles.org/big-buck-bunny_trailer.webm</string>
 
     <!--Activity / Screen Names-->
-    <string name="title_activity_notification">Contral de Notificações</string>
+    <!-- Screen title of the notification hub -->
+    <string name="title_activity_notification">Central de Notificações</string>
     <string name="title_activity_message">Central de Mensagens</string>
     <string name="title_activity_user_list_view">Listas de Usuários</string>
     <string name="title_activity_studio">Estúdio</string>
@@ -264,13 +268,16 @@
     <string name="notification_series">Novo Episódio Foi Ao Ar</string>
     <string name="notification_user_follow_activity">Novo Seguidor</string>
     <string name="notification_user_like_forum">Curtida no Fórum</string>
-    <string name="notification_user_like_activity">Curtida na Atilivade</string>
-    <string name="notification_user_like_reply">Curtida na Respota</string>
+    <!-- Notification title when an activity is liked -->
+    <string name="notification_user_like_activity">Curtida na Atividade</string>
+    <!-- Notification title when a reply is liked -->
+    <string name="notification_user_like_reply">Curtida na Resposta</string>
     <string name="notification_user_comment_forum">Comentário no Fórum</string>
     <string name="notification_user_reply_forum">Resposta no Fórum</string>
     <string name="notification_user_reply_activity">Comentário na Atividade</string>
     <string name="notification_user_activity_message">Mensagem Direta</string>
-    <string name="notification_user_activity_mention">Mencinaram Você</string>
+    <!-- Notification title when the user is mentioned -->
+    <string name="notification_user_activity_mention">Mencionaram você</string>
     <string name="notification_user_like_comment">Curtida no Comentário</string>
 
     <!-- This will become something like Episode 2 of One Piece Has Just Been Aired! the title is set according to what the user has set on AniList -->
@@ -296,9 +303,11 @@
     <string name="pref_header_data_sync">Dados &amp; sincronização</string>
     <string name="pref_header_data_sync_summary">Configurar a frequência de verificação de notificação</string>
 
-    <string name="pref_title_sync_frequency">Sync frequency</string>
+    <!-- Settings row to choose the sync frequency -->
+    <string name="pref_title_sync_frequency">Frequência de sincronização</string>
 
-    <string name="pref_title_system_sync_settings">Frequência de sincronização</string>
+    <!-- Settings row opening the system sync settings -->
+    <string name="pref_title_system_sync_settings">Configurações de sincronização do sistema</string>
 
     <!--Another message using a bit of html the p tags represent new paragraphs-->
 
@@ -368,13 +377,15 @@
 
     <string name="text_confirm_exit">Pressione voltar novamente para sair do aplicativo</string>
 
-    <string name="text_url_copied_to_clipboard">Copied URL to clipboard</string>
+    <!-- Toast shown after copying a URL to the clipboard -->
+    <string name="text_url_copied_to_clipboard">URL copiado para a área de transferência</string>
 
     <string name="text_filter_applying">Aplicando Alterações..</string>
 
     <string name="text_filter_restriction">Filtros não aplicáveis nesta página</string>
 
-    <string name="text_quality_changed">Content List Quality Changed!</string>
+    <!-- Toast shown when the content list quality setting is changed -->
+    <string name="text_quality_changed">A qualidade da lista de conteúdo foi alterada!</string>
 
     <string name="text_review_changed">Tipo de Review Alterado!</string>
 
@@ -453,7 +464,8 @@
 
     <string name="text_already_authenticated">Você Já Está Logado!</string>
 
-    <string name="text_please_sign_in">Por Favor, Inscreva-se</string>
+    <!-- Message asking the user to sign in -->
+    <string name="text_please_sign_in">Por favor, faça login</string>
 
     <string name="text_login_error">AniTrend não conseguiu recuperar seus detalhes de login!</string>
 
@@ -561,14 +573,16 @@
     <string name="text_attach_link">Anexar Link</string>
     <string name="text_attach_image">Anexar Imagem</string>
     <string name="text_youtube_link">Link do Youtube</string>
-    <string name="text_webm_link">WebM Link</string>
+    <!-- Label for attaching a WebM video link -->
+    <string name="text_webm_link">Link do WebM</string>
 
     <!--Floating action button on the anime or manga pages, these are only displayed when the user long presses the icons-->
     <string name="series_favourite_this">Favoritar</string>
     <string name="series_add_to_list">Adicionar a Lista</string>
     <string name="series_write_a_review">Escrever um Review</string>
     <string name="series_share">Compartilhar</string>
-    <string name="series_on_my_list">On My List</string>
+    <!-- Label shown when a series is on the user's list -->
+    <string name="series_on_my_list">Na minha lista</string>
 
     <!--Start of Dialog you use to add, remove or update anime or manga listings-->
     <string name="dialog_title_status">Status</string>
@@ -576,7 +590,8 @@
     <string name="dialog_title_rewatched">Reassistido</string>
     <string name="dialog_title_score">Nota</string>
     <string name="dialog_title_private">Privado</string>
-    <string name="dialog_title_increment_episodes">Increment Episodes</string>
+    <!-- Button that increases the episode count in the manage list editor -->
+    <string name="dialog_title_increment_episodes">Aumentar Episódios</string>
     <string name="dialog_hint_enter_your_notes">Insira suas anotações</string>
 
     <string name="dialog_title_volumes_read">Volumes Lidos</string>
@@ -634,26 +649,32 @@
     <string name="series_next_ep">Próximo Episódio:</string>
     <string name="series_chapters">Capítulos:</string>
     <string name="series_volumes">Volumes:</string>
-    <string name="logged_in_as">Logado como</string>
 
-    <string name="sign_into_anilist">Registrar no AniList</string>
+    <!-- Button that starts signing in with AniList -->
+    <string name="sign_into_anilist">Entrar no AniList</string>
 
-    <string name="anitrend_sign_in">Registrar no AniTrend</string>
-    <string name="please_sing_in">Por favor, registre-se</string>
+    <!-- Title of the AniTrend sign-in screen -->
+    <string name="anitrend_sign_in">Entrar no AniTrend</string>
+    <!-- Message asking the user to sign in -->
+    <string name="please_sing_in">Por favor, faça login</string>
 
     <string name="action_support">Doar</string>
 
-    <string name="dialog_title_increment_chapters">Increment Chapters</string>
+    <!-- Button that increases the chapter count in the manage list editor -->
+    <string name="dialog_title_increment_chapters">Aumentar Capítulos</string>
 
-    <string name="title_activity_staff">Staff</string>
+    <!-- Screen title of the staff detail screen -->
+    <string name="title_activity_staff">Equipe</string>
     <string name="title_activity_character">Personagem</string>
     <string name="title_activity_series">Séries</string>
 
     <string name="More">Mais</string>
 
-    <string name="title_bottom_sheet_giphy">Powered By Giphy</string>
+    <!-- Attribution label on the GIF picker bottom sheet -->
+    <string name="title_bottom_sheet_giphy">Desenvolvido pela Giphy</string>
 
-    <string name="title_bookmark">Bookmark</string>
+    <!-- Label for the bookmark action -->
+    <string name="title_bookmark">Marcador</string>
 
     <string name="series_share_complete">Detalhado</string>
     <string name="series_share_summary">Resumo</string>
@@ -706,8 +727,10 @@
 
     <string name="title_score">Nota</string>
     <string name="title_watching">Assistindo</string>
-    <string name="title_series_stats">Status da Série</string>
-    <string name="error_unresolved_type">Não fpi possível exibir o conteúdo</string>
+    <!-- Screen title for the series statistics -->
+    <string name="title_series_stats">Estatísticas da Série</string>
+    <!-- Error shown when the content type cannot be resolved -->
+    <string name="error_unresolved_type">Não foi possível exibir o conteúdo</string>
 
     <string name="menu_title_tags">Tags</string>
     <string name="app_filter_tags">Tags da Série?</string>
@@ -742,65 +765,110 @@
     <string name="text_application_restart_required">Por favor, reinicie o aplicativo para que as alterações entrem em vigor</string>
 
     <!-- Image Preview strings -->
-    <string name="image_preview_title">Preview</string>
-    <string name="image_preview_download">Download</string>
-    <string name="image_preview_share">Share</string>
-    <string name="image_preview_link">Original Link</string>
+    <!-- Title of the image preview screen -->
+    <string name="image_preview_title">Visualizar</string>
+    <!-- Button that downloads the previewed image -->
+    <string name="image_preview_download">Baixar</string>
+    <!-- Button that shares the previewed image -->
+    <string name="image_preview_share">Compartilhar</string>
+    <!-- Row showing the original link of the previewed image -->
+    <string name="image_preview_link">Link original</string>
 
     <!-- Image Preview error strings -->
-    <string name="image_preview_error_character_image">The character image doesn\'t exist!</string>
-    <string name="image_preview_error_profile_banner">The user has not set a banner image!</string>
-    <string name="image_preview_error_series_cover">The series cover image doesn\'t exist!</string>
-    <string name="image_preview_error_series_banner">The series banner image doesn\'t exist!</string>
-    <string name="image_preview_error_staff_image">The staff image doesn\'t exist!</string>
-    <string name="image_preview_error_user_avatar">The user\'s avatar image doesn\'t exist</string>
+    <!-- Error shown when the character image cannot be previewed -->
+    <string name="image_preview_error_character_image">A imagem do personagem não existe!</string>
+    <!-- Error shown when the profile banner cannot be previewed -->
+    <string name="image_preview_error_profile_banner">O usuário não definiu uma imagem de banner!</string>
+    <!-- Error shown when the series cover cannot be previewed -->
+    <string name="image_preview_error_series_cover">A imagem da capa da série não existe!</string>
+    <!-- Error shown when the series banner cannot be previewed -->
+    <string name="image_preview_error_series_banner">A imagem do banner da série não existe!</string>
+    <!-- Error shown when the staff image cannot be previewed -->
+    <string name="image_preview_error_staff_image">A imagem do membro da equipe não existe!</string>
+    <!-- Error shown when the user avatar cannot be previewed -->
+    <string name="image_preview_error_user_avatar">A imagem do avatar do usuário não existe</string>
 
     <!-- App Log strings -->
-    <string name="app_log">App Logs</string>
-    <string name="save_bug_report">Save Bug Report</string>
-    <string name="bug_report_saved">Bug Report saved to Downloads Folder (AniTrend Logcat.txt)</string>
+    <!-- Screen title of the app log viewer -->
+    <string name="app_log">Registros do aplicativo</string>
+    <!-- Button that saves the log as a bug report file -->
+    <string name="save_bug_report">Salvar relatório de bug</string>
+    <!-- Confirmation shown after the bug report file is saved; keep the file name in parentheses -->
+    <string name="bug_report_saved">Relatório de bug salvo na pasta Downloads (AniTrend Logcat.txt)</string>
 
-    <string name="show_spoiler_tags">Show Spoiler Tags</string>
-    <string name="notification_media_added">New Related Media Added</string>
-    <string name="tip_messages_title">Messages</string>
-    <string name="nav_home">Home</string>
+    <!-- Settings row to show or hide spoiler tags -->
+    <string name="show_spoiler_tags">Mostrar tags de spoiler</string>
+    <!-- Notification title when related media is added to a series -->
+    <string name="notification_media_added">Nova mídia relacionada adicionada</string>
+    <!-- Tip title introducing the messages screen -->
+    <string name="tip_messages_title">Mensagens</string>
+    <!-- Navigation drawer title for the home screen -->
+    <string name="nav_home">Início</string>
     <string name="drawer_section_extras">Extras</string>
     <!-- Section title on the first-time intro screen; shows the videos feature -->
     <string name="app_intro_videos_title">Vídeos</string>
-    <string name="text_error_auth_token">Invalid session, please log out and back in</string>
-    <string name="text_migration_in_progress">Application is upgrading, please wait</string>
-    <string name="title_migration_failed">Upgrade Failed</string>
-    <string name="text_migration_failed"><![CDATA[The application failed to make some changes while upgrading, please clear app cache & data manually and try again]]></string>
-    <string name="text_about_general_information">General Information</string>
-    <string name="text_about_application_version">Version %s</string>
-    <string name="text_about_additional_information">Additional Information</string>
-    <string name="text_about_frequently_asked_questions">Frequently Asked Questions</string>
-    <string name="text_about_legal_information">Legal Information</string>
-    <string name="text_about_terms_and_conditions"><![CDATA[Terms & Conditions]]></string>
-    <string name="text_about_code_of_conduct">Code of Conduct</string>
-    <string name="text_migration_required">AniTrend is updating, this will take a moment</string>
-    <string name="title_activity_logging">Logging</string>
+    <!-- Error shown when the session token is invalid -->
+    <string name="text_error_auth_token">Sessão inválida, faça logout e login novamente</string>
+    <!-- Message shown while the app database is being upgraded -->
+    <string name="text_migration_in_progress">O aplicativo está sendo atualizado, aguarde</string>
+    <!-- Title of the dialog shown when the app upgrade fails -->
+    <string name="title_migration_failed">Falha na atualização</string>
+    <!-- Body of the dialog shown when the app upgrade fails -->
+    <string name="text_migration_failed"><![CDATA[O aplicativo não conseguiu fazer algumas alterações durante a atualização. Limpe manualmente o cache e os dados do aplicativo e tente novamente]]></string>
+    <!-- Section header for general info on the About screen -->
+    <string name="text_about_general_information">Informações gerais</string>
+    <!-- About screen row showing the app version; %s is the version number -->
+    <string name="text_about_application_version">Versão %s</string>
+    <!-- Section header for additional info on the About screen -->
+    <string name="text_about_additional_information">Informações adicionais</string>
+    <!-- About screen row that opens the FAQ page -->
+    <string name="text_about_frequently_asked_questions">Perguntas frequentes</string>
+    <!-- Section header for legal info on the About screen -->
+    <string name="text_about_legal_information">Informações legais</string>
+    <!-- About screen row that opens the terms and conditions -->
+    <string name="text_about_terms_and_conditions"><![CDATA[Termos e Condições]]></string>
+    <!-- About screen row that opens the code of conduct -->
+    <string name="text_about_code_of_conduct">Código de Conduta</string>
+    <!-- Message shown while the app is updating on startup -->
+    <string name="text_migration_required">O AniTrend está atualizando, isso levará um momento</string>
+    <!-- Screen title of the logging activity -->
+    <string name="title_activity_logging">Registros</string>
 
-    <string name="pref_title_app_theme">Application Theme</string>
+    <!-- Settings row to choose the app theme -->
+    <string name="pref_title_app_theme">Tema do aplicativo</string>
 
-    <string name="dialog_title_delete_activity">Delete Activity</string>
-    <string name="dialog_message_delete_activity">Are you sure you want delete this activity? This is irreversible!!</string>
+    <!-- Title of the dialog confirming activity deletion -->
+    <string name="dialog_title_delete_activity">Excluir atividade</string>
+    <!-- Body of the activity deletion confirmation dialog -->
+    <string name="dialog_message_delete_activity">Tem certeza de que deseja excluir esta atividade? Isso é irreversível!!</string>
 
-    <string name="pref_title_display_adult_content">Display Adult Content</string>
-    <string name="pref_summary_display_adult_content">Allow the application to show NSFW content, for this to work +18 content must be enabled in anilist</string>
+    <!-- Settings row to allow adult content -->
+    <string name="pref_title_display_adult_content">Exibir conteúdo adulto</string>
+    <!-- Summary under the adult content setting -->
+    <string name="pref_summary_display_adult_content">Permitir que o aplicativo mostre conteúdo NSFW. Para que isso funcione, o conteúdo +18 deve estar habilitado no AniList</string>
 
-    <string name="pref_summary_clear_notification_on_dismiss">Marks notifications as read when you dismiss them from the status bar</string>
-    <string name="pref_title_clear_notification_on_dismiss">Mark all notifications as read on dismiss</string>
+    <!-- Summary under the mark-read-on-dismiss setting -->
+    <string name="pref_summary_clear_notification_on_dismiss">Marca as notificações como lidas quando você as dispensa na barra de status</string>
+    <!-- Settings row to mark notifications read when dismissed -->
+    <string name="pref_title_clear_notification_on_dismiss">Marcar todas as notificações como lidas ao dispensar</string>
 
-    <string name="pref_summary_notification_work_around">Enable this only if you\'re not getting notifications</string>
-    <string name="pref_title_notification_work_around">Notification workaround</string>
+    <!-- Summary under the notification workaround setting -->
+    <string name="pref_summary_notification_work_around">Ative isso somente se você não estiver recebendo notificações</string>
+    <!-- Settings row enabling the notification workaround -->
+    <string name="pref_title_notification_work_around">Solução alternativa de notificações</string>
     <string name="title_bottom_sheet_spoiler">Spoiler</string>
-    <string name="pref_title_list_view_style">List View Style</string>
-    <string name="notification_action_mark_as_read">Mark as read</string>
-    <string name="notification_media_merge">Media Merge</string>
-    <string name="notification_media_deletion">Media Deletion</string>
-    <string name="notification_media_data_change">Media Update</string>
-    <string name="title_recommendations">Recommendations</string>
+    <!-- Settings row to choose the list view style -->
+    <string name="pref_title_list_view_style">Estilo de visualização da lista</string>
+    <!-- Notification action that marks a notification as read -->
+    <string name="notification_action_mark_as_read">Marcar como lida</string>
+    <!-- Notification title when media entries are merged -->
+    <string name="notification_media_merge">Mesclagem de mídia</string>
+    <!-- Notification title when media entries are deleted -->
+    <string name="notification_media_deletion">Exclusão de mídia</string>
+    <!-- Notification title when media data is updated -->
+    <string name="notification_media_data_change">Atualização de mídia</string>
+    <!-- Screen title for the recommendations list -->
+    <string name="title_recommendations">Recomendações</string>
 
     <!-- Manage list editor and validation strings -->
     <!-- Confirmation message when removing a media list entry -->
@@ -853,4 +921,305 @@
     <string name="section_privacy_priority">Privacidade &amp; prioridade</string>
     <!-- Section card title for notes field -->
     <string name="section_notes">Notas</string>
+
+
+    <!-- Screen-reader description for the add image button in the status composer -->
+    <string name="composer_add_image_description">Adicionar imagem</string>
+
+    <!-- Screen-reader description for the add video button in the status composer -->
+    <string name="composer_add_video_description">Adicionar vídeo</string>
+
+    <!-- Screen-reader description for the add link button in the status composer -->
+    <string name="composer_add_link_description">Adicionar link</string>
+
+    <!-- Screen-reader description for the add YouTube video button in the status composer -->
+    <string name="composer_add_youtube_description">Adicionar vídeo do YouTube</string>
+
+    <!-- Screen-reader description for the add GIF button in the status composer -->
+    <string name="composer_add_gif_description">Adicionar GIF</string>
+
+    <!-- Screen-reader description for the add emoticon button in the status composer -->
+    <string name="composer_add_emoticon_description">Adicionar emoticon</string>
+
+    <!-- Screen-reader description for the more actions button in the status composer -->
+    <string name="composer_more_actions_description">Mais ações do compositor</string>
+
+    <!-- Button that publishes the status post in the composer -->
+    <string name="composer_post">Publicar</string>
+
+    <!-- Screen-reader description of the reply recipient chip in the composer -->
+    <string name="composer_reply_recipient_description">Destinatário da resposta</string>
+
+    <!-- Composer header showing who is being replied to; %s is the user name -->
+    <string name="composer_reply_to">Respondendo a %s</string>
+
+    <!-- Hint text in the composer input when replying to a thread -->
+    <string name="composer_reply_hint">Adicionar à conversa...</string>
+
+    <!-- Screen-reader description for the send button in the message composer -->
+    <string name="composer_send_description">Enviar</string>
+
+    <!-- Screen-reader description announced while a message is being sent -->
+    <string name="composer_sending_description">Enviando</string>
+
+    <!-- Alias for the retry button label; keep pointing at button_try_again -->
+    <string name="try_again">@string/button_try_again</string>
+
+    <!-- Banner shown when series reviews may be out of date, offering a refresh -->
+    <string name="review_stale_message">As avaliações podem estar desatualizadas. Atualize para ver a ordem mais recente.</string>
+
+    <!-- Button that refreshes the review order on the stale reviews banner -->
+    <string name="review_stale_refresh">Atualizar avaliações</string>
+
+    <!-- Accessibility state announced for an unread row in lists -->
+    <string name="layout_unread_state">Não lida</string>
+
+    <!-- Accessibility state announced when a settings switch is enabled -->
+    <string name="accessibility_switch_on">Ativado</string>
+
+    <!-- Accessibility state announced when a settings switch is disabled -->
+    <string name="accessibility_switch_off">Desativado</string>
+
+    <!-- Screen-reader description for a settings choice row; %1$s is the setting title and %2$s its current value -->
+    <string name="settings_choice_content_description" formatted="true">%1$s, atualmente %2$s</string>
+
+    <!-- Screen-reader description for a settings toggle row; %1$s is the setting title and %2$s is On or Off -->
+    <string name="settings_toggle_content_description" formatted="true">%1$s, alternar %2$s</string>
+
+    <!-- Screen-reader description for an external link row on the About screen; %1$s is the link title -->
+    <string name="about_external_link_content_description" formatted="true">%1$s, abre no navegador</string>
+
+    <!-- Screen-reader description for the What's new row on the About screen -->
+    <string name="about_whats_new_content_description">O que há de novo, abre o changelog</string>
+
+    <!-- Product name of the MyAnimeList website; do not translate -->
+    <string name="series_mal" translatable="false">MyAnimeList</string>
+
+    <!-- Section label for the notes field in the manage list editor -->
+    <string name="dialog_title_notes">Notas</string>
+
+    <!-- Value shown for the priority slider in the manage list editor; %d is the numeric priority -->
+    <string name="priority_value">%d</string>
+
+    <!-- Title of the GIF preview dialog -->
+    <string name="title_giphy_preview">Pré-visualização do Giphy</string>
+
+    <!-- Message shown when a GIF preview cannot be displayed -->
+    <string name="title_preview_unavailable">Pré-visualização indisponível</string>
+
+    <!-- Label for the latest release row in the About screen -->
+    <string name="label_latest_release">Último lançamento</string>
+
+    <!-- Screen-reader description of the profile banner image -->
+    <string name="profile_banner_description">Imagem do banner do perfil</string>
+
+    <!-- Screen-reader description of the profile avatar image -->
+    <string name="profile_avatar_description">Imagem do avatar do perfil</string>
+
+    <!-- Loading caption shown while the profile is being fetched -->
+    <string name="profile_loading">Carregando perfil…</string>
+
+    <!-- Retry button shown on the profile error state -->
+    <string name="profile_retry">Tentar novamente</string>
+
+    <!-- Generic error shown when the profile request fails -->
+    <string name="profile_error_generic">Não foi possível carregar este perfil</string>
+
+    <!-- Error shown when the profile was opened without a valid user id or name -->
+    <string name="profile_error_no_user">Este perfil não pôde ser encontrado</string>
+
+    <!-- Screen-reader description for the profile loading indicator -->
+    <string name="profile_loading_content_description">Carregando perfil</string>
+
+    <!-- Loading caption shown while the studio is being fetched -->
+    <string name="studio_loading">Carregando estúdio…</string>
+
+    <!-- Retry button shown on the studio error state -->
+    <string name="studio_retry">Tentar novamente</string>
+
+    <!-- Generic error shown when the studio request fails -->
+    <string name="studio_error_generic">Não foi possível carregar este estúdio</string>
+
+    <!-- Screen-reader description for the studio loading indicator -->
+    <string name="studio_loading_content_description">Carregando estúdio</string>
+
+    <!-- Loading caption shown while the character is being fetched -->
+    <string name="character_loading">Carregando personagem…</string>
+
+    <!-- Retry button shown on the character error state -->
+    <string name="character_retry">Tentar novamente</string>
+
+    <!-- Generic error shown when the character request fails -->
+    <string name="character_error_generic">Não foi possível carregar este personagem</string>
+
+    <!-- Screen-reader description for the character loading indicator -->
+    <string name="character_loading_content_description">Carregando personagem</string>
+
+    <!-- Loading caption shown while the staff member is being fetched -->
+    <string name="staff_loading">Carregando equipe…</string>
+
+    <!-- Retry button shown on the staff error state -->
+    <string name="staff_retry">Tentar novamente</string>
+
+    <!-- Generic error shown when the staff member request fails -->
+    <string name="staff_error_generic">Não foi possível carregar este membro da equipe</string>
+
+    <!-- Screen-reader description for the staff loading indicator -->
+    <string name="staff_loading_content_description">Carregando equipe</string>
+
+    <!-- Log level filter showing all log entries -->
+    <string name="log_filter_all">Tudo</string>
+
+    <!-- Log level filter showing only error entries -->
+    <string name="log_filter_error">Erro</string>
+
+    <!-- Log level filter showing only warning entries -->
+    <string name="log_filter_warning">Aviso</string>
+
+    <!-- Log level filter showing only info entries -->
+    <string name="log_filter_info">Informações</string>
+
+    <!-- Log level filter showing only debug entries -->
+    <string name="log_filter_debug">Depuração</string>
+
+    <!-- About screen row that opens the Play Store rating page -->
+    <string name="text_about_rate_play_store">Avaliar na Play Store</string>
+
+    <!-- About screen row that opens the AniTrend Twitter profile -->
+    <string name="text_about_follow_twitter">Seguir no Twitter</string>
+
+    <!-- About screen row that opens the AniTrend GitHub repository; brand name, do not translate -->
+    <string name="text_about_github">GitHub</string>
+
+    <!-- About screen row that opens the AniTrend website -->
+    <string name="text_about_website">Website</string>
+
+    <!-- Settings section header for accessibility options -->
+    <string name="pref_header_accessibility">Acessibilidade</string>
+
+    <!-- Summary under the accessibility settings section header -->
+    <string name="pref_header_accessibility_summary">Ajuste a exibição para necessidades de acessibilidade</string>
+
+    <!-- Settings section header for appearance options -->
+    <string name="pref_header_appearance">Aparência</string>
+
+    <!-- Summary under the appearance settings section header -->
+    <string name="pref_header_appearance_summary">Personalize a aparência visual e a densidade</string>
+
+    <!-- Settings section header for content options -->
+    <string name="pref_header_content">Conteúdo</string>
+
+    <!-- Summary under the content settings section header -->
+    <string name="pref_header_content_summary">Controle como o conteúdo é exibido</string>
+
+    <!-- Settings row to choose the app accent color -->
+    <string name="pref_title_accent_color">Cor de destaque</string>
+
+    <!-- Settings row to toggle auto-playing trailers -->
+    <string name="pref_title_autoplay">Reprodução automática de trailers</string>
+
+    <!-- Settings row to adjust the font scale -->
+    <string name="pref_title_font_scale">Escala da fonte</string>
+
+    <!-- Settings row to enable high contrast mode -->
+    <string name="pref_title_high_contrast">Modo de alto contraste</string>
+
+    <!-- Settings row to choose the list density -->
+    <string name="pref_title_list_density">Densidade da lista</string>
+
+    <!-- Settings row to reduce animations and motion -->
+    <string name="pref_title_reduce_motion">Reduzir movimento</string>
+
+    <!-- Settings row to choose how scores are displayed -->
+    <string name="pref_title_score_format">Formato da nota</string>
+
+    <!-- Settings row to choose how spoilers are handled -->
+    <string name="pref_title_spoiler_behavior">Comportamento de spoilers</string>
+
+    <!-- Settings row to choose the preferred language for series titles -->
+    <string name="pref_title_title_language">Idioma preferido dos títulos</string>
+
+    <!-- Placeholder summary shown for settings that are not implemented yet -->
+    <string name="pref_summary_placeholder">Em breve</string>
+
+    <!-- Hint text in the search field -->
+    <string name="search_hint">Pesquisar</string>
+
+    <!-- Patreon campaign URL used for the support page; do not translate -->
+    <string name="patreon">https://www.patreon.com/wax911</string>
+
+    <!-- Settings section header for the signed-in AniList account -->
+    <string name="pref_header_account">Conta</string>
+
+    <!-- Summary under the account settings section header -->
+    <string name="pref_header_account_summary">Gerencie o perfil da sua conta AniList e as preferências de lista</string>
+
+    <!-- Section header for profile fields on the account settings screen -->
+    <string name="account_section_profile">Perfil</string>
+
+    <!-- Section header for list and content fields on the account settings screen -->
+    <string name="account_section_lists_content">Listas e conteúdo</string>
+
+    <!-- Label for the public about/bio field on the account settings screen -->
+    <string name="account_title_about">Sobre</string>
+
+    <!-- Helper text under the about field explaining where the bio is shown -->
+    <string name="account_helper_about">Biografia pública exibida no seu perfil do AniList</string>
+
+    <!-- Label for the profile color picker on the account settings screen -->
+    <string name="account_title_profile_color">Cor do perfil</string>
+
+    <!-- Helper text under the profile color picker -->
+    <string name="account_summary_profile_color">Cor de destaque do seu perfil do AniList</string>
+
+    <!-- Label for the list row order picker on the account settings screen -->
+    <string name="account_title_row_order">Ordem das linhas da lista</string>
+
+    <!-- Helper text under the list row order picker -->
+    <string name="account_summary_row_order">Ordem das entradas nas suas listas de anime e mangá</string>
+
+    <!-- Label for the airing notifications switch on the account settings screen -->
+    <string name="account_title_airing_notifications">Notificações de lançamento</string>
+
+    <!-- Helper text under the airing notifications switch -->
+    <string name="account_summary_airing_notifications">Seja notificado quando uma série acompanhada lançar um novo episódio</string>
+
+    <!-- Label for the server-side adult content switch on the account settings screen -->
+    <string name="account_title_display_adult_content">Conteúdo adulto (conta AniList)</string>
+
+    <!-- Helper text clarifying the adult content switch edits the AniList account, separate from the app local setting -->
+    <string name="account_summary_display_adult_content">Controla se o conteúdo adulto é exibido na sua conta do AniList. Isso é separado da configuração local de conteúdo adulto do aplicativo.</string>
+
+    <!-- Value shown for list row order when the server has not set a custom order -->
+    <string name="account_row_order_default">Padrão</string>
+
+    <!-- Title of the dialog confirming discarding unsaved account changes -->
+    <string name="account_dialog_discard_title">Descartar alterações?</string>
+
+    <!-- Body of the discard changes confirmation dialog -->
+    <string name="account_dialog_discard_message">Você tem alterações de conta não salvas. Descartá-las e fechar?</string>
+
+    <!-- Positive action of the discard dialog; throws away the edits -->
+    <string name="account_action_discard">Descartar</string>
+
+    <!-- Negative action of the discard dialog; returns to the form -->
+    <string name="account_action_keep_editing">Continuar editando</string>
+
+    <!-- Save button label shown while a save is in flight -->
+    <string name="account_saving">Salvando…</string>
+
+    <!-- Loading caption shown while account settings are being fetched -->
+    <string name="account_loading">Carregando…</string>
+
+    <!-- Retry button next to the account settings error banner -->
+    <string name="account_action_retry">Tentar novamente</string>
+
+    <!-- Generic error shown when the account settings request fails -->
+    <string name="account_error_generic">Não foi possível concluir a solicitação</string>
+
+    <!-- Screen-reader description for the account settings loading indicator -->
+    <string name="account_loading_content_description">Carregando configurações da conta</string>
+
+    <!-- Screen-reader description for the account settings saving indicator -->
+    <string name="account_saving_content_description">Salvando configurações da conta</string>
 </resources>

@@ -8,7 +8,9 @@
     <string name="action_search">Zoeken</string>
     <string name="action_filter">@string/drawer_title_filter</string>
 
-    <string name="action_mode_selected">Selected: %d</string>
+
+    <!-- Announced when items are selected in multi-select mode; %d is the number of selected items. -->
+    <string name="action_mode_selected">Geselecteerd: %d</string>
 
     <string name="navigation_drawer_open">Navigatielade geopend</string>
     <string name="navigation_drawer_close">Navigatielade gesloten</string>
@@ -128,7 +130,8 @@
 
     <!--Filter menu entry these are the dialog titles-->
     <string name="app_filter_sort">Sorteer op?</string>
-    <string name="app_filter_on_list">On My List?</string>
+    <!-- Filter dialog question asking whether an entry is on the user's list. -->
+    <string name="app_filter_on_list">Op mijn lijst?</string>
     <string name="app_filter_order">Volgorde op?</string>
     <string name="app_filter_show_type">Type Serie?</string>
     <string name="app_filter_year">Serie jaar?</string>
@@ -262,7 +265,9 @@
     <string name="pref_header_general">Algemeen</string>
     <string name="pref_header_general_summary">Beheer de basisfuncties van de applicatie</string>
 
-    <string name="pref_title_startup_page">Startup Page</string>
+
+    <!-- Settings title for the startup page. -->
+    <string name="pref_title_startup_page">Startpagina</string>
 
     <string name="pref_title_update_channel">Kanaal updaten</string>
 
@@ -274,7 +279,7 @@
 
 
     <!-- Settings for Data & Sync &amp; is the html equivalent of &-->
-    <string name="pref_header_data_sync">Data &amp; sync</string>
+    <string name="pref_header_data_sync">Gegevens &amp; synchronisatie</string>
     <string name="pref_header_data_sync_summary">De meldingscontrolefrequentie configureren</string>
 
     <string name="pref_title_sync_frequency">Sync frequentie</string>
@@ -290,22 +295,20 @@
 
     <string name="title_bottom_sheet_likes">Totale Likes: %d</string>
 
-    <string name="dialog_unfollow_message">Je staat op het punt om deze gebruiker te ontvolgen, weet je zeker dat je deze persoon wilt laten huilen?</string>
+
+    <!-- Confirmation dialog body shown before unfollowing a user. -->
+    <string name="dialog_unfollow_message">Je staat op het punt deze gebruiker te ontvolgen. Weet je zeker dat je dit wilt doen?</string>
 
     <string name="info_login_req">Je moet ingelogd zijn om dit object te ontgrendelen!</string>
     <string name="button_try_again">Probeer opnieuw</string>
 
-    <string name="dialog_add_title">
-        <![CDATA[
-        <small>Add: %s</small>
-        ]]>
-    </string>
 
-    <string name="dialog_edit_title">
-        <![CDATA[
-        <small>Update: %s</small>
-        ]]>
-    </string>
+    <!-- Dialog title shown when adding a list entry; %s is the media title. -->
+    <string name="dialog_add_title"><![CDATA[<small>Toevoegen: %s</small>]]></string>
+
+
+    <!-- Dialog title shown when editing a list entry; %s is the media title. -->
+    <string name="dialog_edit_title"><![CDATA[<small>Bijwerken: %s</small>]]></string>
 
     <string name="title_view_likes">Likes bekijken</string>
     <string name="input_empty_warning">Veld kan niet leeg zijn!</string>
@@ -337,7 +340,9 @@
         ]]>
     </string>
 
-    <string name="app_update">Get: v%s</string>
+
+    <!-- Update dialog button label; v%s is the version number. -->
+    <string name="app_update">Download: v%s</string>
 
     <string name="app_no_date">Je hebt de laatste versie van Anitrend!</string>
 
@@ -349,7 +354,9 @@
 
     <string name="text_confirm_exit">Druk nogmaals terug om terug te gaan</string>
 
-    <string name="text_url_copied_to_clipboard">Copied URL to clipboard</string>
+
+    <!-- Toast shown after a URL has been copied to the clipboard. -->
+    <string name="text_url_copied_to_clipboard">URL naar klembord gekopieerd</string>
 
     <string name="text_filter_applying">Veranderingen Doorvoeren..</string>
 
@@ -424,7 +431,9 @@
 
     <string name="text_waiting_for_response">Wachten op een reactie</string>
 
-    <string name="text_operation_unsuccessful">Operatie was een succes!</string>
+
+    <!-- Message shown when an operation failed (previous translation said the opposite). -->
+    <string name="text_operation_unsuccessful">De bewerking is mislukt!</string>
 
     <string name="text_almost_finished">Bijna klaar!</string>
 
@@ -440,7 +449,9 @@
 
     <string name="text_search_empty">zoekinhoud kan niet leeg zijn</string>
 
-    <string name="text_user_model">Gebruiker Model Error!</string>
+
+    <!-- Error message shown when the user model could not be parsed. -->
+    <string name="text_user_model">Fout in gebruikersmodel!</string>
 
 
     <string name="text_signed_out">Uitgelogd E(104) Swipe naar beneden om opnieuw te laden</string>
@@ -481,13 +492,19 @@
     <string name="text_error_request">Kon aanvraag niet voltooien</string>
 
     <string name="text_what_is_new">Wat is nieuw!</string>
-    <string name="text_enter_text">Enter some text here</string>
+    <!-- Placeholder prompting the user to enter text. -->
+    <string name="text_enter_text">Voer hier wat tekst in</string>
     <string name="text_unable_set_text">tekstinvoer niet beschikbaar..</string>
-    <string name="edit_status_title">Edit Activity Status</string>
-    <string name="edit_status_text">Alter your previously created activity status post!</string>
-    <string name="create_status_title">Create Activity Status</string>
-    <string name="create_status_text">Compose your status post, what\'s on your mind?</string>
-    <string name="text_changes_saved">Changes saved!</string>
+    <!-- Dialog title for editing a previously posted activity status. -->
+    <string name="edit_status_title">Activiteitsstatus bewerken</string>
+    <!-- Dialog body explaining the edit status form. -->
+    <string name="edit_status_text">Pas je eerder gemaakte statusbericht aan!</string>
+    <!-- Dialog title for creating a new activity status. -->
+    <string name="create_status_title">Activiteitsstatus maken</string>
+    <!-- Dialog body prompting the user to compose a status post. -->
+    <string name="create_status_text">Stel je statusbericht op, waar denk je aan?</string>
+    <!-- Confirmation shown after changes were saved. -->
+    <string name="text_changes_saved">Wijzigingen opgeslagen!</string>
 
     <string name="dialog_action_null">Het item dat werd doorgegeven aan de Dialog Manager was leeg!</string>
 
@@ -499,7 +516,8 @@
     <string name="title_favourites_list">Favorieten van gebruiker</string>
     <string name="text_anime_episodes">%d afleveringen</string>
     <string name="text_anime_length">%d Minuten</string>
-    <string name="text_anime_score">%d%% Mean</string>
+    <!-- Label showing the mean score of an anime; %d%% is the percentage value. -->
+    <string name="text_anime_score">%d%% Gemiddelde</string>
 
     <string name="text_message_to">Verzend een bericht naar %s</string>
     <string name="title_bottom_sheet_favourites">Favorieten van gebruiker</string>
@@ -541,15 +559,18 @@
     <!--Reply or comment page when you tap the attach icon-->
     <string name="text_attach_link">Link vastmaken</string>
     <string name="text_attach_image">Afbeelding vastmaken</string>
-    <string name="text_youtube_link">Youtube Link</string>
-    <string name="text_webm_link">WebM Link</string>
+    <!-- Attachment action label for inserting a YouTube link. -->
+    <string name="text_youtube_link">YouTube-link</string>
+    <!-- Attachment action label for inserting a WebM video link. -->
+    <string name="text_webm_link">WebM-link</string>
 
     <!--Floating action button on the anime or manga pages, these are only displayed when the user long presses the icons-->
     <string name="series_favourite_this">Maak favoriet</string>
     <string name="series_add_to_list">Toevoegen aan lijst</string>
     <string name="series_write_a_review">Schrijf een Review</string>
     <string name="series_share">Delen</string>
-    <string name="series_on_my_list">On My List</string>
+    <!-- Floating action button state label shown when the series is already on the user list. -->
+    <string name="series_on_my_list">Op mijn lijst</string>
 
     <!--Start of Dialog you use to add, remove or update anime or manga listings-->
     <string name="dialog_title_status">Status</string>
@@ -558,14 +579,15 @@
     <string name="dialog_title_score">Score</string>
     <string name="dialog_title_private">Privé</string>
     <string name="dialog_title_increment_episodes">Toenemen van afleveringen</string>
-    <string name="dialog_hint_enter_your_notes">Noteer wat onzin</string>
+    <!-- Placeholder in the notes field of the manage list editor dialog. -->
+    <string name="dialog_hint_enter_your_notes">Voeg een notitie toe...</string>
 
     <string name="dialog_title_volumes_read">Delen Gelezen</string>
     <string name="dialog_title_chapters_read">Hoofdstukken Gelezen</string>
     <string name="dialog_title_reread">Herlezen</string>
 
     <!--More labels from profiles-->
-    <string name="text_top_genres">Top Genres:</string>
+    <string name="text_top_genres">Topgenres:</string>
     <string name="text_tap_on_item_below_to_view_stats">Tik op het item hieronder om statistieken te bekijken!</string>
 
     <string name="follow">Volgen</string>
@@ -596,14 +618,17 @@
     <string name="text_feature_disabled">Feature is uitgezet in deze context!</string>
 
     <!-- Dialogs for check updates, etc -->
-    <string name="title_download_info">Download Info!</string>
+    <string name="title_download_info">Downloadinfo!</string>
     <string name="text_download_info">Het item wordt gedownload in je downloadmap.</string>
-    <string name="title_update_info">Update Info!</string>
+    <!-- Dialog title shown before an update download starts. -->
+    <string name="title_update_info">Update-info!</string>
 
     <!-- Sliding dialog that helps you select content type -->
-    <string name="sheet_share_hint">Informatie om te delen</string>
-    <string name="sheet_share_title">formatteer je statuspost!</string>
-    <string name="sheet_share_body">Bescrijf de inhoud van de link hieronder.</string>
+    <string name="sheet_share_hint">Link of tekst om te delen</string>
+    <!-- Title of the share bottom sheet note field. -->
+    <string name="sheet_share_title">Voeg een notitie toe</string>
+    <!-- Body text of the share bottom sheet. -->
+    <string name="sheet_share_body">Deel deze link</string>
 
     <!--These are the anime time labels in your profile-->
     <string name="anime_time_hours">%.1f Uren</string>
@@ -615,7 +640,6 @@
     <string name="series_next_ep">Volgende aflevering:</string>
     <string name="series_chapters">Hoofdstukken:</string>
     <string name="series_volumes">Delen:</string>
-    <string name="logged_in_as">Ingelogd als</string>
 
     <string name="sign_into_anilist">Inloggen Op Anilist</string>
 
@@ -628,9 +652,12 @@
 
     <string name="title_activity_staff">Staff</string>
     <string name="title_activity_character">Karakters</string>
-    <string name="title_activity_series">Series</string>
+    <!-- Screen title of the series detail page. -->
+    <string name="title_activity_series">Serie</string>
 
-    <string name="More">More</string>
+
+    <!-- Generic menu label for showing more options. -->
+    <string name="More">Meer</string>
 
     <string name="title_bottom_sheet_giphy">Ondersteund door Giphy</string>
 
@@ -644,9 +671,12 @@
     <string name="text_manga_volumes">%d Delen</string>
     <string name="text_manga_chapters">%d Hoofdstukken</string>
 
-    <string name="title_series_status">Series Status</string>
+
+    <!-- Series detail label for the airing status. -->
+    <string name="title_series_status">Seriesstatus</string>
     <string name="title_series_season">Series Seizoen</string>
-    <string name="title_series_score">Series Score</string>
+    <!-- Series detail label for the score. -->
+    <string name="title_series_score">Seriebeoordeling</string>
     <string name="title_series_origin">Series Oorsprong</string>
 
     <string name="title_total_chapters">Totaal Aantal Hoofdstukken</string>
@@ -656,7 +686,9 @@
     <string name="title_episode_duration">Afleveringen Looptijd</string>
     <string name="title_next_episode">Volgende Aflevering</string>
 
-    <string name="title_hash_tag">Hash Tag</string>
+
+    <!-- Series detail label for the hashtag. -->
+    <string name="title_hash_tag">Hashtag</string>
     <string name="title_main_studio">Huidige Studio</string>
 
     <string name="create_new_account"><![CDATA[Nog geen account? <a href=\"https://anilist.co/register\">Maak een account aan!</a>]]></string>
@@ -683,15 +715,20 @@
     <string name="title_alternative_names">Alternatieve namen</string>
     <string name="text_unable_to_load_next_page">Error: Laden van meer resultaten!</string>
     <string name="menu_title_mark_all_as_read">Markeer Alles Als Gelezen</string>
-    <string name="title_score_distribution">Scoren Distributie</string>
+    <!-- Series stats label for the score distribution chart. -->
+    <string name="title_score_distribution">Scoreverdeling</string>
 
-    <string name="title_score">Scoren</string>
+
+    <!-- Series detail label for the score. -->
+    <string name="title_score">Score</string>
     <string name="title_watching">Aan het kijken</string>
-    <string name="title_series_stats">Serie Stats</string>
+    <!-- Series detail label for the stats section. -->
+    <string name="title_series_stats">Seriestatistieken</string>
     <string name="error_unresolved_type">Kan Inhoud Niet Achterhalen</string>
 
     <string name="menu_title_tags">Tags</string>
-    <string name="app_filter_tags">Serie Tags?</string>
+    <!-- Filter dialog question asking which series tags to filter by. -->
+    <string name="app_filter_tags">Serietags?</string>
 
     <string name="anitrend_sign_in_browser">Google Chrome Aanbevolen</string>
 
@@ -704,7 +741,9 @@
     <string name="pref_crash_reports_summary_off">Applicatie zal geen crash rapporten verzenden. Schakel alstublieft deze optie in om bug bevindingen en oplossingen te verbeteren</string>
     <string name="pref_crash_reports_summary_on">Applicatie zal automatisch crash rapporten verzenden</string>
 
-    <string name="pref_title_usage_analytics">Usage Analytics</string>
+
+    <!-- Settings title for usage analytics. -->
+    <string name="pref_title_usage_analytics">Gebruiksanalyses</string>
     <string name="pref_usage_analytics_summary_off">Applicatie zal geen anonieme statistieken verzenden op meest gebruikte features. Overweeg alstublieft deze optie voor betere design opties in de toekomst</string>
     <string name="pref_usage_analytics_summary_on">Applicatie zal anonieme statistieken versturen zoals meest gebruikte features</string>
 
@@ -717,7 +756,8 @@
 
     <string name="dialog_title_started_at">Start Datum</string>
     <string name="dialog_title_completed_at">Einde Datum</string>
-    <string name="dialog_button_clear">Clear</string>
+    <!-- Manage list editor button clearing a date field. -->
+    <string name="dialog_button_clear">Wissen</string>
 
     <string name="pref_header_customize">Aanpassen</string>
     <string name="pref_header_customize_summary">Pas applicatie gedrag aan</string>
@@ -730,78 +770,136 @@
     <string name="image_preview_link">Originele Link</string>
 
     <!-- Image Preview error strings -->
-    <string name="image_preview_error_character_image">The character image doesn\'t exist!</string>
-    <string name="image_preview_error_profile_banner">The user has not set a banner image!</string>
-    <string name="image_preview_error_series_cover">The series cover image doesn\'t exist!</string>
-    <string name="image_preview_error_series_banner">The series banner image doesn\'t exist!</string>
-    <string name="image_preview_error_staff_image">The staff image doesn\'t exist!</string>
-    <string name="image_preview_error_user_avatar">The user\'s avatar image doesn\'t exist</string>
+    <!-- Error shown when the character image cannot be previewed. -->
+    <string name="image_preview_error_character_image">De afbeelding van dit karakter bestaat niet!</string>
+    <!-- Error shown when the profile banner cannot be previewed. -->
+    <string name="image_preview_error_profile_banner">Deze gebruiker heeft geen bannerafbeelding ingesteld!</string>
+    <!-- Error shown when the series cover cannot be previewed. -->
+    <string name="image_preview_error_series_cover">De coverafbeelding van de serie bestaat niet!</string>
+    <!-- Error shown when the series banner cannot be previewed. -->
+    <string name="image_preview_error_series_banner">De bannerafbeelding van de serie bestaat niet!</string>
+    <!-- Error shown when the staff image cannot be previewed. -->
+    <string name="image_preview_error_staff_image">De afbeelding van de staff bestaat niet!</string>
+    <!-- Error shown when the user avatar cannot be previewed. -->
+    <string name="image_preview_error_user_avatar">De avatarafbeelding van de gebruiker bestaat niet</string>
 
     <!-- App Log strings -->
-    <string name="app_log">App Logs</string>
-    <string name="save_bug_report">Save Bug Report</string>
-    <string name="bug_report_saved">Bug Report saved to Downloads Folder (AniTrend Logcat.txt)</string>
+    <string name="app_log">App-logboeken</string>
+    <!-- Action label saving a bug report file. -->
+    <string name="save_bug_report">Bugrapport opslaan</string>
+    <!-- Confirmation shown after the bug report file was saved; keep the file name in parentheses. -->
+    <string name="bug_report_saved">Bugrapport opgeslagen in de downloadmap (AniTrend Logcat.txt)</string>
 
-    <string name="show_spoiler_tags">Show Spoiler Tags</string>
-    <string name="notification_media_added">New Related Media Added</string>
+
+    <!-- Setting label for showing spoiler tags. -->
+    <string name="show_spoiler_tags">Spoiler-tags tonen</string>
+    <!-- Notification title for newly added related media. -->
+    <string name="notification_media_added">Nieuwe gerelateerde media toegevoegd</string>
     <string name="Reset">Reset</string>
-    <string name="Update">Update</string>
+    <!-- Generic button label for updating an item. -->
+    <string name="Update">Bijwerken</string>
     <string name="action_help">Help</string>
-    <string name="tip_notifications_title">Notifications</string>
-    <string name="tip_navigation_title">Navigation</string>
-    <string name="tip_messages_title">Messages</string>
-    <string name="tip_compose_message_title">Compose Message</string>
-    <string name="notification_user_like_forum">Forum Like</string>
-    <string name="nav_header_support">Support</string>
+    <!-- Tip bubble title introducing the notifications feature. -->
+    <string name="tip_notifications_title">Meldingen</string>
+    <!-- Tip bubble title introducing the navigation drawer. -->
+    <string name="tip_navigation_title">Navigatie</string>
+    <!-- Tip bubble title introducing the messages feature. -->
+    <string name="tip_messages_title">Berichten</string>
+    <!-- Tip bubble title introducing the compose message feature. -->
+    <string name="tip_compose_message_title">Bericht opstellen</string>
+    <!-- Notification title for a like on a forum thread. -->
+    <string name="notification_user_like_forum">Like op forum</string>
+    <!-- Navigation drawer section header for support entries. -->
+    <string name="nav_header_support">Ondersteuning</string>
     <string name="nav_contact">Contact</string>
-    <string name="drawer_title_update">Update</string>
-    <string name="drawer_title_reviews">Series Reviews</string>
+    <!-- Navigation drawer item for checking app updates. -->
+    <string name="drawer_title_update">Bijwerken</string>
+    <!-- Navigation drawer item for series reviews. -->
+    <string name="drawer_title_reviews">Seriebeoordelingen</string>
     <string name="drawer_title_hub">AniTrend Hub</string>
-    <string name="drawer_title_home">Status Feeds</string>
+    <!-- Navigation drawer title for the status feeds screen. -->
+    <string name="drawer_title_home">Statusfeeds</string>
     <string name="drawer_title_filter">Filter</string>
-    <string name="drawer_section_extras">Extras</string>
+    <!-- Navigation drawer section header for extra entries. -->
+    <string name="drawer_section_extras">Extra\'s</string>
     <string name="drawer_section_account">Account</string>
-    <string name="app_filter_genres">Series Genres?</string>
-    <string name="get_started">Get Started</string>
+    <!-- Filter dialog question asking which series genres to filter by. -->
+    <string name="app_filter_genres">Seriegenres?</string>
+    <!-- Onboarding button label on the first page. -->
+    <string name="get_started">Aan de slag</string>
     <!-- Section title on the first-time intro screen; shows the videos feature -->
     <string name="app_intro_videos_title">Video\'s</string>
     <!-- Section title on the first-time intro screen; shows the searching feature -->
     <string name="app_intro_search_title">Zoeken</string>
-    <string name="app_greeting">Welcome to AniTrend, this is not a streaming app!</string>
-    <string name="text_error_auth_token">Invalid session, please log out and back in</string>
-    <string name="text_migration_in_progress">Application is upgrading, please wait</string>
-    <string name="title_migration_failed">Upgrade Failed</string>
-    <string name="text_migration_failed"><![CDATA[The application failed to make some changes while upgrading, please clear app cache & data manually and try again]]></string>
-    <string name="text_about_general_information">General Information</string>
-    <string name="text_about_application_version">Version %s</string>
-    <string name="text_about_additional_information">Additional Information</string>
-    <string name="text_about_frequently_asked_questions">Frequently Asked Questions</string>
-    <string name="text_about_legal_information">Legal Information</string>
-    <string name="text_about_terms_and_conditions"><![CDATA[Terms & Conditions]]></string>
-    <string name="text_about_code_of_conduct">Code of Conduct</string>
-    <string name="text_migration_required">AniTrend is updating, this will take a moment</string>
-    <string name="title_activity_logging">Logging</string>
+    <!-- Welcome message shown on first launch; clarifies that the app is not a streaming service. -->
+    <string name="app_greeting">Welkom bij AniTrend, dit is geen streaming-app!</string>
+    <!-- Error message shown when the session token is invalid. -->
+    <string name="text_error_auth_token">Ongeldige sessie, log uit en weer in</string>
+    <!-- Message shown while the app is upgrading its data. -->
+    <string name="text_migration_in_progress">De app wordt bijgewerkt, even geduld</string>
+    <!-- Dialog title shown when the data upgrade fails. -->
+    <string name="title_migration_failed">Upgrade mislukt</string>
+    <!-- Dialog body shown when the data upgrade fails. -->
+    <string name="text_migration_failed"><![CDATA[De applicatie kon enkele wijzigingen niet toepassen tijdens het bijwerken. Wis handmatig de cache en gegevens van de app en probeer het opnieuw]]></string>
+    <!-- About screen section header for general information. -->
+    <string name="text_about_general_information">Algemene informatie</string>
+    <!-- About screen row showing the application version; %s is the version number. -->
+    <string name="text_about_application_version">Versie %s</string>
+    <!-- About screen section header for additional information. -->
+    <string name="text_about_additional_information">Aanvullende informatie</string>
+    <!-- About screen link to the frequently asked questions. -->
+    <string name="text_about_frequently_asked_questions">Veelgestelde vragen</string>
+    <!-- About screen section header for legal information. -->
+    <string name="text_about_legal_information">Juridische informatie</string>
+    <!-- About screen link to the terms and conditions. -->
+    <string name="text_about_terms_and_conditions"><![CDATA[Voorwaarden & Bepalingen]]></string>
+    <!-- About screen link to the code of conduct. -->
+    <string name="text_about_code_of_conduct">Gedragscode</string>
+    <!-- Message shown while AniTrend is updating its data. -->
+    <string name="text_migration_required">AniTrend wordt bijgewerkt, dit duurt even</string>
+    <!-- Screen title of the logging screen. -->
+    <string name="title_activity_logging">Logboek</string>
 
-    <string name="pref_title_app_theme">Application Theme</string>
 
-    <string name="dialog_title_delete_activity">Delete Activity</string>
-    <string name="dialog_message_delete_activity">Are you sure you want delete this activity? This is irreversible!!</string>
+    <!-- Settings title for the application theme. -->
+    <string name="pref_title_app_theme">App-thema</string>
 
-    <string name="pref_title_display_adult_content">Display Adult Content</string>
-    <string name="pref_summary_display_adult_content">Allow the application to show NSFW content, for this to work +18 content must be enabled in anilist</string>
 
-    <string name="pref_summary_clear_notification_on_dismiss">Marks notifications as read when you dismiss them from the status bar</string>
-    <string name="pref_title_clear_notification_on_dismiss">Mark all notifications as read on dismiss</string>
+    <!-- Dialog title confirming activity deletion. -->
+    <string name="dialog_title_delete_activity">Activiteit verwijderen</string>
+    <!-- Dialog body asking for confirmation before deleting an activity. -->
+    <string name="dialog_message_delete_activity">Weet je zeker dat je deze activiteit wilt verwijderen? Dit is onomkeerbaar!!</string>
 
-    <string name="pref_summary_notification_work_around">Enable this only if you\'re not getting notifications</string>
-    <string name="pref_title_notification_work_around">Notification workaround</string>
+
+    <!-- Settings title for showing adult content. -->
+    <string name="pref_title_display_adult_content">Toon inhoud voor volwassenen</string>
+    <!-- Settings summary for the adult content toggle; keep NSFW and +18 as-is. -->
+    <string name="pref_summary_display_adult_content">Sta de app toe NSFW-inhoud te tonen. Hiervoor moet +18-inhoud zijn ingeschakeld op AniList</string>
+
+
+    <!-- Settings summary for clearing notifications on dismiss. -->
+    <string name="pref_summary_clear_notification_on_dismiss">Markeer meldingen als gelezen wanneer je ze sluit vanuit de statusbalk</string>
+    <!-- Settings title for clearing notifications on dismiss. -->
+    <string name="pref_title_clear_notification_on_dismiss">Markeer alle meldingen als gelezen bij sluiten</string>
+
+
+    <!-- Settings summary for the notification workaround. -->
+    <string name="pref_summary_notification_work_around">Schakel dit alleen in als je geen meldingen ontvangt</string>
+    <!-- Settings title for the notification workaround. -->
+    <string name="pref_title_notification_work_around">Oplossing voor meldingen</string>
     <string name="title_bottom_sheet_spoiler">Spoiler</string>
-    <string name="pref_title_list_view_style">List View Style</string>
-    <string name="notification_action_mark_as_read">Mark as read</string>
-    <string name="notification_media_merge">Media Merge</string>
-    <string name="notification_media_deletion">Media Deletion</string>
-    <string name="notification_media_data_change">Media Update</string>
-    <string name="title_recommendations">Recommendations</string>
+    <!-- Settings title for the list view style. -->
+    <string name="pref_title_list_view_style">Lijstweergavestijl</string>
+    <!-- Notification action label marking the notification as read. -->
+    <string name="notification_action_mark_as_read">Als gelezen markeren</string>
+    <!-- Notification title for a media merge event. -->
+    <string name="notification_media_merge">Mediasamenvoeging</string>
+    <!-- Notification title for a media deletion event. -->
+    <string name="notification_media_deletion">Mediaverwijdering</string>
+    <!-- Notification title for a media data change event. -->
+    <string name="notification_media_data_change">Media-update</string>
+    <!-- Series detail label for the recommendations section. -->
+    <string name="title_recommendations">Aanbevelingen</string>
 
     <!-- Manage list editor and validation strings -->
     <!-- Confirmation message when removing a media list entry -->
@@ -854,4 +952,204 @@
     <string name="section_privacy_priority">Privacy &amp; prioriteit</string>
     <!-- Section card title for notes field -->
     <string name="section_notes">Notities</string>
+    <!-- About screen external-link row; %1$s is the link title and the text explains browser navigation. -->
+    <string name="about_external_link_content_description">%1$s, opent in de browser</string>
+    <!-- About screen What's new row; announces that the row opens the changelog. -->
+    <string name="about_whats_new_content_description">Wat is er nieuw, opent het wijzigingslogboek</string>
+    <!-- Accessibility state announced when a settings switch is disabled. -->
+    <string name="accessibility_switch_off">Uit</string>
+    <!-- Accessibility state announced when a settings switch is enabled. -->
+    <string name="accessibility_switch_on">Aan</string>
+    <!-- Positive action of the discard changes dialog; throws away the edits. -->
+    <string name="account_action_discard">Verwerpen</string>
+    <!-- Negative action of the discard changes dialog; returns to the form. -->
+    <string name="account_action_keep_editing">Verder bewerken</string>
+    <!-- Retry button shown next to the account settings error banner. -->
+    <string name="account_action_retry">Opnieuw proberen</string>
+    <!-- Message body of the discard changes confirmation dialog. -->
+    <string name="account_dialog_discard_message">Je hebt niet-opgeslagen accountwijzigingen. Wil je ze verwerpen en sluiten?</string>
+    <!-- Title of the dialog asking the user to confirm discarding unsaved account changes. -->
+    <string name="account_dialog_discard_title">Wijzigingen verwerpen?</string>
+    <!-- Generic error shown when the account settings request fails and no specific message is available. -->
+    <string name="account_error_generic">Kon de aanvraag niet voltooien</string>
+    <!-- Helper text under the about field explaining where it is shown. -->
+    <string name="account_helper_about">Openbare bio weergegeven op je AniList-profiel</string>
+    <!-- Loading indicator caption shown while account settings are being fetched. -->
+    <string name="account_loading">Laden…</string>
+    <!-- TalkBack description for the account settings loading indicator. -->
+    <string name="account_loading_content_description">Accountinstellingen laden</string>
+    <!-- Shown for the list row order value when the server has not set a custom order. -->
+    <string name="account_row_order_default">Standaard</string>
+    <!-- Save button label shown while a save is in flight. -->
+    <string name="account_saving">Opslaan…</string>
+    <!-- TalkBack description for the account settings saving indicator. -->
+    <string name="account_saving_content_description">Accountinstellingen opslaan</string>
+    <!-- Section header for the list and content fields on the account settings screen. -->
+    <string name="account_section_lists_content">Lijsten &amp; inhoud</string>
+    <!-- Section header for the profile fields on the account settings screen. -->
+    <string name="account_section_profile">Profiel</string>
+    <!-- Helper text under the airing notifications switch. -->
+    <string name="account_summary_airing_notifications">Ontvang een melding wanneer een gevolgde serie een nieuwe aflevering uitzendt</string>
+    <!-- Helper text clarifying the adult content switch edits the server-side AniList account, separate from the app local setting. -->
+    <string name="account_summary_display_adult_content">Bepaalt of inhoud voor volwassenen op je AniList-account wordt getoond. Dit is gescheiden van de lokale instelling voor inhoud voor volwassenen van de app.</string>
+    <!-- Helper text under the profile color picker. -->
+    <string name="account_summary_profile_color">Accentkleur van je AniList-profiel</string>
+    <!-- Helper text under the list row order picker. -->
+    <string name="account_summary_row_order">Volgorde van items in je anime- en mangalijsten</string>
+    <!-- Label for the public about/bio field on the account settings screen. -->
+    <string name="account_title_about">Over</string>
+    <!-- Label for the airing notifications switch on the account settings screen. -->
+    <string name="account_title_airing_notifications">Uitzendmeldingen</string>
+    <!-- Label for the server-side adult content switch; must read as an AniList account setting, not the local app toggle. -->
+    <string name="account_title_display_adult_content">Inhoud voor volwassenen (AniList-account)</string>
+    <!-- Label for the profile color picker on the account settings screen. -->
+    <string name="account_title_profile_color">Profielkleur</string>
+    <!-- Label for the list row order picker on the account settings screen. -->
+    <string name="account_title_row_order">Lijstrijenvolgorde</string>
+    <!-- Generic error shown when the character request fails. -->
+    <string name="character_error_generic">Kon dit karakter niet laden</string>
+    <!-- Loading caption shown while the character is being fetched. -->
+    <string name="character_loading">Karakter laden…</string>
+    <!-- TalkBack description for the character loading indicator. -->
+    <string name="character_loading_content_description">Karakter laden</string>
+    <!-- Retry button shown on the character error state. -->
+    <string name="character_retry">Opnieuw proberen</string>
+    <!-- Composer action spoken by screen readers; adds an emoticon. -->
+    <string name="composer_add_emoticon_description">Emoticon toevoegen</string>
+    <!-- Composer action spoken by screen readers; adds a GIF. -->
+    <string name="composer_add_gif_description">GIF toevoegen</string>
+    <!-- Composer action spoken by screen readers; adds an image. -->
+    <string name="composer_add_image_description">Afbeelding toevoegen</string>
+    <!-- Composer action spoken by screen readers; adds a link. -->
+    <string name="composer_add_link_description">Link toevoegen</string>
+    <!-- Composer action spoken by screen readers; adds a video. -->
+    <string name="composer_add_video_description">Video toevoegen</string>
+    <!-- Composer action spoken by screen readers; adds a YouTube video. -->
+    <string name="composer_add_youtube_description">YouTube-video toevoegen</string>
+    <!-- Composer action spoken by screen readers; opens more composer actions. -->
+    <string name="composer_more_actions_description">Meer compositoracties</string>
+    <!-- Composer button label that publishes the post. -->
+    <string name="composer_post">Plaatsen</string>
+    <!-- Placeholder in the reply composer input. -->
+    <string name="composer_reply_hint">Toevoegen aan discussie...</string>
+    <!-- Composer action spoken by screen readers; announces the reply recipient. -->
+    <string name="composer_reply_recipient_description">Ontvanger van antwoord</string>
+    <!-- Reply composer header; %s is the name of the user being replied to. -->
+    <string name="composer_reply_to">Antwoord op %s</string>
+    <!-- Composer action spoken by screen readers; sends the message. -->
+    <string name="composer_send_description">Verzenden</string>
+    <!-- Composer state spoken by screen readers while a message is being sent. -->
+    <string name="composer_sending_description">Verzenden</string>
+    <!-- Title of the notes field in the manage list editor dialog. -->
+    <string name="dialog_title_notes">Notities</string>
+    <!-- Label shown next to the latest release version. -->
+    <string name="label_latest_release">Nieuwste versie</string>
+    <!-- Accessibility state announced for an unread layout row. -->
+    <string name="layout_unread_state">Ongelezen</string>
+    <!-- Filter chip label in the app log screen showing all entries. -->
+    <string name="log_filter_all">Alles</string>
+    <!-- Filter chip label in the app log screen for debug entries. -->
+    <string name="log_filter_debug">Debug</string>
+    <!-- Filter chip label in the app log screen for error entries. -->
+    <string name="log_filter_error">Fout</string>
+    <!-- Filter chip label in the app log screen for info entries. -->
+    <string name="log_filter_info">Info</string>
+    <!-- Filter chip label in the app log screen for warning entries. -->
+    <string name="log_filter_warning">Waarschuwing</string>
+    <!-- URL to the AniTrend Patreon page; do not translate. -->
+    <string name="patreon">https://www.patreon.com/wax911</string>
+    <!-- Settings section header for accessibility options. -->
+    <string name="pref_header_accessibility">Toegankelijkheid</string>
+    <!-- Summary line under the accessibility settings section. -->
+    <string name="pref_header_accessibility_summary">Pas de weergave aan voor toegankelijkheidsbehoeften</string>
+    <!-- Settings hub category for the signed-in user's AniList account options. -->
+    <string name="pref_header_account">Account</string>
+    <!-- Summary line under the Account settings hub category. -->
+    <string name="pref_header_account_summary">Beheer je AniList-accountprofiel en lijstvoorkeuren</string>
+    <!-- Settings section header for appearance options. -->
+    <string name="pref_header_appearance">Weergave</string>
+    <!-- Summary line under the appearance settings section. -->
+    <string name="pref_header_appearance_summary">Pas de visuele weergave en dichtheid aan</string>
+    <!-- Settings section header for content options. -->
+    <string name="pref_header_content">Inhoud</string>
+    <!-- Summary line under the content settings section. -->
+    <string name="pref_header_content_summary">Bepaal hoe inhoud wordt weergegeven</string>
+    <!-- Placeholder summary for settings that are not implemented yet. -->
+    <string name="pref_summary_placeholder">Binnenkort beschikbaar</string>
+    <!-- Settings title for the accent color picker. -->
+    <string name="pref_title_accent_color">Accentkleur</string>
+    <!-- Settings title for auto-playing trailers. -->
+    <string name="pref_title_autoplay">Trailers automatisch afspelen</string>
+    <!-- Settings title for the font scale slider. -->
+    <string name="pref_title_font_scale">Lettergrootte</string>
+    <!-- Settings title for the high contrast mode. -->
+    <string name="pref_title_high_contrast">Modus met hoog contrast</string>
+    <!-- Settings title for the list density option. -->
+    <string name="pref_title_list_density">Lijstdichtheid</string>
+    <!-- Settings title for reducing animations. -->
+    <string name="pref_title_reduce_motion">Beweging verminderen</string>
+    <!-- Settings title for the score format option. -->
+    <string name="pref_title_score_format">Scoreformaat</string>
+    <!-- Settings title for the spoiler behavior option. -->
+    <string name="pref_title_spoiler_behavior">Spoilergedrag</string>
+    <!-- Settings title for the preferred title language. -->
+    <string name="pref_title_title_language">Voorkeurstaal voor titels</string>
+    <!-- Raw priority value shown next to the priority slider; placeholder only. -->
+    <string name="priority_value">%d</string>
+    <!-- TalkBack description for the profile avatar image. -->
+    <string name="profile_avatar_description">Profielfoto avatar</string>
+    <!-- TalkBack description for the profile banner image. -->
+    <string name="profile_banner_description">Profielfoto banner</string>
+    <!-- Generic error shown when the profile request fails. -->
+    <string name="profile_error_generic">Kon dit profiel niet laden</string>
+    <!-- Error shown when the profile was opened without a valid user id or name. -->
+    <string name="profile_error_no_user">Dit profiel kon niet worden gevonden</string>
+    <!-- Loading caption shown while the profile is being fetched. -->
+    <string name="profile_loading">Profiel laden…</string>
+    <!-- TalkBack description for the profile loading indicator. -->
+    <string name="profile_loading_content_description">Profiel laden</string>
+    <!-- Retry button shown on the profile error state. -->
+    <string name="profile_retry">Opnieuw proberen</string>
+    <!-- Shown when the review order may have changed; offers a page-one refresh. -->
+    <string name="review_stale_message">Beoordelingen kunnen verouderd zijn. Vernieuw om de nieuwste volgorde te zien.</string>
+    <!-- Action label refreshing the review list. -->
+    <string name="review_stale_refresh">Beoordelingen vernieuwen</string>
+    <!-- Placeholder text in the search bar. -->
+    <string name="search_hint">Zoeken</string>
+    <!-- Settings choice row description; %1$s is the setting title and %2$s is its current value. -->
+    <string name="settings_choice_content_description">%1$s, momenteel %2$s</string>
+    <!-- Settings toggle row description; %1$s is the setting title and %2$s is On or Off. -->
+    <string name="settings_toggle_content_description">%1$s, schakelaar %2$s</string>
+    <!-- Generic error shown when the staff request fails. -->
+    <string name="staff_error_generic">Kon dit stafflid niet laden</string>
+    <!-- Loading caption shown while the staff member is being fetched. -->
+    <string name="staff_loading">Staff laden…</string>
+    <!-- TalkBack description for the staff loading indicator. -->
+    <string name="staff_loading_content_description">Staff laden</string>
+    <!-- Retry button shown on the staff error state. -->
+    <string name="staff_retry">Opnieuw proberen</string>
+    <!-- Generic error shown when the studio request fails. -->
+    <string name="studio_error_generic">Kon deze studio niet laden</string>
+    <!-- Loading caption shown while the studio is being fetched. -->
+    <string name="studio_loading">Studio laden…</string>
+    <!-- TalkBack description for the studio loading indicator. -->
+    <string name="studio_loading_content_description">Studio laden</string>
+    <!-- Retry button shown on the studio error state. -->
+    <string name="studio_retry">Opnieuw proberen</string>
+    <!-- About screen external link following AniTrend on Twitter. -->
+    <string name="text_about_follow_twitter">Volgen op Twitter</string>
+    <!-- About screen external link to the GitHub repository; keep the product name. -->
+    <string name="text_about_github">GitHub</string>
+    <!-- About screen external link rating the app on the Play Store. -->
+    <string name="text_about_rate_play_store">Beoordeel op Play Store</string>
+    <!-- About screen external link to the website. -->
+    <string name="text_about_website">Website</string>
+    <!-- Title of the Giphy preview screen. -->
+    <string name="title_giphy_preview">Giphy-voorbeeld</string>
+    <!-- Shown when the image preview cannot be displayed. -->
+    <string name="title_preview_unavailable">Voorbeeld niet beschikbaar</string>
+    <!-- Naam van de externe catalogus bij de MyAnimeList-link; behoud de merknaam ongewijzigd. -->
+    <string name="series_mal" translatable="false">MyAnimeList</string>
+    <!-- Reference to the Try Again button label; keeps the same label as the button. -->
+    <string name="try_again">@string/button_try_again</string>
 </resources>

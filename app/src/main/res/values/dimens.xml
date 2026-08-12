@@ -34,6 +34,25 @@
     <dimen name="widget_flipper_padding">6dp</dimen>
     <dimen name="widget_spinner_compact_size">18dp</dimen>
 
+    <!-- Composer sizing and responsive layout -->
+    <dimen name="composer_action_size">48dp</dimen>
+    <dimen name="composer_send_size">48dp</dimen>
+    <dimen name="composer_post_width">64dp</dimen>
+    <dimen name="composer_post_height">32dp</dimen>
+    <dimen name="composer_post_padding_horizontal">8dp</dimen>
+    <dimen name="composer_send_corner_radius">50dp</dimen>
+    <dimen name="composer_action_breakpoint">400dp</dimen>
+    <dimen name="composer_corner_radius">16dp</dimen>
+    <dimen name="composer_pill_radius">28dp</dimen>
+    <dimen name="composer_horizontal_padding">12dp</dimen>
+    <dimen name="composer_top_padding">10dp</dimen>
+    <dimen name="composer_bottom_padding">8dp</dimen>
+    <dimen name="composer_reply_chip_spacing">4dp</dimen>
+    <dimen name="composer_editor_vertical_padding">6dp</dimen>
+    <dimen name="composer_divider_spacing">6dp</dimen>
+    <dimen name="composer_action_spacing">2dp</dimen>
+    <dimen name="composer_icon_padding">12dp</dimen>
+
 
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="menu_item_icon_size">24dp</dimen>

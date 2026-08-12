@@ -4,13 +4,17 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.app.ShareCompat
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.spinner.IconArrayAdapter
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
+import com.mxt.anitrend.base.custom.view.editor.ComposerWidget
 import com.mxt.anitrend.base.interfaces.event.BottomSheetListener
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener
+import com.mxt.anitrend.data.store.mutation.MutationResult
 import com.mxt.anitrend.databinding.ActivityShareContentBinding
+import com.mxt.anitrend.domain.feed.interactor.SaveFeedInteractor
 import com.mxt.anitrend.extension.getCompatTintedDrawable
 import com.mxt.anitrend.extension.hideKeyboard
 import com.mxt.anitrend.ui.fragmentByTagOrNew
@@ -22,6 +26,9 @@ import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.markdown.MarkDownUtil
 import com.mxt.anitrend.view.activity.CommonActivity
 import com.mxt.anitrend.view.sheet.BottomSheetGiphy
+import com.mxt.anitrend.view.sheet.buildComposerSaveRequest
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 
 class SharedContentActivity :
     CommonActivity(),
@@ -33,6 +40,8 @@ class SharedContentActivity :
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<*>
 
     private var mBottomSheet: BottomSheetBase<*>? = null
+
+    private val saveFeedInteractor: SaveFeedInteractor by inject()
 
     private val bottomSheetCallback =
         object : BottomSheetBehavior.BottomSheetCallback() {
@@ -114,6 +123,24 @@ class SharedContentActivity :
         binding.composerWidget.itemClickListener = this
         binding.composerWidget.lifecycle = lifecycle
         binding.composerWidget.requestType = KeyUtil.MUT_SAVE_TEXT_FEED
+        binding.composerWidget.setListener(
+            object : ComposerWidget.Listener {
+                override fun onSubmit(
+                    text: String,
+                    @KeyUtil.RequestType requestType: Int,
+                    onResult: (Boolean) -> Unit,
+                ) {
+                    val request = buildComposerSaveRequest(requestType, null, text)
+                    if (request == null) {
+                        onResult(false)
+                        return
+                    }
+                    lifecycleScope.launch {
+                        onResult(saveFeedInteractor(request) is MutationResult.Success)
+                    }
+                }
+            },
+        )
 
         // Share-intent content (previously updateUI).
         val reader: ShareCompat.IntentReader? = intentUtil.sharedIntent

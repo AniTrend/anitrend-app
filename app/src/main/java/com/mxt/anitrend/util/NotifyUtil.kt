@@ -17,11 +17,8 @@ import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textview.MaterialTextView
 import com.mxt.anitrend.R
-import com.mxt.anitrend.binding.setImage
-import com.mxt.anitrend.databinding.CustomAuthToastBinding
 import com.mxt.anitrend.databinding.CustomToastBinding
 import com.mxt.anitrend.extension.*
-import com.mxt.anitrend.model.entity.anilist.User
 // Alerter library removed; replaced with Material3 Snackbar-based implementation
 
 /**
@@ -107,21 +104,6 @@ object NotifyUtil {
             .setAction(R.string.Close, clickListener)
             .setBackgroundTint(activity.getCompatColor(backgroundColor))
             .show()
-    }
-
-    /**
-     * Create a custom toast
-     */
-    @Suppress("DEPRECATION")
-    fun createLoginToast(context: FragmentActivity, user: User) {
-        val notification = Toast(context)
-        val binding = CustomAuthToastBinding.inflate(context.layoutInflater)
-        binding.userAvatar.setImage(user.avatar)
-        binding.userName.text = user.name
-        notification.view = binding.root
-        notification.setGravity(Gravity.BOTTOM or Gravity.FILL_HORIZONTAL, 0, 0)
-        notification.duration = Toast.LENGTH_LONG
-        notification.show()
     }
 
     @Suppress("DEPRECATION")

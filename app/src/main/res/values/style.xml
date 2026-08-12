@@ -77,6 +77,8 @@
         <item name="titleColor">@color/m3_light_onSurface</item>
         <item name="subtitleColor">@color/m3_light_onSurfaceVariant</item>
         <item name="contentColor">@color/m3_light_onSurfaceVariant</item>
+        <item name="composerViolet">@color/composer_violet_light</item>
+        <item name="composerOnViolet">@color/composer_on_violet_light</item>
 
         <item name="backDrawable">@drawable/ic_msv_arrow_back</item>
         <item name="suggestionDrawable">@drawable/ic_msv_suggestion</item>
@@ -155,6 +157,8 @@
         <item name="titleColor">@color/m3_dark_onSurface</item>
         <item name="subtitleColor">@color/m3_dark_onSurfaceVariant</item>
         <item name="contentColor">@color/m3_dark_onSurfaceVariant</item>
+        <item name="composerViolet">@color/composer_violet_dark</item>
+        <item name="composerOnViolet">@color/composer_on_violet_dark</item>
 
         <item name="backDrawable">@drawable/ic_msv_arrow_back</item>
         <item name="suggestionDrawable">@drawable/ic_msv_suggestion</item>
@@ -240,6 +244,8 @@
         <item name="titleColor">@color/m3_dark_onSurface</item>
         <item name="subtitleColor">@color/m3_dark_onSurfaceVariant</item>
         <item name="contentColor">@color/m3_dark_onSurfaceVariant</item>
+        <item name="composerViolet">@color/composer_violet_dark</item>
+        <item name="composerOnViolet">@color/composer_on_violet_dark</item>
 
         <item name="backDrawable">@drawable/ic_msv_arrow_back</item>
         <item name="suggestionDrawable">@drawable/ic_msv_suggestion</item>
