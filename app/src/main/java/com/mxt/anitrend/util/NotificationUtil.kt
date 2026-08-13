@@ -18,6 +18,7 @@ import com.mxt.anitrend.extension.getCompatColor
 import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.receiver.ClearNotifications
 import com.mxt.anitrend.view.activity.detail.NotificationActivity
+import timber.log.Timber
 import kotlin.math.min
 
 /**
@@ -30,7 +31,6 @@ class NotificationUtil(
     private val settings: Settings,
     private val notificationManager: NotificationManager?,
 ) {
-    private var defaultNotificationId = 0x00000011
 
     private fun multiContentIntent(): PendingIntent {
         // PendingIntent.FLAG_UPDATE_CURRENT will update notification
@@ -41,7 +41,7 @@ class NotificationUtil(
             )
         return PendingIntent.getActivity(
             context,
-            defaultNotificationId,
+            KeyUtil.NOTIFICATION_SUMMARY_ID,
             targetActivity,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
         )
@@ -52,7 +52,7 @@ class NotificationUtil(
         notificationIdRemote: Long,
     ): PendingIntent {
         val intent = Intent(this.context, ClearNotifications::class.java)
-        intent.putExtra(KeyUtil.NOTIFICATION_ID, defaultNotificationId)
+        intent.putExtra(KeyUtil.NOTIFICATION_ID, KeyUtil.NOTIFICATION_SUMMARY_ID)
         intent.putExtra(KeyUtil.NOTIFICATION_ID_REMOTE, notificationIdRemote)
         intent.putExtra(KeyUtil.NOTIFICATION_ACTION, action)
         return PendingIntent.getBroadcast(
@@ -148,9 +148,6 @@ class NotificationUtil(
         }
 
         val notificationCount = userGraphContainer.unreadNotificationCount
-        if (notificationCount > 0) {
-            defaultNotificationId = defaultNotificationId.inc()
-        }
 
         val notificationBuilder =
             NotificationCompat
@@ -177,7 +174,7 @@ class NotificationUtil(
         when {
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> {
                 // define the importance level of the notification
-                val importance = NotificationManager.IMPORTANCE_DEFAULT
+                val importance = NotificationManager.IMPORTANCE_HIGH
 
                 // build the actual notification channel, giving it a unique ID and name
                 val channel =
@@ -218,7 +215,10 @@ class NotificationUtil(
                 )
 
             if (context.checkNotificationPermission(KeyUtil.CHANNEL_ID)) {
-                notificationManager?.notify(defaultNotificationId, notificationBuilder.build())
+                Timber.d("Issuing notification with ID: ${KeyUtil.NOTIFICATION_SUMMARY_ID} for $notificationCount unread items")
+                notificationManager?.notify(KeyUtil.NOTIFICATION_SUMMARY_ID, notificationBuilder.build())
+            } else {
+                Timber.w("Notification permission not granted for channel: ${KeyUtil.CHANNEL_ID}")
             }
         }
     }

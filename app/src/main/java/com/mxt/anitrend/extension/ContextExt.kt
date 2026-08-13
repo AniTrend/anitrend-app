@@ -216,7 +216,7 @@ fun Context.checkNotificationPermission(channelId: String?): Boolean {
     }
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && hasPermission && channelId != null) {
         val channel = NotificationManagerCompat.from(this).getNotificationChannel(channelId)
-        if (channel != null && channel.importance == NotificationManagerCompat.IMPORTANCE_DEFAULT) {
+        if (channel != null && channel.importance == NotificationManagerCompat.IMPORTANCE_NONE) {
             return false
         }
     }
