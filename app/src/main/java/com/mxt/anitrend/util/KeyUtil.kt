@@ -20,6 +20,7 @@ object KeyUtil {
 
     /** Notification Actions */
     const val NOTIFICATION_ID = "anitrend_notification_id"
+    const val NOTIFICATION_SUMMARY_ID = 0x00000011
     const val NOTIFICATION_ID_REMOTE = "anitrend_notification_id_remote"
     const val NOTIFICATION_ACTION = "anitrend_notification_action"
     const val NOTIFICATION_ACTION_CLEAR = "anitrend_notification_action_clear"

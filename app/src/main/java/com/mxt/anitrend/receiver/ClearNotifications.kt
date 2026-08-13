@@ -8,8 +8,14 @@ import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.util.JobSchedulerUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.Settings
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-class ClearNotifications : BroadcastReceiver() {
+class ClearNotifications : KoinComponent, BroadcastReceiver() {
+
+    private val settings by inject<Settings>()
+    private val scheduler by inject<JobSchedulerUtil>()
+
     override fun onReceive(
         context: Context,
         intent: Intent?,
@@ -23,7 +29,6 @@ class ClearNotifications : BroadcastReceiver() {
             notificationManager?.cancel(extras.getInt(KeyUtil.NOTIFICATION_ID))
         }
 
-        val settings = koinOf<Settings>()
         if (extras.containsKey(KeyUtil.NOTIFICATION_ID_REMOTE)) {
             settings.lastDismissedNotificationId = extras.getLong(KeyUtil.NOTIFICATION_ID_REMOTE)
         }
@@ -35,8 +40,6 @@ class ClearNotifications : BroadcastReceiver() {
                 }
             }
         }
-
-        val scheduler = koinOf<JobSchedulerUtil>()
         scheduler.scheduleClearNotificationJob(context)
     }
 }
