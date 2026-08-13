@@ -4,14 +4,15 @@ import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.util.JobSchedulerUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.Settings
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class ClearNotifications : KoinComponent, BroadcastReceiver() {
+class ClearNotifications :
+    BroadcastReceiver(),
+    KoinComponent {
 
     private val settings by inject<Settings>()
     private val scheduler by inject<JobSchedulerUtil>()
