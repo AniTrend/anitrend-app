@@ -31,10 +31,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.koin.core.context.loadKoinModules
-import org.koin.core.context.unloadKoinModules
-import org.koin.core.module.Module
-import org.koin.dsl.module
+import org.koin.core.context.GlobalContext
 
 /**
  * Dialog-level regression seam for [BottomSheetListUsers] state delivery.
@@ -54,12 +51,12 @@ import org.koin.dsl.module
 class BottomSheetListUsersDialogStateTest {
 
     private val instrumentation = InstrumentationRegistry.getInstrumentation()
-    private val overrideModules = mutableListOf<Module>()
+    private var originalRepository: UserRepository? = null
 
     @After
     fun tearDown() {
-        overrideModules.forEach(::unloadKoinModules)
-        overrideModules.clear()
+        originalRepository?.let { GlobalContext.get().declare(it) }
+        originalRepository = null
     }
 
     @Test
@@ -190,11 +187,12 @@ class BottomSheetListUsersDialogStateTest {
             .show(activity.supportFragmentManager, SHEET_TAG)
     }
 
-    private fun install(repository: UserRepository): Module = module {
-        single<UserRepository> { repository }
-    }.also { module ->
-        overrideModules += module
-        loadKoinModules(module)
+    private fun install(repository: UserRepository) {
+        val koin = GlobalContext.get()
+        if (originalRepository == null) {
+            originalRepository = koin.get()
+        }
+        koin.declare(repository)
     }
 
     private fun sheetFragment(activity: FragmentActivity): BottomSheetListUsers? = activity.supportFragmentManager.findFragmentByTag(SHEET_TAG) as? BottomSheetListUsers

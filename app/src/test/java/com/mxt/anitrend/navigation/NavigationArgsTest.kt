@@ -3,6 +3,7 @@ package com.mxt.anitrend.navigation
 import com.mxt.anitrend.graphql.generated.ActivityType
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.navigation.extension.NavigationArgs
+import com.mxt.anitrend.view.fragment.list.MediaListOrigin
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test
@@ -11,7 +12,7 @@ import org.junit.Test
  * Base-behavior tests for the shared fragment navigation-bundle parsers. These
  * capture the exact containsKey / default / null-versus-empty semantics that the
  * migrated fragments must preserve (FeedListFragment, MediaBrowseFragment,
- * MediaLatestList, UserFeedFragment, MediaFeedFragment, MessageFeedFragment).
+ * MediaLatestList, ProfileFeedSection, MessageFragment, MessageFeedFragment).
  */
 class NavigationArgsTest {
 
@@ -110,5 +111,21 @@ class NavigationArgsTest {
     fun `resolveMediaType coerces known raw value`() {
         assertEquals(MediaType.ANIME, NavigationArgs.resolveMediaType(MediaType.ANIME.name))
         assertEquals(MediaType.MANGA, NavigationArgs.resolveMediaType(MediaType.MANGA.name))
+    }
+
+    // ── media list route origin (NFR-002) ──
+
+    @Test
+    fun `resolveMediaListOrigin defaults to pushed for absent or unknown values`() {
+        // Legacy and restored entries without the origin argument must never
+        // receive root/exit-confirm semantics.
+        assertEquals(MediaListOrigin.PUSHED, NavigationArgs.resolveMediaListOrigin(null))
+        assertEquals(MediaListOrigin.PUSHED, NavigationArgs.resolveMediaListOrigin("SOMETHING_ELSE"))
+    }
+
+    @Test
+    fun `resolveMediaListOrigin coerces known origins`() {
+        assertEquals(MediaListOrigin.ROOT, NavigationArgs.resolveMediaListOrigin(MediaListOrigin.ROOT.name))
+        assertEquals(MediaListOrigin.PUSHED, NavigationArgs.resolveMediaListOrigin(MediaListOrigin.PUSHED.name))
     }
 }

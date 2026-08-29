@@ -14,7 +14,9 @@ import com.mxt.anitrend.adapter.recycler.detail.LogEntryAdapter
 import com.mxt.anitrend.extension.logFile
 import com.mxt.anitrend.model.entity.log.LogEntry
 import com.mxt.anitrend.model.entity.log.LogFilter
-import com.mxt.anitrend.view.activity.base.LoggingActivity
+import com.mxt.anitrend.view.activity.index.MainActivity
+import com.mxt.anitrend.view.fragment.detail.LoggingFragment
+import androidx.navigation.fragment.NavHostFragment
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
@@ -27,7 +29,7 @@ import java.util.concurrent.TimeUnit
 
 @LargeTest
 @RunWith(AndroidJUnit4::class)
-class LoggingActivityTest {
+class LoggingFragmentTest {
 
     @Before
     fun setUp() {
@@ -54,15 +56,28 @@ class LoggingActivityTest {
     // ── helpers ──
 
     /** Polls the ViewModel load-complete flag from the test thread. */
-    private fun waitForLogLoad(activity: LoggingActivity, timeoutMs: Long = 10_000) {
+    private fun loggingFragment(activity: MainActivity): LoggingFragment {
+        val navHost = activity.supportFragmentManager.findFragmentById(R.id.main_nav_host) as NavHostFragment
+        return navHost.childFragmentManager.primaryNavigationFragment as LoggingFragment
+    }
+
+    private fun launchLogging(): ActivityScenario<MainActivity> {
+        val context = ApplicationProvider.getApplicationContext<android.content.Context>()
+        return ActivityScenario.launch(
+            android.content.Intent(context, MainActivity::class.java)
+                .putExtra(MainActivity.EXTRA_ROUTE, MainActivity.ROUTE_LOGGING),
+        )
+    }
+
+    private fun waitForLogLoad(activity: MainActivity, timeoutMs: Long = 10_000) {
         val deadline = System.currentTimeMillis() + timeoutMs
-        while (!activity.loggingViewModel.isLogLoadComplete && System.currentTimeMillis() < deadline) {
+        while (!loggingFragment(activity).loggingViewModel.isLogLoadComplete && System.currentTimeMillis() < deadline) {
             Thread.sleep(100)
         }
     }
 
     /** Yields the main thread so the ViewModel state collector can process a pending emission. */
-    private fun yieldToCollector(activity: LoggingActivity, timeoutMs: Long = 3_000) {
+    private fun yieldToCollector(activity: MainActivity, timeoutMs: Long = 3_000) {
         val latch = CountDownLatch(1)
         activity.window.decorView.post { latch.countDown() }
         latch.await(timeoutMs, TimeUnit.MILLISECONDS)
@@ -125,7 +140,7 @@ class LoggingActivityTest {
 
     // ── presence and launch ──
 
-    private fun getLogAdapter(activity: LoggingActivity): LogEntryAdapter {
+    private fun getLogAdapter(activity: MainActivity): LogEntryAdapter {
         val recycler = activity.findViewById<RecyclerView>(R.id.log_recycler)
         assertNotNull("RecyclerView should be present", recycler)
         return recycler!!.adapter as LogEntryAdapter
@@ -133,7 +148,7 @@ class LoggingActivityTest {
 
     @Test
     fun activityLaunches_withRecyclerViewAndParsedEntries() {
-        ActivityScenario.launch(LoggingActivity::class.java).use { scenario ->
+        launchLogging().use { scenario ->
             scenario.onActivity { activity ->
                 waitForLogLoad(activity)
 
@@ -151,7 +166,7 @@ class LoggingActivityTest {
 
     @Test
     fun activityLaunches_showsContentAfterLoad() {
-        ActivityScenario.launch(LoggingActivity::class.java).use { scenario ->
+        launchLogging().use { scenario ->
             scenario.onActivity { activity ->
                 waitForLogLoad(activity)
 
@@ -167,7 +182,7 @@ class LoggingActivityTest {
 
     @Test
     fun metadataCard_fieldsAreBoundAfterCreate() {
-        ActivityScenario.launch(LoggingActivity::class.java).use { scenario ->
+        launchLogging().use { scenario ->
             scenario.onActivity { activity ->
                 val versionText = activity.findViewById<android.widget.TextView>(R.id.support_version)?.text?.toString()
                 val deviceText = activity.findViewById<android.widget.TextView>(R.id.support_device)?.text?.toString()
@@ -187,7 +202,7 @@ class LoggingActivityTest {
 
     @Test
     fun selectingErrorFilter_narrowsDisplayToErrorEntriesOnly() {
-        ActivityScenario.launch(LoggingActivity::class.java).use { scenario ->
+        launchLogging().use { scenario ->
             scenario.onActivity { activity ->
                 waitForLogLoad(activity)
 
@@ -196,7 +211,7 @@ class LoggingActivityTest {
                 assertTrue("Should have entries before filter, got $totalBefore", totalBefore >= 5)
 
                 // Apply Error filter via ViewModel
-                activity.loggingViewModel.setFilter(LogFilter.Error)
+                loggingFragment(activity).loggingViewModel.setFilter(LogFilter.Error)
                 yieldToCollector(activity)
 
                 val totalAfter = adapter.itemCount
@@ -215,7 +230,7 @@ class LoggingActivityTest {
                 }
 
                 // Switch back to All
-                activity.loggingViewModel.setFilter(LogFilter.All)
+                loggingFragment(activity).loggingViewModel.setFilter(LogFilter.All)
                 yieldToCollector(activity)
                 assertEquals("All should restore full list", totalBefore, adapter.itemCount)
             }
@@ -224,13 +239,13 @@ class LoggingActivityTest {
 
     @Test
     fun selectingWarningFilter_narrowsDisplayToWarningEntriesOnly() {
-        ActivityScenario.launch(LoggingActivity::class.java).use { scenario ->
+        launchLogging().use { scenario ->
             scenario.onActivity { activity ->
                 waitForLogLoad(activity)
 
                 val adapter = getLogAdapter(activity)
                 val totalBefore = adapter.itemCount
-                activity.loggingViewModel.setFilter(LogFilter.Warning)
+                loggingFragment(activity).loggingViewModel.setFilter(LogFilter.Warning)
                 yieldToCollector(activity)
 
                 val totalAfter = adapter.itemCount
@@ -250,11 +265,11 @@ class LoggingActivityTest {
 
     @Test
     fun selectingDebugFilter_includesDebugAndVerboseEntries() {
-        ActivityScenario.launch(LoggingActivity::class.java).use { scenario ->
+        launchLogging().use { scenario ->
             scenario.onActivity { activity ->
                 waitForLogLoad(activity)
                 val adapter = getLogAdapter(activity)
-                activity.loggingViewModel.setFilter(LogFilter.Debug)
+                loggingFragment(activity).loggingViewModel.setFilter(LogFilter.Debug)
                 yieldToCollector(activity)
 
                 val entries = adapter.data
@@ -271,11 +286,11 @@ class LoggingActivityTest {
 
     @Test
     fun selectingInfoFilter_narrowsToInfoOnly() {
-        ActivityScenario.launch(LoggingActivity::class.java).use { scenario ->
+        launchLogging().use { scenario ->
             scenario.onActivity { activity ->
                 waitForLogLoad(activity)
                 val adapter = getLogAdapter(activity)
-                activity.loggingViewModel.setFilter(LogFilter.Info)
+                loggingFragment(activity).loggingViewModel.setFilter(LogFilter.Info)
                 yieldToCollector(activity)
 
                 assertTrue("Info filter should show entries", adapter.itemCount >= 1)
@@ -290,7 +305,7 @@ class LoggingActivityTest {
 
     @Test
     fun selectingErrorChip_firesChipGroupListenerAndNarrowsEntries() {
-        ActivityScenario.launch(LoggingActivity::class.java).use { scenario ->
+        launchLogging().use { scenario ->
             scenario.onActivity { activity ->
                 waitForLogLoad(activity)
 
@@ -331,14 +346,14 @@ class LoggingActivityTest {
         val logFile = context.logFile()
         assertTrue("Log file should have content before clear", logFile.readText().isNotEmpty())
 
-        ActivityScenario.launch(LoggingActivity::class.java).use { scenario ->
+        launchLogging().use { scenario ->
             scenario.onActivity { activity ->
                 waitForLogLoad(activity)
 
                 val adapter = getLogAdapter(activity)
                 assertTrue("Should have entries before clear", adapter.itemCount > 0)
 
-                activity.onOptionsItemSelected(menuItemStub(R.id.action_clear_log))
+                loggingFragment(activity).onOptionsItemSelected(menuItemStub(R.id.action_clear_log))
             }
 
             // Clear is async via viewModelScope; wait for ViewModel + collector to settle

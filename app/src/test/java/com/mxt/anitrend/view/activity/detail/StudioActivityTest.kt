@@ -15,7 +15,7 @@ import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Test
 
-class StudioActivityTest {
+class StudioNavigationTest {
 
     // ── fromIntent null-safety ──
 
@@ -109,7 +109,7 @@ class StudioActivityTest {
     // ── production logic mirror ──
 
     /**
-     * Mirrors the production [StudioActivity.fromIntent] logic so we test the exact
+     * Mirrors the production [StudioFragment] argument rules so we test the exact
      * null/valid rules without needing a real [android.content.Intent]. The typed
      * parameter path is represented directly; the legacy path is represented by the
      * [hasExtra] and [id] pair, mirroring `hasExtra(KeyUtil.arg_id)` and
