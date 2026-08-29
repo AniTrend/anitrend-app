@@ -37,6 +37,7 @@ import timber.log.Timber
  * The ViewModel owns log loading and mutation. This Fragment only binds the
  * immutable state, handles the screen menu, and requests platform permissions.
  */
+@Suppress("TooManyFunctions") // Logging lifecycle, filtering, and export actions stay centralized.
 class LoggingFragment : Fragment() {
 
     private var _binding: ContentLoggingBinding? = null
