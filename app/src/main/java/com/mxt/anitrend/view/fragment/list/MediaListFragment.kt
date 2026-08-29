@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.VisibleForTesting
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -22,6 +23,9 @@ import com.mxt.anitrend.domain.model.buildIncrementMediaProgressCommand
 import com.mxt.anitrend.extension.parcelable
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.navigation.model.UserScreenParam
+import com.mxt.anitrend.navigation.model.MediaScreenParam
+import com.mxt.anitrend.navigation.extension.navigateToMedia
+import com.mxt.anitrend.navigation.extension.screenParam
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
@@ -29,7 +33,6 @@ import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.util.media.MediaListUtil
-import com.mxt.anitrend.view.activity.detail.MediaActivity
 import com.mxt.anitrend.view.sheet.BottomSheetMediaFilter
 import com.mxt.anitrend.view.sheet.MediaFilterSheetResult
 import com.mxt.anitrend.viewmodel.MediaListMutationViewModel
@@ -42,7 +45,15 @@ import java.util.UUID
 /**
  * Created by max on 2017/12/18.
  * media list fragment
+ *
+ * Route origin of the media list destination. [MediaListOrigin.ROOT] is the
+ * drawer My Anime/My Manga contract; every other producer (profile stats,
+ * user-list deep links, media-list shortcuts, the ROUTE_MEDIA_LIST ingress)
+ * pushes the destination with [MediaListOrigin.PUSHED] so caller-back
+ * semantics survive (NFR-002).
  */
+enum class MediaListOrigin { ROOT, PUSHED }
+
 open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, MediaListCollectionPageResult>() {
 
     protected var userId: Long = 0
@@ -51,6 +62,8 @@ open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, MediaListC
     @KeyUtil.MediaType
     protected var mediaType: String? = null
     protected var statusIn: String? = null
+
+    private var isUnifiedDestination = false
 
     private val settings: Settings by inject()
 
@@ -69,7 +82,22 @@ open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, MediaListC
     companion object {
         private const val STATE_PENDING_FILTER = "state_pending_filter"
         private const val STATE_PENDING_REQUEST_ID = "state_pending_request_id"
+        private const val STATE_STATUS = "state_media_list_status"
         private const val FILTER_SHEET_TAG = "media_filter_sheet"
+
+        /**
+         * Legacy unified-destination flag written for root and pushed routes
+         * alike. It gates the status filter menu visibility and is NOT the
+         * route-origin contract; see [MediaListOrigin] and [ARG_MEDIA_LIST_ORIGIN].
+         */
+        const val ARG_UNIFIED_DESTINATION = "navigation_media_list_unified"
+
+        /**
+         * Wire key for the route-origin contract ([MediaListOrigin]). Written by
+         * the destination helpers and read by the host's top-level/back policy.
+         * Absent or unknown values resolve to [MediaListOrigin.PUSHED].
+         */
+        const val ARG_MEDIA_LIST_ORIGIN = "navigation_media_list_origin"
 
         @JvmStatic
         fun newInstance(params: Bundle): MediaListFragment {
@@ -80,18 +108,21 @@ open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, MediaListC
         }
 
         /**
-         * Documented legacy channel: the media-list host activity (MediaListActivity)
-         * writes only legacy wire extras (arg_id, arg_userName, arg_mediaType,
-         * arg_statusIn), so the identity read stays on the transitional channel.
-         * Reads mirror the pre-refactor getters exactly (absent id resolves to 0).
+         * The typed user parameter is preferred. Legacy wire extras remain supported
+         * for the top-level pager compatibility path and restored older intents.
          */
         fun fromBundle(bundle: Bundle?): UserScreenParam? = resolve(
+            typed = bundle?.screenParam<UserScreenParam>(),
             legacyId = bundle?.getLong(KeyUtil.arg_id) ?: 0L,
             legacyName = bundle?.getString(KeyUtil.arg_userName),
         )
 
         @VisibleForTesting
-        internal fun resolve(legacyId: Long, legacyName: String?): UserScreenParam = UserScreenParam(userId = legacyId, initialName = legacyName)
+        internal fun resolve(
+            typed: UserScreenParam?,
+            legacyId: Long,
+            legacyName: String?,
+        ): UserScreenParam = typed ?: UserScreenParam(userId = legacyId, initialName = legacyName)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -114,10 +145,12 @@ open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, MediaListC
             userId = args.userId
             userName = args.initialName
         }
+        isUnifiedDestination = arguments?.getBoolean(ARG_UNIFIED_DESTINATION) == true
         arguments?.let { args ->
-            statusIn = args.getString(KeyUtil.arg_statusIn)
+            statusIn = savedInstanceState?.getString(STATE_STATUS) ?: args.getString(KeyUtil.arg_statusIn)
             mediaType = args.getString(KeyUtil.arg_mediaType)
         }
+        updateScreenTitle()
 
         isFilterableEnabled = true
         isPager = false
@@ -165,6 +198,7 @@ open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, MediaListC
         super.onSaveInstanceState(outState)
         outState.putString(STATE_PENDING_FILTER, pendingFilter?.name)
         outState.putString(STATE_PENDING_REQUEST_ID, pendingFilterRequestId)
+        outState.putString(STATE_STATUS, statusIn)
     }
 
     private fun applyFilterResult(result: MediaFilterSheetResult) {
@@ -231,7 +265,7 @@ open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, MediaListC
         menu.findItem(R.id.action_tag).isVisible = false
         menu.findItem(R.id.action_type).isVisible = false
         menu.findItem(R.id.action_year).isVisible = false
-        menu.findItem(R.id.action_status).isVisible = false
+        menu.findItem(R.id.action_status).isVisible = isUnifiedDestination
     }
 
     @Deprecated("Deprecated in Java")
@@ -259,8 +293,38 @@ open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, MediaListC
                 )
                 return true
             }
+            R.id.action_status -> {
+                showStatusSelector()
+                return true
+            }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun showStatusSelector() {
+        val context = context ?: return
+        val options = CompatUtil.capitalizeWords(KeyUtil.MediaListStatusValues)
+        val selectedIndex = statusIn?.let { CompatUtil.getIndexOf(KeyUtil.MediaListStatusValues, it) } ?: -1
+        AlertDialog.Builder(context)
+            .setTitle(R.string.menu_title_status)
+            .setSingleChoiceItems(options.toTypedArray(), selectedIndex) { dialog, which ->
+                statusIn = KeyUtil.MediaListStatusValues[which]
+                updateScreenTitle()
+                dialog.dismiss()
+                showLoading()
+                onRefresh()
+            }
+            .setNegativeButton(R.string.Close, null)
+            .show()
+    }
+
+    private fun updateScreenTitle() {
+        val title = when {
+            CompatUtil.equals(mediaType, KeyUtil.ANIME) -> R.string.title_anime_list
+            CompatUtil.equals(mediaType, KeyUtil.MANGA) -> R.string.title_manga_list
+            else -> R.string.title_activity_media_list
+        }
+        activity?.setTitle(title)
     }
 
     override fun updateUI() {
@@ -343,9 +407,7 @@ open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, MediaListC
         target: View,
         item: MediaListItemUiModel,
     ) {
-        val host = activity ?: return
-        val intent = MediaActivity.newIntent(host, item.mediaId, item.mediaType)
-        CompatUtil.startRevealAnim(host, target, intent)
+        navigateToMedia(MediaScreenParam(item.mediaId, item.mediaType))
     }
 
     private fun openManage(item: MediaListItemUiModel) {

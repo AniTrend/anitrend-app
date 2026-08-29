@@ -4,16 +4,19 @@ package com.mxt.anitrend.ui
 
 import android.app.Activity
 import android.content.Intent
-import android.view.MenuItem
+import android.widget.ImageButton
+import androidx.appcompat.widget.Toolbar
+import androidx.navigation.fragment.NavHostFragment
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry
-import com.mxt.anitrend.view.activity.detail.NotificationActivity
+import com.mxt.anitrend.R
 import com.mxt.anitrend.view.activity.index.MainActivity
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -28,60 +31,6 @@ class ToolbarHomeNavigationTest {
         TestSessionUtil.setAuthenticated(context, authenticated = true)
     }
 
-    private fun menuItemStub(itemId: Int): MenuItem = object : MenuItem {
-        override fun getItemId(): Int = itemId
-        override fun getGroupId(): Int = 0
-        override fun getOrder(): Int = 0
-        override fun getTitle(): CharSequence = ""
-        override fun getTitleCondensed(): CharSequence = ""
-        override fun setTitle(title: CharSequence?): MenuItem = this
-        override fun setTitle(title: Int): MenuItem = this
-        override fun setTitleCondensed(title: CharSequence?): MenuItem = this
-        override fun getIcon() = null
-        override fun setIcon(icon: android.graphics.drawable.Drawable?): MenuItem = this
-        override fun setIcon(iconRes: Int): MenuItem = this
-        override fun getIntent(): Intent? = null
-        override fun setIntent(intent: Intent?): MenuItem = this
-        override fun getSubMenu(): android.view.SubMenu? = null
-        override fun setShortcut(numericChar: Char, alphaChar: Char): MenuItem = this
-        override fun setNumericShortcut(numericChar: Char): MenuItem = this
-        override fun getNumericShortcut(): Char = '0'
-        override fun setAlphabeticShortcut(alphaChar: Char): MenuItem = this
-        override fun getAlphabeticShortcut(): Char = '0'
-        override fun isCheckable(): Boolean = false
-        override fun setCheckable(checkable: Boolean): MenuItem = this
-        override fun isChecked(): Boolean = false
-        override fun setChecked(checked: Boolean): MenuItem = this
-        override fun isVisible(): Boolean = true
-        override fun setVisible(visible: Boolean): MenuItem = this
-        override fun isEnabled(): Boolean = true
-        override fun setEnabled(enabled: Boolean): MenuItem = this
-        override fun hasSubMenu(): Boolean = false
-        override fun setOnMenuItemClickListener(listener: MenuItem.OnMenuItemClickListener?): MenuItem = this
-        override fun getMenuInfo(): android.view.ContextMenu.ContextMenuInfo? = null
-        override fun setShowAsAction(actionEnum: Int) {}
-        override fun setShowAsActionFlags(actionEnum: Int): MenuItem = this
-        override fun setActionView(view: android.view.View?): MenuItem = this
-        override fun setActionView(resId: Int): MenuItem = this
-        override fun getActionView(): android.view.View? = null
-        override fun setActionProvider(provider: android.view.ActionProvider?): MenuItem = this
-        override fun getActionProvider(): android.view.ActionProvider? = null
-        override fun expandActionView(): Boolean = false
-        override fun collapseActionView(): Boolean = false
-        override fun isActionViewExpanded(): Boolean = false
-        override fun setOnActionExpandListener(listener: MenuItem.OnActionExpandListener?): MenuItem = this
-        override fun setContentDescription(description: CharSequence?): MenuItem = this
-        override fun getContentDescription(): CharSequence = ""
-        override fun setTooltipText(tooltip: CharSequence?): MenuItem = this
-        override fun getTooltipText(): CharSequence = ""
-        override fun setIconTintList(tint: android.content.res.ColorStateList?): MenuItem = this
-        override fun getIconTintList(): android.content.res.ColorStateList? = null
-        override fun getIconTintMode(): android.graphics.PorterDuff.Mode? = null
-        override fun setIconTintMode(mode: android.graphics.PorterDuff.Mode?): MenuItem = this
-        override fun getIconTintBlendMode(): android.graphics.BlendMode? = null
-        override fun setIconTintBlendMode(mode: android.graphics.BlendMode?): MenuItem = this
-    }
-
     private fun launchEntryPoint(name: String): ActivityScenario<Activity> {
         val context = ApplicationProvider.getApplicationContext<android.content.Context>()
         val intent =
@@ -92,65 +41,93 @@ class ToolbarHomeNavigationTest {
         return ActivityScenario.launch<Activity>(intent) as ActivityScenario<Activity>
     }
 
+    /**
+     * The toolbar navigation (up) button has no public view id, and AppCompat
+     * detaches it from the toolbar when no navigation icon is set, which is
+     * the pushed-destination state here. The destination listener registers
+     * the production back policy directly on that button, so the harness
+     * reaches it through the package-private [Toolbar.getNavButtonView] seam;
+     * there is no public API for it.
+     */
+    private fun toolbarNavButton(activity: Activity): ImageButton? {
+        val toolbar = activity.findViewById<Toolbar>(R.id.toolbar)
+        val method = Toolbar::class.java.getDeclaredMethod("getNavButtonView")
+        method.isAccessible = true
+        return method.invoke(toolbar) as? ImageButton
+    }
+
+    /**
+     * The ROUTE_MEDIA_LIST entry (media-list shortcuts and the ingress route)
+     * is pushed by default (NFR-002), so the up affordance returns to the
+     * caller beneath the list instead of finishing the task. This test drives
+     * the production toolbar navigation listener path: clicking the toolbar
+     * navigation button invokes the listener the destination listener
+     * registered on the toolbar, which forwards to
+     * [com.mxt.anitrend.view.activity.index.MainActivity.navigateBackFromDestination].
+     * The caller is captured from the back stack because the root beneath the
+     * list depends on the configured startup page.
+     */
     @Test
-    fun homeMenu_dispatchesBackForRepresentativeActivities() {
-        listOf(
-            "AboutActivity",
-            "CommentActivity",
-            "MediaListActivity",
-            "SearchActivity",
-        ).forEach { activityName ->
-            launchEntryPoint(activityName).use { scenario ->
-                scenario.onActivity { activity ->
-                    assertTrue(
-                        "$activityName should consume toolbar home",
-                        activity.onOptionsItemSelected(menuItemStub(android.R.id.home)),
-                    )
-                    assertTrue(
-                        "$activityName should begin finishing after toolbar home",
-                        activity.isFinishing,
-                    )
-                }
+    fun pushedMediaList_toolbarUpReturnsToPreviousDestinationWithoutFinishingTask() {
+        launchEntryPoint("MediaListFragment").use { scenario ->
+            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+            var callerDestination: Int? = null
+            scenario.onActivity { activity ->
+                val host = (activity as MainActivity).supportFragmentManager.findFragmentById(R.id.main_nav_host) as NavHostFragment
+                assertEquals(R.id.mediaListFragment, host.navController.currentDestination?.id)
+                callerDestination = host.navController.previousBackStackEntry?.destination?.id
+                assertFalse("pushed media list must have a caller beneath it", callerDestination == null)
+                val navButton = toolbarNavButton(activity)
+                assertNotNull("pushed destinations must expose the toolbar up affordance", navButton)
+                navButton!!.performClick()
             }
+            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+            scenario.onActivity { activity ->
+                val host = (activity as MainActivity).supportFragmentManager.findFragmentById(R.id.main_nav_host) as NavHostFragment
+                assertEquals(callerDestination, host.navController.currentDestination?.id)
+                assertFalse(
+                    "toolbar up from the pushed media list must return to the caller, not finish the task",
+                    activity.isFinishing,
+                )
+                activity.setIntent(Intent(ApplicationProvider.getApplicationContext(), MainActivity::class.java))
+                activity.finish()
+            }
+            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
         }
     }
 
+    /**
+     * System-back coverage for the same pushed-media-list contract. Kept
+     * separate from the toolbar test: the deprecated back override routes
+     * through the same production policy as the toolbar click
+     * ([com.mxt.anitrend.view.activity.index.MainActivity.navigateBackFromDestination]),
+     * and the two affordances must both keep caller-back semantics.
+     */
+    @Suppress("DEPRECATION")
     @Test
-    fun notificationActivity_homeMatchesTaskRootBackBehavior() {
-        val instrumentation = InstrumentationRegistry.getInstrumentation()
-        val monitor = instrumentation.addMonitor(MainActivity::class.java.name, null, false)
-        val context = ApplicationProvider.getApplicationContext<android.content.Context>()
-        val intent =
-            Intent(context, NotificationActivity::class.java)
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-
-        try {
-            ActivityScenario.launch<NotificationActivity>(intent).use { scenario ->
-                scenario.onActivity { activity ->
-                    assertTrue(
-                        "NotificationActivity should launch as task root for this regression check",
-                        activity.isTaskRoot,
-                    )
-                    assertTrue(
-                        "NotificationActivity should consume toolbar home",
-                        activity.onOptionsItemSelected(menuItemStub(android.R.id.home)),
-                    )
-                    assertTrue(
-                        "NotificationActivity should begin finishing after toolbar home",
-                        activity.isFinishing,
-                    )
-                }
-
-                instrumentation.waitForIdleSync()
-                val launchedMain = instrumentation.waitForMonitorWithTimeout(monitor, 5_000)
-                assertNotNull(
-                    "Task-root toolbar home should redirect to MainActivity before finishing",
-                    launchedMain,
-                )
-                launchedMain?.finish()
+    fun pushedMediaList_systemBackReturnsToPreviousDestinationWithoutFinishingTask() {
+        launchEntryPoint("MediaListFragment").use { scenario ->
+            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+            var callerDestination: Int? = null
+            scenario.onActivity { activity ->
+                val host = (activity as MainActivity).supportFragmentManager.findFragmentById(R.id.main_nav_host) as NavHostFragment
+                assertEquals(R.id.mediaListFragment, host.navController.currentDestination?.id)
+                callerDestination = host.navController.previousBackStackEntry?.destination?.id
+                assertFalse("pushed media list must have a caller beneath it", callerDestination == null)
+                activity.onBackPressed()
             }
-        } finally {
-            instrumentation.removeMonitor(monitor)
+            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+            scenario.onActivity { activity ->
+                val host = (activity as MainActivity).supportFragmentManager.findFragmentById(R.id.main_nav_host) as NavHostFragment
+                assertEquals(callerDestination, host.navController.currentDestination?.id)
+                assertFalse(
+                    "pushed media list back must return to the caller, not finish the task",
+                    activity.isFinishing,
+                )
+                activity.setIntent(Intent(ApplicationProvider.getApplicationContext(), MainActivity::class.java))
+                activity.finish()
+            }
+            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
         }
     }
 }

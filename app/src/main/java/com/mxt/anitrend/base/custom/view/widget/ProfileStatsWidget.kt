@@ -1,9 +1,7 @@
 package com.mxt.anitrend.base.custom.view.widget
 
 import android.content.Context
-import android.content.Intent
 import android.os.Build
-import android.os.Bundle
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -15,7 +13,6 @@ import com.mxt.anitrend.base.interfaces.view.CustomView
 import com.mxt.anitrend.databinding.WidgetProfileStatsBinding
 import com.mxt.anitrend.domain.user.model.UserStatisticsRecord
 import com.mxt.anitrend.util.KeyUtil
-import com.mxt.anitrend.view.activity.detail.MediaListActivity
 import java.util.Locale
 
 /**
@@ -34,9 +31,10 @@ constructor(
 
     private lateinit var binding: WidgetProfileStatsBinding
 
+    var onMediaListRequested: ((String) -> Unit)? = null
+
     private var model: UserStatisticsRecord? = null
 
-    private var bundle: Bundle? = null
     private val tagName = ProfileStatsWidget::class.java.simpleName
 
     private val placeHolder = ".."
@@ -78,10 +76,6 @@ constructor(
         binding.userMangaTotal.text = getCount(stats.manga.count)
     }
 
-    fun setParams(bundle: Bundle) {
-        this.bundle = bundle
-    }
-
     fun setStats(stats: UserStatisticsRecord?) {
         model = stats
         updateUI()
@@ -92,6 +86,7 @@ constructor(
      */
     override fun onViewRecycled() {
         model = null
+        onMediaListRequested = null
     }
 
     override fun onClick(view: View) {
@@ -124,22 +119,10 @@ constructor(
                 }
             }
             R.id.user_anime_total_container -> {
-                val intent =
-                    Intent(context, MediaListActivity::class.java).apply {
-                        putExtras(bundle ?: Bundle())
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                        putExtra(KeyUtil.arg_mediaType, KeyUtil.ANIME)
-                    }
-                context.startActivity(intent)
+                onMediaListRequested?.invoke(KeyUtil.ANIME)
             }
             R.id.user_manga_total_container -> {
-                val intent =
-                    Intent(context, MediaListActivity::class.java).apply {
-                        putExtras(bundle ?: Bundle())
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                        putExtra(KeyUtil.arg_mediaType, KeyUtil.MANGA)
-                    }
-                context.startActivity(intent)
+                onMediaListRequested?.invoke(KeyUtil.MANGA)
             }
         }
     }

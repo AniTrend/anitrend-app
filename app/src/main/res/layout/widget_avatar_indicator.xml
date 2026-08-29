@@ -6,6 +6,7 @@
     android:layout_height="wrap_content">
 
         <com.mxt.anitrend.base.custom.view.image.AvatarImageView
+            android:contentDescription="@string/profile_avatar_description"
             android:clickable="true"
             android:focusable="true"
             android:id="@+id/user_avatar"
@@ -34,7 +35,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textColor="@color/white"
+                android:textColor="?attr/colorOnPrimary"
                 android:textStyle="bold"
                 android:textSize="10sp"
                 tools:text="10"

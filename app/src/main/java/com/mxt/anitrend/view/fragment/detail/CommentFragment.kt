@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.detail.CommentListAdapter
 import com.mxt.anitrend.adapter.recycler.index.FeedListAdapter
@@ -25,16 +26,19 @@ import com.mxt.anitrend.data.mapper.toUserBase
 import com.mxt.anitrend.domain.feed.model.FeedRecord
 import com.mxt.anitrend.domain.model.FeedItemUiModel
 import com.mxt.anitrend.domain.model.toFeedReplyRecord
+import com.mxt.anitrend.navigation.extension.screenParam
+import com.mxt.anitrend.navigation.extension.navigateToProfile
+import com.mxt.anitrend.navigation.extension.navigateToMedia
+import com.mxt.anitrend.navigation.model.CommentScreenParam
+import com.mxt.anitrend.navigation.model.MediaScreenParam
+import com.mxt.anitrend.navigation.model.UserScreenParam
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.anilist.FeedReply
-import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.media.MediaActionUtil
-import com.mxt.anitrend.view.activity.detail.MediaActivity
-import com.mxt.anitrend.view.activity.detail.ProfileActivity
 import com.mxt.anitrend.view.sheet.BottomSheetGiphy
 import com.mxt.anitrend.view.sheet.BottomSheetUsers
 import com.mxt.anitrend.viewmodel.CommentViewModel
@@ -68,18 +72,13 @@ class CommentFragment : FragmentBaseComment() {
             arguments = params
         }
 
-        /**
-         * Documented legacy channel: the comment host activity (CommentActivity)
-         * writes only the legacy arg_id extra, so the thread-id read stays on the
-         * transitional channel. Reads mirror the pre-refactor getter exactly
-         * (absent resolves to 0).
-         */
+        /** Legacy compatibility read for callers that still provide arg_id. */
         fun fromBundle(bundle: Bundle?): Long = bundle?.getLong(KeyUtil.arg_id) ?: 0L
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        userActivityId = fromBundle(arguments)
+        userActivityId = arguments?.screenParam<CommentScreenParam>()?.feedId ?: fromBundle(arguments)
         mColumnSize = R.integer.single_list_x1
         setInflateMenu(R.menu.custom_menu)
 
@@ -306,7 +305,7 @@ class CommentFragment : FragmentBaseComment() {
         }
 
         if (state.isDeleted) {
-            activity?.finish()
+            runCatching { findNavController().navigateUp() }.getOrElse { activity?.finish() }
             return
         }
 
@@ -350,6 +349,7 @@ class CommentFragment : FragmentBaseComment() {
             mBottomSheet =
                 BottomSheetUsers.Builder()
                     .setModel(likes)
+                    .setOnUserClick(::navigateToProfile)
                     .setTitle(R.string.title_bottom_sheet_likes)
                     .build()
             showBottomSheet()
@@ -366,6 +366,7 @@ class CommentFragment : FragmentBaseComment() {
             mBottomSheet =
                 BottomSheetUsers.Builder()
                     .setModel(likes)
+                    .setOnUserClick(::navigateToProfile)
                     .setTitle(R.string.title_bottom_sheet_likes)
                     .build()
             showBottomSheet()
@@ -382,22 +383,14 @@ class CommentFragment : FragmentBaseComment() {
     ) {
         val feedItem = resolveCurrentFeedItem(feedId) ?: return
         val mediaId = feedItem.mediaId ?: return
-        val host = activity ?: return
-        val intent = MediaActivity.newIntent(host, mediaId, feedItem.mediaType)
-        CompatUtil.startRevealAnim(host, target, intent)
+        navigateToMedia(MediaScreenParam(mediaId, feedItem.mediaType))
     }
 
     private fun openProfile(
         target: View,
         userId: Long,
     ) {
-        val host = activity ?: return
-        val intent =
-            Intent(host, ProfileActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                putExtra(KeyUtil.arg_id, userId)
-            }
-        CompatUtil.startRevealAnim(host, target, intent)
+        navigateToProfile(UserScreenParam(userId))
     }
 
     private fun onFeedMediaLongPressed(

@@ -15,11 +15,6 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.view.image.AvatarIndicatorView
 import com.mxt.anitrend.base.custom.view.widget.AboutPanelWidget
-import com.mxt.anitrend.data.DatabaseHelper
-import com.mxt.anitrend.extension.KoinExt
-import com.mxt.anitrend.model.entity.anilist.User
-import com.mxt.anitrend.model.entity.container.attribute.PageInfo
-import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.WidgetState
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -37,17 +32,6 @@ class EventBusMutationStateGuardTest {
             val widgetRef = AtomicReference<AvatarIndicatorView>()
             val notificationCountRef = AtomicReference<TextView>()
             val badgeContainerRef = AtomicReference<View>()
-            val database = KoinExt.get(DatabaseHelper::class.java)
-
-            val initialUser = User().apply {
-                id = 7L
-                name = "avatar-user"
-                unreadNotificationCount = 2
-            }
-
-            Settings(InstrumentationRegistry.getInstrumentation().targetContext).isAuthenticated = true
-            database.currentUser = initialUser
-
             scenario.onActivity { activity ->
                 val container = FrameLayout(activity)
                 activity.setContentView(container)
@@ -57,6 +41,7 @@ class EventBusMutationStateGuardTest {
                 widgetRef.set(widget)
                 notificationCountRef.set(widget.findViewById(R.id.notification_count))
                 badgeContainerRef.set(widget.findViewById(R.id.container))
+                widget.render(null, unreadNotificationCount = 2)
             }
             InstrumentationRegistry.getInstrumentation().waitForIdleSync()
 
@@ -78,9 +63,6 @@ class EventBusMutationStateGuardTest {
                 assertEquals("2", notificationCountRef.get().text.toString())
                 assertEquals(View.VISIBLE, badgeContainerRef.get().visibility)
             }
-
-            database.invalidateBoxStores()
-            Settings(InstrumentationRegistry.getInstrumentation().targetContext).isAuthenticated = false
         }
     }
 
@@ -101,7 +83,7 @@ class EventBusMutationStateGuardTest {
                 val lifecycleOwner = TestLifecycleOwner()
                 lifecycleOwner.moveToStarted()
                 widget.setPrivateField("lifecycle", lifecycleOwner.lifecycle)
-                widget.setPrivateField("followers", PageInfo(total = 10))
+                widget.setPrivateField("followers", AboutPanelWidget.StatState.Loaded(total = 10))
 
                 val followersCount = widget.findViewById<TextView>(R.id.user_followers_count)
                 followersCountRef.set(followersCount)

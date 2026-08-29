@@ -17,12 +17,10 @@
 package com.mxt.anitrend.base.custom.view.search
 
 import android.content.Context
-import android.content.Intent
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.os.Parcel
 import android.os.Parcelable
-import android.speech.RecognizerIntent
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
@@ -54,10 +52,6 @@ class MaterialSearchView @JvmOverloads constructor(
     defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs),
     Filter.FilterListener {
-
-    companion object {
-        const val REQUEST_VOICE = 9999
-    }
 
     private val binding: SearchViewBinding =
         SearchViewBinding.inflate(LayoutInflater.from(context), this, true)
@@ -229,18 +223,6 @@ class MaterialSearchView @JvmOverloads constructor(
                 binding.searchTextView.setText(null)
             }
         }
-    }
-
-    private fun isVoiceAvailable(): Boolean {
-        if (isInEditMode) {
-            return true
-        }
-        val pm = context.packageManager
-        val activities = pm.queryIntentActivities(
-            Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH),
-            0,
-        )
-        return activities.isEmpty()
     }
 
     fun hideKeyboard(view: View) {

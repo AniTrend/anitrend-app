@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MediaLatestList : MediaBrowseFragment() {
+open class MediaLatestList : MediaBrowseFragment() {
 
     private val settings: Settings by inject()
 

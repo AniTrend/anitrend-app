@@ -1,7 +1,6 @@
 package com.mxt.anitrend.view.sheet
 
 import android.app.Dialog
-import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
@@ -34,10 +33,10 @@ import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.navigation.extension.screenParam
 import com.mxt.anitrend.navigation.extension.screenParamKey
 import com.mxt.anitrend.navigation.model.UserListScreenParam
+import com.mxt.anitrend.navigation.model.UserScreenParam
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
-import com.mxt.anitrend.view.activity.detail.ProfileActivity
 import com.mxt.anitrend.viewmodel.UserListViewModel
 import com.mxt.anitrend.widget.ProgressLayout
 import kotlinx.coroutines.launch
@@ -45,6 +44,7 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
+/** Bottom sheet displaying a paged list of users. */
 class BottomSheetListUsers :
     BottomSheetBase<PageContainer<UserBase>>(),
     ItemClickListener<UserBase>,
@@ -63,6 +63,7 @@ class BottomSheetListUsers :
 
     private var count: Int = 0
     private var userId: Long = 0
+    private var onUserClick: ((UserScreenParam) -> Unit)? = null
 
     @KeyUtil.RequestType
     private var requestType: Int = 0
@@ -79,7 +80,9 @@ class BottomSheetListUsers :
             onRefresh()
         }
 
+    /** Factory and argument helpers for the user list sheet. */
     companion object {
+        /** Creates a user list sheet with the supplied arguments. */
         @JvmStatic
         fun newInstance(bundle: Bundle): BottomSheetListUsers = BottomSheetListUsers().apply {
             arguments = bundle
@@ -322,6 +325,7 @@ class BottomSheetListUsers :
         makeRequest()
     }
 
+    /** Loads the current user list page according to the configured request type. */
     fun makeRequest() {
         val page = presenter.currentPage
         val perPage = KeyUtil.PAGING_LIMIT
@@ -394,13 +398,7 @@ class BottomSheetListUsers :
     ) {
         when (target.id) {
             R.id.container -> {
-                val host = activity ?: return
-                val intent =
-                    Intent(host, ProfileActivity::class.java).apply {
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                        putExtra(KeyUtil.arg_id, data.value.id)
-                    }
-                CompatUtil.startRevealAnim(host, target, intent)
+                onUserClick?.invoke(UserScreenParam(data.value.id))
             }
         }
     }
@@ -410,7 +408,10 @@ class BottomSheetListUsers :
         data: IndexedValue<UserBase>,
     ) = Unit
 
+    /** Builds a user list sheet and configures its navigation callback. */
     class Builder : BottomSheetBuilder() {
+        private var onUserClick: ((UserScreenParam) -> Unit)? = null
+
         override fun build(): BottomSheetBase<*> {
             // Typed identity write at the production entry point, derived from the
             // legacy setters; the legacy keys are retained for pre-migration readers.
@@ -421,19 +422,30 @@ class BottomSheetListUsers :
                     requestType = bundle.getInt(KeyUtil.arg_request_type, 0),
                 ),
             )
-            return newInstance(bundle)
+            return newInstance(bundle).also { instance ->
+                instance.onUserClick = onUserClick
+            }
         }
 
+        /** Sets the callback invoked when a user is selected. */
+        fun setOnUserClick(listener: (UserScreenParam) -> Unit): Builder {
+            onUserClick = listener
+            return this
+        }
+
+        /** Sets the user id whose followers or following are loaded. */
         fun setUserId(userId: Long): Builder {
             bundle.putLong(KeyUtil.arg_userId, userId)
             return this
         }
 
+        /** Sets the count displayed in the sheet title. */
         fun setModelCount(count: Int): Builder {
             bundle.putInt(KeyUtil.arg_model, count)
             return this
         }
 
+        /** Sets whether followers or following should be requested. */
         fun setRequestType(
             @KeyUtil.RequestType requestType: Int,
         ): Builder {

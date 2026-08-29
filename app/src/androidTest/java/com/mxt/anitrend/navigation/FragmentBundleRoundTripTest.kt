@@ -18,16 +18,16 @@ import com.mxt.anitrend.navigation.model.MediaScreenParam
 import com.mxt.anitrend.navigation.model.ReviewScreenParam
 import com.mxt.anitrend.navigation.model.SettingsCategoryScreenParam
 import com.mxt.anitrend.navigation.model.StudioScreenParam
+import com.mxt.anitrend.navigation.model.StaffScreenParam
 import com.mxt.anitrend.navigation.model.TrailerScreenParam
 import com.mxt.anitrend.navigation.model.UserListScreenParam
 import com.mxt.anitrend.navigation.model.UserScreenParam
 import com.mxt.anitrend.util.KeyUtil
-import com.mxt.anitrend.view.fragment.detail.CharacterOverviewFragment
-import com.mxt.anitrend.view.fragment.detail.MediaOverviewFragment
-import com.mxt.anitrend.view.fragment.detail.StudioMediaFragment
-import com.mxt.anitrend.view.fragment.detail.UserFeedFragment
-import com.mxt.anitrend.view.fragment.detail.UserOverviewFragment
-import com.mxt.anitrend.view.fragment.group.MediaFormatFragment
+import com.mxt.anitrend.view.fragment.detail.CharacterFragment
+import com.mxt.anitrend.view.fragment.detail.MediaFragment
+import com.mxt.anitrend.view.fragment.detail.StudioFragment
+import com.mxt.anitrend.view.fragment.detail.StaffFragment
+import com.mxt.anitrend.view.fragment.detail.ProfileFragment
 import com.mxt.anitrend.view.fragment.settings.SettingsCategoryLegacyFragment
 import com.mxt.anitrend.view.fragment.youtube.YouTubeEmbedFragment
 import com.mxt.anitrend.view.sheet.BottomReviewReader
@@ -49,31 +49,31 @@ class FragmentBundleRoundTripTest {
     @Test
     fun mediaParamBundleRoundTripsThroughMediaOverviewParser() {
         val param = MediaScreenParam(mediaId = 21L, mediaType = "ANIME")
-        assertEquals(param, MediaOverviewFragment.fromBundle(param.asBundle()))
+        assertEquals(param, MediaFragment.fromBundle(param.asBundle()))
     }
 
     @Test
     fun characterParamBundleRoundTripsThroughCharacterOverviewParser() {
         val param = CharacterScreenParam(characterId = 31L)
-        assertEquals(param, CharacterOverviewFragment.fromBundle(param.asBundle()))
+        assertEquals(param, CharacterFragment.fromBundle(param.asBundle()))
     }
 
     @Test
-    fun studioParamBundleRoundTripsThroughStudioMediaParser() {
+    fun studioParamBundleRoundTripsThroughStudioParser() {
         val param = StudioScreenParam(studioId = 41L)
-        assertEquals(param.studioId, StudioMediaFragment.fromBundle(param.asBundle()))
+        assertEquals(param, StudioFragment.fromBundle(param.asBundle()))
     }
 
     @Test
-    fun userParamBundleRoundTripsThroughUserOverviewParser() {
+    fun staffParamBundleRoundTripsThroughStaffParser() {
+        val param = StaffScreenParam(staffId = 45L)
+        assertEquals(param, StaffFragment.fromBundle(param.asBundle()))
+    }
+
+    @Test
+    fun userParamBundleRoundTripsThroughProfileParser() {
         val param = UserScreenParam(userId = 51L, initialName = "Raki")
-        assertEquals(param, UserOverviewFragment.fromBundle(param.asBundle()))
-    }
-
-    @Test
-    fun characterParamBundleRoundTripsThroughMediaFormatParser() {
-        val param = CharacterScreenParam(characterId = 61L)
-        assertEquals(param.characterId, MediaFormatFragment.fromBundle(param.asBundle()))
+        assertEquals(param, ProfileFragment.fromBundle(param.asBundle()))
     }
 
     @Test
@@ -108,18 +108,18 @@ class FragmentBundleRoundTripTest {
             putLong(KeyUtil.arg_id, 5L)
             putString(KeyUtil.arg_mediaType, "MANGA")
         }
-        assertEquals(MediaScreenParam(mediaId = 5L, mediaType = "MANGA"), MediaOverviewFragment.fromBundle(bundle))
+        assertEquals(MediaScreenParam(mediaId = 5L, mediaType = "MANGA"), MediaFragment.fromBundle(bundle))
     }
 
     @Test
     fun absentLegacyExtrasResolveToExactDefaults() {
         val empty = Bundle()
         // Pre-refactor getters: id 0, type null.
-        assertEquals(MediaScreenParam(mediaId = 0L, mediaType = null), MediaOverviewFragment.fromBundle(empty))
-        assertEquals(0L, StudioMediaFragment.fromBundle(empty))
+        assertEquals(null, MediaFragment.fromBundle(empty))
+        assertEquals(null, StudioFragment.fromBundle(empty))
         // Negative ids pass through exactly.
         val negative = Bundle().apply { putLong(KeyUtil.arg_id, -3L) }
-        assertEquals(MediaScreenParam(mediaId = -3L, mediaType = null), MediaOverviewFragment.fromBundle(negative))
+        assertEquals(null, MediaFragment.fromBundle(negative))
     }
 
     @Test
@@ -128,7 +128,7 @@ class FragmentBundleRoundTripTest {
             putLong(KeyUtil.arg_id, 5L)
             putString(KeyUtil.arg_mediaType, "MANGA")
         }
-        assertEquals(MediaScreenParam(mediaId = 77L, mediaType = "ANIME"), MediaOverviewFragment.fromBundle(bundle))
+        assertEquals(MediaScreenParam(mediaId = 77L, mediaType = "ANIME"), MediaFragment.fromBundle(bundle))
     }
 
     @Test
@@ -136,16 +136,16 @@ class FragmentBundleRoundTripTest {
         val bundle = MediaScreenParam(mediaId = 0L).asBundle().apply {
             putLong(KeyUtil.arg_id, 5L)
         }
-        assertEquals(MediaScreenParam(mediaId = 5L, mediaType = null), MediaOverviewFragment.fromBundle(bundle))
+        assertEquals(MediaScreenParam(mediaId = 5L, mediaType = null), MediaFragment.fromBundle(bundle))
     }
 
     @Test
-    fun userFeedLegacyContainsKeySemanticsArePreserved() {
+    fun profileLegacyIdentityBridgeWorks() {
         val byId = Bundle().apply { putLong(KeyUtil.arg_id, 9L) }
-        assertEquals(UserScreenParam(userId = 9L), UserFeedFragment.fromBundle(byId))
+        assertEquals(UserScreenParam(userId = 9L), ProfileFragment.fromBundle(byId))
 
         val byName = Bundle().apply { putString(KeyUtil.arg_userName, "Raki") }
-        assertEquals(UserScreenParam(userId = 0L, initialName = "Raki"), UserFeedFragment.fromBundle(byName))
+        assertEquals(UserScreenParam(userId = 0L, initialName = "Raki"), ProfileFragment.fromBundle(byName))
     }
 
     @Test

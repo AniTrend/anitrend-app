@@ -93,6 +93,7 @@ class UserFavouritesViewModelTest {
 
         val state = vm.state.value as MediaFavouritesViewModel.UiState.Success
         assertSame(content, state.content)
+        assertEquals(KeyUtil.ANIME, state.mediaType)
         verify(userRepository).getAnimeFavourites(id = 7L, page = 8, perPage = KeyUtil.PAGING_LIMIT)
     }
 
@@ -108,6 +109,7 @@ class UserFavouritesViewModelTest {
 
         val state = vm.state.value as MediaFavouritesViewModel.UiState.Success
         assertSame(content, state.content)
+        assertEquals(KeyUtil.MANGA, state.mediaType)
         verify(userRepository).getMangaFavourites(id = 9L, page = 10, perPage = KeyUtil.PAGING_LIMIT)
     }
 }

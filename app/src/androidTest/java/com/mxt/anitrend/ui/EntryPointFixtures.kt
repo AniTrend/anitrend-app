@@ -2,35 +2,23 @@ package com.mxt.anitrend.ui
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import com.mxt.anitrend.navigation.model.CharacterScreenParam
 import com.mxt.anitrend.navigation.model.GiphyPreviewScreenParam
 import com.mxt.anitrend.navigation.model.ImagePreviewScreenParam
+import com.mxt.anitrend.navigation.model.MediaScreenParam
 import com.mxt.anitrend.navigation.model.StaffScreenParam
+import com.mxt.anitrend.navigation.model.StudioScreenParam
 import com.mxt.anitrend.navigation.model.UserScreenParam
 import com.mxt.anitrend.navigation.model.VideoPlayerScreenParam
+import com.mxt.anitrend.navigation.extension.putScreenParam
 import com.mxt.anitrend.util.KeyUtil
-import com.mxt.anitrend.view.activity.base.AboutActivity
 import com.mxt.anitrend.view.activity.base.GiphyPreviewActivity
 import com.mxt.anitrend.view.activity.base.ImagePreviewActivity
-import com.mxt.anitrend.view.activity.base.LoggingActivity
-import com.mxt.anitrend.view.activity.base.SettingsActivity
-import com.mxt.anitrend.view.activity.base.SharedContentActivity
 import com.mxt.anitrend.view.activity.base.VideoPlayerActivity
 import com.mxt.anitrend.view.activity.base.WelcomeActivity
-import com.mxt.anitrend.view.activity.detail.CharacterActivity
-import com.mxt.anitrend.view.activity.detail.CommentActivity
-import com.mxt.anitrend.view.activity.detail.FavouriteActivity
-import com.mxt.anitrend.view.activity.detail.MediaActivity
-import com.mxt.anitrend.view.activity.detail.MediaBrowseActivity
-import com.mxt.anitrend.view.activity.detail.MediaListActivity
-import com.mxt.anitrend.view.activity.detail.MessageActivity
-import com.mxt.anitrend.view.activity.detail.NotificationActivity
-import com.mxt.anitrend.view.activity.detail.ProfileActivity
-import com.mxt.anitrend.view.activity.detail.StaffActivity
-import com.mxt.anitrend.view.activity.detail.StudioActivity
 import com.mxt.anitrend.view.activity.index.LoginActivity
 import com.mxt.anitrend.view.activity.index.MainActivity
-import com.mxt.anitrend.view.activity.index.SearchActivity
 
 internal data class EntryPoint(
     val name: String,
@@ -42,47 +30,68 @@ internal object EntryPointFixtures {
     fun unauthenticated(context: Context): List<EntryPoint> = listOf(
         // SplashActivity is intentionally excluded from render smoke tests because it immediately routes onward and performs startup side effects rather than exposing a stable UI surface.
         EntryPoint("MainActivity", { Intent(it, MainActivity::class.java) }),
+        EntryPoint("FeedFragment", {
+            Intent(it, MainActivity::class.java)
+                .putExtra(MainActivity.EXTRA_ROUTE, MainActivity.ROUTE_FEED)
+        }),
+        EntryPoint("AiringFragment", {
+            Intent(it, MainActivity::class.java)
+                .putExtra(MainActivity.EXTRA_ROUTE, MainActivity.ROUTE_AIRING)
+        }),
+        EntryPoint("TrendingFragment", {
+            Intent(it, MainActivity::class.java)
+                .putExtra(MainActivity.EXTRA_ROUTE, MainActivity.ROUTE_TRENDING)
+        }),
         EntryPoint("LoginActivity", { Intent(it, LoginActivity::class.java) }),
-        EntryPoint("SearchActivity", { Intent(it, SearchActivity::class.java) }),
-        EntryPoint("SettingsActivity", { Intent(it, SettingsActivity::class.java) }),
-        EntryPoint("AboutActivity", { Intent(it, AboutActivity::class.java) }),
-        EntryPoint("LoggingActivity", { Intent(it, LoggingActivity::class.java) }),
+        EntryPoint("SearchFragment", {
+            Intent(it, MainActivity::class.java)
+                .putExtra(MainActivity.EXTRA_ROUTE, MainActivity.ROUTE_SEARCH)
+                .putExtra(KeyUtil.arg_search, "test")
+        }),
+        EntryPoint("LoggingFragment", {
+            Intent(it, MainActivity::class.java)
+                .putExtra(MainActivity.EXTRA_ROUTE, MainActivity.ROUTE_LOGGING)
+        }),
         EntryPoint("WelcomeActivity", { Intent(it, WelcomeActivity::class.java) }),
-        EntryPoint("NotificationActivity", { Intent(it, NotificationActivity::class.java) }),
-        EntryPoint("MessageActivity", { Intent(it, MessageActivity::class.java) }),
-        EntryPoint("FavouriteActivity", { Intent(it, FavouriteActivity::class.java) }),
-        EntryPoint("MediaListActivity", {
-            Intent(it, MediaListActivity::class.java)
-                .putExtra(KeyUtil.arg_mediaType, KeyUtil.ANIME)
-        }),
-        EntryPoint("MediaBrowseActivity", {
-            Intent(it, MediaBrowseActivity::class.java)
-                .putExtra(KeyUtil.arg_activity_tag, "Test")
-        }),
-        EntryPoint("MediaActivity", {
-            Intent(it, MediaActivity::class.java)
+        EntryPoint("FavouriteFragment", {
+            Intent(it, MainActivity::class.java)
+                .putExtra(MainActivity.EXTRA_ROUTE, MainActivity.ROUTE_FAVOURITES)
                 .putExtra(KeyUtil.arg_id, 1L)
-                .putExtra(KeyUtil.arg_mediaType, KeyUtil.ANIME)
         }),
-        EntryPoint("ProfileActivity", {
-            Intent(it, ProfileActivity::class.java)
+        EntryPoint("MediaListFragment", {
+            Intent(it, MainActivity::class.java)
+                .putExtra(MainActivity.EXTRA_ROUTE, MainActivity.ROUTE_MEDIA_LIST)
+                .putExtra(KeyUtil.arg_mediaType, KeyUtil.ANIME)
                 .putExtra(KeyUtil.arg_userName, "test-user")
         }),
-        EntryPoint("CharacterActivity", {
-            Intent(it, CharacterActivity::class.java)
+        EntryPoint("MediaFragment", {
+            Intent(it, MainActivity::class.java)
+                .putExtra(MainActivity.EXTRA_ROUTE, MainActivity.ROUTE_MEDIA)
+                .putScreenParam(MediaScreenParam(1L, KeyUtil.ANIME))
+        }),
+        EntryPoint("ProfileFragment", {
+            Intent(it, MainActivity::class.java)
+                .putExtra(MainActivity.EXTRA_ROUTE, MainActivity.ROUTE_PROFILE)
+                .putExtra(KeyUtil.arg_userName, "test-user")
+        }),
+        EntryPoint("CharacterFragment", {
+            Intent(it, MainActivity::class.java)
+                .putExtra(MainActivity.EXTRA_ROUTE, MainActivity.ROUTE_CHARACTER)
                 .putExtra(KeyUtil.arg_id, 1L)
         }),
-        EntryPoint("StaffActivity", {
-            Intent(it, StaffActivity::class.java)
+        EntryPoint("StaffFragment", {
+            Intent(it, MainActivity::class.java)
+                .putExtra(MainActivity.EXTRA_ROUTE, MainActivity.ROUTE_STAFF)
                 .putExtra(KeyUtil.arg_id, 1L)
         }),
-        EntryPoint("StudioActivity", {
-            Intent(it, StudioActivity::class.java)
-                .putExtra(KeyUtil.arg_id, 1L)
+        EntryPoint("StudioFragment", {
+            Intent(it, MainActivity::class.java)
+                .putExtra(MainActivity.EXTRA_ROUTE, MainActivity.ROUTE_STUDIO)
+                .putScreenParam(StudioScreenParam(1L))
         }),
-        EntryPoint("CommentActivity", {
-            Intent(it, CommentActivity::class.java)
-                .putExtra(KeyUtil.arg_id, 1L)
+        EntryPoint("CommentRoute", {
+            Intent(Intent.ACTION_VIEW, Uri.parse("https://anilist.co/activity/1"))
+                .setClass(it, MainActivity::class.java)
         }),
         EntryPoint("ImagePreviewActivity", {
             Intent(it, ImagePreviewActivity::class.java)
@@ -96,58 +105,79 @@ internal object EntryPointFixtures {
             Intent(it, VideoPlayerActivity::class.java)
                 .putExtra(KeyUtil.arg_model, "https://example.com/video.mp4")
         }),
-        EntryPoint("SharedContentActivity", {
+        EntryPoint("SharedContentFragment", {
             Intent(Intent.ACTION_SEND)
-                .setClass(it, SharedContentActivity::class.java)
+                .setClass(it, MainActivity::class.java)
                 .setType("text/plain")
                 .putExtra(Intent.EXTRA_TEXT, "https://example.com")
         }),
-    ) + typedMigratedEntries(context)
+    ) + typedMigratedEntries(context) + externalIngressEntries(context)
 
     fun authenticated(context: Context): List<EntryPoint> = listOf(
         // SplashActivity is intentionally excluded from render smoke tests because it immediately routes onward and performs startup side effects rather than exposing a stable UI surface.
         EntryPoint("MainActivity", { Intent(it, MainActivity::class.java) }),
+        EntryPoint("FeedFragment", {
+            Intent(it, MainActivity::class.java)
+                .putExtra(MainActivity.EXTRA_ROUTE, MainActivity.ROUTE_FEED)
+        }),
+        EntryPoint("AiringFragment", {
+            Intent(it, MainActivity::class.java)
+                .putExtra(MainActivity.EXTRA_ROUTE, MainActivity.ROUTE_AIRING)
+        }),
+        EntryPoint("TrendingFragment", {
+            Intent(it, MainActivity::class.java)
+                .putExtra(MainActivity.EXTRA_ROUTE, MainActivity.ROUTE_TRENDING)
+        }),
         EntryPoint("LoginActivity", { Intent(it, LoginActivity::class.java) }, assertUi = false),
-        EntryPoint("SearchActivity", { Intent(it, SearchActivity::class.java) }),
-        EntryPoint("SettingsActivity", { Intent(it, SettingsActivity::class.java) }),
-        EntryPoint("AboutActivity", { Intent(it, AboutActivity::class.java) }),
-        EntryPoint("LoggingActivity", { Intent(it, LoggingActivity::class.java) }),
+        EntryPoint("SearchFragment", {
+            Intent(it, MainActivity::class.java)
+                .putExtra(MainActivity.EXTRA_ROUTE, MainActivity.ROUTE_SEARCH)
+                .putExtra(KeyUtil.arg_search, "test")
+        }),
+        EntryPoint("LoggingFragment", {
+            Intent(it, MainActivity::class.java)
+                .putExtra(MainActivity.EXTRA_ROUTE, MainActivity.ROUTE_LOGGING)
+        }),
         EntryPoint("WelcomeActivity", { Intent(it, WelcomeActivity::class.java) }),
-        EntryPoint("NotificationActivity", { Intent(it, NotificationActivity::class.java) }),
-        EntryPoint("MessageActivity", { Intent(it, MessageActivity::class.java) }),
-        EntryPoint("FavouriteActivity", { Intent(it, FavouriteActivity::class.java) }),
-        EntryPoint("MediaListActivity", {
-            Intent(it, MediaListActivity::class.java)
-                .putExtra(KeyUtil.arg_mediaType, KeyUtil.ANIME)
-        }),
-        EntryPoint("MediaBrowseActivity", {
-            Intent(it, MediaBrowseActivity::class.java)
-                .putExtra(KeyUtil.arg_activity_tag, "Test")
-        }),
-        EntryPoint("MediaActivity", {
-            Intent(it, MediaActivity::class.java)
+        EntryPoint("FavouriteFragment", {
+            Intent(it, MainActivity::class.java)
+                .putExtra(MainActivity.EXTRA_ROUTE, MainActivity.ROUTE_FAVOURITES)
                 .putExtra(KeyUtil.arg_id, 1L)
-                .putExtra(KeyUtil.arg_mediaType, KeyUtil.ANIME)
         }),
-        EntryPoint("ProfileActivity", {
-            Intent(it, ProfileActivity::class.java)
+        EntryPoint("MediaListFragment", {
+            Intent(it, MainActivity::class.java)
+                .putExtra(MainActivity.EXTRA_ROUTE, MainActivity.ROUTE_MEDIA_LIST)
+                .putExtra(KeyUtil.arg_mediaType, KeyUtil.ANIME)
                 .putExtra(KeyUtil.arg_userName, "test-user")
         }),
-        EntryPoint("CharacterActivity", {
-            Intent(it, CharacterActivity::class.java)
+        EntryPoint("MediaFragment", {
+            Intent(it, MainActivity::class.java)
+                .putExtra(MainActivity.EXTRA_ROUTE, MainActivity.ROUTE_MEDIA)
+                .putScreenParam(MediaScreenParam(1L, KeyUtil.ANIME))
+        }),
+        EntryPoint("ProfileFragment", {
+            Intent(it, MainActivity::class.java)
+                .putExtra(MainActivity.EXTRA_ROUTE, MainActivity.ROUTE_PROFILE)
+                .putExtra(KeyUtil.arg_userName, "test-user")
+        }),
+        EntryPoint("CharacterFragment", {
+            Intent(it, MainActivity::class.java)
+                .putExtra(MainActivity.EXTRA_ROUTE, MainActivity.ROUTE_CHARACTER)
                 .putExtra(KeyUtil.arg_id, 1L)
         }),
-        EntryPoint("StaffActivity", {
-            Intent(it, StaffActivity::class.java)
+        EntryPoint("StaffFragment", {
+            Intent(it, MainActivity::class.java)
+                .putExtra(MainActivity.EXTRA_ROUTE, MainActivity.ROUTE_STAFF)
                 .putExtra(KeyUtil.arg_id, 1L)
         }),
-        EntryPoint("StudioActivity", {
-            Intent(it, StudioActivity::class.java)
-                .putExtra(KeyUtil.arg_id, 1L)
+        EntryPoint("StudioFragment", {
+            Intent(it, MainActivity::class.java)
+                .putExtra(MainActivity.EXTRA_ROUTE, MainActivity.ROUTE_STUDIO)
+                .putScreenParam(StudioScreenParam(1L))
         }),
-        EntryPoint("CommentActivity", {
-            Intent(it, CommentActivity::class.java)
-                .putExtra(KeyUtil.arg_id, 1L)
+        EntryPoint("CommentRoute", {
+            Intent(Intent.ACTION_VIEW, Uri.parse("https://anilist.co/activity/1"))
+                .setClass(it, MainActivity::class.java)
         }),
         EntryPoint("ImagePreviewActivity", {
             Intent(it, ImagePreviewActivity::class.java)
@@ -161,30 +191,36 @@ internal object EntryPointFixtures {
             Intent(it, VideoPlayerActivity::class.java)
                 .putExtra(KeyUtil.arg_model, "https://example.com/video.mp4")
         }),
-        EntryPoint("SharedContentActivity", {
+        EntryPoint("SharedContentFragment", {
             Intent(Intent.ACTION_SEND)
-                .setClass(it, SharedContentActivity::class.java)
+                .setClass(it, MainActivity::class.java)
                 .setType("text/plain")
                 .putExtra(Intent.EXTRA_TEXT, "https://example.com")
         }),
-    ) + typedMigratedEntries(context)
+    ) + typedMigratedEntries(context) + externalIngressEntries(context)
 
     /**
      * Typed [ScreenParam] entry points for the Phase 1 migrated destinations.
      * The legacy-extra entries above stay in place to prove the fromIntent bridge;
-     * these prove the typed navigation path end to end. MediaBrowseActivity is
+     * these prove the typed navigation path end to end. Media browsing is
      * intentionally absent: it has no destination identity (its title and filters
      * stay on the legacy extras until Phase 2).
      */
     private fun typedMigratedEntries(context: Context): List<EntryPoint> = listOf(
-        EntryPoint("ProfileActivity-typed", {
-            ProfileActivity.newIntent(context, UserScreenParam(userId = 1L, initialName = "test-user"))
+        EntryPoint("ProfileFragment-typed", {
+            Intent(context, MainActivity::class.java)
+                .putExtra(MainActivity.EXTRA_ROUTE, MainActivity.ROUTE_PROFILE)
+                .putScreenParam(UserScreenParam(userId = 1L, initialName = "test-user"))
         }),
-        EntryPoint("CharacterActivity-typed", {
-            CharacterActivity.newIntent(context, CharacterScreenParam(characterId = 1L))
+        EntryPoint("CharacterFragment-typed", {
+            Intent(context, MainActivity::class.java)
+                .putExtra(MainActivity.EXTRA_ROUTE, MainActivity.ROUTE_CHARACTER)
+                .putScreenParam(CharacterScreenParam(characterId = 1L))
         }),
-        EntryPoint("StaffActivity-typed", {
-            StaffActivity.newIntent(context, StaffScreenParam(staffId = 1L))
+        EntryPoint("StaffFragment-typed", {
+            Intent(context, MainActivity::class.java)
+                .putExtra(MainActivity.EXTRA_ROUTE, MainActivity.ROUTE_STAFF)
+                .putScreenParam(StaffScreenParam(staffId = 1L))
         }),
         EntryPoint("ImagePreviewActivity-typed", {
             ImagePreviewActivity.newIntent(context, ImagePreviewScreenParam(url = "https://example.com/image.png"))
@@ -196,4 +232,26 @@ internal object EntryPointFixtures {
             VideoPlayerActivity.newIntent(context, VideoPlayerScreenParam(url = "https://example.com/video.mp4"))
         }),
     )
+
+    /**
+     * Cold-start fixtures for every manifest-owned AniList URI route. These
+     * intentionally exercise MainActivity ingress rather than launching a
+     * destination Activity directly.
+     */
+    private fun externalIngressEntries(context: Context): List<EntryPoint> = listOf(
+        EntryPoint("AniListActivityLink", { anilistIntent(context, "/activity/1") }),
+        EntryPoint("AniListStudioLink", { anilistIntent(context, "/studio/1") }),
+        EntryPoint("AniListCharacterLink", { anilistIntent(context, "/character/1") }),
+        EntryPoint("AniListStaffLink", { anilistIntent(context, "/staff/1") }),
+        EntryPoint("AniListActorLink", { anilistIntent(context, "/actor/1") }),
+        EntryPoint("AniListAnimeLink", { anilistIntent(context, "/anime/1") }),
+        EntryPoint("AniListMangaLink", { anilistIntent(context, "/manga/1") }),
+        EntryPoint("AniListUserIdLink", { anilistIntent(context, "/user/1") }),
+        EntryPoint("AniListUserNameLink", { anilistIntent(context, "/user/test-user") }),
+    )
+
+    private fun anilistIntent(context: Context, path: String): Intent = Intent(
+        Intent.ACTION_VIEW,
+        Uri.parse("https://anilist.co$path"),
+    ).setClass(context, MainActivity::class.java)
 }

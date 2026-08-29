@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_root"
+    app:startDestination="@id/animeFragment">
+
+    <!--
+        Keep migrated application destinations direct children of the primary
+        graph. Navigation 2 resolves destination ids from the current nested
+        graph, so cross-feature routes cannot target children of sibling
+        included graphs. Settings remains a graph-shaped feature in the
+        source, but its root destinations are registered here for one-host
+        navigation and restoration.
+    -->
+    <fragment
+        android:id="@+id/mediaBrowseFragment"
+        android:name="com.mxt.anitrend.view.fragment.list.MediaBrowseFragment"
+        android:label="@string/drawer_title_anime" />
+
+    <fragment
+        android:id="@+id/animeFragment"
+        android:name="com.mxt.anitrend.view.fragment.list.AnimeFragment"
+        android:label="@string/drawer_title_anime" />
+
+    <fragment
+        android:id="@+id/mangaFragment"
+        android:name="com.mxt.anitrend.view.fragment.list.MangaFragment"
+        android:label="@string/drawer_title_manga" />
+
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.mxt.anitrend.view.fragment.search.SearchFragment"
+        android:label="@string/action_search" />
+
+    <fragment
+        android:id="@+id/feedFragment"
+        android:name="com.mxt.anitrend.view.fragment.list.FeedFragment"
+        android:label="@string/drawer_title_home" />
+
+    <fragment
+        android:id="@+id/reviewFragment"
+        android:name="com.mxt.anitrend.view.fragment.detail.ReviewBrowseFragment"
+        android:label="@string/drawer_title_reviews" />
+
+    <fragment
+        android:id="@+id/trendingFragment"
+        android:name="com.mxt.anitrend.view.fragment.list.TrendingFragment"
+        android:label="@string/drawer_title_trending" />
+
+    <fragment
+        android:id="@+id/airingFragment"
+        android:name="com.mxt.anitrend.view.fragment.list.AiringFragment"
+        android:label="@string/drawer_title_airing" />
+
+    <fragment
+        android:id="@+id/hubFragment"
+        android:name="com.mxt.anitrend.view.fragment.list.HubFragment"
+        android:label="@string/drawer_title_hub" />
+
+    <fragment
+        android:id="@+id/watchListFragment"
+        android:name="com.mxt.anitrend.view.fragment.list.WatchListFragment"
+        android:label="@string/airing_title_latest_episodes" />
+
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="com.mxt.anitrend.view.fragment.detail.AboutFragment"
+        android:label="@string/nav_about" />
+
+    <fragment
+        android:id="@+id/changelogFragment"
+        android:name="com.mxt.anitrend.view.fragment.detail.ChangelogFragment"
+        android:label="@string/text_what_is_new" />
+
+    <fragment
+        android:id="@+id/loggingFragment"
+        android:name="com.mxt.anitrend.view.fragment.detail.LoggingFragment"
+        android:label="@string/title_activity_logging" />
+
+    <fragment
+        android:id="@+id/sharedContentFragment"
+        android:name="com.mxt.anitrend.view.fragment.detail.SharedContentFragment"
+        android:label="@string/menu_title_new_activity_post" />
+
+    <fragment
+        android:id="@+id/notificationFragment"
+        android:name="com.mxt.anitrend.view.fragment.detail.NotificationFragment"
+        android:label="@string/menu_title_notifications" />
+
+    <fragment
+        android:id="@+id/messageFragment"
+        android:name="com.mxt.anitrend.view.fragment.detail.MessageFragment"
+        android:label="@string/title_activity_message" />
+
+    <fragment
+        android:id="@+id/commentFragment"
+        android:name="com.mxt.anitrend.view.fragment.detail.CommentFragment"
+        android:label="@string/title_activity_reply" />
+
+    <fragment
+        android:id="@+id/studioFragment"
+        android:name="com.mxt.anitrend.view.fragment.detail.StudioFragment"
+        android:label="@string/title_activity_studio" />
+
+    <fragment
+        android:id="@+id/characterFragment"
+        android:name="com.mxt.anitrend.view.fragment.detail.CharacterFragment"
+        android:label="@string/title_activity_character" />
+
+    <fragment
+        android:id="@+id/staffFragment"
+        android:name="com.mxt.anitrend.view.fragment.detail.StaffFragment"
+        android:label="@string/title_activity_staff" />
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.mxt.anitrend.view.fragment.detail.ProfileFragment"
+        android:label="@string/title_activity_profile" />
+
+    <fragment
+        android:id="@+id/mediaListFragment"
+        android:name="com.mxt.anitrend.view.fragment.list.MediaListFragment"
+        android:label="@string/title_activity_media_list" />
+
+    <fragment
+        android:id="@+id/favouriteFragment"
+        android:name="com.mxt.anitrend.view.fragment.favourite.FavouriteFragment"
+        android:label="@string/title_favourites_list" />
+
+    <fragment
+        android:id="@+id/mediaFragment"
+        android:name="com.mxt.anitrend.view.fragment.detail.MediaFragment"
+        android:label="@string/title_activity_series" />
+
+    <fragment
+        android:id="@+id/settingsHubFragment"
+        android:name="com.mxt.anitrend.view.fragment.settings.SettingsHubFragment"
+        android:label="@string/title_activity_settings">
+
+        <action
+            android:id="@+id/action_settings_hub_to_account"
+            app:destination="@id/accountSettingsFragment" />
+
+        <action
+            android:id="@+id/action_settings_hub_to_customize"
+            app:destination="@id/customizeSettingsFragment" />
+
+        <action
+            android:id="@+id/action_settings_hub_to_category"
+            app:destination="@id/settingsCategoryFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/accountSettingsFragment"
+        android:name="com.mxt.anitrend.view.fragment.settings.AccountSettingsFragment"
+        android:label="@string/pref_header_account" />
+
+    <fragment
+        android:id="@+id/customizeSettingsFragment"
+        android:name="com.mxt.anitrend.view.fragment.settings.CustomizeSettingsFragment"
+        android:label="@string/pref_header_customize" />
+
+    <fragment
+        android:id="@+id/settingsCategoryFragment"
+        android:name="com.mxt.anitrend.view.fragment.settings.SettingsCategoryLegacyFragment"
+        android:label="@string/pref_header_general">
+
+        <argument
+            android:name="categoryId"
+            android:defaultValue=""
+            app:argType="string" />
+    </fragment>
+
+    <action android:id="@+id/action_global_aboutFragment" app:destination="@id/aboutFragment" />
+    <action android:id="@+id/action_global_changelogFragment" app:destination="@id/changelogFragment" />
+    <action android:id="@+id/action_global_loggingFragment" app:destination="@id/loggingFragment" />
+    <action android:id="@+id/action_global_settingsHubFragment" app:destination="@id/settingsHubFragment" />
+    <action android:id="@+id/action_global_notificationFragment" app:destination="@id/notificationFragment" />
+    <action android:id="@+id/action_global_messageFragment" app:destination="@id/messageFragment" />
+    <action android:id="@+id/action_global_sharedContentFragment" app:destination="@id/sharedContentFragment" />
+    <action android:id="@+id/action_global_commentFragment" app:destination="@id/commentFragment" />
+    <action android:id="@+id/action_global_studioFragment" app:destination="@id/studioFragment" />
+    <action android:id="@+id/action_global_characterFragment" app:destination="@id/characterFragment" />
+    <action android:id="@+id/action_global_staffFragment" app:destination="@id/staffFragment" />
+    <action android:id="@+id/action_global_profileFragment" app:destination="@id/profileFragment" />
+    <action android:id="@+id/action_global_mediaListFragment" app:destination="@id/mediaListFragment" />
+    <action android:id="@+id/action_global_favouriteFragment" app:destination="@id/favouriteFragment" />
+    <action android:id="@+id/action_global_mediaFragment" app:destination="@id/mediaFragment" />
+    <action android:id="@+id/action_global_mediaBrowseFragment" app:destination="@id/mediaBrowseFragment" />
+    <action android:id="@+id/action_global_animeFragment" app:destination="@id/animeFragment" />
+    <action android:id="@+id/action_global_mangaFragment" app:destination="@id/mangaFragment" />
+    <action android:id="@+id/action_global_feedFragment" app:destination="@id/feedFragment" />
+    <action android:id="@+id/action_global_reviewFragment" app:destination="@id/reviewFragment" />
+    <action android:id="@+id/action_global_trendingFragment" app:destination="@id/trendingFragment" />
+    <action android:id="@+id/action_global_airingFragment" app:destination="@id/airingFragment" />
+    <action android:id="@+id/action_global_hubFragment" app:destination="@id/hubFragment" />
+    <action android:id="@+id/action_global_watchListFragment" app:destination="@id/watchListFragment" />
+    <action android:id="@+id/action_global_searchFragment" app:destination="@id/searchFragment" />
+</navigation>

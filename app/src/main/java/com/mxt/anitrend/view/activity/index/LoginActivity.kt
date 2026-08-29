@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -30,10 +31,7 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-/**
- * Created by max on 2017/11/03.
- * Authentication activity
- */
+/** Hosts OAuth authentication and completes post-login setup. */
 class LoginActivity :
     CommonActivity(),
     View.OnClickListener {
@@ -156,17 +154,6 @@ class LoginActivity :
 
     private fun createApplicationShortcuts() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-            val SHORTCUT_MY_ANIME_BUNDLE = Bundle()
-            SHORTCUT_MY_ANIME_BUNDLE.putString(KeyUtil.arg_mediaType, KeyUtil.ANIME)
-            SHORTCUT_MY_ANIME_BUNDLE.putString(KeyUtil.arg_userName, model?.name)
-
-            val SHORTCUT_MY_MANGA_BUNDLE = Bundle()
-            SHORTCUT_MY_MANGA_BUNDLE.putString(KeyUtil.arg_mediaType, KeyUtil.MANGA)
-            SHORTCUT_MY_MANGA_BUNDLE.putString(KeyUtil.arg_userName, model?.name)
-
-            val SHORTCUT_PROFILE_BUNDLE = Bundle()
-            SHORTCUT_PROFILE_BUNDLE.putString(KeyUtil.arg_userName, model?.name)
-
             ShortcutUtil.createShortcuts(
                 this,
                 ShortcutUtil.ShortcutBuilder()
@@ -174,17 +161,55 @@ class LoginActivity :
                     .build(),
                 ShortcutUtil.ShortcutBuilder()
                     .setShortcutType(KeyUtil.SHORTCUT_MY_ANIME)
-                    .setShortcutParams(SHORTCUT_MY_ANIME_BUNDLE)
+                    .setShortcutParams(userShortcutBundle(model, KeyUtil.ANIME))
                     .build(),
                 ShortcutUtil.ShortcutBuilder()
                     .setShortcutType(KeyUtil.SHORTCUT_MY_MANGA)
-                    .setShortcutParams(SHORTCUT_MY_MANGA_BUNDLE)
+                    .setShortcutParams(userShortcutBundle(model, KeyUtil.MANGA))
                     .build(),
                 ShortcutUtil.ShortcutBuilder()
                     .setShortcutType(KeyUtil.SHORTCUT_PROFILE)
-                    .setShortcutParams(SHORTCUT_PROFILE_BUNDLE)
+                    .setShortcutParams(userShortcutBundle(model, null))
+                    .build(),
+                // NFR-004: Airing, Feed, and Trending are routable shortcut
+                // destinations; register them when the launcher budget
+                // permits. ShortcutUtil selects the set deterministically by
+                // priority, so an over-budget launcher keeps the four legacy
+                // producers above and never throws.
+                ShortcutUtil.ShortcutBuilder()
+                    .setShortcutType(KeyUtil.SHORTCUT_AIRING)
+                    .build(),
+                ShortcutUtil.ShortcutBuilder()
+                    .setShortcutType(KeyUtil.SHORTCUT_FEEDS)
+                    .build(),
+                ShortcutUtil.ShortcutBuilder()
+                    .setShortcutType(KeyUtil.SHORTCUT_TRENDING)
                     .build(),
             )
+        }
+    }
+
+    /** Helpers for constructing post-login shortcut arguments. */
+    companion object {
+        /**
+         * Post-login shortcut params. The media-list and profile routes need
+         * typed [UserScreenParam] identity, but ShortcutInfo intent extras must
+         * be PersistableBundle-safe (platform restriction since API 26, a
+         * Parcelable value throws at build time), so the identity is carried as
+         * wire primitives and the host reconstructs the typed parameter at
+         * ingress. Kept pure for the instrumentation tests that assert the
+         * produced [ShortcutInfo] extras.
+         */
+        @VisibleForTesting
+        internal fun userShortcutBundle(
+            user: User?,
+            mediaType: String?,
+        ): Bundle = Bundle().apply {
+            mediaType?.let { putString(KeyUtil.arg_mediaType, it) }
+            user?.let {
+                putLong(KeyUtil.arg_id, it.id)
+                it.name?.let { name -> putString(KeyUtil.arg_userName, name) }
+            }
         }
     }
 

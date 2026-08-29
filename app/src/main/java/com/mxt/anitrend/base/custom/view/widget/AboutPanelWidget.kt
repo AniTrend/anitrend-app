@@ -1,7 +1,6 @@
 package com.mxt.anitrend.base.custom.view.widget
 
 import android.content.Context
-import android.content.Intent
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -18,8 +17,8 @@ import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.WidgetState
 import com.mxt.anitrend.util.date.DateUtil
-import com.mxt.anitrend.view.activity.detail.FavouriteActivity
 import com.mxt.anitrend.view.sheet.BottomSheetListUsers
+import com.mxt.anitrend.navigation.model.UserScreenParam
 
 /**
  * Created by max on 2017/11/27.
@@ -46,6 +45,9 @@ constructor(
     private var following: StatState = StatState.NotLoaded
     private var favourites: StatState = StatState.NotLoaded
     private var lastAppliedFollowState: Boolean? = null
+
+    var onFavouritesRequested: ((Long) -> Unit)? = null
+    var onUserRequested: ((UserScreenParam) -> Unit)? = null
 
     private var bottomSheet: BottomSheetBase<*>? = null
     private var fragmentManager: FragmentManager? = null
@@ -134,18 +136,15 @@ constructor(
     override fun onViewRecycled() {
         fragmentManager = null
         bottomSheet = null
+        onFavouritesRequested = null
+        onUserRequested = null
     }
 
     override fun onClick(view: View) {
         when (view.id) {
             R.id.user_favourites_container -> {
                 if (favourites.resolveStatClick() == StatClickAction.Open) {
-                    val intent =
-                        Intent(context, FavouriteActivity::class.java).apply {
-                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                            putExtra(KeyUtil.arg_id, userId)
-                        }
-                    context.startActivity(intent)
+                    onFavouritesRequested?.invoke(userId)
                 } else {
                     NotifyUtil.makeText(context, R.string.text_activity_loading, Toast.LENGTH_SHORT).show()
                 }
@@ -160,6 +159,7 @@ constructor(
                             .setUserId(userId)
                             .setModelCount(loaded.total)
                             .setRequestType(KeyUtil.USER_FOLLOWERS_REQ)
+                            .setOnUserClick { param -> onUserRequested?.invoke(param) }
                             .setTitle(R.string.title_bottom_sheet_followers)
                             .build()
                     bottomSheet?.show(manager, bottomSheet?.tag)
@@ -177,6 +177,7 @@ constructor(
                             .setUserId(userId)
                             .setModelCount(loaded.total)
                             .setRequestType(KeyUtil.USER_FOLLOWING_REQ)
+                            .setOnUserClick { param -> onUserRequested?.invoke(param) }
                             .setTitle(R.string.title_bottom_sheet_following)
                             .build()
                     bottomSheet?.show(manager, bottomSheet?.tag)

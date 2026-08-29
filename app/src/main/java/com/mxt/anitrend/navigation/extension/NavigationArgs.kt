@@ -2,6 +2,7 @@ package com.mxt.anitrend.navigation.extension
 
 import com.mxt.anitrend.graphql.generated.ActivityType
 import com.mxt.anitrend.graphql.generated.MediaType
+import com.mxt.anitrend.view.fragment.list.MediaListOrigin
 
 /**
  * Production parsing helpers for fragment navigation bundles.
@@ -60,4 +61,11 @@ object NavigationArgs {
      * Mirrors `bundle.getString(key)?.let { runCatching { MediaType.valueOf(it) }.getOrNull() }`.
      */
     fun resolveMediaType(raw: String?): MediaType? = raw?.let { runCatching { MediaType.valueOf(it) }.getOrNull() }
+
+    /**
+     * Resolves the media list route-origin wire value. Absent or unknown values
+     * default to [MediaListOrigin.PUSHED] so legacy and restored entries never
+     * receive root/exit-confirm semantics (NFR-002).
+     */
+    fun resolveMediaListOrigin(raw: String?): MediaListOrigin = raw?.let { runCatching { MediaListOrigin.valueOf(it) }.getOrNull() } ?: MediaListOrigin.PUSHED
 }

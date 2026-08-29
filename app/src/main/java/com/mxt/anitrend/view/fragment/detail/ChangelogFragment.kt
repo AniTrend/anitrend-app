@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textview.MaterialTextView
 import com.mxt.anitrend.BuildConfig
@@ -45,9 +46,9 @@ class ChangelogFragment : Fragment() {
             Timber.e(e)
         }
 
-        // Wire dismiss button -- finish the host activity
+        // Wire dismiss button to the owning Navigation 2 graph.
         view.findViewById<MaterialButton>(R.id.changelog_dismiss)?.setOnClickListener {
-            requireActivity().finish()
+            findNavController().navigateUp()
         }
     }
 }

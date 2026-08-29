@@ -23,7 +23,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * Created by max on 2017/11/04.
  * Suggestions adapter
  */
-class SuggestionListFragment : MediaBrowseFragment() {
+open class SuggestionListFragment : MediaBrowseFragment() {
 
     private val settings: Settings by inject()
 

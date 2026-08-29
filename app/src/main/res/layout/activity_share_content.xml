@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".view.activity.base.SharedContentActivity">
+    tools:context=".view.fragment.detail.SharedContentFragment">
 
         <LinearLayout
             android:id="@+id/design_bottom_sheet"

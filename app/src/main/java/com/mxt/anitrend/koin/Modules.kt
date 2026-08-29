@@ -105,30 +105,15 @@ import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.view.fragment.detail.AboutFragment
 import com.mxt.anitrend.view.fragment.detail.BrowseReviewFragment
 import com.mxt.anitrend.view.fragment.detail.ChangelogFragment
-import com.mxt.anitrend.view.fragment.detail.CharacterOverviewFragment
+import com.mxt.anitrend.view.fragment.detail.CharacterFragment
 import com.mxt.anitrend.view.fragment.detail.CommentFragment
-import com.mxt.anitrend.view.fragment.detail.MediaFeedFragment
-import com.mxt.anitrend.view.fragment.detail.MediaOverviewFragment
-import com.mxt.anitrend.view.fragment.detail.MediaStaffFragment
-import com.mxt.anitrend.view.fragment.detail.MediaStatsFragment
-import com.mxt.anitrend.view.fragment.detail.MessageFeedFragment
+import com.mxt.anitrend.view.fragment.detail.MediaFragment
+import com.mxt.anitrend.view.fragment.detail.MessageFragment
 import com.mxt.anitrend.view.fragment.detail.NotificationFragment
-import com.mxt.anitrend.view.fragment.detail.ReviewFragment
-import com.mxt.anitrend.view.fragment.detail.StaffOverviewFragment
-import com.mxt.anitrend.view.fragment.detail.StudioMediaFragment
-import com.mxt.anitrend.view.fragment.detail.UserFeedFragment
-import com.mxt.anitrend.view.fragment.detail.UserOverviewFragment
-import com.mxt.anitrend.view.fragment.favourite.CharacterFavouriteFragment
-import com.mxt.anitrend.view.fragment.favourite.MediaFavouriteFragment
-import com.mxt.anitrend.view.fragment.favourite.StaffFavouriteFragment
-import com.mxt.anitrend.view.fragment.favourite.StudioFavouriteFragment
-import com.mxt.anitrend.view.fragment.group.CharacterActorsFragment
-import com.mxt.anitrend.view.fragment.group.MediaAnimeRoleFragment
-import com.mxt.anitrend.view.fragment.group.MediaCharacterFragment
-import com.mxt.anitrend.view.fragment.group.MediaFormatFragment
-import com.mxt.anitrend.view.fragment.group.MediaRecommendationsFragment
-import com.mxt.anitrend.view.fragment.group.MediaRelationFragment
-import com.mxt.anitrend.view.fragment.group.MediaStaffRoleFragment
+import com.mxt.anitrend.view.fragment.detail.StaffFragment
+import com.mxt.anitrend.view.fragment.detail.StudioFragment
+import com.mxt.anitrend.view.fragment.detail.ProfileFragment
+import com.mxt.anitrend.view.fragment.detail.SharedContentFragment
 import com.mxt.anitrend.view.fragment.list.AiringListFragment
 import com.mxt.anitrend.view.fragment.list.FeedListFragment
 import com.mxt.anitrend.view.fragment.list.MediaBrowseFragment
@@ -136,11 +121,6 @@ import com.mxt.anitrend.view.fragment.list.MediaLatestList
 import com.mxt.anitrend.view.fragment.list.MediaListFragment
 import com.mxt.anitrend.view.fragment.list.SuggestionListFragment
 import com.mxt.anitrend.view.fragment.list.WatchListFragment
-import com.mxt.anitrend.view.fragment.search.CharacterSearchFragment
-import com.mxt.anitrend.view.fragment.search.MediaSearchFragment
-import com.mxt.anitrend.view.fragment.search.StaffSearchFragment
-import com.mxt.anitrend.view.fragment.search.StudioSearchFragment
-import com.mxt.anitrend.view.fragment.search.UserSearchFragment
 import com.mxt.anitrend.view.fragment.settings.CustomizeSettingsFragment
 import com.mxt.anitrend.view.fragment.settings.SettingsCategoryLegacyFragment
 import com.mxt.anitrend.view.fragment.settings.SettingsHubFragment
@@ -269,7 +249,7 @@ private val coreModule = module {
                 .androidContext(androidContext())
                 .build(),
         )
-    } bind BoxQuery::class
+    } onClose { helper -> helper?.close() } bind BoxQuery::class
 
     single<ISupportAnalytics> {
         AnalyticsLogging(
@@ -822,82 +802,22 @@ private val fragmentModule = module {
         BrowseReviewFragment()
     }
     fragment {
-        MediaSearchFragment()
+        MediaFragment()
     }
     fragment {
-        StudioSearchFragment()
+        CharacterFragment()
     }
     fragment {
-        StaffSearchFragment()
+        StaffFragment()
     }
     fragment {
-        CharacterSearchFragment()
+        ProfileFragment()
     }
     fragment {
-        UserSearchFragment()
+        SharedContentFragment()
     }
     fragment {
-        MediaOverviewFragment()
-    }
-    fragment {
-        MediaRelationFragment()
-    }
-    fragment {
-        MediaRecommendationsFragment()
-    }
-    fragment {
-        MediaStatsFragment()
-    }
-    fragment {
-        MediaCharacterFragment()
-    }
-    fragment {
-        MediaStaffFragment()
-    }
-    fragment {
-        MediaFeedFragment()
-    }
-    fragment {
-        ReviewFragment()
-    }
-    fragment {
-        CharacterOverviewFragment()
-    }
-    fragment {
-        MediaFormatFragment()
-    }
-    fragment {
-        CharacterActorsFragment()
-    }
-    fragment {
-        StaffOverviewFragment()
-    }
-    fragment {
-        MediaAnimeRoleFragment()
-    }
-    fragment {
-        MediaStaffRoleFragment()
-    }
-    fragment {
-        UserOverviewFragment()
-    }
-    fragment {
-        UserFeedFragment()
-    }
-    fragment {
-        MessageFeedFragment()
-    }
-    fragment {
-        MediaFavouriteFragment()
-    }
-    fragment {
-        CharacterFavouriteFragment()
-    }
-    fragment {
-        StaffFavouriteFragment()
-    }
-    fragment {
-        StudioFavouriteFragment()
+        MessageFragment()
     }
     fragment {
         ChangelogFragment()
@@ -909,7 +829,7 @@ private val fragmentModule = module {
         CommentFragment()
     }
     fragment {
-        StudioMediaFragment()
+        StudioFragment()
     }
     fragment {
         NotificationFragment()

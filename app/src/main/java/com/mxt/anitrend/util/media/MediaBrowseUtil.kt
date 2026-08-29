@@ -6,7 +6,7 @@ import kotlinx.parcelize.Parcelize
 
 /**
  * Helper configuration class for global configurable browsing activity
- * @see com.mxt.anitrend.view.activity.detail.MediaBrowseActivity
+ * Used by the Navigation 2 media browse destination.
  */
 @Parcelize
 class MediaBrowseUtil
