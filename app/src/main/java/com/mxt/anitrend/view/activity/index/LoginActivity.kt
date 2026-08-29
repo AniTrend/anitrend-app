@@ -189,6 +189,7 @@ class LoginActivity :
         }
     }
 
+    /** Helpers for constructing post-login shortcut arguments. */
     companion object {
         /**
          * Post-login shortcut params. The media-list and profile routes need

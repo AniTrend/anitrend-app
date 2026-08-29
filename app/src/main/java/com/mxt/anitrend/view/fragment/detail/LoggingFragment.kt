@@ -230,6 +230,7 @@ class LoggingFragment : Fragment() {
         super.onDestroyView()
     }
 
+    /** Saved-state and logging destination helpers. */
     companion object {
         private const val REQUEST_PERMISSION = 102
     }

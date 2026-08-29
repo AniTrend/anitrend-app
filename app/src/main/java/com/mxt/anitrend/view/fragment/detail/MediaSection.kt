@@ -17,6 +17,7 @@ enum class MediaSection(
     REVIEWS(R.string.drawer_title_reviews),
     ;
 
+    /** Helpers for filtering and restoring media detail sections. */
     companion object {
         /** Returns sections available to the current authentication state. */
         fun visibleSections(isAuthenticated: Boolean): List<MediaSection> = if (isAuthenticated) entries else entries.filterNot { it == FEED || it == REVIEWS }
