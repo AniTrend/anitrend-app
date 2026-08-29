@@ -31,6 +31,7 @@ import com.mxt.anitrend.view.sheet.buildComposerSaveRequest
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
+/** Destination for composing a post from shared text or a shared subject. */
 class SharedContentFragment :
     Fragment(),
     BottomSheetListener,
@@ -52,7 +53,7 @@ class SharedContentFragment :
             ) {
                 if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
                     when (newState) {
-                        BottomSheetBehavior.STATE_HIDDEN -> dismissShareSheet()
+                        BottomSheetBehavior.STATE_HIDDEN -> popShareSheet()
                         BottomSheetBehavior.STATE_COLLAPSED -> onStateCollapsed()
                         BottomSheetBehavior.STATE_EXPANDED -> onStateExpanded()
                     }
@@ -149,19 +150,7 @@ class SharedContentFragment :
         }
     }
 
-    /**
-     * Dismisses the share composer by popping its NavController destination.
-     *
-     * The sheet is hosted as a destination in MainActivity's root nav graph, so
-     * hide dismissal must go through the controller instead of the legacy
-     * fragment-manager pop: the controller's back stack stays consistent and
-     * the previous destination is restored underneath. The [runCatching] guard
-     * is teardown safety: the behavior callback can fire while the entry is
-     * already being removed, when the fragment is no longer attached to a
-     * NavController host and [findNavController] would throw. The enclosing
-     * STARTED lifecycle check already blocks dismissal after the fragment stops.
-     */
-    private fun dismissShareSheet() {
+    private fun popShareSheet() {
         runCatching { findNavController().popBackStack() }
     }
 
@@ -225,15 +214,21 @@ class SharedContentFragment :
         super.onDestroyView()
     }
 
+    /** Bundle keys and factories for shared content arguments. */
     companion object {
+        /** Bundle key containing the shared text. */
         const val ARG_SHARED_TEXT = "shared_text"
+
+        /** Bundle key containing the shared subject. */
         const val ARG_SHARED_SUBJECT = "shared_subject"
 
+        /** Builds arguments from an incoming share intent. */
         fun arguments(intent: Intent): Bundle = arguments(
             sharedText = intent.getStringExtra(Intent.EXTRA_TEXT),
             subject = intent.getStringExtra(Intent.EXTRA_SUBJECT),
         )
 
+        /** Builds arguments from optional shared text and subject values. */
         fun arguments(
             sharedText: String?,
             subject: String?,

@@ -74,7 +74,9 @@ import java.util.Locale
  * Unified media destination. The former eight pager pages are local sections of this
  * Fragment. Section controllers render ordinary views and never own application navigation.
  */
+@Suppress("TooManyFunctions") // Lifecycle, navigation, and section rendering stay centralized.
 class MediaFragment : Fragment() {
+    /** Argument and section helpers for the media destination. */
     companion object {
         private const val KEY_SECTION = "media.section"
 
@@ -106,6 +108,7 @@ class MediaFragment : Fragment() {
             MediaSection.REVIEWS,
         )
 
+        /** Reads the media identity from typed or legacy arguments. */
         fun fromBundle(bundle: Bundle?): MediaScreenParam? = resolve(
             typed = bundle?.screenParam<MediaScreenParam>(),
             legacyId = bundle?.getLong(KeyUtil.arg_id) ?: 0L,
@@ -202,6 +205,7 @@ class MediaFragment : Fragment() {
         super.onSaveInstanceState(outState)
     }
 
+    @Suppress("LongMethod") // Section construction intentionally keeps lifecycle and navigation wiring together.
     private fun createSections(current: MediaScreenParam) {
         val context = requireContext()
         val mediaId = current.mediaId

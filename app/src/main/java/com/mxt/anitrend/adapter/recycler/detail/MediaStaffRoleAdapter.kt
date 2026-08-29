@@ -27,6 +27,7 @@ private val mediaStaffItemDiff = object : DiffUtil.ItemCallback<RecyclerItem>() 
     override fun areContentsTheSame(oldItem: RecyclerItem, newItem: RecyclerItem): Boolean = oldItem == newItem
 }
 
+/** Displays staff associated with a media item, grouped by role. */
 @Suppress("UNCHECKED_CAST")
 class MediaStaffRoleAdapter(
     private val onStaffClick: (View, StaffBase) -> Unit,

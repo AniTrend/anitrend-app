@@ -41,8 +41,12 @@ import kotlinx.coroutines.launch
 import java.util.Locale
 
 /**
- * Created by max on 2017/12/28.
+ * View-only media statistics section used by the media destination.
+ *
+ * The callback-heavy constructor and grouped chart helpers intentionally keep
+ * the destination's existing statistics actions in one section controller.
  */
+@Suppress("LongParameterList", "TooManyFunctions")
 class MediaStatsSection(
     private val mediaStatsViewModel: MediaStatsViewModel,
     private val mediaId: Long,
@@ -63,6 +67,7 @@ class MediaStatsSection(
     private var linkAdapter: LinkAdapter? = null
     private var selected = false
 
+    /** Inflates and initializes the media statistics view. */
     fun inflate(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -91,6 +96,7 @@ class MediaStatsSection(
         return binding.root
     }
 
+    /** Starts collecting statistics state for [owner]. */
     fun start(owner: LifecycleOwner) {
         owner.lifecycleScope.launch {
             owner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -116,6 +122,7 @@ class MediaStatsSection(
         }
     }
 
+    /** Loads the statistics the first time this section is selected. */
     fun select() {
         if (selected) return
         selected = true
@@ -128,6 +135,7 @@ class MediaStatsSection(
         mediaStatsViewModel.load(mediaId = mediaId, type = type, isAdult = if (isAdultContent) null else false)
     }
 
+    /** Releases the statistics binding and cached rendering state. */
     fun clear() {
         _binding = null
         model = null

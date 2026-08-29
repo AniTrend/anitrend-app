@@ -52,6 +52,7 @@ import java.util.Locale
  * Unified Staff destination. Former pager pages are local screen sections,
  * not child fragments or a replacement pager.
  */
+@Suppress("TooManyFunctions") // Lifecycle, navigation, and staff section rendering stay centralized.
 class StaffFragment : Fragment() {
 
     private enum class Section {
@@ -61,10 +62,12 @@ class StaffFragment : Fragment() {
         STAFF_ROLES,
     }
 
+    /** Argument and saved-state helpers for the staff destination. */
     companion object {
         private const val KEY_SECTION = "staff.section"
         private const val KEY_ON_LIST = "staff.on_list"
 
+        /** Reads the staff identity from typed or legacy arguments. */
         fun fromBundle(bundle: Bundle?): StaffScreenParam? = resolve(
             typed = bundle?.screenParam<StaffScreenParam>(),
             legacyId = bundle?.getLong(KeyUtil.arg_id) ?: 0L,
@@ -231,11 +234,12 @@ class StaffFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 mediaRolesViewModel.state.collect { state ->
-                    if (selectedSection != Section.MEDIA_ROLES) return@collect
-                    when (state) {
-                        is MediaFormatViewModel.UiState.Loading -> mediaRolesSection.renderLoading()
-                        is MediaFormatViewModel.UiState.Success -> mediaRolesSection.render(state.items, state.pageInfo, state.isEmpty)
-                        is MediaFormatViewModel.UiState.Error -> mediaRolesSection.renderError(state.message)
+                    if (selectedSection == Section.MEDIA_ROLES) {
+                        when (state) {
+                            is MediaFormatViewModel.UiState.Loading -> mediaRolesSection.renderLoading()
+                            is MediaFormatViewModel.UiState.Success -> mediaRolesSection.render(state.items, state.pageInfo, state.isEmpty)
+                            is MediaFormatViewModel.UiState.Error -> mediaRolesSection.renderError(state.message)
+                        }
                     }
                 }
             }

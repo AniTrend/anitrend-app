@@ -41,6 +41,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * Created by max on 2017/10/30.
  * Media review browse
  */
+@Suppress("TooManyFunctions") // Lifecycle, navigation, and review list responsibilities stay centralized.
 open class BrowseReviewFragment : FragmentBaseList<ReviewRecord, PageContainer<ReviewRecord>>() {
     @KeyUtil.MediaType
     protected var mediaType: String? = null
@@ -53,7 +54,9 @@ open class BrowseReviewFragment : FragmentBaseList<ReviewRecord, PageContainer<R
     protected var reviewAdapter: ReviewAdapter? = null
     private var staleSnackbar: Snackbar? = null
 
+    /** Factory and argument helpers for the review browse destination. */
     companion object {
+        /** Creates a review browse fragment for the supplied media type. */
         @JvmStatic
         fun newInstance(
             @KeyUtil.MediaType mediaType: String,

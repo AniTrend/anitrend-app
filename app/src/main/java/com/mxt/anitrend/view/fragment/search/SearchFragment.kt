@@ -66,6 +66,7 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /** Single Navigation 2 destination for media, staff, studio, character, and user search. */
+@Suppress("TooManyFunctions") // Lifecycle, navigation, and search section rendering stay centralized.
 class SearchFragment : FragmentBaseList<Any, Any>() {
     private enum class Section(
         @StringRes val title: Int,
@@ -96,6 +97,7 @@ class SearchFragment : FragmentBaseList<Any, Any>() {
     private val studioViewModel: StudioSearchViewModel by viewModel()
     private val userViewModel: UserSearchViewModel by viewModel()
 
+    /** Saved-state and query normalization helpers for search. */
     companion object {
         private const val STATE_SECTION = "search_section"
         private const val STATE_QUERY = "search_query"
@@ -152,7 +154,7 @@ class SearchFragment : FragmentBaseList<Any, Any>() {
                 val isSearchAction = actionId == EditorInfo.IME_ACTION_SEARCH
                 val isEnterAction = event?.keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN
                 if (isSearchAction || isEnterAction) {
-                    submitQuery()
+                    submitSearchQuery()
                     true
                 } else {
                     false
@@ -293,12 +295,7 @@ class SearchFragment : FragmentBaseList<Any, Any>() {
         sectionSelector.check(sectionSelector.getChildAt(initialIndex).id)
     }
 
-    /**
-     * Search is entered on this destination rather than through the host toolbar. Keeping the
-     * field local lets the user replace the route query and submit again without leaving the
-     * destination, while the editor action remains the keyboard's search action.
-     */
-    private fun submitQuery() {
+    private fun submitSearchQuery() {
         val query = normalizeSubmittedQuery(queryInput?.text?.toString())
         if (query == null) {
             Toast.makeText(requireContext(), R.string.text_search_empty, Toast.LENGTH_SHORT).show()
@@ -415,11 +412,11 @@ class SearchFragment : FragmentBaseList<Any, Any>() {
 
     private fun rebindFollowStates(states: Map<Long, Boolean>) {
         if (section != Section.USERS) return
-        states.forEach { (userId, isFollowing) ->
+        for ((userId, isFollowing) in states) {
             val position = sectionAdapter.data.indexOfFirst { (it as? UserBase)?.id == userId }
-            if (position < 0) return@forEach
-            val user = sectionAdapter.data[position] as? UserBase ?: return@forEach
-            if (user.isFollowing == isFollowing) return@forEach
+            if (position < 0) continue
+            val user = sectionAdapter.data[position] as? UserBase ?: continue
+            if (user.isFollowing == isFollowing) continue
             user.isFollowing = isFollowing
             sectionAdapter.onItemChanged(user, position)
         }

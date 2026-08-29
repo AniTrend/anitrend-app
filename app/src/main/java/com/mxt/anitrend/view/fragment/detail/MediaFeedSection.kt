@@ -22,7 +22,13 @@ import com.mxt.anitrend.view.fragment.list.renderableFeedItems
 import com.mxt.anitrend.viewmodel.MediaFeedViewModel
 import kotlinx.coroutines.launch
 
-/** View-only media feed section backed by the canonical feed store projection. */
+/**
+ * View-only media feed section backed by the canonical feed store projection.
+ *
+ * The callback-heavy constructor and grouped lifecycle helpers are intentional:
+ * this section forwards the media destination's existing feed actions.
+ */
+@Suppress("LongParameterList", "TooManyFunctions")
 class MediaFeedSection(
     context: Context,
     private val viewModel: MediaFeedViewModel,
@@ -58,6 +64,7 @@ class MediaFeedSection(
     private val currentBinding: FragmentListBinding
         get() = checkNotNull(binding)
 
+    /** Inflates and initializes the media feed view. */
     fun createView(inflater: LayoutInflater, container: ViewGroup?): View {
         val sectionBinding = FragmentListBinding.inflate(inflater, container, false)
         binding = sectionBinding
@@ -80,6 +87,7 @@ class MediaFeedSection(
         return sectionBinding.root
     }
 
+    /** Starts collecting feed state for [owner]. */
     fun start(owner: LifecycleOwner) {
         owner.lifecycleScope.launch {
             owner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -94,21 +102,25 @@ class MediaFeedSection(
         }
     }
 
+    /** Activates the section and loads the first page when needed. */
     fun select() {
         if (adapter.itemCount == 0) onRefresh() else showContent()
     }
 
+    /** Releases the feed adapter and view resources. */
     fun destroyView() {
         currentBinding.recyclerView.clearOnScrollListeners()
         currentBinding.recyclerView.adapter = null
         binding = null
     }
 
+    /** Resets pagination and requests the first feed page. */
     override fun onRefresh() {
         scrollListener.onRefreshPage()
         load(scrollListener.currentPage)
     }
 
+    /** Requests the next feed page. */
     override fun onLoad() = loadNextPage()
 
     private fun loadNextPage() {

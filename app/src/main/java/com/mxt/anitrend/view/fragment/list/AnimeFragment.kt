@@ -27,6 +27,7 @@ class AnimeFragment : MediaBrowseFragment() {
     private lateinit var sectionSelector: ChipGroup
     private var section = Section.SPRING
 
+    /** Saved-state helpers for the anime section selector. */
     companion object {
         private const val STATE_SECTION = "anime_section"
 

@@ -25,6 +25,7 @@ class ReviewBrowseFragment : BrowseReviewFragment() {
     private lateinit var sectionSelector: ChipGroup
     private var section = Section.ANIME
 
+    /** Saved-state helpers for the review section selector. */
     companion object {
         private const val STATE_SECTION = "review_browse_section"
 

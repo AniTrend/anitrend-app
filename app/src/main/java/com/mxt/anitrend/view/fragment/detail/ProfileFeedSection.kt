@@ -26,7 +26,13 @@ import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.viewmodel.UserFeedViewModel
 import kotlinx.coroutines.launch
 
-/** Ordinary feed renderer used by ProfileFragment's local section state. */
+/**
+ * Ordinary feed renderer used by ProfileFragment's local section state.
+ *
+ * The callback-heavy constructor and grouped lifecycle helpers intentionally
+ * preserve the profile destination's existing feed actions.
+ */
+@Suppress("LongParameterList", "TooManyFunctions")
 class ProfileFeedSection(
     private val settings: Settings,
     private val databaseHelper: DatabaseHelper,
@@ -60,6 +66,7 @@ class ProfileFeedSection(
         onLongPressMedia = onLongPressMedia,
     )
 
+    /** Inflates and initializes the profile feed view. */
     fun inflate(inflater: LayoutInflater, container: ViewGroup): View {
         val sectionBinding = FragmentListBinding.inflate(inflater, container, false)
         binding = sectionBinding
@@ -82,6 +89,7 @@ class ProfileFeedSection(
         return sectionBinding.root
     }
 
+    /** Starts collecting profile feed state for [owner]. */
     fun start(owner: LifecycleOwner) {
         owner.lifecycleScope.launch {
             owner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -91,21 +99,25 @@ class ProfileFeedSection(
         load(1)
     }
 
+    /** Releases the profile feed binding and scroll resources. */
     fun clear() {
         binding?.recyclerView?.clearOnScrollListeners()
         binding = null
     }
 
+    /** Resets pagination and requests the first feed page. */
     override fun onRefresh() {
         scrollListener.onRefreshPage()
         load(1)
     }
 
+    /** Requests the current page as an append operation. */
     override fun onLoadMore() {
         binding?.refreshLayout?.setLoading(true)
         load(scrollListener.currentPage)
     }
 
+    /** Ignores the refresh layout append callback. */
     override fun onLoad() = Unit
 
     private fun load(page: Int) {

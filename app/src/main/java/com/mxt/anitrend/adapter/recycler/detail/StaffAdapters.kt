@@ -32,6 +32,7 @@ private val staffItemDiff = object : DiffUtil.ItemCallback<RecyclerItem>() {
     override fun areContentsTheSame(oldItem: RecyclerItem, newItem: RecyclerItem): Boolean = oldItem == newItem
 }
 
+/** Displays media associated with a staff member, including group headers. */
 class StaffMediaAdapter(
     private val onMediaClick: (View, MediaBase) -> Unit,
     private val onMediaLongClick: (MediaBase) -> Unit,
@@ -94,6 +95,7 @@ class StaffMediaAdapter(
     }
 }
 
+/** Displays character roles associated with a staff member. */
 class StaffCharacterRolesAdapter(
     private val onCharacterClick: (View, CharacterStaffBase) -> Unit,
 ) : ListAdapter<RecyclerItem, RecyclerView.ViewHolder>(staffItemDiff) {
@@ -120,8 +122,7 @@ class StaffCharacterRolesAdapter(
     ) : RecyclerViewHolder<RecyclerItem>(binding.root) {
         init {
             itemView.findViewById<View>(R.id.container)?.setOnClickListener { view ->
-                val item = boundItem() ?: return@setOnClickListener
-                onCharacterClick(view, item)
+                boundItem()?.let { onCharacterClick(view, it) }
             }
         }
 

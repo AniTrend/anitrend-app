@@ -31,10 +31,7 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-/**
- * Created by max on 2017/11/03.
- * Authentication activity
- */
+/** Hosts OAuth authentication and completes post-login setup. */
 class LoginActivity :
     CommonActivity(),
     View.OnClickListener {

@@ -44,6 +44,7 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
+/** Bottom sheet displaying a paged list of users. */
 class BottomSheetListUsers :
     BottomSheetBase<PageContainer<UserBase>>(),
     ItemClickListener<UserBase>,
@@ -79,7 +80,9 @@ class BottomSheetListUsers :
             onRefresh()
         }
 
+    /** Factory and argument helpers for the user list sheet. */
     companion object {
+        /** Creates a user list sheet with the supplied arguments. */
         @JvmStatic
         fun newInstance(bundle: Bundle): BottomSheetListUsers = BottomSheetListUsers().apply {
             arguments = bundle
@@ -322,6 +325,7 @@ class BottomSheetListUsers :
         makeRequest()
     }
 
+    /** Loads the current user list page according to the configured request type. */
     fun makeRequest() {
         val page = presenter.currentPage
         val perPage = KeyUtil.PAGING_LIMIT
@@ -404,6 +408,7 @@ class BottomSheetListUsers :
         data: IndexedValue<UserBase>,
     ) = Unit
 
+    /** Builds a user list sheet and configures its navigation callback. */
     class Builder : BottomSheetBuilder() {
         private var onUserClick: ((UserScreenParam) -> Unit)? = null
 
@@ -422,21 +427,25 @@ class BottomSheetListUsers :
             }
         }
 
+        /** Sets the callback invoked when a user is selected. */
         fun setOnUserClick(listener: (UserScreenParam) -> Unit): Builder {
             onUserClick = listener
             return this
         }
 
+        /** Sets the user id whose followers or following are loaded. */
         fun setUserId(userId: Long): Builder {
             bundle.putLong(KeyUtil.arg_userId, userId)
             return this
         }
 
+        /** Sets the count displayed in the sheet title. */
         fun setModelCount(count: Int): Builder {
             bundle.putInt(KeyUtil.arg_model, count)
             return this
         }
 
+        /** Sets whether followers or following should be requested. */
         fun setRequestType(
             @KeyUtil.RequestType requestType: Int,
         ): Builder {

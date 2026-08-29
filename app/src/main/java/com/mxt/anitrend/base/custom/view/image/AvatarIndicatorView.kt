@@ -45,6 +45,7 @@ class AvatarIndicatorView :
         binding.userAvatar.setOnClickListener(this)
     }
 
+    /** Renders the avatar and unread notification count. */
     fun render(
         avatar: String?,
         unreadNotificationCount: Int,
@@ -59,6 +60,7 @@ class AvatarIndicatorView :
         }
     }
 
+    /** Hides the unread notification indicator. */
     fun hideNotificationWidget() {
         onInit()
         hideNotificationCountWidget()

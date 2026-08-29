@@ -16,11 +16,13 @@ inline fun <reified T : Parcelable> Bundle.parcelable(key: String): T? {
     return BundleCompat.getParcelable(this, key, T::class.java)
 }
 
+/** Reads a typed Parcelable list from this bundle, or null when absent. */
 inline fun <reified T : Parcelable> Bundle.parcelableArrayList(key: String): ArrayList<T>? {
     T::class.java.classLoader?.let(::setClassLoader)
     return BundleCompat.getParcelableArrayList(this, key, T::class.java)
 }
 
+/** Reads a typed Serializable value from this bundle, or null when absent. */
 inline fun <reified T : Serializable> Bundle.serializable(key: String): T? {
     T::class.java.classLoader?.let(::setClassLoader)
     return BundleCompat.getSerializable(this, key, T::class.java)

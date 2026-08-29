@@ -46,6 +46,7 @@ import java.util.Locale
  * this Fragment owns the studio identity, metadata, media list,
  * toolbar actions, and pagination state without a child FragmentManager.
  */
+@Suppress("TooManyFunctions") // Lifecycle, navigation, and studio list responsibilities stay centralized.
 class StudioFragment : FragmentBaseList<MediaBase, ConnectionContainer<PageContainer<MediaBase>>>() {
 
     private var studioId: Long = 0
@@ -56,7 +57,9 @@ class StudioFragment : FragmentBaseList<MediaBase, ConnectionContainer<PageConta
     private val studioViewModel: StudioViewModel by viewModel()
     private val mediaViewModel: StudioMediaViewModel by viewModel()
 
+    /** Argument helpers for the studio destination. */
     companion object {
+        /** Reads the studio identity from typed or legacy arguments. */
         fun fromBundle(bundle: Bundle?): StudioScreenParam? = resolve(
             typed = bundle?.screenParam<StudioScreenParam>(),
             legacyId = bundle?.getLong(KeyUtil.arg_id) ?: 0L,

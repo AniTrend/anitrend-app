@@ -35,7 +35,9 @@ import kotlinx.coroutines.launch
  * This is deliberately an ordinary UI component, not a child Fragment. The
  * parent ProfileFragment owns section selection and the ViewModel remains the
  * owner of profile loading and follow mutations.
+ * The callback parameters preserve the profile destination's existing actions.
  */
+@Suppress("LongParameterList")
 class ProfileOverviewSection(
     private val activity: FragmentActivity,
     private val settings: Settings,
@@ -50,6 +52,7 @@ class ProfileOverviewSection(
     private var model: User? = null
     private var lifecycleOwner: LifecycleOwner? = null
 
+    /** Inflates and initializes the profile overview view. */
     fun inflate(inflater: LayoutInflater, container: ViewGroup): View {
         val sectionBinding = FragmentUserAboutBinding.inflate(inflater, container, false)
         binding = sectionBinding
@@ -65,6 +68,7 @@ class ProfileOverviewSection(
         return sectionBinding.root
     }
 
+    /** Starts collecting profile state and follow state for [owner]. */
     fun start(owner: LifecycleOwner) {
         lifecycleOwner = owner
         owner.lifecycleScope.launch {
@@ -93,6 +97,7 @@ class ProfileOverviewSection(
         viewModel.load(userId, userName.orEmpty())
     }
 
+    /** Releases profile view resources and cached rendering state. */
     fun clear() {
         binding?.userFollowStateWidget?.setListener(null)
         binding?.userFollowStateWidget?.setCurrentUser(null)

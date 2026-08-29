@@ -55,6 +55,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.Locale
 
 /** Single Navigation 2 destination for a user profile and its local sections. */
+@Suppress("TooManyFunctions") // Lifecycle, navigation, and profile section rendering stay centralized.
 class ProfileFragment : Fragment() {
     private enum class Section { OVERVIEW, MEDIA_LIST, TEXT }
 
@@ -76,9 +77,11 @@ class ProfileFragment : Fragment() {
     private var renderedSection: Section? = null
     private var mediaActionUtil: MediaActionUtil? = null
 
+    /** Argument and saved-state helpers for the profile destination. */
     companion object {
         private const val KEY_SECTION = "profile_section"
 
+        /** Reads the user identity from typed or legacy arguments. */
         fun fromBundle(bundle: Bundle?): UserScreenParam? = resolve(
             typed = bundle?.screenParam<UserScreenParam>(),
             legacyId = bundle?.getLong(KeyUtil.arg_id, 0L) ?: 0L,

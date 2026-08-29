@@ -22,7 +22,13 @@ import com.mxt.anitrend.viewmodel.MediaRecommendationsViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-/** View-only Paging 3 recommendations section used by the media destination. */
+/**
+ * View-only Paging 3 recommendations section used by the media destination.
+ *
+ * The constructor callbacks and grouped state helpers intentionally mirror the
+ * destination's existing recommendation actions and lifecycle.
+ */
+@Suppress("LongParameterList", "TooManyFunctions")
 class MediaRecommendationsSection(
     context: Context,
     private val viewModel: MediaRecommendationsViewModel,
@@ -44,6 +50,7 @@ class MediaRecommendationsSection(
     private val currentBinding: FragmentListBinding
         get() = checkNotNull(binding)
 
+    /** Inflates and initializes the recommendations view. */
     fun createView(inflater: LayoutInflater, container: ViewGroup?): View {
         val sectionBinding = FragmentListBinding.inflate(inflater, container, false)
         binding = sectionBinding
@@ -61,6 +68,7 @@ class MediaRecommendationsSection(
         return sectionBinding.root
     }
 
+    /** Starts collecting recommendation paging state for [owner]. */
     fun start(owner: LifecycleOwner) {
         owner.lifecycleScope.launch {
             owner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -91,6 +99,7 @@ class MediaRecommendationsSection(
         }
     }
 
+    /** Activates the section and starts loading recommendations when needed. */
     fun select() {
         if (!selected) {
             selected = true
@@ -102,14 +111,17 @@ class MediaRecommendationsSection(
         }
     }
 
+    /** Releases the recommendation adapter and view resources. */
     fun destroyView() {
         binding?.recyclerView?.adapter = null
         binding = null
         selected = false
     }
 
+    /** Refreshes the recommendation paging stream. */
     override fun onRefresh() = adapter.refresh()
 
+    /** Ignores the legacy append callback because Paging owns append loading. */
     override fun onLoad() = Unit
 
     private fun load() {

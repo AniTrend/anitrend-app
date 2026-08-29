@@ -27,6 +27,7 @@ class MangaFragment : MediaBrowseFragment() {
     private lateinit var sectionSelector: ChipGroup
     private var section = Section.MANGA_LIST
 
+    /** Saved-state helpers for the manga section selector. */
     companion object {
         private const val STATE_SECTION = "manga_section"
 

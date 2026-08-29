@@ -35,8 +35,10 @@ class MediaStaffSection(
         onLoadPage = ::load,
     )
 
+    /** Inflates the media staff list section view. */
     fun createView(inflater: LayoutInflater, container: ViewGroup?): View = listSection.createView(inflater, container)
 
+    /** Starts collecting staff state for [owner]. */
     fun start(owner: LifecycleOwner) {
         owner.lifecycleScope.launch {
             owner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -51,12 +53,16 @@ class MediaStaffSection(
         }
     }
 
+    /** Activates the section and loads staff when needed. */
     fun select() = listSection.select()
 
+    /** Saves the section pagination state under [key]. */
     fun saveState(outState: android.os.Bundle, key: String) = listSection.saveState(outState, key)
 
+    /** Restores the section pagination state from [savedState]. */
     fun restoreState(savedState: android.os.Bundle?, key: String) = listSection.restoreState(savedState, key)
 
+    /** Releases the section view resources. */
     fun destroyView() = listSection.destroyView()
 
     private fun load(page: Int) {

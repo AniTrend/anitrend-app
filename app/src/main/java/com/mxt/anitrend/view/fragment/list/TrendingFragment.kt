@@ -27,6 +27,7 @@ class TrendingFragment : MediaLatestList() {
     private lateinit var sectionSelector: ChipGroup
     private var section = Section.ANIME
 
+    /** Saved-state helpers for the trending section selector. */
     companion object {
         private const val STATE_SECTION = "trending_section"
 

@@ -152,10 +152,12 @@ class MainActivity :
      * the task already has a prior destination beneath the delivered route,
      * so back returns there instead of finishing the task.
      */
-    private var isExternalEntry: Boolean = false
+    @Suppress("CommentOverPrivateProperty") // The NFR-003 entry-state contract is materially useful here.
+    private var shouldFinishExternalTaskOnBack: Boolean = false
 
     private val mainViewModel: MainViewModel by viewModel()
 
+    /** Opens the comment destination for [param]. */
     fun navigateToComment(param: CommentScreenParam) {
         navController.navigateToComment(param)
     }
@@ -289,9 +291,9 @@ class MainActivity :
 
         if (savedInstanceState == null) {
             redirectShortcut = fromIntent(intent)
-            isExternalEntry = resolveExternalEntry(isTaskRoot, intent.action, intent.data != null)
+            shouldFinishExternalTaskOnBack = resolveExternalEntry(isTaskRoot, intent.action, intent.data != null)
         } else {
-            isExternalEntry = savedInstanceState.getBoolean(KEY_EXTERNAL_ENTRY)
+            shouldFinishExternalTaskOnBack = savedInstanceState.getBoolean(KEY_EXTERNAL_ENTRY)
         }
         mNavigationView.itemBackground = getCompatDrawable(R.drawable.nav_background)
         mNavigationView.setNavigationItemSelectedListener(this)
@@ -317,10 +319,11 @@ class MainActivity :
         // beneath the delivered route, so back from the delivered destination
         // returns there instead of finishing the task. Only the onCreate entry
         // path evaluates resolveExternalEntry.
-        handleExternalRoute(intent)
-        isExternalEntry = false
+        dispatchExternalIntentRoute(intent)
+        shouldFinishExternalTaskOnBack = false
     }
 
+    @Suppress("ComplexCondition") // The menu remains explicit to match the root destination set.
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         if (navController.currentDestination?.id == R.id.animeFragment ||
             navController.currentDestination?.id == R.id.mangaFragment ||
@@ -400,14 +403,17 @@ class MainActivity :
         if (navController.currentDestination?.id == R.id.animeFragment) {
             onNavigate(selectedItem)
         }
-        isExternalEntry = externalEntryAfterDispatch(isExternalEntry, handleExternalRoute(intent))
+        shouldFinishExternalTaskOnBack = externalEntryAfterDispatch(
+            shouldFinishExternalTaskOnBack,
+            dispatchExternalIntentRoute(intent),
+        )
         makeRequest()
         requestCurrentUser()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putInt(KeyUtil.arg_redirect, redirectShortcut)
-        outState.putBoolean(KEY_EXTERNAL_ENTRY, isExternalEntry)
+        outState.putBoolean(KEY_EXTERNAL_ENTRY, shouldFinishExternalTaskOnBack)
         outState.putInt(KeyUtil.key_navigation_selected, selectedItem)
         outState.putInt(KeyUtil.key_navigation_title, selectedTitle)
         val text = searchView?.findViewById<TextView>(R.id.searchTextView)?.text
@@ -459,7 +465,7 @@ class MainActivity :
     }
 
     private fun navigateBackFromDestination() {
-        if (isExternalEntry) {
+        if (shouldFinishExternalTaskOnBack) {
             finish()
         } else {
             navController.navigateUp()
@@ -477,7 +483,7 @@ class MainActivity :
         -> true
         // NFR-002: the media list is top-level only for the root drawer
         // producer; pushed producers keep caller-back semantics.
-        R.id.mediaListFragment -> isRootOriginMediaList()
+        R.id.mediaListFragment -> isCurrentDestinationRootMediaList()
         else -> false
     }
 
@@ -487,7 +493,8 @@ class MainActivity :
      * origin contract: it is written for root and pushed routes alike and
      * cannot distinguish them.
      */
-    private fun isRootOriginMediaList(): Boolean = NavigationArgs.resolveMediaListOrigin(
+    @Suppress("CommentOverPrivateFunction") // The NFR-002 route-origin contract is materially useful here.
+    private fun isCurrentDestinationRootMediaList(): Boolean = NavigationArgs.resolveMediaListOrigin(
         navController.currentBackStackEntry?.arguments?.getString(MediaListFragment.ARG_MEDIA_LIST_ORIGIN),
     ) == MediaListOrigin.ROOT
 
@@ -526,6 +533,7 @@ class MainActivity :
         return true
     }
 
+    @Suppress("ComplexCondition") // Drawer item routing remains explicit and centralized.
     private fun onNavigate(
         @IdRes menu: Int,
     ) {
@@ -655,7 +663,8 @@ class MainActivity :
      * chain). Callers use the count to keep external finish semantics through
      * the initial ingress route and clear them after a follow-up (NFR-003).
      */
-    private fun handleExternalRoute(intent: Intent): Int {
+    @Suppress("CommentOverPrivateFunction", "LongMethod") // Ingress routing is intentionally centralized.
+    private fun dispatchExternalIntentRoute(intent: Intent): Int {
         IntentBundleUtil(intent).checkIntentData(this)
         if (intent.action == Intent.ACTION_SEND) {
             navController.navigateToSharedContent(SharedContentFragment.arguments(intent))
@@ -820,7 +829,7 @@ class MainActivity :
                 }
                 1
             }
-            null -> handleExternalUriRoute(intent)
+            null -> dispatchExternalUriRoute(intent)
             else -> 0
         }
     }
@@ -831,7 +840,8 @@ class MainActivity :
      * the `/user/<name>/animelist|mangalist` chain, whose profile landing is
      * followed by an internal media-list push (NFR-001, NFR-003).
      */
-    private fun handleExternalUriRoute(intent: Intent): Int {
+    @Suppress("CommentOverPrivateFunction") // URI ingress semantics are documented at this boundary.
+    private fun dispatchExternalUriRoute(intent: Intent): Int {
         if (intent.data?.path?.startsWith("/activity") == true) {
             val activityId = intent.getLongExtra(KeyUtil.arg_id, 0L)
             if (activityId > 0L) {

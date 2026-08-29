@@ -15,6 +15,7 @@ class RecyclerSectionAdapter(
 ) : RecyclerViewAdapter<Any>(context) {
     private var delegate: RecyclerViewAdapter<Any>? = null
 
+    /** Selects the typed adapter that supplies this section's views and data. */
     @Suppress("UNCHECKED_CAST")
     fun <T> select(adapter: RecyclerViewAdapter<T>) {
         delegate?.clearDataSet()
@@ -24,6 +25,7 @@ class RecyclerSectionAdapter(
         super.clearDataSet()
     }
 
+    /** Clears data from the currently selected section and its host adapter. */
     fun clearSelectedSection() {
         delegate?.clearDataSet()
         super.clearDataSet()

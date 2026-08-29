@@ -28,6 +28,7 @@ class FeedFragment : FeedListFragment() {
     private lateinit var sectionSelector: ChipGroup
     private var section = Section.PROGRESS
 
+    /** Saved-state helpers for the feed section selector. */
     companion object {
         private const val STATE_SECTION = "feed_section"
 

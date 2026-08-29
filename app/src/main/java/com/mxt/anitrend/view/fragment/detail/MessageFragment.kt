@@ -22,6 +22,7 @@ import org.koin.android.ext.android.inject
  * Unified message screen. Inbox and outbox are mutually exclusive screen state,
  * not separate navigation destinations.
  */
+@Suppress("TooManyFunctions") // Lifecycle, navigation, and message actions stay centralized.
 class MessageFragment : FeedListFragment() {
     private var userId: Long = 0
 
@@ -30,6 +31,7 @@ class MessageFragment : FeedListFragment() {
     private val userRepository: UserRepository by inject()
     private val messageFeedViewModel: MessageFeedViewModel by viewModel()
 
+    /** Saved-state keys for the message destination. */
     companion object {
         private const val STATE_MESSAGE_TYPE = "message.section"
     }

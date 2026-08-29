@@ -1,3 +1,6 @@
+// Route extensions intentionally remain centralized so callers share one navigation contract.
+@file:Suppress("TooManyFunctions")
+
 package com.mxt.anitrend.navigation.extension
 
 import androidx.navigation.NavController
@@ -27,46 +30,57 @@ fun NavController.navigateToAbout() {
     navigate(R.id.action_global_aboutFragment, null, destinationOptions())
 }
 
+/** Opens the application changelog destination. */
 fun NavController.navigateToChangelog() {
     navigate(R.id.action_global_changelogFragment, null, destinationOptions())
 }
 
+/** Opens the application logging destination. */
 fun NavController.navigateToLogging() {
     navigate(R.id.action_global_loggingFragment, null, destinationOptions())
 }
 
+/** Opens the settings hub destination. */
 fun NavController.navigateToSettings() {
     navigate(R.id.action_global_settingsHubFragment, null, destinationOptions())
 }
 
+/** Opens the notifications destination. */
 fun NavController.navigateToNotifications() {
     navigate(R.id.action_global_notificationFragment, null, destinationOptions())
 }
 
+/** Opens the messages destination. */
 fun NavController.navigateToMessages() {
     navigate(R.id.action_global_messageFragment, null, destinationOptions())
 }
 
+/** Opens shared content with the supplied destination arguments. */
 fun NavController.navigateToSharedContent(arguments: Bundle = Bundle.EMPTY) {
     navigate(R.id.action_global_sharedContentFragment, arguments, destinationOptions())
 }
 
+/** Opens a comment destination for [param]. */
 fun NavController.navigateToComment(param: CommentScreenParam) {
     navigate(R.id.action_global_commentFragment, param.asBundle(), destinationOptions())
 }
 
+/** Opens a studio destination for [param]. */
 fun NavController.navigateToStudio(param: StudioScreenParam) {
     navigate(R.id.action_global_studioFragment, param.asBundle(), destinationOptions())
 }
 
+/** Opens a character destination for [param]. */
 fun NavController.navigateToCharacter(param: CharacterScreenParam) {
     navigate(R.id.action_global_characterFragment, param.asBundle(), destinationOptions())
 }
 
+/** Opens a staff destination for [param]. */
 fun NavController.navigateToStaff(param: StaffScreenParam) {
     navigate(R.id.action_global_staffFragment, param.asBundle(), destinationOptions())
 }
 
+/** Opens a profile destination for [param]. */
 fun NavController.navigateToProfile(param: UserScreenParam) {
     navigate(
         R.id.action_global_profileFragment,
@@ -78,6 +92,7 @@ fun NavController.navigateToProfile(param: UserScreenParam) {
     )
 }
 
+/** Opens a media destination for [param]. */
 fun NavController.navigateToMedia(param: MediaScreenParam) {
     navigate(
         R.id.action_global_mediaFragment,
@@ -139,6 +154,7 @@ fun NavController.navigateToRootMediaList(
     navigateToMediaList(param, mediaType, origin = MediaListOrigin.ROOT)
 }
 
+/** Opens the favourites destination for [param]. */
 fun NavController.navigateToFavourites(param: UserScreenParam) {
     navigate(
         R.id.action_global_favouriteFragment,
@@ -150,6 +166,7 @@ fun NavController.navigateToFavourites(param: UserScreenParam) {
     )
 }
 
+/** Opens search results for [query]. */
 fun NavController.navigateToSearch(query: String?) {
     navigate(
         R.id.action_global_searchFragment,
@@ -158,26 +175,32 @@ fun NavController.navigateToSearch(query: String?) {
     )
 }
 
+/** Opens the feed root destination. */
 fun NavController.navigateToFeed() {
     navigate(R.id.action_global_feedFragment, null, rootDestinationOptions())
 }
 
+/** Opens the anime root destination. */
 fun NavController.navigateToAnime() {
     navigate(R.id.action_global_animeFragment, null, rootDestinationOptions())
 }
 
+/** Opens the manga root destination. */
 fun NavController.navigateToManga() {
     navigate(R.id.action_global_mangaFragment, null, rootDestinationOptions())
 }
 
+/** Opens the airing root destination. */
 fun NavController.navigateToAiring() {
     navigate(R.id.action_global_airingFragment, null, rootDestinationOptions())
 }
 
+/** Opens the hub root destination. */
 fun NavController.navigateToHub() {
     navigate(R.id.action_global_hubFragment, null, rootDestinationOptions())
 }
 
+/** Opens the watch list destination with its feed and popularity state. */
 fun NavController.navigateToWatchList(popular: Boolean) {
     navigate(
         R.id.action_global_watchListFragment,
@@ -192,46 +215,57 @@ fun NavController.navigateToWatchList(popular: Boolean) {
     )
 }
 
+/** Opens the reviews root destination. */
 fun NavController.navigateToReviews() {
     navigate(R.id.action_global_reviewFragment, null, rootDestinationOptions())
 }
 
+/** Opens the trending root destination. */
 fun NavController.navigateToTrending() {
     navigate(R.id.action_global_trendingFragment, null, rootDestinationOptions())
 }
 
+/** Opens a character destination from a fragment for [param]. */
 fun Fragment.navigateToCharacter(param: CharacterScreenParam) {
     findNavController().navigateToCharacter(param)
 }
 
+/** Opens a comment destination from a fragment for [param]. */
 fun Fragment.navigateToComment(param: CommentScreenParam) {
     findNavController().navigateToComment(param)
 }
 
+/** Opens a studio destination from a fragment for [param]. */
 fun Fragment.navigateToStudio(param: StudioScreenParam) {
     findNavController().navigateToStudio(param)
 }
 
+/** Opens a staff destination from a fragment for [param]. */
 fun Fragment.navigateToStaff(param: StaffScreenParam) {
     findNavController().navigateToStaff(param)
 }
 
+/** Opens a profile destination from a fragment for [param]. */
 fun Fragment.navigateToProfile(param: UserScreenParam) {
     findNavController().navigateToProfile(param)
 }
 
+/** Opens a media destination from a fragment for [param]. */
 fun Fragment.navigateToMedia(param: MediaScreenParam) {
     findNavController().navigateToMedia(param)
 }
 
+/** Opens the favourites destination from a fragment for [param]. */
 fun Fragment.navigateToFavourites(param: UserScreenParam) {
     findNavController().navigateToFavourites(param)
 }
 
+/** Opens search results from a fragment for [query]. */
 fun Fragment.navigateToSearch(query: String?) {
     findNavController().navigateToSearch(query)
 }
 
+/** Opens the media browse destination with the supplied [arguments]. */
 fun NavController.navigateToMediaBrowse(arguments: Bundle) {
     navigate(R.id.action_global_mediaBrowseFragment, arguments, destinationOptions())
 }
@@ -255,6 +289,7 @@ private fun rootDestinationOptions(): NavOptions = NavOptions.Builder()
  * root popUpTo (back to the graph root) and `saveState` (drawer state of other
  * root destinations is still preserved).
  */
+@Suppress("CommentOverPrivateFunction") // The NFR-007 state contract is materially useful here.
 private fun mediaListRootDestinationOptions(): NavOptions = NavOptions.Builder()
     .setLaunchSingleTop(true)
     .setRestoreState(false)

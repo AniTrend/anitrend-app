@@ -22,6 +22,7 @@ class CharacterOverviewSection(
     private var binding: FragmentCharacterOverviewBinding? = null
     private var model: MediaCharacter? = null
 
+    /** Inflates and initializes the character overview view. */
     fun createView(inflater: LayoutInflater, container: ViewGroup?): View {
         val sectionBinding = FragmentCharacterOverviewBinding.inflate(inflater, container, false)
         binding = sectionBinding
@@ -35,10 +36,12 @@ class CharacterOverviewSection(
         return sectionBinding.root
     }
 
+    /** Shows the loading state for the overview. */
     fun renderLoading() {
         binding?.stateLayout?.showLoading()
     }
 
+    /** Renders [character] in the overview. */
     fun render(character: MediaCharacter) {
         val current = binding ?: return
         model = character
@@ -50,6 +53,7 @@ class CharacterOverviewSection(
         current.stateLayout.showContent()
     }
 
+    /** Shows [message] and exposes the retry action. */
     fun renderError(message: String) {
         binding?.stateLayout?.showError(
             binding?.root?.context?.getCompatDrawable(R.drawable.ic_warning_white_18dp),
@@ -58,6 +62,7 @@ class CharacterOverviewSection(
         ) { onRetry() }
     }
 
+    /** Releases the current view binding and rendered model. */
     fun destroyView() {
         binding = null
         model = null

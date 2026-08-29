@@ -36,6 +36,7 @@ private val characterItemDiff = object : DiffUtil.ItemCallback<RecyclerItem>() {
     override fun areContentsTheSame(oldItem: RecyclerItem, newItem: RecyclerItem): Boolean = oldItem == newItem
 }
 
+/** Displays media entries grouped by character role and forwards media actions. */
 class CharacterMediaAdapter(
     private val onMediaClick: (View, MediaBase) -> Unit,
     private val onMediaLongClick: (MediaBase) -> Unit,
@@ -102,6 +103,7 @@ class CharacterMediaAdapter(
     }
 }
 
+/** Displays a character's media and staff entries and forwards item actions. */
 class CharacterActorsAdapter(
     private val onMediaClick: ItemClickListener<RecyclerItem>,
     private val onStaffClick: (View, StaffBase) -> Unit,

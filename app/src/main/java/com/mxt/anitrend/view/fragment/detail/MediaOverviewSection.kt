@@ -40,7 +40,10 @@ import kotlinx.coroutines.launch
  *
  * The parent destination owns navigation and section selection. This controller
  * owns only overview rendering, its list adapters, and its ViewModel collection.
+ * The callback-heavy constructor keeps the destination's existing overview
+ * actions at this section boundary.
  */
+@Suppress("LongParameterList")
 class MediaOverviewSection(
     private val viewModel: MediaOverviewViewModel,
     private val mediaId: Long,
@@ -58,6 +61,7 @@ class MediaOverviewSection(
     private var tagAdapter: TagAdapter? = null
     private var selected = false
 
+    /** Inflates and initializes the media overview view. */
     fun inflate(inflater: LayoutInflater, container: ViewGroup?): View {
         val sectionBinding = FragmentSeriesOverviewBinding.inflate(inflater, container, false)
         binding = sectionBinding
@@ -82,6 +86,7 @@ class MediaOverviewSection(
         return sectionBinding.root
     }
 
+    /** Starts collecting overview state for [owner]. */
     fun start(owner: LifecycleOwner) {
         lifecycleOwner = owner
         owner.lifecycleScope.launch {
@@ -106,12 +111,14 @@ class MediaOverviewSection(
         }
     }
 
+    /** Loads the overview the first time this section is selected. */
     fun select() {
         if (selected) return
         selected = true
         viewModel.load(mediaId, mediaType)
     }
 
+    /** Releases the overview binding and cached rendering state. */
     fun clear() {
         binding = null
         lifecycleOwner = null

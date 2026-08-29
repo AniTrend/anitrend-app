@@ -34,7 +34,9 @@ class BottomReviewReader : BottomSheetBase<ReviewRecord>() {
     private var binding: BottomSheetReviewBinding? = null
     private var onUserClick: ((UserScreenParam) -> Unit)? = null
 
+    /** Factory and argument helpers for the review reader sheet. */
     companion object {
+        /** Creates a review reader sheet with the supplied arguments. */
         @JvmStatic
         fun newInstance(bundle: Bundle): BottomReviewReader = BottomReviewReader().apply {
             arguments = bundle
@@ -99,6 +101,7 @@ class BottomReviewReader : BottomSheetBase<ReviewRecord>() {
         onUserClick = null
     }
 
+    /** Builds a review reader sheet from an immutable review record. */
     class Builder : BottomSheetBuilder() {
         private var review: ReviewRecord? = null
         private var onUserClick: ((UserScreenParam) -> Unit)? = null
@@ -108,11 +111,13 @@ class BottomReviewReader : BottomSheetBase<ReviewRecord>() {
             instance.onUserClick = onUserClick
         }
 
+        /** Sets the callback invoked when the review author is selected. */
         fun setOnUserClick(listener: (UserScreenParam) -> Unit): Builder {
             onUserClick = listener
             return this
         }
 
+        /** Sets the review rendered by the sheet and its identity-only arguments. */
         fun setReview(review: ReviewRecord): Builder {
             this.review = review
             val param = review.toReviewScreenParam()

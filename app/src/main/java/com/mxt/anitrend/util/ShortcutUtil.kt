@@ -149,6 +149,7 @@ object ShortcutUtil {
      * [KeyUtil.arg_shortcut_used] marker. Returns null for unknown types.
      */
     @VisibleForTesting
+    @Suppress("LongMethod") // Shortcut metadata mapping stays centralized by type.
     internal fun buildShortcutInfo(
         context: Context,
         shortcutBuilder: ShortcutBuilder,

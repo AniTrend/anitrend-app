@@ -21,6 +21,7 @@ class StaffOverviewSection(
     private var binding: FragmentStaffOverviewBinding? = null
     private var model: StaffBase? = null
 
+    /** Inflates and initializes the staff overview view. */
     fun createView(inflater: LayoutInflater, container: ViewGroup?): View {
         val sectionBinding = FragmentStaffOverviewBinding.inflate(inflater, container, false)
         binding = sectionBinding
@@ -34,10 +35,12 @@ class StaffOverviewSection(
         return sectionBinding.root
     }
 
+    /** Shows the loading state for the overview. */
     fun renderLoading() {
         binding?.stateLayout?.showLoading()
     }
 
+    /** Renders [staff] in the overview. */
     fun render(staff: StaffBase) {
         val current = binding ?: return
         model = staff
@@ -48,6 +51,7 @@ class StaffOverviewSection(
         current.stateLayout.showContent()
     }
 
+    /** Shows [message] and exposes the retry action. */
     fun renderError(message: String) {
         binding?.stateLayout?.showError(
             binding?.root?.context?.getCompatDrawable(R.drawable.ic_emoji_sweat),
@@ -56,6 +60,7 @@ class StaffOverviewSection(
         ) { onRetry() }
     }
 
+    /** Releases the current view binding and rendered model. */
     fun destroyView() {
         binding = null
         model = null

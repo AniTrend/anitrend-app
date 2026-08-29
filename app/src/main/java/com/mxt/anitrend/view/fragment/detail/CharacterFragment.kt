@@ -52,6 +52,7 @@ import java.util.Locale
  * view-only renderer backed by the parent Fragment's ViewModels. No child
  * FragmentManager or replacement pager is used.
  */
+@Suppress("TooManyFunctions") // Lifecycle, navigation, and section rendering stay centralized.
 class CharacterFragment : Fragment() {
 
     private enum class Section {
@@ -61,9 +62,11 @@ class CharacterFragment : Fragment() {
         ACTOR_ROLES,
     }
 
+    /** Argument helpers for the character destination. */
     companion object {
         private const val KEY_SECTION = "character.section"
 
+        /** Reads the character identity from typed or legacy arguments. */
         fun fromBundle(bundle: Bundle?): CharacterScreenParam? = resolve(
             typed = bundle?.screenParam<CharacterScreenParam>(),
             legacyId = bundle?.getLong(KeyUtil.arg_id) ?: 0L,

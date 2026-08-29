@@ -34,6 +34,7 @@ import com.mxt.anitrend.widget.ProgressLayout
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
+/** Bottom sheet displaying a supplied list of users. */
 class BottomSheetUsers :
     BottomSheetBase<List<UserBase>>(),
     ItemClickListener<UserBase>,
@@ -53,7 +54,9 @@ class BottomSheetUsers :
     private val userStore: UserStore by inject()
     private val toggleUserFollowInteractor: ToggleUserFollowInteractor by inject()
 
+    /** Factory and argument helpers for the users sheet. */
     companion object {
+        /** Creates a users sheet with the supplied arguments. */
         @JvmStatic
         fun newInstance(bundle: Bundle): BottomSheetUsers = BottomSheetUsers().apply {
             arguments = bundle
@@ -218,6 +221,7 @@ class BottomSheetUsers :
         data: IndexedValue<UserBase>,
     ) = Unit
 
+    /** Builds a users sheet and configures its navigation callback. */
     class Builder : BottomSheetBuilder() {
         private var onUserClick: ((UserScreenParam) -> Unit)? = null
 
@@ -225,6 +229,7 @@ class BottomSheetUsers :
             instance.onUserClick = onUserClick
         }
 
+        /** Sets the callback invoked when a user is selected. */
         fun setOnUserClick(listener: (UserScreenParam) -> Unit): Builder {
             onUserClick = listener
             return this

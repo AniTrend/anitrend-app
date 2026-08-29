@@ -26,6 +26,7 @@ private val mediaCharacterItemDiff = object : DiffUtil.ItemCallback<RecyclerItem
     override fun areContentsTheSame(oldItem: RecyclerItem, newItem: RecyclerItem): Boolean = oldItem == newItem
 }
 
+/** Displays characters associated with a media item, including role headers. */
 @Suppress("UNCHECKED_CAST")
 class MediaCharacterAdapter(
     private val onCharacterClick: (View, CharacterBase) -> Unit,

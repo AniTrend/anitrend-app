@@ -51,6 +51,7 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /** Single Navigation 2 destination for a user's favourite sections. */
+@Suppress("TooManyFunctions") // Lifecycle, navigation, and favourite section rendering stay centralized.
 class FavouriteFragment : FragmentBaseList<Any, Any>() {
     private enum class Section(
         val title: Int,
@@ -74,9 +75,11 @@ class FavouriteFragment : FragmentBaseList<Any, Any>() {
     private val staffViewModel: StaffFavouritesViewModel by viewModel()
     private val studioViewModel: StudioFavouritesViewModel by viewModel()
 
+    /** Argument and saved-state helpers for the favourites destination. */
     companion object {
         private const val STATE_SECTION = "favourite_section"
 
+        /** Reads the user identity from typed or legacy arguments. */
         fun fromBundle(bundle: Bundle?): UserScreenParam? = bundle?.screenParam<UserScreenParam>() ?: resolveLegacyUser(
             legacyId = bundle?.getLong(KeyUtil.arg_id, 0L) ?: 0L,
             legacyName = bundle?.getString(KeyUtil.arg_userName),

@@ -26,7 +26,13 @@ import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.viewmodel.ReviewViewModel
 import kotlinx.coroutines.launch
 
-/** View-only paged reviews section used by the media destination. */
+/**
+ * View-only paged reviews section used by the media destination.
+ *
+ * The constructor callbacks and grouped state helpers intentionally preserve
+ * the destination's existing review actions and lifecycle.
+ */
+@Suppress("LongParameterList", "TooManyFunctions")
 class MediaReviewSection(
     context: Context,
     databaseHelper: DatabaseHelper,
@@ -60,6 +66,7 @@ class MediaReviewSection(
     private val currentBinding: FragmentListBinding
         get() = checkNotNull(binding)
 
+    /** Inflates and initializes the reviews view. */
     fun createView(inflater: LayoutInflater, container: ViewGroup?): View {
         val sectionBinding = FragmentListBinding.inflate(inflater, container, false)
         binding = sectionBinding
@@ -82,6 +89,7 @@ class MediaReviewSection(
         return sectionBinding.root
     }
 
+    /** Starts collecting review state and rate events for [owner]. */
     fun start(owner: LifecycleOwner) {
         owner.lifecycleScope.launch {
             owner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -103,12 +111,15 @@ class MediaReviewSection(
         }
     }
 
+    /** Activates the section and loads reviews when needed. */
     fun select() {
         if (adapter.itemCount == 0) onRefresh() else showContent()
     }
 
+    /** Refreshes the review list from its first page. */
     fun refresh() = onRefresh()
 
+    /** Releases review view resources and dismisses transient feedback. */
     fun destroyView() {
         staleSnackbar?.dismiss()
         staleSnackbar = null
@@ -116,11 +127,13 @@ class MediaReviewSection(
         binding = null
     }
 
+    /** Resets pagination and requests the first review page. */
     override fun onRefresh() {
         scrollListener.onRefreshPage()
         load(scrollListener.currentPage)
     }
 
+    /** Requests the next review page. */
     override fun onLoad() = loadNextPage()
 
     private fun loadNextPage() {
