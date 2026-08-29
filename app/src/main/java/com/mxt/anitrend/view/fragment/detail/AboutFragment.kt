@@ -8,9 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.R
-import com.mxt.anitrend.view.activity.base.ChangelogActivity
+import com.mxt.anitrend.navigation.extension.navigateToChangelog
 
 /**
  * Created by max on 2018/03/04.
@@ -73,8 +74,7 @@ class AboutFragment : Fragment() {
 
         view.findViewById<View>(R.id.about_whats_new)?.apply {
             setOnClickListener {
-                val intent = Intent(requireContext(), ChangelogActivity::class.java)
-                startActivity(intent)
+                findNavController().navigateToChangelog()
             }
         }
 

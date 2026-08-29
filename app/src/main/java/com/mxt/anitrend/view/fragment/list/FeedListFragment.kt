@@ -1,6 +1,5 @@
 package com.mxt.anitrend.view.fragment.list
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.ActionMode
 import android.view.Menu
@@ -19,17 +18,19 @@ import com.mxt.anitrend.data.mapper.toUserBase
 import com.mxt.anitrend.domain.model.FeedItemUiModel
 import com.mxt.anitrend.domain.model.PageInfoRecord
 import com.mxt.anitrend.navigation.extension.NavigationArgs
+import com.mxt.anitrend.navigation.extension.navigateToComment
+import com.mxt.anitrend.navigation.model.CommentScreenParam
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.container.body.PageContainer
-import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.TapTargetUtil
 import com.mxt.anitrend.util.media.MediaActionUtil
-import com.mxt.anitrend.view.activity.detail.CommentActivity
-import com.mxt.anitrend.view.activity.detail.MediaActivity
-import com.mxt.anitrend.view.activity.detail.ProfileActivity
+import com.mxt.anitrend.navigation.extension.navigateToProfile
+import com.mxt.anitrend.navigation.extension.navigateToMedia
+import com.mxt.anitrend.navigation.model.UserScreenParam
+import com.mxt.anitrend.navigation.model.MediaScreenParam
 import com.mxt.anitrend.view.sheet.BottomSheetComposer
 import com.mxt.anitrend.view.sheet.BottomSheetUsers
 import com.mxt.anitrend.viewmodel.FeedListViewModel
@@ -241,6 +242,10 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
 
     protected open fun currentRenderedFeedItems(): List<FeedItemUiModel> = feedListAdapter?.currentList.orEmpty()
 
+    protected fun clearRenderedFeedItems() {
+        feedListAdapter?.submitList(emptyList())
+    }
+
     private fun resolveCurrentFeedItem(feedId: Long): FeedItemUiModel? = currentRenderedFeedItems().firstOrNull { it.id == feedId }
 
     private fun openFeedMedia(
@@ -249,18 +254,11 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
     ) {
         val feedItem = resolveCurrentFeedItem(feedId) ?: return
         val mediaId = feedItem.mediaId ?: return
-        val host = activity ?: return
-        val intent = MediaActivity.newIntent(host, mediaId, feedItem.mediaType)
-        CompatUtil.startRevealAnim(host, target, intent)
+        navigateToMedia(MediaScreenParam(mediaId, feedItem.mediaType))
     }
 
     private fun openFeedComments(feedId: Long) {
-        val host = activity ?: return
-        val intent =
-            Intent(host, CommentActivity::class.java).apply {
-                putExtra(KeyUtil.arg_id, feedId)
-            }
-        startActivity(intent)
+        navigateToComment(CommentScreenParam(feedId))
     }
 
     /**
@@ -288,6 +286,7 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
                 BottomSheetUsers
                     .Builder()
                     .setModel(likes)
+                    .setOnUserClick(::navigateToProfile)
                     .setTitle(R.string.title_bottom_sheet_likes)
                     .build()
             showBottomSheet()
@@ -302,13 +301,7 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
         target: View,
         userId: Long,
     ) {
-        val host = activity ?: return
-        val intent =
-            Intent(host, ProfileActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                putExtra(KeyUtil.arg_id, userId)
-            }
-        CompatUtil.startRevealAnim(host, target, intent)
+        navigateToProfile(UserScreenParam(userId))
     }
 
     private fun onFeedMediaLongPressed(
@@ -345,17 +338,10 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
         when (target.id) {
             R.id.series_image -> {
                 val series = data.value.media ?: return
-                val host = activity ?: return
-                val intent = MediaActivity.newIntent(host, series.id, series.type)
-                CompatUtil.startRevealAnim(host, target, intent)
+                navigateToMedia(MediaScreenParam(series.id, series.type))
             }
             R.id.widget_comment -> {
-                val host = activity ?: return
-                val intent =
-                    Intent(host, CommentActivity::class.java).apply {
-                        putExtra(KeyUtil.arg_id, data.value.id)
-                    }
-                startActivity(intent)
+                navigateToComment(CommentScreenParam(data.value.id))
             }
             R.id.widget_edit -> {
                 mBottomSheet =
@@ -374,6 +360,7 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
                         BottomSheetUsers
                             .Builder()
                             .setModel(likes)
+                            .setOnUserClick(::navigateToProfile)
                             .setTitle(R.string.title_bottom_sheet_likes)
                             .build()
                     showBottomSheet()
@@ -386,13 +373,7 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
             R.id.user_avatar -> {
                 val user = data.value.user
                 if (user != null) {
-                    val host = activity ?: return
-                    val intent =
-                        Intent(host, ProfileActivity::class.java).apply {
-                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                            putExtra(KeyUtil.arg_id, user.id)
-                        }
-                    CompatUtil.startRevealAnim(host, target, intent)
+                    navigateToProfile(UserScreenParam(user.id))
                 }
             }
         }

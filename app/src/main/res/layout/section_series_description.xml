@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/lg_margin"
-    tools:context=".view.activity.detail.MediaActivity">
+    tools:context=".view.fragment.detail.MediaFragment">
 
         <LinearLayout
         android:orientation="vertical"

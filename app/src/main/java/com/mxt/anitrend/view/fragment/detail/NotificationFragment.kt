@@ -1,6 +1,5 @@
 package com.mxt.anitrend.view.fragment.detail
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -25,14 +24,17 @@ import com.mxt.anitrend.domain.model.commentActivityId
 import com.mxt.anitrend.domain.model.toNotificationItemUiModel
 import com.mxt.anitrend.model.entity.base.NotificationHistory
 import com.mxt.anitrend.model.entity.base.NotificationHistory_
+import com.mxt.anitrend.navigation.extension.navigateToComment
+import com.mxt.anitrend.navigation.extension.navigateToMedia
+import com.mxt.anitrend.navigation.extension.navigateToProfile
+import com.mxt.anitrend.navigation.model.CommentScreenParam
+import com.mxt.anitrend.navigation.model.MediaScreenParam
+import com.mxt.anitrend.navigation.model.UserScreenParam
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.media.MediaActionUtil
-import com.mxt.anitrend.view.activity.detail.CommentActivity
-import com.mxt.anitrend.view.activity.detail.MediaActivity
-import com.mxt.anitrend.view.activity.detail.ProfileActivity
 import com.mxt.anitrend.viewmodel.NotificationViewModel
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
@@ -230,21 +232,17 @@ class NotificationFragment : FragmentBaseList<NotificationItemUiModel, Notificat
             !CompatUtil.equals(record.type, KeyUtil.MEDIA_DELETION) &&
             !CompatUtil.equals(record.type, KeyUtil.MEDIA_MERGE)
         ) {
-            intent = Intent(host, ProfileActivity::class.java)
-            intent.putExtra(KeyUtil.arg_id, record.user?.id ?: 0L)
-            startActivity(intent)
+            navigateToProfile(UserScreenParam(record.user?.id ?: 0L))
         } else {
             when (record.type) {
                 KeyUtil.ACTIVITY_MESSAGE -> {
-                    openCommentActivity(host, record)
+                    openCommentDestination(record)
                 }
                 KeyUtil.FOLLOWING -> {
-                    intent = Intent(host, ProfileActivity::class.java)
-                    intent.putExtra(KeyUtil.arg_id, record.user?.id ?: 0L)
-                    startActivity(intent)
+                    navigateToProfile(UserScreenParam(record.user?.id ?: 0L))
                 }
                 KeyUtil.ACTIVITY_MENTION -> {
-                    openCommentActivity(host, record)
+                    openCommentDestination(record)
                 }
                 KeyUtil.AIRING,
                 KeyUtil.RELATED_MEDIA_ADDITION,
@@ -252,20 +250,18 @@ class NotificationFragment : FragmentBaseList<NotificationItemUiModel, Notificat
                 KeyUtil.MEDIA_DELETION,
                 KeyUtil.MEDIA_MERGE,
                 -> {
-                    intent = MediaActivity.newIntent(host, record.media?.id ?: 0L, record.media?.type)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     if (record.media != null) {
-                        startActivity(intent)
+                        navigateToMedia(MediaScreenParam(record.media.id, record.media.type))
                     }
                 }
                 KeyUtil.ACTIVITY_LIKE -> {
-                    openCommentActivity(host, record)
+                    openCommentDestination(record)
                 }
                 KeyUtil.ACTIVITY_REPLY, KeyUtil.ACTIVITY_REPLY_SUBSCRIBED -> {
-                    openCommentActivity(host, record)
+                    openCommentDestination(record)
                 }
                 KeyUtil.ACTIVITY_REPLY_LIKE -> {
-                    openCommentActivity(host, record)
+                    openCommentDestination(record)
                 }
                 KeyUtil.THREAD_SUBSCRIBED,
                 KeyUtil.THREAD_LIKE,
@@ -291,7 +287,7 @@ class NotificationFragment : FragmentBaseList<NotificationItemUiModel, Notificat
         }
     }
 
-    private fun openCommentActivity(host: Context, record: NotificationRecord) {
+    private fun openCommentDestination(record: NotificationRecord) {
         // A null activity id means the referenced activity was deleted; the comment
         // screen cannot recover from a missing id, so show the message and stay put.
         val activityId = record.commentActivityId()
@@ -301,9 +297,7 @@ class NotificationFragment : FragmentBaseList<NotificationItemUiModel, Notificat
             }
             return
         }
-        val intent = Intent(host, CommentActivity::class.java)
-        intent.putExtra(KeyUtil.arg_id, activityId)
-        startActivity(intent)
+        navigateToComment(CommentScreenParam(activityId))
     }
 
     private fun onNotificationLongClick(target: View, item: NotificationItemUiModel) {

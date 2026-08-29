@@ -1,7 +1,6 @@
 package com.mxt.anitrend.view.sheet
 
 import android.app.Dialog
-import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
@@ -34,10 +33,10 @@ import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.navigation.extension.screenParam
 import com.mxt.anitrend.navigation.extension.screenParamKey
 import com.mxt.anitrend.navigation.model.UserListScreenParam
+import com.mxt.anitrend.navigation.model.UserScreenParam
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
-import com.mxt.anitrend.view.activity.detail.ProfileActivity
 import com.mxt.anitrend.viewmodel.UserListViewModel
 import com.mxt.anitrend.widget.ProgressLayout
 import kotlinx.coroutines.launch
@@ -63,6 +62,7 @@ class BottomSheetListUsers :
 
     private var count: Int = 0
     private var userId: Long = 0
+    private var onUserClick: ((UserScreenParam) -> Unit)? = null
 
     @KeyUtil.RequestType
     private var requestType: Int = 0
@@ -394,13 +394,7 @@ class BottomSheetListUsers :
     ) {
         when (target.id) {
             R.id.container -> {
-                val host = activity ?: return
-                val intent =
-                    Intent(host, ProfileActivity::class.java).apply {
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                        putExtra(KeyUtil.arg_id, data.value.id)
-                    }
-                CompatUtil.startRevealAnim(host, target, intent)
+                onUserClick?.invoke(UserScreenParam(data.value.id))
             }
         }
     }
@@ -411,6 +405,8 @@ class BottomSheetListUsers :
     ) = Unit
 
     class Builder : BottomSheetBuilder() {
+        private var onUserClick: ((UserScreenParam) -> Unit)? = null
+
         override fun build(): BottomSheetBase<*> {
             // Typed identity write at the production entry point, derived from the
             // legacy setters; the legacy keys are retained for pre-migration readers.
@@ -421,7 +417,14 @@ class BottomSheetListUsers :
                     requestType = bundle.getInt(KeyUtil.arg_request_type, 0),
                 ),
             )
-            return newInstance(bundle)
+            return newInstance(bundle).also { instance ->
+                instance.onUserClick = onUserClick
+            }
+        }
+
+        fun setOnUserClick(listener: (UserScreenParam) -> Unit): Builder {
+            onUserClick = listener
+            return this
         }
 
         fun setUserId(userId: Long): Builder {

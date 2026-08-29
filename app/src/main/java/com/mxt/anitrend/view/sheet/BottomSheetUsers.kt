@@ -1,7 +1,6 @@
 package com.mxt.anitrend.view.sheet
 
 import android.app.Dialog
-import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
@@ -28,9 +27,9 @@ import com.mxt.anitrend.domain.user.interactor.ToggleUserFollowInteractor
 import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.extension.parcelableArrayList
 import com.mxt.anitrend.model.entity.base.UserBase
+import com.mxt.anitrend.navigation.model.UserScreenParam
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
-import com.mxt.anitrend.view.activity.detail.ProfileActivity
 import com.mxt.anitrend.widget.ProgressLayout
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
@@ -41,6 +40,7 @@ class BottomSheetUsers :
     Observer<List<UserBase>?> {
 
     private var binding: BottomSheetListBinding? = null
+    private var onUserClick: ((UserScreenParam) -> Unit)? = null
 
     private lateinit var mAdapter: RecyclerViewAdapter<UserBase>
     private lateinit var mLayoutManager: StaggeredGridLayoutManager
@@ -197,6 +197,7 @@ class BottomSheetUsers :
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
+        onUserClick = null
     }
 
     override fun onChanged(value: List<UserBase>?) = Unit
@@ -207,13 +208,7 @@ class BottomSheetUsers :
     ) {
         when (target.id) {
             R.id.container -> {
-                val host = activity ?: return
-                val intent =
-                    Intent(host, ProfileActivity::class.java).apply {
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                        putExtra(KeyUtil.arg_id, data.value.id)
-                    }
-                host.startActivity(intent)
+                onUserClick?.invoke(UserScreenParam(data.value.id))
             }
         }
     }
@@ -224,7 +219,16 @@ class BottomSheetUsers :
     ) = Unit
 
     class Builder : BottomSheetBuilder() {
-        override fun build(): BottomSheetBase<*> = newInstance(bundle)
+        private var onUserClick: ((UserScreenParam) -> Unit)? = null
+
+        override fun build(): BottomSheetBase<*> = newInstance(bundle).also { instance ->
+            instance.onUserClick = onUserClick
+        }
+
+        fun setOnUserClick(listener: (UserScreenParam) -> Unit): Builder {
+            onUserClick = listener
+            return this
+        }
 
         /**
          * Writes the user list through the parcel-safe [UserSheetModel] boundary.

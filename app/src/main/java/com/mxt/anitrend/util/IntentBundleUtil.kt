@@ -53,18 +53,22 @@ class IntentBundleUtil(
                         intent.putExtra(KeyUtil.arg_id, lastKey?.toLong())
                     }
                 }
-                KeyUtil.DEEP_LINK_USER ->
+                KeyUtil.DEEP_LINK_USER -> {
+                    val keys = lastKey?.split("/", limit = 2)
+                    val userName = keys?.getOrNull(0)
                     when {
-                        TextUtils.isDigitsOnly(lastKey) -> intent.putExtra(KeyUtil.arg_id, lastKey?.toLong())
-                        else -> {
-                            val keys = lastKey?.split("/", limit = 2)
-                            intent.putExtra(KeyUtil.arg_userName, keys?.getOrNull(0))
-                            when (keys?.getOrNull(1)?.lowercase()) {
-                                "animelist" -> intent.putExtra(KeyUtil.arg_mediaType, KeyUtil.ANIME)
-                                "mangalist" -> intent.putExtra(KeyUtil.arg_mediaType, KeyUtil.MANGA)
-                            }
-                        }
+                        // The identity is the first path segment: a numeric
+                        // segment is a user id, not a username, even when the
+                        // animelist/mangalist suffix follows it (NFR-003).
+                        userName != null && TextUtils.isDigitsOnly(userName) ->
+                            intent.putExtra(KeyUtil.arg_id, userName.toLong())
+                        else -> intent.putExtra(KeyUtil.arg_userName, userName)
                     }
+                    when (keys?.getOrNull(1)?.lowercase()) {
+                        "animelist" -> intent.putExtra(KeyUtil.arg_mediaType, KeyUtil.ANIME)
+                        "mangalist" -> intent.putExtra(KeyUtil.arg_mediaType, KeyUtil.MANGA)
+                    }
+                }
                 KeyUtil.DEEP_LINK_MANGA -> {
                     if (splitKeys != null) {
                         intent.putExtra(KeyUtil.arg_id, splitKeys[0].toLong())

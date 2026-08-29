@@ -8,6 +8,7 @@
     <string name="nav_about">About</string>
 
     <string name="action_search">Search</string>
+    <string name="title_activity_media_list">Media list</string>
     <string name="action_filter">@string/drawer_title_filter</string>
     <string name="action_help">Help</string>
 
@@ -819,6 +820,10 @@
     <string name="profile_error_generic">Couldn\'t load this profile</string>
     <!-- Error shown when the profile was opened without a valid user id or name -->
     <string name="profile_error_no_user">This profile could not be found</string>
+    <string name="title_activity_profile">Profile</string>
+    <string name="profile_section_overview">Overview</string>
+    <string name="profile_section_media">Progress</string>
+    <string name="profile_section_text">Status</string>
     <!-- TalkBack description for the profile loading indicator -->
     <string name="profile_loading_content_description">Loading profile</string>
 
@@ -841,6 +846,7 @@
     <string name="character_error_generic">Couldn\'t load this character</string>
     <!-- TalkBack description for the character loading indicator -->
     <string name="character_loading_content_description">Loading character</string>
+    <string name="character_image_description">Character image. Double tap to preview.</string>
 
     <!-- Staff detail strings -->
     <!-- Loading caption shown while the staff member is being fetched -->
@@ -851,6 +857,7 @@
     <string name="staff_error_generic">Couldn\'t load this staff member</string>
     <!-- TalkBack description for the staff loading indicator -->
     <string name="staff_loading_content_description">Loading staff</string>
+    <string name="staff_image_description">Staff image. Double tap to preview.</string>
 
     <!-- Image Preview error strings -->
     <string name="image_preview_error_character_image">The character image doesn\'t exist!</string>

@@ -14,6 +14,8 @@ import com.mxt.anitrend.adapter.recycler.index.MediaAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
 import com.mxt.anitrend.extension.parcelable
 import com.mxt.anitrend.navigation.extension.NavigationArgs
+import com.mxt.anitrend.navigation.extension.navigateToMedia
+import com.mxt.anitrend.navigation.model.MediaScreenParam
 import com.mxt.anitrend.model.entity.anilist.Genre
 import com.mxt.anitrend.model.entity.anilist.MediaTag
 import com.mxt.anitrend.model.entity.base.MediaBase
@@ -26,7 +28,6 @@ import com.mxt.anitrend.util.collection.GenreTagUtil
 import com.mxt.anitrend.util.date.DateUtil
 import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.util.media.MediaBrowseUtil
-import com.mxt.anitrend.view.activity.detail.MediaActivity
 import com.mxt.anitrend.view.sheet.BottomSheetMediaFilter
 import com.mxt.anitrend.view.sheet.MediaFilterSheetResult
 import com.mxt.anitrend.viewmodel.MediaBrowseViewModel
@@ -532,9 +533,7 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
     ) {
         when (target.id) {
             R.id.container -> {
-                val host = activity ?: return
-                val intent = MediaActivity.newIntent(host, data.value.id, data.value.type)
-                CompatUtil.startRevealAnim(host, target, intent)
+                navigateToMedia(MediaScreenParam(data.value.id, data.value.type))
             }
         }
     }

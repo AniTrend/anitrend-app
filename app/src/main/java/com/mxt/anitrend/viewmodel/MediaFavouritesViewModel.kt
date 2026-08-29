@@ -18,12 +18,20 @@ class MediaFavouritesViewModel(
 ) : ViewModel() {
 
     sealed interface UiState {
-        data object Loading : UiState
-        data class Success(val content: ConnectionContainer<Favourite>) : UiState
-        data class Error(val message: String) : UiState
+        val mediaType: String?
+
+        data class Loading(override val mediaType: String? = null) : UiState
+        data class Success(
+            val content: ConnectionContainer<Favourite>,
+            override val mediaType: String,
+        ) : UiState
+        data class Error(
+            val message: String,
+            override val mediaType: String? = null,
+        ) : UiState
     }
 
-    private val _state = MutableStateFlow<UiState>(UiState.Loading)
+    private val _state = MutableStateFlow<UiState>(UiState.Loading())
     val state: StateFlow<UiState> = _state.asStateFlow()
 
     /**
@@ -37,7 +45,7 @@ class MediaFavouritesViewModel(
         @KeyUtil.MediaType mediaType: String,
     ) {
         viewModelScope.launch {
-            _state.value = UiState.Loading
+            _state.value = UiState.Loading(mediaType)
             runCatching {
                 if (CompatUtil.equals(mediaType, KeyUtil.ANIME)) {
                     userRepository.getAnimeFavourites(
@@ -53,11 +61,12 @@ class MediaFavouritesViewModel(
                     )
                 }.getOrThrow()
             }.onSuccess { content ->
-                _state.value = UiState.Success(content)
+                _state.value = UiState.Success(content, mediaType)
             }.onFailure { throwable ->
                 Timber.e(throwable, "MediaFavouritesViewModel load failed")
                 _state.value = UiState.Error(
                     throwable.message ?: "Failed to load media favourites",
+                    mediaType,
                 )
             }
         }

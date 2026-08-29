@@ -30,16 +30,7 @@
         <meta-data android:name="firebase_analytics_collection_enabled"
             android:value="false" />
 
-        <activity
-            android:name=".view.activity.base.SettingsActivity"
-            android:label="@string/title_activity_settings"
-            android:exported="true"
-            android:parentActivityName=".view.activity.index.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.mxt.anitrend.view.activity.index.MainActivity" />
-        </activity>
-        <activity
+          <activity
             android:name=".view.activity.index.SplashActivity"
             android:exported="true"
             android:launchMode="singleTop">
@@ -56,16 +47,55 @@
         <activity
             android:name=".view.activity.index.MainActivity"
             android:launchMode="singleTop"
-            android:exported="true" />
-        <activity
-            android:name=".view.activity.detail.NotificationActivity"
-            android:label="@string/title_activity_notification"
-            android:launchMode="singleTop"
-            android:exported="true" />
-        <activity
-            android:name=".view.activity.detail.MessageActivity"
-            android:label="@string/title_activity_message"
-            android:exported="true"/>
+            android:exported="true">
+            <intent-filter>
+                <data
+                    android:host="anilist.co"
+                    android:pathPattern="/activity.*"
+                    android:scheme="https" />
+                <data
+                    android:host="anilist.co"
+                    android:pathPattern="/studio.*"
+                    android:scheme="https" />
+                <data
+                    android:host="anilist.co"
+                    android:pathPattern="/character.*"
+                    android:scheme="https" />
+                <data
+                    android:host="anilist.co"
+                    android:pathPattern="/staff.*"
+                    android:scheme="https" />
+                <data
+                    android:host="anilist.co"
+                    android:pathPattern="/actor.*"
+                    android:scheme="https" />
+                <data
+                    android:host="anilist.co"
+                    android:pathPattern="/anime.*"
+                    android:scheme="https" />
+                <data
+                    android:host="anilist.co"
+                    android:pathPattern="/manga.*"
+                    android:scheme="https" />
+                <data
+                    android:host="anilist.co"
+                    android:pathPattern="/user.*"
+                    android:scheme="https" />
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".view.activity.index.LoginActivity"
             android:exported="true"
@@ -80,156 +110,6 @@
                 <data
                     android:host="com.mxt.anitrend"
                     android:scheme="intent" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".view.activity.detail.ProfileActivity"
-            android:exported="true"
-            android:label="@string/drawer_title_profile">
-            <intent-filter>
-                <data
-                    android:host="anilist.co"
-                    android:pathPattern="/user.*"
-                    android:scheme="https" />
-
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".view.activity.detail.MediaActivity"
-            android:exported="true"
-            android:label="@string/title_activity_series">
-            <intent-filter>
-                <data
-                    android:host="anilist.co"
-                    android:pathPattern="/manga.*"
-                    android:scheme="https" />
-                <data
-                    android:host="anilist.co"
-                    android:pathPattern="/anime.*"
-                    android:scheme="https" />
-
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".view.activity.detail.CharacterActivity"
-            android:exported="true"
-            android:label="@string/title_activity_character">
-            <intent-filter>
-                <data
-                    android:host="anilist.co"
-                    android:pathPattern="/character.*"
-                    android:scheme="https" />
-
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".view.activity.detail.StaffActivity"
-            android:exported="true"
-            android:label="@string/title_activity_staff">
-            <intent-filter>
-                <data
-                    android:host="anilist.co"
-                    android:pathPattern="/staff.*"
-                    android:scheme="https" />
-                <data
-                    android:host="anilist.co"
-                    android:pathPattern="/actor.*"
-                    android:scheme="https" />
-
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".view.activity.detail.StudioActivity"
-            android:exported="true"
-            android:label="@string/title_activity_studio">
-            <intent-filter>
-                <data
-                    android:host="anilist.co"
-                    android:pathPattern="/studio.*"
-                    android:scheme="https" />
-
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".view.activity.detail.FavouriteActivity"
-            android:exported="true"
-            android:label="@string/title_favourites_list" />
-        <activity
-            android:name=".view.activity.detail.MediaListActivity"
-            android:exported="true"
-            android:label="@string/title_activity_user_list_view" />
-        <activity
-            android:name=".view.activity.detail.MediaBrowseActivity"
-            android:exported="true"
-            android:launchMode="singleTop" />
-        <activity
-            android:name=".view.activity.base.AboutActivity"
-            android:exported="true"
-            android:label="@string/nav_about"
-            android:launchMode="singleTop" />
-        <activity
-            android:name=".view.activity.base.ChangelogActivity"
-            android:exported="false" />
-        <activity
-            android:name=".view.activity.base.LoggingActivity"
-            android:exported="true"
-            android:label="@string/title_activity_logging"
-            android:launchMode="singleTop" />
-        <activity
-            android:name=".view.activity.index.SearchActivity"
-            android:exported="true"
-            android:label="@string/action_search"
-            android:launchMode="singleTop" />
-        <activity
-            android:name=".view.activity.detail.CommentActivity"
-            android:exported="true"
-            android:label="@string/title_activity_reply"
-            android:launchMode="singleTop">
-            <intent-filter>
-                <data
-                    android:host="anilist.co"
-                    android:pathPattern="/activity.*"
-                    android:scheme="https" />
-
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".view.activity.base.SharedContentActivity"
-            android:exported="true"
-            android:label="@string/menu_title_new_activity_post"
-            android:launchMode="singleTop"
-            android:theme="@style/AppThemeLight.Translucent">
-            <intent-filter>
-                <action android:name="android.intent.action.SEND" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
         <activity

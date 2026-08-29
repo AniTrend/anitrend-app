@@ -17,7 +17,7 @@ import com.mxt.anitrend.extension.checkNotificationPermission
 import com.mxt.anitrend.extension.getCompatColor
 import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.receiver.ClearNotifications
-import com.mxt.anitrend.view.activity.detail.NotificationActivity
+import com.mxt.anitrend.view.activity.index.MainActivity
 import timber.log.Timber
 import kotlin.math.min
 
@@ -37,8 +37,9 @@ class NotificationUtil(
         val targetActivity =
             Intent(
                 context,
-                NotificationActivity::class.java,
+                MainActivity::class.java,
             )
+                .putExtra(MainActivity.EXTRA_ROUTE, MainActivity.ROUTE_NOTIFICATIONS)
         return PendingIntent.getActivity(
             context,
             KeyUtil.NOTIFICATION_SUMMARY_ID,

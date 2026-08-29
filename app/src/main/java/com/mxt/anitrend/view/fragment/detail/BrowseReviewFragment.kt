@@ -28,7 +28,9 @@ import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.util.selectedIndex
-import com.mxt.anitrend.view.activity.detail.MediaActivity
+import com.mxt.anitrend.navigation.extension.navigateToMedia
+import com.mxt.anitrend.navigation.extension.navigateToProfile
+import com.mxt.anitrend.navigation.model.MediaScreenParam
 import com.mxt.anitrend.view.sheet.BottomReviewReader
 import com.mxt.anitrend.viewmodel.BrowseReviewViewModel
 import kotlinx.coroutines.launch
@@ -39,16 +41,16 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * Created by max on 2017/10/30.
  * Media review browse
  */
-class BrowseReviewFragment : FragmentBaseList<ReviewRecord, PageContainer<ReviewRecord>>() {
+open class BrowseReviewFragment : FragmentBaseList<ReviewRecord, PageContainer<ReviewRecord>>() {
     @KeyUtil.MediaType
-    private var mediaType: String? = null
+    protected var mediaType: String? = null
 
     private val settings: Settings by inject()
     private val databaseHelper: DatabaseHelper by inject()
 
     private val browseReviewViewModel: BrowseReviewViewModel by viewModel()
 
-    private var reviewAdapter: ReviewAdapter? = null
+    protected var reviewAdapter: ReviewAdapter? = null
     private var staleSnackbar: Snackbar? = null
 
     companion object {
@@ -67,9 +69,9 @@ class BrowseReviewFragment : FragmentBaseList<ReviewRecord, PageContainer<Review
 
         /**
          * Documented legacy channel: the review media type is filter state, not
-         * identity. It stays on arg_mediaType (set per tab by ReviewPageAdapter)
-         * until a browse-review state model is designed. Reads mirror the
-         * pre-refactor getter exactly (absent → null).
+         * identity. It stays on arg_mediaType (set by the local section selector)
+         * as presentation state. Reads mirror the pre-refactor getter exactly
+         * (absent → null).
          */
         fun fromBundle(bundle: Bundle?): String? = resolveLegacyType(bundle?.getString(KeyUtil.arg_mediaType))
 
@@ -273,15 +275,15 @@ class BrowseReviewFragment : FragmentBaseList<ReviewRecord, PageContainer<Review
         when (target.id) {
             R.id.series_image -> {
                 val mediaBase: MediaSummaryRecord? = data.value.media
-                val host = activity ?: return
-                val intent = MediaActivity.newIntent(host, mediaBase?.id ?: return, mediaBase?.type)
-                CompatUtil.startRevealAnim(host, target, intent)
+                val media = mediaBase ?: return
+                navigateToMedia(MediaScreenParam(media.id, media.type))
             }
             R.id.review_read_more -> {
                 mBottomSheet =
                     BottomReviewReader
                         .Builder()
                         .setReview(data.value)
+                        .setOnUserClick(::navigateToProfile)
                         .setTitle(R.string.drawer_title_reviews)
                         .build()
                 showBottomSheet()

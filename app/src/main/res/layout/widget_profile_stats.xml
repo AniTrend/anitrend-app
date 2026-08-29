@@ -10,8 +10,8 @@
     android:orientation="horizontal"
     android:baselineAligned="false"
     android:weightSum="4"
-    tools:showIn="@layout/activity_profile"
-    tools:context=".view.activity.detail.ProfileActivity">
+    tools:showIn="@layout/fragment_profile"
+    tools:context=".view.fragment.detail.ProfileFragment">
 
     <LinearLayout
         android:id="@+id/user_anime_total_container"

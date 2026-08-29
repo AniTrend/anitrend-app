@@ -23,7 +23,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 /**
  * Created by max on 2017/11/03.
  */
-class AiringListFragment : MediaListFragment() {
+open class AiringListFragment : MediaListFragment() {
 
     private val settings: Settings by inject()
     private val userRepository: UserRepository by inject()

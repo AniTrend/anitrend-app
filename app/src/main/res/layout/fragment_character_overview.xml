@@ -4,7 +4,7 @@
      card (alternative names + summary). Uses M3 typography tokens,
      MaterialDivider for breaks, and the existing ProgressLayout for
      loading/error/empty states. Preserves all binding IDs used by
-     CharacterOverviewFragment. -->
+     CharacterOverviewSection. -->
 <com.mxt.anitrend.widget.ProgressLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -44,7 +44,7 @@
                         android:foreground="?attr/selectableItemBackground"
                         android:layout_width="@dimen/series_image_xs"
                         android:layout_height="wrap_content"
-                        android:contentDescription="@string/image_preview_error_character_image"
+                        android:contentDescription="@string/character_image_description"
                         tools:src="@sample/gintama" />
 
                     <LinearLayout

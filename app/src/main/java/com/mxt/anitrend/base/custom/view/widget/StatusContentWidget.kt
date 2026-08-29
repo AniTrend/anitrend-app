@@ -1,9 +1,6 @@
 package com.mxt.anitrend.base.custom.view.widget
 
-import android.content.ActivityNotFoundException
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.text.TextUtils
 import android.util.AttributeSet
@@ -25,11 +22,7 @@ import com.mxt.anitrend.domain.feed.model.FeedReplyRecord
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.anilist.FeedReply
 import com.mxt.anitrend.util.CenterSnapUtil
-import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.markdown.RegexUtil
-import com.mxt.anitrend.view.activity.base.ImagePreviewActivity
-import com.mxt.anitrend.view.activity.base.VideoPlayerActivity
-import timber.log.Timber
 import java.util.ArrayList
 
 /**
@@ -48,6 +41,10 @@ constructor(
     private var contentLinks: MutableList<String>? = null
     private var contentTypes: MutableList<String>? = null
     private lateinit var binding: WidgetStatusBinding
+
+    var onImagePreviewRequested: ((String) -> Unit)? = null
+    var onVideoPreviewRequested: ((String) -> Unit)? = null
+    var onYoutubeRequested: ((String) -> Unit)? = null
 
     init {
         onInit()
@@ -123,6 +120,9 @@ constructor(
     override fun onViewRecycled() {
         contentLinks = null
         contentTypes = null
+        onImagePreviewRequested = null
+        onVideoPreviewRequested = null
+        onYoutubeRequested = null
     }
 
     private fun findMediaAttachments(value: String?) {
@@ -150,10 +150,10 @@ constructor(
 
     private fun constructAdditionalViews() {
         val links = contentLinks
-        if (!CompatUtil.isEmpty(links)) {
+        if (!links.isNullOrEmpty()) {
             val types = contentTypes ?: return
             val previewAdapter: RecyclerViewAdapter<String> = ImagePreviewAdapter(types, context)
-            previewAdapter.onItemsInserted(links ?: emptyList())
+            previewAdapter.onItemsInserted(links)
             previewAdapter.setClickListener(this)
             binding.widgetStatusRecycler.adapter = previewAdapter
 
@@ -181,25 +181,9 @@ constructor(
         val type = contentTypes?.getOrNull(data.index)?.lowercase() ?: return
         val content = data.value
         when (type) {
-            RegexUtil.KEY_IMG -> {
-                val intent = ImagePreviewActivity.newIntent(context, content)
-                context.startActivity(intent)
-            }
-            RegexUtil.KEY_WEB -> {
-                val intent = VideoPlayerActivity.newIntent(context, content)
-                context.startActivity(intent)
-            }
-            RegexUtil.KEY_YOU -> {
-                try {
-                    val intent =
-                        Intent(Intent.ACTION_VIEW).apply {
-                            setData(Uri.parse(content))
-                        }
-                    context.startActivity(intent)
-                } catch (e: ActivityNotFoundException) {
-                    Timber.e(e)
-                }
-            }
+            RegexUtil.KEY_IMG -> onImagePreviewRequested?.invoke(content)
+            RegexUtil.KEY_WEB -> onVideoPreviewRequested?.invoke(content)
+            RegexUtil.KEY_YOU -> onYoutubeRequested?.invoke(content)
         }
     }
 

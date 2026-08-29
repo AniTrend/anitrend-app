@@ -23,8 +23,8 @@
         android:icon="@drawable/ic_share_white_24dp"
         app:showAsAction="always"/>
 
-    <!-- Current-user only: visibility is gated in ProfileActivity so it never
-         appears when viewing another user's profile. Launches SettingsActivity. -->
+    <!-- Current-user only: visibility is gated in ProfileFragment so it never
+         appears when viewing another user's profile. Routes through MainActivity. -->
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="103"

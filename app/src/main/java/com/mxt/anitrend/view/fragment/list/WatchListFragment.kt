@@ -37,6 +37,8 @@ class WatchListFragment :
     private var mediaType: String? = null
 
     companion object {
+        const val ARG_FEED_ROUTE = "navigation_watch_feed"
+
         @JvmStatic
         fun newInstance(
             params: Bundle,
@@ -87,6 +89,9 @@ class WatchListFragment :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val ctx = requireContext()
+        if (arguments?.getBoolean(ARG_FEED_ROUTE) == true) {
+            targetLink = BuildConfig.FEEDS_LINK
+        }
         // Documented legacy channel: see fromBundle. The popular flag and the
         // external-links list stay on the legacy channel (read by FragmentChannelBase)
         // because they are presentation/data state, not destination identity.

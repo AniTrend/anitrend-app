@@ -1,7 +1,6 @@
 package com.mxt.anitrend.view.sheet
 
 import android.app.Dialog
-import android.content.Intent
 import android.os.Bundle
 import androidx.annotation.VisibleForTesting
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
@@ -16,10 +15,9 @@ import com.mxt.anitrend.extension.parcelable
 import com.mxt.anitrend.navigation.extension.screenParam
 import com.mxt.anitrend.navigation.extension.screenParamKey
 import com.mxt.anitrend.navigation.model.ReviewScreenParam
-import com.mxt.anitrend.util.CompatUtil
+import com.mxt.anitrend.navigation.model.UserScreenParam
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.date.DateUtil
-import com.mxt.anitrend.view.activity.detail.ProfileActivity
 
 /**
  * Created by max on 2017/11/05.
@@ -34,6 +32,7 @@ class BottomReviewReader : BottomSheetBase<ReviewRecord>() {
     private var model: ReviewRecord? = null
     private var reviewParam: ReviewScreenParam? = null
     private var binding: BottomSheetReviewBinding? = null
+    private var onUserClick: ((UserScreenParam) -> Unit)? = null
 
     companion object {
         @JvmStatic
@@ -88,28 +87,30 @@ class BottomReviewReader : BottomSheetBase<ReviewRecord>() {
         CustomRatingBar.setAverageScore(reviewTemplate.reviewScore, review.score)
         AspectImageView.setImage(reviewTemplate.reviewCover, review.media?.coverImage)
         binding?.reviewBody?.richMarkDown(review.body)
-        reviewTemplate.userAvatar.setOnClickListener { view ->
-            val host = activity ?: return@setOnClickListener
+        reviewTemplate.userAvatar.setOnClickListener {
             val userId = review.user?.id ?: reviewParam?.userId ?: return@setOnClickListener
-            val intent =
-                Intent(host, ProfileActivity::class.java).apply {
-                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    putExtra(KeyUtil.arg_id, userId)
-                }
-            CompatUtil.startRevealAnim(host, view, intent)
+            onUserClick?.invoke(UserScreenParam(userId))
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
+        onUserClick = null
     }
 
     class Builder : BottomSheetBuilder() {
         private var review: ReviewRecord? = null
+        private var onUserClick: ((UserScreenParam) -> Unit)? = null
 
         override fun build(): BottomSheetBase<*> = newInstance(bundle).also { instance ->
             instance.model = this@Builder.review
+            instance.onUserClick = onUserClick
+        }
+
+        fun setOnUserClick(listener: (UserScreenParam) -> Unit): Builder {
+            onUserClick = listener
+            return this
         }
 
         fun setReview(review: ReviewRecord): Builder {

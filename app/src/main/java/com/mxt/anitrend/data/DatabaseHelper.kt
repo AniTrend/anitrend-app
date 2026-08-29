@@ -22,6 +22,11 @@ class DatabaseHelper(
     private val store: BoxStore,
 ) : BoxQuery {
 
+    /** Closes the owned ObjectBox store when the dependency scope is disposed. */
+    fun close() {
+        store.close()
+    }
+
     /**
      * Gets the object box from a requested class type.
      *

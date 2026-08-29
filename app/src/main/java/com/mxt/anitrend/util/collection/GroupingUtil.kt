@@ -11,7 +11,6 @@ import com.mxt.anitrend.model.entity.group.RecyclerHeaderItem
 import com.mxt.anitrend.model.entity.group.RecyclerItem
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
-import com.mxt.anitrend.view.fragment.group.CharacterActorsFragment
 import java.util.*
 
 /**
@@ -91,7 +90,7 @@ object GroupingUtil {
      * of a given role because the voiceActors and characterRoles are grouped by media
      * <br></br>
      *
-     * @see CharacterActorsFragment restricted and should only be used by this
+     * Character actor grouping is consumed by the unified Character destination.
      *
      * @see EdgeContainer
      * <br></br>
