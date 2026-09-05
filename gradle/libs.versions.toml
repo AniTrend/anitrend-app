@@ -62,7 +62,7 @@ anitrend-support-markwon = "0.12.1-alpha01"
 anitrend-android-emoji = "2.2.0"
 
 androidx-media3 = "1.11.0"
-androidx-navigation = "2.9.8"
+androidx-navigation = "2.10.0"
 cash-turbine = "1.2.1"
 google-firebase-core = "21.1.1"
 google-firebase-analytics = "22.5.0"
