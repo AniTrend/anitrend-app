@@ -1,6 +1,6 @@
 [versions]
 ktlint = "0.40.0"
-spotless = "7.2.1"
+spotless = "8.10.2"
 
 gradle-plugin = "9.4.0"
 
