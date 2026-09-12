@@ -12,6 +12,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.RecyclerView
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.MediaListAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
@@ -34,6 +35,7 @@ import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.util.media.MediaListUtil
 import com.mxt.anitrend.view.sheet.BottomSheetMediaFilter
+import com.mxt.anitrend.view.sheet.BottomSheetSeriesManage
 import com.mxt.anitrend.view.sheet.MediaFilterSheetResult
 import com.mxt.anitrend.viewmodel.MediaListMutationViewModel
 import com.mxt.anitrend.viewmodel.MediaListViewModel
@@ -78,6 +80,15 @@ open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, MediaListC
 
     protected var stateListAdapter: MediaListAdapter? = null
     private var latestEntries: List<MediaListRecord> = emptyList()
+    private var pendingViewportAnchor: PendingViewportAnchor? = null
+
+    private data class PendingViewportAnchor(
+        val anchorMediaId: Long,
+        val offset: Int,
+        val targetMediaId: Long,
+        val targetBaselineRevision: Long,
+        val predecessorMediaIds: List<Long>,
+    )
 
     companion object {
         private const val STATE_PENDING_FILTER = "state_pending_filter"
@@ -139,6 +150,23 @@ open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, MediaListC
                 bundle.parcelable<MediaFilterSheetResult>(BottomSheetMediaFilter.RESULT_BUNDLE_KEY)
             if (result != null) {
                 applyFilterResult(result)
+            }
+        }
+        requireActivity().supportFragmentManager.setFragmentResultListener(
+            BottomSheetSeriesManage.MEDIA_LIST_MUTATION_STARTED_RESULT_KEY,
+            this,
+        ) { _, bundle ->
+            bundle.getLong(BottomSheetSeriesManage.MEDIA_LIST_MUTATION_STARTED_MEDIA_ID)
+                .takeIf { it > 0L }
+                ?.let(::captureViewportAnchor)
+        }
+        requireActivity().supportFragmentManager.setFragmentResultListener(
+            BottomSheetSeriesManage.MEDIA_LIST_MUTATION_FAILED_RESULT_KEY,
+            this,
+        ) { _, bundle ->
+            val mediaId = bundle.getLong(BottomSheetSeriesManage.MEDIA_LIST_MUTATION_FAILED_MEDIA_ID)
+            if (pendingViewportAnchor?.targetMediaId == mediaId) {
+                pendingViewportAnchor = null
             }
         }
         fromBundle(arguments)?.let { args ->
@@ -380,7 +408,46 @@ open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, MediaListC
     }
 
     protected fun submitStateList(rendered: List<MediaListItemUiModel>) {
-        stateListAdapter?.submitItems(rendered)
+        val anchor = pendingViewportAnchor
+        if (anchor != null && isMutationApplied(anchor)) {
+            stateListAdapter?.submitItems(rendered) {
+                restoreViewportAnchor(anchor)
+            }
+        } else {
+            stateListAdapter?.submitItems(rendered)
+        }
+    }
+
+    private fun captureViewportAnchor(targetMediaId: Long) {
+        val adapter = stateListAdapter ?: return
+        val position = mLayoutManager.findFirstVisibleItemPositions(null)
+            .filter { it != RecyclerView.NO_POSITION }
+            .minOrNull() ?: return
+        val item = adapter.currentList.getOrNull(position) ?: return
+        val row = mLayoutManager.findViewByPosition(position) ?: return
+        pendingViewportAnchor = PendingViewportAnchor(
+            anchorMediaId = item.mediaId,
+            offset = mLayoutManager.getDecoratedTop(row) - recyclerView.paddingTop,
+            targetMediaId = targetMediaId,
+            targetBaselineRevision = latestEntries.firstOrNull { it.mediaId == targetMediaId }?.revision ?: Long.MIN_VALUE,
+            predecessorMediaIds = adapter.currentList.take(position).asReversed().map(MediaListItemUiModel::mediaId),
+        )
+    }
+
+    private fun isMutationApplied(anchor: PendingViewportAnchor): Boolean {
+        val targetEntry = latestEntries.firstOrNull { it.mediaId == anchor.targetMediaId }
+        return targetEntry == null || targetEntry.revision > anchor.targetBaselineRevision
+    }
+
+    private fun restoreViewportAnchor(anchor: PendingViewportAnchor) {
+        if (pendingViewportAnchor != anchor) return
+        val adapter = stateListAdapter ?: return
+        val itemPosition = sequenceOf(anchor.anchorMediaId)
+            .plus(anchor.predecessorMediaIds.asSequence())
+            .map { mediaId -> adapter.currentList.indexOfFirst { it.mediaId == mediaId } }
+            .firstOrNull { it >= 0 }
+        mLayoutManager.scrollToPositionWithOffset(itemPosition ?: 0, if (itemPosition == null) 0 else anchor.offset)
+        pendingViewportAnchor = null
     }
 
     override fun onStart() {
@@ -446,6 +513,7 @@ open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, MediaListC
      * example the Airing list) reuse this dispatch instead of duplicating it.
      */
     protected fun dispatchIncrement(entry: MediaListRecord) {
+        captureViewportAnchor(entry.mediaId)
         mediaListMutationViewModel.increment(buildIncrementMediaProgressCommand(entry))
     }
 }
