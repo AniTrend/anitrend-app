@@ -1,6 +1,8 @@
 package com.mxt.anitrend.data.store
 
+import com.mxt.anitrend.data.mapper.toMediaListRecord
 import com.mxt.anitrend.data.store.medialist.InMemoryMediaListStore
+import com.mxt.anitrend.fixture.MediaListFixtures.aMediaList
 import com.mxt.anitrend.data.store.medialist.MediaListQueryKey
 import com.mxt.anitrend.data.store.medialist.MediaListStoreChange
 import com.mxt.anitrend.domain.medialist.model.MediaListRecord
@@ -116,6 +118,94 @@ class MediaListStoreTest {
         val restoredSnapshot = store.state.value.queries.getValue(currentAnimeQuery)
         assertEquals(listOf(10L), restoredSnapshot.orderedEntryIds)
     }
+
+    @Test
+    fun `entry update reorders added-time sorts using server timestamps`() = runTest {
+        val store = InMemoryMediaListStore()
+        val query = currentAnimeQuery.copy(sort = MediaListSort.ADDED_TIME_DESC)
+        val first = createTimestampedEntry(id = 10L, mediaId = 100L, createdAt = 200L, updatedAt = 100L, revision = 1L)
+        val second = createTimestampedEntry(id = 11L, mediaId = 101L, createdAt = 100L, updatedAt = 100L, revision = 1L)
+
+        store.apply(
+            MediaListStoreChange.CollectionLoaded(
+                queryKey = query,
+                token = 1L,
+                entries = listOf(first, second),
+                pageInfo = createPageInfo(1),
+            ),
+        )
+
+        store.apply(
+            MediaListStoreChange.EntryUpserted(
+                createTimestampedEntry(id = 11L, mediaId = 101L, createdAt = 100L, updatedAt = 100L, revision = 2L, progress = 6),
+            ),
+        )
+
+        assertEquals(listOf(first.id, second.id), store.state.value.queries.getValue(query).orderedEntryIds)
+    }
+
+    @Test
+    fun `entry update reorders updated-time sorts using server timestamps`() = runTest {
+        val store = InMemoryMediaListStore()
+        val query = currentAnimeQuery.copy(sort = MediaListSort.UPDATED_TIME_DESC)
+        val first = createTimestampedEntry(id = 10L, mediaId = 100L, createdAt = 100L, updatedAt = 200L, revision = 1L)
+        val second = createTimestampedEntry(id = 11L, mediaId = 101L, createdAt = 100L, updatedAt = 100L, revision = 1L)
+
+        store.apply(
+            MediaListStoreChange.CollectionLoaded(
+                queryKey = query,
+                token = 1L,
+                entries = listOf(first, second),
+                pageInfo = createPageInfo(1),
+            ),
+        )
+
+        store.apply(
+            MediaListStoreChange.EntryUpserted(
+                createTimestampedEntry(id = 11L, mediaId = 101L, createdAt = 100L, updatedAt = 300L, revision = 2L),
+            ),
+        )
+
+        assertEquals(listOf(second.id, first.id), store.state.value.queries.getValue(query).orderedEntryIds)
+    }
+
+    @Test
+    fun `entry update preserves API order for equal updated-time keys`() = runTest {
+        val store = InMemoryMediaListStore()
+        val query = currentAnimeQuery.copy(sort = MediaListSort.UPDATED_TIME_DESC)
+        val first = createTimestampedEntry(id = 10L, mediaId = 100L, createdAt = 100L, updatedAt = 200L, revision = 1L)
+        val second = createTimestampedEntry(id = 11L, mediaId = 101L, createdAt = 100L, updatedAt = 200L, revision = 1L)
+
+        store.apply(
+            MediaListStoreChange.CollectionLoaded(
+                queryKey = query,
+                token = 1L,
+                entries = listOf(first, second),
+                pageInfo = createPageInfo(1),
+            ),
+        )
+
+        store.apply(
+            MediaListStoreChange.EntryUpserted(
+                createTimestampedEntry(id = 11L, mediaId = 101L, createdAt = 100L, updatedAt = 200L, revision = 2L, progress = 6),
+            ),
+        )
+
+        assertEquals(listOf(first.id, second.id), store.state.value.queries.getValue(query).orderedEntryIds)
+    }
+
+    private fun createTimestampedEntry(
+        id: Long,
+        mediaId: Long,
+        createdAt: Long,
+        updatedAt: Long,
+        revision: Long,
+        progress: Int = 5,
+    ): MediaListRecord = aMediaList(id = id, mediaId = mediaId).apply {
+        this.createdAt = createdAt
+        this.updatedAt = updatedAt
+        this.progress = progress
+    }.toMediaListRecord(revision = revision, ownerUserId = 1L)
 
     private fun createEntry(
         id: Long,
