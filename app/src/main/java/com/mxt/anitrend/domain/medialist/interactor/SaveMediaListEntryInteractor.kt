@@ -1,6 +1,7 @@
 package com.mxt.anitrend.domain.medialist.interactor
 
 import com.mxt.anitrend.data.mapper.toMediaListRecord
+import com.mxt.anitrend.data.mapper.toAiringScheduleRecord
 import com.mxt.anitrend.data.store.medialist.MediaListStore
 import com.mxt.anitrend.data.store.medialist.MediaListStoreChange
 import com.mxt.anitrend.data.store.mutation.MutationExecutor
@@ -72,13 +73,24 @@ class SaveMediaListEntryInteractor(
             revision = revision,
         ).fold(
             onSuccess = { entry ->
+                val record = entry.toMediaListRecord(
+                    revision = revision,
+                    ownerUserId = currentUser?.id,
+                    ownerUserName = currentUser?.name,
+                )
+                val refreshedMedia = entry.media
+                    ?.takeIf {
+                        entry.mediaId > 0L &&
+                            it.status == "RELEASING" &&
+                            it.nextAiringEpisode == null
+                    }
+                    ?.let { browseRepository.getMediaWithList(id = entry.mediaId, scoreFormat = scoreFormat).getOrNull() }
                 context.ensureSessionActive()
+                val refreshedNextAiringEpisode = refreshedMedia?.nextAiringEpisode?.toAiringScheduleRecord()
                 mediaListStore.apply(
                     MediaListStoreChange.EntryUpserted(
-                        entry = entry.toMediaListRecord(
-                            revision = revision,
-                            ownerUserId = currentUser?.id,
-                            ownerUserName = currentUser?.name,
+                        entry = record.copy(
+                            media = record.media?.copy(nextAiringEpisode = refreshedNextAiringEpisode ?: record.media.nextAiringEpisode),
                         ),
                     ),
                 )
