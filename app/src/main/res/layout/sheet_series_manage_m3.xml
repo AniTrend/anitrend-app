@@ -336,12 +336,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/sheet_field_margin"
-                        android:text="@string/section_notes"
-                        android:textAppearance="@style/Widget.AniTrend.ManageSheet.SectionLabel" />
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/sheet_manage_notes_layout"
