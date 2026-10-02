@@ -188,6 +188,8 @@ class MainActivity :
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         mUserAvatar.onAvatarClick = ::onAvatarClicked
+        setSupportActionBar(mToolbar)
+        mDrawerToggle.setToolbarNavigationClickListener { navigateBackFromDestination() }
         navController.addOnDestinationChangedListener { _, destination, _ ->
             val isSharedContent = destination.id == R.id.sharedContentFragment
             binding.appBarMain.customToolbar.root.isVisible = !isSharedContent
@@ -199,27 +201,14 @@ class MainActivity :
             if (isTopLevelDestination(destination.id)) {
                 mDrawerToggle.isDrawerIndicatorEnabled = true
                 mDrawerToggle.syncState()
-                // The toolbar navigation click toggles the drawer on top-level
-                // landings. Registered directly on the toolbar because
-                // AppCompat's setSupportActionBar wrapper owns the button's
-                // click listener after the toggle was wired, so the toggle's
-                // own click listener is unreachable.
-                mToolbar.setNavigationOnClickListener {
-                    if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-                        mDrawerLayout.closeDrawer(GravityCompat.START)
-                    } else {
-                        mDrawerLayout.openDrawer(GravityCompat.START)
-                    }
-                }
+                // The toggle's constructor listener is the single final click
+                // owner. With the indicator enabled, it toggles the drawer at
+                // START; no per-dispatch click registration exists.
             } else {
                 mDrawerToggle.isDrawerIndicatorEnabled = false
-                // The toolbar up affordance applies the back policy directly,
-                // for the same reason as the top-level branch: the toggle only
-                // stores a listener that is never wired to the button, so the
-                // production back policy must be registered on the toolbar.
-                mToolbar.setNavigationOnClickListener {
-                    navigateBackFromDestination()
-                }
+                // The toggle's constructor listener is the single final click
+                // owner. Its forwarder handles the disabled-indicator up
+                // branch; no per-dispatch click registration exists.
             }
             invalidateOptionsMenu()
         }
@@ -261,8 +250,6 @@ class MainActivity :
                 }
             })
         }
-        setSupportActionBar(mToolbar)
-
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 mainViewModel.state.collect { state ->
