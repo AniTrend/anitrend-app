@@ -568,6 +568,7 @@ private fun SaveMediaListEntryData.SaveMediaListEntry.toMediaList(): MediaEntity
     startedAt = this@toMediaList.startedAt?.toFuzzyDate()
     completedAt = this@toMediaList.completedAt?.toFuzzyDate()
     updatedAt = this@toMediaList.updatedAt?.toLong() ?: 0L
+    createdAt = this@toMediaList.createdAt?.toLong() ?: 0L
     media = this@toMediaList.media?.toMediaBase() ?: MediaBase()
 }
 

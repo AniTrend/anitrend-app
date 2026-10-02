@@ -53,6 +53,8 @@ fun MediaListCollectionData.MediaListCollectionListsEntries.toMediaListRecord(
     notes = notes,
     startedAt = startedAt?.toFuzzyDateRecord(),
     completedAt = completedAt?.toFuzzyDateRecord(),
+    createdAt = createdAt?.toLong() ?: 0L,
+    updatedAt = updatedAt?.toLong() ?: 0L,
     media = media?.toMediaSummaryRecord(),
     revision = revision,
     ownerUserId = ownerUserId,

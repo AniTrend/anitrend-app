@@ -24,4 +24,6 @@ data class MediaListRecord(
     val revision: Long,
     val ownerUserId: Long? = null,
     val ownerUserName: String? = null,
+    val createdAt: Long = 0L,
+    val updatedAt: Long = 0L,
 )

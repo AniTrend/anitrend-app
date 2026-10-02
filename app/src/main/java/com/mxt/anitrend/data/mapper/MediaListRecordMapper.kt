@@ -25,6 +25,8 @@ fun MediaList.toMediaListRecord(
     notes = notes,
     startedAt = startedAt?.toFuzzyDateRecord(),
     completedAt = completedAt?.toFuzzyDateRecord(),
+    createdAt = createdAt,
+    updatedAt = updatedAt,
     media = media.toMediaSummaryRecord(),
     revision = revision,
     ownerUserId = ownerUserId,
@@ -50,5 +52,7 @@ fun MediaListRecord.toMediaList(): MediaList = MediaList().apply {
     }
     startedAt = this@toMediaList.startedAt?.toFuzzyDate()
     completedAt = this@toMediaList.completedAt?.toFuzzyDate()
+    createdAt = this@toMediaList.createdAt
+    updatedAt = this@toMediaList.updatedAt
     media = this@toMediaList.media?.toMediaBase() ?: media
 }

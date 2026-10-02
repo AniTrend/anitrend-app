@@ -470,6 +470,7 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
         )
 
         val command = mediaListDraft.toSaveMediaListEntryCommand(mediaListModel)
+        notifyMutationStarted()
         mediaListMutationViewModel.save(command)
     }
 
@@ -478,12 +479,26 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
             return
         }
 
+        notifyMutationStarted()
         mediaListMutationViewModel.delete(
             entryId = mediaListModel.id,
             mediaId = mediaBase.id,
         )
     }
 
+    private fun notifyMutationStarted() {
+        parentFragmentManager.setFragmentResult(
+            MEDIA_LIST_MUTATION_STARTED_RESULT_KEY,
+            Bundle().apply { putLong(MEDIA_LIST_MUTATION_STARTED_MEDIA_ID, mediaBase.id) },
+        )
+    }
+
+    private fun notifyMutationFailed() {
+        parentFragmentManager.setFragmentResult(
+            MEDIA_LIST_MUTATION_FAILED_RESULT_KEY,
+            Bundle().apply { putLong(MEDIA_LIST_MUTATION_FAILED_MEDIA_ID, mediaBase.id) },
+        )
+    }
     private fun setSavingState(isSaving: Boolean) {
         this.isSaving = isSaving
         saveButton.isEnabled = !isSaving
@@ -527,6 +542,7 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
                             dismiss()
                         }
                         !state.errorMessage.isNullOrBlank() -> {
+                            notifyMutationFailed()
                             context?.let { safeCtx ->
                                 NotifyUtil
                                     .makeText(
@@ -576,6 +592,10 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
          */
         @VisibleForTesting
         internal const val ARG_MEDIA_BASE = "arg_media_base"
+        internal const val MEDIA_LIST_MUTATION_STARTED_RESULT_KEY = "media_list_mutation_started"
+        internal const val MEDIA_LIST_MUTATION_STARTED_MEDIA_ID = "media_list_mutation_started_media_id"
+        internal const val MEDIA_LIST_MUTATION_FAILED_RESULT_KEY = "media_list_mutation_failed"
+        internal const val MEDIA_LIST_MUTATION_FAILED_MEDIA_ID = "media_list_mutation_failed_media_id"
 
         fun newInstance(mediaBase: MediaBase): BottomSheetSeriesManage = BottomSheetSeriesManage().apply {
             arguments = Bundle().apply {

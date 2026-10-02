@@ -18,5 +18,6 @@ fragment MediaListCoreFragment on MediaList {
   completedAt {
     ... FuzzyDateFragment
   }
+  createdAt
   updatedAt
 }

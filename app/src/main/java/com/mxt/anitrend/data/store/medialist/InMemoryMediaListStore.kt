@@ -226,15 +226,14 @@ class InMemoryMediaListStore : MediaListStore {
         state: MediaListStoreState,
         entry: MediaListRecord,
     ): Map<MediaListQueryKey, MediaListQuerySnapshot> = state.queries.mapValues { (queryKey, snapshot) ->
-        val existingIds = snapshot.orderedEntryIds.filterNot { it == entry.id }
-        val currentlyContained = snapshot.orderedEntryIds.contains(entry.id)
+        val currentIds = snapshot.orderedEntryIds
+        val currentlyContained = currentIds.contains(entry.id)
         val matches = entry.matches(queryKey)
-
         val nextIds = when {
-            currentlyContained && matches -> existingIds + entry.id
-            currentlyContained && !matches -> existingIds
-            matches -> existingIds + entry.id
-            else -> existingIds
+            currentlyContained && matches -> currentIds
+            currentlyContained -> currentIds.filterNot { it == entry.id }
+            matches -> currentIds + entry.id
+            else -> currentIds
         }
 
         snapshot.copy(
@@ -262,7 +261,7 @@ class InMemoryMediaListStore : MediaListStore {
         val descending = sort.name.endsWith("_DESC")
         val baseComparator =
             when (sort.name.removeSuffix("_DESC")) {
-                "ADDED_TIME" -> compareBy<MediaListRecord> { it.revision }
+                "ADDED_TIME" -> compareBy<MediaListRecord> { it.createdAt }
                 "FINISHED_ON" -> compareBy<MediaListRecord>({ it.completedAt?.year }, { it.completedAt?.month }, { it.completedAt?.day })
                 "MEDIA_ID" -> compareBy<MediaListRecord> { it.mediaId }
                 "MEDIA_POPULARITY" -> null
@@ -276,12 +275,11 @@ class InMemoryMediaListStore : MediaListStore {
                 "SCORE" -> compareBy<MediaListRecord> { it.score }
                 "STARTED_ON" -> compareBy<MediaListRecord>({ it.startedAt?.year }, { it.startedAt?.month }, { it.startedAt?.day })
                 "STATUS" -> compareBy<MediaListRecord> { it.status.orEmpty() }
-                "UPDATED_TIME" -> compareBy<MediaListRecord> { it.revision }
+                "UPDATED_TIME" -> compareBy<MediaListRecord> { it.updatedAt }
                 else -> null
             } ?: return null
 
-        val comparator = baseComparator.thenBy { it.mediaId }
-        return if (descending) comparator.reversed() else comparator
+        return if (descending) baseComparator.reversed() else baseComparator
     }
 
     private fun MediaListRecord.matches(queryKey: MediaListQueryKey): Boolean {

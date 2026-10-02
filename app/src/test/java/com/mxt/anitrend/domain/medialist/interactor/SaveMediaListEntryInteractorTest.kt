@@ -2,6 +2,7 @@ package com.mxt.anitrend.domain.medialist.interactor
 
 import com.mxt.anitrend.data.store.medialist.InMemoryMediaListStore
 import com.mxt.anitrend.data.store.medialist.MediaListQueryKey
+import com.mxt.anitrend.model.entity.anilist.meta.AiringSchedule
 import com.mxt.anitrend.data.store.medialist.MediaListQueryResult
 import com.mxt.anitrend.data.store.medialist.MediaListStore
 import com.mxt.anitrend.data.store.medialist.MediaListStoreChange
@@ -20,6 +21,7 @@ import com.mxt.anitrend.fixture.MediaListFixtures
 import com.mxt.anitrend.graphql.generated.MediaListStatus
 import com.mxt.anitrend.graphql.generated.ScoreFormat
 import com.mxt.anitrend.model.entity.anilist.User
+import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.model.entity.anilist.MediaList
 import com.mxt.anitrend.repository.BrowseRepository
 import com.mxt.anitrend.repository.UserRepository
@@ -258,6 +260,64 @@ class SaveMediaListEntryInteractorTest {
         assertNotNull(thrown)
         assertTrue(store.appliedChanges.isEmpty())
         assertTrue(registry.state.value.isEmpty())
+    }
+
+    @Test
+    fun `successful save with missing airing data commits refreshed next-airing episode`() = runTest {
+        val repository = mock(BrowseRepository::class.java)
+        val userRepository = mock(UserRepository::class.java)
+        val store = InMemoryMediaListStore()
+        val command = createCommand()
+        val currentUser = User().apply {
+            id = 77L
+            name = "max"
+            mediaListOptions.scoreFormat = ScoreFormat.POINT_100.name
+        }
+        val refreshingMedia = MediaListFixtures.anAnimeMediaBase(id = 101, status = KeyUtil.RELEASING)
+        doReturn(currentUser).`when`(userRepository).cachedCurrentUser
+        doReturn(Result.success(MediaListFixtures.aMediaList(id = 5, mediaId = 101, progress = 9, media = refreshingMedia)))
+            .`when`(repository)
+            .saveMediaListEntry(
+                id = 5,
+                mediaId = 101L,
+                status = MediaListStatus.CURRENT,
+                scoreRaw = 80,
+                score = 8.0,
+                progress = 9,
+                progressVolumes = 0,
+                repeat = 0,
+                priority = 1,
+                private = false,
+                hiddenFromStatusLists = false,
+                customLists = null,
+                advancedScores = null,
+                notes = null,
+                scoreFormat = ScoreFormat.POINT_100,
+                startedAt = null,
+                completedAt = null,
+                commitToStore = false,
+                revision = 1L,
+            )
+        doReturn(Result.success(MediaListFixtures.anAnimeMediaBase(id = 101).apply { nextAiringEpisode = AiringSchedule(episode = 12) }))
+            .`when`(repository)
+            .getMediaWithList(
+                id = 101L,
+                type = null,
+                onList = null,
+                scoreFormat = ScoreFormat.POINT_100,
+            )
+
+        val interactor = SaveMediaListEntryInteractor(
+            browseRepository = repository,
+            mutationExecutor = DefaultMutationExecutor(applicationScope = backgroundScope, keyedMutex = KeyedMutex(backgroundScope), mutationRegistry = DefaultMutationRegistry(), operationIdGenerator = DefaultOperationIdGenerator(), sessionEpoch = SessionEpoch()),
+            mediaListStore = store,
+            requestSequence = RequestSequence(),
+            userRepository = userRepository,
+        )
+
+        interactor(command)
+
+        assertEquals(12, store.state.value.entriesById.getValue(5L).media?.nextAiringEpisode?.episode)
     }
 
     private fun createCommand(): SaveMediaListEntryCommand = SaveMediaListEntryCommand(

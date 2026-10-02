@@ -362,6 +362,7 @@ class BrowseMediaListCollectionRepositoryTest {
     ): MediaListCollectionData.MediaListCollectionListsEntries = MediaListCollectionData.MediaListCollectionListsEntries(
         advancedScores = advancedScores,
         completedAt = null,
+        createdAt = null,
         customLists = customLists,
         hiddenFromStatusLists = hiddenFromStatusLists,
         id = id,

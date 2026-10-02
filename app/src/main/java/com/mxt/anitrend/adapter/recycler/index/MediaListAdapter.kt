@@ -40,9 +40,12 @@ class MediaListAdapter(
     private var sourceItems: List<MediaListItemUiModel> = emptyList()
     private var currentFilterQuery: String = ""
 
-    fun submitItems(items: List<MediaListItemUiModel>) {
+    fun submitItems(
+        items: List<MediaListItemUiModel>,
+        onCommitted: (() -> Unit)? = null,
+    ) {
         sourceItems = items
-        submitFilteredList()
+        submitFilteredList(onCommitted)
     }
 
     override fun onCreateViewHolder(
@@ -74,12 +77,7 @@ class MediaListAdapter(
 
     override fun getFilter(): Filter = object : Filter() {
         override fun performFiltering(constraint: CharSequence?): FilterResults = FilterResults().apply {
-            val query = constraint?.toString().orEmpty().trim().lowercase()
-            values = if (query.isBlank()) {
-                sourceItems
-            } else {
-                sourceItems.filter { item -> item.matchesFilter(query) }
-            }
+            values = filteredItems(constraint?.toString().orEmpty())
         }
 
         override fun publishResults(
@@ -91,8 +89,13 @@ class MediaListAdapter(
         }
     }
 
-    private fun submitFilteredList() {
-        filter.filter(currentFilterQuery)
+    private fun submitFilteredList(onCommitted: (() -> Unit)? = null) {
+        submitList(filteredItems(currentFilterQuery), onCommitted)
+    }
+
+    private fun filteredItems(query: String): List<MediaListItemUiModel> {
+        val normalized = query.trim().lowercase()
+        return if (normalized.isBlank()) sourceItems else sourceItems.filter { it.matchesFilter(normalized) }
     }
 
     private inner class SeriesListViewHolder(
