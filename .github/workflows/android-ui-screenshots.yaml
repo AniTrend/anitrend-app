@@ -1,0 +1,78 @@
+name: android-ui-screenshots
+
+on:
+  pull_request:
+    paths:
+      - 'DESIGN.md'
+      - 'CONTRIBUTING.md'
+      - 'AGENTS.md'
+      - '.github/PULL_REQUEST_TEMPLATE.md'
+      - '.github/workflows/android-ui-screenshots.yaml'
+      - 'app/src/main/java/com/mxt/anitrend/view/activity/index/**'
+      - 'app/src/main/java/com/mxt/anitrend/view/fragment/settings/**'
+      - 'app/src/main/java/com/mxt/anitrend/navigation/**'
+      - 'app/src/main/res/**'
+      - 'app/src/app/java/com/mxt/anitrend/base/custom/activity/**'
+      - 'app/src/github/java/com/mxt/anitrend/base/custom/activity/**'
+      - 'app/src/test/java/com/mxt/anitrend/ui/screenshot/**'
+      - 'app/src/test/screenshots/**'
+      - 'build.gradle.kts'
+      - 'app/build.gradle.kts'
+      - 'buildSrc/**'
+      - 'gradle/libs.versions.toml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-ui-screenshots-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ui-screenshots:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: set up JDK 21
+        uses: actions/setup-java@v6
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
+        with:
+          cache-read-only: ${{ github.ref != 'refs/heads/develop' }}
+      - name: Configure properties
+        run: bash .github/scripts/setup-config.sh
+      - name: Verify UI screenshots
+        run: ./gradlew :app:verifyUiScreenshots --no-daemon
+      - name: Upload visual proof
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ui-screenshots-${{ github.sha }}
+          path: |
+            app/build/reports/roborazzi/**
+            app/build/test-results/roborazzi/**
+            app/build/outputs/screenshots-comparison/**
+            app/src/test/screenshots/**
+          if-no-files-found: warn
+      - name: Publish job summary
+        if: always()
+        run: |
+          {
+            echo "## UI visual proof"
+            echo ""
+            echo "- Commit: \`${{ github.sha }}\`"
+            echo "- Configuration matrix: appDebug (Robolectric SDK 37, NATIVE graphics)"
+            echo "- Captures under verification: 28 (compact light/dark/black shells, w600dp rail, guest/auth visibility, large font, RTL, toolbar overflow, settings hub and 8 categories, shared component states, manage sheet and dialog)"
+            echo "- Roborazzi report: \`app/build/reports/roborazzi/index.html\` in the uploaded artifact"
+            echo "- Comparison output: \`app/build/outputs/screenshots-comparison/\` in the uploaded artifact"
+            echo "- Artifact: \`ui-screenshots-${{ github.sha }}\`"
+            if [ "${{ job.status }}" = "success" ]; then
+              echo "- Result: all captures match the reviewed references"
+            else
+              echo "- Result: verification failed — inspect the expected/actual/diff images in the artifact"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
