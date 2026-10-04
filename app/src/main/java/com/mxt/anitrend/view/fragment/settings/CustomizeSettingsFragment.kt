@@ -96,30 +96,15 @@ class CustomizeSettingsFragment :
         sectionBinding.sectionIcon.setImageResource(R.drawable.ic_format_color_fill_grey_600_24dp)
         val content = sectionBinding.sectionContent
 
-        val rows = listOf(
-            SettingsRow.Choice(
-                keyRes = R.string.pref_key_app_theme,
-                titleRes = R.string.pref_title_app_theme,
-                entriesRes = R.array.pref_selected_theme_titles,
-                valuesRes = R.array.pref_selected_theme_values,
-                defaultValue = state.theme,
-            ) to state.theme,
-            SettingsRow.Choice(
-                keyRes = R.string.pref_key_selected_language,
-                titleRes = R.string.pref_title_language,
-                summaryRes = R.string.pref_title_language_summary,
-                entriesRes = R.array.pref_selected_language_titles,
-                valuesRes = R.array.pref_selected_language_values,
-                defaultValue = state.language,
-            ) to state.language,
-            SettingsRow.Choice(
-                keyRes = R.string.pref_key_list_view_style,
-                titleRes = R.string.pref_title_list_view_style,
-                entriesRes = R.array.pref_selected_list_view_style_titles,
-                valuesRes = R.array.pref_selected_list_view_style_values,
-                defaultValue = state.listViewStyle,
-            ) to state.listViewStyle,
-        )
+        val rows = SettingsCategoryRegistry.customizeRows().map { row ->
+            val currentValue = when (row.keyRes) {
+                R.string.pref_key_app_theme -> state.theme
+                R.string.pref_key_selected_language -> state.language
+                R.string.pref_key_list_view_style -> state.listViewStyle
+                else -> row.defaultValue
+            }
+            row to currentValue
+        }
 
         rows.forEachIndexed { index, (row, currentValue) ->
             bindChoiceRow(content, row, currentValue) { selectedValue ->
