@@ -19,7 +19,7 @@ import org.robolectric.annotation.GraphicsMode
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @Config(sdk = [37], application = ScreenshotTestApplication::class, qualifiers = "w600dp-h640dp")
-class NavigationRailScreenshotTest {
+class NavigationRailScreenshotTest : ScreenshotTestBase() {
 
     @Test
     fun railShellShowsFiveDestinationsWithSelectedAnimeItem() {

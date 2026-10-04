@@ -27,7 +27,7 @@ import org.robolectric.annotation.GraphicsMode
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @Config(sdk = [37], application = ScreenshotTestApplication::class, qualifiers = "w360dp-h640dp")
-class SharedComponentsScreenshotTest {
+class SharedComponentsScreenshotTest : ScreenshotTestBase() {
 
     private fun host(themeRes: Int = R.style.AppThemeLight): Pair<Activity, LinearLayout> {
         val activity: Activity = Robolectric.buildActivity(Activity::class.java).setup().get()

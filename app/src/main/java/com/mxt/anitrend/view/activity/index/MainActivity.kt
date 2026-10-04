@@ -579,12 +579,11 @@ class MainActivity : CommonActivity() {
         else -> null
     }
 
-    private fun primaryMenuItemFor(@IdRes destinationId: Int, arguments: Bundle?): Int? =
-        primaryMenuItemFor(
-            destinationId,
-            arguments?.getString(MediaListFragment.ARG_MEDIA_LIST_ORIGIN),
-            arguments?.getString(KeyUtil.arg_mediaType),
-        )
+    private fun primaryMenuItemFor(@IdRes destinationId: Int, arguments: Bundle?): Int? = primaryMenuItemFor(
+        destinationId,
+        arguments?.getString(MediaListFragment.ARG_MEDIA_LIST_ORIGIN),
+        arguments?.getString(KeyUtil.arg_mediaType),
+    )
 
     @Suppress("ComplexCondition") // Navigation item routing remains explicit and centralized.
     private fun onNavigate(

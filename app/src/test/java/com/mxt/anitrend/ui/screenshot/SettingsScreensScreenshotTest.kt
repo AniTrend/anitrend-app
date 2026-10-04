@@ -3,7 +3,6 @@ package com.mxt.anitrend.ui.screenshot
 import android.app.Activity
 import android.view.View
 import android.widget.LinearLayout
-import android.widget.TextView
 import com.github.takahirom.roborazzi.captureRoboImage
 import com.mxt.anitrend.R
 import com.mxt.anitrend.databinding.FragmentSettingsM3Binding
@@ -29,7 +28,7 @@ import org.robolectric.annotation.GraphicsMode
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @Config(sdk = [37], application = ScreenshotTestApplication::class, qualifiers = "w360dp-h640dp")
-class SettingsScreensScreenshotTest {
+class SettingsScreensScreenshotTest : ScreenshotTestBase() {
 
     private fun host(): Pair<Activity, FragmentSettingsM3Binding> {
         val activity: Activity = Robolectric.buildActivity(Activity::class.java).setup().get()

@@ -36,8 +36,7 @@ internal object ShellScreenshotFixtures {
     }
 
     /** A themed context for surfaces that do not host fragments. */
-    fun themed(activity: Activity, themeRes: Int): ContextThemeWrapper =
-        ContextThemeWrapper(activity, themeRes)
+    fun themed(activity: Activity, themeRes: Int): ContextThemeWrapper = ContextThemeWrapper(activity, themeRes)
 
     /**
      * Lays a surface out at an exact size before capture. Hosts below the
@@ -62,8 +61,7 @@ internal object ShellScreenshotFixtures {
     }
 
     /** Returns the shell's primary navigation surface (bar or rail). */
-    fun primaryNavigation(binding: ActivityMainBinding): NavigationBarView =
-        binding.root.findViewById(R.id.primary_navigation)
+    fun primaryNavigation(binding: ActivityMainBinding): NavigationBarView = binding.root.findViewById(R.id.primary_navigation)
 
     /** Inflates the production toolbar menu into the shell toolbar. */
     fun inflateToolbarMenu(binding: ActivityMainBinding): Menu {

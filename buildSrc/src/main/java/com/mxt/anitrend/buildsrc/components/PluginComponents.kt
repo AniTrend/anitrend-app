@@ -6,6 +6,7 @@ import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 
+@Suppress("OPT_IN_USAGE") // The Roborazzi output/compare options are the plan-mandated experimental DSL.
 internal fun Project.configurePlugins() {
     plugins.apply("com.android.application")
     plugins.apply("com.diffplug.spotless")

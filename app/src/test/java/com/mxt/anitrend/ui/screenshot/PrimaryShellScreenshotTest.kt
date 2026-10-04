@@ -20,7 +20,7 @@ import org.robolectric.annotation.GraphicsMode
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @Config(sdk = [37], application = ScreenshotTestApplication::class, qualifiers = "w360dp-h640dp")
-class PrimaryShellScreenshotTest {
+class PrimaryShellScreenshotTest : ScreenshotTestBase() {
 
     private fun captureShell(
         themeRes: Int,
