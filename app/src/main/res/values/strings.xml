@@ -1,6 +1,5 @@
 <resources>
     <string name="nav_header_discover">Discover</string>
-    <string name="nav_header_manage">Manage</string>
     <string name="nav_header_customization">Customization</string>
 
     <string name="nav_header_support">Support</string>
@@ -29,8 +28,7 @@
 
     <string name="action_mode_selected">Selected: %d</string>
 
-    <string name="navigation_drawer_open">Navigation drawer opened</string>
-    <string name="navigation_drawer_close">Navigation drawer closed</string>
+
 
 
     <string name="nav_home">Home</string>

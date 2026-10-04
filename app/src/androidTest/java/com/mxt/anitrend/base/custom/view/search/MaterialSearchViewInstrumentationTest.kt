@@ -5,6 +5,7 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.mxt.anitrend.R
+import com.mxt.anitrend.test.R as TestR
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -18,7 +19,7 @@ class MaterialSearchViewInstrumentationTest {
     fun showSearch_setsStateOpenAndVisible() {
         ActivityScenario.launch(MaterialSearchViewTestActivity::class.java).use { scenario ->
             scenario.onActivity { activity ->
-                val searchView = activity.findViewById<MaterialSearchView>(R.id.searchView)
+                val searchView = activity.findViewById<MaterialSearchView>(TestR.id.searchView)
 
                 assertFalse("Initially search should be closed", searchView.isSearchOpen)
 
@@ -38,7 +39,7 @@ class MaterialSearchViewInstrumentationTest {
     fun clickingUpButton_closesSearch() {
         ActivityScenario.launch(MaterialSearchViewTestActivity::class.java).use { scenario ->
             scenario.onActivity { activity ->
-                val searchView = activity.findViewById<MaterialSearchView>(R.id.searchView)
+                val searchView = activity.findViewById<MaterialSearchView>(TestR.id.searchView)
                 var backClicked = false
                 searchView.setOnClickBackListener(object : MaterialSearchView.OnClickBackListener {
                     override fun onClickBack() {

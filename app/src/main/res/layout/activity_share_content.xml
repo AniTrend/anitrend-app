@@ -53,18 +53,23 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/sheet_shared_resource"
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.AniTrend.TextField.Outlined"
                         android:layout_height="wrap_content"
                         android:layout_width="0dp"
                         android:layout_weight="1"
-                        android:singleLine="true"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:hint="@string/sheet_share_hint"
-                        android:textAppearance="?attr/textAppearanceBodyMedium"
-                        android:textColor="?attr/colorOnSurface"
-                        android:textColorHint="?attr/colorOnSurfaceVariant" />
+                        android:hint="@string/sheet_share_hint">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/sheet_shared_resource"
+                            android:layout_height="wrap_content"
+                            android:layout_width="match_parent"
+                            android:singleLine="true"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:textAppearance="?attr/textAppearanceBodyMedium" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
 
                     <Spinner
                         android:id="@+id/sheet_share_post_type"
@@ -81,7 +86,7 @@
                         android:layout_width="@dimen/composer_action_size"
                         android:layout_height="@dimen/composer_action_size"
                         android:padding="@dimen/lg_margin"
-                        app:tint="?colorAccent"
+                        app:tint="?attr/colorPrimary"
                         app:srcCompat="@drawable/ic_check_circle_white_24dp" />
 
                     </LinearLayout>

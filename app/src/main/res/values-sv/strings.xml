@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nav_header_discover">Upptäck</string>
-    <string name="nav_header_manage">Hantera</string>
+
     <string name="nav_header_customization">Anpassning</string>
 
     <string name="nav_contact">Kontakta</string>
@@ -13,8 +13,7 @@
 
     <string name="action_mode_selected">Vald: %d</string>
 
-    <string name="navigation_drawer_open">Navigationslådan öppnades</string>
-    <string name="navigation_drawer_close">Navigationslådan stängd</string>
+
 
 
     <string name="nav_home">Hem</string>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nav_header_discover">Scopri</string>
-    <string name="nav_header_manage">Gestione</string>
+
     <string name="nav_header_customization">Personalizzazione</string>
 
     <string name="nav_header_support">Supporto</string>
@@ -803,10 +803,8 @@
     <string name="notification_media_added">Nuovo media correlato aggiunto</string>
     <string name="Reset">Reset</string>
     <string name="title_activity_studio">Studio</string>
-    <!-- Accessibility announcement when the navigation drawer opens. -->
-    <string name="navigation_drawer_open">Menu di navigazione aperto</string>
-    <!-- Accessibility announcement when the navigation drawer closes. -->
-    <string name="navigation_drawer_close">Menu di navigazione chiuso</string>
+
+
     <!-- Navigation drawer item leading to the home feed. -->
     <string name="nav_home">Pagina iniziale</string>
     <!-- Navigation drawer item leading to the about screen. -->

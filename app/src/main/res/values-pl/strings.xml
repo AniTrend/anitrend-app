@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nav_header_discover">Odkryj</string>
-    <string name="nav_header_manage">Zarządzaj</string>
+
     <string name="nav_header_customization">Dostosowywanie</string>
 
     <string name="nav_header_support">Wsparcie</string>
@@ -14,8 +14,7 @@
 
     <string name="action_mode_selected">Wybrane: %d</string>
 
-    <string name="navigation_drawer_open">Nawigacja została otwarta</string>
-    <string name="navigation_drawer_close">Nawigacja została zamknięta</string>
+
 
 
     <string name="nav_home">Główny</string>
