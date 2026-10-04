@@ -37,6 +37,8 @@ jetbrains-kotlinx-serialization = "1.11.0"
 mpandroidchartVersion = "v3.1.0"
 noties-markwon = "4.6.2"
 org-mockito = "5.23.0"
+org-robolectric = "4.17"
+io-github-takahirom-roborazzi = "1.76.0"
 squareup-retrofit = "3.0.0"
 squareup-okhttp = "5.5.0"
 
@@ -203,6 +205,11 @@ markwon-ext-latex = { module = "io.noties.markwon:ext-latex", version.ref = "not
 
 mockito-android = { module = "org.mockito:mockito-android", version.ref = "org.mockito" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "org.mockito" }
+
+org-robolectric = { module = "org.robolectric:robolectric", version.ref = "org-robolectric" }
+io-github-takahirom-roborazzi = { module = "io.github.takahirom.roborazzi:roborazzi", version.ref = "io-github-takahirom-roborazzi" }
+io-github-takahirom-roborazzi-junit-rule = { module = "io.github.takahirom.roborazzi:roborazzi-junit-rule", version.ref = "io-github-takahirom-roborazzi" }
+io-github-takahirom-roborazzi-gradle-plugin = { module = "io.github.takahirom.roborazzi:roborazzi-gradle-plugin", version.ref = "io-github-takahirom-roborazzi" }
 
 mockk = { module = "io.mockk:mockk", version.ref = "io-mockk" }
 mockk-android = { module = "io.mockk:mockk-android", version.ref = "io-mockk" }

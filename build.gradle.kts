@@ -5,6 +5,7 @@ buildscript {
     }
     dependencies {
         classpath(libs.android.gradle.plugin)
+        classpath(libs.io.github.takahirom.roborazzi.gradle.plugin)
         classpath(libs.jetbrains.kotlin.gradle)
         classpath(libs.jetbrains.kotlin.serialization)
         classpath(libs.koin.gradle.plugin)
