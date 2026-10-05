@@ -27,6 +27,9 @@ Before opening a pull request, please ensure you've done the following:
 - Tested configurations (e.g. compact light/dark, w600dp rail, RTL, large font):
 - Device-only evidence (only if interaction/platform surfaces are affected):
 
+## Screenshots:
+<!-- If applicable, otherwise feel free to remove this section -->
+
 ## Types of changes
 <!--- What types of changes does your code introduce? Put an `x` in all the boxes that apply: -->
 - [ ] Bug fix (non-breaking change which fixes an issue)
