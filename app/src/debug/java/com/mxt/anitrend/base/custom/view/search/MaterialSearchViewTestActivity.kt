@@ -2,7 +2,7 @@ package com.mxt.anitrend.base.custom.view.search
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.mxt.anitrend.test.R
+import com.mxt.anitrend.R
 
 /**
  * Host activity for [MaterialSearchViewInstrumentationTest]. Builds the search

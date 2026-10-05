@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Debug-only host activities for instrumentation tests. ActivityScenario
+    requires the target activity to live in the app-under-test APK, so the
+    widget and search test hosts are compiled into the debug variant only and
+    declared here instead of in the androidTest manifest.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+        <activity
+            android:name="com.mxt.anitrend.widget.ProgressLayoutTestActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.mxt.anitrend.base.custom.view.search.MaterialSearchViewTestActivity"
+            android:exported="false" />
+    </application>
+
+</manifest>
