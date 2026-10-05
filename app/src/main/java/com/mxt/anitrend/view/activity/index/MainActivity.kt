@@ -184,15 +184,13 @@ class MainActivity : CommonActivity() {
             mToolbar.title = destination.label
             if (destination.id == R.id.searchFragment) searchView?.closeSearch()
             if (isTopLevelDestination(destination.id)) {
-                // Top-level roots have no up action.
+                // Top-level roots have no up action; the single registered
+                // back listener stays dormant without the icon.
                 mToolbar.navigationIcon = null
             } else {
-                // Pushed and detail destinations show the back affordance and
-                // route its click through the production back policy.
+                // Pushed and detail destinations show the back affordance;
+                // its click is owned by the once-registered listener above.
                 mToolbar.setNavigationIcon(R.drawable.ic_msv_arrow_back)
-                mToolbar.setNavigationOnClickListener {
-                    navigateBackFromDestination()
-                }
             }
             syncPrimarySelection(primaryMenuItemFor(destination.id, arguments))
             invalidateOptionsMenu()
@@ -236,6 +234,13 @@ class MainActivity : CommonActivity() {
             })
         }
         setSupportActionBar(mToolbar)
+        // Single-owner toolbar back contract: AppCompat's setSupportActionBar
+        // wrapper owns the button's click listener, so the production back
+        // policy is registered once here; destination changes only swap the
+        // navigation icon.
+        mToolbar.setNavigationOnClickListener {
+            navigateBackFromDestination()
+        }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
