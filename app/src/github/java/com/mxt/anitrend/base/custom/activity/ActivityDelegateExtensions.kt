@@ -41,7 +41,7 @@ private fun MainActivity.onUpdateChecked(
             val mAppUpdateWidget =
                 menuItems
                     .findItem(R.id.nav_check_update)
-                    .actionView
+                    ?.actionView
                     ?.findViewById<TextView>(R.id.app_update_info)
             mAppUpdateWidget?.text = getString(R.string.app_update, remoteVersion.version)
             mAppUpdateWidget?.visibility = View.VISIBLE

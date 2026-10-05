@@ -549,7 +549,7 @@ class MaterialSearchView @JvmOverloads constructor(
         this.onSearchClearedListener = onSearchClearedListener
     }
 
-    fun getText(): Editable = binding.searchTextView.text
+    fun getText(): Editable? = binding.searchTextView.text
 
     override fun onFilterComplete(count: Int) {
         if (count > 0 && showSuggestionsFlag) {

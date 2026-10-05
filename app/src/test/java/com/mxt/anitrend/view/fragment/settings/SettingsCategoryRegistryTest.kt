@@ -2,6 +2,7 @@ package com.mxt.anitrend.view.fragment.settings
 
 import com.mxt.anitrend.R
 import com.mxt.anitrend.util.KeyUtil
+import com.mxt.anitrend.viewmodel.CustomizeSettingsViewModel
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
@@ -202,5 +203,36 @@ class SettingsCategoryRegistryTest {
             .first { it.keyRes == R.string.pref_key_notification_work_around }
 
         assertFalse(workaround.enabled)
+    }
+
+    // ── canonical customize rows ──
+
+    @Test
+    fun `customizeRows contains each persisted customize key exactly once`() {
+        val rows = SettingsCategoryRegistry.customizeRows()
+
+        assertEquals(3, rows.size)
+        val keys = rows.map { it.keyRes }
+        assertEquals(keys.size, keys.toSet().size)
+        assertTrue(R.string.pref_key_app_theme in keys)
+        assertTrue(R.string.pref_key_selected_language in keys)
+        assertTrue(R.string.pref_key_list_view_style in keys)
+    }
+
+    @Test
+    fun `customize section renderer consumes the canonical customize rows`() {
+        val canonical: List<SettingsRow> = SettingsCategoryRegistry.customizeRows()
+        val sectionRows = sectionFor(SettingsCategoryRegistry.CUSTOMIZE)!!.rows
+
+        assertEquals(canonical, sectionRows)
+    }
+
+    @Test
+    fun `customize rows carry the same defaults as the customize view model`() {
+        val defaults = SettingsCategoryRegistry.customizeRows().associate { it.keyRes to it.defaultValue }
+
+        assertEquals(KeyUtil.THEME_LIGHT, defaults.getValue(R.string.pref_key_app_theme))
+        assertEquals(CustomizeSettingsViewModel.DEFAULT_LANGUAGE, defaults.getValue(R.string.pref_key_selected_language))
+        assertEquals(CustomizeSettingsViewModel.DEFAULT_LIST_VIEW_STYLE, defaults.getValue(R.string.pref_key_list_view_style))
     }
 }

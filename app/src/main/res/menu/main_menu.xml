@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Toolbar menu for root destinations. Primary destinations live in
+    menu/main_primary_navigation.xml; the secondary root destinations
+    (trending, reviews, airing, hub) sit in the action_discover submenu here
+    and keep their stable ids because startup shortcuts and deep-link routes
+    dispatch them by id.
+-->
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -8,6 +15,46 @@
         android:orderInCategory="100"
         android:title="@string/action_search"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/nav_check_update"
+        android:orderInCategory="101"
+        android:title="@string/drawer_title_update"
+        android:visible="@bool/display_update_channel_pref"
+        app:actionLayout="@layout/action_view_update"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_account"
+        android:orderInCategory="102"
+        android:title="@string/pref_header_account"
+        app:actionLayout="@layout/action_view_account"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_discover"
+        android:orderInCategory="100"
+        android:title="@string/nav_header_discover"
+        app:showAsAction="never">
+        <menu>
+            <item
+                android:id="@+id/nav_trending"
+                android:icon="@drawable/ic_bubble_chart_white_24dp"
+                android:title="@string/drawer_title_trending" />
+            <item
+                android:id="@+id/nav_reviews"
+                android:icon="@drawable/ic_rate_review_white_24dp"
+                android:title="@string/drawer_title_reviews" />
+            <item
+                android:id="@+id/nav_airing"
+                android:icon="@drawable/ic_hourglass_empty_white_24dp"
+                android:title="@string/drawer_title_airing" />
+            <item
+                android:id="@+id/nav_hub"
+                android:icon="@drawable/ic_group_work_white_24dp"
+                android:title="@string/drawer_title_hub" />
+        </menu>
+    </item>
 
     <item
         android:id="@+id/action_settings"
@@ -24,8 +71,22 @@
         app:showAsAction="never" />
 
     <item
+        android:id="@+id/nav_sign_in"
+        android:icon="@drawable/ic_person_white_24dp"
+        android:orderInCategory="103"
+        android:title="@string/drawer_title_sign_in"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/nav_sign_out"
+        android:icon="@drawable/ic_exit_to_app_white_24dp"
+        android:orderInCategory="104"
+        android:title="@string/drawer_title_sign_out"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_extra"
-        android:orderInCategory="102"
+        android:orderInCategory="105"
         android:title="@string/drawer_section_extras">
         <menu>
 
@@ -35,21 +96,18 @@
                 android:orderInCategory="103"
                 android:title="@string/nav_about"
                 app:showAsAction="ifRoom" />
-
             <item
                 android:id="@+id/action_discord"
                 android:icon="@drawable/ic_discord"
                 android:orderInCategory="104"
                 android:title="@string/title_discord"
                 app:showAsAction="ifRoom" />
-
             <item
                 android:id="@+id/action_support"
                 android:icon="@drawable/ic_patreon_logo"
                 android:orderInCategory="105"
                 android:title="@string/action_support"
                 app:showAsAction="ifRoom" />
-
             <item
                 android:id="@+id/action_report"
                 android:icon="@drawable/ic_bug_report_grey_600_24dp"

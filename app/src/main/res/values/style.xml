@@ -393,4 +393,45 @@
         <item name="shapeAppearanceOverlay">@style/ShapeAppearance.Material3.Corner.Full</item>
     </style>
 
+    <!-- Primary navigation shell styles (compact bar + w600dp rail).
+         The active indicator uses the primary-container role; icon and label
+         colors pair with it through the checked/default role selectors. -->
+    <style name="Widget.AniTrend.Navigation.Bar" parent="Widget.Material3.BottomNavigationView">
+        <item name="itemIconTint">@color/primary_navigation_item_tint</item>
+        <item name="itemTextColor">@color/primary_navigation_item_text</item>
+        <item name="itemActiveIndicatorStyle">@style/Widget.AniTrend.Navigation.Bar.ActiveIndicator</item>
+        <item name="labelVisibilityMode">labeled</item>
+    </style>
+
+    <style name="Widget.AniTrend.Navigation.Bar.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">?attr/colorPrimaryContainer</item>
+    </style>
+
+    <style name="Widget.AniTrend.Navigation.Rail" parent="Widget.Material3.NavigationRailView">
+        <item name="itemIconTint">@color/primary_navigation_item_tint</item>
+        <item name="itemTextColor">@color/primary_navigation_item_text</item>
+        <item name="itemActiveIndicatorStyle">@style/Widget.AniTrend.Navigation.Rail.ActiveIndicator</item>
+        <item name="labelVisibilityMode">labeled</item>
+    </style>
+
+    <style name="Widget.AniTrend.Navigation.Rail.ActiveIndicator" parent="Widget.Material3.NavigationRailView.ActiveIndicator">
+        <item name="android:color">?attr/colorPrimaryContainer</item>
+    </style>
+
+    <!-- Shared component styles. Inputs use the M3 outlined box with the
+         AniTrend label roles; the toolbar account action keeps a 48dp touch
+         target on the action-view host. -->
+    <style name="Widget.AniTrend.TextField.Outlined" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textColorHint">?attr/colorOnSurfaceVariant</item>
+        <item name="hintTextColor">?attr/colorOnSurfaceVariant</item>
+    </style>
+
+    <style name="Widget.AniTrend.Toolbar.AccountAction" parent="">
+        <item name="android:minHeight">48dp</item>
+        <item name="android:paddingStart">@dimen/lg_margin</item>
+        <item name="android:paddingEnd">@dimen/lg_margin</item>
+        <item name="android:gravity">center</item>
+    </style>
+
 </resources>

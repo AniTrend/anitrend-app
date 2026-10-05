@@ -129,6 +129,15 @@ internal fun Project.configureDependencies() {
     dependencies.testImplementation(libs.androidx.arch.core.testing)
     dependencies.testImplementation(libs.androidx.paging.testing)
 
+    /** Screenshot regression (Robolectric + Roborazzi) */
+    dependencies.testImplementation(libs.org.robolectric)
+    dependencies.testImplementation(libs.io.github.takahirom.roborazzi)
+    dependencies.testImplementation(libs.io.github.takahirom.roborazzi.junit.rule)
+    // Roborazzi window captures route through Espresso; SDK 37 needs these
+    // versions (robolectric/robolectric#11344 removed InputManager.getInstance).
+    dependencies.testImplementation(libs.androidx.test.core)
+    dependencies.testImplementation(libs.androidx.test.espresso.core)
+
     dependencies.androidTestImplementation(libs.cash.turbine)
     dependencies.androidTestImplementation(libs.androidx.test.coreKtx)
     dependencies.androidTestImplementation(libs.androidx.test.runner)

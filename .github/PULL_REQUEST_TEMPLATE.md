@@ -20,6 +20,13 @@ Before opening a pull request, please ensure you've done the following:
 ## Description
 <!--- Describe your changes in detail, or link an existing issue here -->
 
+## UI evidence
+<!-- Required for UI changes; a fork PR satisfies this with the read-only android-ui-screenshots workflow. -->
+- [ ] `./gradlew :app:verifyUiScreenshots` passes locally (or the `android-ui-screenshots` workflow run is green)
+- Workflow run / Roborazzi report link:
+- Tested configurations (e.g. compact light/dark, w600dp rail, RTL, large font):
+- Device-only evidence (only if interaction/platform surfaces are affected):
+
 ## Screenshots:
 <!-- If applicable, otherwise feel free to remove this section -->
 
