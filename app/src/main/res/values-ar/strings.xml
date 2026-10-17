@@ -2,7 +2,7 @@
 <resources>
 
     <string name="nav_header_discover">الاستكشاف</string>
-    <string name="nav_header_manage">التحكم</string>
+
     <string name="nav_header_customization">التخصيص</string>
 
     <string name="nav_header_support">الدعم</string>
@@ -15,8 +15,7 @@
 
     <string name="action_mode_selected">حُدد: %d</string>
 
-    <string name="navigation_drawer_open">فُتحَ درج التنقل</string>
-    <string name="navigation_drawer_close">غُلقَ درج التنقل</string>
+
 
 
     <string name="nav_home">الصفحة الرئيسية</string>

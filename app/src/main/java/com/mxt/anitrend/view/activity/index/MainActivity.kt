@@ -11,16 +11,14 @@ import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.annotation.VisibleForTesting
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.net.toUri
-import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.withResumed
 import androidx.navigation.fragment.NavHostFragment
-import com.google.android.material.navigation.NavigationView
+import com.google.android.material.navigation.NavigationBarView
 import com.mxt.anitrend.R
 import com.mxt.anitrend.analytics.contract.ISupportAnalytics
 import com.mxt.anitrend.base.custom.activity.checkUpdate
@@ -29,13 +27,10 @@ import com.mxt.anitrend.base.custom.async.WebTokenRequest
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
 import com.mxt.anitrend.base.custom.view.image.AvatarIndicatorView
-import com.mxt.anitrend.base.custom.view.image.HeaderImageView
 import com.mxt.anitrend.base.custom.view.search.MaterialSearchView
 import com.mxt.anitrend.base.interfaces.event.BottomSheetChoice
 import com.mxt.anitrend.base.interfaces.event.ISearchDelegate
 import com.mxt.anitrend.databinding.ActivityMainBinding
-import com.mxt.anitrend.extension.LAZY_MODE_UNSAFE
-import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.extension.requestNotificationsPermission
 import com.mxt.anitrend.navigation.extension.NavigationArgs
@@ -93,10 +88,7 @@ import timber.log.Timber
  * Base main_menu activity to show case template
  */
 
-class MainActivity :
-    CommonActivity(),
-    View.OnClickListener,
-    NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : CommonActivity() {
     private lateinit var binding: ActivityMainBinding
 
     // --- Fields carried over from ActivityBase shell ---
@@ -108,25 +100,17 @@ class MainActivity :
     private val mToolbar by lazy(LazyThreadSafetyMode.NONE) {
         binding.appBarMain.customToolbar.toolbar
     }
-    private val mDrawerLayout by lazy(LazyThreadSafetyMode.NONE) {
-        binding.drawerLayout
-    }
-    private val mNavigationView by lazy(LazyThreadSafetyMode.NONE) {
-        binding.navView
-    }
+
+    /**
+     * Whichever navigation surface the current window class inflated: the
+     * compact BottomNavigationView or the w600dp NavigationRailView. Both are
+     * driven through one [NavigationBarView] binding path.
+     */
+    private val primaryNavigation: NavigationBarView?
+        get() = binding.root.findViewById(R.id.primary_navigation)
 
     private val navController
         get() = (supportFragmentManager.findFragmentById(R.id.main_nav_host) as NavHostFragment).navController
-
-    private val mDrawerToggle by lazy(LAZY_MODE_UNSAFE) {
-        ActionBarDrawerToggle(
-            this@MainActivity,
-            mDrawerLayout,
-            mToolbar,
-            R.string.navigation_drawer_open,
-            R.string.navigation_drawer_close,
-        )
-    }
 
     private var searchView: MaterialSearchView? = null
     private var isClosing = false
@@ -162,54 +146,53 @@ class MainActivity :
         navController.navigateToComment(param)
     }
 
-    private lateinit var menuItems: Menu
+    /** Toolbar menu currently attached; hosts the account and update action views. */
+    private var menuItems: Menu? = null
 
-    private lateinit var mHomeFeed: MenuItem
-    private lateinit var mAccountLogin: MenuItem
-    private lateinit var mSignOutProfile: MenuItem
-    private lateinit var mManageMenu: MenuItem
+    /** The update worker observer registers once per activity instance. */
+    private var updateWorkerAttached = false
 
-    private val headerContainer by lazy(LAZY_MODE_UNSAFE) {
-        mNavigationView.getHeaderView(0)
-    }
+    /** Suppresses re-dispatch when syncing the bar selection from navigation state. */
+    private var suppressPrimarySelection = false
 
-    private val mHeaderView by lazy(LAZY_MODE_UNSAFE) {
-        headerContainer.findViewById<HeaderImageView>(R.id.drawer_banner)
-    }
-    private val mUserName by lazy(LAZY_MODE_UNSAFE) {
-        headerContainer.findViewById<TextView>(R.id.drawer_app_name)
-    }
-    private val mUserAvatar by lazy(LAZY_MODE_UNSAFE) {
-        headerContainer.findViewById<AvatarIndicatorView>(R.id.drawer_avatar_indicator)
-    }
+    /**
+     * Toolbar-owned account avatar (action view of `action_account`). The
+     * drawer header used to own this view; its data source and click behavior
+     * are unchanged.
+     */
+    private val mUserAvatar: AvatarIndicatorView?
+        get() = menuItems
+            ?.findItem(R.id.action_account)
+            ?.actionView
+            ?.findViewById(R.id.account_avatar)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        mUserAvatar.onAvatarClick = ::onAvatarClicked
-        setSupportActionBar(mToolbar)
-        mDrawerToggle.setToolbarNavigationClickListener { navigateBackFromDestination() }
-        navController.addOnDestinationChangedListener { _, destination, _ ->
+        primaryNavigation?.let(::bindPrimaryNavigation)
+        navController.addOnDestinationChangedListener { _, destination, arguments ->
             val isSharedContent = destination.id == R.id.sharedContentFragment
             binding.appBarMain.customToolbar.root.isVisible = !isSharedContent
+            // The shell owns the navigation surface inset: hiding the bar or
+            // rail together with the toolbar keeps the content host full-bleed
+            // on the full-screen shared content destination.
+            primaryNavigation?.isVisible = !isSharedContent
             // Navigation owns the toolbar title. Graph labels are applied for every destination,
             // including root switches and restored back-stack entries, so a previous title cannot
             // leak into the next root landing.
             mToolbar.title = destination.label
             if (destination.id == R.id.searchFragment) searchView?.closeSearch()
             if (isTopLevelDestination(destination.id)) {
-                mDrawerToggle.isDrawerIndicatorEnabled = true
-                mDrawerToggle.syncState()
-                // The toggle's constructor listener is the single final click
-                // owner. With the indicator enabled, it toggles the drawer at
-                // START; no per-dispatch click registration exists.
+                // Top-level roots have no up action; the single registered
+                // back listener stays dormant without the icon.
+                mToolbar.navigationIcon = null
             } else {
-                mDrawerToggle.isDrawerIndicatorEnabled = false
-                // The toggle's constructor listener is the single final click
-                // owner. Its forwarder handles the disabled-indicator up
-                // branch; no per-dispatch click registration exists.
+                // Pushed and detail destinations show the back affordance;
+                // its click is owned by the once-registered listener above.
+                mToolbar.setNavigationIcon(R.drawable.ic_msv_arrow_back)
             }
+            syncPrimarySelection(primaryMenuItemFor(destination.id, arguments))
             invalidateOptionsMenu()
         }
         searchView = binding.appBarMain.customToolbar.searchView
@@ -250,6 +233,15 @@ class MainActivity :
                 }
             })
         }
+        setSupportActionBar(mToolbar)
+        // Single-owner toolbar back contract: AppCompat's setSupportActionBar
+        // wrapper owns the button's click listener, so the production back
+        // policy is registered once here; destination changes only swap the
+        // navigation icon.
+        mToolbar.setNavigationOnClickListener {
+            navigateBackFromDestination()
+        }
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 mainViewModel.state.collect { state ->
@@ -282,9 +274,6 @@ class MainActivity :
         } else {
             shouldFinishExternalTaskOnBack = savedInstanceState.getBoolean(KEY_EXTERNAL_ENTRY)
         }
-        mNavigationView.itemBackground = getCompatDrawable(R.drawable.nav_background)
-        mNavigationView.setNavigationItemSelectedListener(this)
-        menuItems = mNavigationView.menu
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -324,6 +313,13 @@ class MainActivity :
             menuInflater.inflate(R.menu.main_menu, menu)
             val searchItem = menu.findItem(R.id.action_search)
             searchView?.setMenuItem(searchItem)
+            menuItems = menu
+            bindToolbarActionViews(menu)
+            applyAccountMenuVisibility(menu)
+            if (!updateWorkerAttached) {
+                updateWorkerAttached = true
+                makeRequest()
+            }
         }
         return super.onCreateOptionsMenu(menu)
     }
@@ -361,6 +357,21 @@ class MainActivity :
                 navController.navigateToLogging()
                 return true
             }
+            R.id.action_account -> {
+                onAvatarClicked()
+                return true
+            }
+            R.id.nav_trending,
+            R.id.nav_reviews,
+            R.id.nav_airing,
+            R.id.nav_hub,
+            R.id.nav_sign_in,
+            R.id.nav_sign_out,
+            R.id.nav_check_update,
+            -> {
+                onNavigate(item.itemId)
+                return true
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -374,7 +385,7 @@ class MainActivity :
             selectedItem =
                 if (settings.isAuthenticated) {
                     if (redirectShortcut == 0) {
-                        getNavigationItem()
+                        startupNavigationItem()
                     } else {
                         redirectShortcut
                     }
@@ -386,7 +397,7 @@ class MainActivity :
                     }
                 }
         }
-        mNavigationView.setCheckedItem(selectedItem)
+        syncPrimarySelection(selectedItem.takeIf { isPrimaryNavigationItem(it) })
         if (navController.currentDestination?.id == R.id.animeFragment) {
             onNavigate(selectedItem)
         }
@@ -394,7 +405,6 @@ class MainActivity :
             shouldFinishExternalTaskOnBack,
             dispatchExternalIntentRoute(intent),
         )
-        makeRequest()
         requestCurrentUser()
     }
 
@@ -422,10 +432,6 @@ class MainActivity :
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
-        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-            mDrawerLayout.closeDrawer(GravityCompat.START)
-            return
-        }
         if (searchView?.isSearchOpen == true) {
             searchView?.closeSearch()
             return
@@ -446,7 +452,7 @@ class MainActivity :
         }
         // The NavController's OnBackPressedDispatcher callback pops the nav
         // stack instead of finishing, so the exit-confirm completes with an
-        // explicit finish: a drawer root media list sits above the start
+        // explicit finish: a root media list sits above the start
         // destination, and the second back press still has to exit the task.
         finish()
     }
@@ -468,7 +474,7 @@ class MainActivity :
         R.id.reviewFragment,
         R.id.trendingFragment,
         -> true
-        // NFR-002: the media list is top-level only for the root drawer
+        // NFR-002: the media list is top-level only for the root primary
         // producer; pushed producers keep caller-back semantics.
         R.id.mediaListFragment -> isCurrentDestinationRootMediaList()
         else -> false
@@ -488,7 +494,6 @@ class MainActivity :
     override fun onPause() {
         super.onPause()
         mediaActionUtil?.onPause(null)
-        mDrawerLayout.removeDrawerListener(mDrawerToggle)
     }
 
     /**
@@ -503,24 +508,89 @@ class MainActivity :
     override fun onResume() {
         super.onResume()
         mediaActionUtil?.onResume(null)
-        mDrawerLayout.addDrawerListener(mDrawerToggle)
-        mDrawerToggle.syncState()
         updateUI()
         requestCurrentUser()
     }
 
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        @IdRes val menu = item.itemId
-        if (selectedItem != menu || !isTopLevelDestination(navController.currentDestination?.id)) {
-            onNavigate(menu)
-        }
-        if (menu != R.id.nav_sign_in) {
-            mDrawerLayout.closeDrawer(GravityCompat.START)
+    /**
+     * One binding path for both navigation surfaces. Item selection routes
+     * through the shared production mapping in [onPrimaryNavigationItemSelected];
+     * a reselect of the active item is a no-op (the legacy `selectedItem` guard).
+     */
+    private fun bindPrimaryNavigation(view: NavigationBarView) {
+        view.setOnItemSelectedListener { item -> onPrimaryNavigationItemSelected(item.itemId) }
+        view.setOnItemReselectedListener { /* Intentionally empty: reselect must not re-dispatch. */ }
+    }
+
+    private fun onPrimaryNavigationItemSelected(@IdRes itemId: Int): Boolean {
+        if (suppressPrimarySelection) return true
+        if (selectedItem != itemId || !isTopLevelDestination(navController.currentDestination?.id)) {
+            onNavigate(itemId)
         }
         return true
     }
 
-    @Suppress("ComplexCondition") // Drawer item routing remains explicit and centralized.
+    /**
+     * Applies the bar/rail checked state from navigation state without
+     * re-dispatching navigation (guarded by [suppressPrimarySelection]).
+     * Destinations without a primary owner clear the selection, leaving the
+     * bar unselected until a primary root is entered again.
+     */
+    private fun syncPrimarySelection(@IdRes itemId: Int?) {
+        val view = primaryNavigation ?: return
+        suppressPrimarySelection = true
+        if (itemId != null && view.menu.findItem(itemId)?.isVisible == true) {
+            view.selectedItemId = itemId
+        } else {
+            for (index in 0 until view.menu.size()) {
+                view.menu.getItem(index).isChecked = false
+            }
+        }
+        suppressPrimarySelection = false
+    }
+
+    private fun isPrimaryNavigationItem(@IdRes menu: Int): Boolean = when (menu) {
+        R.id.nav_home_feed,
+        R.id.nav_anime,
+        R.id.nav_manga,
+        R.id.nav_myanime,
+        R.id.nav_mymanga,
+        -> true
+        else -> false
+    }
+
+    /**
+     * Maps a destination and its route arguments to the primary menu item that
+     * owns it, or null when the destination has no primary owner (secondary
+     * roots, pushed media lists, details and settings). A root media list maps
+     * by its freshly selected media type (NFR-007); pushed media lists never
+     * claim a primary item (NFR-002).
+     */
+    @VisibleForTesting
+    internal fun primaryMenuItemFor(
+        @IdRes destinationId: Int,
+        mediaListOrigin: String?,
+        mediaType: String?,
+    ): Int? = when (destinationId) {
+        R.id.feedFragment -> R.id.nav_home_feed
+        R.id.animeFragment -> R.id.nav_anime
+        R.id.mangaFragment -> R.id.nav_manga
+        R.id.mediaListFragment -> when {
+            NavigationArgs.resolveMediaListOrigin(mediaListOrigin) != MediaListOrigin.ROOT -> null
+            mediaType == KeyUtil.ANIME -> R.id.nav_myanime
+            mediaType == KeyUtil.MANGA -> R.id.nav_mymanga
+            else -> null
+        }
+        else -> null
+    }
+
+    private fun primaryMenuItemFor(@IdRes destinationId: Int, arguments: Bundle?): Int? = primaryMenuItemFor(
+        destinationId,
+        arguments?.getString(MediaListFragment.ARG_MEDIA_LIST_ORIGIN),
+        arguments?.getString(KeyUtil.arg_mediaType),
+    )
+
+    @Suppress("ComplexCondition") // Navigation item routing remains explicit and centralized.
     private fun onNavigate(
         @IdRes menu: Int,
     ) {
@@ -612,27 +682,60 @@ class MainActivity :
     }
 
     fun updateUI() {
-        headerContainer
-            .findViewById<View>(R.id.banner_clickable)
-            .setOnClickListener(this)
-
-        mHomeFeed = menuItems.findItem(R.id.nav_home_feed)
-        mAccountLogin = menuItems.findItem(R.id.nav_sign_in)
-        mSignOutProfile = menuItems.findItem(R.id.nav_sign_out)
-        mManageMenu = menuItems.findItem(R.id.nav_header_manage)
-
-        if (settings.isAuthenticated) {
-            setupUserItems()
-        } else {
-            mUserAvatar.render(null, 0)
-            mHeaderView.setImageResource(R.drawable.reg_bg)
+        val authenticated = settings.isAuthenticated
+        menuItems?.let { menu ->
+            applyAccountMenuVisibility(menu)
+            renderAccountAction(menu)
         }
-
+        primaryNavigation?.menu?.let { items ->
+            items.findItem(R.id.nav_myanime)?.isVisible = authenticated
+            items.findItem(R.id.nav_mymanga)?.isVisible = authenticated
+        }
+        if (authenticated) {
+            setupUserItems()
+        }
         checkUpdatedVersion()
     }
 
     fun makeRequest() {
-        launchUpdateWorker(menuItems)
+        menuItems?.let { launchUpdateWorker(it) }
+    }
+
+    /**
+     * Wires the toolbar-owned account and update action views. The update
+     * action view keeps its flavor-specific data source; clicking it dispatches
+     * the same route as the update menu action.
+     */
+    private fun bindToolbarActionViews(menu: Menu) {
+        renderAccountAction(menu)
+        menu.findItem(R.id.nav_check_update)
+            ?.actionView
+            ?.findViewById<View>(R.id.app_update_info)
+            ?.setOnClickListener {
+                onNavigate(R.id.nav_check_update)
+            }
+    }
+
+    /** Applies sign-in/sign-out visibility to the current toolbar menu. */
+    private fun applyAccountMenuVisibility(menu: Menu) {
+        menu.findItem(R.id.nav_sign_in)?.isVisible = !settings.isAuthenticated
+        menu.findItem(R.id.nav_sign_out)?.isVisible = settings.isAuthenticated
+    }
+
+    /**
+     * Renders the current user state into the toolbar account action view.
+     * Data source and click behavior are unchanged from the legacy drawer
+     * header rendering.
+     */
+    private fun renderAccountAction(menu: Menu) {
+        val avatar = menu
+            .findItem(R.id.action_account)
+            ?.actionView
+            ?.findViewById<AvatarIndicatorView>(R.id.account_avatar)
+            ?: return
+        avatar.onAvatarClick = ::onAvatarClicked
+        val user = if (settings.isAuthenticated) mainViewModel.currentUser() else null
+        avatar.render(user?.avatar?.large, user?.unreadNotificationCount ?: 0)
     }
 
     private fun checkUpdatedVersion() {
@@ -895,7 +998,7 @@ class MainActivity :
         }
     }
 
-    private fun getNavigationItem(): Int = when (settings.startupPage) {
+    private fun startupNavigationItem(): Int = when (settings.startupPage) {
         "0" -> R.id.nav_home_feed
         "1" -> R.id.nav_anime
         "2" -> R.id.nav_manga
@@ -911,9 +1014,6 @@ class MainActivity :
     private fun setupUserItems() {
         val user = mainViewModel.currentUser()
         if (user != null) {
-            mUserAvatar.render(user.avatar?.large, user.unreadNotificationCount)
-            mUserName.text = user.name.orEmpty()
-            mHeaderView.setImage(user.bannerImage.orEmpty())
             if (settings.shouldShowTipFor(KeyUtil.KEY_LOGIN_TIP)) {
                 settings.disableTipFor(KeyUtil.KEY_LOGIN_TIP)
                 mBottomSheet =
@@ -926,35 +1026,6 @@ class MainActivity :
                 showBottomSheet()
             }
             koinOf<ISupportAnalytics>().setCrashAnalyticUser(user.name.orEmpty())
-        } else {
-            mUserAvatar.render(null, 0)
-        }
-        mAccountLogin.isVisible = false
-
-        mSignOutProfile.isVisible = true
-        mManageMenu.isVisible = true
-        mHomeFeed.isVisible = true
-    }
-
-    override fun onClick(view: View) {
-        if (view.id == R.id.banner_clickable) {
-            if (settings.isAuthenticated) {
-                val user = mainViewModel.currentUser()
-                if (user != null) {
-                    // Name-only identity preserves the legacy redirect behaviour:
-                    // the profile resolves the current user by name, not by id.
-                    navController.navigateToProfile(UserScreenParam(userId = 0L, initialName = user.name))
-                } else {
-                    NotifyUtil
-                        .makeText(
-                            applicationContext,
-                            R.string.text_error_login,
-                            Toast.LENGTH_SHORT,
-                        ).show()
-                }
-            } else {
-                onNavigate(R.id.nav_sign_in)
-            }
         }
     }
 
@@ -965,7 +1036,7 @@ class MainActivity :
             return
         }
         if (user.unreadNotificationCount > 0) {
-            mUserAvatar.hideNotificationWidget()
+            mUserAvatar?.hideNotificationWidget()
             navController.navigateToNotifications()
         } else {
             navController.navigateToProfile(UserScreenParam(userId = 0L, initialName = user.name))
@@ -973,7 +1044,7 @@ class MainActivity :
     }
 
     override fun onDestroy() {
-        mUserAvatar.onViewRecycled()
+        mUserAvatar?.onViewRecycled()
         searchView?.apply {
             setOnQueryTextListener(null)
             setOnSearchViewListener(null)
@@ -997,8 +1068,9 @@ class MainActivity :
 
         /**
          * The legacy shortcut redirect channel is an int nav-item id targeting a
-         * drawer tab; it is launch state, not entity identity, so it stays a scalar
-         * wire value instead of a [com.mxt.anitrend.navigation.model.ScreenParam].
+         * navigation menu item; it is launch state, not entity identity, so it
+         * stays a scalar wire value instead of a
+         * [com.mxt.anitrend.navigation.model.ScreenParam].
          */
         const val NO_REDIRECT = 0
         const val EXTRA_ROUTE = "extra_main_route"
@@ -1024,7 +1096,7 @@ class MainActivity :
          * Reads the legacy shortcut redirect target from the launch intent.
          *
          * Legacy launcher shortcuts (and pre-update persisted shortcut intents)
-         * write [KeyUtil.arg_redirect] with a drawer nav-item id. The value is
+         * write [KeyUtil.arg_redirect] with a navigation menu-item id. The value is
          * normalized via [resolveRedirect]; the saved-state channel keeps using the
          * same legacy key and is handled separately in onSaveInstanceState/onCreate.
          */

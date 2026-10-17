@@ -8,11 +8,11 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.VisibleForTesting
-import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.MediaListAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
@@ -333,7 +333,7 @@ open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, MediaListC
         val context = context ?: return
         val options = CompatUtil.capitalizeWords(KeyUtil.MediaListStatusValues)
         val selectedIndex = statusIn?.let { CompatUtil.getIndexOf(KeyUtil.MediaListStatusValues, it) } ?: -1
-        AlertDialog.Builder(context)
+        MaterialAlertDialogBuilder(context)
             .setTitle(R.string.menu_title_status)
             .setSingleChoiceItems(options.toTypedArray(), selectedIndex) { dialog, which ->
                 statusIn = KeyUtil.MediaListStatusValues[which]

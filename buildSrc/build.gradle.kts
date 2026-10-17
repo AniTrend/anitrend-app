@@ -19,6 +19,9 @@ dependencies {
     // Depend on the android gradle plugin, since we want to access it in our plugin
     implementation(libs.android.gradle.plugin)
 
+    // Depend on the Roborazzi plugin, since we configure its extension and tasks in our plugin
+    implementation(libs.io.github.takahirom.roborazzi.gradle.plugin)
+
     // Depend on the retrofit-graphql codegen plugin, since we want to configure it in our plugin
     implementation(libs.anitrend.retrofit.graphql.gradle.plugin)
 

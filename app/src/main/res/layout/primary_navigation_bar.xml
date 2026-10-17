@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Compact primary navigation surface (windows below 600dp). Included by
+    layout/activity_main.xml. The w600dp rail counterpart is
+    layout/primary_navigation_rail.xml; both keep the same view id so
+    MainActivity binds whichever surface the current window class provides.
+-->
+<com.google.android.material.bottomnavigation.BottomNavigationView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/primary_navigation"
+    style="@style/Widget.AniTrend.Navigation.Bar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:menu="@menu/main_primary_navigation" />

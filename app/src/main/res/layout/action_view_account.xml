@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Toolbar-owned account action view. Hosts the same AvatarIndicatorView that
+    the drawer header used to own; MainActivity renders the current user state
+    into it and routes clicks through the existing account behaviour
+    (signed-out: sign in, unread notifications: notifications, else profile).
+-->
+<com.mxt.anitrend.base.custom.view.image.AvatarIndicatorView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/account_avatar"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:contentDescription="@string/pref_header_account"
+    android:paddingStart="@dimen/lg_margin"
+    android:paddingEnd="@dimen/lg_margin" />

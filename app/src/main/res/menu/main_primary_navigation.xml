@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Primary navigation destinations. This menu drives the compact
+    BottomNavigationView and the w600dp NavigationRailView; both inflate it
+    through the shell styles in values/style.xml. Item order is the bar order.
+    nav_myanime and nav_mymanga are hidden for signed-out sessions by
+    MainActivity.updateUI().
+-->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_home_feed"
+        android:icon="@drawable/ic_home_white_24dp"
+        android:title="@string/drawer_title_home" />
+
+    <item
+        android:id="@+id/nav_anime"
+        android:icon="@drawable/ic_movie_white_24dp"
+        android:title="@string/drawer_title_anime" />
+
+    <item
+        android:id="@+id/nav_manga"
+        android:icon="@drawable/ic_library_books_white_24dp"
+        android:title="@string/drawer_title_manga" />
+
+    <item
+        android:id="@+id/nav_myanime"
+        android:icon="@drawable/ic_live_tv_white_24dp"
+        android:title="@string/drawer_title_myanime" />
+
+    <item
+        android:id="@+id/nav_mymanga"
+        android:icon="@drawable/ic_book_white_24dp"
+        android:title="@string/drawer_title_mymanga" />
+
+</menu>

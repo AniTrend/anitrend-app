@@ -42,12 +42,12 @@ class ToolbarHomeNavigationTest {
     }
 
     /**
-     * The toolbar navigation (up) button has no public view id, and AppCompat
-     * detaches it from the toolbar when no navigation icon is set, which is
-     * the pushed-destination state here. The destination listener registers
-     * the production back policy directly on that button, so the harness
-     * reaches it through the package-private [Toolbar.getNavButtonView] seam;
-     * there is no public API for it.
+     * The toolbar back affordance is owned by the shell contract: pushed and
+     * detail destinations set `ic_msv_arrow_back` as the toolbar navigation
+     * icon and register the production back policy on the button. The button
+     * has no public view id, so the harness reaches it through the
+     * package-private [Toolbar.getNavButtonView] seam; there is no public API
+     * for it.
      */
     private fun toolbarNavButton(activity: Activity): ImageButton? {
         val toolbar = activity.findViewById<Toolbar>(R.id.toolbar)
@@ -79,6 +79,10 @@ class ToolbarHomeNavigationTest {
                 assertFalse("pushed media list must have a caller beneath it", callerDestination == null)
                 val navButton = toolbarNavButton(activity)
                 assertNotNull("pushed destinations must expose the toolbar up affordance", navButton)
+                assertNotNull(
+                    "pushed destinations must own the toolbar back icon",
+                    activity.findViewById<Toolbar>(R.id.toolbar).navigationIcon,
+                )
                 navButton!!.performClick()
             }
             InstrumentationRegistry.getInstrumentation().waitForIdleSync()

@@ -176,6 +176,11 @@ private fun ApplicationExtension.setUpWith(project: Project) {
 
     testOptions {
         unitTests.isReturnDefaultValues = true
+        unitTests.isIncludeAndroidResources = true
+        unitTests.all { test ->
+            // Robolectric 4.17 FileDescriptorInterceptor needs this open on JDK 21.
+            test.jvmArgs("--add-opens=java.base/jdk.internal.access=ALL-UNNAMED")
+        }
     }
 
     lint {

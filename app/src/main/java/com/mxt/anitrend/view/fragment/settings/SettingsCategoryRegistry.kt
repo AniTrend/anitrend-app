@@ -74,6 +74,36 @@ object SettingsCategoryRegistry {
     fun isKnown(categoryId: String?): Boolean = categories(isFirebaseVisible = true, isAuthenticated = true).any { it.id == categoryId }
 
     /**
+     * Canonical Customize row metadata. This is the single source consumed by
+     * both the registry section renderer and the Customize category fragment,
+     * so the three persisted keys can never diverge between renderers.
+     */
+    fun customizeRows(): List<SettingsRow.Choice> = listOf(
+        SettingsRow.Choice(
+            keyRes = R.string.pref_key_app_theme,
+            titleRes = R.string.pref_title_app_theme,
+            entriesRes = R.array.pref_selected_theme_titles,
+            valuesRes = R.array.pref_selected_theme_values,
+            defaultValue = KeyUtil.THEME_LIGHT,
+        ),
+        SettingsRow.Choice(
+            keyRes = R.string.pref_key_selected_language,
+            titleRes = R.string.pref_title_language,
+            summaryRes = R.string.pref_title_language_summary,
+            entriesRes = R.array.pref_selected_language_titles,
+            valuesRes = R.array.pref_selected_language_values,
+            defaultValue = "en",
+        ),
+        SettingsRow.Choice(
+            keyRes = R.string.pref_key_list_view_style,
+            titleRes = R.string.pref_title_list_view_style,
+            entriesRes = R.array.pref_selected_list_view_style_titles,
+            valuesRes = R.array.pref_selected_list_view_style_values,
+            defaultValue = "0",
+        ),
+    )
+
+    /**
      * Resolves the settings section rendered for [categoryId], honoring the
      * same resource-gated visibility rules as the legacy single-screen
      * settings. Returns null for unknown ids so callers can fall back safely.
@@ -166,30 +196,7 @@ object SettingsSections {
         id = SettingsCategoryRegistry.CUSTOMIZE,
         titleRes = R.string.pref_header_customize,
         summaryRes = R.string.pref_header_customize_summary,
-        rows = listOf(
-            SettingsRow.Choice(
-                keyRes = R.string.pref_key_app_theme,
-                titleRes = R.string.pref_title_app_theme,
-                entriesRes = R.array.pref_selected_theme_titles,
-                valuesRes = R.array.pref_selected_theme_values,
-                defaultValue = KeyUtil.THEME_LIGHT,
-            ),
-            SettingsRow.Choice(
-                keyRes = R.string.pref_key_selected_language,
-                titleRes = R.string.pref_title_language,
-                summaryRes = R.string.pref_title_language_summary,
-                entriesRes = R.array.pref_selected_language_titles,
-                valuesRes = R.array.pref_selected_language_values,
-                defaultValue = "en",
-            ),
-            SettingsRow.Choice(
-                keyRes = R.string.pref_key_list_view_style,
-                titleRes = R.string.pref_title_list_view_style,
-                entriesRes = R.array.pref_selected_list_view_style_titles,
-                valuesRes = R.array.pref_selected_list_view_style_values,
-                defaultValue = "0",
-            ),
-        ),
+        rows = SettingsCategoryRegistry.customizeRows(),
     )
 
     private fun appearanceSection() = SettingsSection(

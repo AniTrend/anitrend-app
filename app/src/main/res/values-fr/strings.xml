@@ -907,17 +907,15 @@
     <string name="tip_messages_title">Messages</string>
     <!-- Notification title for a like on a reply. -->
     <string name="notification_user_like_reply">\"J\'aime\" sur une réponse</string>
-    <!-- Accessibility announcement when the navigation drawer opens. -->
-    <string name="navigation_drawer_open">Tiroir de navigation ouvert</string>
-    <!-- Accessibility announcement when the navigation drawer closes. -->
-    <string name="navigation_drawer_close">Tiroir de navigation fermé</string>
+
+
     <!-- Navigation drawer item leading to the home feed. -->
     <string name="nav_home">Accueil</string>
     <string name="nav_header_support">Support</string>
     <!-- Navigation drawer item leading to the history. -->
     <string name="nav_history">Historique</string>
-    <!-- Navigation drawer section header for list management entries. -->
-    <string name="nav_header_manage">Gérer</string>
+
+
     <!-- Navigation drawer section header for discovery entries. -->
     <string name="nav_header_discover">Découvrir</string>
     <!-- Navigation drawer section header for customization entries. -->

@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    Toolbar-owned update action view. The github flavor sets its text and
+    visibility from the remote version (ActivityDelegateExtensions), and
+    MainActivity routes clicks through the update action.
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="match_parent">
 
-    <TextView
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/app_update_info"
-        android:visibility="invisible"
-        android:layout_gravity="center"
+        style="@style/Widget.Material3.Button.TonalButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="5dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingBottom="5dp"
-        android:textAlignment="center"
-        android:background="@drawable/link_button"
-        android:textColor="@color/white"
-        tools:visibility="visible"
-        tools:text="Get v1.0.0"/>
+        android:layout_gravity="center"
+        android:visibility="gone"
+        tools:text="Get v1.0.0"
+        tools:visibility="visible" />
 
 </LinearLayout>

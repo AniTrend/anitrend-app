@@ -1,6 +1,11 @@
 /build
 /src/release
-/src/debug
+# Local debug/release overlays stay ignored, but the instrumentation test
+# hosts (manifest, java, res) are tracked source.
+/src/debug/*
+!/src/debug/AndroidManifest.xml
+!/src/debug/java
+!/src/debug/res
 
 # Credentials File
 .config/secrets.properties

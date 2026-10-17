@@ -112,16 +112,16 @@ fun NavController.navigateToMedia(param: MediaScreenParam) {
  * contract.
  *
  * NFR-007 invariant: the [MediaListOrigin.ROOT] path must apply the freshly
- * selected [mediaType] on every drawer My Anime/My Manga navigation. Navigation
+ * selected [mediaType] on every primary My Anime/My Manga navigation. Navigation
  * 2.9 `restoreState(true)` would otherwise resurrect the saved back stack entry
- * from the previous drawer media list, whose saved arguments carry the stale
+ * from the previous root media list, whose saved arguments carry the stale
  * media type (repro: My Anime -> Feed -> My Manga restores ANIME). The ROOT
  * path therefore uses [mediaListRootDestinationOptions], which keeps the root
- * popUpTo/drawer-state behavior but disables state restoration for this
+ * popUpTo/saved-state behavior but disables state restoration for this
  * destination, so the new arguments always win. All other root destinations
  * keep normal state restoration via [rootDestinationOptions].
  *
- * @param origin [MediaListOrigin.ROOT] only for drawer My Anime/My Manga;
+ * @param origin [MediaListOrigin.ROOT] only for primary My Anime/My Manga;
  * every other producer pushes with the default [MediaListOrigin.PUSHED].
  */
 fun NavController.navigateToMediaList(
@@ -143,7 +143,7 @@ fun NavController.navigateToMediaList(
 }
 
 /**
- * Drawer My Anime/My Manga route (NFR-007). Uses the root media-list options so
+ * Primary My Anime/My Manga route (NFR-007). Uses the root media-list options so
  * the selected [mediaType] is always applied instead of a restored stale entry;
  * see [navigateToMediaList].
  */
@@ -282,11 +282,11 @@ private fun rootDestinationOptions(): NavOptions = NavOptions.Builder()
     .build()
 
 /**
- * NFR-007: root (drawer) media-list navigation must not restore the saved back
- * stack entry, because that entry carries the previous drawer selection's
+ * NFR-007: root (primary) media-list navigation must not restore the saved back
+ * stack entry, because that entry carries the previous primary selection's
  * arguments. With `restoreState(false)` every My Anime/My Manga navigation
  * creates a fresh entry with the newly selected media type, while keeping the
- * root popUpTo (back to the graph root) and `saveState` (drawer state of other
+ * root popUpTo (back to the graph root) and `saveState` (saved state of other
  * root destinations is still preserved).
  */
 @Suppress("CommentOverPrivateFunction") // The NFR-007 state contract is materially useful here.

@@ -37,25 +37,30 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <EditText
-                android:id="@+id/searchTextView"
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.AniTrend.TextField.Outlined"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:background="@null"
                 android:hint="@string/search_hint"
-                android:imeOptions="actionSearch"
-                android:inputType="textNoSuggestions"
-                android:paddingStart="@dimen/search_view_text_padding"
-                android:paddingEnd="@dimen/search_view_text_padding"
-                android:singleLine="true"
-                android:textColor="?attr/colorOnSurface"
-                android:textColorHint="?attr/colorOnSurfaceVariant"
-                android:textCursorDrawable="@drawable/material_search_cursor"
-                android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/filter_btn"
                 app:layout_constraintStart_toEndOf="@id/action_up_btn"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/searchTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:imeOptions="actionSearch"
+                    android:inputType="textNoSuggestions"
+                    android:paddingStart="@dimen/search_view_text_padding"
+                    android:paddingEnd="@dimen/search_view_text_padding"
+                    android:singleLine="true"
+                    android:textAppearance="?attr/textAppearanceBodyLarge"
+                    android:textCursorDrawable="@drawable/material_search_cursor" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/filter_btn"

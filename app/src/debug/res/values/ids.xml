@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Stable view ids for the androidTest host activities. The instrumentation
+    tests resolve these through the merged test R class; declaring them here
+    keeps the harness independent of production layout ids.
+-->
+<resources>
+    <item name="progressLayout" type="id" />
+    <item name="contentChild" type="id" />
+    <item name="secondContentChild" type="id" />
+    <item name="initiallyGoneContentChild" type="id" />
+    <item name="initiallyInvisibleContentChild" type="id" />
+    <item name="searchView" type="id" />
+</resources>

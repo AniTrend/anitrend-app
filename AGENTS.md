@@ -24,6 +24,11 @@
 - Flavor APK builds:
   - `./gradlew :app:assembleAppDebug`
   - `./gradlew :app:assembleGithubDebug`
+- UI visual proof (required for UI changes):
+  - `./gradlew :app:verifyUiScreenshots --no-daemon` compares production UI surfaces against the reviewed references in `app/src/test/screenshots/appDebug/`.
+  - `./gradlew :app:recordUiScreenshots --no-daemon` re-records references; run it only for an intentionally reviewed design change, never to silence a verification failure.
+  - `./gradlew :app:compareUiScreenshots --no-daemon` generates comparison images under `app/build/outputs/screenshots-comparison`.
+  - The `android-ui-screenshots` workflow runs the verification on UI-relevant pull request paths and publishes the Roborazzi report and comparison artifacts (including on failure).
 
 ## CI scope and release gotchas
 - PR/develop unit CI (`android-unit-test.yaml`) runs on JDK 21 Temurin and executes `./gradlew :app:spotlessCheck --stacktrace` and `./gradlew test --stacktrace`. It does not separately assemble APKs.
@@ -109,6 +114,7 @@ The full specification lives at `docs/architecture/state-synchronization-and-mut
 - Consult `@DESIGN.md` before any UI/UX work: new screens, layout changes, component selection, styling, spacing, color usage, typography choices, dialog or sheet design, custom view creation, or any visual refactor.
 - The manage list editor (`BottomSheetSeriesManage`) is the reference implementation of this design language. Future design passes must carry the same philosophy across the whole app.
 - When a design decision changes (new component pattern, revised token usage, updated spacing convention), update `@DESIGN.md` in the same PR so it stays the source of truth.
+- UI changes carry visual proof: `./gradlew :app:verifyUiScreenshots` must pass and the pull request must link the report or workflow run. Screenshot baselines are re-recorded only as part of a reviewed design change.
 
 ## Branch, commit, and PR conventions
 - Primary integration branch is `develop`. Branch prefixes in use: `feat/`, `fix/`, `chore/`, `refactor/`, `platform/`, `renovate/`, `translation/`.

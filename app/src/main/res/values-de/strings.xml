@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nav_header_discover">"Entdecken"</string>
-    <string name="nav_header_manage">"Verwalten"</string>
+
     <string name="nav_header_customization">"Anpassung"</string>
     <string name="nav_header_support">"Hilfe"</string>
     <string name="nav_contact">"Kontakt"</string>
@@ -12,8 +12,7 @@
     <string name="action_filter">@string/drawer_title_filter</string>
     <string name="action_help">"Hilfe"</string>
     <string name="action_mode_selected">"Ausgewählt: %d"</string>
-    <string name="navigation_drawer_open">"Seitenleiste geöffnet"</string>
-    <string name="navigation_drawer_close">"Seitenleiste geschlossen"</string>
+
     <string name="nav_home">"Start"</string>
     <string name="nav_history">"Verlauf"</string>
 

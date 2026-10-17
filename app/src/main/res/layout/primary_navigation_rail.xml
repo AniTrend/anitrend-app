@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Primary navigation rail (windows at least 600dp wide). Included by
+    layout-w600dp/activity_main.xml. The compact counterpart is
+    layout/primary_navigation_bar.xml; both keep the same view id so
+    MainActivity binds whichever surface the current window class provides.
+-->
+<com.google.android.material.navigationrail.NavigationRailView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/primary_navigation"
+    style="@style/Widget.AniTrend.Navigation.Rail"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    app:menu="@menu/main_primary_navigation" />

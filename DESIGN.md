@@ -158,9 +158,13 @@ Sheets are edge-to-edge. The content scrolls, but the action bar and app bar sta
 - Avoid arbitrary item heights. Use the same spacing tokens as the rest of the app.
 
 ### Navigation
+- Primary navigation is a five-destination set: Status Feeds, Discover Anime, Discover Manga, My Anime List, My Manga List. Compact windows (below 600dp) use `Widget.AniTrend.Navigation.Bar` (Material 3 `BottomNavigationView`); windows at least 600dp use `Widget.AniTrend.Navigation.Rail` (`NavigationRailView`). Both inflate `menu/main_primary_navigation` and share one `NavigationBarView` binding path.
+- Secondary root destinations (What's Trending, Series Reviews, Airing Anime, AniTrend Hub) live in the toolbar `action_discover` overflow submenu. Sign in, Sign out, and Update also live in the toolbar overflow; Settings, share, and the extras submenu keep their existing toolbar placement.
+- The active indicator uses the `colorPrimaryContainer` role with `colorOnPrimaryContainer` icon and label colors; inactive items use `colorOnSurfaceVariant` (`color/primary_navigation_item_tint.xml`, `color/primary_navigation_item_text.xml`). Labels stay visible and accessible on both surfaces.
+- Top-level roots have no toolbar up action. Pushed and detail destinations show `ic_msv_arrow_back` and route the click through the host back policy.
+- The account action view (`layout/action_view_account.xml`) and update action view (`layout/action_view_update.xml`) are toolbar-owned; their data sources and flavor behavior are unchanged from the migrated drawer surfaces.
 - Top app bars use `LightToolbarTheme`, `DarkToolbarTheme`, or `BlackToolbarTheme`.
 - Overflow menus use `PopupThemeLight` or `PopupThemeDark`, extending `Widget.Material3.PopupMenu.Overflow`.
-- Bottom navigation follows the M3 component and the active icon color is `colorPrimary`.
 
 ### Custom views
 - Custom views must read M3 tokens and never hardcode colors or sizes.
@@ -201,3 +205,4 @@ Progress dialogs must be lifecycle-aware. Tie them to the request lifecycle and 
 - Do use `NestedScrollView` in bottom sheets. Do not use `ScrollView`.
 - Do keep custom views view-only. Do not let custom views initiate loading or own ViewModels.
 - Do keep the manage list editor as the reference implementation. Future sheets, dialogs, and lists should reuse its spacing, card grouping, and typography choices.
+- Do run `./gradlew :app:verifyUiScreenshots` for UI changes and attach the visual-proof report link to the pull request. Do not re-record screenshot baselines to silence a failure; recording is a reviewed design-change operation only.

@@ -16,6 +16,17 @@ Please ensure your pull request adheres to the following guidelines:
 - Be sure not to stage any files in excluded in .gitignore
 - Check your spelling and grammar.
 
+## UI verification
+
+Pull requests that change UI surfaces (layouts, menus, themes, shared styles, navigation, settings presentation, or the screenshot tooling itself) must include emulator-free visual proof:
+
+- Run `./gradlew :app:verifyUiScreenshots --no-daemon` and attach the workflow run link (or the Roborazzi report link) to the pull request. The `android-ui-screenshots` workflow runs this check automatically for UI-relevant paths and publishes the report and comparison images as artifacts on every run, including failures.
+- Run `./gradlew test --no-daemon` for the full JVM test graph, not only the tests you expect to change.
+- Recording (`./gradlew :app:recordUiScreenshots`) is a reviewed design-change operation only. Never re-record baselines to silence a verification failure; fix the implementation or present the intentional change for review.
+- Missing references, missing captures, and pixel drift all fail verification and stay visible until resolved.
+
+A rendered screenshot proves appearance only. TalkBack, keyboard focus, deep links, system bars, the IME, OEM rendering, and network/update services are covered by the instrumentation suite and device smoke checks; record device images as integration evidence when those surfaces are affected.
+
 ## Pull Request Branch Naming
 
 Pull request branches should follow the `<type>/<short-description>` convention (for example `fix/login-crash` or `feat/manga-timeline`). Supported types are:

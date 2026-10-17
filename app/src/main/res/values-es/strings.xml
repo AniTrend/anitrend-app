@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="nav_header_discover">Descubrir</string>
-    <string name="nav_header_manage">Gestionar</string>
+
     <string name="nav_header_customization">Personalizar</string>
 
     <string name="nav_header_support">Soporte técnico</string>
@@ -14,8 +14,7 @@
 
     <string name="action_mode_selected">Seleccionado: %d</string>
 
-    <string name="navigation_drawer_open">Menú deslizante abierto</string>
-    <string name="navigation_drawer_close">Menú deslizante cerrado</string>
+
 
 
     <string name="nav_home">Inicio</string>
