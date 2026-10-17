@@ -36,7 +36,7 @@ jetbrains-kotlinx-serialization = "1.11.0"
 
 mpandroidchartVersion = "3.1.0"
 noties-markwon = "4.6.2"
-org-mockito = "5.23.0"
+org-mockito = "5.24.0"
 squareup-retrofit = "3.0.0"
 squareup-okhttp = "5.5.0"
 
