@@ -17,4 +17,7 @@
 
 <resources>
     <item name="tag_system_window_inset_top" type="id"/>
+    <item name="changelog_compose_view" type="id"/>
+    <item name="sub_container" type="id"/>
+    <item name="feed_status_image" type="id"/>
 </resources>

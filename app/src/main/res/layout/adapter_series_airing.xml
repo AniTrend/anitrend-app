@@ -33,7 +33,7 @@
                     android:layout_height="wrap_content"
                     tools:src="@sample/gintama" />
 
-                <com.mxt.anitrend.base.custom.view.widget.AutoIncrementWidget
+                <androidx.compose.ui.platform.ComposeView
                     android:id="@+id/series_episodes"
                     android:layout_gravity="top|end"
                     android:layout_width="wrap_content"

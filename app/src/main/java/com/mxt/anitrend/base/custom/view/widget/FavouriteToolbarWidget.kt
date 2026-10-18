@@ -1,20 +1,22 @@
 package com.mxt.anitrend.base.custom.view.widget
 
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.os.Build
+import android.view.Gravity
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.Toast
+import android.view.ViewGroup
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.annotation.RequiresApi
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.interfaces.view.CustomView
+import com.mxt.anitrend.ui.designsystem.AniTrendTheme
+import com.mxt.anitrend.ui.favourite.FavouriteToolbarAction
 import com.mxt.anitrend.data.store.favourite.FavouriteFlag
-import com.mxt.anitrend.databinding.WidgetToolbarFavouriteBinding
-import com.mxt.anitrend.extension.getCompatDrawable
-import com.mxt.anitrend.extension.getCompatTintedDrawable
-import com.mxt.anitrend.extension.getLayoutInflater
 import com.mxt.anitrend.util.NotifyUtil
 
 /**
@@ -59,14 +61,14 @@ constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr),
-    CustomView,
-    View.OnClickListener {
+    CustomView {
 
-    private lateinit var binding: WidgetToolbarFavouriteBinding
-
-    private val tagName = FavouriteToolbarWidget::class.java.simpleName
+    private lateinit var composeView: ComposeView
+    private val composeState = mutableStateOf(FavouriteWidgetRenderState(isFavourite = false))
     private var toggleAction: (() -> Unit)? = null
     private var renderState: FavouriteWidgetRenderState? = null
+    private var shouldShowContent = false
+    private var compositionInstalled = false
 
     /**
      * Fire-and-forget action delivery for the render-only path. The widget does not await a
@@ -89,8 +91,53 @@ constructor(
     ) : this(context, attrs, defStyleAttr)
 
     override fun onInit() {
-        binding = WidgetToolbarFavouriteBinding.inflate(context.getLayoutInflater(), this, true)
-        binding.widgetFlipper.setOnClickListener(this)
+        composeView =
+            ComposeView(context).apply {
+                id = View.generateViewId()
+                setViewCompositionStrategy(
+                    ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool,
+                )
+                visibility = GONE
+            }
+        addView(
+            composeView,
+            FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                Gravity.CENTER,
+            ),
+        )
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        if (shouldShowContent) showAfterAttach()
+    }
+
+    override fun onDetachedFromWindow() {
+        composeView.visibility = GONE
+        super.onDetachedFromWindow()
+    }
+
+    private fun showAfterAttach() {
+        composeView.post {
+            if (shouldShowContent && composeView.isAttachedToWindow) {
+                if (!compositionInstalled) {
+                    composeView.setContent {
+                        AniTrendTheme {
+                            FavouriteToolbarAction(
+                                isFavourite = composeState.value.isFavourite,
+                                isEnabled = composeState.value.isEnabled,
+                                isLoading = composeState.value.isLoading,
+                                onClick = ::handleActionClick,
+                            )
+                        }
+                    }
+                    compositionInstalled = true
+                }
+                composeView.visibility = VISIBLE
+            }
+        }
     }
 
     /**
@@ -99,72 +146,31 @@ constructor(
     override fun onViewRecycled() {
         toggleAction = null
         renderState = null
-        resetFlipperState()
-    }
-
-    private fun resetFlipperState() {
-        if (binding.widgetFlipper.displayedChild == LOADING_STATE) {
-            binding.widgetFlipper.displayedChild = CONTENT_STATE
+        if (composeState.value.isLoading) {
+            composeState.value = composeState.value.copy(isLoading = false)
         }
     }
 
     /**
-     * Render-only path used by migrated favourite slices. Accepts an immutable
-     * [FavouriteWidgetRenderState]; the widget never mutates a model. Loading is state driven,
-     * so any render with [FavouriteWidgetRenderState.isLoading] false resets the flipper back
-     * to the content child (bounded loading reset), even after a failure or a re-render.
+     * Render-only path used by toolbar owners. Loading and favorite visuals are driven by the
+     * immutable state; committed mutations remain owned by the caller's canonical store.
      */
     fun render(state: FavouriteWidgetRenderState) {
         renderState = state
-        binding.widgetFlipper.visibility = VISIBLE
-        binding.widgetFlipper.displayedChild = if (state.isLoading) LOADING_STATE else CONTENT_STATE
-        binding.widgetLike.setImageDrawable(
-            favouriteDrawable(isFavourite = state.isFavourite, requiresTint = true),
-        )
+        composeState.value = state
+        shouldShowContent = true
+        if (composeView.isAttachedToWindow) showAfterAttach()
     }
 
-    override fun onClick(view: View) {
-        if (view.id == R.id.widget_flipper) {
-            val state = renderState
-            if (state == null) {
-                NotifyUtil
-                    .makeText(
-                        context,
-                        R.string.text_activity_loading,
-                        Toast.LENGTH_SHORT,
-                    ).show()
-                return
-            }
-            when {
-                state.isLoading -> {
-                    NotifyUtil
-                        .makeText(
-                            context,
-                            R.string.busy_please_wait,
-                            Toast.LENGTH_SHORT,
-                        ).show()
-                }
-                state.isEnabled -> toggleAction?.invoke()
-            }
+    private fun handleActionClick() {
+        val state = renderState
+        if (state == null) {
+            NotifyUtil.makeText(context, R.string.text_activity_loading, Toast.LENGTH_SHORT).show()
+            return
         }
-    }
-
-    private fun favouriteDrawable(
-        isFavourite: Boolean,
-        requiresTint: Boolean,
-    ): Drawable? = when {
-        isFavourite && requiresTint ->
-            context.getCompatTintedDrawable(R.drawable.ic_favorite_white_24dp)
-        isFavourite ->
-            context.getCompatDrawable(R.drawable.ic_favorite_white_24dp)
-        requiresTint ->
-            context.getCompatTintedDrawable(R.drawable.ic_favorite_border_white_24dp)
-        else ->
-            context.getCompatDrawable(R.drawable.ic_favorite_border_white_24dp)
-    }
-
-    companion object {
-        const val CONTENT_STATE = 0
-        const val LOADING_STATE = 1
+        when {
+            state.isLoading -> NotifyUtil.makeText(context, R.string.busy_please_wait, Toast.LENGTH_SHORT).show()
+            state.isEnabled -> toggleAction?.invoke()
+        }
     }
 }

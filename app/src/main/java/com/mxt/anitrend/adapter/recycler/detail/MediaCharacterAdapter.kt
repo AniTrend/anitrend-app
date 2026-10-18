@@ -2,19 +2,20 @@ package com.mxt.anitrend.adapter.recycler.detail
 
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.neverEqualPolicy
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.shared.GroupTitleViewHolder
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder
-import com.mxt.anitrend.base.custom.view.image.AspectImageView
-import com.mxt.anitrend.databinding.AdapterCharacterBinding
-import com.mxt.anitrend.databinding.AdapterEntityGroupBinding
-import com.mxt.anitrend.extension.getLayoutInflater
 import com.mxt.anitrend.model.entity.base.CharacterBase
 import com.mxt.anitrend.model.entity.group.RecyclerItem
+import com.mxt.anitrend.ui.character.CharacterRow
+import com.mxt.anitrend.ui.designsystem.AniTrendTheme
 import com.mxt.anitrend.util.KeyUtil
 
 private val mediaCharacterItemDiff = object : DiffUtil.ItemCallback<RecyclerItem>() {
@@ -35,11 +36,24 @@ class MediaCharacterAdapter(
     override fun getItemViewType(position: Int): Int = getItem(position).contentType
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder = if (viewType == KeyUtil.RECYCLER_TYPE_HEADER) {
-        GroupTitleViewHolder(
-            AdapterEntityGroupBinding.inflate(parent.context.getLayoutInflater(), parent, false),
-        )
+        GroupTitleViewHolder(parent)
     } else {
-        CharacterViewHolder(AdapterCharacterBinding.inflate(parent.context.getLayoutInflater(), parent, false))
+        val rowMargin = parent.resources.getDimensionPixelSize(R.dimen.lg_margin)
+        val composeView =
+            ComposeView(parent.context).apply {
+                id = R.id.container
+                layoutParams =
+                    RecyclerView.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ).apply {
+                        setMargins(rowMargin, rowMargin, rowMargin, rowMargin)
+                    }
+                setViewCompositionStrategy(
+                    ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool,
+                )
+            }
+        CharacterViewHolder(composeView)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -52,30 +66,36 @@ class MediaCharacterAdapter(
     }
 
     private inner class CharacterViewHolder(
-        private val binding: AdapterCharacterBinding,
-    ) : RecyclerViewHolder<RecyclerItem>(binding.root) {
-        private var character: CharacterBase? = null
+        private val composeView: ComposeView,
+    ) : RecyclerViewHolder<RecyclerItem>(composeView) {
+        private val character = mutableStateOf<CharacterBase?>(null, neverEqualPolicy())
 
         init {
-            itemView.findViewById<View>(R.id.container)?.setOnClickListener { view ->
-                character?.let { onCharacterClick(view, it) }
+            composeView.setContent {
+                AniTrendTheme {
+                    character.value?.let { current ->
+                        CharacterRow(
+                            characterName = current.name?.fullName.orEmpty(),
+                            imageUrl = current.image?.let { it.extraLarge ?: it.large },
+                            isFavourite = current.isFavourite,
+                            onClick = { onClick(composeView) },
+                        )
+                    }
+                }
             }
         }
 
         override fun onBindViewHolder(model: RecyclerItem) {
-            character = model as? CharacterBase
-            val current = character ?: return
-            AspectImageView.setImage(binding.characterImg, current.image)
-            binding.characterNameText.text = current.name?.fullName
-            binding.favouriteIndicator.visibility = if (current.isFavourite) View.VISIBLE else View.GONE
+            character.value = model as? CharacterBase
         }
 
         override fun onViewRecycled() {
-            Glide.with(itemView.context).clear(binding.characterImg)
-            character = null
+            character.value = null
         }
 
-        override fun onClick(v: View) = character?.let { onCharacterClick(v, it) } ?: Unit
+        override fun onClick(v: View) {
+            character.value?.let { onCharacterClick(v, it) }
+        }
 
         override fun onLongClick(v: View): Boolean = false
     }

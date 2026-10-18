@@ -31,16 +31,17 @@ constructor(
             mediaBase: MediaBase?,
         ) {
             if (mediaBase != null) {
-                val nextAiringEpisode = mediaBase.nextAiringEpisode
-                if (nextAiringEpisode != null) {
-                    view.text = DateUtil.getNextEpDate(nextAiringEpisode)
-                } else {
-                    view.text = CompatUtil.capitalizeWords(mediaBase.status)
-                }
+                view.text = formatAiringText(mediaBase)
                 view.visibility = View.VISIBLE
             } else {
                 view.visibility = View.GONE
             }
+        }
+
+        internal fun formatAiringText(mediaBase: MediaBase?): String? {
+            if (mediaBase == null) return null
+            return mediaBase.nextAiringEpisode?.let { DateUtil.getNextEpDate(it) }
+                ?: CompatUtil.capitalizeWords(mediaBase.status)
         }
 
         /** Render from the immutable media list render model instead of a legacy [MediaBase] projection. */

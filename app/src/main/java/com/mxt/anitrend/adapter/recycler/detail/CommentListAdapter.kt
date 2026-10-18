@@ -2,19 +2,18 @@ package com.mxt.anitrend.adapter.recycler.detail
 
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.mxt.anitrend.R
-import com.mxt.anitrend.base.custom.view.widget.FavouriteWidgetState
-import com.mxt.anitrend.base.custom.view.widget.StatusDeleteWidgetState
-import com.mxt.anitrend.binding.richMarkDown
-import com.mxt.anitrend.binding.setImage
-import com.mxt.anitrend.databinding.AdapterCommentBinding
+import com.mxt.anitrend.base.custom.view.widget.StatusDeleteWidget
 import com.mxt.anitrend.domain.model.CommentReplyUiModel
-import com.mxt.anitrend.extension.getLayoutInflater
 import com.mxt.anitrend.model.entity.base.UserBase
+import com.mxt.anitrend.ui.designsystem.AniTrendTheme
+import com.mxt.anitrend.ui.feed.CommentReplyRow
 import com.mxt.anitrend.util.date.DateUtil
 
 class CommentListAdapter(
@@ -31,7 +30,20 @@ class CommentListAdapter(
         parent: ViewGroup,
         viewType: Int,
     ): CommentViewHolder = CommentViewHolder(
-        AdapterCommentBinding.inflate(parent.context.getLayoutInflater(), parent, false),
+        ComposeView(parent.context).apply {
+            id = R.id.container
+            layoutParams =
+                RecyclerView.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                ).apply {
+                    val margin = parent.resources.getDimensionPixelSize(R.dimen.lg_margin)
+                    setMargins(margin, margin, margin, margin)
+                }
+            setViewCompositionStrategy(
+                ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool,
+            )
+        },
     )
 
     override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
@@ -44,70 +56,69 @@ class CommentListAdapter(
     }
 
     inner class CommentViewHolder(
-        private val binding: AdapterCommentBinding,
-    ) : RecyclerView.ViewHolder(binding.root),
-        View.OnClickListener {
+        private val composeView: ComposeView,
+    ) : RecyclerView.ViewHolder(composeView) {
+        private val rowModel = mutableStateOf<CommentReplyUiModel?>(null)
+        private val createdAtText = mutableStateOf("")
+        private val isCurrentUser = mutableStateOf(false)
+        private var deleteWidget: StatusDeleteWidget? = null
+        private val recycled = mutableStateOf(true)
 
         init {
-            binding.widgetEdit.setOnClickListener(this)
-            binding.widgetUsers.setOnClickListener(this)
-            binding.userAvatar.setOnClickListener(this)
-            binding.widgetMention.setOnClickListener(this)
-        }
-
-        fun bind(model: CommentReplyUiModel) {
-            binding.userAvatar.setImage(model.userAvatar)
-            binding.userName.text = model.userName
-            binding.feedTime.text = DateUtil.getPrettyDateUnix(model.createdAt)
-            binding.widgetStatus.visibility = View.GONE
-            binding.widgetStatusText.richMarkDown(model.reply)
-
-            binding.widgetFavourite.render(
-                FavouriteWidgetState(
-                    count = model.likeCount,
-                    isLiked = model.isLikedByCurrentUser,
-                    isEnabled = !model.isLikePending,
-                    isLoading = model.isLikePending,
-                ),
-            )
-            binding.widgetFavourite.setOnToggleListener { onToggleLike(model.id) }
-
-            val isCurrentUser = currentUser?.id == model.userId
-            if (isCurrentUser) {
-                binding.widgetDelete.render(
-                    StatusDeleteWidgetState(
-                        isEnabled = !model.isDeletePending,
-                        isLoading = model.isDeletePending,
-                    ),
-                )
-                binding.widgetDelete.visibility = View.VISIBLE
-                binding.widgetDelete.setOnDeleteListener { onDeleteReply(model.id) }
-                binding.widgetMention.visibility = View.GONE
-                binding.widgetEdit.visibility = View.VISIBLE
-            } else {
-                binding.widgetDelete.visibility = View.GONE
-                binding.widgetDelete.setOnDeleteListener(null)
-                binding.widgetMention.visibility = View.VISIBLE
-                binding.widgetEdit.visibility = View.GONE
+            composeView.setContent {
+                AniTrendTheme {
+                    rowModel.value?.let { model ->
+                        CommentReplyRow(
+                            model = model,
+                            createdAtText = createdAtText.value,
+                            isCurrentUser = isCurrentUser.value,
+                            isRecycled = recycled.value,
+                            onToggleLike = { dispatchClick(R.id.widget_favourite) },
+                            onDelete = { dispatchClick(R.id.widget_delete) },
+                            onEdit = { dispatchClick(R.id.widget_edit) },
+                            onMention = { dispatchClick(R.id.widget_mention) },
+                            onShowLikes = { dispatchClick(R.id.widget_users) },
+                            onOpenProfile = { dispatchClick(R.id.user_avatar) },
+                            onDeleteWidgetCreated = { deleteWidget = it },
+                        )
+                    }
+                }
             }
         }
 
-        fun recycle() {
-            Glide.with(binding.root).clear(binding.userAvatar)
-            binding.widgetFavourite.setOnToggleListener(null)
-            binding.widgetDelete.setOnDeleteListener(null)
-            binding.widgetFavourite.onViewRecycled()
-            binding.widgetStatus.onViewRecycled()
-            binding.widgetDelete.onViewRecycled()
+        fun bind(model: CommentReplyUiModel) {
+            recycled.value = false
+            rowModel.value = model
+            createdAtText.value = DateUtil.getPrettyDateUnix(model.createdAt)
+            isCurrentUser.value = currentUser?.id == model.userId
         }
 
-        override fun onClick(v: View) {
+        fun recycle() {
+            recycled.value = true
+            deleteWidget?.apply {
+                setOnDeleteListener(null)
+                onViewRecycled()
+            }
+            rowModel.value =
+                rowModel.value?.copy(
+                    likes = emptyList(),
+                    likeCount = 0,
+                    isLikedByCurrentUser = false,
+                    isLikePending = false,
+                    isDeletePending = false,
+                )
+        }
+
+        private fun dispatchClick(targetId: Int) {
+            if (recycled.value || !composeView.isAttachedToWindow) return
             val model = currentItem() ?: return
-            when (v.id) {
+            when (targetId) {
+                R.id.widget_favourite -> onToggleLike(model.id)
+                R.id.widget_delete -> onDeleteReply(model.id)
                 R.id.widget_edit -> onEditReply(model.id)
                 R.id.widget_users -> onShowLikes(model.id)
-                R.id.user_avatar -> model.userId?.let { onOpenProfile(v, it) }
                 R.id.widget_mention -> onMentionReply(model.id)
+                R.id.user_avatar -> model.userId?.let { userId -> onOpenProfile(composeView, userId) }
             }
         }
 

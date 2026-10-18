@@ -13,7 +13,6 @@ import com.mxt.anitrend.base.custom.view.image.AspectImageView
 import com.mxt.anitrend.base.custom.view.text.SeriesYearTypeTextView
 import com.mxt.anitrend.base.custom.view.widget.SeriesStatusWidget
 import com.mxt.anitrend.binding.setAverageRating
-import com.mxt.anitrend.databinding.AdapterEntityGroupBinding
 import com.mxt.anitrend.databinding.AdapterSeriesBinding
 import com.mxt.anitrend.extension.getLayoutInflater
 import com.mxt.anitrend.model.entity.base.MediaBase
@@ -30,9 +29,7 @@ class GroupSeriesAdapter(
         parent: ViewGroup,
         @KeyUtil.RecyclerViewType viewType: Int,
     ): RecyclerViewHolder<RecyclerItem> = if (viewType == KeyUtil.RECYCLER_TYPE_HEADER) {
-        GroupTitleViewHolder(
-            AdapterEntityGroupBinding.inflate(parent.context.getLayoutInflater(), parent, false),
-        )
+        GroupTitleViewHolder(parent)
     } else {
         SeriesViewHolder(
             AdapterSeriesBinding.inflate(parent.context.getLayoutInflater(), parent, false),

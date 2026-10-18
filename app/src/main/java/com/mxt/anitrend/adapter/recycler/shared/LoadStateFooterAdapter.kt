@@ -1,12 +1,15 @@
 package com.mxt.anitrend.adapter.recycler.shared
 
+import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
+import androidx.activity.compose.setContent
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.paging.LoadState
 import androidx.paging.LoadStateAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.mxt.anitrend.databinding.ItemLoadStateFooterBinding
-import com.mxt.anitrend.extension.getLayoutInflater
+import com.mxt.anitrend.ui.designsystem.AniTrendTheme
 
 /**
  * Shared Paging 3 append load-state footer that shows progress while the next
@@ -19,13 +22,21 @@ class LoadStateFooterAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         loadState: LoadState,
-    ): LoadStateViewHolder = LoadStateViewHolder(
-        ItemLoadStateFooterBinding.inflate(
-            parent.context.getLayoutInflater(),
-            parent,
-            false,
-        ),
-    )
+    ): LoadStateViewHolder {
+        val composeView =
+            ComposeView(parent.context).apply {
+                id = View.generateViewId()
+                layoutParams =
+                    RecyclerView.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                    )
+                setViewCompositionStrategy(
+                    ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool,
+                )
+            }
+        return LoadStateViewHolder(composeView, loadState)
+    }
 
     override fun onBindViewHolder(
         holder: LoadStateViewHolder,
@@ -36,18 +47,25 @@ class LoadStateFooterAdapter(
 
     /** View holder that renders the current append load state. */
     inner class LoadStateViewHolder(
-        private val binding: ItemLoadStateFooterBinding,
-    ) : RecyclerView.ViewHolder(binding.root) {
+        composeView: ComposeView,
+        initialLoadState: LoadState,
+    ) : RecyclerView.ViewHolder(composeView) {
+        private val state = mutableStateOf(LoadStateFooterUiState.from(initialLoadState))
+
         init {
-            binding.retryButton.setOnClickListener { retry() }
+            composeView.setContent {
+                AniTrendTheme {
+                    LoadStateFooter(
+                        state = state.value,
+                        onRetry = retry,
+                    )
+                }
+            }
         }
 
         /** Applies the Paging state to the footer's loading and retry surfaces. */
         fun bind(loadState: LoadState) {
-            val uiState = LoadStateFooterUiState.from(loadState)
-            binding.loadingProgress.isVisible = uiState.showLoading
-            binding.loadingText.isVisible = uiState.showLoading
-            binding.retryButton.isVisible = uiState.showRetry
+            state.value = LoadStateFooterUiState.from(loadState)
         }
     }
 }
