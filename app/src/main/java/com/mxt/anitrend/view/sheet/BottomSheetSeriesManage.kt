@@ -1,6 +1,9 @@
 package com.mxt.anitrend.view.sheet
 
 import android.app.Dialog
+import android.app.DatePickerDialog
+import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.ContextThemeWrapper
 import android.view.View
@@ -11,6 +14,11 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -28,7 +36,6 @@ import androidx.core.view.isNotEmpty
 import androidx.core.view.isVisible
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.view.editor.MarkdownInputEditor
-import com.mxt.anitrend.base.custom.view.widget.FuzzyDateWidget
 import com.mxt.anitrend.base.custom.view.widget.ProgressWidget
 import com.mxt.anitrend.base.custom.view.widget.ScoreWidget
 import com.mxt.anitrend.domain.model.MediaListDraft
@@ -36,14 +43,19 @@ import com.mxt.anitrend.domain.model.createEditableMediaList
 import com.mxt.anitrend.domain.model.toDraft
 import com.mxt.anitrend.domain.model.toSaveMediaListEntryCommand
 import com.mxt.anitrend.model.entity.anilist.MediaList
+import com.mxt.anitrend.model.entity.anilist.meta.FuzzyDate
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.media.MediaUtil
+import com.mxt.anitrend.ui.designsystem.AniTrendTheme
+import com.mxt.anitrend.ui.medialist.FuzzyDateField
+import com.mxt.anitrend.util.date.DateUtil
 import com.mxt.anitrend.viewmodel.MediaListMutationViewModel
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 import kotlinx.coroutines.launch
+import java.util.Calendar
 
 /**
  * M3 BottomSheetDialogFragment for managing media list entries.
@@ -68,6 +80,8 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
     private lateinit var mediaBase: MediaBase
     private lateinit var mediaListModel: MediaList
     private lateinit var mediaListDraft: MediaListDraft
+    private var startedAtDate by mutableStateOf<FuzzyDate?>(null)
+    private var completedAtDate by mutableStateOf<FuzzyDate?>(null)
     private var isAnime: Boolean = true
     private var isSaving: Boolean = false
     private var progressDialog: AlertDialog? = null
@@ -83,8 +97,8 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
     private lateinit var volumesWidget: ProgressWidget
     private lateinit var repeatWidget: ProgressWidget
     private lateinit var repeatLabel: MaterialTextView
-    private lateinit var startedAtWidget: FuzzyDateWidget
-    private lateinit var completedAtWidget: FuzzyDateWidget
+    private lateinit var startedAtComposeView: ComposeView
+    private lateinit var completedAtComposeView: ComposeView
     private lateinit var privateSwitch: MaterialSwitch
     private lateinit var hiddenFromStatusSwitch: MaterialSwitch
     private lateinit var prioritySlider: Slider
@@ -145,6 +159,8 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
     private fun initModel() {
         mediaListModel = createEditableMediaList(mediaBase.mediaListEntry, mediaBase)
         mediaListDraft = mediaListModel.toDraft()
+        startedAtDate = mediaListDraft.startedAt
+        completedAtDate = mediaListDraft.completedAt
     }
 
     private fun bindViews(view: View) {
@@ -157,8 +173,20 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
         volumesWidget = view.findViewById(R.id.sheet_manage_volumes)
         repeatWidget = view.findViewById(R.id.sheet_manage_repeat)
         repeatLabel = view.findViewById(R.id.sheet_manage_repeat_label)
-        startedAtWidget = view.findViewById(R.id.sheet_manage_started_at)
-        completedAtWidget = view.findViewById(R.id.sheet_manage_completed_at)
+        startedAtComposeView = view.findViewById(R.id.sheet_manage_started_at)
+        completedAtComposeView = view.findViewById(R.id.sheet_manage_completed_at)
+        bindDateField(
+            startedAtComposeView,
+            R.string.dialog_title_started_at,
+            dateProvider = { startedAtDate },
+            onDateSelected = { startedAtDate = it },
+        )
+        bindDateField(
+            completedAtComposeView,
+            R.string.dialog_title_completed_at,
+            dateProvider = { completedAtDate },
+            onDateSelected = { completedAtDate = it },
+        )
         privateSwitch = view.findViewById(R.id.sheet_manage_private)
         hiddenFromStatusSwitch = view.findViewById(R.id.sheet_manage_hidden_from_status)
         prioritySlider = view.findViewById(R.id.sheet_manage_priority)
@@ -179,6 +207,59 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
         prioritySlider.addOnChangeListener { _, value, _ ->
             updatePriorityValue(value)
         }
+    }
+
+    private fun bindDateField(
+        composeView: ComposeView,
+        labelRes: Int,
+        dateProvider: () -> FuzzyDate?,
+        onDateSelected: (FuzzyDate) -> Unit,
+    ) {
+        val context = composeView.context
+        composeView.setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool)
+        composeView.setContent {
+            AniTrendTheme {
+                val currentDate = dateProvider()
+                val value = DateUtil.convertDate(currentDate) ?: "TBA"
+                FuzzyDateField(
+                    value = value,
+                    contentDescription = "${context.getString(labelRes)}, $value",
+                    onClick = {
+                        showDatePickerDialog(context, currentDate, onDateSelected)
+                    },
+                )
+            }
+        }
+    }
+
+    private fun showDatePickerDialog(
+        context: Context,
+        currentDate: FuzzyDate?,
+        onDateSelected: (FuzzyDate) -> Unit,
+    ) {
+        val calendar = Calendar.getInstance()
+        val seedYear = currentDate?.year?.takeIf { it > 0 } ?: calendar.get(Calendar.YEAR)
+        val seedMonth =
+            (currentDate?.month?.takeIf { it in 1..12 } ?: (calendar.get(Calendar.MONTH) + 1)) - 1
+        val seedDay = currentDate?.day?.takeIf { it in 1..31 } ?: calendar.get(Calendar.DAY_OF_MONTH)
+
+        val datePickerDialog =
+            DatePickerDialog(
+                context,
+                { _, year, month, day ->
+                    onDateSelected(FuzzyDate(day = day, month = month + 1, year = year))
+                },
+                seedYear,
+                seedMonth,
+                seedDay,
+            )
+        datePickerDialog.setButton(
+            DialogInterface.BUTTON_NEUTRAL,
+            context.getText(R.string.dialog_button_clear),
+        ) { _, _ ->
+            onDateSelected(FuzzyDate(day = 0, month = 0, year = 0))
+        }
+        datePickerDialog.show()
     }
 
     private fun setupStatusDropdown() {
@@ -270,10 +351,6 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
 
         // Repeat
         repeatWidget.setProgressCurrent(model.repeat)
-
-        // Dates
-        startedAtWidget.setDate(model.startedAt)
-        completedAtWidget.setDate(model.completedAt)
 
         // Privacy
         privateSwitch.isChecked = model.isHidden
@@ -403,13 +480,13 @@ class BottomSheetSeriesManage : BottomSheetDialogFragment() {
         val statusNames = CompatUtil.getStringList(requireContext(), R.array.media_list_status)
         val selectedStatusIndex = statusNames.indexOf(statusDropdown.text.toString()).coerceAtLeast(0)
 
-        // Read widget values (view layer)
+        // Read values from the sheet widgets and Compose date fields.
         val progress = progressWidget.progressCurrent
         val repeat = repeatWidget.progressCurrent
         val score = scoreWidget.scoreCurrent
         val progressVolumes = if (!isAnime) volumesWidget.progressCurrent else 0
-        val startedAt = startedAtWidget.date
-        val completedAt = completedAtWidget.date
+        val startedAt = startedAtDate
+        val completedAt = completedAtDate
         val isHidden = privateSwitch.isChecked
         val isHiddenFromStatusLists = hiddenFromStatusSwitch.isChecked
         val priority = prioritySlider.value.toInt()

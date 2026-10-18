@@ -2,17 +2,17 @@
 
 package com.mxt.anitrend.widget
 
-import android.view.View
-import android.widget.FrameLayout
-import androidx.test.core.app.ActivityScenario
+import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.v2.runAndroidComposeUiTest
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.view.widget.AboutPanelWidget
 import com.mxt.anitrend.base.custom.view.widget.AboutPanelWidget.StatState
 import com.mxt.anitrend.view.sheet.BottomSheetListUsers
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
+import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -29,100 +29,85 @@ class AboutPanelWidgetInstrumentationTest {
 
     @Test
     fun loadedZeroFollowers_opensListSheet() {
-        ActivityScenario.launch(ProgressLayoutTestActivity::class.java).use { scenario ->
-            scenario.onActivity { activity ->
-                val widget = attachWidget(activity)
-                widget.setStats(StatState.Loaded(0), StatState.NotLoaded, StatState.NotLoaded)
-
-                widget.findViewById<View>(R.id.user_followers_container).performClick()
-                activity.supportFragmentManager.executePendingTransactions()
-
-                assertTrue(
-                    "loaded zero followers must open the empty list sheet",
-                    activity.supportFragmentManager.fragments.any { it is BottomSheetListUsers },
-                )
-            }
-        }
+        assertListSheet(
+            labelResource = R.string.followers,
+            followers = StatState.Loaded(0),
+            following = StatState.NotLoaded,
+            shouldOpenSheet = true,
+        )
     }
 
     @Test
     fun loadedNonzeroFollowers_opensListSheet() {
-        ActivityScenario.launch(ProgressLayoutTestActivity::class.java).use { scenario ->
-            scenario.onActivity { activity ->
-                val widget = attachWidget(activity)
-                widget.setStats(StatState.Loaded(4), StatState.NotLoaded, StatState.NotLoaded)
-
-                widget.findViewById<View>(R.id.user_followers_container).performClick()
-                activity.supportFragmentManager.executePendingTransactions()
-
-                assertTrue(
-                    "loaded nonzero followers must open the list sheet",
-                    activity.supportFragmentManager.fragments.any { it is BottomSheetListUsers },
-                )
-            }
-        }
+        assertListSheet(
+            labelResource = R.string.followers,
+            followers = StatState.Loaded(4),
+            following = StatState.NotLoaded,
+            shouldOpenSheet = true,
+        )
     }
 
     @Test
     fun loadedZeroFollowing_opensListSheet() {
-        ActivityScenario.launch(ProgressLayoutTestActivity::class.java).use { scenario ->
-            scenario.onActivity { activity ->
-                val widget = attachWidget(activity)
-                widget.setStats(StatState.NotLoaded, StatState.Loaded(0), StatState.NotLoaded)
-
-                widget.findViewById<View>(R.id.user_following_container).performClick()
-                activity.supportFragmentManager.executePendingTransactions()
-
-                assertTrue(
-                    "loaded zero following must open the empty list sheet",
-                    activity.supportFragmentManager.fragments.any { it is BottomSheetListUsers },
-                )
-            }
-        }
+        assertListSheet(
+            labelResource = R.string.following,
+            followers = StatState.NotLoaded,
+            following = StatState.Loaded(0),
+            shouldOpenSheet = true,
+        )
     }
 
     @Test
     fun notLoadedFollowers_keepsLoadingToastWithoutSheet() {
-        ActivityScenario.launch(ProgressLayoutTestActivity::class.java).use { scenario ->
-            scenario.onActivity { activity ->
-                val widget = attachWidget(activity)
-
-                widget.findViewById<View>(R.id.user_followers_container).performClick()
-                activity.supportFragmentManager.executePendingTransactions()
-
-                assertFalse(
-                    "not-yet-loaded followers must not open the list sheet",
-                    activity.supportFragmentManager.fragments.any { it is BottomSheetListUsers },
-                )
-            }
-        }
+        assertListSheet(
+            labelResource = R.string.followers,
+            followers = StatState.NotLoaded,
+            following = StatState.NotLoaded,
+            shouldOpenSheet = false,
+        )
     }
 
     @Test
     fun failedFollowers_keepsLoadingToastWithoutSheet() {
-        ActivityScenario.launch(ProgressLayoutTestActivity::class.java).use { scenario ->
-            scenario.onActivity { activity ->
-                val widget = attachWidget(activity)
-                widget.setStats(StatState.Failed, StatState.NotLoaded, StatState.NotLoaded)
+        assertListSheet(
+            labelResource = R.string.followers,
+            followers = StatState.Failed,
+            following = StatState.NotLoaded,
+            shouldOpenSheet = false,
+        )
+    }
 
-                widget.findViewById<View>(R.id.user_followers_container).performClick()
-                activity.supportFragmentManager.executePendingTransactions()
+    @OptIn(ExperimentalTestApi::class)
+    private fun assertListSheet(
+        labelResource: Int,
+        followers: StatState,
+        following: StatState,
+        shouldOpenSheet: Boolean,
+    ) {
+        runAndroidComposeUiTest<ProgressLayoutTestActivity> {
+            val hostActivity = requireNotNull(activity)
+            runOnUiThread {
+                val widget = AboutPanelWidget(hostActivity).apply {
+                    setFragmentActivity(hostActivity)
+                    setUserId(7L)
+                    setStats(
+                        followers = followers,
+                        following = following,
+                        favourites = StatState.NotLoaded,
+                    )
+                }
+                installAboutPanelWidgetForComposeTest(hostActivity, widget)
+            }
+            waitForIdle()
 
-                assertFalse(
-                    "failed followers must not open the list sheet",
-                    activity.supportFragmentManager.fragments.any { it is BottomSheetListUsers },
+            onNodeWithContentDescription(hostActivity.getString(labelResource)).performClick()
+            runOnUiThread { hostActivity.supportFragmentManager.executePendingTransactions() }
+            runOnIdle {
+                assertEquals(
+                    shouldOpenSheet,
+                    hostActivity.supportFragmentManager.fragments.any { it is BottomSheetListUsers },
                 )
             }
         }
-    }
-
-    private fun attachWidget(activity: androidx.appcompat.app.AppCompatActivity): AboutPanelWidget {
-        val container = FrameLayout(activity)
-        activity.setContentView(container)
-        val widget = AboutPanelWidget(activity)
-        container.addView(widget)
-        widget.setFragmentActivity(activity)
-        widget.setUserId(7L, activity.lifecycle)
-        return widget
     }
 }

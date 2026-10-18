@@ -34,7 +34,13 @@ constructor(
             seriesYearTypeTextView: SeriesYearTypeTextView,
             mediaBase: MediaBase,
         ) {
-            val context = seriesYearTypeTextView.context
+            formatText(seriesYearTypeTextView.context, mediaBase)?.let { seriesYearTypeTextView.text = it }
+        }
+
+        internal fun formatText(
+            context: Context,
+            mediaBase: MediaBase,
+        ): String? {
             val startDate: FuzzyDate? = mediaBase.startDate
             val year =
                 if (startDate?.isValidDate == true) {
@@ -42,54 +48,25 @@ constructor(
                 } else {
                     context.getString(R.string.tba_placeholder)
                 }
-            when (mediaBase.type) {
-                KeyUtil.ANIME ->
-                    if (CompatUtil.equals(mediaBase.format, KeyUtil.MOVIE)) {
-                        seriesYearTypeTextView.text =
-                            String.format(
-                                Locale.getDefault(),
-                                "%s - %s",
-                                year,
-                                CompatUtil.capitalizeWords(mediaBase.format),
-                            )
-                    } else {
-                        if (mediaBase.episodes > 0) {
-                            seriesYearTypeTextView.text =
-                                String.format(
-                                    Locale.getDefault(),
-                                    "%s - %s",
-                                    year,
-                                    context.getString(R.string.text_anime_episodes, mediaBase.episodes),
-                                )
+            val details =
+                when (mediaBase.type) {
+                    KeyUtil.ANIME ->
+                        if (CompatUtil.equals(mediaBase.format, KeyUtil.MOVIE)) {
+                            CompatUtil.capitalizeWords(mediaBase.format)
+                        } else if (mediaBase.episodes > 0) {
+                            context.getString(R.string.text_anime_episodes, mediaBase.episodes)
                         } else {
-                            seriesYearTypeTextView.text =
-                                String.format(
-                                    Locale.getDefault(),
-                                    "%s - %s",
-                                    year,
-                                    CompatUtil.capitalizeWords(mediaBase.format),
-                                )
+                            CompatUtil.capitalizeWords(mediaBase.format)
                         }
-                    }
-                KeyUtil.MANGA ->
-                    if (mediaBase.chapters > 0) {
-                        seriesYearTypeTextView.text =
-                            String.format(
-                                Locale.getDefault(),
-                                "%s - %s",
-                                year,
-                                context.getString(R.string.text_manga_chapters, mediaBase.chapters),
-                            )
-                    } else {
-                        seriesYearTypeTextView.text =
-                            String.format(
-                                Locale.getDefault(),
-                                "%s - %s",
-                                year,
-                                CompatUtil.capitalizeWords(mediaBase.format),
-                            )
-                    }
-            }
+                    KeyUtil.MANGA ->
+                        if (mediaBase.chapters > 0) {
+                            context.getString(R.string.text_manga_chapters, mediaBase.chapters)
+                        } else {
+                            CompatUtil.capitalizeWords(mediaBase.format)
+                        }
+                    else -> return null
+                }
+            return String.format(Locale.getDefault(), "%s - %s", year, details)
         }
 
         /** Same layout rules as the [MediaBase] overload, driven by the immutable render model. */

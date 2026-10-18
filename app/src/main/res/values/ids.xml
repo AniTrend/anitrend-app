@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="widget_mention" type="id" />
+    <item name="review_read_more" type="id" />
+    <item name="series_rating" type="id" />
+</resources>

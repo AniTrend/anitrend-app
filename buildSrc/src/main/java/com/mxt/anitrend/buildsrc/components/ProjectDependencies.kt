@@ -41,6 +41,23 @@ internal fun Project.configureDependencies() {
     dependencies.implementation(libs.google.firebase.analytics)
     dependencies.implementation(libs.google.firebase.crashlytics)
 
+    /** Jetpack Compose */
+    val composeBom = dependencies.platform(libs.androidx.compose.bom)
+    dependencies.implementation(composeBom)
+    dependencies.androidTestImplementation(composeBom)
+    dependencies.implementation(libs.androidx.compose.ui)
+    dependencies.implementation(libs.androidx.compose.foundation)
+    dependencies.implementation(libs.androidx.compose.material3)
+    dependencies.implementation(libs.androidx.compose.animation)
+    dependencies.implementation(libs.androidx.compose.ui.tooling.preview)
+    dependencies.implementation(libs.androidx.activity.compose)
+    /** Coil image loading for Compose surfaces */
+    dependencies.implementation(libs.coil.compose)
+    dependencies.implementation(libs.coil.network.okhttp)
+    dependencies.implementation(libs.coil.gif)
+    dependencies.debugImplementation(libs.androidx.compose.ui.tooling)
+    dependencies.debugImplementation(libs.androidx.compose.ui.test.manifest)
+
     /** Architecture Components */
     dependencies.implementation(libs.androidx.constraintLayout)
     dependencies.implementation(libs.androidx.collectionKtx)
@@ -139,6 +156,8 @@ internal fun Project.configureDependencies() {
     dependencies.androidTestImplementation(libs.mockito.core)
     dependencies.androidTestImplementation(libs.mockk.android)
     dependencies.androidTestImplementation(libs.mockk)
+    dependencies.androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+    dependencies.androidTestImplementation(libs.androidx.compose.accessibility.test)
 
     dependencies.debugImplementation(libs.chuncker.debug)
     dependencies.releaseImplementation(libs.chuncker.release)

@@ -2,6 +2,7 @@
 
 - `docs/architecture/state-synchronization-and-mutation-refactor.md`, phased specification for the state synchronisation and mutation architecture.
 - `docs/architecture/migration-inventory.md`, baseline inventory of pre-migration classes, call paths, and compatibility surfaces.
+- `docs/architecture/compose-migration-inventory.md`, baseline, boundaries, and verification status for incremental XML-to-Compose slices.
 - `docs/architecture/persistence-evaluation.md`, Phase 8 persistence decisions, account-clearing rules, and follow-up storage guidance.
 - `docs/architecture/navigation-refactor/specification.md`, Navigation 2 migration target and invariants.
 - `docs/architecture/navigation-refactor/migration-inventory.md`, activity, pager, ingress, and result inventory for the navigation migration.

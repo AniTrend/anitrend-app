@@ -5,7 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -13,8 +14,10 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mxt.anitrend.R
 import com.mxt.anitrend.databinding.FragmentSettingsM3Binding
-import com.mxt.anitrend.databinding.ItemSettingsRowValueBinding
-import com.mxt.anitrend.databinding.ItemSettingsSectionCardBinding
+import com.mxt.anitrend.ui.settings.SettingsDivider
+import com.mxt.anitrend.ui.settings.SettingsSectionCard
+import com.mxt.anitrend.ui.settings.SettingsValueRow
+import com.mxt.anitrend.ui.settings.addSettingsComposeContent
 import com.mxt.anitrend.viewmodel.CustomizeSettingsUiState
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.JobSchedulerUtil
@@ -90,12 +93,6 @@ class CustomizeSettingsFragment :
         val sectionHost = binding.settingsSections
         sectionHost.removeAllViews()
 
-        val sectionBinding = ItemSettingsSectionCardBinding.inflate(layoutInflater, sectionHost, false)
-        sectionBinding.sectionTitle.setText(R.string.pref_header_customize)
-        sectionBinding.sectionSummary.setText(R.string.pref_header_customize_summary)
-        sectionBinding.sectionIcon.setImageResource(R.drawable.ic_format_color_fill_grey_600_24dp)
-        val content = sectionBinding.sectionContent
-
         val rows = listOf(
             SettingsRow.Choice(
                 keyRes = R.string.pref_key_app_theme,
@@ -121,84 +118,69 @@ class CustomizeSettingsFragment :
             ) to state.listViewStyle,
         )
 
-        rows.forEachIndexed { index, (row, currentValue) ->
-            bindChoiceRow(content, row, currentValue) { selectedValue ->
-                when (row.keyRes) {
-                    R.string.pref_key_app_theme -> customizeSettingsViewModel.setTheme(selectedValue)
-                    R.string.pref_key_selected_language -> customizeSettingsViewModel.setLanguage(selectedValue)
-                    R.string.pref_key_list_view_style -> customizeSettingsViewModel.setListViewStyle(selectedValue)
+        sectionHost.addSettingsComposeContent {
+            val context = LocalContext.current
+            SettingsSectionCard(
+                title = context.getString(R.string.pref_header_customize),
+                summary = context.getString(R.string.pref_header_customize_summary),
+                iconRes = R.drawable.ic_format_color_fill_grey_600_24dp,
+            ) {
+                rows.forEachIndexed { index, (row, currentValue) ->
+                    renderChoiceRow(row, currentValue) { selectedValue ->
+                        when (row.keyRes) {
+                            R.string.pref_key_app_theme -> customizeSettingsViewModel.setTheme(selectedValue)
+                            R.string.pref_key_selected_language -> customizeSettingsViewModel.setLanguage(selectedValue)
+                            R.string.pref_key_list_view_style -> customizeSettingsViewModel.setListViewStyle(selectedValue)
+                        }
+                    }
+                    if (index < rows.lastIndex) {
+                        SettingsDivider()
+                    }
                 }
             }
-            if (index < rows.lastIndex) {
-                addDivider(content)
-            }
         }
-
-        sectionHost.addView(sectionBinding.root)
     }
 
-    private fun bindChoiceRow(
-        container: LinearLayout,
+    @Composable
+    private fun renderChoiceRow(
         row: SettingsRow.Choice,
         currentValue: String,
         onSelected: (String) -> Unit,
     ) {
-        val rowBinding = ItemSettingsRowValueBinding.inflate(layoutInflater, container, false)
-        val context = rowBinding.root.context
+        val context = LocalContext.current
         val labels = context.resources.getStringArray(row.entriesRes)
         val values = context.resources.getStringArray(row.valuesRes)
-        val currentLabel = labels[values.indexOf(currentValue).coerceAtLeast(0)]
+        val currentValueIndex = values.indexOf(currentValue).coerceAtLeast(0)
+        val currentLabel = labels[currentValueIndex]
+        val title = context.getString(row.titleRes)
+        val contentDescription =
+            context.getString(
+                R.string.settings_choice_content_description,
+                title,
+                currentLabel,
+            )
 
-        rowBinding.rowTitle.setText(row.titleRes)
-        rowBinding.rowSummary.apply {
-            if (row.summaryRes != null) {
-                setText(row.summaryRes)
-                visibility = View.VISIBLE
+        SettingsValueRow(
+            title = title,
+            summary = row.summaryRes?.let { context.getString(it) },
+            value = currentLabel,
+            enabled = row.enabled,
+            contentDescription = contentDescription,
+            showChevron = row.enabled,
+            onClick =
+            if (row.enabled) {
+                {
+                    MaterialAlertDialogBuilder(context)
+                        .setTitle(row.titleRes)
+                        .setSingleChoiceItems(labels, currentValueIndex) { dialog, which ->
+                            onSelected(values[which])
+                            dialog.dismiss()
+                        }.setNegativeButton(R.string.Cancel, null)
+                        .show()
+                }
             } else {
-                visibility = View.GONE
-            }
-        }
-        rowBinding.rowValue.text = currentLabel
-        rowBinding.rowValue.visibility = View.VISIBLE
-        rowBinding.rowChevron.visibility = View.VISIBLE
-        rowBinding.root.isEnabled = row.enabled
-        rowBinding.root.isClickable = row.enabled
-        rowBinding.rowTitle.isEnabled = row.enabled
-        rowBinding.rowSummary.isEnabled = row.enabled
-        rowBinding.rowValue.isEnabled = row.enabled
-        rowBinding.rowChevron.isEnabled = row.enabled
-        rowBinding.root.alpha = if (row.enabled) 1f else DISABLED_ALPHA
-
-        rowBinding.root.contentDescription = context.getString(
-            R.string.settings_choice_content_description,
-            context.getString(row.titleRes),
-            currentLabel,
+                null
+            },
         )
-
-        if (row.enabled) {
-            rowBinding.root.setOnClickListener {
-                MaterialAlertDialogBuilder(context)
-                    .setTitle(row.titleRes)
-                    .setSingleChoiceItems(labels, values.indexOf(currentValue).coerceAtLeast(0)) { dialog, which ->
-                        onSelected(values[which])
-                        dialog.dismiss()
-                    }.setNegativeButton(R.string.Cancel, null)
-                    .show()
-            }
-        } else {
-            rowBinding.root.setOnClickListener(null)
-        }
-
-        container.addView(rowBinding.root)
-    }
-
-    private fun addDivider(container: LinearLayout) {
-        val divider = layoutInflater.inflate(R.layout.item_settings_divider, container, false)
-        container.addView(divider)
-    }
-
-    /** Alpha used to communicate disabled setting rows without hiding them. */
-    companion object {
-        private const val DISABLED_ALPHA = 0.38f
     }
 }

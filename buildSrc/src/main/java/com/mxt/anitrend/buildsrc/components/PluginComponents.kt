@@ -5,6 +5,7 @@ import org.gradle.api.Project
 
 internal fun Project.configurePlugins() {
     plugins.apply("com.android.application")
+    plugins.apply("org.jetbrains.kotlin.plugin.compose")
     plugins.apply("com.diffplug.spotless")
     plugins.apply("co.anitrend.retrofit.graphql.codegen")
     plugins.apply("kotlinx-serialization")

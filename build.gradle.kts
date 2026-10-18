@@ -6,6 +6,7 @@ buildscript {
     dependencies {
         classpath(libs.android.gradle.plugin)
         classpath(libs.jetbrains.kotlin.gradle)
+        classpath(libs.jetbrains.kotlin.compose.compiler.gradle.plugin)
         classpath(libs.jetbrains.kotlin.serialization)
         classpath(libs.koin.gradle.plugin)
         classpath(libs.google.gsm.google.services)

@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.savedstate.findViewTreeSavedStateRegistryOwner
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.spinner.IconArrayAdapter
@@ -97,11 +98,12 @@ class SharedContentFragment :
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
 
         binding.sheetSharePostTypeApprove.setOnClickListener { getItemSelected() }
+        val viewTreeOwner =
+            requireNotNull(binding.root.findViewTreeSavedStateRegistryOwner())
         val iconArrayAdapter =
             IconArrayAdapter(
                 requireContext(),
-                R.layout.adapter_spinner_item,
-                R.id.spinner_text,
+                viewTreeOwner,
                 CompatUtil.getStringList(requireContext(), R.array.post_share_types),
             )
         iconArrayAdapter.setIndexIconMap(indexIconMap)
