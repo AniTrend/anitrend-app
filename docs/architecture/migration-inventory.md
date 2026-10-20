@@ -5,6 +5,8 @@
 
 This inventory documents the 19 classes and supporting types that participate in the current mutation propagation architecture, their mutable state, call relationships, and Koin registrations. It is the baseline for the phased migration.
 
+**Note:** Since this inventory was written, the app has migrated to Compose Material 3 and Navigation 3. The XML/View system, Navigation 2, and RecyclerView adapters referenced below have been removed. The mutation propagation patterns and store/interactor contracts described here remain the active design; the UI-layer class names below are historical references to the pre-Compose implementation.
+
 ---
 
 ## Call path: feed like toggle
