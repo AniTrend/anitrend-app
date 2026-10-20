@@ -4,7 +4,7 @@
 - Real Gradle project is single-module `:app` (`settings.gradle.kts`); `app-compose/` exists in repo but is a stale, excluded build-output directory, not a module. Do not include it in the build.
 - App build logic is centralized in `buildSrc` via plugin `com.mxt.anitrend.plugin` (`app/build.gradle.kts`); prefer changing `buildSrc/src/main/java/com/mxt/anitrend/buildsrc/components/*` over adding ad-hoc module config.
 - Product flavors are `app` and `github` (`app/src/app/`, `app/src/github/`); the `github` flavor adds a `-github` version suffix and has its own manifest/service surface. Preserve flavor behavior when editing build logic.
-- Current toolchain: Gradle wrapper 9.6.1, AGP 9.3.1, Kotlin 2.4.10 (do not conflate these versions), compileSdk/targetSdk 37, minSdk 23, Java 21 (`.java-version` = `21.0.11`), Kotlin JVM 21.
+- Current toolchain: Gradle wrapper 9.6.1, AGP 9.3.1, Kotlin 2.4.10 (do not conflate these versions), compileSdk/targetSdk 37, minSdk 24, Java 21 (`.java-version` = `21.0.11`), Kotlin JVM 21.
 - View Binding is enabled and Data Binding is disabled. Legacy KAPT remains in use alongside ObjectBox, GraphQL code generation, Kotlinx serialization, parcelize, and Spotless; do not opportunistically migrate to KSP.
 - `app/.config/configuration.properties` is committed configuration. Secrets and signing properties are local or CI-provisioned and must never be committed.
 
@@ -31,7 +31,7 @@
 - CI always runs `bash .github/scripts/validate-changelogs.sh`; any file in `fastlane/metadata/android/en-GB/changelogs/*.txt` must be `<= 500` chars.
 - Fastlane lanes live in `fastlane/Fastfile`: `verify`, `build`, `submit_beta`, `submit_prod`, and `deploy`.
 - Version metadata is automated by workflow `version-updater.yml` on branch `platform/update-version-meta-data`, targeting `develop`; check that branch/PR before manual version-file edits. Version data lives in `gradle/version.properties`.
-- Generated `app/.meta/version.json` currently reports minSdk 21 while the Android build uses minSdk 23. Treat this as a known automation mismatch; do not alter build values without a dedicated change.
+- Generated `app/.meta/version.json` and the `version-updater.yml` generator both report minSdk 24, matching the Android build. Keep them aligned with `buildSrc` when the support floor changes.
 
 ## Dependency and build-edit conventions
 - Use version catalog aliases from `gradle/libs.versions.toml`; do not hardcode dependency coordinates in module build files.

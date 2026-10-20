@@ -38,9 +38,11 @@ class MediaFormatViewModel(
     val state: StateFlow<UiState> = _state.asStateFlow()
 
     /** Identity of the query the active generation loads for. */
+    private enum class Owner { CHARACTER, STAFF }
+
     private data class QueryKey(
         val id: Long,
-        val requestType: Int,
+        val owner: Owner,
         val mediaType: String?,
         val onList: Boolean?,
     )
@@ -60,7 +62,8 @@ class MediaFormatViewModel(
     private val queuedPages = sortedSetOf<Int>()
 
     /**
-     * Loads media grouped by format. Repeatable for pagination; no loadedOnce guard.
+     * Loads character media grouped by format. Repeatable for pagination; no
+     * loadedOnce guard.
      *
      * Page 1 establishes the active query, resets the deduplicated media snapshot and
      * advances the request generation. A repeated page 1 for the same active query
@@ -75,20 +78,44 @@ class MediaFormatViewModel(
      * accepted media, so re-collection of the state flow can never replay an append
      * delta.
      *
-     * @param id The character or staff id.
-     * @param onList Filter to media on the user's list (staff-only).
+     * @param id The character id.
      * @param mediaType Raw enum name of [MediaType]; parsed internally.
      * @param page Current page number.
-     * @param requestType One of [KeyUtil.CHARACTER_MEDIA_REQ] or [KeyUtil.STAFF_MEDIA_REQ].
      */
-    fun load(
+    fun loadCharacterMedia(
+        id: Long,
+        mediaType: String?,
+        page: Int,
+    ) {
+        loadQuery(Owner.CHARACTER, id, onList = null, mediaType = mediaType, page = page)
+    }
+
+    /**
+     * Loads staff media grouped by format with the same pagination and
+     * generation semantics as [loadCharacterMedia].
+     *
+     * @param id The staff id.
+     * @param onList Filter to media on the user's list.
+     * @param mediaType Raw enum name of [MediaType]; parsed internally.
+     * @param page Current page number.
+     */
+    fun loadStaffMedia(
         id: Long,
         onList: Boolean?,
         mediaType: String?,
         page: Int,
-        requestType: Int,
     ) {
-        val query = QueryKey(id = id, requestType = requestType, mediaType = mediaType, onList = onList)
+        loadQuery(Owner.STAFF, id, onList = onList, mediaType = mediaType, page = page)
+    }
+
+    private fun loadQuery(
+        owner: Owner,
+        id: Long,
+        onList: Boolean?,
+        mediaType: String?,
+        page: Int,
+    ) {
+        val query = QueryKey(id = id, owner = owner, mediaType = mediaType, onList = onList)
         val inFlight = pageInFlight
         if (page == 1) {
             // Coalesce a reset for the same active query while the reset is in flight.
@@ -130,7 +157,7 @@ class MediaFormatViewModel(
         _state.value = UiState.Loading
         viewModelScope.launch {
             val type = query.mediaType?.let { runCatching { MediaType.valueOf(it) }.getOrNull() }
-            val result = if (query.requestType == KeyUtil.CHARACTER_MEDIA_REQ) {
+            val result = if (query.owner == Owner.CHARACTER) {
                 characterRepository.getCharacterMedia(
                     id = query.id,
                     page = page,

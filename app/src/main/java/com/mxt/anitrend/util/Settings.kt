@@ -84,14 +84,13 @@ class Settings(
             }
         }
 
-    var mediaListStyle: Int = 0
+    /**
+     * The list view style is stored as a string preference (written by the
+     * Appearance settings through [edit]); the property is read-only so no
+     * caller can flip the stored type and break the string read path.
+     */
+    val mediaListStyle: Int
         get() = getString(resources.getString(R.string.pref_key_list_view_style), "0")?.toInt() ?: 0
-        set(value) {
-            field = value
-            edit {
-                putInt(resources.getString(R.string.pref_key_list_view_style), field)
-            }
-        }
 
     // Returns amount of time in seconds
     var syncTime: Int = 15
@@ -151,8 +150,13 @@ class Settings(
             }
         }
 
+    /**
+     * Effective adult-content visibility: the flavor resource must allow the
+     * feature AND the user must have stored it, so an old or shared
+     * preference can never enable adult browse where the build forbids it.
+     */
     var displayAdultContent: Boolean = false
-        get() = getBoolean(resources.getString(R.string.pref_key_display_adult_content), false)
+        get() = resources.getBoolean(R.bool.display_adult_content_pref) && getBoolean(resources.getString(R.string.pref_key_display_adult_content), false)
         set(value) {
             field = value
             edit {

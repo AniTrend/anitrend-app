@@ -7,9 +7,12 @@ import com.google.android.material.textview.MaterialTextView
 import com.mxt.anitrend.base.interfaces.view.CustomView
 import io.noties.markwon.Markwon
 import me.saket.bettermovementmethod.BetterLinkMovementMethod
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
+/**
+ * View-only markdown TextView. The configured [Markwon] renderer is supplied by
+ * the host through [setMarkDownText]; this view never resolves dependencies or
+ * dispatches links itself.
+ */
 class RichMarkdownTextView
 @JvmOverloads
 constructor(
@@ -17,10 +20,7 @@ constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
 ) : MaterialTextView(context, attrs, defStyleAttr),
-    CustomView,
-    KoinComponent {
-    val markwon by inject<Markwon>()
-
+    CustomView {
     init {
         onInit()
     }
@@ -38,9 +38,11 @@ constructor(
      * Clean up any resources that won't be needed
      */
     override fun onViewRecycled() {
+        setOnLongClickListener(null)
+        setOnClickListener(null)
     }
 
-    fun setMarkDownText(markDownText: String?) {
-        markwon.setMarkdown(this, markDownText ?: "**No content available**")
+    fun setMarkDownText(markDownText: String, markwon: Markwon) {
+        markwon.setMarkdown(this, markDownText)
     }
 }

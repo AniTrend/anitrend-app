@@ -50,7 +50,7 @@ internal fun GroupTitleRow(
 @Preview(name = "Group title states", showBackground = true, widthDp = 360)
 @Composable
 private fun GroupTitleRowPreview() {
-    AniTrendTheme {
+    AniTrendTheme("light") {
         Column(verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lg_margin))) {
             GroupTitleRow(title = "Adaptations", count = 20)
             GroupTitleRow(title = "1984", count = 0)

@@ -108,7 +108,7 @@ internal fun FavouriteToolbarAction(
 @Preview(name = "Toolbar favorite actions", showBackground = true)
 @Composable
 private fun FavouriteToolbarActionPreview() {
-    AniTrendTheme {
+    AniTrendTheme("light") {
         Row {
             FavouriteToolbarAction(isFavourite = false, isEnabled = true, isLoading = false, onClick = {})
             FavouriteToolbarAction(isFavourite = true, isEnabled = true, isLoading = false, onClick = {})

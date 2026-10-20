@@ -120,7 +120,7 @@ internal fun SettingsValueRow(
 @Preview(name = "Settings choice row", showBackground = true)
 @Composable
 private fun SettingsChoiceRowPreview() {
-    AniTrendTheme {
+    AniTrendTheme("light") {
         Surface {
             SettingsValueRow(
                 title = "Application Theme",
@@ -142,7 +142,7 @@ private fun SettingsChoiceRowPreview() {
 )
 @Composable
 private fun SettingsInfoRowDarkPreview() {
-    AniTrendTheme {
+    AniTrendTheme("dark") {
         Surface {
             SettingsValueRow(
                 title = "Auto-play trailers",

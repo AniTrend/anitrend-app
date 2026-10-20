@@ -1,6 +1,13 @@
 package com.mxt.anitrend.util
 
-import com.mxt.anitrend.view.activity.index.MainActivity
+import com.mxt.anitrend.navigation.EXTRA_ROUTE
+import com.mxt.anitrend.navigation.ROUTE_AIRING
+import com.mxt.anitrend.navigation.ROUTE_FEED
+import com.mxt.anitrend.navigation.ROUTE_MEDIA_LIST
+import com.mxt.anitrend.navigation.ROUTE_NOTIFICATIONS
+import com.mxt.anitrend.navigation.ROUTE_PROFILE
+import com.mxt.anitrend.navigation.ROUTE_SEARCH
+import com.mxt.anitrend.navigation.ROUTE_TRENDING
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
@@ -8,7 +15,7 @@ import org.junit.Test
 
 /**
  * Producer-to-route contract for dynamic shortcuts (NFR-004): every shortcut
- * type maps to the [MainActivity.EXTRA_ROUTE] value the host consumes, so a
+ * type maps to the [EXTRA_ROUTE] wire value the host consumes, so a
  * cold launch lands on the shortcut's destination instead of the start
  * destination.
  */
@@ -16,18 +23,18 @@ class ShortcutUtilTest {
 
     @Test
     fun `established producers keep their routes`() {
-        assertEquals(MainActivity.ROUTE_NOTIFICATIONS, ShortcutUtil.routeForShortcutType(KeyUtil.SHORTCUT_NOTIFICATION))
-        assertEquals(MainActivity.ROUTE_MEDIA_LIST, ShortcutUtil.routeForShortcutType(KeyUtil.SHORTCUT_MY_ANIME))
-        assertEquals(MainActivity.ROUTE_MEDIA_LIST, ShortcutUtil.routeForShortcutType(KeyUtil.SHORTCUT_MY_MANGA))
-        assertEquals(MainActivity.ROUTE_PROFILE, ShortcutUtil.routeForShortcutType(KeyUtil.SHORTCUT_PROFILE))
-        assertEquals(MainActivity.ROUTE_SEARCH, ShortcutUtil.routeForShortcutType(KeyUtil.SHORTCUT_SEARCH))
+        assertEquals(ROUTE_NOTIFICATIONS, ShortcutUtil.routeForShortcutType(KeyUtil.SHORTCUT_NOTIFICATION))
+        assertEquals(ROUTE_MEDIA_LIST, ShortcutUtil.routeForShortcutType(KeyUtil.SHORTCUT_MY_ANIME))
+        assertEquals(ROUTE_MEDIA_LIST, ShortcutUtil.routeForShortcutType(KeyUtil.SHORTCUT_MY_MANGA))
+        assertEquals(ROUTE_PROFILE, ShortcutUtil.routeForShortcutType(KeyUtil.SHORTCUT_PROFILE))
+        assertEquals(ROUTE_SEARCH, ShortcutUtil.routeForShortcutType(KeyUtil.SHORTCUT_SEARCH))
     }
 
     @Test
     fun `airing feed and trending producers map to their destinations`() {
-        assertEquals(MainActivity.ROUTE_AIRING, ShortcutUtil.routeForShortcutType(KeyUtil.SHORTCUT_AIRING))
-        assertEquals(MainActivity.ROUTE_FEED, ShortcutUtil.routeForShortcutType(KeyUtil.SHORTCUT_FEEDS))
-        assertEquals(MainActivity.ROUTE_TRENDING, ShortcutUtil.routeForShortcutType(KeyUtil.SHORTCUT_TRENDING))
+        assertEquals(ROUTE_AIRING, ShortcutUtil.routeForShortcutType(KeyUtil.SHORTCUT_AIRING))
+        assertEquals(ROUTE_FEED, ShortcutUtil.routeForShortcutType(KeyUtil.SHORTCUT_FEEDS))
+        assertEquals(ROUTE_TRENDING, ShortcutUtil.routeForShortcutType(KeyUtil.SHORTCUT_TRENDING))
     }
 
     @Test
@@ -39,9 +46,9 @@ class ShortcutUtilTest {
     fun `route wire values match the consumer constants`() {
         // The producer extras and the consumer branches share these literal
         // wire values; a mismatch would silently drop the route.
-        assertEquals("airing", MainActivity.ROUTE_AIRING)
-        assertEquals("feed", MainActivity.ROUTE_FEED)
-        assertEquals("trending", MainActivity.ROUTE_TRENDING)
+        assertEquals("airing", ROUTE_AIRING)
+        assertEquals("feed", ROUTE_FEED)
+        assertEquals("trending", ROUTE_TRENDING)
     }
 
     // ── NFR-004: deterministic budget-aware registration ──

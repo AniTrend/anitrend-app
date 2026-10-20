@@ -18,6 +18,7 @@ import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.graphql.generated.ScoreFormat
 import com.mxt.anitrend.repository.BrowseRepository
 import com.mxt.anitrend.repository.UserRepository
+import com.mxt.anitrend.ui.library.LibraryPreset
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.Settings
@@ -59,6 +60,7 @@ class MediaListViewModel(
 
     private data class ScreenState(
         val queryKey: MediaListQueryKey? = null,
+        val preset: LibraryPreset = LibraryPreset.MY_ANIME,
         val isLoading: Boolean = false,
         val errorMessage: String? = null,
         val requestToken: Long = 0L,
@@ -84,7 +86,15 @@ class MediaListViewModel(
                     mutationRegistry.state,
                     flowOf(screen),
                 ) { query, operations, currentScreen ->
-                    val sortedEntries = sortEntriesIfNeeded(query.entries)
+                    val presetEntries =
+                        if (currentScreen.preset == LibraryPreset.AIRING) {
+                            query.entries.filter { entry ->
+                                CompatUtil.equals(entry.media?.status, KeyUtil.RELEASING)
+                            }
+                        } else {
+                            query.entries
+                        }
+                    val sortedEntries = sortEntriesIfNeeded(presetEntries)
                     val renderedItems = sortedEntries.map { entry ->
                         entry.toMediaListItemUiModel(
                             isIncrementPending = operations.isIncrementPending(entry.id, entry.mediaId),
@@ -124,6 +134,7 @@ class MediaListViewModel(
         userName: String?,
         mediaType: String?,
         statusIn: String?,
+        preset: LibraryPreset,
     ) {
         val isCurrentUser = isCurrentUser(userId, userName)
         val token = requestSequence.next()
@@ -135,8 +146,10 @@ class MediaListViewModel(
         }
         val sort: List<MediaListSort>? = runCatching { listOf(MediaListSort.valueOf(sortString)) }.getOrNull()
         val statusList: List<MediaListStatus>? =
-            statusIn?.let { runCatching { listOf(MediaListStatus.valueOf(it)) }.getOrNull() }
-        val type: MediaType? = mediaType?.let { runCatching { MediaType.valueOf(it) }.getOrNull() }
+            (if (preset == LibraryPreset.AIRING) KeyUtil.CURRENT else statusIn)
+                ?.let { runCatching { listOf(MediaListStatus.valueOf(it)) }.getOrNull() }
+        val type: MediaType? = (if (preset == LibraryPreset.AIRING) KeyUtil.ANIME else mediaType)
+            ?.let { runCatching { MediaType.valueOf(it) }.getOrNull() }
         val queryKey = MediaListQueryKey(
             userId = if (userId != 0L) userId else null,
             userName = if (userId == 0L) userName else null,
@@ -147,6 +160,7 @@ class MediaListViewModel(
         screenState.update {
             it.copy(
                 queryKey = queryKey,
+                preset = preset,
                 isLoading = true,
                 errorMessage = null,
                 requestToken = token,
@@ -200,16 +214,26 @@ class MediaListViewModel(
     }
 
     /**
-     * Re-sorts the current items in-place when a title-based sort preference changes.
-     * Does not re-fetch from the API.
+     * Applies a changed sort order to the active collection. Title sorting is
+     * a local projection; server-defined sorts reload the same owner, type,
+     * status and preset so the committed query matches the preference.
      */
     fun onSortPreferenceChanged() {
+        val current = screenState.value
         val mediaListSort = settings.mediaListSort ?: KeyUtil.PROGRESS
         if (MediaListUtil.isTitleSort(mediaListSort)) {
-            screenState.update { current ->
-                current.copy(titleSortVersion = current.titleSortVersion + 1)
-            }
+            screenState.update { it.copy(titleSortVersion = it.titleSortVersion + 1) }
+            return
         }
+
+        val queryKey = current.queryKey ?: return
+        load(
+            userId = queryKey.userId ?: 0L,
+            userName = queryKey.userName,
+            mediaType = queryKey.mediaType?.name,
+            statusIn = queryKey.statuses.singleOrNull()?.name,
+            preset = current.preset,
+        )
     }
 
     fun isCurrentUser(

@@ -5,48 +5,71 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
-import android.view.View
 import android.widget.Toast
+import androidx.activity.compose.setContent
 import androidx.annotation.VisibleForTesting
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.async.WebTokenRequest
-import com.mxt.anitrend.binding.basicText
-import com.mxt.anitrend.databinding.ActivityLoginBinding
 import com.mxt.anitrend.model.api.retro.ServiceFactory
 import com.mxt.anitrend.model.entity.anilist.User
+import com.mxt.anitrend.ui.designsystem.AniTrendTheme
+import com.mxt.anitrend.ui.designsystem.currentAniTrendTheme
+import com.mxt.anitrend.ui.markdown.MarkdownText
+import com.mxt.anitrend.ui.markdown.createMarkwon
 import com.mxt.anitrend.util.JobSchedulerUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.ShortcutUtil
-import com.mxt.anitrend.util.WidgetState
 import com.mxt.anitrend.view.activity.CommonActivity
 import com.mxt.anitrend.viewmodel.LoginAuthState
 import com.mxt.anitrend.viewmodel.LoginAuthViewModel
 import com.mxt.anitrend.viewmodel.LoginUserViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
 /** Hosts OAuth authentication and completes post-login setup. */
-class LoginActivity :
-    CommonActivity(),
-    View.OnClickListener {
+class LoginActivity : CommonActivity() {
 
-    private lateinit var binding: ActivityLoginBinding
     private val authViewModel: LoginAuthViewModel by viewModel()
     private val userViewModel: LoginUserViewModel by viewModel()
     private var model: User? = null
     private val scheduler: JobSchedulerUtil by inject()
 
+    /** Loading flipper state, ported from the retired ViewFlipper widget. */
+    private var isLoading by mutableStateOf(false)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        binding = ActivityLoginBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
         authViewModel.authState.observe(this) { authState ->
             when (authState) {
@@ -69,6 +92,7 @@ class LoginActivity :
                         is LoginUserViewModel.UiState.Loading -> Unit
                         is LoginUserViewModel.UiState.Success -> {
                             model = state.user
+                            setResult(RESULT_OK)
                             scheduleJobAndShortcuts()
                             finish()
                         }
@@ -80,9 +104,15 @@ class LoginActivity :
             }
         }
 
-        binding.container.setOnClickListener(this)
-        binding.authSignIn.setOnClickListener(this)
-        binding.createAccountText.basicText(getString(R.string.create_new_account))
+        setContent {
+            AniTrendTheme(currentAniTrendTheme()) {
+                LoginScreen(
+                    isLoading = isLoading,
+                    onSignInClick = { signIn() },
+                    onDismissClick = { dismiss() },
+                )
+            }
+        }
 
         if (!settings.isAuthenticated) {
             checkNewIntent(intent)
@@ -92,7 +122,7 @@ class LoginActivity :
     override fun onResume() {
         super.onResume()
         // Returning from the external browser (Chrome back button, or the flow was
-        // abandoned) does not deliver a redirect intent, so the flipper would stay
+        // abandoned) does not deliver a redirect intent, so the screen would stay
         // on the loading state indefinitely. Restore the content state instead,
         // while an intent carrying redirect data is still handled by checkNewIntent.
         if (!settings.isAuthenticated && intent?.data == null) {
@@ -101,10 +131,31 @@ class LoginActivity :
     }
 
     private fun restoreContentState() {
-        if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED) &&
-            binding.widgetFlipper.displayedChild == WidgetState.LOADING_STATE
-        ) {
-            binding.widgetFlipper.showPrevious()
+        if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED) && isLoading) {
+            isLoading = false
+        }
+    }
+
+    private fun signIn() {
+        if (!isLoading) {
+            isLoading = true
+            try {
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(ServiceFactory.API_AUTH_LINK)))
+            } catch (e: Exception) {
+                Timber.e(e)
+                isLoading = false
+                NotifyUtil.makeText(this, R.string.text_unknown_error, Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            NotifyUtil.makeText(this, R.string.busy_please_wait, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun dismiss() {
+        if (!isLoading) {
+            finish()
+        } else {
+            NotifyUtil.makeText(this, R.string.busy_please_wait, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -129,7 +180,7 @@ class LoginActivity :
                 KeyUtil.DURATION_LONG,
             )
         }
-        binding.widgetFlipper.showPrevious()
+        isLoading = false
     }
 
     private fun showCurrentUserError(message: String) {
@@ -143,7 +194,7 @@ class LoginActivity :
             R.color.colorStateRed,
             KeyUtil.DURATION_LONG,
         )
-        binding.widgetFlipper.showPrevious()
+        isLoading = false
         Timber.e(message)
     }
 
@@ -192,13 +243,11 @@ class LoginActivity :
     /** Helpers for constructing post-login shortcut arguments. */
     companion object {
         /**
-         * Post-login shortcut params. The media-list and profile routes need
-         * typed [UserScreenParam] identity, but ShortcutInfo intent extras must
+         * Post-login shortcut params. The media-list and profile routes carry
+         * identity as wire primitives because ShortcutInfo intent extras must
          * be PersistableBundle-safe (platform restriction since API 26, a
-         * Parcelable value throws at build time), so the identity is carried as
-         * wire primitives and the host reconstructs the typed parameter at
-         * ingress. Kept pure for the instrumentation tests that assert the
-         * produced [ShortcutInfo] extras.
+         * Parcelable value throws at build time). Kept pure for the
+         * instrumentation tests that assert the produced [ShortcutInfo] extras.
          */
         @VisibleForTesting
         internal fun userShortcutBundle(
@@ -209,28 +258,6 @@ class LoginActivity :
             user?.let {
                 putLong(KeyUtil.arg_id, it.id)
                 it.name?.let { name -> putString(KeyUtil.arg_userName, name) }
-            }
-        }
-    }
-
-    override fun onClick(view: View) {
-        when (view.id) {
-            R.id.auth_sign_in -> if (binding.widgetFlipper.displayedChild == WidgetState.CONTENT_STATE) {
-                binding.widgetFlipper.showNext()
-                try {
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(ServiceFactory.API_AUTH_LINK)))
-                } catch (e: Exception) {
-                    Timber.e(e)
-                    restoreContentState()
-                    NotifyUtil.makeText(this, R.string.text_unknown_error, Toast.LENGTH_SHORT).show()
-                }
-            } else {
-                NotifyUtil.makeText(this, R.string.busy_please_wait, Toast.LENGTH_SHORT).show()
-            }
-            R.id.container -> if (binding.widgetFlipper.displayedChild != WidgetState.LOADING_STATE) {
-                finish()
-            } else {
-                NotifyUtil.makeText(this, R.string.busy_please_wait, Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -246,10 +273,92 @@ class LoginActivity :
     private fun checkNewIntent(intent: Intent?) {
         if (intent != null && intent.data != null) {
             if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
-                if (binding.widgetFlipper.displayedChild == WidgetState.CONTENT_STATE) {
-                    binding.widgetFlipper.showNext()
+                if (!isLoading) {
+                    isLoading = true
                 }
                 authViewModel.authenticate(intent.data.toString())
+            }
+        }
+    }
+}
+
+/** Centered sign-in card: browser OAuth handoff with a loading/content flipper state. */
+@Composable
+private fun LoginScreen(
+    isLoading: Boolean,
+    onSignInClick: () -> Unit,
+    onDismissClick: () -> Unit,
+) {
+    val markwon = createMarkwon(LocalContext.current) { link ->
+        // A login flow has no in-app route destinations: every link opens externally.
+    }
+
+    Box(
+        modifier =
+        Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surfaceContainerLowest)
+            .clickable(onClick = onDismissClick),
+        contentAlignment = Alignment.Center,
+    ) {
+        Card(
+            modifier =
+            Modifier
+                .padding(dimensionResource(R.dimen.spacing_xs))
+                .fillMaxWidth(),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+        ) {
+            Column(
+                modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Text(
+                    text = stringResource(R.string.anitrend_sign_in),
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    textAlign = TextAlign.Center,
+                )
+                Text(
+                    text = stringResource(R.string.anitrend_sign_in_browser),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center,
+                    modifier =
+                    Modifier
+                        .padding(top = dimensionResource(R.dimen.md_margin))
+                        .fillMaxWidth(),
+                )
+                if (isLoading) {
+                    CircularProgressIndicator(
+                        modifier =
+                        Modifier
+                            .padding(top = dimensionResource(R.dimen.spacing_xs))
+                            .size(48.dp),
+                    )
+                } else {
+                    Button(
+                        onClick = onSignInClick,
+                        modifier =
+                        Modifier
+                            .padding(top = dimensionResource(R.dimen.spacing_xs))
+                            .fillMaxWidth(),
+                    ) {
+                        Text(text = stringResource(R.string.sign_into_anilist))
+                    }
+                }
+                MarkdownText(
+                    markdown = stringResource(R.string.create_new_account),
+                    markwon = markwon,
+                    onLinkClick = {},
+                    onLinkLongClick = {},
+                    modifier =
+                    Modifier
+                        .padding(top = dimensionResource(R.dimen.spacing_xs))
+                        .fillMaxWidth(),
+                )
             }
         }
     }

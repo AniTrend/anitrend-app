@@ -36,7 +36,6 @@ jetbrains-kotlin = "2.4.21"
 jetbrains-kotlinx-coroutines = "1.11.0"
 jetbrains-kotlinx-serialization = "1.11.0"
 
-mpandroidchartVersion = "3.1.0"
 noties-markwon = "4.6.2"
 org-mockito = "5.24.0"
 squareup-retrofit = "3.0.0"
@@ -47,10 +46,6 @@ treesSence = "1.0.4"
 treessence = "1.1.2"
 prettyTime = "5.0.9.Final"
 betterLinkMovement = "2.2.0"
-tapTarget = "3.3.2"
-photoView = "2.3.0"
-onboarder = "1.0.4"
-mpAndroidChart = "3.1.0"
 eventBus = "3.3.1"
 hamcrest = "3.0"
 chuncker = "4.3.1"
@@ -64,7 +59,7 @@ anitrend-support-markwon = "0.12.1-alpha01"
 anitrend-android-emoji = "2.2.0"
 
 androidx-media3 = "1.11.1"
-androidx-navigation = "2.9.8"
+androidx-navigation3 = "1.2.0"
 cash-turbine = "1.2.1"
 google-firebase-core = "21.1.1"
 google-firebase-analytics = "22.5.0"
@@ -78,14 +73,11 @@ google-gms-google-services = "4.5.0"
 spotless-gradle-plugin = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
 androidx-media3-exoplayer = { module = "androidx.media3:media3-exoplayer", version.ref = "androidx-media3" }
 androidx-media3-ui = { module = "androidx.media3:media3-ui", version.ref = "androidx-media3" }
+androidx-media3-ui-compose-material3 = { module = "androidx.media3:media3-ui-compose-material3", version.ref = "androidx-media3" }
 betterLinkMovement = { module = "me.saket:better-link-movement-method", version.ref = "betterLinkMovement" }
 eventbus = { module = "org.greenrobot:eventbus", version.ref = "eventBus" }
 hamcrest = { module = "org.hamcrest:hamcrest-library", version.ref = "hamcrest" }
 junit = { module = "junit:junit", version.ref = "junit" }
-material-tap-target-prompt = { module = "uk.co.samuelwall:material-tap-target-prompt", version.ref = "tapTarget" }
-mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpandroidchartVersion" }
-onboarder = { module = "com.codemybrainsout.onboarding:onboarder", version.ref = "onboarder" }
-photoview = { module = "com.github.chrisbanes:PhotoView", version.ref = "photoView" }
 prettyTime = { module = "org.ocpsoft.prettytime:prettytime", version.ref = "prettyTime" }
 threeTenBp = { module = "com.jakewharton.threetenabp:threetenabp", version.ref = "threeTenBp" }
 treessence = { module = "com.github.bastienpaulfr:Treessence", version.ref = "treessence" }
@@ -126,11 +118,15 @@ androidx-lifecycle-runTimeKtx = { module = "androidx.lifecycle:lifecycle-runtime
 androidx-lifecycle-liveDataKtx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "androix-lifecycle" }
 androidx-lifecycle-viewModelKtx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androix-lifecycle" }
 androidx-lifecycle-liveDataCoreKtx = { module = "androidx.lifecycle:lifecycle-livedata-core-ktx", version.ref = "androix-lifecycle" }
+androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androix-lifecycle" }
+androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androix-lifecycle" }
+androidx-lifecycle-viewmodel-navigation3 = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "androix-lifecycle" }
 
-androidx-navigation-fragmentKtx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "androidx-navigation" }
-androidx-navigation-uiKtx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "androidx-navigation" }
+androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "androidx-navigation3" }
+androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "androidx-navigation3" }
 
 androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "androidx-paging" }
+androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "androidx-paging" }
 androidx-paging-testing = { module = "androidx.paging:paging-testing", version.ref = "androidx-paging" }
 
 androidx-preference = { module = "androidx.preference:preference", version.ref = "androidx-preference" }
@@ -198,6 +194,7 @@ jetbrains-kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-co
 jetbrains-kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "jetbrains-kotlinx-serialization" }
 
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "io-koin" }
+koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "io-koin" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "io-koin" }
 koin-workManager = { module = "io.insert-koin:koin-androidx-workmanager", version.ref = "io-koin" }
 koin-gradle-plugin = { module = "io.insert-koin:koin-gradle-plugin", version.ref = "io-koin" }
@@ -205,10 +202,11 @@ koin-test = { module = "io.insert-koin:koin-test", version.ref = "io-koin" }
 koin-test-jUnit4 = { module = "io.insert-koin:koin-test-junit4", version.ref = "io-koin" }
 
 markwon-core = { module = "io.noties.markwon:core", version.ref = "noties-markwon" }
-markwon-editor = { module = "io.noties.markwon:editor", version.ref = "noties-markwon" }
 markwon-html = { module = "io.noties.markwon:html", version.ref = "noties-markwon" }
 markwon-image = { module = "io.noties.markwon:image", version.ref = "noties-markwon" }
 markwon-glide = { module = "io.noties.markwon:image-glide", version.ref = "noties-markwon" }
+markwon-editor = { module = "io.noties.markwon:editor", version.ref = "noties-markwon" }
+
 markwon-parser = { module = "io.noties.markwon:inline-parser", version.ref = "noties-markwon" }
 markwon-linkify = { module = "io.noties.markwon:linkify", version.ref = "noties-markwon" }
 markwon-simpleExt = { module = "io.noties.markwon:simple-ext", version.ref = "noties-markwon" }

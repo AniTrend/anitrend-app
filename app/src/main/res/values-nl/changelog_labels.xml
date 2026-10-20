@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Changelog timeline copy for the structured release-notes screen. -->
+<resources>
+    <!-- Changelog screen heading above the newest release -->
+    <string name="changelog_whats_new">Nieuw</string>
+
+    <!-- Changelog screen section listing credits and supporters -->
+    <string name="changelog_acknowledgements">Met dank aan</string>
+
+    <!-- Changelog release category heading for newly added features -->
+    <string name="changelog_category_added">Toegevoegd</string>
+
+    <!-- Changelog release category heading for improvements -->
+    <string name="changelog_category_improved">Verbeterd</string>
+
+    <!-- Changelog release category heading for fixes -->
+    <string name="changelog_category_fixed">Opgelost</string>
+
+    <!-- Changelog release category heading for known issues -->
+    <string name="changelog_category_known_issues">Bekende problemen</string>
+
+    <!-- Changelog message shown when the bundled release notes cannot be decoded -->
+    <string name="changelog_error_message">Release-opmerkingen konden niet worden geladen</string>
+
+    <!-- Changelog message shown when the bundled release notes contain no releases -->
+    <string name="changelog_empty_message">Nog geen release-opmerkingen</string>
+</resources>

@@ -108,7 +108,7 @@ class FavouriteActionComposeTest {
             ComposeView(activity).apply {
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 setContent {
-                    AniTrendTheme {
+                    AniTrendTheme("light") {
                         FavouriteAction(state = state.value, onClick = onClick)
                     }
                 }

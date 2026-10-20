@@ -93,7 +93,7 @@ internal fun FuzzyDateField(
 @Preview(name = "Fuzzy date fields", showBackground = true)
 @Composable
 private fun FuzzyDateFieldPreview() {
-    AniTrendTheme {
+    AniTrendTheme("light") {
         Column {
             FuzzyDateField(
                 value = "TBA",

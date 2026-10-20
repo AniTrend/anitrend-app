@@ -11,22 +11,19 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertIsOff
 import androidx.compose.ui.test.assertIsOn
+import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.v2.runAndroidComposeUiTest
 import androidx.core.content.edit
-import androidx.navigation.fragment.NavHostFragment
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.mxt.anitrend.R
-import com.mxt.anitrend.navigation.extension.asBundle
-import com.mxt.anitrend.navigation.model.SettingsCategoryScreenParam
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.view.activity.index.MainActivity
-import com.mxt.anitrend.view.fragment.settings.SettingsCategoryRegistry
 import org.junit.Assert.assertFalse
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -46,18 +43,16 @@ class SettingsToggleRowComposeTest {
         settings.edit {
             putBoolean(messageKey, true)
             putBoolean(workaroundKey, false)
+            putString(context.getString(R.string.pref_key_startup_page), "1")
         }
 
         runAndroidComposeUiTest<MainActivity> {
             val mainActivity = requireNotNull(activity)
-            val navHost =
-                mainActivity.supportFragmentManager.findFragmentById(R.id.main_nav_host) as NavHostFragment
-            runOnUiThread {
-                navHost.navController.navigate(
-                    R.id.settingsCategoryFragment,
-                    SettingsCategoryScreenParam(categoryId = SettingsCategoryRegistry.NOTIFICATIONS).asBundle(),
-                )
-            }
+            onAllNodesWithContentDescription(mainActivity.getString(R.string.action_menu))[0].performClick()
+            waitForIdle()
+            onNodeWithText(mainActivity.getString(R.string.title_activity_settings)).performClick()
+            waitForIdle()
+            onNodeWithContentDescription(mainActivity.getString(R.string.pref_header_notifications)).performClick()
             waitForIdle()
 
             onAllNodesWithTag("settings-toggle-row").assertCountEquals(3)

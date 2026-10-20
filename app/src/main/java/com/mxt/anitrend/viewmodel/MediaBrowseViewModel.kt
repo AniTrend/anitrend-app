@@ -16,6 +16,7 @@ import com.mxt.anitrend.model.entity.container.attribute.PageInfo
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.repository.BaseRepository
 import com.mxt.anitrend.repository.BrowseRepository
+import com.mxt.anitrend.repository.UserRepository
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -36,6 +37,7 @@ class MediaBrowseViewModel(
     private val baseRepository: BaseRepository,
     private val browseRepository: BrowseRepository,
     private val mediaListStore: MediaListStore,
+    private val userRepository: UserRepository,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : ViewModel() {
 
@@ -53,6 +55,33 @@ class MediaBrowseViewModel(
         get() = baseRepository.cachedGenres
     val mediaTags: List<MediaTag>
         get() = baseRepository.cachedTags
+
+    /**
+     * Top anime genres from the cached current user's statistics, most
+     * frequent first. Returns null when the statistics are unavailable.
+     */
+    fun topFavouriteGenres(limit: Int = 4): List<String>? {
+        val genres = userRepository.cachedCurrentUser?.statistics?.anime?.genres ?: return null
+        if (genres.isEmpty()) return null
+        return genres
+            .sortedByDescending { it.count }
+            .mapNotNull { it.genre }
+            .take(limit)
+    }
+
+    /**
+     * Top anime tags from the cached current user's statistics, most frequent
+     * first and excluding null names. Returns null when unavailable.
+     */
+    fun topFavouriteTags(limit: Int = 6): List<String>? {
+        val tags = userRepository.cachedCurrentUser?.statistics?.anime?.tags ?: return null
+        if (tags.isEmpty()) return null
+        return tags
+            .sortedByDescending { it.count }
+            .filter { it.tag != null }
+            .mapNotNull { it.tag?.name }
+            .take(limit)
+    }
 
     private data class ScreenState(
         val loadedMedia: LinkedHashMap<Long, MediaBase> = linkedMapOf(),
@@ -89,6 +118,7 @@ class MediaBrowseViewModel(
         status: String?,
         genres: List<String>?,
         tags: List<String>?,
+        onList: Boolean?,
     ) {
         val generation = screenState.value.requestGeneration.takeIf { page > 1 } ?: (screenState.value.requestGeneration + 1)
         screenState.update {
@@ -124,7 +154,7 @@ class MediaBrowseViewModel(
                     season = seasonEnum,
                     isAdult = isAdult,
                     sort = sortList,
-                    onList = null,
+                    onList = onList,
                     status = statusEnum,
                     genres = normalizedGenres,
                     tags = normalizedTags,

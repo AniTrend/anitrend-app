@@ -56,7 +56,7 @@ internal fun ShareTypeOptionRow(
 @Preview(name = "Share type option", showBackground = true)
 @Composable
 private fun ShareTypeOptionRowPreview() {
-    AniTrendTheme {
+    AniTrendTheme("light") {
         Surface(color = MaterialTheme.colorScheme.surface) {
             ShareTypeOptionRow(
                 label = "Plain Text",

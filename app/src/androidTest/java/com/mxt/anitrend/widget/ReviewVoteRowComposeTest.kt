@@ -144,7 +144,7 @@ class ReviewVoteRowComposeTest {
             ComposeView(activity).apply {
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 setContent {
-                    AniTrendTheme {
+                    AniTrendTheme("light") {
                         ReviewVoteRow(
                             state = state,
                             onUpVoteClick = onUpVoteClick,

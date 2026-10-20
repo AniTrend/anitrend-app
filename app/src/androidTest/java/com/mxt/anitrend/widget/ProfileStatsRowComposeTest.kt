@@ -46,7 +46,7 @@ class ProfileStatsRowComposeTest {
                     ComposeView(hostActivity).apply {
                         setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                         setContent {
-                            AniTrendTheme {
+                            AniTrendTheme("light") {
                                 Box(
                                     modifier = Modifier.fillMaxSize(),
                                     contentAlignment = Alignment.Center,

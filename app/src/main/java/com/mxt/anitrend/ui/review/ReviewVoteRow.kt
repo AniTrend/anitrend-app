@@ -175,7 +175,7 @@ private fun ReviewVoteAction(
 @Preview(name = "Review vote row", showBackground = true, widthDp = 240, heightDp = 48)
 @Composable
 private fun ReviewVoteRowPreview() {
-    AniTrendTheme {
+    AniTrendTheme("light") {
         ReviewVoteRow(
             state =
             ReviewVoteRowState(

@@ -4,31 +4,37 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.annotation.OptIn
 import androidx.annotation.VisibleForTesting
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.activity.compose.setContent
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.ui.compose.material3.Player
 import com.mxt.anitrend.R
-import com.mxt.anitrend.databinding.ActivityVideoPlayerBinding
 import com.mxt.anitrend.navigation.extension.putScreenParam
 import com.mxt.anitrend.navigation.extension.screenParam
 import com.mxt.anitrend.navigation.model.VideoPlayerScreenParam
+import com.mxt.anitrend.ui.designsystem.AniTrendTheme
+import com.mxt.anitrend.ui.designsystem.currentAniTrendTheme
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.view.activity.CommonActivity
 import timber.log.Timber
 
+@OptIn(UnstableApi::class)
 class VideoPlayerActivity : CommonActivity() {
 
     companion object {
-        fun newIntent(context: Context, param: VideoPlayerScreenParam): Intent = Intent(context, VideoPlayerActivity::class.java).apply {
-            putScreenParam(param)
-            // Interim boundary: keep the legacy wire key alongside the typed param
-            // until all pre-bridge callers and fixtures migrate.
-            putExtra(KeyUtil.arg_model, param.url)
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        }
+
+        fun newIntent(context: Context, param: VideoPlayerScreenParam): Intent = Intent(context, VideoPlayerActivity::class.java).apply { putScreenParam(param) }
 
         /**
          * Compatibility overload preserving the legacy URL-based callers. Bridges
@@ -45,8 +51,8 @@ class VideoPlayerActivity : CommonActivity() {
          * not a parcel path for any remote model.
          */
         fun fromIntent(intent: Intent): VideoPlayerScreenParam? = resolve(
-            typed = intent.screenParam<VideoPlayerScreenParam>(),
-            legacyUrl = intent.getStringExtra(KeyUtil.arg_model),
+            intent.screenParam<VideoPlayerScreenParam>(),
+            intent.extras?.getString(KeyUtil.arg_model),
         )
 
         /**
@@ -59,9 +65,7 @@ class VideoPlayerActivity : CommonActivity() {
          */
         @VisibleForTesting
         internal fun resolve(typed: VideoPlayerScreenParam?, legacyUrl: String?): VideoPlayerScreenParam? {
-            typed?.let { param ->
-                return if (param.url.isNotEmpty()) param else null
-            }
+            if (typed != null) return if (typed.url.isNotEmpty()) typed else null
             return parseUrl(legacyUrl)
         }
 
@@ -70,14 +74,10 @@ class VideoPlayerActivity : CommonActivity() {
     }
 
     private var contentLink: String? = null
-    private var player: ExoPlayer? = null
-    private lateinit var binding: ActivityVideoPlayerBinding
+    private var player by mutableStateOf<ExoPlayer?>(null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        binding = ActivityVideoPlayerBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
         val args = fromIntent(intent)
         if (args != null) {
@@ -87,15 +87,24 @@ class VideoPlayerActivity : CommonActivity() {
             NotifyUtil.makeText(
                 this,
                 R.string.text_error_request,
-                R.drawable.ic_warning_white_18dp,
                 Toast.LENGTH_LONG,
             ).show()
+        }
+
+        setContent {
+            AniTrendTheme(currentAniTrendTheme()) {
+                player?.let { current ->
+                    Player(
+                        player = current,
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                }
+            }
         }
     }
 
     private fun startPlayer(link: String) {
         player = ExoPlayer.Builder(this).build().also { exoPlayer ->
-            binding.videoPlayer.player = exoPlayer
             val mediaItem = MediaItem.fromUri(link)
             exoPlayer.setMediaItem(mediaItem)
             exoPlayer.prepare()
@@ -106,7 +115,6 @@ class VideoPlayerActivity : CommonActivity() {
                     NotifyUtil.makeText(
                         this@VideoPlayerActivity,
                         R.string.text_error_request,
-                        R.drawable.ic_warning_white_18dp,
                         Toast.LENGTH_LONG,
                     ).show()
                     finish()

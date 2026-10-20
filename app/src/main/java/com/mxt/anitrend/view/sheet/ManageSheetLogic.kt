@@ -180,9 +180,9 @@ fun shouldDecodeHtml(input: String): Boolean = input.contains("&") && (input.con
 /**
  * Decodes HTML entities from [notes] if it appears to be HTML-encoded.
  *
- * The server may return HTML-encoded notes. Because [com.mxt.anitrend.base.custom.view.editor.MarkdownInputEditor]
- * encodes again via its [formattedText] getter, raw HTML entities would be double-encoded.
- * This function guards against that by decoding first.
+ * The server may return HTML-encoded notes; the composer path expects decoded
+ * text, so raw HTML entities would be double-encoded. This function guards
+ * against that by decoding first.
  *
  * Plain-text notes pass through unchanged.
  *

@@ -96,32 +96,32 @@
     <string name="post_share_type_youtube">YouTube</string>
     <string name="post_share_type_video">Video</string>
 
-    <string name="media_status_all">All</string>
-    <string name="media_status_finished">Finished</string>
-    <string name="media_status_releasing">Releasing</string>
-    <string name="media_status_not_yet_released">Not Yet Released</string>
-    <string name="media_status_canceled">Canceled</string>
+    <string name="media_status_all">Tous</string>
+    <string name="media_status_finished">Terminé</string>
+    <string name="media_status_releasing">En diffusion</string>
+    <string name="media_status_not_yet_released">Pas encore sorti</string>
+    <string name="media_status_canceled">Annulé</string>
 
-    <string name="anime_format_all">All</string>
+    <string name="anime_format_all">Tous</string>
     <string name="anime_format_tv">TV</string>
-    <string name="anime_format_tv_short">TV Short</string>
-    <string name="anime_format_movie">Movie</string>
-    <string name="anime_format_special">Special</string>
+    <string name="anime_format_tv_short">Série TV courte</string>
+    <string name="anime_format_movie">Film</string>
+    <string name="anime_format_special">Spécial</string>
     <string name="anime_format_ova">OVA</string>
     <string name="anime_format_ona">ONA</string>
-    <string name="anime_format_music">Music</string>
+    <string name="anime_format_music">Musique</string>
 
-    <string name="manga_format_all">All</string>
+    <string name="manga_format_all">Tous</string>
     <string name="manga_format_manga">Manga</string>
-    <string name="manga_format_novel">Novel</string>
-    <string name="manga_format_oneshot">One Shot</string>
+    <string name="manga_format_novel">Roman</string>
+    <string name="manga_format_oneshot">One shot</string>
 
-    <string name="media_list_status_current">Current</string>
-    <string name="media_list_status_planning">Planning</string>
-    <string name="media_list_status_completed">Completed</string>
-    <string name="media_list_status_dropped">Dropped</string>
-    <string name="media_list_status_paused">Paused</string>
-    <string name="media_list_status_repeating">Repeating</string>
+    <string name="media_list_status_current">En cours</string>
+    <string name="media_list_status_planning">Prévu</string>
+    <string name="media_list_status_completed">Terminé</string>
+    <string name="media_list_status_dropped">Abandonné</string>
+    <string name="media_list_status_paused">En pause</string>
+    <string name="media_list_status_repeating">Re-regardé</string>
 
     <string name="messages_page_title_inbox">Inbox</string>
     <string name="messages_page_title_outbox">Outbox</string>
@@ -136,5 +136,6 @@
 
     <string name="pref_selected_theme_title_light">Light</string>
     <string name="pref_selected_theme_title_dark">Dark</string>
-    <string name="pref_selected_theme_title_black">Black</string>
+    <!-- Theme choice using a pure black background for AMOLED screens; AMOLED is a display technology term -->
+    <string name="pref_selected_theme_title_black">AMOLED</string>
 </resources>

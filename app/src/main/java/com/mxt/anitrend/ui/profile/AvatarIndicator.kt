@@ -129,7 +129,7 @@ private fun AvatarImage(
 @Preview(name = "Avatar with unread count", showBackground = true, widthDp = 64, heightDp = 64)
 @Composable
 private fun AvatarIndicatorPreview() {
-    AniTrendTheme {
+    AniTrendTheme("light") {
         AvatarIndicator(
             state =
             AvatarIndicatorState(

@@ -3,41 +3,27 @@
 package com.mxt.anitrend.ui
 
 import android.content.Context
-import android.view.accessibility.AccessibilityWindowInfo
-import androidx.core.content.edit
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertHeightIsEqualTo
-import androidx.compose.ui.test.assertHasClickAction
-import androidx.compose.ui.test.assertHasNoClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
-import androidx.compose.ui.test.assertIsNotEnabled
+import androidx.compose.ui.test.assertHasClickAction
+import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.onAllNodesWithTag
-import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.v2.runAndroidComposeUiTest
 import androidx.compose.ui.unit.dp
-import androidx.navigation.fragment.NavHostFragment
+import androidx.core.content.edit
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.matcher.RootMatchers.isDialog
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
 import com.mxt.anitrend.R
-import com.mxt.anitrend.navigation.extension.asBundle
-import com.mxt.anitrend.navigation.model.SettingsCategoryScreenParam
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.view.activity.index.MainActivity
-import com.mxt.anitrend.view.fragment.settings.SettingsCategoryRegistry
-import com.mxt.anitrend.viewmodel.CustomizeSettingsViewModel
+import com.mxt.anitrend.viewmodel.AppearanceSettingsViewModel
 import kotlin.time.Duration.Companion.minutes
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -47,27 +33,23 @@ class SettingsValueRowComposeTest {
 
     @Test
     @OptIn(ExperimentalTestApi::class)
-    fun settingsValueRowsPreserveChoiceAndInfoBehavior() {
+    fun settingsValueRowsPreserveChoiceBehavior() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         TestSessionUtil.setAuthenticated(context, authenticated = false)
         val settings = Settings(context)
         settings.theme = KeyUtil.THEME_LIGHT
-        settings.userLanguage = CustomizeSettingsViewModel.DEFAULT_LANGUAGE
+        settings.userLanguage = AppearanceSettingsViewModel.DEFAULT_LANGUAGE
         settings.edit {
-            putString(
-                context.getString(R.string.pref_key_list_view_style),
-                CustomizeSettingsViewModel.DEFAULT_LIST_VIEW_STYLE,
-            )
+            putString(context.getString(R.string.pref_key_list_view_style), AppearanceSettingsViewModel.DEFAULT_LIST_VIEW_STYLE)
+            putString(context.getString(R.string.pref_key_startup_page), "1")
         }
         runAndroidComposeUiTest<MainActivity>(testTimeout = 3.minutes) {
             val mainActivity = requireNotNull(activity)
-            val navHost =
-                mainActivity.supportFragmentManager.findFragmentById(R.id.main_nav_host) as NavHostFragment
-            val navController = navHost.navController
-
-            runOnUiThread {
-                navController.navigate(R.id.customizeSettingsFragment)
-            }
+            onAllNodesWithContentDescription(mainActivity.getString(R.string.action_menu))[0].performClick()
+            waitForIdle()
+            onNodeWithText(mainActivity.getString(R.string.title_activity_settings)).performClick()
+            waitForIdle()
+            onNodeWithContentDescription(mainActivity.getString(R.string.pref_header_appearance)).performClick()
             waitForIdle()
 
             val choiceRows = onAllNodesWithTag("settings-value-row")
@@ -91,39 +73,21 @@ class SettingsValueRowComposeTest {
                 .assertIsEnabled()
                 .assertHasClickAction()
                 .performClick()
-            InstrumentationRegistry.getInstrumentation()
-                .waitForFocusedWindowContainingText(
-                    themeTitles[1],
-                    AccessibilityWindowInfo.TYPE_APPLICATION,
-                )
-            onView(withText(themeTitles[1])).inRoot(isDialog()).check(matches(isDisplayed()))
-            onView(withText(mainActivity.getString(R.string.Cancel)))
-                .inRoot(isDialog())
-                .perform(click())
+            // Choice rows cycle inline (no dialog): each click advances to the
+            // next entry and the merged description announces the new value.
+            fun themeDescriptionFor(index: Int) = mainActivity.getString(
+                R.string.settings_choice_content_description,
+                mainActivity.getString(R.string.pref_title_app_theme),
+                themeTitles[index],
+            )
+            onNodeWithContentDescription(themeDescriptionFor(1)).assertIsDisplayed()
+            onNodeWithContentDescription(themeDescriptionFor(1)).performClick()
             waitForIdle()
-
-            runOnUiThread {
-                navController.navigate(
-                    R.id.settingsCategoryFragment,
-                    SettingsCategoryScreenParam(categoryId = SettingsCategoryRegistry.CONTENT).asBundle(),
-                )
-            }
+            onNodeWithContentDescription(themeDescriptionFor(2)).assertIsDisplayed()
+            onNodeWithContentDescription(themeDescriptionFor(2)).performClick()
             waitForIdle()
-
-            val infoRows = onAllNodesWithTag("settings-value-row")
-            infoRows.assertCountEquals(4)
-            for (index in 0 until 4) {
-                infoRows[index].assertHeightIsEqualTo(58.dp)
-            }
-            infoRows[0]
-                .assertIsDisplayed()
-                .assertHasNoClickAction()
-            onNodeWithText(mainActivity.getString(R.string.pref_title_autoplay))
-                .assertIsDisplayed()
-                .assertIsNotEnabled()
-            onAllNodesWithText(mainActivity.getString(R.string.pref_summary_placeholder)).assertCountEquals(4)
-            onAllNodesWithTag("settings-value-row-value", useUnmergedTree = true).assertCountEquals(0)
-            onAllNodesWithTag("settings-value-row-chevron", useUnmergedTree = true).assertCountEquals(0)
+            onNodeWithContentDescription(themeDescriptionFor(0)).assertIsDisplayed()
+            waitForIdle()
         }
     }
 }

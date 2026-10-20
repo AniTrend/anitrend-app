@@ -7,12 +7,13 @@ import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.v2.runAndroidComposeUiTest
-import androidx.navigation.fragment.NavHostFragment
+import androidx.core.content.edit
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.firebase.FirebaseApp
@@ -21,7 +22,6 @@ import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.view.activity.index.MainActivity
 import com.mxt.anitrend.view.fragment.settings.SettingsCategoryRegistry
-import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -30,53 +30,53 @@ class SettingsHubComposeTest {
 
     @Test
     @OptIn(ExperimentalTestApi::class)
-    fun signedOutCategoryCardsRenderAndPreserveCustomizeNavigation() {
+    fun signedOutCategoryCardsRenderAndPreserveAppearanceNavigation() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         TestSessionUtil.setAuthenticated(context, authenticated = false)
-        Settings(context).theme = KeyUtil.THEME_LIGHT
+        val settings = Settings(context)
+        settings.theme = KeyUtil.THEME_LIGHT
+        settings.edit { putString(context.getString(R.string.pref_key_startup_page), "1") }
         val categories =
             SettingsCategoryRegistry.categories(
                 isFirebaseVisible = FirebaseApp.getApps(context).isNotEmpty(),
-                isAuthenticated = false,
             )
 
         runAndroidComposeUiTest<MainActivity> {
             val mainActivity = requireNotNull(activity)
-            val navHost =
-                mainActivity.supportFragmentManager.findFragmentById(R.id.main_nav_host) as NavHostFragment
-            val navController = navHost.navController
-
-            runOnUiThread { navController.navigate(R.id.action_global_settingsHubFragment) }
+            onAllNodesWithContentDescription(mainActivity.getString(R.string.action_menu))[0].performClick()
+            waitForIdle()
+            onNodeWithText(mainActivity.getString(R.string.title_activity_settings)).performClick()
             waitForIdle()
 
             onAllNodesWithTag("settings-category-card").assertCountEquals(categories.size)
-            val customizeTitle = mainActivity.getString(R.string.pref_header_customize)
-            val customizeSummary = mainActivity.getString(R.string.pref_header_customize_summary)
-            val customizeCard = onNodeWithContentDescription(customizeTitle)
-            customizeCard
+            val appearanceTitle = mainActivity.getString(R.string.pref_header_appearance)
+            val appearanceSummary = mainActivity.getString(R.string.pref_header_appearance_summary)
+            val appearanceCard = onNodeWithContentDescription(appearanceTitle)
+            appearanceCard
                 .assertIsDisplayed()
                 .assertHasClickAction()
-            onNodeWithText(customizeTitle, useUnmergedTree = true).assertIsDisplayed()
-            onNodeWithText(customizeSummary, useUnmergedTree = true).assertIsDisplayed()
-            customizeCard.performClick()
+            onNodeWithText(appearanceTitle, useUnmergedTree = true).assertIsDisplayed()
+            onNodeWithText(appearanceSummary, useUnmergedTree = true).assertIsDisplayed()
+            appearanceCard.performClick()
             waitForIdle()
-            assertEquals(R.id.customizeSettingsFragment, navController.currentDestination?.id)
+            onAllNodesWithTag("settings-value-row").assertCountEquals(3)
         }
     }
 
     @Test
     @OptIn(ExperimentalTestApi::class)
-    fun generalCardNavigatesWithCategoryId() {
+    fun generalCardOpensSettingsCategoryRows() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         TestSessionUtil.setAuthenticated(context, authenticated = false)
-        Settings(context).theme = KeyUtil.THEME_LIGHT
+        val settings = Settings(context)
+        settings.theme = KeyUtil.THEME_LIGHT
+        settings.edit { putString(context.getString(R.string.pref_key_startup_page), "1") }
 
         runAndroidComposeUiTest<MainActivity> {
             val mainActivity = requireNotNull(activity)
-            val navHost =
-                mainActivity.supportFragmentManager.findFragmentById(R.id.main_nav_host) as NavHostFragment
-            val navController = navHost.navController
-            runOnUiThread { navController.navigate(R.id.action_global_settingsHubFragment) }
+            onAllNodesWithContentDescription(mainActivity.getString(R.string.action_menu))[0].performClick()
+            waitForIdle()
+            onNodeWithText(mainActivity.getString(R.string.title_activity_settings)).performClick()
             waitForIdle()
 
             val generalTitle = mainActivity.getString(R.string.pref_header_general)
@@ -85,11 +85,7 @@ class SettingsHubComposeTest {
                 .assertHasClickAction()
                 .performClick()
             waitForIdle()
-            assertEquals(R.id.settingsCategoryFragment, navController.currentDestination?.id)
-            assertEquals(
-                SettingsCategoryRegistry.GENERAL,
-                navController.currentBackStackEntry?.arguments?.getString(SettingsCategoryRegistry.ARG_CATEGORY_ID),
-            )
+            onAllNodesWithTag("settings-value-row")[0].assertIsDisplayed()
         }
     }
 
@@ -98,25 +94,25 @@ class SettingsHubComposeTest {
     fun authenticatedAccountCardIsAccessibleAndNavigates() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         TestSessionUtil.setAuthenticated(context, authenticated = true)
-        Settings(context).theme = KeyUtil.THEME_LIGHT
+        val settings = Settings(context)
+        settings.theme = KeyUtil.THEME_LIGHT
+        settings.edit { putString(context.getString(R.string.pref_key_startup_page), "1") }
         val accountTitle = context.getString(R.string.pref_header_account)
 
         runAndroidComposeUiTest<MainActivity> {
             val mainActivity = requireNotNull(activity)
-            val navHost =
-                mainActivity.supportFragmentManager.findFragmentById(R.id.main_nav_host) as NavHostFragment
-            val navController = navHost.navController
-
-            runOnUiThread { navController.navigate(R.id.action_global_settingsHubFragment) }
+            onAllNodesWithContentDescription(mainActivity.getString(R.string.action_menu))[0].performClick()
+            waitForIdle()
+            onNodeWithText(mainActivity.getString(R.string.title_activity_settings)).performClick()
             waitForIdle()
 
             onNodeWithContentDescription(accountTitle)
                 .assertIsDisplayed()
                 .assertHasClickAction()
                 .performClick()
-            runOnIdle {
-                assertEquals(R.id.accountSettingsFragment, navController.currentDestination?.id)
-            }
+            waitForIdle()
+            onAllNodesWithTag("settings-category-card").assertCountEquals(0)
+            onNodeWithText(mainActivity.getString(R.string.action_back)).assertIsDisplayed()
         }
     }
 }

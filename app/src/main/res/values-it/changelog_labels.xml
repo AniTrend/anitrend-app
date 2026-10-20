@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Changelog timeline copy for the structured release-notes screen. -->
+<resources>
+    <!-- Changelog screen heading above the newest release -->
+    <string name="changelog_whats_new">Novità</string>
+
+    <!-- Changelog screen section listing credits and supporters -->
+    <string name="changelog_acknowledgements">Ringraziamenti</string>
+
+    <!-- Changelog release category heading for newly added features -->
+    <string name="changelog_category_added">Aggiunto</string>
+
+    <!-- Changelog release category heading for improvements -->
+    <string name="changelog_category_improved">Migliorato</string>
+
+    <!-- Changelog release category heading for fixes -->
+    <string name="changelog_category_fixed">Corretto</string>
+
+    <!-- Changelog release category heading for known issues -->
+    <string name="changelog_category_known_issues">Problemi noti</string>
+
+    <!-- Changelog message shown when the bundled release notes cannot be decoded -->
+    <string name="changelog_error_message">Impossibile caricare le note di rilascio</string>
+
+    <!-- Changelog message shown when the bundled release notes contain no releases -->
+    <string name="changelog_empty_message">Ancora nessuna nota di rilascio</string>
+</resources>

@@ -94,7 +94,7 @@ internal fun StatusDeleteAction(
 @Preview(name = "Delete action states", showBackground = true)
 @Composable
 private fun StatusDeleteActionPreview() {
-    AniTrendTheme {
+    AniTrendTheme("light") {
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             StatusDeleteAction(isEnabled = true, isLoading = false, onClick = {})
             StatusDeleteAction(isEnabled = false, isLoading = true, onClick = {})

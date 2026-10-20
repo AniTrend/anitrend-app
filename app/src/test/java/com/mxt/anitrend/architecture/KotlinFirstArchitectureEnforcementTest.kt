@@ -9,8 +9,7 @@ import org.junit.Test
  *
  * Guardrails implemented here (ADR `docs/adr/2026-08-01-kotlin-first-domain-model-and-navigation.md`):
  * 1. `com.mxt.anitrend.model.entity.**` is frozen at the reviewed 95-file baseline.
- * 2. No new handwritten Parcelable code (scoped exceptions: legacy model/entity parceling,
- *    MaterialSearchView.SavedState).
+ * 2. No new handwritten Parcelable code (scoped exceptions: legacy model/entity parceling).
  * 3. The domain layer stays pure Kotlin; only the documented generated GraphQL enum/input
  *    exceptions are allowed.
  * 4. Domain models (files under a `domain` `model` directory) expose only `val` properties.
@@ -68,8 +67,7 @@ class KotlinFirstArchitectureEnforcementTest {
         assertFalse(
             "ADR section 9 (Phase 1) and section 7.6: handwritten Parcelable code " +
                 "(writeToParcel, describeContents, Parcelable.Creator, CREATOR) is prohibited. " +
-                "Existing model/entity parceling and MaterialSearchView.SavedState are scoped " +
-                "exceptions. New violations:\n" + additions.joinToString("\n"),
+                "Existing model/entity parceling is a scoped exception. New violations:\n" + additions.joinToString("\n"),
             additions.isNotEmpty(),
         )
     }

@@ -110,7 +110,7 @@ internal fun SettingsToggleRow(
 @Preview(name = "Settings toggle enabled", showBackground = true)
 @Composable
 private fun SettingsToggleRowPreview() {
-    AniTrendTheme {
+    AniTrendTheme("light") {
         SettingsToggleRow(
             title = "New message notifications",
             summary = "Mark all messages as read",
@@ -129,7 +129,7 @@ private fun SettingsToggleRowPreview() {
 )
 @Composable
 private fun SettingsToggleRowDisabledPreview() {
-    AniTrendTheme {
+    AniTrendTheme("dark") {
         SettingsToggleRow(
             title = "Notification workaround",
             summary = "Enable only if notifications are missing",

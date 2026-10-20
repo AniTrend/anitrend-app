@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Polish translations for the shared categorical labels used by
+    ui/format/EnumLabels.kt. Keep keys in sync with values/enum_labels.xml.
+-->
+<resources>
+
+    <!-- Fallback shown when a categorical value is missing or unrecognized (for example an unknown media status) -->
+    <string name="label_unknown">Nieznane</string>
+
+    <!-- Media type chip/label for anime entries (AniList MediaType ANIME) -->
+    <string name="label_media_type_anime">Anime</string>
+    <!-- Media type chip/label for manga entries (AniList MediaType MANGA) -->
+    <string name="label_media_type_manga">Manga</string>
+
+    <!-- Media status label for series paused mid-release (AniList MediaStatus HIATUS) -->
+    <string name="label_media_status_hiatus">Wstrzymane</string>
+
+    <!-- Media source label: originally an anime (AniList MediaSource ANIME) -->
+    <string name="label_media_source_anime">Anime</string>
+    <!-- Media source label: comics excluding manga (AniList MediaSource COMIC) -->
+    <string name="label_media_source_comic">Komiks</string>
+    <!-- Media source label: self-published works (AniList MediaSource DOUJINSHI) -->
+    <string name="label_media_source_doujinshi">Dōjinshi</string>
+    <!-- Media source label: games excluding video games (AniList MediaSource GAME) -->
+    <string name="label_media_source_game">Gra</string>
+    <!-- Media source label: written work published in volumes (AniList MediaSource LIGHT_NOVEL) -->
+    <string name="label_media_source_light_novel">Light novel</string>
+    <!-- Media source label: live action movies or TV shows (AniList MediaSource LIVE_ACTION) -->
+    <string name="label_media_source_live_action">Film aktorski</string>
+    <!-- Media source label: Asian comic book (AniList MediaSource MANGA) -->
+    <string name="label_media_source_manga">Manga</string>
+    <!-- Media source label: multimedia project (AniList MediaSource MULTIMEDIA_PROJECT) -->
+    <string name="label_media_source_multimedia_project">Projekt multimedialny</string>
+    <!-- Media source label: written works not published in volumes (AniList MediaSource NOVEL) -->
+    <string name="label_media_source_novel">Powieść</string>
+    <!-- Media source label: original production (AniList MediaSource ORIGINAL) -->
+    <string name="label_media_source_original">Oryginał</string>
+    <!-- Media source label: other source material (AniList MediaSource OTHER) -->
+    <string name="label_media_source_other">Inne</string>
+    <!-- Media source label: picture book (AniList MediaSource PICTURE_BOOK) -->
+    <string name="label_media_source_picture_book">Książka obrazkowa</string>
+    <!-- Media source label: video game (AniList MediaSource VIDEO_GAME) -->
+    <string name="label_media_source_video_game">Gra wideo</string>
+    <!-- Media source label: text-driven game (AniList MediaSource VISUAL_NOVEL) -->
+    <string name="label_media_source_visual_novel">Powieść wizualna</string>
+    <!-- Media source label: works published online (AniList MediaSource WEB_NOVEL) -->
+    <string name="label_media_source_web_novel">Powieść internetowa</string>
+
+    <!-- Character role caption: primary character (AniList CharacterRole MAIN) -->
+    <string name="label_character_role_main">Główna</string>
+    <!-- Character role caption: supporting character (AniList CharacterRole SUPPORTING) -->
+    <string name="label_character_role_supporting">Drugoplanowa</string>
+    <!-- Character role caption: background character (AniList CharacterRole BACKGROUND) -->
+    <string name="label_character_role_background">Tło</string>
+
+    <!-- Voice actor language group heading: Japanese (AniList StaffLanguage JAPANESE) -->
+    <string name="label_staff_language_japanese">Japoński</string>
+    <!-- Voice actor language group heading: English (AniList StaffLanguage ENGLISH) -->
+    <string name="label_staff_language_english">Angielski</string>
+    <!-- Voice actor language group heading: Korean (AniList StaffLanguage KOREAN) -->
+    <string name="label_staff_language_korean">Koreański</string>
+    <!-- Voice actor language group heading: Italian (AniList StaffLanguage ITALIAN) -->
+    <string name="label_staff_language_italian">Włoski</string>
+    <!-- Voice actor language group heading: Hebrew (AniList StaffLanguage HEBREW) -->
+    <string name="label_staff_language_hebrew">Hebrajski</string>
+    <!-- Voice actor language group heading: Hungarian (AniList StaffLanguage HUNGARIAN) -->
+    <string name="label_staff_language_hungarian">Węgierski</string>
+    <!-- Voice actor language group heading: German (AniList StaffLanguage GERMAN) -->
+    <string name="label_staff_language_german">Niemiecki</string>
+    <!-- Voice actor language group heading: Spanish (AniList StaffLanguage SPANISH) -->
+    <string name="label_staff_language_spanish">Hiszpański</string>
+    <!-- Voice actor language group heading: Portuguese (AniList StaffLanguage PORTUGUESE) -->
+    <string name="label_staff_language_portuguese">Portugalski</string>
+    <!-- Voice actor language group heading: French (AniList StaffLanguage FRENCH) -->
+    <string name="label_staff_language_french">Francuski</string>
+
+    <!-- Related media label: adapted into another format (AniList MediaRelation ADAPTATION) -->
+    <string name="label_media_relation_adaptation">Adaptacja</string>
+    <!-- Related media label: alternative version (AniList MediaRelation ALTERNATIVE) -->
+    <string name="label_media_relation_alternative">Alternatywa</string>
+    <!-- Related media label: shares characters (AniList MediaRelation CHARACTER) -->
+    <string name="label_media_relation_character">Postać</string>
+    <!-- Related media label: compilation of the media (AniList MediaRelation COMPILATION) -->
+    <string name="label_media_relation_compilation">Kompilacja</string>
+    <!-- Related media label: contains this media (AniList MediaRelation CONTAINS) -->
+    <string name="label_media_relation_contains">Zawiera</string>
+    <!-- Related media label: other relation (AniList MediaRelation OTHER) -->
+    <string name="label_media_relation_other">Inne</string>
+    <!-- Related media label: parent of a side story (AniList MediaRelation PARENT) -->
+    <string name="label_media_relation_parent">Nadrzędne</string>
+    <!-- Related media label: released before this media (AniList MediaRelation PREQUEL) -->
+    <string name="label_media_relation_prequel">Prequel</string>
+    <!-- Related media label: released after this media (AniList MediaRelation SEQUEL) -->
+    <string name="label_media_relation_sequel">Sequel</string>
+    <!-- Related media label: side story (AniList MediaRelation SIDE_STORY) -->
+    <string name="label_media_relation_side_story">Historia poboczna</string>
+    <!-- Related media label: source material (AniList MediaRelation SOURCE) -->
+    <string name="label_media_relation_source">Źródło</string>
+    <!-- Related media label: spin-off with a different focus (AniList MediaRelation SPIN_OFF) -->
+    <string name="label_media_relation_spin_off">Spin-off</string>
+    <!-- Related media label: shortened summary version (AniList MediaRelation SUMMARY) -->
+    <string name="label_media_relation_summary">Streszczenie</string>
+
+    <!-- Sort option label: internal identifier (MediaSort ID) -->
+    <string name="label_media_sort_id">ID</string>
+    <!-- Sort option label: romaji title (MediaSort TITLE_ROMAJI) -->
+    <string name="label_media_sort_title_romaji">Tytuł (Romaji)</string>
+    <!-- Sort option label: English title (MediaSort TITLE_ENGLISH) -->
+    <string name="label_media_sort_title_english">Tytuł (Angielski)</string>
+    <!-- Sort option label: native title (MediaSort TITLE_NATIVE) -->
+    <string name="label_media_sort_title_native">Tytuł (Oryginalny)</string>
+    <!-- Sort option label: media type (MediaSort TYPE) -->
+    <string name="label_media_sort_type">Typ</string>
+    <!-- Sort option label: release format (MediaSort FORMAT) -->
+    <string name="label_media_sort_format">Format</string>
+    <!-- Sort option label: start date (MediaSort START_DATE) -->
+    <string name="label_media_sort_start_date">Data rozpoczęcia</string>
+    <!-- Sort option label: end date (MediaSort END_DATE) -->
+    <string name="label_media_sort_end_date">Data zakończenia</string>
+    <!-- Sort option label: average score (MediaSort SCORE) -->
+    <string name="label_media_sort_score">Ocena</string>
+    <!-- Sort option label: popularity (MediaSort POPULARITY) -->
+    <string name="label_media_sort_popularity">Popularność</string>
+    <!-- Sort option label: trending amount (MediaSort TRENDING) -->
+    <string name="label_media_sort_trending">W trendach</string>
+    <!-- Sort option label: episode count (MediaSort EPISODES) -->
+    <string name="label_media_sort_episodes">Odcinki</string>
+    <!-- Sort option label: episode duration (MediaSort DURATION) -->
+    <string name="label_media_sort_duration">Czas trwania</string>
+    <!-- Sort option label: release status (MediaSort STATUS) -->
+    <string name="label_media_sort_status">Status</string>
+    <!-- Sort option label: chapter count (MediaSort CHAPTERS) -->
+    <string name="label_media_sort_chapters">Rozdziały</string>
+    <!-- Sort option label: volume count (MediaSort VOLUMES) -->
+    <string name="label_media_sort_volumes">Tomy</string>
+
+</resources>

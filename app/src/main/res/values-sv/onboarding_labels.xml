@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Onboarding tour copy for the four-page first-run flow. -->
+<resources>
+    <!-- Onboarding page 1 heading about discovering media -->
+    <string name="title_onboarding_discover">Hitta din nästa berättelse</string>
+    <!-- Onboarding page 1 supporting copy about exploring and filtering media -->
+    <string name="description_onboarding_discover">Utforska anime och manga och smalna sedan av listan med filter som passar det du vill titta på eller läsa.</string>
+
+    <!-- Onboarding page 2 heading about tracking lists -->
+    <string name="title_onboarding_track">Håll dina listor i steg</string>
+    <!-- Onboarding page 2 supporting copy about saving media and updating progress -->
+    <string name="description_onboarding_track">Spara anime och manga i dina listor, byt till Pågående och uppdatera framsteg medan du tittar eller läser.</string>
+
+    <!-- Onboarding page 3 heading about social features -->
+    <string name="title_onboarding_social">Följ samtalet</string>
+    <!-- Onboarding page 3 supporting copy about activity, comments and messages -->
+    <string name="description_onboarding_social">Bläddra bland AniList-aktivitet, delta i kommentarer och svar och använd meddelanden. Anslut AniList när du väljer.</string>
+
+    <!-- Onboarding page 4 heading about choosing how to start -->
+    <string name="title_onboarding_start">Börja på ditt sätt</string>
+    <!-- Onboarding page 4 supporting copy about connecting an account or continuing as a guest -->
+    <string name="description_onboarding_start">Anslut AniList för kontokopplade åtgärder eller fortsätt som gäst. Du kan ansluta senare.</string>
+
+    <!-- Onboarding action advancing to the next page -->
+    <string name="action_onboarding_next">Nästa</string>
+
+    <!-- Onboarding action completing the tour with an existing session -->
+    <string name="action_onboarding_continue">Fortsätt</string>
+
+    <!-- Onboarding action opening the privacy controls sheet -->
+    <string name="action_onboarding_privacy_choices">Sekretessval</string>
+    <!-- Onboarding action returning to the previous page -->
+    <string name="action_onboarding_previous">Föregående</string>
+    <!-- Onboarding action opening the AniList sign-in flow -->
+    <string name="action_onboarding_connect">Anslut AniList</string>
+    <!-- Onboarding action completing the tour without an account -->
+    <string name="action_onboarding_continue_as_guest">Fortsätt som gäst</string>
+
+    <!-- Onboarding page position indicator; %1$d is the current page number, %2$d is the total page count -->
+    <string name="label_onboarding_page_indicator" formatted="true">Sida %1$d av %2$d</string>
+</resources>

@@ -10,6 +10,7 @@ import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.repository.BaseRepository
 import com.mxt.anitrend.repository.BrowseRepository
+import com.mxt.anitrend.repository.UserRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
@@ -52,6 +53,7 @@ class MediaBrowseViewModelStoreObservationTest {
     private lateinit var baseRepository: BaseRepository
     private lateinit var browseRepository: BrowseRepository
     private lateinit var mediaListStore: InMemoryMediaListStore
+    private lateinit var userRepository: UserRepository
 
     @Before
     fun setUp() {
@@ -59,6 +61,7 @@ class MediaBrowseViewModelStoreObservationTest {
         baseRepository = mock(BaseRepository::class.java)
         browseRepository = mock(BrowseRepository::class.java)
         mediaListStore = InMemoryMediaListStore()
+        userRepository = mock(UserRepository::class.java)
     }
 
     @After
@@ -99,6 +102,7 @@ class MediaBrowseViewModelStoreObservationTest {
             baseRepository = baseRepository,
             browseRepository = browseRepository,
             mediaListStore = mediaListStore,
+            userRepository = userRepository,
             ioDispatcher = testDispatcher,
         )
         val collector = backgroundScope.launch { viewModel.state.collect {} }
@@ -116,6 +120,7 @@ class MediaBrowseViewModelStoreObservationTest {
             status = null,
             genres = emptyList(),
             tags = emptyList(),
+            onList = null,
         )
         advanceUntilIdle()
 
@@ -170,6 +175,7 @@ class MediaBrowseViewModelStoreObservationTest {
             baseRepository = baseRepository,
             browseRepository = browseRepository,
             mediaListStore = mediaListStore,
+            userRepository = userRepository,
             ioDispatcher = testDispatcher,
         )
         val collector = backgroundScope.launch { viewModel.state.collect {} }
@@ -187,6 +193,7 @@ class MediaBrowseViewModelStoreObservationTest {
             status = null,
             genres = emptyList(),
             tags = emptyList(),
+            onList = null,
         )
         advanceUntilIdle()
 
@@ -215,6 +222,7 @@ class MediaBrowseViewModelStoreObservationTest {
             baseRepository = baseRepository,
             browseRepository = browseRepository,
             mediaListStore = mediaListStore,
+            userRepository = userRepository,
             ioDispatcher = testDispatcher,
         )
         val collector = backgroundScope.launch { viewModel.state.collect {} }
@@ -253,6 +261,7 @@ class MediaBrowseViewModelStoreObservationTest {
             baseRepository = baseRepository,
             browseRepository = browseRepository,
             mediaListStore = mediaListStore,
+            userRepository = userRepository,
             ioDispatcher = testDispatcher,
         )
         val collector = backgroundScope.launch { viewModel.state.collect {} }
@@ -270,6 +279,7 @@ class MediaBrowseViewModelStoreObservationTest {
             status = null,
             genres = emptyList(),
             tags = emptyList(),
+            onList = null,
         )
         advanceUntilIdle()
 
@@ -290,6 +300,7 @@ class MediaBrowseViewModelStoreObservationTest {
             baseRepository = baseRepository,
             browseRepository = browseRepository,
             mediaListStore = mediaListStore,
+            userRepository = userRepository,
             ioDispatcher = testDispatcher,
         )
         val collector = backgroundScope.launch { viewModel.state.collect {} }
@@ -321,6 +332,7 @@ class MediaBrowseViewModelStoreObservationTest {
             baseRepository = baseRepository,
             browseRepository = browseRepository,
             mediaListStore = mediaListStore,
+            userRepository = userRepository,
             ioDispatcher = testDispatcher,
         )
         val collector = backgroundScope.launch { viewModel.state.collect {} }
@@ -390,6 +402,7 @@ class MediaBrowseViewModelStoreObservationTest {
             status = null,
             genres = emptyList(),
             tags = emptyList(),
+            onList = null,
         )
     }
 

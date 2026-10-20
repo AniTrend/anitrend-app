@@ -1,6 +1,5 @@
 package com.mxt.anitrend.ui.media
 
-import androidx.appcompat.R as AppCompatR
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Row
@@ -17,23 +16,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.text.HtmlCompat
-import androidx.core.widget.TextViewCompat
 import com.mxt.anitrend.R as AppR
-import com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView
 import com.mxt.anitrend.extension.getCompatColorAttr
-import com.mxt.anitrend.binding.htmlText
 import com.mxt.anitrend.model.entity.anilist.MediaRank
 import com.mxt.anitrend.ui.designsystem.AniTrendTheme
+import com.mxt.anitrend.ui.markdown.MarkdownText
+import com.mxt.anitrend.ui.markdown.createMarkwon
 import com.mxt.anitrend.util.KeyUtil
+import io.noties.markwon.Markwon
 
 private const val RANK_CARD_TAG = "rank-row-card"
 private const val RATED_ICON_TAG = "rank-row-rated-icon"
@@ -42,6 +38,9 @@ private const val POPULAR_ICON_TAG = "rank-row-popular-icon"
 @Composable
 internal fun RankRow(
     rank: MediaRank,
+    markwon: Markwon,
+    onLinkClick: (String) -> Unit,
+    onLinkLongClick: (String) -> Unit = {},
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     onTextClick: () -> Unit,
@@ -55,7 +54,6 @@ internal fun RankRow(
     val cardColor = remember(context) { Color(context.getCompatColorAttr(AppR.attr.colorSurfaceContainerLow)) }
     val cardElevation = dimensionResource(AppR.dimen.sm_margin)
     // Match CardViewBase's shadow inset: elevation horizontally and 1.5x vertically.
-    val isPreview = LocalInspectionMode.current
 
     Card(
         modifier =
@@ -88,30 +86,13 @@ internal fun RankRow(
                     .testTag(iconTag),
             )
             Spacer(modifier = Modifier.width(dimensionResource(AppR.dimen.xl_margin)))
-            AndroidView(
-                factory = { context ->
-                    RichMarkdownTextView(context).apply {
-                        id = AppR.id.sub_container
-                        isClickable = true
-                        isFocusable = true
-                        TextViewCompat.setTextAppearance(
-                            this,
-                            AppCompatR.style.Base_TextAppearance_AppCompat_Caption,
-                        )
-                    }
-                },
+            MarkdownText(
+                markdown = htmlText,
+                markwon = markwon,
+                onLinkClick = onLinkClick,
+                onLinkLongClick = onLinkLongClick,
                 modifier = Modifier.weight(1f),
-                update = { textView ->
-                    if (textView.tag != htmlText) {
-                        textView.tag = htmlText
-                        if (isPreview) {
-                            textView.text = HtmlCompat.fromHtml(htmlText, HtmlCompat.FROM_HTML_MODE_COMPACT)
-                        } else {
-                            textView.htmlText(htmlText)
-                        }
-                    }
-                    textView.setOnClickListener { onTextClick() }
-                },
+                onViewClick = onTextClick,
             )
         }
     }
@@ -120,7 +101,7 @@ internal fun RankRow(
 @Preview(name = "Ranking rows", showBackground = true, widthDp = 360)
 @Composable
 private fun RankRowPreview() {
-    AniTrendTheme {
+    AniTrendTheme("light") {
         Row(
             modifier =
             Modifier
@@ -140,6 +121,8 @@ private fun RankRowPreview() {
                 onClick = {},
                 onTextClick = {},
                 onLongClick = {},
+                markwon = createMarkwon(LocalContext.current) {},
+                onLinkClick = {},
             )
         }
     }

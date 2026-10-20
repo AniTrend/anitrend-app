@@ -88,53 +88,6 @@
 
     <string name="Watch">Assistir</string>
 
-    <!--First time usage intro screen-->
-    <string name="get_started">Iniciar</string>
-    <string name="app_intro_colors_title">Status Coloridos</string>
-    <string name="app_intro_colors_text">Cores Representando os Status de Anime/Mangá!</string>
-    <string name="app_intro_content_title">Conteúdo</string>
-    <string name="app_intro_content_text">Múltiplas Listas de Anime &amp; Mangá!</string>
-    <string name="app_intro_search_title">Pesquisando</string>
-    <string name="app_intro_search_text">Anime, Mangá &amp; Mais Opções de Pesquisa!</string>
-    <string name="app_intro_videos_text">Usando um Player Embutido do Youtube!</string>
-    <!-- Greeting shown at the end of onboarding; clarifies that the app is not a streaming service -->
-    <string name="app_greeting">Bem-vindo ao AniTrend, este não é um aplicativo de streaming!</string>
-
-    <!-- Action label on the onboarding button before the final page; advances to the next page -->
-    <string name="action_onboarding_continue">Continuar</string>
-    <!-- Status chip label in the onboarding heroes; shows the "watching" list status -->
-    <string name="label_onboarding_status_watching">Assistindo</string>
-    <!-- Status chip label in the onboarding heroes; shows the "completed" list status -->
-    <string name="label_onboarding_status_completed">Concluído</string>
-    <!-- Status chip label in the onboarding heroes; shows the "plan to watch" list status -->
-    <string name="label_onboarding_status_plan_to_watch">Planejado para assistir</string>
-    <!-- Status chip label in the onboarding heroes; shows the "dropped" list status -->
-    <string name="label_onboarding_status_dropped">Abandonado</string>
-    <!-- Status chip label in the onboarding heroes; shows the "on hold" list status -->
-    <string name="label_onboarding_status_on_hold">Em espera</string>
-    <!-- Status chip label in the onboarding heroes; shows the "rewatching" list status -->
-    <string name="label_onboarding_status_rewatching">Assistindo novamente</string>
-
-    <!-- Placeholder text in the search bar mockup of the onboarding searching hero -->
-    <string name="placeholder_onboarding_search">Pesquisar anime, mangá...</string>
-    <!-- Example search result in the onboarding searching hero; Jujutsu Kaisen is an anime title -->
-    <string name="label_onboarding_search_result_jujutsu_kaisen">Jujutsu Kaisen</string>
-    <!-- Example search result in the onboarding searching hero; One Piece is an anime title -->
-    <string name="label_onboarding_search_result_one_piece">One Piece</string>
-
-    <!-- First onboarding page description; friendly benefit-led copy about discovering, tracking, and organizing anime and manga -->
-    <string name="description_onboarding_welcome">Descubra novos favoritos, acompanhe seu progresso e mantenha todas as suas listas de anime e mangá em um só lugar.</string>
-    <!-- Colors page description; explains the color coding of anime/manga list statuses -->
-    <string name="description_onboarding_colors">Identifique rapidamente o que você está assistindo, concluiu ou planeja assistir com um código de cores intuitivo.</string>
-    <!-- Content page description; explains the browsable catalog -->
-    <string name="description_onboarding_content">Explore milhares de títulos com informações detalhadas, avaliações, calendários sazonais e créditos da equipe, atualizados diariamente.</string>
-    <!-- Searching page description; explains search and filter capabilities -->
-    <string name="description_onboarding_searching">Pesquisa poderosa com filtros por gênero, ano, estúdio e status para encontrar exatamente o que você procura.</string>
-    <!-- Final onboarding page title; introduces managing anime and manga lists -->
-    <string name="title_onboarding_manage">Gerencie sua lista</string>
-    <!-- Final onboarding page description; long-pressing an anime or manga item opens list management for status, progress, and details -->
-    <string name="description_onboarding_manage">Mantenha pressionado qualquer anime ou mangá para gerenciar seu status, progresso e detalhes.</string>
-
     <!--Filter menu entry these are the dialog titles-->
     <string name="app_filter_sort">Classificar por?</string>
     <!-- Dialog title asking whether the series is already on the user's list -->
@@ -184,14 +137,6 @@
         Você também pode adicionar/remover itens de seus favoritos em sua lista tocando no ícone do coração.
         ]]>
     </string>
-
-    <!-- translators: This copy is shown on the full-screen onboarding card (the final
-     welcome card). It explains that tapping a card lets users explore anime and
-     manga, and that signing in with AniList lets them manage their lists. -->
-    <string name="app_intro_guide">Toque em um cartão para explorar animes e mangás. Entre com AniList para gerenciar suas listas.</string>
-    <!-- translators: Heading for the full-screen onboarding card, shown directly above
-         the guide text. -->
-    <string name="app_intro_title">Começar</string>
 
     <string name="login_welcome_title">Bem-vindo(a) %s</string>
 
@@ -760,10 +705,6 @@
     <string name="dialog_title_completed_at">Data de Termino</string>
     <string name="dialog_button_clear">Limpar</string>
 
-    <string name="pref_header_customize">Customizar</string>
-    <string name="pref_header_customize_summary">Personalizar o comportamento do aplicativo</string>
-    <string name="text_application_restart_required">Por favor, reinicie o aplicativo para que as alterações entrem em vigor</string>
-
     <!-- Image Preview strings -->
     <!-- Title of the image preview screen -->
     <string name="image_preview_title">Visualizar</string>
@@ -841,11 +782,6 @@
     <string name="dialog_title_delete_activity">Excluir atividade</string>
     <!-- Body of the activity deletion confirmation dialog -->
     <string name="dialog_message_delete_activity">Tem certeza de que deseja excluir esta atividade? Isso é irreversível!!</string>
-
-    <!-- Settings row to allow adult content -->
-    <string name="pref_title_display_adult_content">Exibir conteúdo adulto</string>
-    <!-- Summary under the adult content setting -->
-    <string name="pref_summary_display_adult_content">Permitir que o aplicativo mostre conteúdo NSFW. Para que isso funcione, o conteúdo +18 deve estar habilitado no AniList</string>
 
     <!-- Summary under the mark-read-on-dismiss setting -->
     <string name="pref_summary_clear_notification_on_dismiss">Marca as notificações como lidas quando você as dispensa na barra de status</string>
@@ -1094,53 +1030,17 @@
     <!-- About screen row that opens the AniTrend website -->
     <string name="text_about_website">Website</string>
 
-    <!-- Settings section header for accessibility options -->
-    <string name="pref_header_accessibility">Acessibilidade</string>
-
-    <!-- Summary under the accessibility settings section header -->
-    <string name="pref_header_accessibility_summary">Ajuste a exibição para necessidades de acessibilidade</string>
-
     <!-- Settings section header for appearance options -->
     <string name="pref_header_appearance">Aparência</string>
 
     <!-- Summary under the appearance settings section header -->
-    <string name="pref_header_appearance_summary">Personalize a aparência visual e a densidade</string>
-
-    <!-- Settings section header for content options -->
-    <string name="pref_header_content">Conteúdo</string>
-
-    <!-- Summary under the content settings section header -->
-    <string name="pref_header_content_summary">Controle como o conteúdo é exibido</string>
-
-    <!-- Settings row to choose the app accent color -->
-    <string name="pref_title_accent_color">Cor de destaque</string>
-
-    <!-- Settings row to toggle auto-playing trailers -->
-    <string name="pref_title_autoplay">Reprodução automática de trailers</string>
-
-    <!-- Settings row to adjust the font scale -->
-    <string name="pref_title_font_scale">Escala da fonte</string>
-
-    <!-- Settings row to enable high contrast mode -->
-    <string name="pref_title_high_contrast">Modo de alto contraste</string>
-
-    <!-- Settings row to choose the list density -->
-    <string name="pref_title_list_density">Densidade da lista</string>
-
-    <!-- Settings row to reduce animations and motion -->
-    <string name="pref_title_reduce_motion">Reduzir movimento</string>
+    <string name="pref_header_appearance_summary">Tema, idioma e estilo de lista</string>
 
     <!-- Settings row to choose how scores are displayed -->
     <string name="pref_title_score_format">Formato da nota</string>
 
-    <!-- Settings row to choose how spoilers are handled -->
-    <string name="pref_title_spoiler_behavior">Comportamento de spoilers</string>
-
     <!-- Settings row to choose the preferred language for series titles -->
     <string name="pref_title_title_language">Idioma preferido dos títulos</string>
-
-    <!-- Placeholder summary shown for settings that are not implemented yet -->
-    <string name="pref_summary_placeholder">Em breve</string>
 
     <!-- Hint text in the search field -->
     <string name="search_hint">Pesquisar</string>

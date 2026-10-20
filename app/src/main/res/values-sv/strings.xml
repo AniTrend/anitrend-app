@@ -88,55 +88,6 @@
 
     <string name="Watch">Kolla på</string>
 
-    <!--First time usage intro screen-->
-    <string name="get_started">Komma igång</string>
-    <string name="app_intro_colors_title">Färgstater</string>
-    <string name="app_intro_colors_text">Färger som representerar Anime/Manga Status!</string>
-    <string name="app_intro_content_title">Innehåll</string>
-    <string name="app_intro_content_text">Flera anime &amp; Manga listor!</string>
-    <string name="app_intro_search_title">Sökande</string>
-    <string name="app_intro_search_text">Anime, Manga &amp; Mer sökfunktionalitet!</string>
-    <string name="app_intro_videos_title">Videoklipp</string>
-    <!-- Intro screen text describing the built-in video player -->
-    <string name="app_intro_videos_text">Använder inbyggd YouTube-videospelare!</string>
-    <!-- Greeting shown at the end of onboarding; clarifies that the app is not a streaming service -->
-    <string name="app_greeting">Välkommen till AniTrend, detta är inte en streaming-app!</string>
-
-    <!-- Action label on the onboarding button before the final page; advances to the next page -->
-    <string name="action_onboarding_continue">Fortsätt</string>
-    <!-- Status chip label in the onboarding heroes; shows the "watching" list status -->
-    <string name="label_onboarding_status_watching">Tittar på</string>
-    <!-- Status chip label in the onboarding heroes; shows the "completed" list status -->
-    <string name="label_onboarding_status_completed">Slutförd</string>
-    <!-- Status chip label in the onboarding heroes; shows the "plan to watch" list status -->
-    <string name="label_onboarding_status_plan_to_watch">Planerad</string>
-    <!-- Status chip label in the onboarding heroes; shows the "dropped" list status -->
-    <string name="label_onboarding_status_dropped">Övergiven</string>
-    <!-- Status chip label in the onboarding heroes; shows the "on hold" list status -->
-    <string name="label_onboarding_status_on_hold">Pausad</string>
-    <!-- Status chip label in the onboarding heroes; shows the "rewatching" list status -->
-    <string name="label_onboarding_status_rewatching">Tittar igen</string>
-
-    <!-- Placeholder text in the search bar mockup of the onboarding searching hero -->
-    <string name="placeholder_onboarding_search">Sök anime, manga...</string>
-    <!-- Example search result in the onboarding searching hero; Jujutsu Kaisen is an anime title -->
-    <string name="label_onboarding_search_result_jujutsu_kaisen">Jujutsu Kaisen</string>
-    <!-- Example search result in the onboarding searching hero; One Piece is an anime title -->
-    <string name="label_onboarding_search_result_one_piece">One Piece</string>
-
-    <!-- First onboarding page description; friendly benefit-led copy about discovering, tracking, and organizing anime and manga -->
-    <string name="description_onboarding_welcome">Upptäck nya favoriter, följ dina framsteg och samla alla dina anime- och mangalistor på ett ställe.</string>
-    <!-- Colors page description; explains the color coding of anime/manga list statuses -->
-    <string name="description_onboarding_colors">Se snabbt vad du tittar på, har slutfört eller planerar att titta på med intuitiv färgkodning.</string>
-    <!-- Content page description; explains the browsable catalog -->
-    <string name="description_onboarding_content">Bläddra bland tusentals titlar med detaljerad information, betyg, säsongslistor och uppgifter om medverkande, uppdaterade dagligen.</string>
-    <!-- Searching page description; explains search and filter capabilities -->
-    <string name="description_onboarding_searching">Kraftfull sökning med filter för genre, år, studio och status så att du hittar exakt det du söker.</string>
-    <!-- Final onboarding page title; introduces managing anime and manga lists -->
-    <string name="title_onboarding_manage">Hantera din lista</string>
-    <!-- Final onboarding page description; long-pressing an anime or manga item opens list management for status, progress, and details -->
-    <string name="description_onboarding_manage">Tryck och håll på valfri anime eller manga för att hantera status, framsteg och detaljer.</string>
-
     <!--Filter menu entry these are the dialog titles-->
     <string name="app_filter_sort">Sortera efter?</string>
     <!-- Dialog title asking whether the series is already on the user's list -->
@@ -186,14 +137,6 @@
           Du kan också lägga till / ta bort objekt från dina favoriter på din lista genom att trycka på hjärtatikonen.
         ]]>
 	</string>
-
-    <!-- translators: This copy is shown on the full-screen onboarding card (the final
-     welcome card). It explains that tapping a card lets users explore anime and
-     manga, and that signing in with AniList lets them manage their lists. -->
-    <string name="app_intro_guide">Tryck på ett kort för att utforska anime och manga. Logga in med AniList för att hantera dina listor.</string>
-    <!-- translators: Heading for the full-screen onboarding card, shown directly above
-         the guide text. -->
-    <string name="app_intro_title">Kom igång</string>
 
     <string name="login_welcome_title">Välkommen %s</string>
 
@@ -781,12 +724,6 @@
     <string name="dialog_title_started_at">Startdatum</string>
     <!-- Label for the finish date field in the manage list editor -->
     <string name="dialog_title_completed_at">Slutdatum</string>
-    <!-- Settings section header for customization options -->
-    <string name="pref_header_customize">Anpassa</string>
-    <!-- Summary under the customize settings section header -->
-    <string name="pref_header_customize_summary">Anpassa appens utseende och känsla</string>
-    <!-- Message shown after changing settings that require an app restart -->
-    <string name="text_application_restart_required">Starta om applikationen för att ändringarna ska träda i kraft</string>
     <!-- Button that clears a date field in the manage list editor -->
     <string name="dialog_button_clear">Rensa</string>
 
@@ -864,11 +801,6 @@
     <string name="dialog_title_delete_activity">Radera aktivitet</string>
     <!-- Body of the activity deletion confirmation dialog -->
     <string name="dialog_message_delete_activity">Är du säker på att du vill radera den här aktiviteten? Detta kan inte ångras!!</string>
-
-    <!-- Settings row to allow adult content -->
-    <string name="pref_title_display_adult_content">Visa vuxet innehåll</string>
-    <!-- Summary under the adult content setting -->
-    <string name="pref_summary_display_adult_content">Tillåt applikationen att visa NSFW-innehåll. För att detta ska fungera måste +18-innehåll vara aktiverat på AniList</string>
 
     <!-- Summary under the mark-read-on-dismiss setting -->
     <string name="pref_summary_clear_notification_on_dismiss">Markerar meddelanden som lästa när du avfärdar dem från statusfältet</string>
@@ -1117,53 +1049,17 @@
     <!-- About screen row that opens the AniTrend website -->
     <string name="text_about_website">Webbplats</string>
 
-    <!-- Settings section header for accessibility options -->
-    <string name="pref_header_accessibility">Tillgänglighet</string>
-
-    <!-- Summary under the accessibility settings section header -->
-    <string name="pref_header_accessibility_summary">Justera visningen efter tillgänglighetsbehov</string>
-
     <!-- Settings section header for appearance options -->
     <string name="pref_header_appearance">Utseende</string>
 
     <!-- Summary under the appearance settings section header -->
-    <string name="pref_header_appearance_summary">Anpassa visuellt utseende och täthet</string>
-
-    <!-- Settings section header for content options -->
-    <string name="pref_header_content">Innehåll</string>
-
-    <!-- Summary under the content settings section header -->
-    <string name="pref_header_content_summary">Styr hur innehåll visas</string>
-
-    <!-- Settings row to choose the app accent color -->
-    <string name="pref_title_accent_color">Accentfärg</string>
-
-    <!-- Settings row to toggle auto-playing trailers -->
-    <string name="pref_title_autoplay">Autouppspelning av trailers</string>
-
-    <!-- Settings row to adjust the font scale -->
-    <string name="pref_title_font_scale">Teckenstorlek</string>
-
-    <!-- Settings row to enable high contrast mode -->
-    <string name="pref_title_high_contrast">Högkontrastläge</string>
-
-    <!-- Settings row to choose the list density -->
-    <string name="pref_title_list_density">Listtäthet</string>
-
-    <!-- Settings row to reduce animations and motion -->
-    <string name="pref_title_reduce_motion">Minska rörelse</string>
+    <string name="pref_header_appearance_summary">Tema, språk och liststil</string>
 
     <!-- Settings row to choose how scores are displayed -->
     <string name="pref_title_score_format">Poängformat</string>
 
-    <!-- Settings row to choose how spoilers are handled -->
-    <string name="pref_title_spoiler_behavior">Spoiler-beteende</string>
-
     <!-- Settings row to choose the preferred language for series titles -->
     <string name="pref_title_title_language">Föredraget titelspråk</string>
-
-    <!-- Placeholder summary shown for settings that are not implemented yet -->
-    <string name="pref_summary_placeholder">Kommer snart</string>
 
     <!-- Hint text in the search field -->
     <string name="search_hint">Sök</string>

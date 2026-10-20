@@ -85,49 +85,6 @@
 
     <string name="Watch">Kijken</string>
 
-    <!--First time usage intro screen-->
-    <string name="app_intro_colors_title">Kleurenstaten</string>
-    <string name="app_intro_colors_text">Kleuren die Anime / Manga-status vertegenwoordigen!</string>
-    <string name="app_intro_content_title">Inhoud</string>
-    <string name="app_intro_content_text">Multiple Anime &amp; Manga Vermeldingen!</string>
-    <string name="app_intro_search_text">Anime, Manga &amp; Meer zoekfunctionaliteiten!</string>
-    <string name="app_intro_videos_text">Gebruikt een ingebouwde Youtube Video Player!</string>
-
-    <!-- Action label on the onboarding button before the final page; advances to the next page -->
-    <string name="action_onboarding_continue">Doorgaan</string>
-    <!-- Status chip label in the onboarding heroes; shows the "watching" list status -->
-    <string name="label_onboarding_status_watching">Aan het kijken</string>
-    <!-- Status chip label in the onboarding heroes; shows the "completed" list status -->
-    <string name="label_onboarding_status_completed">Voltooid</string>
-    <!-- Status chip label in the onboarding heroes; shows the "plan to watch" list status -->
-    <string name="label_onboarding_status_plan_to_watch">Wil ik kijken</string>
-    <!-- Status chip label in the onboarding heroes; shows the "dropped" list status -->
-    <string name="label_onboarding_status_dropped">Gestopt</string>
-    <!-- Status chip label in the onboarding heroes; shows the "on hold" list status -->
-    <string name="label_onboarding_status_on_hold">Gepauzeerd</string>
-    <!-- Status chip label in the onboarding heroes; shows the "rewatching" list status -->
-    <string name="label_onboarding_status_rewatching">Opnieuw kijken</string>
-
-    <!-- Placeholder text in the search bar mockup of the onboarding searching hero -->
-    <string name="placeholder_onboarding_search">Anime, manga zoeken...</string>
-    <!-- Example search result in the onboarding searching hero; Jujutsu Kaisen is an anime title -->
-    <string name="label_onboarding_search_result_jujutsu_kaisen">Jujutsu Kaisen</string>
-    <!-- Example search result in the onboarding searching hero; One Piece is an anime title -->
-    <string name="label_onboarding_search_result_one_piece">One Piece</string>
-
-    <!-- First onboarding page description; friendly benefit-led copy about discovering, tracking, and organizing anime and manga -->
-    <string name="description_onboarding_welcome">Ontdek nieuwe favorieten, houd je voortgang bij en bewaar al je anime- en mangalijsten op één plek.</string>
-    <!-- Colors page description; explains the color coding of anime/manga list statuses -->
-    <string name="description_onboarding_colors">Zie snel wat je kijkt, hebt voltooid of wilt kijken dankzij duidelijke kleurcodering.</string>
-    <!-- Content page description; explains the browsable catalog -->
-    <string name="description_onboarding_content">Bekijk duizenden titels met uitgebreide informatie, beoordelingen, seizoensoverzichten en medewerkers, dagelijks bijgewerkt.</string>
-    <!-- Searching page description; explains search and filter capabilities -->
-    <string name="description_onboarding_searching">Krachtige zoekfunctie met filters voor genre, jaar, studio en status, zodat je precies vindt wat je zoekt.</string>
-    <!-- Final onboarding page title; introduces managing anime and manga lists -->
-    <string name="title_onboarding_manage">Je lijst beheren</string>
-    <!-- Final onboarding page description; long-pressing an anime or manga item opens list management for status, progress, and details -->
-    <string name="description_onboarding_manage">Houd een anime of manga lang ingedrukt om de status, voortgang en details te beheren.</string>
-
     <!--Filter menu entry these are the dialog titles-->
     <string name="app_filter_sort">Sorteer op?</string>
     <!-- Filter dialog question asking whether an entry is on the user's list. -->
@@ -176,14 +133,6 @@
         Je kan ook items toevoegen/verwijderen van je favorieten op je lijst door op het Hart icoontje te klikken.
         ]]>
     </string>
-
-    <!-- translators: This copy is shown on the full-screen onboarding card (the final
-     welcome card). It explains that tapping a card lets users explore anime and
-     manga, and that signing in with AniList lets them manage their lists. -->
-    <string name="app_intro_guide">Tik op een kaart om anime en manga te ontdekken. Log in met AniList om je lijsten te beheren.</string>
-    <!-- translators: Heading for the full-screen onboarding card, shown directly above
-         the guide text. -->
-    <string name="app_intro_title">Aan de slag</string>
 
     <string name="login_welcome_title">Welkom %s</string>
 
@@ -759,10 +708,6 @@
     <!-- Manage list editor button clearing a date field. -->
     <string name="dialog_button_clear">Wissen</string>
 
-    <string name="pref_header_customize">Aanpassen</string>
-    <string name="pref_header_customize_summary">Pas applicatie gedrag aan</string>
-    <string name="text_application_restart_required">Herstart de applicatie om de wijzigingen door te voeren</string>
-
     <!-- Image Preview strings -->
     <string name="image_preview_title">Voorbeeld</string>
     <string name="image_preview_download">Download</string>
@@ -825,14 +770,6 @@
     <string name="drawer_section_account">Account</string>
     <!-- Filter dialog question asking which series genres to filter by. -->
     <string name="app_filter_genres">Seriegenres?</string>
-    <!-- Onboarding button label on the first page. -->
-    <string name="get_started">Aan de slag</string>
-    <!-- Section title on the first-time intro screen; shows the videos feature -->
-    <string name="app_intro_videos_title">Video\'s</string>
-    <!-- Section title on the first-time intro screen; shows the searching feature -->
-    <string name="app_intro_search_title">Zoeken</string>
-    <!-- Welcome message shown on first launch; clarifies that the app is not a streaming service. -->
-    <string name="app_greeting">Welkom bij AniTrend, dit is geen streaming-app!</string>
     <!-- Error message shown when the session token is invalid. -->
     <string name="text_error_auth_token">Ongeldige sessie, log uit en weer in</string>
     <!-- Message shown while the app is upgrading its data. -->
@@ -870,11 +807,6 @@
     <!-- Dialog body asking for confirmation before deleting an activity. -->
     <string name="dialog_message_delete_activity">Weet je zeker dat je deze activiteit wilt verwijderen? Dit is onomkeerbaar!!</string>
 
-
-    <!-- Settings title for showing adult content. -->
-    <string name="pref_title_display_adult_content">Toon inhoud voor volwassenen</string>
-    <!-- Settings summary for the adult content toggle; keep NSFW and +18 as-is. -->
-    <string name="pref_summary_display_adult_content">Sta de app toe NSFW-inhoud te tonen. Hiervoor moet +18-inhoud zijn ingeschakeld op AniList</string>
 
 
     <!-- Settings summary for clearing notifications on dismiss. -->
@@ -1058,10 +990,6 @@
     <string name="log_filter_warning">Waarschuwing</string>
     <!-- URL to the AniTrend Patreon page; do not translate. -->
     <string name="patreon">https://www.patreon.com/wax911</string>
-    <!-- Settings section header for accessibility options. -->
-    <string name="pref_header_accessibility">Toegankelijkheid</string>
-    <!-- Summary line under the accessibility settings section. -->
-    <string name="pref_header_accessibility_summary">Pas de weergave aan voor toegankelijkheidsbehoeften</string>
     <!-- Settings hub category for the signed-in user's AniList account options. -->
     <string name="pref_header_account">Account</string>
     <!-- Summary line under the Account settings hub category. -->
@@ -1069,29 +997,9 @@
     <!-- Settings section header for appearance options. -->
     <string name="pref_header_appearance">Weergave</string>
     <!-- Summary line under the appearance settings section. -->
-    <string name="pref_header_appearance_summary">Pas de visuele weergave en dichtheid aan</string>
-    <!-- Settings section header for content options. -->
-    <string name="pref_header_content">Inhoud</string>
-    <!-- Summary line under the content settings section. -->
-    <string name="pref_header_content_summary">Bepaal hoe inhoud wordt weergegeven</string>
-    <!-- Placeholder summary for settings that are not implemented yet. -->
-    <string name="pref_summary_placeholder">Binnenkort beschikbaar</string>
-    <!-- Settings title for the accent color picker. -->
-    <string name="pref_title_accent_color">Accentkleur</string>
-    <!-- Settings title for auto-playing trailers. -->
-    <string name="pref_title_autoplay">Trailers automatisch afspelen</string>
-    <!-- Settings title for the font scale slider. -->
-    <string name="pref_title_font_scale">Lettergrootte</string>
-    <!-- Settings title for the high contrast mode. -->
-    <string name="pref_title_high_contrast">Modus met hoog contrast</string>
-    <!-- Settings title for the list density option. -->
-    <string name="pref_title_list_density">Lijstdichtheid</string>
-    <!-- Settings title for reducing animations. -->
-    <string name="pref_title_reduce_motion">Beweging verminderen</string>
+    <string name="pref_header_appearance_summary">Thema, taal en lijststijl</string>
     <!-- Settings title for the score format option. -->
     <string name="pref_title_score_format">Scoreformaat</string>
-    <!-- Settings title for the spoiler behavior option. -->
-    <string name="pref_title_spoiler_behavior">Spoilergedrag</string>
     <!-- Settings title for the preferred title language. -->
     <string name="pref_title_title_language">Voorkeurstaal voor titels</string>
     <!-- Raw priority value shown next to the priority slider; placeholder only. -->

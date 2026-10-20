@@ -8,17 +8,20 @@ import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertHasNoClickAction
 import androidx.compose.ui.test.assertHeightIsEqualTo
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.onAllNodesWithContentDescription
 import androidx.compose.ui.test.onAllNodesWithTag
+import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.v2.runAndroidComposeUiTest
 import androidx.compose.ui.unit.dp
-import androidx.navigation.fragment.NavHostFragment
+import androidx.core.content.edit
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.mxt.anitrend.R
-import com.mxt.anitrend.navigation.extension.asBundle
-import com.mxt.anitrend.navigation.model.SettingsCategoryScreenParam
+import com.mxt.anitrend.util.KeyUtil
+import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.view.activity.index.MainActivity
-import com.mxt.anitrend.view.fragment.settings.SettingsCategoryRegistry
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -30,39 +33,37 @@ class SettingsDividerComposeTest {
     fun settingsScreensRenderNonInteractiveSectionAndRowDividers() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         TestSessionUtil.setAuthenticated(context, authenticated = false)
+        val settings = Settings(context)
+        settings.theme = KeyUtil.THEME_LIGHT
+        settings.edit { putString(context.getString(R.string.pref_key_startup_page), "1") }
 
         runAndroidComposeUiTest<MainActivity> {
             val mainActivity = requireNotNull(activity)
-            val navHost =
-                mainActivity.supportFragmentManager.findFragmentById(R.id.main_nav_host) as NavHostFragment
-            val navController = navHost.navController
-
-            runOnUiThread {
-                navController.navigate(R.id.customizeSettingsFragment)
-            }
+            onAllNodesWithContentDescription(mainActivity.getString(R.string.action_menu))[0].performClick()
             waitForIdle()
-
-            val customizeDividers = onAllNodesWithTag("settings-divider")
-            customizeDividers.assertCountEquals(3)
+            onNodeWithText(mainActivity.getString(R.string.title_activity_settings)).performClick()
+            waitForIdle()
+            onNodeWithContentDescription(mainActivity.getString(R.string.pref_header_appearance)).performClick()
+            waitForIdle()
+            // 3 dividers: one under the section-card header plus one
+            // between each pair of the section's rows.
+            val appearanceDividers = onAllNodesWithTag("settings-divider")
+            appearanceDividers.assertCountEquals(3)
             for (index in 0 until 3) {
-                customizeDividers[index]
+                appearanceDividers[index]
                     .assertIsDisplayed()
                     .assertHeightIsEqualTo(1.dp)
                     .assertHasNoClickAction()
             }
 
-            runOnUiThread {
-                navController.navigate(
-                    R.id.settingsCategoryFragment,
-                    SettingsCategoryScreenParam(categoryId = SettingsCategoryRegistry.CONTENT).asBundle(),
-                )
-            }
+            onNodeWithText(mainActivity.getString(R.string.action_back)).performClick()
             waitForIdle()
-
-            val contentDividers = onAllNodesWithTag("settings-divider")
-            contentDividers.assertCountEquals(4)
-            for (index in 0 until 4) {
-                contentDividers[index]
+            onNodeWithContentDescription(mainActivity.getString(R.string.pref_header_notifications)).performClick()
+            waitForIdle()
+            val notificationDividers = onAllNodesWithTag("settings-divider")
+            notificationDividers.assertCountEquals(3)
+            for (index in 0 until 3) {
+                notificationDividers[index]
                     .assertIsDisplayed()
                     .assertHeightIsEqualTo(1.dp)
                     .assertHasNoClickAction()

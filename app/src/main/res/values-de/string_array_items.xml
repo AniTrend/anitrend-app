@@ -83,7 +83,7 @@
     <string name="media_status_canceled">Abgebrochen</string>
     <string name="anime_format_all">Alle</string>
     <string name="anime_format_tv">TV</string>
-    <string name="anime_format_tv_short">TV Short</string>
+    <string name="anime_format_tv_short">TV-Kurzformat</string>
     <string name="anime_format_movie">Film</string>
     <string name="anime_format_special">Special</string>
     <string name="anime_format_ova">OVA</string>
@@ -91,8 +91,8 @@
     <string name="anime_format_music">Musik</string>
     <string name="manga_format_all">Alle</string>
     <string name="manga_format_manga">Manga</string>
-    <string name="manga_format_novel">Novel</string>
-    <string name="manga_format_oneshot">One Shot</string>
+    <string name="manga_format_novel">Roman</string>
+    <string name="manga_format_oneshot">One-Shot</string>
     <string name="media_list_status_current">Schauend</string>
     <string name="media_list_status_planning">Planend</string>
     <string name="media_list_status_completed">Beendet</string>
@@ -109,5 +109,6 @@
     <string name="pref_selected_list_view_style_title_compact_double">Kompakt (zweispaltig)</string>
     <string name="pref_selected_theme_title_light">Hell</string>
     <string name="pref_selected_theme_title_dark">Dunkel</string>
-    <string name="pref_selected_theme_title_black">Schwarz</string>
+    <!-- Theme choice using a pure black background for AMOLED screens; AMOLED is a display technology term -->
+    <string name="pref_selected_theme_title_black">AMOLED</string>
 </resources>

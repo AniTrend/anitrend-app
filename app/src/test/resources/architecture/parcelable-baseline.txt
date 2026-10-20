@@ -1,6 +1,3 @@
-app/src/main/java/com/mxt/anitrend/base/custom/view/search/MaterialSearchView.kt:companion object CREATOR : Parcelable.Creator<SavedState> {
-app/src/main/java/com/mxt/anitrend/base/custom/view/search/MaterialSearchView.kt:override fun writeToParcel(out: Parcel, flags: Int) {
-app/src/main/java/com/mxt/anitrend/base/custom/view/search/MaterialSearchView.kt:super.writeToParcel(out, flags)
 app/src/main/java/com/mxt/anitrend/model/entity/anilist/Media.kt:object : Parcelable.Creator<Media> {
 app/src/main/java/com/mxt/anitrend/model/entity/anilist/Media.kt:override fun describeContents(): Int = 0
 app/src/main/java/com/mxt/anitrend/model/entity/anilist/Media.kt:override fun writeToParcel(

@@ -25,14 +25,18 @@ data class SettingsCategory(
 object SettingsCategoryRegistry {
 
     const val ACCOUNT = "account"
-    const val CUSTOMIZE = "customize"
     const val APPEARANCE = "appearance"
-    const val CONTENT = "content"
     const val GENERAL = "general"
     const val NOTIFICATIONS = "notifications"
     const val DATA_SYNC = "data_sync"
     const val PRIVACY = "privacy"
-    const val ACCESSIBILITY = "accessibility"
+    const val ABOUT = "about"
+
+    /**
+     * Legacy category id of the removed Customize route. Inputs carrying it
+     * resolve to [APPEARANCE], whose section owns the same rows.
+     */
+    const val LEGACY_CUSTOMIZE = "customize"
 
     /** Argument key carried by the category destination for identity-only navigation. */
     const val ARG_CATEGORY_ID = "categoryId"
@@ -40,54 +44,53 @@ object SettingsCategoryRegistry {
     /**
      * The category hub entries in display order.
      *
-     * The authenticated [ACCOUNT] category is listed first when
-     * [isAuthenticated] is true, and omitted entirely otherwise so it never
-     * appears for signed-out users. The privacy category is hidden when the
-     * Firebase build is not present, mirroring the legacy single-screen
-     * visibility rule. All other categories keep their existing order.
+     * AniList ([ACCOUNT]) is always listed first: signed-out users see a
+     * sign-in card in that destination, authenticated users the account
+     * editor. The privacy category is hidden when the Firebase build is not
+     * present, mirroring the legacy single-screen visibility rule. About is
+     * a dedicated destination, not a preference section.
      */
-    fun categories(isFirebaseVisible: Boolean, isAuthenticated: Boolean = false): List<SettingsCategory> = buildList {
-        if (isAuthenticated) {
-            add(
-                SettingsCategory(
-                    id = ACCOUNT,
-                    titleRes = R.string.pref_header_account,
-                    summaryRes = R.string.pref_header_account_summary,
-                ),
-            )
-        }
+    fun categories(isFirebaseVisible: Boolean): List<SettingsCategory> = buildList {
+        add(
+            SettingsCategory(
+                id = ACCOUNT,
+                titleRes = R.string.pref_header_account,
+                summaryRes = R.string.pref_header_account_summary,
+            ),
+        )
         addAll(
             listOf(
-                SettingsCategory(CUSTOMIZE, R.string.pref_header_customize, R.string.pref_header_customize_summary),
                 SettingsCategory(APPEARANCE, R.string.pref_header_appearance, R.string.pref_header_appearance_summary),
-                SettingsCategory(CONTENT, R.string.pref_header_content, R.string.pref_header_content_summary),
                 SettingsCategory(GENERAL, R.string.pref_header_general, R.string.pref_header_general_summary),
                 SettingsCategory(NOTIFICATIONS, R.string.pref_header_notifications, R.string.pref_header_notifications_summary),
                 SettingsCategory(DATA_SYNC, R.string.pref_header_data_sync, R.string.pref_header_data_sync_summary),
                 SettingsCategory(PRIVACY, R.string.pref_header_privacy, R.string.pref_header_privacy_summary, visible = isFirebaseVisible),
-                SettingsCategory(ACCESSIBILITY, R.string.pref_header_accessibility, R.string.pref_header_accessibility_summary),
+                SettingsCategory(ABOUT, R.string.menu_title_about, R.string.settings_about_summary),
             ),
         )
     }.filter { it.visible }
 
     /** Whether [categoryId] is a known category, i.e. a valid navigation argument. */
-    fun isKnown(categoryId: String?): Boolean = categories(isFirebaseVisible = true, isAuthenticated = true).any { it.id == categoryId }
+    fun isKnown(categoryId: String?): Boolean = categories(isFirebaseVisible = true).any { it.id == categoryId } || categoryId == LEGACY_CUSTOMIZE
 
     /**
      * Resolves the settings section rendered for [categoryId], honoring the
      * same resource-gated visibility rules as the legacy single-screen
-     * settings. Returns null for unknown ids so callers can fall back safely.
+     * settings. The removed Customize category id aliases to Appearance,
+     * whose section owns the same rows. Returns null for unknown ids so
+     * callers can fall back safely.
      */
     fun sectionFor(
         categoryId: String?,
         isFirebaseVisible: Boolean,
         isUpdateChannelVisible: Boolean,
-        isAdultContentVisible: Boolean,
-    ): SettingsSection? = SettingsSections.build(
-        isFirebaseVisible = isFirebaseVisible,
-        isUpdateChannelVisible = isUpdateChannelVisible,
-        isAdultContentVisible = isAdultContentVisible,
-    ).firstOrNull { it.id == categoryId }
+    ): SettingsSection? {
+        val resolvedId = if (categoryId == LEGACY_CUSTOMIZE) APPEARANCE else categoryId
+        return SettingsSections.build(
+            isFirebaseVisible = isFirebaseVisible,
+            isUpdateChannelVisible = isUpdateChannelVisible,
+        ).firstOrNull { it.id == resolvedId }
+    }
 }
 
 /** The settings row models rendered inside a section. */
@@ -150,22 +153,18 @@ object SettingsSections {
     fun build(
         isFirebaseVisible: Boolean,
         isUpdateChannelVisible: Boolean,
-        isAdultContentVisible: Boolean,
     ): List<SettingsSection> = listOf(
-        customizeSection(),
         appearanceSection(),
-        contentSection(),
-        generalSection(isUpdateChannelVisible, isAdultContentVisible),
+        generalSection(isUpdateChannelVisible),
         notificationsSection(),
         dataSyncSection(),
         privacySection(isFirebaseVisible),
-        accessibilitySection(),
     ).filter { it.visible }
 
-    private fun customizeSection() = SettingsSection(
-        id = SettingsCategoryRegistry.CUSTOMIZE,
-        titleRes = R.string.pref_header_customize,
-        summaryRes = R.string.pref_header_customize_summary,
+    private fun appearanceSection() = SettingsSection(
+        id = SettingsCategoryRegistry.APPEARANCE,
+        titleRes = R.string.pref_header_appearance,
+        summaryRes = R.string.pref_header_appearance_summary,
         rows = listOf(
             SettingsRow.Choice(
                 keyRes = R.string.pref_key_app_theme,
@@ -192,33 +191,7 @@ object SettingsSections {
         ),
     )
 
-    private fun appearanceSection() = SettingsSection(
-        id = SettingsCategoryRegistry.APPEARANCE,
-        titleRes = R.string.pref_header_appearance,
-        summaryRes = R.string.pref_header_appearance_summary,
-        rows = listOf(
-            SettingsRow.Info(R.string.pref_title_accent_color, R.string.pref_summary_placeholder),
-            SettingsRow.Info(R.string.pref_title_font_scale, R.string.pref_summary_placeholder),
-            SettingsRow.Info(R.string.pref_title_list_density, R.string.pref_summary_placeholder),
-        ),
-    )
-
-    private fun contentSection() = SettingsSection(
-        id = SettingsCategoryRegistry.CONTENT,
-        titleRes = R.string.pref_header_content,
-        summaryRes = R.string.pref_header_content_summary,
-        rows = listOf(
-            SettingsRow.Info(R.string.pref_title_autoplay, R.string.pref_summary_placeholder),
-            SettingsRow.Info(R.string.pref_title_spoiler_behavior, R.string.pref_summary_placeholder),
-            SettingsRow.Info(R.string.pref_title_title_language, R.string.pref_summary_placeholder),
-            SettingsRow.Info(R.string.pref_title_score_format, R.string.pref_summary_placeholder),
-        ),
-    )
-
-    private fun generalSection(
-        isUpdateChannelVisible: Boolean,
-        isAdultContentVisible: Boolean,
-    ) = SettingsSection(
+    private fun generalSection(isUpdateChannelVisible: Boolean) = SettingsSection(
         id = SettingsCategoryRegistry.GENERAL,
         titleRes = R.string.pref_header_general,
         summaryRes = R.string.pref_header_general_summary,
@@ -237,13 +210,6 @@ object SettingsSections {
                 valuesRes = R.array.pref_values_channel_entries,
                 defaultValue = "master",
                 rowVisible = isUpdateChannelVisible,
-            ),
-            SettingsRow.Toggle(
-                keyRes = R.string.pref_key_display_adult_content,
-                titleRes = R.string.pref_title_display_adult_content,
-                summaryRes = R.string.pref_summary_display_adult_content,
-                defaultValue = false,
-                rowVisible = isAdultContentVisible,
             ),
         ),
     )
@@ -310,15 +276,5 @@ object SettingsSections {
             ),
         ),
         visible = isFirebaseVisible,
-    )
-
-    private fun accessibilitySection() = SettingsSection(
-        id = SettingsCategoryRegistry.ACCESSIBILITY,
-        titleRes = R.string.pref_header_accessibility,
-        summaryRes = R.string.pref_header_accessibility_summary,
-        rows = listOf(
-            SettingsRow.Info(R.string.pref_title_reduce_motion, R.string.pref_summary_placeholder),
-            SettingsRow.Info(R.string.pref_title_high_contrast, R.string.pref_summary_placeholder),
-        ),
     )
 }

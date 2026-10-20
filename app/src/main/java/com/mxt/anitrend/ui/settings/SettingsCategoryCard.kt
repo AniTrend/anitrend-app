@@ -66,11 +66,11 @@ internal fun SettingsCategoryCard(
 @Preview(name = "Settings category card", showBackground = true)
 @Composable
 private fun SettingsCategoryCardPreview() {
-    AniTrendTheme {
+    AniTrendTheme("light") {
         SettingsCategoryCard(
-            title = "Customize",
-            summary = "Customize the look and feel of the app",
-            iconRes = R.drawable.ic_format_color_fill_grey_600_24dp,
+            title = "Appearance",
+            summary = "Theme, language and list view style",
+            iconRes = R.drawable.ic_format_size_grey_600_24dp,
             onClick = {},
         )
     }

@@ -3,6 +3,7 @@ package com.mxt.anitrend.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mxt.anitrend.repository.UserRepository
+import com.mxt.anitrend.util.Settings
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,10 +24,11 @@ import timber.log.Timber
  * rejected while one is in flight, and failed saves keep the edited form so the
  * user can retry or discard.
  *
- * The local `pref_key_display_adult_content` shared preference keeps its own
- * existing behavior and flavor gating in the legacy settings rows. This
- * ViewModel only edits the separate server-side `displayAdultContent` field
- * and never touches that preference, so the two stay independent.
+ * The local `pref_key_display_adult_content` shared preference is owned by
+ * this ViewModel when [adultContentAllowed]: authenticated users sync it from
+ * successful server saves/refreshes, and guests write it immediately as a
+ * device-local value. When adult content is not allowed by the flavor
+ * resource, the field is absent from the draft, payload and semantics.
  *
  * UI event concerns (navigation, toasts, dialog confirmation) stay in the
  * fragment; this ViewModel exposes state and actions only.
@@ -37,6 +39,8 @@ import timber.log.Timber
  */
 class AccountSettingsViewModel(
     private val userRepository: UserRepository,
+    private val settings: Settings,
+    private val adultContentAllowed: Boolean,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : ViewModel() {
 
@@ -44,6 +48,8 @@ class AccountSettingsViewModel(
         AccountSettingsUiState.from(userRepository.cachedCurrentUser),
     )
 
+    /** True when no current user is cached: the AniList destination renders its guest card. */
+    val isGuest: Boolean get() = userRepository.cachedCurrentUser == null
     val state: StateFlow<AccountSettingsUiState> = _state.asStateFlow()
 
     /**
@@ -64,6 +70,7 @@ class AccountSettingsViewModel(
             withContext(ioDispatcher) { userRepository.getCurrentUser(asHtml = false) }
                 .onSuccess { user ->
                     _state.value = AccountSettingsUiState.from(user)
+                    syncLocalAdultContent(user.options?.isDisplayAdultContent)
                 }
                 .onFailure { throwable ->
                     Timber.e(throwable)
@@ -133,11 +140,23 @@ class AccountSettingsViewModel(
     fun setAiringNotifications(value: Boolean) = _state.updateDirty { it.copy(airingNotifications = value, airingNotificationsDirty = true) }
 
     /**
-     * Edits the server-side adult content preference. This is separate from
-     * the local `pref_key_display_adult_content` preference, which keeps its
-     * existing behavior; this action never writes that preference.
+     * Edits the adult content preference.
+     *
+     * No-op when the flavor resource does not allow adult content, keeping
+     * the field absent from the draft, payload and semantics. For a guest the
+     * row is device-local: the shared preference is written immediately with
+     * no server call. For an authenticated user the value joins the sparse
+     * dirty draft and only a successful server save writes the preference.
      */
-    fun setDisplayAdultContent(value: Boolean) = _state.updateDirty { it.copy(displayAdultContent = value, displayAdultContentDirty = true) }
+    fun setDisplayAdultContent(value: Boolean) {
+        if (!adultContentAllowed) return
+        if (userRepository.cachedCurrentUser == null) {
+            settings.displayAdultContent = value
+            _state.updateDirty { it.copy(displayAdultContent = value, displayAdultContentDirty = false) }
+        } else {
+            _state.updateDirty { it.copy(displayAdultContent = value, displayAdultContentDirty = true) }
+        }
+    }
 
     /**
      * Saves the dirty fields through the server-authoritative `updateUser`
@@ -145,7 +164,8 @@ class AccountSettingsViewModel(
      *
      * Repeated calls while a save is in flight are ignored. A failed save
      * keeps the edited form (fields and dirty flags) and sets
-     * [AccountSettingsUiState.errorMessage].
+     * [AccountSettingsUiState.errorMessage]; the local adult preference keeps
+     * its previous value.
      */
     fun save() {
         val current = _state.value
@@ -157,6 +177,7 @@ class AccountSettingsViewModel(
             withContext(ioDispatcher) { userRepository.updateUser(update) }
                 .onSuccess { record ->
                     _state.update { state -> state.mergeServerRecord(record, savedFields) }
+                    syncLocalAdultContent(record.displayAdultContent)
                 }
                 .onFailure { throwable ->
                     Timber.e(throwable)
@@ -173,6 +194,16 @@ class AccountSettingsViewModel(
      */
     fun discard() {
         _state.update { AccountSettingsUiState.from(userRepository.cachedCurrentUser) }
+    }
+
+    /**
+     * Writes the local adult preference from a successful server response.
+     * A null server value never changes the preference, and Discard never
+     * calls this, matching the server-authoritative commit rule.
+     */
+    private fun syncLocalAdultContent(serverValue: Boolean?) {
+        if (!adultContentAllowed || serverValue == null) return
+        settings.displayAdultContent = serverValue
     }
 
     private companion object {

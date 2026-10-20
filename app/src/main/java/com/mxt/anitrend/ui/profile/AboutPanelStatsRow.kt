@@ -106,7 +106,7 @@ private fun AboutPanelStatCell(
 @Preview(name = "Profile about stats", showBackground = true, widthDp = 360, heightDp = 80)
 @Composable
 private fun AboutPanelStatsRowPreview() {
-    AniTrendTheme {
+    AniTrendTheme("light") {
         Surface(
             modifier = Modifier.fillMaxWidth(),
             color = MaterialTheme.colorScheme.surface,

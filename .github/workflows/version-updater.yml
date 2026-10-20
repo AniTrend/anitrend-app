@@ -74,7 +74,7 @@ jobs:
           {
             "code": $CODE,
             "migration": false,
-            "minSdk": 21,
+            "minSdk": 24,
             "releaseNotes": "",
             "version": "$VERSION",
             "appId": "com.mxt.anitrend"

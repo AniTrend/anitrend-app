@@ -157,7 +157,7 @@ private fun EpisodeRowPreview() {
     val context = LocalContext.current
     val imageUrl = "android.resource://${context.packageName}/${R.drawable.reg_bg}"
 
-    AniTrendTheme {
+    AniTrendTheme("light") {
         Box(modifier = Modifier.fillMaxWidth().padding(dimensionResource(R.dimen.lg_margin))) {
             EpisodeRow(
                 title = "Compose migration baseline episode",

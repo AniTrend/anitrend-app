@@ -114,7 +114,7 @@ private fun ApplicationExtension.setUpWith(project: Project) {
     compileSdk = 37
     defaultConfig {
         applicationId = "com.mxt.anitrend"
-        minSdk = 23
+        minSdk = 24
         targetSdk = 37
         versionCode = project.props[PropertyTypes.CODE].toInt()
         versionName = project.props[PropertyTypes.VERSION]
@@ -125,7 +125,7 @@ private fun ApplicationExtension.setUpWith(project: Project) {
     project.createSigningConfiguration(this)
     buildFeatures {
         dataBinding = false
-        viewBinding = true
+        viewBinding = false
         buildConfig = true
         compose = true
         resValues = true

@@ -10,10 +10,8 @@ import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.Settings
 import org.koin.android.ext.android.inject
 import org.koin.android.scope.AndroidScopeComponent
-import org.koin.androidx.fragment.android.setupKoinFragmentFactory
 import org.koin.androidx.scope.activityScope
 import org.koin.core.scope.Scope
-import java.util.Locale
 
 abstract class CommonActivity :
     AppCompatActivity(),
@@ -22,18 +20,16 @@ abstract class CommonActivity :
     override val scope: Scope by activityScope()
     protected val settings by inject<Settings>()
 
-    protected var currentLocale: String? = null
     protected var currentTheme: String? = null
 
-    @Suppress("DEPRECATION")
+    /**
+     * Re-themes without a restart: [applyConfiguredTheme] recreates the
+     * activity, preserving Fragment and saved navigation state. Locale
+     * changes are applied globally by AppCompatDelegate, not here.
+     */
     private fun onResumeThemeCheck() {
-        if (currentTheme != settings.theme || currentLocale != settings.userLanguage) {
+        if (currentTheme != settings.theme) {
             applyConfiguredTheme()
-            val currentIntent = intent
-            finish()
-            overridePendingTransition(0, 0)
-            startActivity(currentIntent)
-            overridePendingTransition(0, 0)
         }
     }
 
@@ -48,7 +44,6 @@ abstract class CommonActivity :
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        currentLocale = settings.userLanguage ?: Locale.getDefault().language
         currentTheme = settings.theme
         val themeRes = when (currentTheme) {
             KeyUtil.THEME_DARK -> R.style.AppThemeDark
@@ -57,7 +52,6 @@ abstract class CommonActivity :
         }
         setTheme(themeRes)
         enableEdgeToEdge()
-        setupKoinFragmentFactory()
         super.onCreate(savedInstanceState)
     }
 

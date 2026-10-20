@@ -146,7 +146,7 @@ private fun formatCount(count: Int): String = if (count >= 1000) {
 @Preview(name = "Profile statistics", showBackground = true, widthDp = 360, heightDp = 88)
 @Composable
 private fun ProfileStatsRowPreview() {
-    AniTrendTheme {
+    AniTrendTheme("light") {
         Surface(modifier = Modifier.fillMaxWidth(), color = MaterialTheme.colorScheme.surfaceContainer) {
             ProfileStatsRow(
                 stats =

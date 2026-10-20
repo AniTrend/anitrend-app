@@ -136,7 +136,7 @@ internal fun FavouriteAction(
 @Preview(name = "Favorite action", showBackground = true, widthDp = 120, heightDp = 48)
 @Composable
 private fun FavouriteActionPreview() {
-    AniTrendTheme {
+    AniTrendTheme("light") {
         FavouriteAction(
             state = FavouriteActionState(count = 5, isLiked = true, isEnabled = true, isLoading = false),
             onClick = {},

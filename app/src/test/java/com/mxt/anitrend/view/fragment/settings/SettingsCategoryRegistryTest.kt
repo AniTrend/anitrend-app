@@ -20,31 +20,28 @@ class SettingsCategoryRegistryTest {
         categoryId: String?,
         isFirebaseVisible: Boolean = true,
         isUpdateChannelVisible: Boolean = true,
-        isAdultContentVisible: Boolean = true,
     ): SettingsSection? = SettingsCategoryRegistry.sectionFor(
         categoryId = categoryId,
         isFirebaseVisible = isFirebaseVisible,
         isUpdateChannelVisible = isUpdateChannelVisible,
-        isAdultContentVisible = isAdultContentVisible,
     )
 
     // ── hub categories ──
 
     @Test
-    fun `categories exposes all eight categories in display order`() {
+    fun `categories exposes all hub categories in display order`() {
         val categories = SettingsCategoryRegistry.categories(isFirebaseVisible = true)
 
-        assertEquals(8, categories.size)
+        assertEquals(7, categories.size)
         assertEquals(
             listOf(
-                SettingsCategoryRegistry.CUSTOMIZE,
+                SettingsCategoryRegistry.ACCOUNT,
                 SettingsCategoryRegistry.APPEARANCE,
-                SettingsCategoryRegistry.CONTENT,
                 SettingsCategoryRegistry.GENERAL,
                 SettingsCategoryRegistry.NOTIFICATIONS,
                 SettingsCategoryRegistry.DATA_SYNC,
                 SettingsCategoryRegistry.PRIVACY,
-                SettingsCategoryRegistry.ACCESSIBILITY,
+                SettingsCategoryRegistry.ABOUT,
             ),
             categories.map { it.id },
         )
@@ -54,47 +51,17 @@ class SettingsCategoryRegistryTest {
     fun `categories hides privacy category when Firebase is absent`() {
         val categories = SettingsCategoryRegistry.categories(isFirebaseVisible = false)
 
-        assertEquals(7, categories.size)
+        assertEquals(6, categories.size)
         assertFalse(categories.any { it.id == SettingsCategoryRegistry.PRIVACY })
     }
 
-    // ── account category (authenticated) ──
+    // ── account category ──
 
     @Test
-    fun `categories lists the account category first when authenticated`() {
-        val categories = SettingsCategoryRegistry.categories(
-            isFirebaseVisible = true,
-            isAuthenticated = true,
-        )
+    fun `categories always lists the account category first for guest sign-in`() {
+        val categories = SettingsCategoryRegistry.categories(isFirebaseVisible = true)
 
-        assertEquals(9, categories.size)
         assertEquals(SettingsCategoryRegistry.ACCOUNT, categories.first().id)
-        // The legacy eight keep their relative order after the account entry.
-        assertEquals(
-            listOf(
-                SettingsCategoryRegistry.ACCOUNT,
-                SettingsCategoryRegistry.CUSTOMIZE,
-                SettingsCategoryRegistry.APPEARANCE,
-                SettingsCategoryRegistry.CONTENT,
-                SettingsCategoryRegistry.GENERAL,
-                SettingsCategoryRegistry.NOTIFICATIONS,
-                SettingsCategoryRegistry.DATA_SYNC,
-                SettingsCategoryRegistry.PRIVACY,
-                SettingsCategoryRegistry.ACCESSIBILITY,
-            ),
-            categories.map { it.id },
-        )
-    }
-
-    @Test
-    fun `categories omit the account category when not authenticated`() {
-        val categories = SettingsCategoryRegistry.categories(
-            isFirebaseVisible = true,
-            isAuthenticated = false,
-        )
-
-        assertEquals(8, categories.size)
-        assertFalse(categories.any { it.id == SettingsCategoryRegistry.ACCOUNT })
     }
 
     @Test
@@ -105,6 +72,12 @@ class SettingsCategoryRegistryTest {
     @Test
     fun `sectionFor returns null for the account category since it has a dedicated destination`() {
         assertNull(sectionFor(SettingsCategoryRegistry.ACCOUNT))
+    }
+
+    @Test
+    fun `about category is known and has a dedicated destination`() {
+        assertTrue(SettingsCategoryRegistry.isKnown(SettingsCategoryRegistry.ABOUT))
+        assertNull(sectionFor(SettingsCategoryRegistry.ABOUT))
     }
 
     @Test
@@ -132,14 +105,17 @@ class SettingsCategoryRegistryTest {
     }
 
     @Test
-    fun `sectionFor resolves every known category to its section`() {
-        SettingsCategoryRegistry.categories(isFirebaseVisible = true).forEach { category ->
-            val section = sectionFor(category.id)
-            assertNotNull("section for ${category.id} must exist", section)
-            assertEquals(category.id, section!!.id)
-            assertEquals(category.titleRes, section.titleRes)
-            assertEquals(category.summaryRes, section.summaryRes)
-        }
+    fun `sectionFor resolves every preference category to its section`() {
+        val dedicatedDestinations = setOf(SettingsCategoryRegistry.ACCOUNT, SettingsCategoryRegistry.ABOUT)
+        SettingsCategoryRegistry.categories(isFirebaseVisible = true)
+            .filter { it.id !in dedicatedDestinations }
+            .forEach { category ->
+                val section = sectionFor(category.id)
+                assertNotNull("section for ${category.id} must exist", section)
+                assertEquals(category.id, section!!.id)
+                assertEquals(category.titleRes, section.titleRes)
+                assertEquals(category.summaryRes, section.summaryRes)
+            }
     }
 
     @Test
@@ -162,7 +138,6 @@ class SettingsCategoryRegistryTest {
         val filtered = sectionFor(
             SettingsCategoryRegistry.GENERAL,
             isUpdateChannelVisible = false,
-            isAdultContentVisible = false,
         )!!
         assertEquals(1, filtered.rows.filter { it.visible }.size)
         assertEquals(R.string.pref_key_startup_page, (filtered.rows.filter { it.visible }.first() as SettingsRow.Choice).keyRes)
@@ -170,14 +145,13 @@ class SettingsCategoryRegistryTest {
         val full = sectionFor(
             SettingsCategoryRegistry.GENERAL,
             isUpdateChannelVisible = true,
-            isAdultContentVisible = true,
         )!!
-        assertEquals(3, full.rows.filter { it.visible }.size)
+        assertEquals(2, full.rows.filter { it.visible }.size)
     }
 
     @Test
-    fun `customize section keeps legacy row defaults and keys`() {
-        val section = sectionFor(SettingsCategoryRegistry.CUSTOMIZE)!!
+    fun `appearance section keeps legacy row defaults and keys`() {
+        val section = sectionFor(SettingsCategoryRegistry.APPEARANCE)!!
         val rows = section.rows.filter { it.visible }
 
         assertEquals(3, rows.size)
@@ -193,6 +167,16 @@ class SettingsCategoryRegistryTest {
         val listStyle = rows[2] as SettingsRow.Choice
         assertEquals(R.string.pref_key_list_view_style, listStyle.keyRes)
         assertEquals("0", listStyle.defaultValue)
+    }
+
+    @Test
+    fun `legacy customize input aliases to the appearance section`() {
+        val aliased = sectionFor(SettingsCategoryRegistry.LEGACY_CUSTOMIZE)
+        val appearance = sectionFor(SettingsCategoryRegistry.APPEARANCE)
+
+        assertNotNull(aliased)
+        assertEquals(appearance!!.id, aliased!!.id)
+        assertEquals(appearance.rows, aliased.rows)
     }
 
     @Test

@@ -127,7 +127,7 @@ private fun CharacterRowPreview() {
     val context = LocalContext.current
     val imageUrl = "android.resource://${context.packageName}/${R.drawable.reg_bg}"
 
-    AniTrendTheme {
+    AniTrendTheme("light") {
         Box(modifier = Modifier.fillMaxWidth().padding(dimensionResource(R.dimen.lg_margin))) {
             CharacterRow(
                 characterName = "Spike Spiegel",

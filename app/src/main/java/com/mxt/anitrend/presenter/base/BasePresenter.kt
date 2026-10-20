@@ -1,8 +1,6 @@
 package com.mxt.anitrend.presenter.base
 
 import android.content.Context
-import androidx.annotation.IdRes
-import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.presenter.CommonPresenter
 import com.mxt.anitrend.base.interfaces.dao.BoxQuery
 import com.mxt.anitrend.data.mapper.toUserStatisticsRecord
@@ -50,20 +48,6 @@ open class BasePresenter(
             action()
             settings.lastUserSyncTime = System.currentTimeMillis()
         }
-    }
-
-    @IdRes
-    fun getNavigationItem(): Int = when (settings.startupPage) {
-        "0" -> R.id.nav_home_feed
-        "1" -> R.id.nav_anime
-        "2" -> R.id.nav_manga
-        "3" -> R.id.nav_trending
-        "4" -> R.id.nav_airing
-        "5" -> R.id.nav_myanime
-        "6" -> R.id.nav_mymanga
-        "7" -> R.id.nav_hub
-        "8" -> R.id.nav_reviews
-        else -> R.id.nav_airing
     }
 
     fun checkIfMigrationIsNeeded(): Boolean {

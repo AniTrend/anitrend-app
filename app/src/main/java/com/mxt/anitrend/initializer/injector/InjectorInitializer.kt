@@ -9,7 +9,6 @@ import com.mxt.anitrend.koin.appModules
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.locale.LocaleUtil
 import org.koin.android.ext.koin.androidContext
-import org.koin.androidx.fragment.koin.fragmentFactory
 import org.koin.core.context.startKoin
 import org.koin.core.logger.KOIN_TAG
 import org.koin.core.logger.Level
@@ -33,7 +32,6 @@ class InjectorInitializer : Initializer<Unit> {
             )
             logger(KoinLogger())
             workManagerFactory()
-            fragmentFactory()
             modules(appModules)
         }
     }

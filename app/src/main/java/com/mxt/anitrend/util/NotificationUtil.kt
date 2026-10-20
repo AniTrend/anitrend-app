@@ -16,6 +16,8 @@ import com.mxt.anitrend.domain.model.NotificationPageResult
 import com.mxt.anitrend.extension.checkNotificationPermission
 import com.mxt.anitrend.extension.getCompatColor
 import com.mxt.anitrend.model.entity.anilist.User
+import com.mxt.anitrend.navigation.EXTRA_ROUTE
+import com.mxt.anitrend.navigation.ROUTE_NOTIFICATIONS
 import com.mxt.anitrend.receiver.ClearNotifications
 import com.mxt.anitrend.view.activity.index.MainActivity
 import timber.log.Timber
@@ -39,7 +41,7 @@ class NotificationUtil(
                 context,
                 MainActivity::class.java,
             )
-                .putExtra(MainActivity.EXTRA_ROUTE, MainActivity.ROUTE_NOTIFICATIONS)
+                .putExtra(EXTRA_ROUTE, ROUTE_NOTIFICATIONS)
         return PendingIntent.getActivity(
             context,
             KeyUtil.NOTIFICATION_SUMMARY_ID,

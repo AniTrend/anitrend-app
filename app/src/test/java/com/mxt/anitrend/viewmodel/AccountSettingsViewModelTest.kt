@@ -1,11 +1,15 @@
 package com.mxt.anitrend.viewmodel
 
+import android.content.Context
+import android.content.SharedPreferences
+import android.content.res.Resources
 import com.mxt.anitrend.domain.user.model.UserSettingsRecord
 import com.mxt.anitrend.domain.user.model.UserSettingsUpdate
 import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.model.entity.anilist.meta.MediaListOptions
 import com.mxt.anitrend.model.entity.anilist.meta.UserOptions
 import com.mxt.anitrend.repository.UserRepository
+import com.mxt.anitrend.util.Settings
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -19,10 +23,15 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TestWatcher
 import org.junit.runner.Description
+import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers.anyBoolean
+import org.mockito.ArgumentMatchers.eq
+import org.mockito.ArgumentMatchers.isNull
 import org.mockito.Mockito.doReturn
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.never
@@ -33,13 +42,27 @@ import org.mockito.Mockito.`when`
 /**
  * Focused tests for the account settings ViewModel: cache seeding, sparse
  * dirty tracking, server refresh, save/merge state reduction, failure
- * retention, duplicate-save protection and discard.
+ * retention, duplicate-save protection and discard. The adult-content field
+ * is covered as a gated boundary: forbidden flavors never see the value,
+ * guests write the device-local preference immediately, and authenticated
+ * users sync it only from successful server responses.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 class AccountSettingsViewModelTest {
 
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
+
+    private lateinit var preferences: SharedPreferences
+    private lateinit var editor: SharedPreferences.Editor
+
+    @Before
+    fun setUpPreferenceStore() {
+        preferences = mock(SharedPreferences::class.java)
+        editor = mock(SharedPreferences.Editor::class.java)
+        `when`(preferences.edit()).thenReturn(editor)
+        `when`(editor.putBoolean(any(), anyBoolean())).thenReturn(editor)
+    }
 
     // ── seeding ──
 
@@ -372,17 +395,106 @@ class AccountSettingsViewModelTest {
         assertEquals("Server bio", viewModel.state.value.about)
     }
 
+    // ── adult content gating ──
+
+    @Test
+    fun `setDisplayAdultContent is a no-op when adult content is not allowed`() {
+        val viewModel = createViewModel(cachedUser = createUser(), adultContentAllowed = false)
+
+        viewModel.setDisplayAdultContent(true)
+
+        val state = viewModel.state.value
+        assertFalse(state.displayAdultContent)
+        assertFalse(state.displayAdultContentDirty)
+        assertFalse(state.hasDirtyFields)
+        verify(editor, never()).putBoolean(any(), anyBoolean())
+    }
+
+    @Test
+    fun `guest adult selection is device-local and never joins the server draft`() {
+        val viewModel = createViewModel(cachedUser = null, adultContentAllowed = true)
+
+        viewModel.setDisplayAdultContent(true)
+
+        val state = viewModel.state.value
+        assertTrue(state.displayAdultContent)
+        assertFalse(state.displayAdultContentDirty)
+        assertFalse(state.hasDirtyFields)
+        verify(editor).putBoolean(isNull(), eq(true))
+    }
+
+    @Test
+    fun `successful save writes the local adult preference from the server record`() = runTest {
+        val repository = createRepository(cachedUser = createUser())
+        val viewModel = createViewModel(repository = repository)
+        viewModel.setDisplayAdultContent(true)
+        val sparse = UserSettingsUpdate(displayAdultContent = true)
+        doReturn(Result.success(serverRecord(displayAdultContent = true)))
+            .`when`(repository)
+            .updateUser(sparse)
+
+        viewModel.save()
+
+        verify(editor).putBoolean(isNull(), eq(true))
+    }
+
+    @Test
+    fun `successful refresh writes the local adult preference from the server options`() = runTest {
+        val repository = createRepository(cachedUser = createUser())
+        val viewModel = createViewModel(repository = repository)
+        doReturn(Result.success(createUser(adultContent = true)))
+            .`when`(repository)
+            .getCurrentUser(asHtml = false)
+
+        viewModel.refresh()
+
+        verify(editor).putBoolean(isNull(), eq(true))
+    }
+
+    @Test
+    fun `failed save keeps the previous local adult preference`() = runTest {
+        val repository = createRepository(cachedUser = createUser())
+        val viewModel = createViewModel(repository = repository)
+        viewModel.setDisplayAdultContent(true)
+        doReturn(Result.failure<UserSettingsRecord>(RuntimeException("Server exploded")))
+            .`when`(repository)
+            .updateUser(UserSettingsUpdate(displayAdultContent = true))
+
+        viewModel.save()
+
+        assertTrue(viewModel.state.value.displayAdultContentDirty)
+        verify(editor, never()).putBoolean(any(), anyBoolean())
+    }
+
+    @Test
+    fun `discard never writes the local adult preference`() = runTest {
+        val viewModel = createViewModel(cachedUser = createUser())
+        viewModel.setDisplayAdultContent(true)
+
+        viewModel.discard()
+
+        assertFalse(viewModel.state.value.displayAdultContentDirty)
+        verify(editor, never()).putBoolean(any(), anyBoolean())
+    }
     // ── helpers ──
 
     private fun createViewModel(
         repository: UserRepository = createRepository(),
         cachedUser: User? = null,
+        adultContentAllowed: Boolean = true,
     ): AccountSettingsViewModel {
         if (cachedUser != null) {
             `when`(repository.cachedCurrentUser).thenReturn(cachedUser)
         }
         return AccountSettingsViewModel(
             userRepository = repository,
+            settings =
+            Settings(
+                context = mock(Context::class.java),
+                resources = mock(Resources::class.java),
+                preferences = preferences,
+            ),
+            adultContentAllowed = adultContentAllowed,
             ioDispatcher = UnconfinedTestDispatcher(),
         )
     }
@@ -398,16 +510,18 @@ class AccountSettingsViewModelTest {
         profileColor: String? = "blue",
         titleLanguage: String? = "ROMAJI",
         rowOrder: String? = "CUSTOM",
+        adultContent: Boolean = false,
     ): User = User().also {
         it.id = 7L
         it.name = "mxt"
         it.about = about
-        it.options = UserOptions(
-            titleLanguage = titleLanguage,
-            isDisplayAdultContent = false,
-            isAiringNotifications = true,
-            profileColor = profileColor,
-        )
+        it.options =
+            UserOptions(
+                titleLanguage = titleLanguage,
+                isDisplayAdultContent = adultContent,
+                isAiringNotifications = true,
+                profileColor = profileColor,
+            )
         it.mediaListOptions = MediaListOptions(scoreFormat = "POINT_10", rowOrder = rowOrder)
     }
 

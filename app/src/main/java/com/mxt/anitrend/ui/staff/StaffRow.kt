@@ -176,7 +176,7 @@ private fun StaffRowPreview() {
             }
         }
 
-    AniTrendTheme {
+    AniTrendTheme("light") {
         StaffRow(state = StaffRowUiState.from(staff), onClick = {})
     }
 }

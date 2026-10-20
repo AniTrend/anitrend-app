@@ -92,54 +92,6 @@
 
     <string name="Watch">شاهد</string>
 
-    <!--First time usage intro screen-->
-    <string name="get_started">لنبدأ</string>
-    <string name="app_intro_colors_title">حالات اللون</string>
-    <string name="app_intro_colors_text">حالات الأنيمي والمانغا تمثل بالألوان!</string>
-    <string name="app_intro_content_title">المحتوى</string>
-    <string name="app_intro_content_text">قوائم أنيمي ومانغا متعددة</string>
-    <string name="app_intro_search_title">البحث</string>
-    <string name="app_intro_search_text">أنيمي ومانغا وخصائص بحث أخرى!</string>
-    <string name="app_intro_videos_title">فيديو</string>
-    <string name="app_intro_videos_text">يستخدم مشغل مقاطع الفيديو الخاص بيوتيوب مدمج معه!</string>
-    <!-- Welcome message shown on first launch; clarifies that the app does not stream videos -->
-    <string name="app_greeting">أهلًا بك في AniTrend، هذا ليس تطبيق بث!</string>
-
-    <!-- Action label on the onboarding button before the final page; advances to the next page -->
-    <string name="action_onboarding_continue">متابعة</string>
-    <!-- Status chip label in the onboarding heroes; shows the "watching" list status -->
-    <string name="label_onboarding_status_watching">قيد المشاهدة</string>
-    <!-- Status chip label in the onboarding heroes; shows the "completed" list status -->
-    <string name="label_onboarding_status_completed">مكتمل</string>
-    <!-- Status chip label in the onboarding heroes; shows the "plan to watch" list status -->
-    <string name="label_onboarding_status_plan_to_watch">مخطط للمشاهدة</string>
-    <!-- Status chip label in the onboarding heroes; shows the "dropped" list status -->
-    <string name="label_onboarding_status_dropped">متروك</string>
-    <!-- Status chip label in the onboarding heroes; shows the "on hold" list status -->
-    <string name="label_onboarding_status_on_hold">متوقف مؤقتًا</string>
-    <!-- Status chip label in the onboarding heroes; shows the "rewatching" list status -->
-    <string name="label_onboarding_status_rewatching">إعادة المشاهدة</string>
-
-    <!-- Placeholder text in the search bar mockup of the onboarding searching hero -->
-    <string name="placeholder_onboarding_search">ابحث عن أنمي أو مانغا...</string>
-    <!-- Example search result in the onboarding searching hero; Jujutsu Kaisen is an anime title -->
-    <string name="label_onboarding_search_result_jujutsu_kaisen">Jujutsu Kaisen</string>
-    <!-- Example search result in the onboarding searching hero; One Piece is an anime title -->
-    <string name="label_onboarding_search_result_one_piece">One Piece</string>
-
-    <!-- First onboarding page description; friendly benefit-led copy about discovering, tracking, and organizing anime and manga -->
-    <string name="description_onboarding_welcome">اكتشف أعمالًا جديدة، وتابع تقدمك، واحتفظ بكل قوائم الأنمي والمانغا في مكان واحد.</string>
-    <!-- Colors page description; explains the color coding of anime/manga list statuses -->
-    <string name="description_onboarding_colors">حدد بسرعة ما تشاهده وما أكملته وما تخطط لمشاهدته باستخدام ترميز لوني واضح.</string>
-    <!-- Content page description; explains the browsable catalog -->
-    <string name="description_onboarding_content">تصفح آلاف العناوين مع معلومات مفصلة وتقييمات ومخططات موسمية وبيانات فريق العمل، مع تحديثات يومية.</string>
-    <!-- Searching page description; explains search and filter capabilities -->
-    <string name="description_onboarding_searching">ابحث باستخدام فلاتر النوع والسنة والاستوديو والحالة، واعثر على ما تبحث عنه بدقة.</string>
-    <!-- Final onboarding page title; introduces managing anime and manga lists -->
-    <string name="title_onboarding_manage">إدارة قائمتك</string>
-    <!-- Final onboarding page description; long-pressing an anime or manga item opens list management for status, progress, and details -->
-    <string name="description_onboarding_manage">اضغط مطولًا على أي أنمي أو مانغا لإدارة حالته وتقدمه وتفاصيله.</string>
-
     <!--Filter menu entry these are the dialog titles-->
     <string name="app_filter_sort">الفرز حسب:</string>
     <!-- Filter dialog question asking whether to show only entries already on the user's list -->
@@ -189,15 +141,6 @@
         يمكنك أيضًا إضافة / إزالة العناصر من مفضلتك عن طريق النقر على أيقونة القلب.
         ]]>
     </string>
-
-    <!-- translators: This copy is shown on the full-screen onboarding card (the final
-     welcome card). It explains that tapping a card lets users explore anime and
-     manga, and that signing in with AniList lets them manage their lists. -->
-    <string name="app_intro_guide">اضغط على بطاقة لاستكشاف الأنمي والمانغا. سجّل الدخول باستخدام AniList لإدارة قوائمك.</string>
-
-    <!-- translators: Heading for the full-screen onboarding card, shown directly above
-         the guide text. -->
-    <string name="app_intro_title">ابدأ</string>
 
     <string name="login_welcome_title">أهلا بك %s</string>
 
@@ -751,12 +694,6 @@
     <string name="dialog_title_started_at">تاريخ البداية</string>
     <!-- Date field label in the manage list editor -->
     <string name="dialog_title_completed_at">تاريخ الانتهاء</string>
-    <!-- Settings category header for customization options -->
-    <string name="pref_header_customize">تخصيص</string>
-    <!-- Summary under the customization category header -->
-    <string name="pref_header_customize_summary">تخصيص مظهر التطبيق وإحساسه</string>
-    <!-- Notice shown after changing settings that need an app restart -->
-    <string name="text_application_restart_required">يرجى إعادة تشغيل التطبيق لتفعيل التغييرات</string>
     <!-- Button that clears a date field value -->
     <string name="dialog_button_clear">مسح</string>
 
@@ -831,10 +768,6 @@
     <!-- Dialog message warning that deleting an activity cannot be undone -->
     <string name="dialog_message_delete_activity">هل أنت متأكد من حذف هذا النشاط؟ لا يمكن التراجع عن هذا الإجراء!</string>
 
-    <!-- Setting label for showing adult content in the app -->
-    <string name="pref_title_display_adult_content">عرض محتوى للبالغين</string>
-    <!-- Summary explaining that +18 content must also be enabled on AniList -->
-    <string name="pref_summary_display_adult_content">السماح للتطبيق بعرض محتوى NSFW، لكي يعمل هذا يجب تفعيل محتوى +18 في AniList</string>
 
     <!-- Summary for marking notifications as read when dismissed from the status bar -->
     <string name="pref_summary_clear_notification_on_dismiss">تحديد الإشعارات كمقروءة عند إغلاقها من شريط الحالة</string>
@@ -1047,38 +980,14 @@
     <!-- TalkBack description for the staff loading indicator -->
     <string name="staff_loading_content_description">جارٍ تحميل طاقم العمل</string>
 
-    <!-- Settings category header for accessibility options -->
-    <string name="pref_header_accessibility">إمكانية الوصول</string>
-    <!-- Summary under the accessibility category header -->
-    <string name="pref_header_accessibility_summary">ضبط العرض وفقًا لاحتياجات إمكانية الوصول</string>
     <!-- Settings category header for appearance options -->
     <string name="pref_header_appearance">المظهر</string>
     <!-- Summary under the appearance category header -->
-    <string name="pref_header_appearance_summary">تخصيص المظهر المرئي وكثافة العرض</string>
-    <!-- Settings category header for content options -->
-    <string name="pref_header_content">المحتوى</string>
-    <!-- Summary under the content category header -->
-    <string name="pref_header_content_summary">التحكم في طريقة عرض المحتوى</string>
-    <!-- Setting label for the accent color picker -->
-    <string name="pref_title_accent_color">اللون المميز</string>
-    <!-- Setting label for automatic trailer playback -->
-    <string name="pref_title_autoplay">تشغيل العروض الترويجية تلقائيًا</string>
-    <!-- Setting label for the font size scale slider -->
-    <string name="pref_title_font_scale">حجم الخط</string>
-    <!-- Setting label for the high contrast display mode -->
-    <string name="pref_title_high_contrast">وضع التباين العالي</string>
-    <!-- Setting label for the list density selector -->
-    <string name="pref_title_list_density">كثافة القائمة</string>
-    <!-- Setting label that reduces animations and motion -->
-    <string name="pref_title_reduce_motion">تقليل الحركة</string>
+    <string name="pref_header_appearance_summary">المظهر واللغة ونمط عرض القائمة</string>
     <!-- Setting label for the score display format -->
     <string name="pref_title_score_format">تنسيق التقييم</string>
-    <!-- Setting label for how spoiler content is handled -->
-    <string name="pref_title_spoiler_behavior">سلوك الحرق</string>
     <!-- Setting label for the preferred title language -->
     <string name="pref_title_title_language">لغة العنوان المفضلة</string>
-    <!-- Placeholder summary shown for settings that are not implemented yet -->
-    <string name="pref_summary_placeholder">قريبًا</string>
 
     <!-- Warning shown when the review list may be stale; offers a page refresh -->
     <string name="review_stale_message">قد تكون المراجعات قديمة. حدّث لعرض أحدث ترتيب.</string>
