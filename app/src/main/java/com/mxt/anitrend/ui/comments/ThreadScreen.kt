@@ -157,111 +157,116 @@ internal fun ThreadScreen(
         snackbarHostState = remember { SnackbarHostState() },
         modifier = modifier,
         bottomBar = {
-            Column(
-                modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .verticalScroll(rememberScrollState())
-                    .padding(horizontal = 8.dp, vertical = 4.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp),
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+            // The composer belongs to a rendered thread: a failed or absent
+            // feed load shows only its empty state, not a reply affordance
+            // for content that never loaded.
+            if (feedItem != null) {
+                Column(
+                    modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .verticalScroll(rememberScrollState())
+                        .padding(horizontal = 8.dp, vertical = 4.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
-                    IconButton(onClick = onBackClick) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_arrow_back_white_24dp),
-                            contentDescription = stringResource(R.string.action_back),
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    ) {
+                        IconButton(onClick = onBackClick) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_arrow_back_white_24dp),
+                                contentDescription = stringResource(R.string.action_back),
+                            )
+                        }
+                        Text(
+                            text = stringResource(
+                                when {
+                                    isEditingFeed -> R.string.text_edit_mode
+                                    editingReplyId != null -> R.string.text_edit_mode
+                                    else -> R.string.title_activity_reply
+                                },
+                            ),
+                            style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
-                    }
-                    Text(
-                        text = stringResource(
-                            when {
-                                isEditingFeed -> R.string.text_edit_mode
-                                editingReplyId != null -> R.string.text_edit_mode
-                                else -> R.string.title_activity_reply
-                            },
-                        ),
-                        style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                    if (isEditingFeed || editingReplyId != null) {
-                        TextButton(
-                            onClick = {
-                                editingReplyId = null
-                                isEditingFeed = false
-                                draft = TextFieldValue("")
-                            },
+                        if (isEditingFeed || editingReplyId != null) {
+                            TextButton(
+                                onClick = {
+                                    editingReplyId = null
+                                    isEditingFeed = false
+                                    draft = TextFieldValue("")
+                                },
+                            ) {
+                                Text(text = stringResource(R.string.Cancel), style = MaterialTheme.typography.labelLarge)
+                            }
+                        }
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.End,
                         ) {
-                            Text(text = stringResource(R.string.Cancel), style = MaterialTheme.typography.labelLarge)
+                            TextButton(onClick = { shareOverflowOpen = true }) {
+                                Text(text = stringResource(R.string.More), style = MaterialTheme.typography.labelLarge)
+                            }
+                            DropdownMenu(
+                                expanded = shareOverflowOpen,
+                                onDismissRequest = { shareOverflowOpen = false },
+                            ) {
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(R.string.drawer_title_share)) },
+                                    onClick = {
+                                        shareOverflowOpen = false
+                                        state.feed?.siteUrl?.let { url ->
+                                            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                                        }
+                                    },
+                                )
+                            }
                         }
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.End,
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
-                        TextButton(onClick = { shareOverflowOpen = true }) {
-                            Text(text = stringResource(R.string.More), style = MaterialTheme.typography.labelLarge)
-                        }
-                        DropdownMenu(
-                            expanded = shareOverflowOpen,
-                            onDismissRequest = { shareOverflowOpen = false },
+                        OutlinedTextField(
+                            value = draft,
+                            onValueChange = { value ->
+                                draft = value
+                                sendErrorResId = null
+                            },
+                            enabled = !isGuest && !isSendPending,
+                            placeholder = {
+                                Text(
+                                    text = stringResource(
+                                        if (isEditingFeed || editingReplyId != null) {
+                                            R.string.text_edit_mode
+                                        } else {
+                                            R.string.title_activity_reply
+                                        },
+                                    ),
+                                )
+                            },
+                            minLines = 1,
+                            maxLines = 6,
+                            textStyle = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.weight(1f),
+                        )
+                        TextButton(
+                            onClick = { submit() },
+                            enabled = !isGuest && !isSendPending,
                         ) {
-                            DropdownMenuItem(
-                                text = { Text(stringResource(R.string.drawer_title_share)) },
-                                onClick = {
-                                    shareOverflowOpen = false
-                                    state.feed?.siteUrl?.let { url ->
-                                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
-                                    }
-                                },
-                            )
+                            Text(text = stringResource(R.string.action_send), style = MaterialTheme.typography.labelLarge)
                         }
                     }
-                }
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    OutlinedTextField(
-                        value = draft,
-                        onValueChange = { value ->
-                            draft = value
-                            sendErrorResId = null
-                        },
-                        enabled = !isGuest && !isSendPending,
-                        placeholder = {
-                            Text(
-                                text = stringResource(
-                                    if (isEditingFeed || editingReplyId != null) {
-                                        R.string.text_edit_mode
-                                    } else {
-                                        R.string.title_activity_reply
-                                    },
-                                ),
-                            )
-                        },
-                        minLines = 1,
-                        maxLines = 6,
-                        textStyle = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.weight(1f),
-                    )
-                    TextButton(
-                        onClick = { submit() },
-                        enabled = !isGuest && !isSendPending,
-                    ) {
-                        Text(text = stringResource(R.string.action_send), style = MaterialTheme.typography.labelLarge)
+                    if (sendErrorResId != null) {
+                        Text(
+                            text = stringResource(sendErrorResId!!),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.error,
+                        )
                     }
-                }
-                if (sendErrorResId != null) {
-                    Text(
-                        text = stringResource(sendErrorResId!!),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.error,
-                    )
                 }
             }
         },
