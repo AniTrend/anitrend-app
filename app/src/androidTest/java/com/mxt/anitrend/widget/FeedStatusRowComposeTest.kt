@@ -2,20 +2,20 @@
 
 package com.mxt.anitrend.widget
 
-import android.content.DialogInterface
+import android.view.View
 import android.content.Context
-import android.net.Uri
+import android.content.DialogInterface
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.net.Uri
 import android.text.Spanned
 import android.text.style.ClickableSpan
-import android.view.View
-import android.view.ViewGroup
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asAndroidBitmap
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
@@ -25,15 +25,13 @@ import androidx.compose.ui.test.captureToImage
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.v2.runAndroidComposeUiTest
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.mxt.anitrend.R
-import com.mxt.anitrend.adapter.recycler.index.FeedListAdapter
 import com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView
 import com.mxt.anitrend.domain.model.FeedItemUiModel
 import com.mxt.anitrend.ui.designsystem.AniTrendTheme
+import com.mxt.anitrend.ui.feed.FeedItemLazyList
+import com.mxt.anitrend.ui.feed.FeedRowCallbacks
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import io.mockk.every
@@ -44,10 +42,10 @@ import io.mockk.unmockkStatic
 import java.io.File
 import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.math.abs
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
-import org.junit.After
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -69,32 +67,20 @@ class FeedStatusRowComposeTest {
 
     @Test
     @OptIn(ExperimentalTestApi::class)
-    fun otherUserStatusKeepsAccessibleActionsAndRendersAvatarFallbackAcrossRecycle() {
+    fun otherUserStatusKeepsAccessibleActionsAndMarkdownInTheComposeList() {
         runAndroidComposeUiTest<ProgressLayoutTestActivity> {
             val activity = requireNotNull(activity)
             val localAvatarUrl = avatarUrl(activity, Color.BLUE)
             val expectedImageCenterColor = Color.BLUE
-
-            lateinit var host: FeedStatusHost
-            runOnUiThread {
-                host =
-                    installStatusHost(
-                        activity = activity,
-                        item = statusItem(),
-                    )
-            }
-            waitUntil("other-user status holder binds", 5_000L) {
-                host.adapter.itemCount == 1 && host.recyclerView.findViewHolderForAdapterPosition(0) != null
-            }
+            val items = mutableStateOf(listOf(statusItem()))
+            installStatusList(activity, items)
             waitForIdle()
 
             val profileDescription = activity.getString(R.string.description_comment_open_profile, STATUS_USER_NAME)
-            val likesDescription = activity.getString(R.string.title_view_likes)
-            val commentsDescription = activity.getString(R.string.description_feed_open_comments)
             val profileNode = onNodeWithContentDescription(profileDescription)
             profileNode.assertIsDisplayed().assertHasClickAction()
-            onNodeWithContentDescription(likesDescription).assertIsDisplayed().assertHasClickAction()
-            onNodeWithContentDescription(commentsDescription).assertIsDisplayed().assertHasClickAction()
+            onNodeWithContentDescription(activity.getString(R.string.title_view_likes)).assertIsDisplayed().assertHasClickAction()
+            onNodeWithContentDescription(activity.getString(R.string.description_feed_open_comments)).assertIsDisplayed().assertHasClickAction()
             onNodeWithContentDescription(activity.getString(R.string.description_favourite_action_add))
                 .assertIsDisplayed()
                 .assertHasClickAction()
@@ -108,7 +94,7 @@ class FeedStatusRowComposeTest {
                 isFallbackVisible
             }
 
-            runOnUiThread { host.adapter.submitList(listOf(statusItem(avatarUrl = localAvatarUrl))) }
+            runOnUiThread { items.value = listOf(statusItem(avatarUrl = localAvatarUrl)) }
             waitUntil("local status avatar renders", 5_000L) {
                 val image = profileNode.captureToImage().asAndroidBitmap()
                 val isFixtureVisible = image.centerColorMatches(expectedImageCenterColor)
@@ -116,32 +102,10 @@ class FeedStatusRowComposeTest {
                 isFixtureVisible
             }
 
-            lateinit var recycledHolder: RecyclerView.ViewHolder
-            runOnUiThread {
-                recycledHolder = requireNotNull(host.recyclerView.findViewHolderForAdapterPosition(0))
-                host.adapter.onViewRecycled(recycledHolder)
-            }
-            waitUntil("recycled status avatar displays its fallback", 5_000L) {
-                val image = profileNode.captureToImage().asAndroidBitmap()
-                val isFallbackVisible = image.centerColorMatches(Color.rgb(255, 224, 74))
-                image.recycle()
-                isFallbackVisible
-            }
-            profileNode.assertIsDisplayed().assertHasClickAction()
-
-            runOnUiThread { host.adapter.onBindViewHolder(recycledHolder, 0) }
-            waitUntil("rebound status avatar renders", 5_000L) {
-                val image = profileNode.captureToImage().asAndroidBitmap()
-                val isFixtureVisible = image.centerColorMatches(expectedImageCenterColor)
-                image.recycle()
-                isFixtureVisible
-            }
-            profileNode.assertIsDisplayed().assertHasClickAction()
-
             var markdownView: RichMarkdownTextView? = null
-            runOnUiThread {
-                val row = requireNotNull(host.recyclerView.findViewHolderForAdapterPosition(0)).itemView
-                markdownView = row.findViewById(R.id.widget_status_text)
+            waitUntil("status Markdown view is composed", 5_000L) {
+                runOnUiThread { markdownView = activity.findViewById(R.id.widget_status_text) }
+                markdownView != null
             }
             val markdown = requireNotNull(markdownView)
             assertEquals("A status with bold text and AniList.", markdown.text.toString())
@@ -155,15 +119,12 @@ class FeedStatusRowComposeTest {
 
     @Test
     @OptIn(ExperimentalTestApi::class)
-    fun ownerStatusShowsEditDeleteAndLoadingEmptyStates() {
+    fun ownerStatusShowsEditDeleteAndCanonicalBusyStates() {
         runAndroidComposeUiTest<ProgressLayoutTestActivity> {
             val activity = requireNotNull(activity)
-            val idleItem = statusItem(body = null, canEdit = true, canDelete = true)
-            lateinit var host: FeedStatusHost
-            runOnUiThread { host = installStatusHost(activity, idleItem) }
-            waitUntil("owner status holder binds", 5_000L) {
-                host.adapter.itemCount == 1 && host.recyclerView.findViewHolderForAdapterPosition(0) != null
-            }
+            val item = statusItem(body = null, canEdit = true, canDelete = true)
+            val items = mutableStateOf(listOf(item))
+            installStatusList(activity, items)
             waitForIdle()
 
             onNodeWithContentDescription(activity.getString(R.string.edit_status_title))
@@ -172,33 +133,18 @@ class FeedStatusRowComposeTest {
             onNodeWithContentDescription(activity.getString(R.string.dialog_title_delete_activity))
                 .assertIsDisplayed()
                 .assertIsEnabled()
-                .assertHasClickAction()
-
             var emptyBody: RichMarkdownTextView? = null
-            runOnUiThread {
-                emptyBody =
-                    requireNotNull(host.recyclerView.findViewHolderForAdapterPosition(0))
-                        .itemView
-                        .findViewById(R.id.widget_status_text)
-            }
+            runOnUiThread { emptyBody = activity.findViewById(R.id.widget_status_text) }
             assertEquals("No content available", requireNotNull(emptyBody).text.toString())
 
             val favouriteDescription = activity.getString(R.string.description_favourite_action_add)
             val busyDescription = activity.getString(R.string.busy_please_wait)
-            val pendingFavourite = idleItem.copy(isLikePending = true)
-            runOnUiThread { host.adapter.submitList(listOf(pendingFavourite)) }
-            waitUntil("favorite pending state commits", 5_000L) {
-                host.adapter.currentList.singleOrNull()?.isLikePending == true
-            }
+            runOnUiThread { items.value = listOf(item.copy(isLikePending = true)) }
             waitForIdle()
             onNodeWithContentDescription(favouriteDescription).assertIsNotEnabled()
             onNodeWithContentDescription(busyDescription, useUnmergedTree = true).assertIsDisplayed()
 
-            val pendingDelete = idleItem.copy(isDeletePending = true)
-            runOnUiThread { host.adapter.submitList(listOf(pendingDelete)) }
-            waitUntil("delete pending state commits", 5_000L) {
-                host.adapter.currentList.singleOrNull()?.isDeletePending == true
-            }
+            runOnUiThread { items.value = listOf(item.copy(isDeletePending = true)) }
             waitForIdle()
             onNodeWithContentDescription(activity.getString(R.string.dialog_title_delete_activity)).assertIsNotEnabled()
             onNodeWithContentDescription(busyDescription, useUnmergedTree = true).assertIsDisplayed()
@@ -207,58 +153,33 @@ class FeedStatusRowComposeTest {
 
     @Test
     @OptIn(ExperimentalTestApi::class)
-    fun deleteConfirmationCannotActOnAnotherFeedAfterRebind() {
+    fun deleteConfirmationCannotActAfterItsFeedLeavesTheComposeSnapshot() {
         val deletedFeedIds = CopyOnWriteArrayList<Long>()
         val confirmation = slot<DialogInterface.OnClickListener>()
-
         mockkStatic(DialogUtil::class)
         try {
-            every {
-                DialogUtil.createMessage(any(), any(), any(), capture(confirmation))
-            } returns Unit
+            every { DialogUtil.createMessage(any(), any(), any(), capture(confirmation)) } returns Unit
 
             runAndroidComposeUiTest<ProgressLayoutTestActivity> {
                 val activity = requireNotNull(activity)
-                lateinit var host: FeedStatusHost
-                runOnUiThread {
-                    host =
-                        installStatusHost(
-                            activity = activity,
-                            item = statusItem(id = 42L, canDelete = true),
-                            onDeleteFeed = deletedFeedIds::add,
-                        )
-                }
-                waitUntil("first deletable status binds", 5_000L) {
-                    host.adapter.itemCount == 1 && host.recyclerView.findViewHolderForAdapterPosition(0) != null
-                }
+                val items = mutableStateOf(listOf(statusItem(id = 42L, canDelete = true)))
+                installStatusList(activity, items, onDeleteFeed = deletedFeedIds::add)
                 waitForIdle()
 
                 val deleteDescription = activity.getString(R.string.dialog_title_delete_activity)
                 onNodeWithContentDescription(deleteDescription).performClick()
                 val oldConfirmation = confirmation.captured
 
-                runOnUiThread {
-                    host.adapter.submitList(listOf(statusItem(id = 43L, canDelete = true)))
-                }
-                waitUntil("rebound deletable status commits", 5_000L) {
-                    host.adapter.currentList.singleOrNull()?.id == 43L &&
-                        host.recyclerView.findViewHolderForAdapterPosition(0) != null
-                }
+                runOnUiThread { items.value = listOf(statusItem(id = 43L, canDelete = true)) }
                 waitForIdle()
                 runOnUiThread {
-                    oldConfirmation.onClick(
-                        mockk(relaxed = true),
-                        DialogInterface.BUTTON_POSITIVE,
-                    )
+                    oldConfirmation.onClick(mockk(relaxed = true), DialogInterface.BUTTON_POSITIVE)
                 }
-                runOnIdle { assertTrue("stale confirmation cannot delete the rebound status", deletedFeedIds.isEmpty()) }
+                runOnIdle { assertTrue("stale confirmation cannot delete the removed status", deletedFeedIds.isEmpty()) }
 
                 onNodeWithContentDescription(deleteDescription).performClick()
                 runOnUiThread {
-                    confirmation.captured.onClick(
-                        mockk(relaxed = true),
-                        DialogInterface.BUTTON_POSITIVE,
-                    )
+                    confirmation.captured.onClick(mockk(relaxed = true), DialogInterface.BUTTON_POSITIVE)
                 }
                 runOnIdle { assertEquals(listOf(43L), deletedFeedIds.toList()) }
             }
@@ -267,49 +188,93 @@ class FeedStatusRowComposeTest {
         }
     }
 
-    private fun installStatusHost(
-        activity: ProgressLayoutTestActivity,
-        item: FeedItemUiModel,
-        onDeleteFeed: (Long) -> Unit = {},
-    ): FeedStatusHost {
-        val adapter =
-            FeedListAdapter(
-                onToggleLikeAction = {},
-                onDeleteFeedAction = onDeleteFeed,
-                onOpenMedia = { _, _ -> },
-                onOpenComments = {},
-                onEditFeed = {},
-                onShowLikes = {},
-                onOpenProfile = { _, _ -> },
-                onLongPressMedia = { _, _ -> false },
+    @Test
+    @OptIn(ExperimentalTestApi::class)
+    fun messageListKeepsMarkdownIdentityLikesCommentsAndEditActions() {
+        val openedProfiles = CopyOnWriteArrayList<Pair<Int, Long>>()
+        val likesFeedIds = CopyOnWriteArrayList<Long>()
+        val commentedFeedIds = CopyOnWriteArrayList<Long>()
+        val editedFeedIds = CopyOnWriteArrayList<Long>()
+        val message =
+            statusItem(id = 44L, body = "A **message** [link](https://anilist.co)", canEdit = true).copy(
+                type = KeyUtil.MESSAGE,
+                messengerName = "Sender",
+                messengerId = 11L,
+                recipientName = "Recipient",
+                recipientId = 12L,
             )
-        val recyclerView =
-            RecyclerView(activity).apply {
-                layoutManager = LinearLayoutManager(activity)
-                itemAnimator = null
-                layoutParams =
-                    ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                    )
-                this.adapter = adapter
+
+        runAndroidComposeUiTest<ProgressLayoutTestActivity> {
+            val activity = requireNotNull(activity)
+            installStatusList(
+                activity = activity,
+                items = mutableStateOf(listOf(message)),
+                callbacks =
+                FeedRowCallbacks(
+                    onToggleLike = {},
+                    onDelete = {},
+                    onOpenMedia = { _, _ -> },
+                    onOpenComments = { commentedFeedIds.add(it) },
+                    onEdit = { editedFeedIds.add(it.id) },
+                    onShowLikes = { likesFeedIds.add(it.id) },
+                    onOpenProfile = { target, userId -> openedProfiles.add(target.id to userId) },
+                    onLongPressMedia = { _, _ -> false },
+                ),
+            )
+            waitForIdle()
+
+            val markdown = activity.findViewById<RichMarkdownTextView>(R.id.widget_status_text)
+            assertEquals("A message link", markdown.text.toString())
+            assertTrue((markdown.text as Spanned).getSpans(0, markdown.text.length, ClickableSpan::class.java).isNotEmpty())
+            assertEquals("Recipient", activity.findViewById<android.widget.TextView>(R.id.recipient_user_name).text.toString())
+            assertEquals("Sender", activity.findViewById<android.widget.TextView>(R.id.messenger_user_name).text.toString())
+            assertEquals(View.VISIBLE, activity.findViewById<View>(R.id.messenger_user_name).visibility)
+
+            runOnUiThread {
+                activity.findViewById<View>(R.id.messenger_avatar).performClick()
+                activity.findViewById<View>(R.id.recipient_avatar).performClick()
+                activity.findViewById<View>(R.id.widget_users).performClick()
+                activity.findViewById<View>(R.id.widget_comment).performClick()
+                activity.findViewById<View>(R.id.widget_edit).performClick()
             }
-        activity.setContentView(
-            ComposeView(activity).apply {
-                id = View.generateViewId()
-                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-                setContent {
-                    AniTrendTheme {
-                        AndroidView(
-                            factory = { recyclerView },
-                            modifier = Modifier.fillMaxSize(),
-                        )
-                    }
-                }
-            },
-        )
-        adapter.submitList(listOf(item))
-        return FeedStatusHost(adapter, recyclerView)
+            runOnIdle {
+                assertEquals(
+                    listOf(R.id.messenger_avatar to 11L, R.id.recipient_avatar to 12L),
+                    openedProfiles.toList(),
+                )
+                assertEquals(listOf(44L), likesFeedIds.toList())
+                assertEquals(listOf(44L), commentedFeedIds.toList())
+                assertEquals(listOf(44L), editedFeedIds.toList())
+            }
+        }
+    }
+
+    private fun installStatusList(
+        activity: ProgressLayoutTestActivity,
+        items: MutableState<List<FeedItemUiModel>>,
+        onDeleteFeed: (Long) -> Unit = {},
+        callbacks: FeedRowCallbacks? = null,
+    ) {
+        activity.installComposeContent {
+            AniTrendTheme {
+                FeedItemLazyList(
+                    items = items.value,
+                    listState = rememberLazyListState(),
+                    callbacks = callbacks ?: FeedRowCallbacks(
+                        onToggleLike = {},
+                        onDelete = onDeleteFeed,
+                        onOpenMedia = { _, _ -> },
+                        onOpenComments = {},
+                        onEdit = {},
+                        onShowLikes = {},
+                        onOpenProfile = { _, _ -> },
+                        onLongPressMedia = { _, _ -> false },
+                    ),
+                    onLoadMore = {},
+                    modifier = Modifier.fillMaxSize(),
+                )
+            }
+        }
     }
 
     private fun statusItem(
@@ -350,11 +315,6 @@ class FeedStatusRowComposeTest {
         hasLikes = true,
         likes = emptyList(),
         feedText = body,
-    )
-
-    private data class FeedStatusHost(
-        val adapter: FeedListAdapter,
-        val recyclerView: RecyclerView,
     )
 
     private companion object {

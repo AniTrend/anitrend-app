@@ -11,33 +11,29 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.annotation.VisibleForTesting
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.referentialEqualityPolicy
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import androidx.paging.CombinedLoadStates
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.textfield.TextInputEditText
 import com.mxt.anitrend.R
-import com.mxt.anitrend.adapter.recycler.group.GroupCharacterAdapter
-import com.mxt.anitrend.adapter.recycler.index.StaffAdapter
-import com.mxt.anitrend.adapter.recycler.index.StudioAdapter
-import com.mxt.anitrend.adapter.recycler.index.UserAdapter
-import com.mxt.anitrend.adapter.recycler.search.MediaSearchAdapter
-import com.mxt.anitrend.adapter.recycler.shared.LoadStateFooterAdapter
-import com.mxt.anitrend.adapter.recycler.shared.PagingLoadStateRenderer
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
-import com.mxt.anitrend.base.custom.recycler.RecyclerSectionAdapter
-import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter
-import com.mxt.anitrend.base.interfaces.event.ItemClickListener
 import com.mxt.anitrend.data.DatabaseHelper
 import com.mxt.anitrend.databinding.FragmentListBinding
 import com.mxt.anitrend.domain.model.MediaSearchItemUiModel
 import com.mxt.anitrend.graphql.generated.MediaType
-import com.mxt.anitrend.model.entity.base.CharacterBase
-import com.mxt.anitrend.model.entity.base.StaffBase
-import com.mxt.anitrend.model.entity.base.StudioBase
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.navigation.extension.navigateToCharacter
 import com.mxt.anitrend.navigation.extension.navigateToMedia
@@ -49,18 +45,30 @@ import com.mxt.anitrend.navigation.model.MediaScreenParam
 import com.mxt.anitrend.navigation.model.StaffScreenParam
 import com.mxt.anitrend.navigation.model.StudioScreenParam
 import com.mxt.anitrend.navigation.model.UserScreenParam
+import com.mxt.anitrend.ui.character.CharacterGrid
+import com.mxt.anitrend.ui.character.CharacterRowUiState
+import com.mxt.anitrend.ui.designsystem.AniTrendTheme
+import com.mxt.anitrend.ui.media.StudioGrid
+import com.mxt.anitrend.ui.media.StudioRowUiState
+import com.mxt.anitrend.ui.mediasearch.MediaSearchPagingList
+import com.mxt.anitrend.ui.paging.PagingLoadStateRenderer
+import com.mxt.anitrend.ui.staff.StaffGrid
+import com.mxt.anitrend.ui.staff.StaffRowUiState
+import com.mxt.anitrend.ui.user.UserList
+import com.mxt.anitrend.ui.user.UserRowUiState
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.Settings
-import com.mxt.anitrend.util.collection.GroupingUtil
 import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.viewmodel.CharacterSearchViewModel
 import com.mxt.anitrend.viewmodel.MediaSearchViewModel
 import com.mxt.anitrend.viewmodel.StaffSearchViewModel
 import com.mxt.anitrend.viewmodel.StudioSearchViewModel
 import com.mxt.anitrend.viewmodel.UserSearchViewModel
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -82,12 +90,55 @@ class SearchFragment : FragmentBaseList<Any, Any>() {
 
     private var listBinding: FragmentListBinding? = null
     private lateinit var sectionSelector: ChipGroup
-    private lateinit var sectionAdapter: RecyclerSectionAdapter
-    private lateinit var mediaSearchAdapter: MediaSearchAdapter
-    private lateinit var mediaAdapterWithFooter: RecyclerView.Adapter<*>
-    private var section = Section.ANIME
+    private lateinit var mediaComposeView: ComposeView
+    private lateinit var loadStateRenderer: PagingLoadStateRenderer
+    private lateinit var userComposeView: ComposeView
+    private val mediaRefreshSignal = mutableStateOf(0)
+
+    // The refresh signal is one-shot across ComposeView recreation.
+    private var consumedMediaRefreshSignal = 0
+    private val mediaPaging = MutableStateFlow<MediaPagingSnapshot?>(null)
+    private val mediaListState = LazyGridState()
+    private val characterGridState = LazyGridState()
+    private val staffGridState = LazyGridState()
+    private val studioGridState = LazyGridState()
+    private val userListState = LazyGridState()
+
+    /**
+     * Load state and item count from one paging snapshot: count-only changes must
+     * re-trigger rendering, so both travel through the single observed holder.
+     */
+    private data class MediaPagingSnapshot(
+        val states: CombinedLoadStates,
+        val count: Int,
+    )
+
+    private var section by mutableStateOf(Section.ANIME)
+
+    // Search identity changes only on submit or tab selection, never on keystrokes.
     private var searchQuery: String? = null
+    private var draftQuery = ""
+    private var draftQueryChanged = false
     private var queryInput: TextInputEditText? = null
+    private lateinit var composeView: ComposeView
+
+    // Compose-grid paging state for the character, staff, and studio sections.
+    private var composeHasMore = true
+    private var composeLoading = false
+    private var lastCharacterSearch: String? = null
+    private var lastStaffSearch: String? = null
+    private var lastStudioSearch: String? = null
+    private var lastUserSearch: String? = null
+    private var lastCharacterPage = 0
+    private var lastStaffPage = 0
+    private var lastStudioPage = 0
+    private var lastUserPage = 0
+    private val characterItems = mutableStateOf(emptyList<CharacterRowUiState>(), referentialEqualityPolicy())
+    private val staffItems = mutableStateOf(emptyList<StaffRowUiState>(), referentialEqualityPolicy())
+    private val studioItems = mutableStateOf(emptyList<StudioRowUiState>(), referentialEqualityPolicy())
+    private val userItems = mutableStateOf(emptyList<UserRowUiState>())
+    private var usersLoading = false
+    private var usersHaveMore = true
 
     private val settings: Settings by inject()
     private val databaseHelper: DatabaseHelper by inject()
@@ -101,6 +152,9 @@ class SearchFragment : FragmentBaseList<Any, Any>() {
     companion object {
         private const val STATE_SECTION = "search_section"
         private const val STATE_QUERY = "search_query"
+        private const val STATE_DRAFT_QUERY = "search_draft_query"
+        private const val STATE_DRAFT_QUERY_CHANGED = "search_draft_query_changed"
+        private const val USER_LIST_VISIBLE_THRESHOLD = 9
 
         @VisibleForTesting
         internal fun resolveLegacyQuery(raw: String?): String? = raw
@@ -113,21 +167,12 @@ class SearchFragment : FragmentBaseList<Any, Any>() {
         super.onCreate(savedInstanceState)
         searchQuery = savedInstanceState?.getString(STATE_QUERY)
             ?: resolveLegacyQuery(arguments?.getString(KeyUtil.arg_search))
+        draftQuery = savedInstanceState?.getString(STATE_DRAFT_QUERY) ?: searchQuery.orEmpty()
+        draftQueryChanged = savedInstanceState?.getBoolean(STATE_DRAFT_QUERY_CHANGED) ?: false
         section = savedInstanceState?.getString(STATE_SECTION)?.let { value ->
             runCatching { Section.valueOf(value) }.getOrDefault(Section.ANIME)
         }?.takeIf { it in visibleSections() } ?: Section.ANIME
-        sectionAdapter = RecyclerSectionAdapter(requireContext()) { sectionClickListener() }
-        mAdapter = sectionAdapter
-        mediaSearchAdapter = MediaSearchAdapter(
-            context = requireContext(),
-            onOpenMedia = ::openMedia,
-            onLongPressMedia = ::longPressMedia,
-        )
-        mediaAdapterWithFooter = mediaSearchAdapter.withLoadStateFooter(
-            footer = LoadStateFooterAdapter(mediaSearchAdapter::retry),
-        )
-        isPager = false
-        sectionAdapter.select(createAdapter(section))
+        isPager = section.mediaType == null
     }
 
     override fun onCreateView(
@@ -137,14 +182,15 @@ class SearchFragment : FragmentBaseList<Any, Any>() {
     ): View {
         val root = inflater.inflate(R.layout.fragment_search, container, false)
         queryInput = root.findViewById<TextInputEditText>(R.id.search_query_input).apply {
-            setText(searchQuery.orEmpty())
+            setText(draftQuery)
             setSelection(text?.length ?: 0)
             addTextChangedListener(
                 object : TextWatcher {
                     override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
 
                     override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                        searchQuery = s?.toString()?.takeIf { it.isNotEmpty() }
+                        draftQuery = s?.toString().orEmpty()
+                        draftQueryChanged = true
                     }
 
                     override fun afterTextChanged(s: Editable?) = Unit
@@ -166,16 +212,96 @@ class SearchFragment : FragmentBaseList<Any, Any>() {
         listBinding = FragmentListBinding.inflate(inflater, listContainer, true)
         val binding = requireNotNull(listBinding)
         swipeRefreshLayout = binding.refreshLayout
-        recyclerView = binding.recyclerView
         stateLayout = binding.stateLayout
-        recyclerView.setHasFixedSize(true)
-        recyclerView.isNestedScrollingEnabled = true
-        mColumnSize = columnSizeFor(section)
-        mLayoutManager = StaggeredGridLayoutManager(
-            resources.getInteger(mColumnSize),
-            StaggeredGridLayoutManager.VERTICAL,
-        )
-        recyclerView.layoutManager = mLayoutManager
+        composeView = ComposeView(requireContext()).apply {
+            visibility = View.GONE
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                AniTrendTheme {
+                    when (section) {
+                        Section.CHARACTERS -> CharacterGrid(
+                            items = characterItems.value,
+                            gridState = characterGridState,
+                            onCharacterClick = { navigateToCharacter(CharacterScreenParam(it)) },
+                            onLoadMore = ::onComposeLoadMore,
+                        )
+                        Section.STAFF -> StaffGrid(
+                            items = staffItems.value,
+                            gridState = staffGridState,
+                            onStaffClick = { navigateToStaff(StaffScreenParam(it)) },
+                            onLoadMore = ::onComposeLoadMore,
+                        )
+                        Section.STUDIO -> StudioGrid(
+                            items = studioItems.value,
+                            gridState = studioGridState,
+                            onStudioClick = { navigateToStudio(StudioScreenParam(it)) },
+                            onLoadMore = ::onComposeLoadMore,
+                        )
+                        else -> Unit
+                    }
+                }
+            }
+        }
+        mediaComposeView = ComposeView(requireContext()).apply {
+            visibility = View.GONE
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                val lazyPagingItems = mediaViewModel.pagingDataFlow.collectAsLazyPagingItems()
+                LaunchedEffect(mediaRefreshSignal.value) {
+                    val refreshSignal = mediaRefreshSignal.value
+                    if (refreshSignal > consumedMediaRefreshSignal) {
+                        consumedMediaRefreshSignal = refreshSignal
+                        lazyPagingItems.refresh()
+                    }
+                }
+                LaunchedEffect(lazyPagingItems) {
+                    snapshotFlow { lazyPagingItems.loadState to lazyPagingItems.itemCount }
+                        .collect { (states, count) ->
+                            mediaPaging.value = MediaPagingSnapshot(states, count)
+                        }
+                }
+                AniTrendTheme {
+                    MediaSearchPagingList(
+                        lazyPagingItems = lazyPagingItems,
+                        listState = mediaListState,
+                        onMediaClick = ::openMedia,
+                        onMediaLongClick = ::longPressMedia,
+                    )
+                }
+            }
+        }
+        userComposeView = ComposeView(requireContext()).apply {
+            visibility = View.GONE
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                LaunchedEffect(section, userListState) {
+                    if (section == Section.USERS) {
+                        snapshotFlow {
+                            val layoutInfo = userListState.layoutInfo
+                            layoutInfo.visibleItemsInfo.lastOrNull()?.index?.let { lastVisibleIndex ->
+                                layoutInfo.totalItemsCount to lastVisibleIndex
+                            }
+                        }.distinctUntilChanged().collect { visibleRange ->
+                            if (
+                                visibleRange != null &&
+                                visibleRange.first - visibleRange.second - 1 <= USER_LIST_VISIBLE_THRESHOLD
+                            ) {
+                                onUserLoadMore()
+                            }
+                        }
+                    }
+                }
+                AniTrendTheme {
+                    UserList(
+                        items = userItems.value,
+                        listState = userListState,
+                        currentUser = databaseHelper.currentUser,
+                        onUserClick = { navigateToProfile(UserScreenParam(it)) },
+                        onToggleFollow = userViewModel::toggleFollow,
+                    )
+                }
+            }
+        }
         swipeRefreshLayout.setOnRefreshAndLoadListener(this)
         activity?.let { CompatUtil.configureSwipeRefreshLayout(swipeRefreshLayout, it) }
         buildSectionSelector()
@@ -184,34 +310,44 @@ class SearchFragment : FragmentBaseList<Any, Any>() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        // FragmentBaseList restores these in onViewStateRestored, after this request decision.
+        savedInstanceState?.let { state ->
+            pageState.currentPage = state.getInt(KeyUtil.arg_page, pageState.currentPage)
+            pageState.currentOffset = state.getInt(KeyUtil.arg_page_offset, pageState.currentOffset)
+        }
         super.onViewCreated(view, savedInstanceState)
-        val loadStateRenderer = PagingLoadStateRenderer(
-            itemCount = { mediaSearchAdapter.itemCount },
-            callbacks = PagingLoadStateRenderer.Callbacks(
-                showLoading = ::showLoading,
-                showContent = ::showContent,
-                showError = ::showError,
-                showEmpty = ::showEmpty,
-                stopRefreshIndicators = {
-                    if (swipeRefreshLayout.isRefreshing()) swipeRefreshLayout.setRefreshing(false)
-                    if (swipeRefreshLayout.isLoading()) swipeRefreshLayout.setLoading(false)
-                },
-                messages = PagingLoadStateRenderer.Callbacks.Messages(
-                    errorMessage = { getString(R.string.text_error_request) },
-                    emptyMessage = { getString(R.string.layout_empty_response) },
+        loadStateRenderer =
+            PagingLoadStateRenderer(
+                itemCount = { mediaPaging.value?.count ?: 0 },
+                callbacks = PagingLoadStateRenderer.Callbacks(
+                    showLoading = ::showLoading,
+                    showContent = ::showContent,
+                    showError = ::showError,
+                    showEmpty = ::showEmpty,
+                    stopRefreshIndicators = {
+                        if (swipeRefreshLayout.isRefreshing()) swipeRefreshLayout.setRefreshing(false)
+                        if (swipeRefreshLayout.isLoading()) swipeRefreshLayout.setLoading(false)
+                    },
+                    messages = PagingLoadStateRenderer.Callbacks.Messages(
+                        errorMessage = { getString(R.string.text_error_request) },
+                        emptyMessage = { getString(R.string.layout_empty_response) },
+                    ),
                 ),
-            ),
-        )
+            )
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    mediaViewModel.pagingDataFlow.collectLatest { pagingData ->
-                        mediaSearchAdapter.submitData(pagingData)
-                    }
-                }
-                launch {
-                    mediaSearchAdapter.loadStateFlow.collect {
-                        if (section.mediaType != null) loadStateRenderer.render(it)
+                    // Re-renders on load-state changes and on section changes: the
+                    // query-keyed Pager is idempotent, so returning to the media
+                    // tabs emits no new load state and the cached state must drive
+                    // the surfaces again. Both signals stay reactive (snapshotFlow
+                    // alone would not observe the StateFlow).
+                    combine(mediaPaging, snapshotFlow { section }) { paging, currentSection ->
+                        paging to currentSection
+                    }.collect { (paging, currentSection) ->
+                        if (paging != null && currentSection.mediaType != null) {
+                            loadStateRenderer.render(paging.states)
+                        }
                     }
                 }
                 launch { characterViewModel.state.collect { state -> if (section == Section.CHARACTERS) renderCharacter(state) } }
@@ -221,12 +357,27 @@ class SearchFragment : FragmentBaseList<Any, Any>() {
                 launch { userViewModel.followStates.collect(::rebindFollowStates) }
             }
         }
-        if (!searchQuery.isNullOrBlank()) makeRequest()
+        if (!searchQuery.isNullOrBlank()) {
+            resetComposePagingForQueryChange()
+            if (!hasCurrentComposePage()) {
+                if (pageState.currentPage > 1) resetComposePaging()
+                makeRequest()
+            }
+        }
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        if (section.isComposeGrid() || section == Section.USERS) {
+            hasCurrentComposePage()
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putString(STATE_SECTION, section.name)
         outState.putString(STATE_QUERY, searchQuery)
+        outState.putString(STATE_DRAFT_QUERY, queryInput?.text?.toString() ?: draftQuery)
+        outState.putBoolean(STATE_DRAFT_QUERY_CHANGED, draftQueryChanged)
         super.onSaveInstanceState(outState)
     }
 
@@ -237,17 +388,22 @@ class SearchFragment : FragmentBaseList<Any, Any>() {
     }
 
     override fun onRefresh() {
-        if (section.mediaType != null) mediaSearchAdapter.refresh() else super.onRefresh()
-    }
-
-    override fun onLoadMore() {
-        if (section.mediaType == null) super.onLoadMore()
+        if (section.mediaType != null) {
+            mediaRefreshSignal.value++
+        } else {
+            if (section.isComposeGrid()) resetComposePaging()
+            if (section == Section.USERS) {
+                usersLoading = false
+                usersHaveMore = true
+            }
+            super.onRefresh()
+        }
     }
 
     override fun updateUI() {
         if (section.mediaType != null) return
         setSwipeRefreshLayoutEnabled(false)
-        injectAdapter()
+        showContent()
     }
 
     override fun makeRequest() {
@@ -258,28 +414,34 @@ class SearchFragment : FragmentBaseList<Any, Any>() {
             mediaViewModel.load(query, type, isAdult)
             return
         }
+        if (section.isComposeGrid()) composeLoading = true
         when (section) {
-            Section.CHARACTERS -> characterViewModel.load(query, mScrollListener.currentPage)
-            Section.STAFF -> staffViewModel.load(query, mScrollListener.currentPage)
-            Section.STUDIO -> studioViewModel.load(query, mScrollListener.currentPage)
-            Section.USERS -> userViewModel.load(query, mScrollListener.currentPage)
+            Section.CHARACTERS -> {
+                lastCharacterSearch = query
+                lastCharacterPage = pageState.currentPage
+                characterViewModel.load(query, pageState.currentPage)
+            }
+            Section.STAFF -> {
+                lastStaffSearch = query
+                lastStaffPage = pageState.currentPage
+                staffViewModel.load(query, pageState.currentPage)
+            }
+            Section.STUDIO -> {
+                lastStudioSearch = query
+                lastStudioPage = pageState.currentPage
+                studioViewModel.load(query, pageState.currentPage)
+            }
+            Section.USERS -> {
+                lastUserSearch = query
+                lastUserPage = pageState.currentPage
+                usersLoading = true
+                userViewModel.load(query, pageState.currentPage)
+            }
             Section.ANIME, Section.MANGA -> Unit
         }
     }
 
     override fun onChanged(value: Any?) = Unit
-
-    override fun onItemClick(target: View, data: IndexedValue<Any>) {
-        if (target.id != R.id.container) return
-        when (val item = data.value) {
-            is CharacterBase -> navigateToCharacter(CharacterScreenParam(item.id))
-            is StaffBase -> navigateToStaff(StaffScreenParam(item.id))
-            is StudioBase -> navigateToStudio(StudioScreenParam(item.id))
-            is UserBase -> navigateToProfile(UserScreenParam(item.id))
-        }
-    }
-
-    override fun onItemLongClick(target: View, data: IndexedValue<Any>) = Unit
 
     private fun buildSectionSelector() {
         visibleSections().forEach { value ->
@@ -302,12 +464,14 @@ class SearchFragment : FragmentBaseList<Any, Any>() {
             return
         }
         searchQuery = query
-        mScrollListener.onRefreshPage()
+        draftQueryChanged = false
+        pageState.onRefreshPage()
         if (section.mediaType != null) {
             makeRequest()
-            mediaSearchAdapter.refresh()
+            mediaRefreshSignal.value++
         } else {
-            sectionAdapter.clearSelectedSection()
+            clearComposeItems()
+            resetComposePaging()
             showLoading()
             makeRequest()
         }
@@ -315,65 +479,243 @@ class SearchFragment : FragmentBaseList<Any, Any>() {
 
     private fun selectSection(value: Section, reload: Boolean = true) {
         if (section == value && reload) return
-        removeScrollLoadTrigger()
         section = value
         isPager = value.mediaType == null
-        mColumnSize = columnSizeFor(value)
-        if (::mLayoutManager.isInitialized) mLayoutManager.spanCount = resources.getInteger(mColumnSize)
         sectionSelector.getChildAt(visibleSections().indexOf(value))?.let { sectionSelector.check(it.id) }
         attachSectionSurface()
         if (reload && view != null) {
-            mScrollListener.onRefreshPage()
-            sectionAdapter.clearSelectedSection()
+            // Tab changes remain an explicit search action for the current draft.
+            if (draftQueryChanged) {
+                searchQuery = draftQuery.takeIf { it.isNotEmpty() }
+                draftQueryChanged = false
+            }
+            clearComposeItems()
+            resetComposePaging()
             showLoading()
             makeRequest()
+        }
+        // Returning to a media tab emits no new paging state (the query-keyed
+        // Pager is idempotent), so the cached state must re-drive the surfaces
+        // synchronously or the selection loading state never dismisses.
+        if (section.mediaType != null) {
+            mediaPaging.value?.let { loadStateRenderer.render(it.states) }
         }
     }
 
     private fun attachSectionSurface() {
-        if (!::recyclerView.isInitialized) return
-        if (section.mediaType != null) {
-            swipeRefreshLayout.setPermitLoad(false)
-            recyclerView.adapter = mediaAdapterWithFooter
+        if (listBinding == null) return
+        val composeGrid = section.isComposeGrid()
+        val mediaTab = section.mediaType != null
+        val usersTab = section == Section.USERS
+        composeView.visibility = if (composeGrid) View.VISIBLE else View.GONE
+        mediaComposeView.visibility = if (mediaTab) View.VISIBLE else View.GONE
+        userComposeView.visibility = if (usersTab) View.VISIBLE else View.GONE
+        when {
+            mediaTab -> {
+                swipeRefreshLayout.setPermitLoad(false)
+                swapRefreshTarget(mediaComposeView)
+            }
+            composeGrid -> {
+                swipeRefreshLayout.setPermitLoad(false)
+                swapRefreshTarget(composeView)
+            }
+            usersTab -> {
+                swipeRefreshLayout.setPermitLoad(false)
+                swapRefreshTarget(userComposeView)
+            }
+        }
+    }
+
+    /**
+     * CustomSwipeRefreshLayout measures and scroll-gates only its single cached
+     * target, so the active Compose host owns that slot and inactive hosts leave
+     * the container (the container re-resolves a target that left).
+     */
+    private fun swapRefreshTarget(host: View) {
+        if (host !== composeView && composeView.parent === swipeRefreshLayout) {
+            swipeRefreshLayout.removeView(composeView)
+        }
+        if (host !== mediaComposeView && mediaComposeView.parent === swipeRefreshLayout) {
+            swipeRefreshLayout.removeView(mediaComposeView)
+        }
+        if (host !== userComposeView && userComposeView.parent === swipeRefreshLayout) {
+            swipeRefreshLayout.removeView(userComposeView)
+        }
+        swipeRefreshLayout.scrollBoundary = { direction ->
+            when (host) {
+                mediaComposeView -> if (direction < 0) mediaListState.canScrollBackward else mediaListState.canScrollForward
+                userComposeView -> if (direction < 0) userListState.canScrollBackward else userListState.canScrollForward
+                composeView -> when (section) {
+                    Section.CHARACTERS ->
+                        if (direction < 0) characterGridState.canScrollBackward else characterGridState.canScrollForward
+                    Section.STAFF ->
+                        if (direction < 0) staffGridState.canScrollBackward else staffGridState.canScrollForward
+                    Section.STUDIO ->
+                        if (direction < 0) studioGridState.canScrollBackward else studioGridState.canScrollForward
+                    else -> false
+                }
+                else -> host.canScrollVertically(direction)
+            }
+        }
+        if (host.parent !== swipeRefreshLayout) {
+            swipeRefreshLayout.addView(
+                host,
+                0,
+                ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT),
+            )
+        }
+    }
+
+    private fun renderUserPage(content: List<UserBase>?) {
+        usersLoading = false
+        val mapped = content.orEmpty().map { it.toUserRowUiState() }
+        userItems.value = mapped
+        rebindFollowStates(userViewModel.followStates.value)
+        if (swipeRefreshLayout.isRefreshing()) swipeRefreshLayout.setRefreshing(false)
+        if (swipeRefreshLayout.isLoading()) swipeRefreshLayout.setLoading(false)
+        if (mapped.isNotEmpty()) {
+            updateUI()
         } else {
-            swipeRefreshLayout.setPermitLoad(true)
-            sectionAdapter.select(createAdapter(section))
-            recyclerView.adapter = sectionAdapter
-            if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) addScrollLoadTrigger()
+            usersHaveMore = false
+            if (isPager) setLimitReached()
+            showEmpty(getString(R.string.layout_empty_response))
+        }
+    }
+
+    private fun onUserLoadMore() {
+        if (section != Section.USERS || usersLoading || !usersHaveMore || isLimit || searchQuery.isNullOrBlank()) return
+        usersLoading = true
+        pageState.currentPage++
+        swipeRefreshLayout.setLoading(true)
+        makeRequest()
+    }
+
+    private fun Section.isComposeGrid(): Boolean = this == Section.CHARACTERS || this == Section.STAFF || this == Section.STUDIO
+
+    // A matching ViewModel page is authoritative; without one, a fresh process reloads page one.
+    private fun hasCurrentComposePage(): Boolean {
+        val query = searchQuery ?: return false
+        val requestedPage = when (section) {
+            Section.CHARACTERS ->
+                when (val state = characterViewModel.state.value) {
+                    is CharacterSearchViewModel.UiState.Success -> state.page.takeIf { state.search == query }
+                    is CharacterSearchViewModel.UiState.Error -> state.page.takeIf { state.search == query }
+                    CharacterSearchViewModel.UiState.Loading ->
+                        lastCharacterPage.takeIf { lastCharacterSearch == query && it > 0 }
+                }
+            Section.STAFF ->
+                when (val state = staffViewModel.state.value) {
+                    is StaffSearchViewModel.UiState.Success -> state.page.takeIf { state.search == query }
+                    is StaffSearchViewModel.UiState.Error -> state.page.takeIf { state.search == query }
+                    StaffSearchViewModel.UiState.Loading ->
+                        lastStaffPage.takeIf { lastStaffSearch == query && it > 0 }
+                }
+            Section.STUDIO ->
+                when (val state = studioViewModel.state.value) {
+                    is StudioSearchViewModel.UiState.Success -> state.page.takeIf { state.search == query }
+                    is StudioSearchViewModel.UiState.Error -> state.page.takeIf { state.search == query }
+                    StudioSearchViewModel.UiState.Loading ->
+                        lastStudioPage.takeIf { lastStudioSearch == query && it > 0 }
+                }
+            Section.USERS ->
+                when (val state = userViewModel.state.value) {
+                    is UserSearchViewModel.UiState.Success -> state.page.takeIf { state.search == query }
+                    is UserSearchViewModel.UiState.Error -> state.page.takeIf { state.search == query }
+                    UserSearchViewModel.UiState.Loading ->
+                        lastUserPage.takeIf { lastUserSearch == query && it > 0 }
+                }
+            else -> null
+        } ?: return false
+        pageState.currentPage = requestedPage
+        pageState.currentOffset = (requestedPage - 1) * KeyUtil.PAGING_LIMIT
+        return true
+    }
+
+    private fun resetComposePagingForQueryChange() {
+        if ((!section.isComposeGrid() && section != Section.USERS) || pageState.currentPage <= 1) return
+        val query = searchQuery ?: return
+        val loadedQuery = when (section) {
+            Section.CHARACTERS -> when (val state = characterViewModel.state.value) {
+                is CharacterSearchViewModel.UiState.Success -> state.search
+                is CharacterSearchViewModel.UiState.Error -> state.search
+                is CharacterSearchViewModel.UiState.Loading -> lastCharacterSearch
+            }
+            Section.STAFF -> when (val state = staffViewModel.state.value) {
+                is StaffSearchViewModel.UiState.Success -> state.search
+                is StaffSearchViewModel.UiState.Error -> state.search
+                is StaffSearchViewModel.UiState.Loading -> lastStaffSearch
+            }
+            Section.STUDIO -> when (val state = studioViewModel.state.value) {
+                is StudioSearchViewModel.UiState.Success -> state.search
+                is StudioSearchViewModel.UiState.Error -> state.search
+                is StudioSearchViewModel.UiState.Loading -> lastStudioSearch
+            }
+            Section.USERS -> when (val state = userViewModel.state.value) {
+                is UserSearchViewModel.UiState.Success -> state.search
+                is UserSearchViewModel.UiState.Error -> state.search
+                is UserSearchViewModel.UiState.Loading -> lastUserSearch
+            }
+            else -> null
+        }
+        if (loadedQuery != null && loadedQuery != query) resetComposePaging()
+    }
+
+    private fun onComposeLoadMore() {
+        if (composeLoading || !composeHasMore) return
+        if (searchQuery.isNullOrBlank()) return
+        composeLoading = true
+        pageState.currentPage++
+        makeRequest()
+    }
+
+    private fun resetComposePaging() {
+        pageState.onRefreshPage()
+        composeHasMore = true
+        composeLoading = false
+    }
+
+    private fun clearComposeItems() {
+        characterItems.value = emptyList()
+        staffItems.value = emptyList()
+        studioItems.value = emptyList()
+        userItems.value = emptyList()
+        usersLoading = false
+        usersHaveMore = true
+        isLimit = false
+    }
+
+    private fun commitComposePage(newCount: Int, totalCount: Int, hasNextPage: Boolean) {
+        composeLoading = false
+        composeHasMore = hasNextPage
+        if (swipeRefreshLayout.isRefreshing()) swipeRefreshLayout.setRefreshing(false)
+        if (swipeRefreshLayout.isLoading()) swipeRefreshLayout.setLoading(false)
+        if (newCount == 0) {
+            composeHasMore = false
+            if (totalCount == 0) {
+                showEmpty(getString(R.string.layout_empty_response))
+            } else {
+                showContent()
+            }
+        } else {
+            showContent()
         }
     }
 
     private fun visibleSections(): List<Section> = if (settings.isAuthenticated) Section.values().toList() else Section.values().filterNot { it == Section.USERS }
 
-    private fun createAdapter(value: Section): RecyclerViewAdapter<*> = when (value) {
-        Section.ANIME, Section.MANGA -> com.mxt.anitrend.adapter.recycler.index.MediaAdapter(requireContext(), true)
-        Section.CHARACTERS -> GroupCharacterAdapter(requireContext())
-        Section.STAFF -> StaffAdapter(requireContext())
-        Section.STUDIO -> StudioAdapter(requireContext())
-        Section.USERS -> UserAdapter(requireContext(), databaseHelper.currentUser) { userId, _ ->
-            userViewModel.toggleFollow(userId)
-        }
-    }
-
-    private fun sectionClickListener() = object : ItemClickListener<Any> {
-        override fun onItemClick(target: View, data: IndexedValue<Any>) = this@SearchFragment.onItemClick(target, data)
-        override fun onItemLongClick(target: View, data: IndexedValue<Any>) = this@SearchFragment.onItemLongClick(target, data)
-    }
-
-    private fun columnSizeFor(value: Section): Int = when (value) {
-        Section.STUDIO -> R.integer.grid_list_x2
-        Section.USERS -> R.integer.single_list_x1
-        else -> R.integer.grid_giphy_x3
-    }
-
     private fun renderCharacter(state: CharacterSearchViewModel.UiState) {
         when (state) {
             is CharacterSearchViewModel.UiState.Loading -> showLoading()
             is CharacterSearchViewModel.UiState.Success -> {
-                state.content.pageInfo?.let(::setPageInfo)
-                onPostProcessed(state.content.pageData.let(GroupingUtil::wrapInGroup).map { it as Any })
+                if (state.search != searchQuery || section != Section.CHARACTERS) return
+                state.content.pageInfo?.let(pageState::setPageInfo)
+                val mapped = state.items.map { CharacterRowUiState.from(it) }
+                characterItems.value = mapped
+                commitComposePage(state.itemsInPage, mapped.size, state.content.pageInfo?.hasNextPage() != false)
             }
-            is CharacterSearchViewModel.UiState.Error -> showError(state.message)
+            is CharacterSearchViewModel.UiState.Error -> {
+                if (state.search == searchQuery && section == Section.CHARACTERS) showError(state.message)
+            }
         }
     }
 
@@ -381,10 +723,15 @@ class SearchFragment : FragmentBaseList<Any, Any>() {
         when (state) {
             is StaffSearchViewModel.UiState.Loading -> showLoading()
             is StaffSearchViewModel.UiState.Success -> {
-                state.content.pageInfo?.let(::setPageInfo)
-                onPostProcessed(state.content.pageData.map { it as Any })
+                if (state.search != searchQuery || section != Section.STAFF) return
+                state.content.pageInfo?.let(pageState::setPageInfo)
+                val mapped = state.items.map { StaffRowUiState.from(it) }
+                staffItems.value = mapped
+                commitComposePage(state.itemsInPage, mapped.size, state.content.pageInfo?.hasNextPage() != false)
             }
-            is StaffSearchViewModel.UiState.Error -> showError(state.message)
+            is StaffSearchViewModel.UiState.Error -> {
+                if (state.search == searchQuery && section == Section.STAFF) showError(state.message)
+            }
         }
     }
 
@@ -392,41 +739,63 @@ class SearchFragment : FragmentBaseList<Any, Any>() {
         when (state) {
             is StudioSearchViewModel.UiState.Loading -> showLoading()
             is StudioSearchViewModel.UiState.Success -> {
-                state.content.pageInfo?.let(::setPageInfo)
-                onPostProcessed(state.content.pageData.map { it as Any })
+                if (state.search != searchQuery || section != Section.STUDIO) return
+                state.content.pageInfo?.let(pageState::setPageInfo)
+                val mapped = state.items.map { StudioRowUiState.from(it) }
+                studioItems.value = mapped
+                commitComposePage(state.itemsInPage, mapped.size, state.content.pageInfo?.hasNextPage() != false)
             }
-            is StudioSearchViewModel.UiState.Error -> showError(state.message)
+            is StudioSearchViewModel.UiState.Error -> {
+                if (state.search == searchQuery && section == Section.STUDIO) showError(state.message)
+            }
         }
     }
 
     private fun renderUser(state: UserSearchViewModel.UiState) {
         when (state) {
-            is UserSearchViewModel.UiState.Loading -> showLoading()
-            is UserSearchViewModel.UiState.Success -> {
-                state.content.pageInfo?.let(::setPageInfo)
-                onPostProcessed(state.content.pageData.map { it as Any })
+            is UserSearchViewModel.UiState.Loading -> {
+                usersLoading = true
+                showLoading()
             }
-            is UserSearchViewModel.UiState.Error -> showError(state.message)
+            is UserSearchViewModel.UiState.Success -> {
+                if (state.search != searchQuery || section != Section.USERS) return
+                pageState.setPageInfo(state.content.pageInfo)
+                usersHaveMore = state.content.pageInfo.hasNextPage() && state.itemsInPage > 0
+                renderUserPage(state.content.pageData)
+            }
+            is UserSearchViewModel.UiState.Error -> {
+                if (state.search != searchQuery || section != Section.USERS) return
+                usersHaveMore = false
+                usersLoading = false
+                showError(state.message)
+            }
         }
     }
+
+    private fun UserBase.toUserRowUiState(): UserRowUiState = UserRowUiState(
+        model = this,
+        name = name,
+        avatar = avatar,
+        isFollowing = isFollowing,
+    )
 
     private fun rebindFollowStates(states: Map<Long, Boolean>) {
         if (section != Section.USERS) return
-        for ((userId, isFollowing) in states) {
-            val position = sectionAdapter.data.indexOfFirst { (it as? UserBase)?.id == userId }
-            if (position < 0) continue
-            val user = sectionAdapter.data[position] as? UserBase ?: continue
-            if (user.isFollowing == isFollowing) continue
-            user.isFollowing = isFollowing
-            sectionAdapter.onItemChanged(user, position)
+        var changed = false
+        val updated = userItems.value.map { item ->
+            val isFollowing = states[item.model.id] ?: return@map item
+            if (item.isFollowing == isFollowing) return@map item
+            changed = true
+            item.copy(isFollowing = isFollowing)
         }
+        if (changed) userItems.value = updated
     }
 
-    private fun openMedia(target: View, item: MediaSearchItemUiModel) {
+    private fun openMedia(item: MediaSearchItemUiModel) {
         navigateToMedia(MediaScreenParam(item.id, item.mediaType))
     }
 
-    private fun longPressMedia(target: View, item: MediaSearchItemUiModel): Boolean {
+    private fun longPressMedia(item: MediaSearchItemUiModel): Boolean {
         if (settings.isAuthenticated) {
             mediaActionUtil = MediaActionUtil.Builder().setId(item.id).build(requireActivity())
             mediaActionUtil.startSeriesAction()

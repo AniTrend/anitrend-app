@@ -21,13 +21,15 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
  * Created by max on 2017/11/04.
- * Suggestions adapter
+ * Suggested media results
  */
 open class SuggestionListFragment : MediaBrowseFragment() {
 
     private val settings: Settings by inject()
 
     private val suggestionListViewModel: SuggestionListViewModel by viewModel()
+
+    private var lastSuggestionSuccess: SuggestionListViewModel.UiState.Success? = null
 
     companion object {
         @JvmStatic
@@ -51,13 +53,15 @@ open class SuggestionListFragment : MediaBrowseFragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 suggestionListViewModel.state.collect { state ->
                     when (state) {
-                        is SuggestionListViewModel.UiState.Loading -> {
-                            // Loading is handled by swipeRefreshLayout in the base class
-                        }
+                        is SuggestionListViewModel.UiState.Loading -> Unit
                         is SuggestionListViewModel.UiState.Success -> {
-                            handleSuccess(state.content)
+                            if (state !== lastSuggestionSuccess) {
+                                lastSuggestionSuccess = state
+                                handleSuccess(state.content)
+                            }
                         }
                         is SuggestionListViewModel.UiState.Error -> {
+                            onBrowseRequestFailed()
                             showError(state.message)
                         }
                     }
@@ -67,11 +71,12 @@ open class SuggestionListFragment : MediaBrowseFragment() {
     }
 
     override fun makeRequest() {
+        onBrowseRequestStarted()
         val sort = settings.mediaSort + settings.sortOrder
         val isAdult: Boolean? = if (settings.displayAdultContent) null else false
         suggestionListViewModel.load(
             sort = sort,
-            page = mScrollListener.currentPage,
+            page = pageState.currentPage,
             tags = getTopFavouriteTags(6)?.let { ArrayList(it) },
             genres = getTopFavouriteGenres(4)?.let { ArrayList(it) },
             isAdult = isAdult,
@@ -80,16 +85,9 @@ open class SuggestionListFragment : MediaBrowseFragment() {
 
     private fun handleSuccess(content: PageContainer<MediaBase>) {
         if (content.hasPageInfo()) {
-            setPageInfo(content.pageInfo)
+            pageState.setPageInfo(content.pageInfo)
         }
-        if (!content.isEmpty) {
-            onPostProcessed(content.pageData)
-        } else {
-            onPostProcessed(emptyList())
-        }
-        if (mAdapter.itemCount < 1) {
-            onPostProcessed(null)
-        }
+        appendBrowsePage(content.pageData)
     }
 
     @Deprecated("Deprecated in Java")

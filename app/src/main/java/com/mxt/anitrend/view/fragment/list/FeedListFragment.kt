@@ -1,16 +1,19 @@
 package com.mxt.anitrend.view.fragment.list
 
 import android.os.Bundle
-import android.view.ActionMode
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.referentialEqualityPolicy
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
-import com.mxt.anitrend.adapter.recycler.index.FeedListAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
 import com.mxt.anitrend.data.DatabaseHelper
 import com.mxt.anitrend.data.mapper.toPageInfo
@@ -19,29 +22,34 @@ import com.mxt.anitrend.domain.model.FeedItemUiModel
 import com.mxt.anitrend.domain.model.PageInfoRecord
 import com.mxt.anitrend.navigation.extension.NavigationArgs
 import com.mxt.anitrend.navigation.extension.navigateToComment
+import com.mxt.anitrend.navigation.extension.navigateToMedia
+import com.mxt.anitrend.navigation.extension.navigateToProfile
 import com.mxt.anitrend.navigation.model.CommentScreenParam
+import com.mxt.anitrend.navigation.model.MediaScreenParam
+import com.mxt.anitrend.navigation.model.UserScreenParam
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.container.body.PageContainer
+import com.mxt.anitrend.ui.designsystem.AniTrendTheme
+import com.mxt.anitrend.ui.feed.FeedItemLazyList
+import com.mxt.anitrend.ui.feed.FeedRowCallbacks
+import com.mxt.anitrend.ui.feed.countNewFeedItems
+import com.mxt.anitrend.ui.media.ManualGridAppendGate
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.TapTargetUtil
 import com.mxt.anitrend.util.media.MediaActionUtil
-import com.mxt.anitrend.navigation.extension.navigateToProfile
-import com.mxt.anitrend.navigation.extension.navigateToMedia
-import com.mxt.anitrend.navigation.model.UserScreenParam
-import com.mxt.anitrend.navigation.model.MediaScreenParam
 import com.mxt.anitrend.view.sheet.BottomSheetComposer
 import com.mxt.anitrend.view.sheet.BottomSheetUsers
 import com.mxt.anitrend.viewmodel.FeedListViewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
- * Filters out render-unresolvable item types. This is the only transformation applied
- * between the ViewModel's canonical [FeedItemUiModel] list and the adapter submission,
- * so the fragment never re-projects store records.
+ * Filters out item types that cannot be rendered. All visible fields and action state
+ * otherwise come directly from immutable snapshots emitted by the canonical feed store.
  */
 internal fun renderableFeedItems(items: List<FeedItemUiModel>): List<FeedItemUiModel> = items.filter { !it.type.isNullOrBlank() }
 
@@ -56,7 +64,26 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
     private val databaseHelper: DatabaseHelper by inject()
 
     private val feedListViewModel: FeedListViewModel by viewModel()
-    private var feedListAdapter: FeedListAdapter? = null
+    private var composeView: ComposeView? = null
+    private val feedItems =
+        mutableStateOf<List<FeedItemUiModel>>(emptyList(), referentialEqualityPolicy())
+    private val feedListState = LazyListState()
+    private val pageSuccessRevision = mutableStateOf(0)
+    private val appendGate = ManualGridAppendGate()
+    private var activeRequestPage: Int? = null
+    private var requestStartFeedIds: Set<Long> = emptySet()
+    private var requestInFlight = false
+    private val feedRowCallbacks =
+        FeedRowCallbacks(
+            onToggleLike = ::onToggleLike,
+            onDelete = ::deleteCurrentFeed,
+            onOpenMedia = { target, item -> openFeedMedia(target, item.id) },
+            onOpenComments = ::openFeedComments,
+            onEdit = { item -> editFeed(item.id) },
+            onShowLikes = { item -> showFeedLikes(item.id) },
+            onOpenProfile = ::openFeedProfile,
+            onLongPressMedia = { target, item -> onFeedMediaLongPressed(target, item.id) },
+        )
 
     companion object {
         @JvmStatic
@@ -72,40 +99,65 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
         super.onCreate(savedInstanceState)
         isPager = true
         isFeed = true
-        mColumnSize = R.integer.single_list_x1
-        feedListAdapter =
-            FeedListAdapter(
-                onToggleLikeAction = ::onToggleLike,
-                onDeleteFeedAction = ::onDeleteFeed,
-                onOpenMedia = { target, feedId -> openFeedMedia(target, feedId) },
-                onOpenComments = ::openFeedComments,
-                onEditFeed = ::editFeed,
-                onShowLikes = ::showFeedLikes,
-                onOpenProfile = { target, userId -> openFeedProfile(target, userId) },
-                onLongPressMedia = { target, feedId -> onFeedMediaLongPressed(target, feedId) },
-            )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        installComposeList()
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 feedListViewModel.state.collect { state ->
                     when (state) {
-                        is FeedListViewModel.UiState.Loading -> {
-                            // Loading is handled by swipeRefreshLayout in the base class
-                        }
-                        is FeedListViewModel.UiState.Success -> {
-                            handleSuccess(state.items, state.pageInfo)
-                        }
-                        is FeedListViewModel.UiState.Error -> {
-                            showError(state.message)
-                        }
+                        is FeedListViewModel.UiState.Loading -> Unit
+                        is FeedListViewModel.UiState.Success ->
+                            handleSuccess(
+                                items = state.items,
+                                pageInfo = state.pageInfo,
+                                requestedPage = state.requestedPage,
+                                isLoading = state.isLoading,
+                            )
+                        is FeedListViewModel.UiState.Error -> showError(state.message)
                     }
                 }
             }
         }
+    }
+    private fun installComposeList() {
+        val host =
+            ComposeView(requireContext()).apply {
+                id = R.id.container
+                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+                setContent {
+                    AniTrendTheme {
+                        FeedItemLazyList(
+                            items = feedItems.value,
+                            listState = feedListState,
+                            callbacks = feedRowCallbacks,
+                            loadMoreRevision = pageSuccessRevision.value,
+                            onLoadMore = ::loadNextPage,
+                        )
+                    }
+                }
+            }
+        swipeRefreshLayout.addView(
+            host,
+            0,
+            ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT,
+            ),
+        )
+        swipeRefreshLayout.scrollBoundary = { direction ->
+            if (direction < 0) feedListState.canScrollBackward else feedListState.canScrollForward
+        }
+        composeView = host
+    }
+
+    override fun onDestroyView() {
+        swipeRefreshLayout.scrollBoundary = null
+        composeView = null
+        super.onDestroyView()
     }
 
     @Deprecated("Deprecated in Java")
@@ -127,11 +179,7 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
     }
 
     override fun updateUI() {
-        val adapter = feedListAdapter ?: return
-        if (adapter.itemCount > 0) {
-            if (recyclerView.adapter !== adapter) {
-                recyclerView.adapter = adapter
-            }
+        if (feedItems.value.isNotEmpty()) {
             if (swipeRefreshLayout.isRefreshing()) {
                 swipeRefreshLayout.setRefreshing(false)
             } else if (swipeRefreshLayout.isLoading()) {
@@ -163,8 +211,9 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
 
     override fun makeRequest() {
         val args = arguments ?: return
+        prepareFeedRequest()
         feedListViewModel.load(
-            page = mScrollListener.currentPage,
+            page = pageState.currentPage,
             pageLimit = NavigationArgs.intWithDefault(args.containsKey(KeyUtil.arg_page_limit), args.getInt(KeyUtil.arg_page_limit), KeyUtil.PAGING_LIMIT),
             isFollowing = NavigationArgs.optionalBoolean(args.containsKey(KeyUtil.arg_isFollowing), args.getBoolean(KeyUtil.arg_isFollowing)),
             type = NavigationArgs.resolveActivityType(args.getString(KeyUtil.arg_type)),
@@ -201,8 +250,8 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
 
     override fun onStart() {
         super.onStart()
-        showLoading()
-        if ((feedListAdapter?.itemCount ?: 0) < 1) {
+        if (feedItems.value.isEmpty()) {
+            showLoading()
             onRefresh()
         } else {
             updateUI()
@@ -218,35 +267,51 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
     }
 
     /**
-     * Submits the ViewModel's canonical [FeedItemUiModel] list directly to the adapter.
-     * The only transformation applied is invalid-type filtering via [renderableFeedItems];
-     * store records are never re-projected here and pending flags are never merged a
-     * second time (they are already part of each item from the ViewModel projection).
+     * Applies each complete immutable ViewModel snapshot as a replacement, not an append.
+     * The append gate only observes the unique-id delta for successful page requests.
      */
     protected fun handleSuccess(
         items: List<FeedItemUiModel>,
         pageInfo: PageInfoRecord?,
+        requestedPage: Int = pageState.currentPage,
+        isLoading: Boolean = false,
     ) {
-        pageInfo?.let { setPageInfo(it.toPageInfo()) }
-        val renderedItems = renderableFeedItems(items)
-        mScrollListener.getPageInfo()?.perPage = renderedItems.size
-        if (renderedItems.isEmpty()) {
-            feedListAdapter?.submitList(emptyList())
+        pageInfo?.let { pageState.setPageInfo(it.toPageInfo()) }
+        val snapshot = renderableFeedItems(items)
+        feedItems.value = snapshot
+        pageState.getPageInfo()?.perPage = snapshot.size
+        if (activeRequestPage == requestedPage && !isLoading) {
+            val previousIds = if (requestedPage <= 1) emptySet() else requestStartFeedIds
+            appendGate.onRequestSucceeded(countNewFeedItems(previousIds, snapshot))
+            activeRequestPage = null
+            requestInFlight = false
+            pageSuccessRevision.value++
+        }
+        if (snapshot.isNotEmpty()) {
+            if (!isLoading) updateUI()
+        } else if (!isLoading) {
             showEmpty(getString(R.string.layout_empty_response))
-        } else {
-            // updateUI is deferred to the submit commit callback so the adapter's
-            // itemCount has settled before the content/empty teardown runs.
-            feedListAdapter?.submitList(renderedItems) { updateUI() }
         }
     }
 
-    protected open fun currentRenderedFeedItems(): List<FeedItemUiModel> = feedListAdapter?.currentList.orEmpty()
+    protected open fun currentRenderedFeedItems(): List<FeedItemUiModel> = feedItems.value
+    private fun resolveCurrentFeedItem(feedId: Long): FeedItemUiModel? = currentRenderedFeedItems().firstOrNull { it.id == feedId }
 
     protected fun clearRenderedFeedItems() {
-        feedListAdapter?.submitList(emptyList())
+        feedItems.value = emptyList()
+        if (composeView != null) {
+            viewLifecycleOwner.lifecycleScope.launch {
+                feedListState.scrollToItem(0)
+            }
+        }
     }
 
-    private fun resolveCurrentFeedItem(feedId: Long): FeedItemUiModel? = currentRenderedFeedItems().firstOrNull { it.id == feedId }
+    protected fun prepareFeedRequest() {
+        activeRequestPage = pageState.currentPage
+        requestStartFeedIds = currentRenderedFeedItems().mapTo(mutableSetOf()) { it.id }
+        requestInFlight = true
+        appendGate.onRequestStarted()
+    }
 
     private fun openFeedMedia(
         target: View,
@@ -263,12 +328,12 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
 
     /**
      * Opens the composer for an existing feed. The immutable [FeedItemUiModel] is
-     * resolved from the adapter's current submitted list, so only the stable feed id
-     * and draft text extracted by [BottomSheetComposer.Builder.setUserActivity] reach
-     * the typed composer parameter.
+     * resolved from the current Compose snapshot, so only the stable feed id and draft
+     * text extracted by [BottomSheetComposer.Builder.setUserActivity] reach the typed
+     * composer parameter.
      */
     protected open fun editFeed(feedId: Long) {
-        val feedItem = currentRenderedFeedItems().firstOrNull { it.id == feedId } ?: return
+        val feedItem = currentRenderedFeedItems().firstOrNull { it.id == feedId && it.canEdit } ?: return
         mBottomSheet =
             BottomSheetComposer
                 .Builder()
@@ -330,103 +395,27 @@ open class FeedListFragment : FragmentBaseList<FeedList, PageContainer<FeedList>
         mediaActionUtil.startSeriesAction()
         return true
     }
-
-    override fun onItemClick(
-        target: View,
-        data: IndexedValue<FeedList>,
-    ) {
-        when (target.id) {
-            R.id.series_image -> {
-                val series = data.value.media ?: return
-                navigateToMedia(MediaScreenParam(series.id, series.type))
-            }
-            R.id.widget_comment -> {
-                navigateToComment(CommentScreenParam(data.value.id))
-            }
-            R.id.widget_edit -> {
-                mBottomSheet =
-                    BottomSheetComposer
-                        .Builder()
-                        .setUserActivity(data.value)
-                        .setRequestMode(KeyUtil.MUT_SAVE_TEXT_FEED)
-                        .setTitle(R.string.edit_status_title)
-                        .build()
-                showBottomSheet()
-            }
-            R.id.widget_users -> {
-                val likes = data.value.likes.orEmpty()
-                if (likes.isNotEmpty()) {
-                    mBottomSheet =
-                        BottomSheetUsers
-                            .Builder()
-                            .setModel(likes)
-                            .setOnUserClick(::navigateToProfile)
-                            .setTitle(R.string.title_bottom_sheet_likes)
-                            .build()
-                    showBottomSheet()
-                } else {
-                    activity?.let {
-                        NotifyUtil.makeText(it, R.string.text_no_likes, Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-            R.id.user_avatar -> {
-                val user = data.value.user
-                if (user != null) {
-                    navigateToProfile(UserScreenParam(user.id))
-                }
-            }
+    private fun deleteCurrentFeed(feedId: Long) {
+        val currentItem = currentRenderedFeedItems().firstOrNull { it.id == feedId } ?: return
+        if (currentItem.canDelete && !currentItem.isDeletePending) {
+            onDeleteFeed(feedId)
         }
     }
 
-    override fun onItemLongClick(
-        target: View,
-        data: IndexedValue<FeedList>,
-    ) {
-        when (target.id) {
-            R.id.series_image -> {
-                if (settings.isAuthenticated) {
-                    val host = activity ?: return
-                    data.value.media?.let { media ->
-                        mediaActionUtil =
-                            MediaActionUtil
-                                .Builder()
-                                .setId(media.id)
-                                .build(host)
-                        mediaActionUtil.startSeriesAction()
-                    }
-                } else {
-                    context?.let {
-                        NotifyUtil
-                            .makeText(
-                                it,
-                                R.string.info_login_req,
-                                R.drawable.ic_group_add_grey_600_18dp,
-                                Toast.LENGTH_SHORT,
-                            ).show()
-                    }
-                }
-            }
-        }
+    override fun showError(error: String) {
+        requestInFlight = false
+        activeRequestPage = null
+        appendGate.onRequestFailed()
+        super.showError(error)
     }
 
-    override fun onPrepareActionMode(
-        mode: ActionMode,
-        menu: Menu,
-    ): Boolean {
-        menu.findItem(R.id.action_bookmark).isVisible = true
-        return true
-    }
-
-    override fun onActionItemClicked(
-        mode: ActionMode,
-        item: MenuItem,
-    ): Boolean {
-        val selected = actionMode?.selectedItems.orEmpty()
-        when (item.itemId) {
-            R.id.action_bookmark -> Unit
-            R.id.action_delete -> Unit
-        }
-        return true
+    private fun loadNextPage() {
+        if (requestInFlight || !appendGate.canRequestNextPage) return
+        val pageInfo = pageState.getPageInfo()
+        if (pageInfo != null && !pageInfo.hasNextPage()) return
+        pageState.currentPage++
+        pageState.currentOffset += KeyUtil.PAGING_LIMIT
+        swipeRefreshLayout.setLoading(true)
+        makeRequest()
     }
 }

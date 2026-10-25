@@ -7,11 +7,12 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
@@ -20,9 +21,6 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.PercentFormatter
 import com.mxt.anitrend.R
-import com.mxt.anitrend.adapter.recycler.detail.LinkAdapter
-import com.mxt.anitrend.adapter.recycler.detail.RankAdapter
-import com.mxt.anitrend.base.interfaces.event.ItemClickListener
 import com.mxt.anitrend.databinding.FragmentSeriesStatsBinding
 import com.mxt.anitrend.extension.getCompatColorAttr
 import com.mxt.anitrend.extension.getCompatDrawable
@@ -32,6 +30,9 @@ import com.mxt.anitrend.model.entity.anilist.Media
 import com.mxt.anitrend.model.entity.anilist.MediaRank
 import com.mxt.anitrend.model.entity.anilist.meta.ScoreDistribution
 import com.mxt.anitrend.model.entity.anilist.meta.StatusDistribution
+import com.mxt.anitrend.ui.designsystem.AniTrendTheme
+import com.mxt.anitrend.ui.media.LinkGrid
+import com.mxt.anitrend.ui.media.RankingsGrid
 import com.mxt.anitrend.util.ChartUtil
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
@@ -63,8 +64,8 @@ class MediaStatsSection(
     private var model: Media? = null
     private var clipboardManager: ClipboardManager? = null
 
-    private var rankAdapter: RankAdapter? = null
-    private var linkAdapter: LinkAdapter? = null
+    private val rankings = mutableStateOf<List<MediaRank>>(emptyList())
+    private val links = mutableStateOf<List<ExternalLink>>(emptyList())
     private var selected = false
 
     /** Inflates and initializes the media statistics view. */
@@ -75,21 +76,30 @@ class MediaStatsSection(
         _binding = FragmentSeriesStatsBinding.inflate(inflater, container, false)
         clipboardManager = binding.root.context.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
 
-        binding.linksRecycler.apply {
-            layoutManager =
-                StaggeredGridLayoutManager(
-                    resources.getInteger(R.integer.grid_list_x2),
-                    StaggeredGridLayoutManager.VERTICAL,
-                )
-            setHasFixedSize(true)
+        binding.rankingComposeView.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                AniTrendTheme {
+                    RankingsGrid(
+                        rankings = rankings.value,
+                        onRankClick = { rank -> model?.let { onOpenRank(rank, it) } },
+                        onRankLongClick = {},
+                    )
+                }
+            }
         }
-        binding.rankingRecycler.apply {
-            layoutManager =
-                StaggeredGridLayoutManager(
-                    resources.getInteger(R.integer.grid_list_x2),
-                    StaggeredGridLayoutManager.VERTICAL,
-                )
-            setHasFixedSize(true)
+
+        binding.linksComposeView.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                AniTrendTheme {
+                    LinkGrid(
+                        links = links.value,
+                        onLinkClick = { link -> link.url?.let(onOpenExternalLink) },
+                        onLinkLongClick = ::onLinkLongClick,
+                    )
+                }
+            }
         }
 
         binding.stateLayout.showLoading()
@@ -137,81 +147,40 @@ class MediaStatsSection(
 
     /** Releases the statistics binding and cached rendering state. */
     fun clear() {
+        rankings.value = emptyList()
+        links.value = emptyList()
+        _binding?.rankingComposeView?.disposeComposition()
+        _binding?.linksComposeView?.disposeComposition()
         _binding = null
         model = null
         clipboardManager = null
-        rankAdapter = null
-        linkAdapter = null
         selected = false
     }
 
     private fun updateUI() {
-        val ctx = binding.root.context
         val model = model ?: return
-        binding.linksRecycler.visibility =
+        binding.linksComposeView.visibility =
             if (!CompatUtil.isEmpty(model.externalLinks)) View.VISIBLE else View.GONE
-        binding.rankingRecycler.visibility =
+        binding.rankingComposeView.visibility =
             if (!CompatUtil.isEmpty(model.rankings)) View.VISIBLE else View.GONE
         binding.scoreDistributionCard.visibility =
             if (!CompatUtil.isEmpty(model.stats?.scoreDistribution)) View.VISIBLE else View.GONE
         binding.statusDistributionCard.visibility =
             if (!CompatUtil.isEmpty(model.stats?.statusDistribution)) View.VISIBLE else View.GONE
-
-        if (rankAdapter == null) {
-            rankAdapter =
-                RankAdapter(ctx).apply {
-                    onItemsInserted(model.rankings ?: emptyList())
-                    setClickListener(
-                        object : ItemClickListener<MediaRank> {
-                            override fun onItemClick(
-                                target: View,
-                                data: IndexedValue<MediaRank>,
-                            ) {
-                                onOpenRank(data.value, model)
-                            }
-
-                            override fun onItemLongClick(
-                                target: View,
-                                data: IndexedValue<MediaRank>,
-                            ) = Unit
-                        },
-                    )
-                }
-        }
-
-        if (linkAdapter == null) {
-            linkAdapter =
-                LinkAdapter(ctx).apply {
-                    onItemsInserted(model.externalLinks ?: emptyList())
-                    setClickListener(
-                        object : ItemClickListener<ExternalLink> {
-                            override fun onItemClick(
-                                target: View,
-                                data: IndexedValue<ExternalLink>,
-                            ) {
-                                data.value.url?.let(onOpenExternalLink)
-                            }
-
-                            override fun onItemLongClick(
-                                target: View,
-                                data: IndexedValue<ExternalLink>,
-                            ) {
-                                val url = data.value.url ?: return
-                                clipboardManager?.setPrimaryClip(
-                                    ClipData.newPlainText("", url),
-                                )
-                                onCopyExternalLink(url)
-                            }
-                        },
-                    )
-                }
-        }
+        rankings.value = model.rankings ?: emptyList()
+        links.value = model.externalLinks ?: emptyList()
 
         binding.stateLayout.showContent()
-        binding.linksRecycler.adapter = linkAdapter
-        binding.rankingRecycler.adapter = rankAdapter
         showStatusDistribution()
         showScoreDistribution()
+    }
+
+    private fun onLinkLongClick(link: ExternalLink) {
+        val url = link.url ?: return
+        clipboardManager?.setPrimaryClip(
+            ClipData.newPlainText("", url),
+        )
+        onCopyExternalLink(url)
     }
 
     private fun showScoreDistribution() {

@@ -4,6 +4,10 @@ package com.mxt.anitrend.ui
 
 import android.content.Context
 import android.content.Intent
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.junit4.createEmptyComposeRule
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
@@ -12,8 +16,6 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import androidx.test.platform.app.InstrumentationRegistry
-import com.google.android.material.navigation.NavigationView
 import com.mxt.anitrend.R
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.view.activity.index.MainActivity
@@ -21,6 +23,7 @@ import com.mxt.anitrend.view.fragment.list.MediaListFragment
 import com.mxt.anitrend.view.fragment.list.MediaListOrigin
 import org.junit.Assert.assertEquals
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -43,6 +46,8 @@ import org.junit.runner.RunWith
 @LargeTest
 @RunWith(AndroidJUnit4::class)
 class MediaListSavedStateNavigationTest {
+    @get:Rule
+    val composeRule = createEmptyComposeRule()
 
     @Before
     fun setUp() {
@@ -58,19 +63,32 @@ class MediaListSavedStateNavigationTest {
     }
 
     /**
-     * Selects a drawer destination through the real NavigationView menu, which
-     * dispatches to the activity's OnNavigationItemSelectedListener exactly
-     * like a user tap. The drawer is closed explicitly afterwards so the
-     * navigation under test is not interleaved with the drawer close
-     * animation.
+     * Opens the production DrawerLayout and selects a visible drawer label
+     * through Compose semantics, as a user does.
      */
-    @Suppress("DEPRECATION")
     private fun selectDrawerItem(scenario: ActivityScenario<MainActivity>, itemId: Int) {
-        scenario.onActivity { activity ->
-            activity.findViewById<NavigationView>(R.id.nav_view).menu.performIdentifierAction(itemId, 0)
-            activity.findViewById<DrawerLayout>(R.id.drawer_layout).closeDrawer(GravityCompat.START)
+        val labelId = when (itemId) {
+            R.id.nav_home_feed -> R.string.drawer_title_home
+            R.id.nav_myanime -> R.string.drawer_title_myanime
+            R.id.nav_mymanga -> R.string.drawer_title_mymanga
+            else -> error("Unsupported drawer item id: $itemId")
         }
-        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+        var label = ""
+        scenario.onActivity { activity ->
+            activity.findViewById<DrawerLayout>(R.id.drawer_layout)
+                .openDrawer(GravityCompat.START, false)
+            label = activity.getString(labelId)
+        }
+        composeRule.waitForIdle()
+        composeRule.onNodeWithText(label).assertIsDisplayed().performClick()
+        composeRule.waitUntil(5_000L) {
+            var isDrawerOpen = true
+            scenario.onActivity { activity ->
+                isDrawerOpen = activity.findViewById<DrawerLayout>(R.id.drawer_layout)
+                    .isDrawerOpen(GravityCompat.START)
+            }
+            !isDrawerOpen
+        }
     }
 
     private fun navController(activity: MainActivity): NavController {

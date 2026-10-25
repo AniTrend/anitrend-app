@@ -129,6 +129,7 @@ import com.mxt.anitrend.view.sheet.BottomSheetGiphy
 import com.mxt.anitrend.view.activity.base.OnboardingViewModel
 import com.mxt.anitrend.viewmodel.AccountSettingsViewModel
 import com.mxt.anitrend.viewmodel.AiringListViewModel
+import com.mxt.anitrend.viewmodel.BottomSheetUsersViewModel
 import com.mxt.anitrend.viewmodel.BrowseReviewViewModel
 import com.mxt.anitrend.viewmodel.CharacterActorsViewModel
 import com.mxt.anitrend.viewmodel.CharacterFavouritesViewModel
@@ -175,6 +176,7 @@ import com.mxt.anitrend.viewmodel.StudioMediaViewModel
 import com.mxt.anitrend.viewmodel.StudioSearchViewModel
 import com.mxt.anitrend.viewmodel.StudioViewModel
 import com.mxt.anitrend.viewmodel.SuggestionListViewModel
+import com.mxt.anitrend.viewmodel.WatchListViewModel
 import com.mxt.anitrend.viewmodel.UserFeedViewModel
 import com.mxt.anitrend.viewmodel.UserListViewModel
 import com.mxt.anitrend.viewmodel.UserOverviewViewModel
@@ -622,6 +624,14 @@ private val repositoryModule = module {
 
 private val mediaFeatureModule = module {
     viewModel { AiringListViewModel(browseRepository = get(), mediaListStore = get(), mutationRegistry = get(), requestSequence = get()) }
+    viewModel {
+        WatchListViewModel(
+            mediaRepository = get(),
+            crunchyrollRepository = get(),
+            settings = get(),
+            ioDispatcher = get<CoroutineDispatcher>(IoDispatcherQualifier),
+        )
+    }
     viewModel { BrowseReviewViewModel(browseRepository = get(), reviewStore = get(), requestSequence = get(), rateReviewInteractor = get()) }
     viewModel { MediaBrowseViewModel(baseRepository = get(), browseRepository = get(), mediaListStore = get()) }
     viewModel { MediaLatestViewModel(browseRepository = get()) }
@@ -664,6 +674,7 @@ private val userFeatureModule = module {
         )
     }
     viewModel { UserListViewModel(userRepository = get()) }
+    viewModel { BottomSheetUsersViewModel() }
     viewModel { UserSearchViewModel(searchRepository = get(), toggleUserFollowInteractor = get(), userStore = get()) }
     viewModel { NotificationViewModel(userRepository = get()) }
     viewModel { ProfileViewModel(userRepository = get()) }

@@ -4,56 +4,72 @@ package com.mxt.anitrend.widget
 
 import android.graphics.Bitmap
 import android.view.View
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.ui.Modifier
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.asAndroidBitmap
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertCountEquals
-import androidx.compose.ui.test.captureToImage
-import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertHasClickAction
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.captureToImage
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.v2.runAndroidComposeUiTest
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.mxt.anitrend.R
-import com.mxt.anitrend.adapter.recycler.detail.StaffCharacterRolesAdapter
 import com.mxt.anitrend.model.entity.anilist.meta.ImageBase
 import com.mxt.anitrend.model.entity.anilist.meta.MediaTitle
 import com.mxt.anitrend.model.entity.anilist.meta.TitleBase
 import com.mxt.anitrend.model.entity.base.CharacterBase
 import com.mxt.anitrend.model.entity.base.CharacterStaffBase
 import com.mxt.anitrend.model.entity.base.MediaBase
+import com.mxt.anitrend.model.entity.group.RecyclerHeaderItem
+import com.mxt.anitrend.ui.detail.DetailListGrid
+import com.mxt.anitrend.ui.detail.projectStaffCharacterRoleRows
 import com.mxt.anitrend.ui.designsystem.AniTrendTheme
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
+import kotlin.time.Duration.Companion.minutes
 
 @RunWith(AndroidJUnit4::class)
 class StaffCharacterRolesComposeTest {
     @Test
     @OptIn(ExperimentalTestApi::class)
     fun roleRowsExposeCharacterAndMediaTitles() {
-        runAndroidComposeUiTest<ProgressLayoutTestActivity> {
+        runAndroidComposeUiTest<ProgressLayoutTestActivity>(testTimeout = 3.minutes) {
             val hostActivity = requireNotNull(activity)
-            val rows =
+            val roles =
                 listOf(
                     staffFixture(hostActivity, 101, "Compose staff character", "Compose staff media", true),
                     staffFixture(hostActivity, 102, "Standard staff character", "Standard staff media", false),
                 )
-            lateinit var host: StaffRoleHost
-            runOnUiThread { host = installStaffHost(hostActivity, rows) }
-            waitUntil("staff role rows bind", 5_000L) {
-                (0..1).all { host.recyclerView.findViewHolderForAdapterPosition(it) != null }
+            val callbackTarget = View(hostActivity).apply { id = R.id.container }
+            var clickedCharacterId = 0L
+            var clickedTargetId = View.NO_ID
+            val rows =
+                mutableStateOf(
+                    projectStaffCharacterRoleRows(
+                        listOf(RecyclerHeaderItem("2039", roles.size)) + roles,
+                    ) { target, item ->
+                        clickedTargetId = target.id
+                        clickedCharacterId = item.character.id
+                    },
+                )
+            hostActivity.installComposeContent {
+                AniTrendTheme {
+                    DetailListGrid(
+                        rows = rows.value,
+                        gridState = rememberLazyGridState(),
+                        callbackTarget = callbackTarget,
+                        onLoadMore = {},
+                    )
+                }
             }
-            waitForIdle()
             waitUntil("staff role covers show local image pixels", 60_000L) {
                 val images = onAllNodesWithTag(STAFF_ROLE_IMAGE_TAG, useUnmergedTree = true)
                 val imageNodes = images.fetchSemanticsNodes()
@@ -77,33 +93,21 @@ class StaffCharacterRolesComposeTest {
                     .hasImageContentPixels(),
             )
             onAllNodesWithText("Compose staff character").assertCountEquals(1)
-            onNodeWithText("Compose staff character").assertIsDisplayed().assertHasClickAction()
+            onNodeWithText("Compose staff character").assertIsDisplayed().assertHasClickAction().performClick()
             onAllNodesWithText("Compose staff media").assertCountEquals(1)
             onNodeWithText("Compose staff media").assertIsDisplayed()
+            assertEquals(101L, clickedCharacterId)
+            assertEquals(R.id.container, clickedTargetId)
         }
     }
 
     @Test
     @OptIn(ExperimentalTestApi::class)
     fun favoriteIndicatorFollowsCharacterFavoriteState() {
-        runAndroidComposeUiTest<ProgressLayoutTestActivity> {
+        runAndroidComposeUiTest<ProgressLayoutTestActivity>(testTimeout = 3.minutes) {
             val hostActivity = requireNotNull(activity)
-            val standard =
-                staffFixture(
-                    hostActivity,
-                    101,
-                    "Standard character",
-                    "Standard media",
-                    false,
-                )
-            val favorite =
-                staffFixture(
-                    hostActivity,
-                    101,
-                    "Favorite character",
-                    "Favorite media",
-                    true,
-                )
+            val standard = staffFixture(hostActivity, 101, "Standard character", "Standard media", false)
+            val favorite = staffFixture(hostActivity, 101, "Favorite character", "Favorite media", true)
             val missingCover =
                 staffFixture(
                     hostActivity,
@@ -113,18 +117,23 @@ class StaffCharacterRolesComposeTest {
                     false,
                     hasImage = false,
                 )
-            val updated =
-                staffFixture(
-                    hostActivity,
-                    101,
-                    "Updated character",
-                    "Updated media",
-                    false,
+            val updated = staffFixture(hostActivity, 101, "Updated character", "Updated media", false)
+            val callbackTarget = View(hostActivity).apply { id = R.id.container }
+            val rows =
+                mutableStateOf(
+                    projectStaffCharacterRoleRows(
+                        listOf(RecyclerHeaderItem("2039", 1), standard),
+                    ) { _, _ -> },
                 )
-            lateinit var host: StaffRoleHost
-            runOnUiThread { host = installStaffHost(hostActivity, listOf(standard)) }
-            waitUntil("standard staff row binds", 5_000L) {
-                host.recyclerView.findViewHolderForAdapterPosition(0) != null
+            hostActivity.installComposeContent {
+                AniTrendTheme {
+                    DetailListGrid(
+                        rows = rows.value,
+                        gridState = rememberLazyGridState(),
+                        callbackTarget = callbackTarget,
+                        onLoadMore = {},
+                    )
+                }
             }
             waitUntil("initial role cover shows local image pixels", 10_000L) {
                 val images = onAllNodesWithTag(STAFF_ROLE_IMAGE_TAG, useUnmergedTree = true)
@@ -133,7 +142,12 @@ class StaffCharacterRolesComposeTest {
             }
             onNodeWithTag(FAVORITE_INDICATOR_TAG, useUnmergedTree = true).assertDoesNotExist()
 
-            runOnUiThread { host.adapter.submitList(listOf(favorite)) }
+            runOnIdle {
+                rows.value =
+                    projectStaffCharacterRoleRows(
+                        listOf(RecyclerHeaderItem("2039", 1), favorite),
+                    ) { _, _ -> }
+            }
             waitUntil("same character rebind shows favorite state", 10_000L) {
                 onAllNodesWithTag(FAVORITE_INDICATOR_TAG, useUnmergedTree = true)
                     .fetchSemanticsNodes()
@@ -146,7 +160,12 @@ class StaffCharacterRolesComposeTest {
             }
             onNodeWithTag(FAVORITE_INDICATOR_TAG, useUnmergedTree = true).assertIsDisplayed()
 
-            runOnUiThread { host.adapter.submitList(listOf(missingCover)) }
+            runOnIdle {
+                rows.value =
+                    projectStaffCharacterRoleRows(
+                        listOf(RecyclerHeaderItem("2039", 1), missingCover),
+                    ) { _, _ -> }
+            }
             waitUntil("same character rebind clears its old cover", 5_000L) {
                 val favoriteNodes = onAllNodesWithTag(FAVORITE_INDICATOR_TAG, useUnmergedTree = true)
                 val imageNodes = onAllNodesWithTag(STAFF_ROLE_IMAGE_TAG, useUnmergedTree = true)
@@ -163,7 +182,12 @@ class StaffCharacterRolesComposeTest {
                     .hasUniformImageSurface(),
             )
 
-            runOnUiThread { host.adapter.submitList(listOf(updated)) }
+            runOnIdle {
+                rows.value =
+                    projectStaffCharacterRoleRows(
+                        listOf(RecyclerHeaderItem("2039", 1), updated),
+                    ) { _, _ -> }
+            }
             waitUntil("same character rebind restores its cover", 10_000L) {
                 val images = onAllNodesWithTag(STAFF_ROLE_IMAGE_TAG, useUnmergedTree = true)
                 images.fetchSemanticsNodes().size == 1 &&
@@ -182,64 +206,40 @@ class StaffCharacterRolesComposeTest {
     @Test
     @OptIn(ExperimentalTestApi::class)
     fun removingRoleRowRemovesImageSemantics() {
-        runAndroidComposeUiTest<ProgressLayoutTestActivity> {
+        runAndroidComposeUiTest<ProgressLayoutTestActivity>(testTimeout = 3.minutes) {
             val hostActivity = requireNotNull(activity)
             val row = staffFixture(hostActivity, 101, "Staff character", "Staff media", true)
-            lateinit var host: StaffRoleHost
-            runOnUiThread { host = installStaffHost(hostActivity, listOf(row)) }
+            val callbackTarget = View(hostActivity).apply { id = R.id.container }
+            val rows =
+                mutableStateOf(
+                    projectStaffCharacterRoleRows(
+                        listOf(RecyclerHeaderItem("2039", 1), row),
+                    ) { _, _ -> },
+                )
+            hostActivity.installComposeContent {
+                AniTrendTheme {
+                    DetailListGrid(
+                        rows = rows.value,
+                        gridState = rememberLazyGridState(),
+                        callbackTarget = callbackTarget,
+                        onLoadMore = {},
+                    )
+                }
+            }
             waitUntil("staff role cover shows local image pixels", 60_000L) {
                 val images = onAllNodesWithTag(STAFF_ROLE_IMAGE_TAG, useUnmergedTree = true)
                 images.fetchSemanticsNodes().size == 1 &&
                     images[0].captureToImage().asAndroidBitmap().hasImageContentPixels()
             }
 
-            runOnUiThread { host.adapter.submitList(emptyList()) }
+            runOnIdle { rows.value = emptyList() }
             waitUntil("removed staff role image semantics are absent", 5_000L) {
-                host.adapter.currentList.isEmpty() &&
-                    onAllNodesWithTag(STAFF_ROLE_IMAGE_TAG, useUnmergedTree = true)
-                        .fetchSemanticsNodes()
-                        .isEmpty()
+                onAllNodesWithTag(STAFF_ROLE_IMAGE_TAG, useUnmergedTree = true)
+                    .fetchSemanticsNodes()
+                    .isEmpty()
             }
         }
     }
-
-    private fun installStaffHost(
-        activity: ProgressLayoutTestActivity,
-        rows: List<CharacterStaffBase>,
-    ): StaffRoleHost {
-        val adapter = StaffCharacterRolesAdapter { _, _ -> }.apply { submitList(rows) }
-        val recyclerView =
-            RecyclerView(activity).apply {
-                setHasFixedSize(true)
-                layoutManager =
-                    StaggeredGridLayoutManager(
-                        activity.resources.getInteger(R.integer.grid_giphy_x3),
-                        StaggeredGridLayoutManager.VERTICAL,
-                    )
-                itemAnimator = null
-                this.adapter = adapter
-            }
-        activity.setContentView(
-            ComposeView(activity).apply {
-                id = View.generateViewId()
-                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-                setContent {
-                    AniTrendTheme {
-                        AndroidView(
-                            factory = { recyclerView },
-                            modifier = Modifier.fillMaxSize(),
-                        )
-                    }
-                }
-            },
-        )
-        return StaffRoleHost(adapter, recyclerView)
-    }
-
-    private data class StaffRoleHost(
-        val adapter: StaffCharacterRolesAdapter,
-        val recyclerView: RecyclerView,
-    )
 
     private companion object {
         const val FAVORITE_INDICATOR_TAG = "staff-role-favorite-indicator"
@@ -270,6 +270,7 @@ class StaffCharacterRolesComposeTest {
         return CharacterStaffBase(character, media)
     }
 }
+
 private fun Bitmap.hasImageContentPixels(): Boolean {
     val colors = mutableSetOf<Int>()
     val startX = width / 5

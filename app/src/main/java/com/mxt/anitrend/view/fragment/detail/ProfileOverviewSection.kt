@@ -19,7 +19,6 @@ import com.mxt.anitrend.extension.getCompatColorAttr
 import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.model.entity.base.StatsRing
-import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.navigation.model.UserScreenParam
 import com.mxt.anitrend.repository.UserRepository
 import com.mxt.anitrend.util.CompatUtil
@@ -117,7 +116,6 @@ class ProfileOverviewSection(
         sectionBinding.widgetStatus.isVisible = false
         sectionBinding.userFollowStateWidget.setListener { id -> viewModel.toggleFollow(id) }
         sectionBinding.userFollowStateWidget.setCurrentUser(viewModel.currentUserSnapshot)
-        sectionBinding.userFollowStateWidget.setUserModel(user)
         renderFollowCta(viewModel.isFollowing.value)
         sectionBinding.userAboutPanelWidget.setFragmentActivity(activity)
         sectionBinding.userAboutPanelWidget.onFavouritesRequested = onOpenFavourites
@@ -131,10 +129,9 @@ class ProfileOverviewSection(
 
     private fun renderFollowCta(committedFollowState: Boolean?) {
         val user = model ?: return
-        binding?.userFollowStateWidget?.setUserModel(
-            UserBase(name = user.name, isFollowing = committedFollowState ?: user.isFollowing).apply {
-                id = user.id
-            },
+        binding?.userFollowStateWidget?.setUserState(
+            userId = user.id,
+            isFollowing = committedFollowState ?: user.isFollowing,
         )
     }
 

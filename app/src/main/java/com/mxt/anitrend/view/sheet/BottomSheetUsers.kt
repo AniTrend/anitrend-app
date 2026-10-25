@@ -2,57 +2,59 @@ package com.mxt.anitrend.view.sheet
 
 import android.app.Dialog
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.VisibleForTesting
-import androidx.lifecycle.Observer
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.referentialEqualityPolicy
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mxt.anitrend.R
-import com.mxt.anitrend.adapter.recycler.index.UserAdapter
-import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter
-import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
 import com.mxt.anitrend.base.interfaces.event.ISearchDelegate
-import com.mxt.anitrend.base.interfaces.event.ItemClickListener
 import com.mxt.anitrend.data.DatabaseHelper
 import com.mxt.anitrend.data.store.mutation.MutationResult
 import com.mxt.anitrend.data.store.user.UserStore
 import com.mxt.anitrend.databinding.BottomSheetListBinding
 import com.mxt.anitrend.domain.model.ToggleUserFollowCommand
-import com.mxt.anitrend.domain.model.UserRecord
 import com.mxt.anitrend.domain.user.interactor.ToggleUserFollowInteractor
 import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.extension.parcelableArrayList
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.navigation.model.UserScreenParam
+import com.mxt.anitrend.ui.designsystem.AniTrendTheme
+import com.mxt.anitrend.ui.user.UserList
+import com.mxt.anitrend.ui.user.UserRowUiState
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
+import com.mxt.anitrend.viewmodel.BottomSheetUsersViewModel
 import com.mxt.anitrend.widget.ProgressLayout
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /** Bottom sheet displaying a supplied list of users. */
-class BottomSheetUsers :
-    BottomSheetBase<List<UserBase>>(),
-    ItemClickListener<UserBase>,
-    Observer<List<UserBase>?> {
+class BottomSheetUsers : BottomSheetBase<List<UserBase>>() {
 
-    private var binding: BottomSheetListBinding? = null
     private var onUserClick: ((UserScreenParam) -> Unit)? = null
-
-    private lateinit var mAdapter: RecyclerViewAdapter<UserBase>
-    private lateinit var mLayoutManager: StaggeredGridLayoutManager
+    private var userRows by mutableStateOf<List<UserRowUiState>>(emptyList(), referentialEqualityPolicy())
 
     private var stateLayout: ProgressLayout? = null
-    private var recyclerView: StatefulRecyclerView? = null
-    private var mColumnSize: Int = 0
+    private var userCount: Int = 0
 
     private val databaseHelper: DatabaseHelper by inject()
     private val userStore: UserStore by inject()
     private val toggleUserFollowInteractor: ToggleUserFollowInteractor by inject()
+    private val usersViewModel: BottomSheetUsersViewModel by viewModel()
 
     /** Factory and argument helpers for the users sheet. */
     companion object {
@@ -78,30 +80,16 @@ class BottomSheetUsers :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val ctx = requireContext()
-        mColumnSize = resources.getInteger(R.integer.single_list_x1)
-        mAdapter = UserAdapter(
-            context = ctx,
-            currentUser = databaseHelper.currentUser,
-            onToggleFollowAction = ::toggleFollow,
-        )
-        val baseList = resolveUsers(arguments)
-        if (!baseList.isNullOrEmpty()) {
-            mAdapter.onItemsInserted(baseList)
-        }
+        val users = resolveUsers(arguments).orEmpty()
+        userCount = users.size
+        usersViewModel.setSourceUsers(users)
+        userRows = usersViewModel.filteredRows.value
         observeUserStore()
+        observeUserRows()
     }
 
-    /**
-     * Fire-and-forget delivery from the render-only [FollowStateWidget]. The legacy adapter
-     * still passes a result callback slot, which is intentionally ignored: the committed
-     * result is applied by observing [UserStore] below. Request failures are reported
-     * explicitly because a failed mutation commits nothing and would otherwise stay silent.
-     */
-    private fun toggleFollow(
-        userId: Long,
-        @Suppress("UNUSED_PARAMETER") onResult: (Result<UserBase>) -> Unit,
-    ) {
+    /** Launches a follow mutation; the committed [UserStore] record updates row state. */
+    private fun toggleFollow(userId: Long) {
         lifecycleScope.launch {
             val result = toggleUserFollowInteractor(ToggleUserFollowCommand(userId = userId))
             if (result is MutationResult.Failure) {
@@ -117,75 +105,27 @@ class BottomSheetUsers :
         }
     }
 
-    /**
-     * Smallest behavior-preserving bridge between the canonical [UserStore] and the legacy
-     * adapter: committed follow changes for users in the list are written back onto the
-     * existing item so the widget re-renders the authoritative state.
-     */
     private fun observeUserStore() {
         lifecycleScope.launch {
             userStore.state.collect { state ->
-                state.usersById.values.forEach(::rebindUserIfPresent)
+                state.usersById.values.forEach(usersViewModel::rebindUserIfPresent)
             }
         }
     }
 
-    private fun rebindUserIfPresent(record: UserRecord) {
-        val position = mAdapter.data.indexOfFirst { it.id == record.id }
-        if (position < 0) return
-        val current = mAdapter.data[position]
-        if (current.rebindFollowState(record)) {
-            mAdapter.onItemChanged(current, position)
-        }
-    }
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = super.onCreateDialog(savedInstanceState)
-        binding = BottomSheetListBinding.inflate(layoutInflater)
-        dialog.setContentView(requireNotNull(binding).root)
-        bindToolbarViews(requireNotNull(binding).root)
-        searchView = binding?.customSheetToolbar?.searchView
-        stateLayout = binding?.stateLayout
-        recyclerView = binding?.recyclerView
-        createBottomSheetBehavior(requireNotNull(binding).root)
-        mLayoutManager = StaggeredGridLayoutManager(mColumnSize, StaggeredGridLayoutManager.VERTICAL)
-        return dialog
-    }
-
-    override fun onStart() {
-        super.onStart()
-        toolbarTitle?.text = getString(mTitle, mAdapter.itemCount)
-        toolbarSearch?.visibility = View.VISIBLE
-        mSearchDelegate = object : ISearchDelegate {
-            override fun onQueryChanged(query: String?) {
-                if (!TextUtils.isEmpty(query) && mAdapter.filter != null) {
-                    mAdapter.filter.filter(query)
+    private fun observeUserRows() {
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                usersViewModel.filteredRows.collect { rows ->
+                    userRows = rows
+                    updateEmptyState(rows)
                 }
             }
-
-            override fun onSearchSubmitted(query: String?) = Unit
-
-            override fun onSearchShown() {
-                bottomSheetBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
-            }
-
-            override fun onSearchClosed() {
-                mAdapter.filter?.filter("")
-            }
         }
-        injectAdapter()
     }
 
-    private fun injectAdapter() {
-        mAdapter.setClickListener(this)
-        val recycler = recyclerView ?: return
-        if (recycler.adapter == null) {
-            recycler.setHasFixedSize(true)
-            recycler.isNestedScrollingEnabled = true
-            recycler.layoutManager = mLayoutManager
-            recycler.adapter = mAdapter
-        }
-        if (mAdapter.itemCount < 1) {
+    private fun updateEmptyState(rows: List<UserRowUiState>) {
+        if (rows.isEmpty()) {
             val drawable =
                 context?.getCompatDrawable(
                     R.drawable.ic_new_releases_white_24dp,
@@ -197,29 +137,61 @@ class BottomSheetUsers :
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding = null
-        onUserClick = null
-    }
-
-    override fun onChanged(value: List<UserBase>?) = Unit
-
-    override fun onItemClick(
-        target: View,
-        data: IndexedValue<UserBase>,
-    ) {
-        when (target.id) {
-            R.id.container -> {
-                onUserClick?.invoke(UserScreenParam(data.value.id))
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState)
+        val sheetBinding = BottomSheetListBinding.inflate(layoutInflater)
+        dialog.setContentView(sheetBinding.root)
+        bindToolbarViews(sheetBinding.root)
+        searchView = sheetBinding.customSheetToolbar.searchView
+        stateLayout = sheetBinding.stateLayout
+        sheetBinding.userListComposeView.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool)
+            setContent {
+                val nestedScrollInterop = rememberNestedScrollInteropConnection()
+                AniTrendTheme {
+                    UserList(
+                        modifier = Modifier.nestedScroll(nestedScrollInterop),
+                        items = userRows,
+                        listState = rememberLazyGridState(),
+                        currentUser = databaseHelper.currentUser,
+                        onUserClick = { userId ->
+                            onUserClick?.invoke(UserScreenParam(userId))
+                        },
+                        onToggleFollow = ::toggleFollow,
+                    )
+                }
             }
         }
+        createBottomSheetBehavior(sheetBinding.root)
+        return dialog
     }
 
-    override fun onItemLongClick(
-        target: View,
-        data: IndexedValue<UserBase>,
-    ) = Unit
+    override fun onStart() {
+        super.onStart()
+        toolbarTitle?.text = getString(mTitle, userCount)
+        toolbarSearch?.visibility = View.VISIBLE
+        mSearchDelegate = object : ISearchDelegate {
+            override fun onQueryChanged(query: String?) {
+                usersViewModel.setQuery(query)
+            }
+
+            override fun onSearchSubmitted(query: String?) = Unit
+
+            override fun onSearchShown() {
+                bottomSheetBehavior?.state = BottomSheetBehavior.STATE_EXPANDED
+            }
+
+            override fun onSearchClosed() {
+                usersViewModel.setQuery("")
+            }
+        }
+        updateEmptyState(userRows)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        onUserClick = null
+    }
 
     /** Builds a users sheet and configures its navigation callback. */
     class Builder : BottomSheetBuilder() {

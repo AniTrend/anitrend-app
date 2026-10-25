@@ -45,6 +45,8 @@ class MediaFeedViewModel(
             val pageInfo: PageInfoRecord?,
             val loadedPages: Set<Int>,
             val replaceExisting: Boolean,
+            val isLoading: Boolean,
+            val requestedPage: Int,
         ) : UiState
         data class Error(val message: String) : UiState
     }
@@ -95,6 +97,8 @@ class MediaFeedViewModel(
                                 pageInfo = query.pageInfo,
                                 loadedPages = query.loadedPages,
                                 replaceExisting = currentScreen.lastRequestedPage <= 1,
+                                isLoading = currentScreen.isLoading,
+                                requestedPage = currentScreen.lastRequestedPage,
                             )
                         }
                     }

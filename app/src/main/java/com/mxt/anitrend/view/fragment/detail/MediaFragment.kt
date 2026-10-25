@@ -20,7 +20,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.chip.Chip
 import com.mxt.anitrend.R
-import com.mxt.anitrend.adapter.recycler.index.ReviewImageAction
+import com.mxt.anitrend.ui.review.ReviewImageAction
 import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget
 import com.mxt.anitrend.base.custom.view.widget.FavouriteWidgetRenderState
 import com.mxt.anitrend.data.DatabaseHelper

@@ -6,20 +6,21 @@ import android.text.TextUtils
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.VisibleForTesting
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mxt.anitrend.R
-import com.mxt.anitrend.adapter.recycler.index.UserAdapter
-import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter
-import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
-import com.mxt.anitrend.base.custom.view.container.CustomSwipeRefreshLayout
 import com.mxt.anitrend.base.interfaces.event.ISearchDelegate
-import com.mxt.anitrend.base.interfaces.event.ItemClickListener
-import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener
 import com.mxt.anitrend.data.DatabaseHelper
 import com.mxt.anitrend.data.store.mutation.MutationResult
 import com.mxt.anitrend.data.store.user.UserStore
@@ -34,32 +35,34 @@ import com.mxt.anitrend.navigation.extension.screenParam
 import com.mxt.anitrend.navigation.extension.screenParamKey
 import com.mxt.anitrend.navigation.model.UserListScreenParam
 import com.mxt.anitrend.navigation.model.UserScreenParam
-import com.mxt.anitrend.util.CompatUtil
+import com.mxt.anitrend.ui.designsystem.AniTrendTheme
+import com.mxt.anitrend.ui.user.UserList
+import com.mxt.anitrend.ui.user.UserRowUiState
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.viewmodel.UserListViewModel
 import com.mxt.anitrend.widget.ProgressLayout
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
+private const val USER_LIST_VISIBLE_THRESHOLD = 9
+
 /** Bottom sheet displaying a paged list of users. */
-class BottomSheetListUsers :
-    BottomSheetBase<PageContainer<UserBase>>(),
-    ItemClickListener<UserBase>,
-    androidx.lifecycle.Observer<PageContainer<UserBase>?>,
-    RecyclerLoadListener,
-    CustomSwipeRefreshLayout.OnRefreshAndLoadListener {
+class BottomSheetListUsers : BottomSheetBase<PageContainer<UserBase>>() {
     private var stateLayout: ProgressLayout? = null
-    private var recyclerView: StatefulRecyclerView? = null
 
-    private lateinit var mAdapter: RecyclerViewAdapter<UserBase>
-    private lateinit var mLayoutManager: StaggeredGridLayoutManager
+    @VisibleForTesting
+    internal val userListState = LazyGridState()
 
-    private var mColumnSize: Int = 0
-    private var isPager: Boolean = false
-    private var isLimit: Boolean = false
+    @VisibleForTesting
+    internal val userItems = mutableStateOf(emptyList<UserRowUiState>())
+    private var isLoading: Boolean = false
+    private var hasMore: Boolean = true
+    private var lastAppliedPageState: UserListViewModel.UiState.Success? = null
+    private var requestedPage: Int = 1
 
     private var count: Int = 0
     private var userId: Long = 0
@@ -115,34 +118,17 @@ class BottomSheetListUsers :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val ctx = requireContext()
         fromBundle(arguments)?.let { args ->
             userId = args.userId
             requestType = args.requestType
         }
         count = arguments?.getInt(KeyUtil.arg_model) ?: 0
-        mAdapter = UserAdapter(
-            context = ctx,
-            currentUser = databaseHelper.currentUser,
-            onToggleFollowAction = ::toggleFollow,
-        )
-        isPager = true
-        mColumnSize = resources.getInteger(R.integer.single_list_x1)
         observeUserStore()
         observeViewModelState()
     }
 
-    /**
-     * Fire-and-forget delivery from the render-only [FollowStateWidget]. The legacy adapter
-     * still passes a result callback slot, which is intentionally ignored: the committed
-     * result is applied by observing [UserStore] below. Request failures are reported
-     * explicitly because a failed mutation commits nothing and would otherwise stay silent
-     * until the widget's bounded loading fallback expires.
-     */
-    private fun toggleFollow(
-        userId: Long,
-        @Suppress("UNUSED_PARAMETER") onResult: (Result<UserBase>) -> Unit,
-    ) {
+    /** Dispatches the follow mutation; UserStore applies committed changes to row projections. */
+    private fun toggleFollow(userId: Long) {
         lifecycleScope.launch {
             val result = toggleUserFollowInteractor(ToggleUserFollowCommand(userId = userId))
             reportFollowFailure(result) { message ->
@@ -158,12 +144,7 @@ class BottomSheetListUsers :
         }
     }
 
-    /**
-     * Smallest behavior-preserving bridge between the canonical [UserStore] and the legacy
-     * adapter: committed follow changes for users in the list are written back onto the
-     * existing item so the widget re-renders the authoritative state. A failed mutation
-     * commits nothing, so the displayed state stays unchanged.
-     */
+    /** Tracks committed follow changes for users currently represented by the list. */
     private fun observeUserStore() {
         lifecycleScope.launch {
             userStore.state.collect { state ->
@@ -173,12 +154,15 @@ class BottomSheetListUsers :
     }
 
     private fun rebindUserIfPresent(record: UserRecord) {
-        val position = mAdapter.data.indexOfFirst { it.id == record.id }
-        if (position < 0) return
-        val current = mAdapter.data[position]
-        if (current.rebindFollowState(record)) {
-            mAdapter.onItemChanged(current, position)
-        }
+        val rows = userItems.value
+        val index = rows.indexOfFirst { it.model.id == record.id }
+        if (index < 0) return
+        val current = rows[index]
+        if (!current.model.rebindFollowState(record)) return
+        userItems.value =
+            rows.mapIndexed { position, item ->
+                if (position == index) item.copy(isFollowing = record.isFollowing) else item
+            }
     }
 
     /**
@@ -198,12 +182,19 @@ class BottomSheetListUsers :
                 userListViewModel.state.collect { state ->
                     when (state) {
                         is UserListViewModel.UiState.Loading -> {
+                            isLoading = true
                             stateLayout?.showLoading()
                         }
                         is UserListViewModel.UiState.Success -> {
+                            // Re-entering STARTED re-delivers the latest Success;
+                            // applying it again would duplicate the accumulated
+                            // page and break the keyed lazy grid.
+                            if (lastAppliedPageState === state) return@collect
+                            lastAppliedPageState = state
                             onChanged(state.container)
                         }
                         is UserListViewModel.UiState.Error -> {
+                            isLoading = false
                             showError(state.message)
                         }
                     }
@@ -218,10 +209,39 @@ class BottomSheetListUsers :
         dialog.setContentView(binding.root)
         bindToolbarViews(binding.root)
         stateLayout = binding.stateLayout
-        recyclerView = binding.recyclerView
+        binding.userListComposeView.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindow)
+            setContent {
+                val nestedScrollInterop = rememberNestedScrollInteropConnection()
+                LaunchedEffect(userListState) {
+                    snapshotFlow {
+                        val layoutInfo = userListState.layoutInfo
+                        layoutInfo.visibleItemsInfo.lastOrNull()?.index?.let { lastVisibleIndex ->
+                            layoutInfo.totalItemsCount to lastVisibleIndex
+                        }
+                    }.distinctUntilChanged().collect { visibleRange ->
+                        if (
+                            visibleRange != null &&
+                            visibleRange.first - visibleRange.second - 1 <= USER_LIST_VISIBLE_THRESHOLD
+                        ) {
+                            onLoadMore()
+                        }
+                    }
+                }
+                AniTrendTheme {
+                    UserList(
+                        modifier = Modifier.nestedScroll(nestedScrollInterop),
+                        items = userItems.value,
+                        listState = userListState,
+                        currentUser = databaseHelper.currentUser,
+                        onUserClick = { userId -> onUserClick?.invoke(UserScreenParam(userId)) },
+                        onToggleFollow = ::toggleFollow,
+                    )
+                }
+            }
+        }
         searchView = binding.customSheetToolbar.searchView
         createBottomSheetBehavior(binding.root)
-        mLayoutManager = StaggeredGridLayoutManager(mColumnSize, StaggeredGridLayoutManager.VERTICAL)
         return dialog
     }
 
@@ -248,86 +268,40 @@ class BottomSheetListUsers :
         }
         searchView?.visibility = View.GONE
         stateLayout?.showLoading()
-        if (mAdapter.itemCount < 1) {
+        if (userItems.value.isEmpty()) {
             onRefresh()
         } else {
             updateUI()
         }
     }
 
-    private fun addScrollLoadTrigger() {
-        if (isPager) {
-            val recycler = recyclerView ?: return
-            if (!recycler.hasOnScrollListener()) {
-                presenter.initListener(mLayoutManager, this)
-                recycler.addOnScrollListener(presenter)
-            }
-        }
-    }
-
-    private fun removeScrollLoadTrigger() {
-        if (isPager) {
-            recyclerView?.clearOnScrollListeners()
-        }
-    }
-
-    override fun onPause() {
-        removeScrollLoadTrigger()
-        super.onPause()
-    }
-
-    override fun onResume() {
-        addScrollLoadTrigger()
-        super.onResume()
-    }
-
-    private fun injectAdapter() {
-        mAdapter.setClickListener(this)
-        val recycler = recyclerView ?: return
-        if (recycler.adapter == null) {
-            recycler.setHasFixedSize(true)
-            recycler.isNestedScrollingEnabled = true
-            recycler.layoutManager = mLayoutManager
-            recycler.adapter = mAdapter
-        }
-        if (mAdapter.itemCount < 1) {
-            val drawable =
-                context?.getCompatDrawable(
-                    R.drawable.ic_new_releases_white_24dp,
-                    R.color.colorStateBlue,
-                ) ?: return
-            stateLayout?.showEmpty(drawable, getString(R.string.layout_empty_response))
+    private fun updateUI() {
+        if (userItems.value.isEmpty()) {
+            showEmpty(getString(R.string.layout_empty_response))
         } else {
             stateLayout?.showContent()
         }
     }
 
-    private fun updateUI() {
-        injectAdapter()
-    }
-
-    private fun setLimitReached() {
-        if (presenter.currentPage != 0) {
-            isLimit = true
-        }
-    }
-
-    override fun onRefresh() {
-        if (isPager) {
-            presenter.onRefreshPage()
-        }
+    private fun onRefresh() {
+        presenter.onRefreshPage()
+        hasMore = true
+        isLoading = true
         makeRequest()
     }
 
-    override fun onLoad() = Unit
-
-    override fun onLoadMore() {
+    private fun onLoadMore() {
+        if (isLoading || !hasMore) return
+        presenter.currentPage++
+        isLoading = true
         makeRequest()
     }
 
     /** Loads the current user list page according to the configured request type. */
     fun makeRequest() {
+        isLoading = true
         val page = presenter.currentPage
+        requestedPage = page
         val perPage = KeyUtil.PAGING_LIMIT
         when (requestType) {
             KeyUtil.USER_FOLLOWERS_REQ -> userListViewModel.loadFollowers(userId, page, perPage)
@@ -339,45 +313,43 @@ class BottomSheetListUsers :
         }
     }
 
+    private fun UserBase.toUserRowUiState(): UserRowUiState = UserRowUiState(
+        model = this,
+        name = name,
+        avatar = avatar,
+        isFollowing = isFollowing,
+    )
+
     private fun onPostProcessed(content: List<UserBase>?) {
-        val items = content ?: emptyList()
-        if (!CompatUtil.isEmpty(items)) {
-            if (isPager) {
-                if (mAdapter.itemCount < 1) {
-                    mAdapter.onItemsInserted(items)
-                } else {
-                    mAdapter.onItemRangeInserted(items)
-                }
-            } else {
-                mAdapter.onItemsInserted(items)
-            }
+        isLoading = false
+        val mapped = content.orEmpty().map { it.toUserRowUiState() }
+        if (requestedPage <= 1) {
+            // Refresh/retry re-requests page 1; rows must be replaced even by an
+            // empty result, or stale rows (and later duplicate keys) survive the
+            // refresh and the empty surface never shows.
+            userItems.value = mapped
+        } else if (mapped.isNotEmpty()) {
+            val existing = userItems.value.mapTo(mutableSetOf()) { it.model.id }
+            userItems.value = userItems.value + mapped.filter { it.model.id !in existing }
+        }
+        if (mapped.isNotEmpty()) {
             updateUI()
         } else {
-            if (isPager) {
-                setLimitReached()
-            }
-            if (mAdapter.itemCount < 1) {
+            hasMore = false
+            if (userItems.value.isEmpty()) {
                 showEmpty(getString(R.string.layout_empty_response))
             }
         }
     }
 
-    override fun onChanged(content: PageContainer<UserBase>?) {
-        if (content != null) {
-            if (content.hasPageInfo()) {
-                presenter.setPageInfo(content.pageInfo)
-            }
-            if (!content.isEmpty) {
-                onPostProcessed(content.pageData)
-            } else {
-                onPostProcessed(emptyList())
-            }
+    private fun onChanged(content: PageContainer<UserBase>?) {
+        if (content?.hasPageInfo() == true) {
+            presenter.setPageInfo(content.pageInfo)
+            hasMore = content.pageInfo.hasNextPage()
         } else {
-            onPostProcessed(emptyList())
+            hasMore = content != null
         }
-        if (mAdapter.itemCount < 1) {
-            onPostProcessed(null)
-        }
+        onPostProcessed(content?.pageData)
     }
 
     override fun showError(error: String) {
@@ -391,22 +363,6 @@ class BottomSheetListUsers :
         val drawable = context?.getCompatDrawable(R.drawable.ic_emoji_sweat)
         stateLayout?.showError(drawable, message, getString(R.string.button_try_again), stateLayoutOnClick)
     }
-
-    override fun onItemClick(
-        target: View,
-        data: IndexedValue<UserBase>,
-    ) {
-        when (target.id) {
-            R.id.container -> {
-                onUserClick?.invoke(UserScreenParam(data.value.id))
-            }
-        }
-    }
-
-    override fun onItemLongClick(
-        target: View,
-        data: IndexedValue<UserBase>,
-    ) = Unit
 
     /** Builds a user list sheet and configures its navigation callback. */
     class Builder : BottomSheetBuilder() {

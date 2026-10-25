@@ -19,11 +19,10 @@ import com.mxt.anitrend.util.NotifyUtil
  * widget that represents the state of an
  * external user, either following or not
  *
- * The widget is render-only with respect to follow mutations: it renders the bound
- * [UserBase] as a transitional read-only source and emits the affected userId to its
- * listener fire-and-forget. It never resolves repositories and never starts business
- * coroutines; the owning screen owns the mutation lifecycle and pushes committed state
- * back through [setUserModel].
+ * The widget renders a user ID and committed follow flag, then emits the affected
+ * userId to its listener. It never retains the target entity, resolves repositories,
+ * or starts business coroutines. The owning screen pushes committed display values
+ * back through [setUserState].
  */
 class FollowStateWidget
 @JvmOverloads
@@ -39,10 +38,11 @@ constructor(
         fun onToggleFollow(userId: Long)
     }
 
-    private var model: UserBase? = null
+    private var boundUserId = 0L
+    private var isFollowing = false
     private lateinit var binding: WidgetButtonStateBinding
     private var listener: Listener? = null
-    private var recycled = false
+    private var hasBoundUser = false
     private var currentUser: UserBase? = null
     private val mainHandler = Handler(Looper.getMainLooper())
 
@@ -63,11 +63,8 @@ constructor(
 
     fun setCurrentUser(user: UserBase?) {
         this.currentUser = user
-        // The model may already be bound: adapters commonly bind the row model before
-        // the current-user context on the first pass, and the visibility decision in
-        // setUserModel then runs against a still-null current user. Re-evaluate so a
-        // control is never left hidden because the user context arrived afterwards.
-        if (model != null) {
+        // Authentication context may arrive after the row's display state.
+        if (hasBoundUser) {
             applyVisibilityState()
         }
     }
@@ -89,24 +86,24 @@ constructor(
         binding.buttonStateText.setOnClickListener(this)
     }
 
-    fun setUserModel(model: UserBase) {
-        recycled = false
-        this.model = model
-        // A newly bound state always reflects the latest committed render source,
-        // so a pending mutation loading state is reset.
+    /** Binds committed display values without retaining a mutable target entity. */
+    fun setUserState(userId: Long, isFollowing: Boolean) {
+        boundUserId = userId
+        this.isFollowing = isFollowing
+        hasBoundUser = true
         resetLoadingState()
         applyVisibilityState()
     }
 
     /**
-     * Decides whether the follow control is rendered for the bound model:
+     * Decides whether the follow control is rendered for the bound user:
      * hidden when there is no authenticated current user context or when the row
      * is the current user themself, visible otherwise.
      */
     private fun applyVisibilityState() {
-        val currentModel = model ?: return
+        if (!hasBoundUser) return
         if (currentUser != null) {
-            if (!isCurrentUser(currentModel)) {
+            if (boundUserId == 0L || currentUser?.id != boundUserId) {
                 visibility = VISIBLE
                 setControlText()
             } else {
@@ -117,11 +114,8 @@ constructor(
         }
     }
 
-    private fun isCurrentUser(userBase: UserBase): Boolean = userBase.id != 0L && currentUser?.id == userBase.id
-
     private fun setControlText() {
-        val currentModel = model ?: return
-        if (currentModel.isFollowing) {
+        if (isFollowing) {
             binding.buttonStateText.setText(R.string.following)
         } else {
             binding.buttonStateText.setText(R.string.follow)
@@ -132,7 +126,7 @@ constructor(
      * Clean up any resources that won't be needed
      */
     override fun onViewRecycled() {
-        recycled = true
+        hasBoundUser = false
         listener = null
         visibility = VISIBLE
         resetLoadingState()
@@ -156,13 +150,13 @@ constructor(
             R.id.button_state_text,
             -> {
                 if (binding.widgetFlipper.displayedChild == CONTENT_STATE) {
-                    val currentModel = model ?: run {
+                    if (!hasBoundUser) {
                         resetLoadingState()
                         return
                     }
                     val configuredListener = listener ?: return
                     showLoadingState()
-                    configuredListener.onToggleFollow(currentModel.id)
+                    configuredListener.onToggleFollow(boundUserId)
                 } else {
                     NotifyUtil
                         .makeText(

@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.flatMapLatest
  *
  * Paging 3 owns all network page orchestration: this ViewModel only establishes the
  * query identity, rebuilds the [Pager] when the query changes, and exposes the cached
- * [PagingData] stream. The fragment renders load states and the adapter renders
+ * [PagingData] stream. The section renders load states and the lazy grid renders
  * immutable items. There is no manual page state machine, no in-memory item cache, and
  * no local store or RemoteMediator behind this stream.
  *

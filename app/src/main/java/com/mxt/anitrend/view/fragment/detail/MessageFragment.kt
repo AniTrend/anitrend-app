@@ -96,7 +96,12 @@ class MessageFragment : FeedListFragment() {
                             // Loading is handled by swipeRefreshLayout in the base class
                         }
                         is MessageFeedViewModel.UiState.Success -> {
-                            handleSuccess(state.items, state.pageInfo)
+                            handleSuccess(
+                                items = state.items,
+                                pageInfo = state.pageInfo,
+                                requestedPage = state.requestedPage,
+                                isLoading = state.isLoading,
+                            )
                         }
                         is MessageFeedViewModel.UiState.Error -> {
                             showError(state.message)
@@ -109,9 +114,10 @@ class MessageFragment : FeedListFragment() {
 
     override fun makeRequest() {
         val args = arguments
+        prepareFeedRequest()
         messageFeedViewModel.load(
             userId = userId,
-            page = mScrollListener.currentPage,
+            page = pageState.currentPage,
             pageLimit = args?.getInt(KeyUtil.arg_page_limit, KeyUtil.PAGING_LIMIT) ?: KeyUtil.PAGING_LIMIT,
             messageType = messageType,
             currentUserId = currentUserId(),
@@ -127,7 +133,7 @@ class MessageFragment : FeedListFragment() {
     }
 
     override fun editFeed(feedId: Long) {
-        val feedItem = currentRenderedFeedItems().firstOrNull { it.id == feedId } ?: return
+        val feedItem = currentRenderedFeedItems().firstOrNull { it.id == feedId && it.canEdit } ?: return
         val recipientId = feedItem.recipientId ?: return
         val recipient = UserBase(name = feedItem.recipientName).apply { id = recipientId }
         mBottomSheet =

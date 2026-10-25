@@ -32,8 +32,8 @@
                     tools:visibility="gone"
                     tools:layout_height="@dimen/lg_margin"/>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/genre_recycler"
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/genre_grid"
                     android:visibility="gone"
                     android:layout_margin="@dimen/lg_margin"
                     android:layout_width="match_parent"
@@ -44,8 +44,8 @@
                     android:id="@+id/series_details_section"
                     layout="@layout/section_series_details" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/tags_recycler"
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/tags_compose_view"
                     android:visibility="gone"
                     android:layout_margin="@dimen/lg_margin"
                     android:layout_width="match_parent"

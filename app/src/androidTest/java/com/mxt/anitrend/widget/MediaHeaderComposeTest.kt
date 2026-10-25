@@ -5,35 +5,36 @@ package com.mxt.anitrend.widget
 import android.graphics.Bitmap
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.ui.Modifier
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.asAndroidBitmap
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.platform.ViewCompositionStrategy
-import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.captureToImage
 import androidx.compose.ui.test.onAllNodesWithTag
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performSemanticsAction
 import androidx.compose.ui.test.v2.runAndroidComposeUiTest
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.mxt.anitrend.R
-import com.mxt.anitrend.adapter.recycler.detail.CharacterActorsAdapter
-import com.mxt.anitrend.base.interfaces.event.ItemClickListener
 import com.mxt.anitrend.model.entity.anilist.meta.ImageBase
 import com.mxt.anitrend.model.entity.anilist.meta.MediaTitle
 import com.mxt.anitrend.model.entity.base.MediaBase
-import com.mxt.anitrend.model.entity.group.RecyclerItem
+import com.mxt.anitrend.model.entity.group.RecyclerHeaderItem
+import com.mxt.anitrend.ui.detail.projectGroupedMediaSeriesRows
+import com.mxt.anitrend.ui.mediasearch.MEDIA_SERIES_CARD_TAG
+import com.mxt.anitrend.ui.character.CharacterMediaHeaderUiState
+import com.mxt.anitrend.ui.detail.DetailGridRow
+import com.mxt.anitrend.ui.detail.DetailListGrid
 import com.mxt.anitrend.ui.designsystem.AniTrendTheme
 import com.mxt.anitrend.util.KeyUtil
+import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -55,53 +56,36 @@ class MediaHeaderComposeTest {
                     status = KeyUtil.RELEASING
                     title = MediaTitle(null, null, null, "The Alternate Story")
                     coverImage = ImageBase(null, imageUrl, null)
-                    contentType = KeyUtil.RECYCLER_TYPE_HEADER
-                    subGroupTitle = "Supporting Role"
                 }
-            val adapter =
-                CharacterActorsAdapter(
-                    onMediaClick =
-                    object : ItemClickListener<RecyclerItem> {
-                        override fun onItemClick(
-                            target: View,
-                            data: IndexedValue<RecyclerItem>,
-                        ) = Unit
-
-                        override fun onItemLongClick(
-                            target: View,
-                            data: IndexedValue<RecyclerItem>,
-                        ) = Unit
+            val callbackTarget = View(hostActivity).apply { id = R.id.container }
+            var clickedTargetId = View.NO_ID
+            var longClickedTargetId = View.NO_ID
+            var clickedMedia: MediaBase? = null
+            var longClickedMedia: MediaBase? = null
+            val initialState = CharacterMediaHeaderUiState.from(media).copy(subGroupTitle = "Supporting Role")
+            val headerRow =
+                DetailGridRow.CharacterMediaHeader(
+                    key = "actor:501:supporting:media",
+                    state = initialState,
+                    onClick = { target ->
+                        clickedTargetId = target.id
+                        clickedMedia = media
                     },
-                    onStaffClick = { _, _ -> },
-                )
-            lateinit var recyclerView: RecyclerView
-            runOnUiThread {
-                recyclerView =
-                    RecyclerView(hostActivity).apply {
-                        setHasFixedSize(true)
-                        layoutManager =
-                            StaggeredGridLayoutManager(
-                                hostActivity.resources.getInteger(R.integer.grid_giphy_x3),
-                                StaggeredGridLayoutManager.VERTICAL,
-                            )
-                        itemAnimator = null
-                        this.adapter = adapter
-                    }
-                hostActivity.setContentView(
-                    ComposeView(hostActivity).apply {
-                        id = View.generateViewId()
-                        setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-                        setContent {
-                            AniTrendTheme {
-                                AndroidView(
-                                    factory = { recyclerView },
-                                    modifier = Modifier.fillMaxSize(),
-                                )
-                            }
-                        }
+                    onLongClick = { target ->
+                        longClickedTargetId = target.id
+                        longClickedMedia = media
                     },
                 )
-                adapter.submitList(listOf(media))
+            val rows = mutableStateOf(listOf(headerRow))
+            hostActivity.installComposeContent {
+                AniTrendTheme {
+                    DetailListGrid(
+                        rows = rows.value,
+                        gridState = rememberLazyGridState(),
+                        callbackTarget = callbackTarget,
+                        onLoadMore = {},
+                    )
+                }
             }
             waitUntil("media header image shows local cover pixels", 60_000L) {
                 val images = onAllNodesWithTag(MEDIA_HEADER_IMAGE_TAG, useUnmergedTree = true)
@@ -111,8 +95,7 @@ class MediaHeaderComposeTest {
             waitForIdle()
             var statusColor = 0
             runOnUiThread {
-                val row = requireNotNull(recyclerView.findViewHolderForAdapterPosition(0)).itemView
-                val statusView = requireNotNull(findSeriesStatusWidget(row))
+                val statusView = requireNotNull(findSeriesStatusWidget(hostActivity.window.decorView))
                 statusColor =
                     requireNotNull(statusView.background as? android.graphics.drawable.ColorDrawable).color
             }
@@ -125,6 +108,9 @@ class MediaHeaderComposeTest {
                 .assertIsDisplayed()
                 .assertHasClickAction()
                 .assert(SemanticsMatcher.keyIsDefined(SemanticsActions.OnLongClick))
+                .performClick()
+            onNodeWithTag(MEDIA_HEADER_CARD_TAG, useUnmergedTree = true)
+                .performSemanticsAction(SemanticsActions.OnLongClick) { action -> action() }
             onNodeWithTag(MEDIA_HEADER_IMAGE_TAG, useUnmergedTree = true).assertIsDisplayed()
             assertTrue(
                 "the media header cover should display local image pixels",
@@ -137,10 +123,12 @@ class MediaHeaderComposeTest {
             onNodeWithText("The Alternate Story").assertIsDisplayed()
             onNodeWithText("Supporting Role", substring = true).assertIsDisplayed()
             onNodeWithText("TV", substring = true).assertIsDisplayed()
-            runOnUiThread {
-                media.coverImage = null
-                adapter.notifyItemChanged(0)
-            }
+            assertTrue("media click retains the container target", clickedTargetId == R.id.container)
+            assertTrue("media long-click retains the container target", longClickedTargetId == R.id.container)
+            assertSame(media, clickedMedia)
+            assertSame(media, longClickedMedia)
+
+            runOnIdle { rows.value = listOf(headerRow.copy(state = initialState.copy(coverImageUrl = null))) }
             waitUntil("media header cover clears when its model becomes null", 5_000L) {
                 val images = onAllNodesWithTag(MEDIA_HEADER_IMAGE_TAG, useUnmergedTree = true)
                 images.fetchSemanticsNodes().size == 1 &&
@@ -154,9 +142,8 @@ class MediaHeaderComposeTest {
                     .hasUniformImageSurface(),
             )
 
-            runOnUiThread {
-                media.coverImage = ImageBase(extraLarge = null, large = imageUrl, medium = null)
-                adapter.notifyItemChanged(0)
+            runOnIdle {
+                rows.value = listOf(headerRow.copy(state = initialState.copy(coverImageUrl = imageUrl)))
             }
             waitUntil("rebound media header cover shows local image pixels", 60_000L) {
                 val images = onAllNodesWithTag(MEDIA_HEADER_IMAGE_TAG, useUnmergedTree = true)
@@ -171,13 +158,67 @@ class MediaHeaderComposeTest {
                     .hasImageContentPixels(),
             )
 
-            runOnUiThread { adapter.submitList(emptyList()) }
+            runOnIdle { rows.value = emptyList() }
             waitUntil("removed media header image semantics are absent", 5_000L) {
-                adapter.currentList.isEmpty() &&
-                    onAllNodesWithTag(MEDIA_HEADER_IMAGE_TAG, useUnmergedTree = true)
-                        .fetchSemanticsNodes()
-                        .isEmpty()
+                onAllNodesWithTag(MEDIA_HEADER_IMAGE_TAG, useUnmergedTree = true)
+                    .fetchSemanticsNodes()
+                    .isEmpty()
             }
+        }
+    }
+
+    @Test
+    @OptIn(ExperimentalTestApi::class)
+    fun groupedMediaSeriesForwardsBothActionsWithTheContainerTarget() {
+        runAndroidComposeUiTest<ProgressLayoutTestActivity>(testTimeout = 3.minutes) {
+            val hostActivity = requireNotNull(activity)
+            val media =
+                MediaBase().apply {
+                    id = 502L
+                    type = KeyUtil.ANIME
+                    format = KeyUtil.TV
+                    status = KeyUtil.RELEASING
+                    title = MediaTitle(null, null, null, "Detail media series")
+                }
+            val callbackTarget = View(hostActivity).apply { id = R.id.container }
+            var clickedTargetId = View.NO_ID
+            var longClickedTargetId = View.NO_ID
+            var clickedMedia: MediaBase? = null
+            var longClickedMedia: MediaBase? = null
+            val rows =
+                projectGroupedMediaSeriesRows(
+                    context = hostActivity,
+                    items = listOf(RecyclerHeaderItem("Relations", 1), media),
+                    onMediaClick = { target, item ->
+                        clickedTargetId = target.id
+                        clickedMedia = item
+                    },
+                    onMediaLongClick = { target, item ->
+                        longClickedTargetId = target.id
+                        longClickedMedia = item
+                    },
+                )
+            hostActivity.installComposeContent {
+                AniTrendTheme {
+                    DetailListGrid(
+                        rows = rows,
+                        gridState = rememberLazyGridState(),
+                        callbackTarget = callbackTarget,
+                        onLoadMore = {},
+                    )
+                }
+            }
+
+            waitForIdle()
+            onNodeWithTag(MEDIA_SERIES_CARD_TAG, useUnmergedTree = true)
+                .assertHasClickAction()
+                .performClick()
+            onNodeWithTag(MEDIA_SERIES_CARD_TAG, useUnmergedTree = true)
+                .performSemanticsAction(SemanticsActions.OnLongClick) { action -> action() }
+            assertTrue("media click keeps the container target", clickedTargetId == R.id.container)
+            assertTrue("media long-click keeps the container target", longClickedTargetId == R.id.container)
+            assertSame(media, clickedMedia)
+            assertSame(media, longClickedMedia)
         }
     }
 
@@ -197,6 +238,7 @@ class MediaHeaderComposeTest {
         const val MEDIA_HEADER_STATUS_TAG = "media-header-status"
     }
 }
+
 private fun Bitmap.hasImageContentPixels(): Boolean {
     val colors = mutableSetOf<Int>()
     val startX = width / 5

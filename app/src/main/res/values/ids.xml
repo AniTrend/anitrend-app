@@ -3,4 +3,17 @@
     <item name="widget_mention" type="id" />
     <item name="review_read_more" type="id" />
     <item name="series_rating" type="id" />
+    <item name="nav_home_feed" type="id" />
+    <item name="nav_anime" type="id" />
+    <item name="nav_manga" type="id" />
+    <item name="nav_trending" type="id" />
+    <item name="nav_reviews" type="id" />
+    <item name="nav_airing" type="id" />
+    <item name="nav_hub" type="id" />
+    <item name="nav_myanime" type="id" />
+    <item name="nav_mymanga" type="id" />
+    <item name="nav_sign_in" type="id" />
+    <item name="nav_sign_out" type="id" />
+    <item name="nav_check_update" type="id" />
+    <item name="custom_rating_widget" type="id" />
 </resources>

@@ -1,8 +1,5 @@
 package com.mxt.anitrend.base.custom.activity
 
-import android.view.Menu
-import android.view.View
-import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
@@ -29,29 +26,20 @@ private fun FragmentActivity.onLatestUpdateInstalled() {
     )
 }
 
-private fun MainActivity.onUpdateChecked(
-    silent: Boolean,
-    menuItems: Menu,
-) {
+private fun MainActivity.onUpdateChecked(silent: Boolean) {
     val remoteVersion = koinOf<BoxQuery>().remoteVersion
 
     if (remoteVersion != null) {
         if (remoteVersion.isNewerVersion()) {
             // If a new version of the application is available on GitHub
-            val mAppUpdateWidget =
-                menuItems
-                    .findItem(R.id.nav_check_update)
-                    .actionView
-                    ?.findViewById<TextView>(R.id.app_update_info)
-            mAppUpdateWidget?.text = getString(R.string.app_update, remoteVersion.version)
-            mAppUpdateWidget?.visibility = View.VISIBLE
+            updateDrawerUpdateBadge(getString(R.string.app_update, remoteVersion.version))
         } else if (!silent) {
             onLatestUpdateInstalled()
         }
     }
 }
 
-fun MainActivity.launchUpdateWorker(menuItems: Menu) {
+fun MainActivity.launchUpdateWorker() {
     WorkManager
         .getInstance(this)
         .getWorkInfosByTagLiveData(
@@ -66,7 +54,6 @@ fun MainActivity.launchUpdateWorker(menuItems: Menu) {
                             KeyUtil.WorkUpdaterSilentId,
                             false,
                         ),
-                        menuItems,
                     )
                 }
         }

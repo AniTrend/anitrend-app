@@ -45,7 +45,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView
-import com.mxt.anitrend.base.custom.view.widget.StatusDeleteWidget
 import com.mxt.anitrend.base.custom.view.widget.StatusDeleteWidgetState
 import com.mxt.anitrend.binding.richMarkDown
 import com.mxt.anitrend.domain.model.CommentReplyUiModel
@@ -66,14 +65,12 @@ internal fun CommentReplyRow(
     model: CommentReplyUiModel,
     createdAtText: String,
     isCurrentUser: Boolean,
-    isRecycled: Boolean,
     onToggleLike: () -> Unit,
     onDelete: () -> Unit,
     onEdit: () -> Unit,
     onMention: () -> Unit,
     onShowLikes: () -> Unit,
     onOpenProfile: () -> Unit,
-    onDeleteWidgetCreated: (StatusDeleteWidget) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val isPreview = LocalInspectionMode.current
@@ -105,28 +102,20 @@ internal fun CommentReplyRow(
             dimensionResource(R.dimen.xs_margin)
 
     val favouriteState =
-        remember(model.likeCount, model.isLikedByCurrentUser, model.isLikePending, isRecycled) {
-            if (isRecycled) {
-                FavouriteActionState(count = 0, isLiked = false, isEnabled = true, isLoading = false)
-            } else {
-                FavouriteActionState(
-                    count = model.likeCount,
-                    isLiked = model.isLikedByCurrentUser,
-                    isEnabled = !model.isLikePending,
-                    isLoading = model.isLikePending,
-                )
-            }
+        remember(model.likeCount, model.isLikedByCurrentUser, model.isLikePending) {
+            FavouriteActionState(
+                count = model.likeCount,
+                isLiked = model.isLikedByCurrentUser,
+                isEnabled = !model.isLikePending,
+                isLoading = model.isLikePending,
+            )
         }
     val deleteState =
-        remember(model.isDeletePending, isRecycled) {
-            if (isRecycled) {
-                StatusDeleteWidgetState(isEnabled = true, isLoading = false)
-            } else {
-                StatusDeleteWidgetState(
-                    isEnabled = !model.isDeletePending,
-                    isLoading = model.isDeletePending,
-                )
-            }
+        remember(model.isDeletePending) {
+            StatusDeleteWidgetState(
+                isEnabled = !model.isDeletePending,
+                isLoading = model.isDeletePending,
+            )
         }
 
     Card(
@@ -148,7 +137,7 @@ internal fun CommentReplyRow(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 CommentReplyAvatar(
-                    imageUrl = model.userAvatar.takeUnless { isRecycled },
+                    imageUrl = model.userAvatar,
                     avatarLabel = model.userName?.firstOrNull()?.toString().orEmpty(),
                     profileDescription = profileDescription,
                     isPreview = isPreview,
@@ -216,11 +205,9 @@ internal fun CommentReplyRow(
                                 .heightIn(min = legacyTextActionHeight)
                                 .testTag(R.id.widget_edit.toString()),
                         )
-                        CommentDeleteAction(
+                        FeedDeleteAction(
                             state = deleteState,
-                            isRecycled = isRecycled,
                             onClick = onDelete,
-                            onWidgetCreated = onDeleteWidgetCreated,
                             modifier = Modifier.padding(start = dimensionResource(R.dimen.lg_margin)),
                         )
                     } else {
@@ -369,48 +356,6 @@ private fun CommentActionIcon(
     }
 }
 
-@Composable
-private fun CommentDeleteAction(
-    isRecycled: Boolean,
-    state: StatusDeleteWidgetState,
-    onClick: () -> Unit,
-    onWidgetCreated: (StatusDeleteWidget) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    if (LocalInspectionMode.current) {
-        StatusDeleteAction(
-            isEnabled = state.isEnabled,
-            isLoading = state.isLoading,
-            onClick = onClick,
-            modifier = modifier,
-        )
-    } else {
-        AndroidView(
-            factory = { context ->
-                StatusDeleteWidget(context).apply {
-                    id = R.id.widget_delete
-                    layoutParams = ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                    )
-                    onWidgetCreated(this)
-                }
-            },
-            modifier = modifier,
-            update = { view ->
-                if (isRecycled) {
-                    view.setOnDeleteListener(null)
-                    view.onViewRecycled()
-                } else {
-                    view.render(state)
-                    view.setOnDeleteListener(onClick)
-                }
-            },
-            onRelease = StatusDeleteWidget::onViewRecycled,
-        )
-    }
-}
-
 @Preview(name = "Comment reply row", showBackground = true, widthDp = 360)
 @Composable
 private fun CommentReplyRowPreview() {
@@ -434,27 +379,23 @@ private fun CommentReplyRowPreview() {
                 model = reply.copy(isLikedByCurrentUser = false),
                 createdAtText = "1 day ago",
                 isCurrentUser = false,
-                isRecycled = false,
                 onToggleLike = {},
                 onDelete = {},
                 onEdit = {},
                 onMention = {},
                 onShowLikes = {},
                 onOpenProfile = {},
-                onDeleteWidgetCreated = {},
             )
             CommentReplyRow(
                 model = reply.copy(isDeletePending = true),
                 createdAtText = "1 day ago",
                 isCurrentUser = true,
-                isRecycled = false,
                 onToggleLike = {},
                 onDelete = {},
                 onEdit = {},
                 onMention = {},
                 onShowLikes = {},
                 onOpenProfile = {},
-                onDeleteWidgetCreated = {},
             )
         }
     }

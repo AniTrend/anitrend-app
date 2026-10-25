@@ -50,7 +50,7 @@ class FollowStateWidgetInstrumentationTest {
                         id = 1L
                     },
                 )
-                widget.setUserModel(targetUser)
+                widget.setUserState(targetUser.id, targetUser.isFollowing)
 
                 val deliveredUserIds = mutableListOf<Long>()
                 widget.setListener(
@@ -69,14 +69,12 @@ class FollowStateWidgetInstrumentationTest {
                 assertEquals(WidgetState.LOADING_STATE, flipper.displayedChild)
 
                 // A newly bound committed state resets the loading spinner and re-renders.
-                val committedUser = UserBase(name = "other-user", isFollowing = true).apply {
-                    id = 2L
-                }
-                widget.setUserModel(committedUser)
+                widget.setUserState(targetUser.id, isFollowing = true)
 
                 val label = widget.findViewById<MaterialButton>(R.id.button_state_text)
                 assertEquals(WidgetState.CONTENT_STATE, flipper.displayedChild)
                 assertEquals(activity.getString(R.string.following), label.text.toString())
+                assertFalse(targetUser.isFollowing)
             }
         }
         database.invalidateBoxStores()
@@ -108,7 +106,7 @@ class FollowStateWidgetInstrumentationTest {
                         id = 1L
                     },
                 )
-                widget.setUserModel(targetUser)
+                widget.setUserState(targetUser.id, targetUser.isFollowing)
 
                 // No listener configured: the tap has no callback target, so the
                 // widget must neither dispatch nor leave the content state.
@@ -138,8 +136,8 @@ class FollowStateWidgetInstrumentationTest {
                 container.addView(widget)
                 val targetUser = UserBase(name = "other-user").apply { id = 2L }
 
-                // Adapter order: model first, current user second.
-                widget.setUserModel(targetUser)
+                // Display state first, authenticated current-user context second.
+                widget.setUserState(targetUser.id, targetUser.isFollowing)
                 assertEquals(View.GONE, widget.visibility)
 
                 widget.setCurrentUser(
@@ -169,7 +167,7 @@ class FollowStateWidgetInstrumentationTest {
                         id = 1L
                     },
                 )
-                widget.setUserModel(UserBase(name = "other-user").apply { id = 2L })
+                widget.setUserState(userId = 2L, isFollowing = false)
 
                 assertEquals(View.VISIBLE, widget.visibility)
             }
@@ -190,11 +188,7 @@ class FollowStateWidgetInstrumentationTest {
                         id = 1L
                     },
                 )
-                widget.setUserModel(
-                    UserBase(name = "current-user").apply {
-                        id = 1L
-                    },
-                )
+                widget.setUserState(userId = 1L, isFollowing = false)
 
                 // Self rows intentionally render no follow control: you cannot
                 // follow yourself.
@@ -222,7 +216,7 @@ class FollowStateWidgetInstrumentationTest {
                         id = 1L
                     },
                 )
-                widget.setUserModel(UserBase(name = "other-user").apply { id = 2L })
+                widget.setUserState(userId = 2L, isFollowing = false)
 
                 val deliveredUserIds = mutableListOf<Long>()
                 widget.setListener(
@@ -256,7 +250,7 @@ class FollowStateWidgetInstrumentationTest {
 
                 val widget = FollowStateWidget(activity)
                 container.addView(widget)
-                widget.setUserModel(UserBase(name = "other-user").apply { id = 2L })
+                widget.setUserState(userId = 2L, isFollowing = false)
 
                 // Without an authenticated current-user context there is nothing to
                 // follow from, so the control stays hidden.

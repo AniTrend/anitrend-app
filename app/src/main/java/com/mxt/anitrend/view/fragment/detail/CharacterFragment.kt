@@ -15,15 +15,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.tabs.TabLayout
 import com.mxt.anitrend.R
-import com.mxt.anitrend.adapter.recycler.detail.CharacterActorsAdapter
-import com.mxt.anitrend.adapter.recycler.detail.CharacterMediaAdapter
 import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget
 import com.mxt.anitrend.base.custom.view.widget.FavouriteWidgetRenderState
-import com.mxt.anitrend.base.interfaces.event.ItemClickListener
 import com.mxt.anitrend.databinding.FragmentCharacterBinding
+import com.mxt.anitrend.ui.detail.projectCharacterActorRows
+import com.mxt.anitrend.ui.detail.projectGroupedMediaSeriesRows
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.base.StaffBase
-import com.mxt.anitrend.model.entity.group.RecyclerItem
 import com.mxt.anitrend.navigation.extension.navigateToStaff
 import com.mxt.anitrend.navigation.extension.navigateToMedia
 import com.mxt.anitrend.navigation.model.MediaScreenParam
@@ -33,7 +31,6 @@ import com.mxt.anitrend.navigation.model.StaffScreenParam
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.Settings
-import com.mxt.anitrend.util.collection.GroupingUtil
 import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.viewmodel.CharacterActorsViewModel
 import com.mxt.anitrend.viewmodel.CharacterOverviewViewModel
@@ -215,7 +212,14 @@ class CharacterFragment : Fragment() {
                         is MediaFormatViewModel.UiState.Success -> {
                             if (selectedSection == activeMediaSection) {
                                 val section = if (activeMediaSection == Section.MANGA_ROLES) mangaSection else animeSection
-                                section.render(state.items, state.pageInfo, state.isEmpty)
+                                val rows =
+                                    projectGroupedMediaSeriesRows(
+                                        context = requireContext(),
+                                        items = state.items,
+                                        onMediaClick = ::openMedia,
+                                        onMediaLongClick = { _, media -> longPressMedia(media) },
+                                    )
+                                section.renderSnapshot(rows, state.pageInfo, state.isEmpty, state)
                             }
                         }
                         is MediaFormatViewModel.UiState.Error -> {
@@ -238,14 +242,21 @@ class CharacterFragment : Fragment() {
                         is CharacterActorsViewModel.UiState.Loading -> actorsSection.renderLoading()
                         is CharacterActorsViewModel.UiState.Success -> {
                             if (state.content.isEmpty) {
-                                actorsSection.render(emptyList(), null, true)
+                                actorsSection.renderPage(emptyList(), null, true, state)
                             } else {
                                 val page = state.content.connection
-                                actorsSection.render(
-                                    GroupingUtil.groupActorMediaEdge(page.edges),
-                                    page.pageInfo,
-                                    page.isEmpty,
-                                )
+                                val rows =
+                                    projectCharacterActorRows(
+                                        edges = page.edges,
+                                        onMediaClick = { target, media ->
+                                            if (target.id == R.id.container) openMedia(target, media)
+                                        },
+                                        onMediaLongClick = { target, media ->
+                                            if (target.id == R.id.container) longPressMedia(media)
+                                        },
+                                        onStaffClick = ::openStaff,
+                                    )
+                                actorsSection.renderPage(rows, page.pageInfo, page.isEmpty, state)
                             }
                         }
                         is CharacterActorsViewModel.UiState.Error -> actorsSection.renderError(state.message)
@@ -276,48 +287,24 @@ class CharacterFragment : Fragment() {
         binding.characterSectionContainer.addView(view)
     }
 
-    private fun createMediaSection(section: Section, mediaType: String): DetailListSection {
-        val adapter = CharacterMediaAdapter(
-            onMediaClick = ::openMedia,
-            onMediaLongClick = ::longPressMedia,
-        )
-        return DetailListSection(
-            context = requireContext(),
-            adapter = adapter,
-            onLoadPage = { page ->
-                activeMediaSection = section
-                mediaFormatViewModel.load(
-                    id = characterId,
-                    onList = null,
-                    mediaType = mediaType,
-                    page = page,
-                    requestType = KeyUtil.CHARACTER_MEDIA_REQ,
-                )
-            },
-        )
-    }
+    private fun createMediaSection(section: Section, mediaType: String): DetailListSection = DetailListSection(
+        context = requireContext(),
+        onLoadPage = { page ->
+            activeMediaSection = section
+            mediaFormatViewModel.load(
+                id = characterId,
+                onList = null,
+                mediaType = mediaType,
+                page = page,
+                requestType = KeyUtil.CHARACTER_MEDIA_REQ,
+            )
+        },
+    )
 
-    private fun createActorsSection(): DetailListSection {
-        val adapter = CharacterActorsAdapter(
-            onMediaClick = object : ItemClickListener<RecyclerItem> {
-                override fun onItemClick(target: View, data: IndexedValue<RecyclerItem>) {
-                    val media = data.value as? MediaBase ?: return
-                    if (target.id == R.id.container) openMedia(target, media)
-                }
-
-                override fun onItemLongClick(target: View, data: IndexedValue<RecyclerItem>) {
-                    val media = data.value as? MediaBase ?: return
-                    if (target.id == R.id.container) longPressMedia(media)
-                }
-            },
-            onStaffClick = ::openStaff,
-        )
-        return DetailListSection(
-            context = requireContext(),
-            adapter = adapter,
-            onLoadPage = { page -> actorsViewModel.load(characterId, page) },
-        )
-    }
+    private fun createActorsSection(): DetailListSection = DetailListSection(
+        context = requireContext(),
+        onLoadPage = { page -> actorsViewModel.load(characterId, page) },
+    )
 
     private fun openMedia(target: View, media: MediaBase) {
         navigateToMedia(MediaScreenParam(media.id, media.type))

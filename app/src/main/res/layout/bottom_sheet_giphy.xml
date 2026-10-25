@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorSurfaceContainerLow"
+    android:orientation="vertical">
+
+    <include android:id="@+id/custom_sheet_toolbar" layout="@layout/custom_sheet_toolbar" />
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <com.mxt.anitrend.widget.ProgressLayout
+        android:id="@+id/stateLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <androidx.compose.ui.platform.ComposeView
+            android:id="@+id/giphy_grid_compose_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </com.mxt.anitrend.widget.ProgressLayout>
+
+</LinearLayout>

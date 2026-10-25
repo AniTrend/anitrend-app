@@ -1,11 +1,15 @@
-@file:Suppress("UnstableApiUsage")
+@file:Suppress("UndocumentedPublicClass", "UndocumentedPublicFunction")
 
 package com.mxt.anitrend.widget
 
 import android.graphics.Bitmap
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.referentialEqualityPolicy
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.platform.ComposeView
@@ -17,19 +21,15 @@ import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.captureToImage
-import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onAllNodesWithTag
-import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onAllNodesWithText
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.v2.runAndroidComposeUiTest
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.mxt.anitrend.R
-import com.mxt.anitrend.adapter.recycler.index.MediaLatestAdapter
 import com.mxt.anitrend.base.custom.view.text.RatingTextView
 import com.mxt.anitrend.model.entity.anilist.MediaList
 import com.mxt.anitrend.model.entity.anilist.meta.AiringSchedule
@@ -39,6 +39,8 @@ import com.mxt.anitrend.model.entity.anilist.meta.MediaTitle
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.ui.TestSessionUtil
 import com.mxt.anitrend.ui.designsystem.AniTrendTheme
+import com.mxt.anitrend.ui.media.LatestMediaList
+import com.mxt.anitrend.ui.media.MediaItems
 import com.mxt.anitrend.util.KeyUtil
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -65,7 +67,7 @@ class MediaLatestRowComposeTest {
             runOnUiThread {
                 host = installLatestMediaHost(hostActivity, media)
             }
-            val latestHost = requireNotNull(host)
+            requireNotNull(host)
             waitUntil("local latest anime image loads", 60_000L) {
                 val images = onAllNodesWithTag(LATEST_MEDIA_IMAGE_TAG, useUnmergedTree = true)
                 val imageNodes = images.fetchSemanticsNodes()
@@ -96,8 +98,7 @@ class MediaLatestRowComposeTest {
                 ContextCompat.getColor(hostActivity, R.color.colorStateBlue),
                 statusBitmap.getPixel(statusBitmap.width / 2, statusBitmap.height / 2),
             )
-            val rating = requireNotNull(latestHost.recyclerView.findViewHolderForAdapterPosition(0)?.itemView)
-                .findViewById<RatingTextView>(R.id.custom_rating_widget)
+            val rating = findRatingTextViews(hostActivity.findViewById(android.R.id.content)).single()
             assertEquals("87", rating.findViewById<TextView>(R.id.rating_value).text.toString())
             assertEquals(View.VISIBLE, rating.findViewById<View>(R.id.rating_list_status).visibility)
         }
@@ -115,7 +116,7 @@ class MediaLatestRowComposeTest {
             runOnUiThread {
                 host = installLatestMediaHost(hostActivity, media)
             }
-            val latestHost = requireNotNull(host)
+            requireNotNull(host)
             waitUntil("local latest manga image loads", 60_000L) {
                 val images = onAllNodesWithTag(LATEST_MEDIA_IMAGE_TAG, useUnmergedTree = true)
                 val imageNodes = images.fetchSemanticsNodes()
@@ -145,8 +146,7 @@ class MediaLatestRowComposeTest {
                 ContextCompat.getColor(hostActivity, R.color.colorStateGreen),
                 statusBitmap.getPixel(statusBitmap.width / 2, statusBitmap.height / 2),
             )
-            val rating = requireNotNull(latestHost.recyclerView.findViewHolderForAdapterPosition(0)?.itemView)
-                .findViewById<RatingTextView>(R.id.custom_rating_widget)
+            val rating = findRatingTextViews(hostActivity.findViewById(android.R.id.content)).single()
             assertEquals("92", rating.findViewById<TextView>(R.id.rating_value).text.toString())
             assertEquals(View.GONE, rating.findViewById<View>(R.id.rating_list_status).visibility)
         }
@@ -183,7 +183,7 @@ class MediaLatestRowComposeTest {
                 model.isFavourite = false
                 model.coverImage = null
                 model.mediaListEntry = null
-                latestHost.adapter.onItemChanged(model, 0)
+                latestHost.items.value = listOf(model)
             }
 
             waitUntil("same-ID anime row shows its updated values", 5_000L) {
@@ -195,8 +195,7 @@ class MediaLatestRowComposeTest {
             onNodeWithText("Finished", substring = true).assertIsDisplayed()
             onNodeWithText("2025 - 12 Episodes").assertIsDisplayed()
 
-            val row = requireNotNull(latestHost.recyclerView.findViewHolderForAdapterPosition(0)?.itemView)
-            val rating = row.findViewById<RatingTextView>(R.id.custom_rating_widget)
+            val rating = findRatingTextViews(hostActivity.findViewById(android.R.id.content)).single()
             assertEquals("75", rating.findViewById<TextView>(R.id.rating_value).text.toString())
             assertEquals(View.GONE, rating.findViewById<View>(R.id.rating_list_status).visibility)
 
@@ -220,7 +219,7 @@ class MediaLatestRowComposeTest {
 
             runOnUiThread {
                 model.coverImage = ImageBase(extraLarge = null, large = imageUrl, medium = null)
-                latestHost.adapter.onItemChanged(model, 0)
+                latestHost.items.value = listOf(model)
             }
             waitUntil("rebound anime cover shows local image pixels", 60_000L) {
                 val images = onAllNodesWithTag(LATEST_MEDIA_IMAGE_TAG, useUnmergedTree = true)
@@ -257,18 +256,14 @@ class MediaLatestRowComposeTest {
             }
             waitForIdle()
 
-            val recycledRow = requireNotNull(latestHost.recyclerView.findViewHolderForAdapterPosition(0)).itemView
-            val viewType = latestHost.adapter.getItemViewType(0)
-            runOnUiThread {
-                latestHost.recyclerView.setItemViewCacheSize(0)
-                latestHost.recyclerView.recycledViewPool.setMaxRecycledViews(viewType, 0)
-                latestHost.adapter.onItemRemoved(0)
-            }
+            runOnUiThread { latestHost.items.value = emptyList() }
 
             waitUntil("latest media row detaches after removal", 5_000L) {
-                latestHost.adapter.itemCount == 0 && recycledRow.parent == null
+                onAllNodesWithTag(LATEST_MEDIA_ROW_TAG, useUnmergedTree = true)
+                    .fetchSemanticsNodes()
+                    .isEmpty()
             }
-            waitUntil("recycled latest media image semantics are removed", 5_000L) {
+            waitUntil("removed latest media image semantics disappear", 5_000L) {
                 onAllNodesWithTag(LATEST_MEDIA_IMAGE_TAG, useUnmergedTree = true)
                     .fetchSemanticsNodes()
                     .isEmpty()
@@ -302,40 +297,40 @@ class MediaLatestRowComposeTest {
         activity: ProgressLayoutTestActivity,
         media: MediaBase,
     ): LatestMediaHost {
-        val adapter =
-            MediaLatestAdapter(activity).apply {
-                onItemsInserted(listOf(media))
-            }
-        val recyclerView =
-            RecyclerView(activity).apply {
-                setHasFixedSize(true)
-                layoutManager =
-                    StaggeredGridLayoutManager(
-                        activity.resources.getInteger(R.integer.single_list_x1),
-                        StaggeredGridLayoutManager.VERTICAL,
-                    )
-                itemAnimator = null
-                this.adapter = adapter
-            }
+        val items = mutableStateOf(listOf(media), referentialEqualityPolicy())
         activity.setContentView(
             ComposeView(activity).apply {
                 id = View.generateViewId()
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 setContent {
                     AniTrendTheme {
-                        AndroidView(factory = { recyclerView }, modifier = Modifier.fillMaxSize())
+                        LatestMediaList(
+                            items = MediaItems(items.value),
+                            modifier = Modifier.fillMaxSize(),
+                            onMediaClick = {},
+                            onMediaLongClick = {},
+                            onLoadMore = {},
+                        )
                     }
                 }
             },
         )
-        return LatestMediaHost(adapter, recyclerView)
+        return LatestMediaHost(items)
     }
 
-    private data class LatestMediaHost(
-        val adapter: MediaLatestAdapter,
-        val recyclerView: RecyclerView,
+    private fun findRatingTextViews(parent: ViewGroup): List<RatingTextView> = buildList {
+        for (index in 0 until parent.childCount) {
+            val child = parent.getChildAt(index)
+            if (child is RatingTextView) add(child)
+            if (child is ViewGroup) addAll(findRatingTextViews(child))
+        }
+    }
+
+    private class LatestMediaHost(
+        val items: MutableState<List<MediaBase>>,
     )
 }
+
 private fun Bitmap.hasImageContentPixels(): Boolean {
     val colors = mutableSetOf<Int>()
     val startX = width / 5

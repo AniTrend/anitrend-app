@@ -4,20 +4,18 @@ import android.text.Html
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.mxt.anitrend.R
-import com.mxt.anitrend.adapter.recycler.detail.GenreAdapter
-import com.mxt.anitrend.adapter.recycler.detail.TagAdapter
 import com.mxt.anitrend.base.custom.view.image.AspectImageView
 import com.mxt.anitrend.base.custom.view.text.AiringTextView
 import com.mxt.anitrend.base.custom.view.text.RangeDateTextView
 import com.mxt.anitrend.base.custom.view.text.SeriesTypeView
 import com.mxt.anitrend.base.custom.view.widget.SeriesStatusWidget
-import com.mxt.anitrend.base.interfaces.event.ItemClickListener
 import com.mxt.anitrend.binding.htmlText
 import com.mxt.anitrend.databinding.FragmentSeriesOverviewBinding
 import com.mxt.anitrend.databinding.SectionSeriesDescriptionBinding
@@ -30,16 +28,19 @@ import com.mxt.anitrend.model.entity.anilist.Genre
 import com.mxt.anitrend.model.entity.anilist.MediaTag
 import com.mxt.anitrend.model.entity.anilist.meta.MediaTrailer
 import com.mxt.anitrend.navigation.model.TrailerScreenParam
+import com.mxt.anitrend.ui.designsystem.AniTrendTheme
+import com.mxt.anitrend.ui.media.GenreGrid
+import com.mxt.anitrend.ui.media.TagGrid
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.viewmodel.MediaOverviewViewModel
 import kotlinx.coroutines.launch
 
 /**
- * View-only controller for the media overview section.
+ * View-hosted controller for the media overview section.
  *
  * The parent destination owns navigation and section selection. This controller
- * owns only overview rendering, its list adapters, and its ViewModel collection.
+ * owns overview rendering, genre and tag Compose state, and its ViewModel collection.
  * The callback-heavy constructor keeps the destination's existing overview
  * actions at this section boundary.
  */
@@ -56,27 +57,36 @@ class MediaOverviewSection(
     private var binding: FragmentSeriesOverviewBinding? = null
     private var lifecycleOwner: LifecycleOwner? = null
     private var overviewRecord: MediaOverviewRecord? = null
-    private var tagItems: List<MediaTag> = emptyList()
-    private var genreAdapter: GenreAdapter? = null
-    private var tagAdapter: TagAdapter? = null
+    private val tagItems = mutableStateOf<List<MediaTag>>(emptyList())
+    private val genreItems = mutableStateOf<List<Genre>>(emptyList())
     private var selected = false
 
     /** Inflates and initializes the media overview view. */
     fun inflate(inflater: LayoutInflater, container: ViewGroup?): View {
         val sectionBinding = FragmentSeriesOverviewBinding.inflate(inflater, container, false)
         binding = sectionBinding
-        sectionBinding.genreRecycler.layoutManager = StaggeredGridLayoutManager(
-            sectionBinding.root.resources.getInteger(R.integer.grid_list_x2),
-            StaggeredGridLayoutManager.VERTICAL,
-        )
-        sectionBinding.genreRecycler.isNestedScrollingEnabled = false
-        sectionBinding.genreRecycler.setHasFixedSize(true)
-        sectionBinding.tagsRecycler.layoutManager = StaggeredGridLayoutManager(
-            sectionBinding.root.resources.getInteger(R.integer.grid_list_x2),
-            StaggeredGridLayoutManager.VERTICAL,
-        )
-        sectionBinding.tagsRecycler.isNestedScrollingEnabled = false
-        sectionBinding.tagsRecycler.setHasFixedSize(true)
+        sectionBinding.genreGrid.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                AniTrendTheme {
+                    GenreGrid(
+                        genres = genreItems.value,
+                        onOpenGenre = onOpenGenre,
+                    )
+                }
+            }
+        }
+        sectionBinding.tagsComposeView.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                AniTrendTheme {
+                    TagGrid(
+                        tags = tagItems.value,
+                        onTagClick = ::onTagClick,
+                    )
+                }
+            }
+        }
         listOf(
             R.id.series_image,
             R.id.anime_main_studio_container,
@@ -123,9 +133,8 @@ class MediaOverviewSection(
         binding = null
         lifecycleOwner = null
         overviewRecord = null
-        tagItems = emptyList()
-        genreAdapter = null
-        tagAdapter = null
+        tagItems.value = emptyList()
+        genreItems.value = emptyList()
         selected = false
     }
 
@@ -143,47 +152,12 @@ class MediaOverviewSection(
         bindSeriesInfo(sectionBinding.seriesInfoSection, record, displayData)
         bindSeriesDescription(sectionBinding.seriesDescriptionSection, record)
         bindSeriesDetails(sectionBinding.seriesDetailsSection, record, displayData)
-        sectionBinding.genreRecycler.visibility = if (displayData.genres.isNotEmpty()) View.VISIBLE else View.GONE
-        sectionBinding.tagsRecycler.visibility = if (!record.tags.isNullOrEmpty()) View.VISIBLE else View.GONE
+        genreItems.value = displayData.genres
+        sectionBinding.genreGrid.visibility = if (displayData.genres.isNotEmpty()) View.VISIBLE else View.GONE
+        tagItems.value = record.tags.orEmpty().map { it.toMediaTag() }
+        sectionBinding.tagsComposeView.visibility = if (tagItems.value.isNotEmpty()) View.VISIBLE else View.GONE
         sectionBinding.showSpoilerTags.visibility = View.GONE
 
-        if (genreAdapter == null) {
-            genreAdapter = GenreAdapter(sectionBinding.root.context).apply {
-                onItemsInserted(displayData.genres)
-                setClickListener(object : ItemClickListener<Genre> {
-                    override fun onItemClick(target: View, data: IndexedValue<Genre>) {
-                        if (target.id == R.id.container) data.value.genre?.let(onOpenGenre)
-                    }
-
-                    override fun onItemLongClick(target: View, data: IndexedValue<Genre>) = Unit
-                })
-            }
-        }
-        sectionBinding.genreRecycler.adapter = genreAdapter
-
-        tagItems = record.tags.orEmpty().map { it.toMediaTag() }
-        if (tagAdapter == null) {
-            tagAdapter = TagAdapter(sectionBinding.root.context).apply {
-                onItemsInserted(tagItems)
-                setClickListener(object : ItemClickListener<MediaTag> {
-                    override fun onItemClick(target: View, data: IndexedValue<MediaTag>) {
-                        if (target.id == R.id.container) {
-                            DialogUtil.createTagMessage(
-                                sectionBinding.root.context,
-                                data.value.name.orEmpty(),
-                                data.value.description.orEmpty(),
-                                data.value.isMediaSpoiler,
-                                R.string.More,
-                                R.string.Close,
-                            ) { _, _ -> onOpenTag(data.value.name.orEmpty()) }
-                        }
-                    }
-
-                    override fun onItemLongClick(target: View, data: IndexedValue<MediaTag>) = Unit
-                })
-            }
-        }
-        sectionBinding.tagsRecycler.adapter = tagAdapter
         sectionBinding.stateLayout.showContent()
     }
 
@@ -196,13 +170,23 @@ class MediaOverviewSection(
             )
             R.id.anime_main_studio_container -> overviewRecord?.studios?.firstOrNull()?.id?.let(onOpenStudio)
             R.id.show_spoiler_tags -> {
-                if (tagItems.isNotEmpty()) {
-                    tagAdapter?.onItemRangeChanged(tagItems)
-                    tagAdapter?.notifyDataSetChanged()
+                if (tagItems.value.isNotEmpty()) {
                     view.visibility = View.GONE
                 }
             }
         }
+    }
+
+    private fun onTagClick(tag: MediaTag) {
+        val context = binding?.root?.context ?: return
+        DialogUtil.createTagMessage(
+            context,
+            tag.name.orEmpty(),
+            tag.description.orEmpty(),
+            tag.isMediaSpoiler,
+            R.string.More,
+            R.string.Close,
+        ) { _, _ -> onOpenTag(tag.name.orEmpty()) }
     }
 
     private fun bindSeriesInfo(

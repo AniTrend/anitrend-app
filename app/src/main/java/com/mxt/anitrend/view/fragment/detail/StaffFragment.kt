@@ -15,11 +15,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.tabs.TabLayout
 import com.mxt.anitrend.R
-import com.mxt.anitrend.adapter.recycler.detail.StaffCharacterRolesAdapter
-import com.mxt.anitrend.adapter.recycler.detail.StaffMediaAdapter
 import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget
 import com.mxt.anitrend.base.custom.view.widget.FavouriteWidgetRenderState
 import com.mxt.anitrend.databinding.FragmentStaffBinding
+import com.mxt.anitrend.ui.detail.projectGroupedMediaSeriesRows
+import com.mxt.anitrend.ui.detail.projectStaffCharacterRoleRows
 import com.mxt.anitrend.extension.serializable
 import com.mxt.anitrend.model.entity.base.CharacterStaffBase
 import com.mxt.anitrend.model.entity.base.MediaBase
@@ -217,11 +217,14 @@ class StaffFragment : Fragment() {
                         is MediaAnimeRoleViewModel.UiState.Loading -> animeRolesSection.renderLoading()
                         is MediaAnimeRoleViewModel.UiState.Success -> {
                             val page = state.content.connection
-                            animeRolesSection.render(
-                                if (page.isEmpty) emptyList() else GroupingUtil.groupCharactersByYear(page.edges, null),
-                                page.pageInfo,
-                                page.isEmpty,
-                            )
+                            val groupedItems =
+                                if (page.isEmpty) {
+                                    emptyList()
+                                } else {
+                                    GroupingUtil.groupCharactersByYear(page.edges, null)
+                                }
+                            val rows = projectStaffCharacterRoleRows(groupedItems, ::openCharacter)
+                            animeRolesSection.renderPage(rows, page.pageInfo, page.isEmpty, state)
                         }
                         is MediaAnimeRoleViewModel.UiState.Error -> animeRolesSection.renderError(state.message)
                     }
@@ -237,7 +240,16 @@ class StaffFragment : Fragment() {
                     if (selectedSection == Section.MEDIA_ROLES) {
                         when (state) {
                             is MediaFormatViewModel.UiState.Loading -> mediaRolesSection.renderLoading()
-                            is MediaFormatViewModel.UiState.Success -> mediaRolesSection.render(state.items, state.pageInfo, state.isEmpty)
+                            is MediaFormatViewModel.UiState.Success -> {
+                                val rows =
+                                    projectGroupedMediaSeriesRows(
+                                        context = requireContext(),
+                                        items = state.items,
+                                        onMediaClick = ::openMedia,
+                                        onMediaLongClick = { _, media -> longPressMedia(media) },
+                                    )
+                                mediaRolesSection.renderSnapshot(rows, state.pageInfo, state.isEmpty, state)
+                            }
                             is MediaFormatViewModel.UiState.Error -> mediaRolesSection.renderError(state.message)
                         }
                     }
@@ -254,11 +266,20 @@ class StaffFragment : Fragment() {
                         is MediaStaffRoleViewModel.UiState.Loading -> staffRolesSection.renderLoading()
                         is MediaStaffRoleViewModel.UiState.Success -> {
                             val page = state.content.connection
-                            staffRolesSection.render(
-                                if (page.isEmpty) emptyList() else GroupingUtil.groupMediaByStaffRole(page.edges, null),
-                                page.pageInfo,
-                                page.isEmpty,
-                            )
+                            val groupedItems =
+                                if (page.isEmpty) {
+                                    emptyList()
+                                } else {
+                                    GroupingUtil.groupMediaByStaffRole(page.edges, null)
+                                }
+                            val rows =
+                                projectGroupedMediaSeriesRows(
+                                    context = requireContext(),
+                                    items = groupedItems,
+                                    onMediaClick = ::openMedia,
+                                    onMediaLongClick = { _, media -> longPressMedia(media) },
+                                )
+                            staffRolesSection.renderPage(rows, page.pageInfo, page.isEmpty, state)
                         }
                         is MediaStaffRoleViewModel.UiState.Error -> staffRolesSection.renderError(state.message)
                     }
@@ -288,13 +309,11 @@ class StaffFragment : Fragment() {
 
     private fun createAnimeRolesSection(): DetailListSection = DetailListSection(
         context = requireContext(),
-        adapter = StaffCharacterRolesAdapter(::openCharacter),
         onLoadPage = { page -> animeRolesViewModel.load(staffId, onList, page) },
     )
 
     private fun createMediaRolesSection(): DetailListSection = DetailListSection(
         context = requireContext(),
-        adapter = StaffMediaAdapter(::openMedia, ::longPressMedia),
         onLoadPage = { page ->
             mediaRolesViewModel.load(
                 id = staffId,
@@ -308,7 +327,6 @@ class StaffFragment : Fragment() {
 
     private fun createStaffRolesSection(): DetailListSection = DetailListSection(
         context = requireContext(),
-        adapter = StaffMediaAdapter(::openMedia, ::longPressMedia),
         onLoadPage = { page -> staffRolesViewModel.load(staffId, onList, page) },
     )
 

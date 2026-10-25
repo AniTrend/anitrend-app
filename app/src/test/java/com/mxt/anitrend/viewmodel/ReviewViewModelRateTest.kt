@@ -107,7 +107,14 @@ class ReviewViewModelRateTest {
                 revision = 1L,
             )
 
-        viewModel.rateReview(42L, ReviewRating.UP_VOTE)
+        assertEquals(
+            ReviewVoteActionResult.SUBMITTED,
+            viewModel.voteReview(
+                (viewModel.state.value as ReviewViewModel.UiState.Success).content.pageData.single(),
+                ReviewRating.UP_VOTE,
+                isAuthenticated = true,
+            ),
+        )
         advanceUntilIdle()
 
         assertEquals(1, outcomes.size)
@@ -156,7 +163,14 @@ class ReviewViewModelRateTest {
                 revision = 1L,
             )
 
-        viewModel.rateReview(42L, ReviewRating.UP_VOTE)
+        assertEquals(
+            ReviewVoteActionResult.SUBMITTED,
+            viewModel.voteReview(
+                (viewModel.state.value as ReviewViewModel.UiState.Success).content.pageData.single(),
+                ReviewRating.UP_VOTE,
+                isAuthenticated = true,
+            ),
+        )
         advanceUntilIdle()
 
         assertEquals(1, outcomes.size)
@@ -194,12 +208,20 @@ class ReviewViewModelRateTest {
                 revision = 1L,
             )
 
-        viewModel.rateReview(42L, ReviewRating.UP_VOTE)
+        assertEquals(
+            ReviewVoteActionResult.SUBMITTED,
+            viewModel.voteReview(
+                (viewModel.state.value as ReviewViewModel.UiState.Success).content.pageData.single(),
+                ReviewRating.UP_VOTE,
+                isAuthenticated = true,
+            ),
+        )
         advanceUntilIdle()
 
         assertEquals(1, outcomes.size)
         assertTrue(outcomes.single().result is MutationResult.Failure)
         assertEquals("rate failed", (outcomes.single().result as MutationResult.Failure).message)
+        assertTrue(viewModel.reviewVoteState.value.isEmpty())
         assertEquals(0, reviewStore.state.value.reviewsById.getValue(42L).review.rating)
         assertEquals(0, (viewModel.state.value as ReviewViewModel.UiState.Success).content.pageData.single().rating)
     }
@@ -225,7 +247,14 @@ class ReviewViewModelRateTest {
 
         // No outcome collector is active while the mutation runs (the fragment view is
         // not in STARTED): the buffered channel must retain the outcome.
-        viewModel.rateReview(42L, ReviewRating.UP_VOTE)
+        assertEquals(
+            ReviewVoteActionResult.SUBMITTED,
+            viewModel.voteReview(
+                (viewModel.state.value as ReviewViewModel.UiState.Success).content.pageData.single(),
+                ReviewRating.UP_VOTE,
+                isAuthenticated = true,
+            ),
+        )
         advanceUntilIdle()
 
         val outcomes = mutableListOf<ReviewRateOutcome>()

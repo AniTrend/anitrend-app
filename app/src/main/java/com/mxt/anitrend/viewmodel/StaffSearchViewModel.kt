@@ -7,6 +7,7 @@ import com.mxt.anitrend.model.entity.base.StaffBase
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.repository.SearchRepository
 import com.mxt.anitrend.util.KeyUtil
+import java.util.TreeMap
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,17 +20,37 @@ class StaffSearchViewModel(
 
     sealed interface UiState {
         data object Loading : UiState
-        data class Success(val content: PageContainer<StaffBase>) : UiState
-        data class Error(val message: String) : UiState
+
+        // Entity equality is id-only, so StateFlow must not conflate fresh projections for the same ids.
+        class Success(
+            val content: PageContainer<StaffBase>,
+            val search: String?,
+            val page: Int,
+            val items: List<StaffBase>,
+            val itemsInPage: Int,
+        ) : UiState
+
+        data class Error(
+            val message: String,
+            val search: String?,
+            val page: Int,
+        ) : UiState
     }
 
     private val _state = MutableStateFlow<UiState>(UiState.Loading)
     val state: StateFlow<UiState> = _state.asStateFlow()
 
-    /**
-     * Loads staff search results. Repeatable for pagination; no loadedOnce guard.
-     */
+    private val pages = TreeMap<Int, LinkedHashMap<Long, StaffBase>>()
+    private var loadedSearch: String? = null
+    private var requestSequence = 0L
+
+    /** Loads one request identity and publishes a complete id-keyed snapshot. */
     fun load(search: String?, page: Int) {
+        val request = ++requestSequence
+        if (page <= 1 || loadedSearch != search) {
+            pages.clear()
+            loadedSearch = search
+        }
         viewModelScope.launch {
             _state.value = UiState.Loading
             runCatching {
@@ -40,11 +61,33 @@ class StaffSearchViewModel(
                     sort = listOf(StaffSort.SEARCH_MATCH),
                 ).getOrThrow()
             }.onSuccess { content ->
-                _state.value = UiState.Success(content)
+                if (request != requestSequence) return@onSuccess
+                val pageItems = LinkedHashMap<Long, StaffBase>()
+                content.pageData.forEach { item -> pageItems[item.id] = item }
+                pages[page] = pageItems
+
+                var itemsInPage = 0
+                val snapshot = LinkedHashMap<Long, StaffBase>()
+                pages.forEach { (loadedPage, items) ->
+                    items.forEach { (id, item) ->
+                        if (loadedPage == page && id !in snapshot) itemsInPage++
+                        snapshot[id] = item
+                    }
+                }
+                _state.value = UiState.Success(
+                    content = content,
+                    search = search,
+                    page = page,
+                    items = snapshot.values.toList(),
+                    itemsInPage = itemsInPage,
+                )
             }.onFailure { throwable ->
+                if (request != requestSequence) return@onFailure
                 Timber.e(throwable, "StaffSearchViewModel load failed")
                 _state.value = UiState.Error(
-                    throwable.message ?: "Failed to load staff search",
+                    message = throwable.message ?: "Failed to load staff search",
+                    search = search,
+                    page = page,
                 )
             }
         }

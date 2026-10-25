@@ -41,6 +41,9 @@ class BrowseReviewViewModel(
             val content: PageContainer<ReviewRecord>,
             val replaceExisting: Boolean = false,
             val isStale: Boolean = false,
+            val requestId: Long = 0L,
+            val requestedPage: Int = 1,
+            val isLoading: Boolean = false,
         ) : UiState
         data class Error(val message: String) : UiState
     }
@@ -48,23 +51,24 @@ class BrowseReviewViewModel(
     private data class ScreenState(
         val queryKey: ReviewQueryKey? = null,
         val requestToken: Long = 0L,
+        val requestId: Long = 0L,
         val lastRequestedPage: Int = 1,
         val isLoading: Boolean = false,
         val errorMessage: String? = null,
     )
 
     private val screenState = MutableStateFlow(ScreenState())
+    private val reviewVoteStateOwner = ReviewVoteStateOwner(viewModelScope)
+    internal val reviewVoteState: StateFlow<Map<Long, ReviewVotePendingState>> = reviewVoteStateOwner.state
 
     private val _rateReviewEvents = Channel<ReviewRateOutcome>(Channel.BUFFERED)
 
     /**
-     * One-shot outcomes of [rateReview] calls. The canonical committed state is delivered
-     * through the [state] flow (store rebinding); these events only drive widget
-     * convergence (reset the vote loading state, surface a failure message).
+     * One-shot mutation outcomes. Vote loading state is owned by [reviewVoteStateOwner]
+     * and completes by review id; these events surface mutation failures.
      *
-     * A buffered single-consumer channel is used so an outcome emitted while the fragment
-     * collector is inactive (for example when the view left STARTED mid-mutation) is
-     * retained and delivered when the next collector subscribes, instead of being dropped.
+     * The buffered channel retains outcomes emitted while the fragment collector is
+     * inactive, delivering them when the view becomes started again.
      */
     val rateReviewEvents: Flow<ReviewRateOutcome> = _rateReviewEvents.receiveAsFlow()
 
@@ -90,6 +94,9 @@ class BrowseReviewViewModel(
                             },
                             replaceExisting = screen.lastRequestedPage <= 1,
                             isStale = query.stale,
+                            requestId = screen.requestId,
+                            requestedPage = screen.lastRequestedPage,
+                            isLoading = screen.isLoading,
                         )
                     }
                 }
@@ -118,6 +125,7 @@ class BrowseReviewViewModel(
             it.copy(
                 queryKey = queryKey,
                 requestToken = token,
+                requestId = it.requestId + 1L,
                 lastRequestedPage = page,
                 isLoading = true,
                 errorMessage = null,
@@ -160,12 +168,28 @@ class BrowseReviewViewModel(
         }
     }
 
-    fun rateReview(reviewId: Long, rating: ReviewRating?) {
+    internal fun voteReview(
+        review: ReviewRecord,
+        target: ReviewRating,
+        isAuthenticated: Boolean,
+    ): ReviewVoteActionResult {
+        if (!isAuthenticated) return ReviewVoteActionResult.LOGIN_REQUIRED
+        val ticket = reviewVoteStateOwner.beginVote(review, target) ?: return ReviewVoteActionResult.BUSY
+        dispatchRateReview(ticket.reviewId, ticket.rating, ticket)
+        return ReviewVoteActionResult.SUBMITTED
+    }
+
+    private fun dispatchRateReview(
+        reviewId: Long,
+        rating: ReviewRating,
+        ticket: ReviewVoteTicket,
+    ) {
         viewModelScope.launch {
             val outcome = ReviewRateOutcome(
                 reviewId = reviewId,
                 result = rateReviewInteractor(reviewId, rating),
             )
+            reviewVoteStateOwner.complete(ticket)
             _rateReviewEvents.send(outcome)
         }
     }

@@ -40,18 +40,18 @@ private const val USER_ROW_AVATAR_TAG = "user-row-avatar"
 private const val USER_ROW_FOLLOW_TAG = "user-row-follow"
 
 /**
- * Snapshot the Compose-rendered fields because UserBase compares by id while owners mutate its state in place.
- * The follow widget still consumes [model] to preserve its existing action and visibility behavior.
+ * Display fields are immutable snapshots because UserBase equality compares only IDs.
+ * The target entity supplies identity, not the follow control's display state.
  */
 internal data class UserRowUiState(
     val model: UserBase,
     val name: String?,
     val avatar: ImageBase?,
-    // FollowStateWidget renders the same entity; this flag makes its visible state part of snapshot equality.
+    // Canonical committed flag, independent of the legacy entity's mutable flag.
     val isFollowing: Boolean,
 )
 
-/** Renders one user row while the adapter and owner retain follow and navigation state. */
+/** Renders one user row while its owner retains follow and navigation state. */
 @Composable
 internal fun UserRow(
     state: UserRowUiState,
@@ -109,7 +109,7 @@ internal fun UserRow(
             modifier = Modifier.wrapContentSize().testTag(USER_ROW_FOLLOW_TAG),
             update = { followWidget ->
                 followWidget.setCurrentUser(currentUser)
-                followWidget.setUserModel(state.model)
+                followWidget.setUserState(state.model.id, state.isFollowing)
                 followWidget.setListener(followListener)
             },
             onRelease = { followWidget ->

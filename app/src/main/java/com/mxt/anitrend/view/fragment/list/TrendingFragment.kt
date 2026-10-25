@@ -4,12 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.mxt.anitrend.R
-import com.mxt.anitrend.databinding.FragmentListBinding
-import com.mxt.anitrend.util.CompatUtil
+import com.mxt.anitrend.databinding.FragmentMediaLatestBinding
 import com.mxt.anitrend.util.KeyUtil
 
 /** Unified root-host destination for the former three-page trending pager. */
@@ -50,19 +48,8 @@ class TrendingFragment : MediaLatestList() {
         val root = inflater.inflate(R.layout.fragment_trending, container, false)
         sectionSelector = root.findViewById(R.id.trending_section_selector)
         val listContainer = root.findViewById<ViewGroup>(R.id.trending_list_container)
-        val binding = FragmentListBinding.inflate(inflater, listContainer, true)
-        swipeRefreshLayout = binding.refreshLayout
-        recyclerView = binding.recyclerView
-        stateLayout = binding.stateLayout
-        recyclerView.setHasFixedSize(true)
-        recyclerView.isNestedScrollingEnabled = true
-        mLayoutManager = StaggeredGridLayoutManager(
-            resources.getInteger(mColumnSize),
-            StaggeredGridLayoutManager.VERTICAL,
-        )
-        recyclerView.layoutManager = mLayoutManager
-        swipeRefreshLayout.setOnRefreshAndLoadListener(this)
-        activity?.let { CompatUtil.configureSwipeRefreshLayout(swipeRefreshLayout, it) }
+        val listBinding = FragmentMediaLatestBinding.inflate(inflater, listContainer, true)
+        attachList(listBinding)
         buildSectionSelector()
         return root
     }
@@ -74,12 +61,13 @@ class TrendingFragment : MediaLatestList() {
 
     private fun buildSectionSelector() {
         Section.values().forEach { value ->
-            val chip = Chip(requireContext()).apply {
-                id = View.generateViewId()
-                text = getString(value.title)
-                isCheckable = true
-                setOnClickListener { selectSection(value) }
-            }
+            val chip =
+                Chip(requireContext()).apply {
+                    id = View.generateViewId()
+                    text = getString(value.title)
+                    isCheckable = true
+                    setOnClickListener { selectSection(value) }
+                }
             sectionSelector.addView(chip)
         }
         sectionSelector.check(sectionSelector.getChildAt(section.ordinal).id)
@@ -90,11 +78,8 @@ class TrendingFragment : MediaLatestList() {
         section = value
         requestArgs = argumentsFor(value)
         arguments = Bundle(requestArgs)
-        mAdapter.clearDataSet()
-        mScrollListener.onRefreshPage()
         sectionSelector.check(sectionSelector.getChildAt(value.ordinal).id)
-        showLoading()
-        makeRequest()
+        resetAndLoad()
     }
 
     private fun argumentsFor(value: Section): Bundle = Bundle().apply {

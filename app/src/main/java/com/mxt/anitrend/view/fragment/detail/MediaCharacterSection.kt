@@ -8,13 +8,13 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.mxt.anitrend.adapter.recycler.detail.MediaCharacterAdapter
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.model.entity.anilist.edge.CharacterEdge
 import com.mxt.anitrend.model.entity.base.CharacterBase
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.container.body.EdgeContainer
 import com.mxt.anitrend.model.entity.group.RecyclerItem
+import com.mxt.anitrend.ui.detail.projectGroupedCharacterRows
 import com.mxt.anitrend.util.collection.GroupingUtil
 import com.mxt.anitrend.viewmodel.MediaCharacterViewModel
 import kotlinx.coroutines.launch
@@ -28,10 +28,8 @@ class MediaCharacterSection(
     private val isAdultContent: Boolean,
     private val onOpenCharacter: (View, CharacterBase) -> Unit,
 ) {
-    private val adapter = MediaCharacterAdapter(onCharacterClick = onOpenCharacter)
     private val listSection = DetailListSection(
         context = context,
-        adapter = adapter,
         onLoadPage = ::load,
     )
 
@@ -45,7 +43,7 @@ class MediaCharacterSection(
                 viewModel.state.collect { state ->
                     when (state) {
                         is MediaCharacterViewModel.UiState.Loading -> listSection.renderLoading()
-                        is MediaCharacterViewModel.UiState.Success -> render(state.content)
+                        is MediaCharacterViewModel.UiState.Success -> render(state.content, state)
                         is MediaCharacterViewModel.UiState.Error -> listSection.renderError(state.message)
                     }
                 }
@@ -59,7 +57,7 @@ class MediaCharacterSection(
     /** Saves the section pagination state under [key]. */
     fun saveState(outState: android.os.Bundle, key: String) = listSection.saveState(outState, key)
 
-    /** Restores the section pagination state from [savedState]. */
+    /** Restores the section pagination state from [savedState] under [key]. */
     fun restoreState(savedState: android.os.Bundle?, key: String) = listSection.restoreState(savedState, key)
 
     /** Releases the section view resources. */
@@ -75,9 +73,13 @@ class MediaCharacterSection(
         )
     }
 
-    private fun render(content: ConnectionContainer<EdgeContainer<CharacterEdge>>) {
+    private fun render(
+        content: ConnectionContainer<EdgeContainer<CharacterEdge>>,
+        emissionIdentity: Any,
+    ) {
         val connection = content.connection
-        val items: List<RecyclerItem> = GroupingUtil.groupCharactersByRole(connection.edges, adapter.currentList)
-        listSection.render(items, connection.pageInfo, connection.isEmpty)
+        val groupedItems: List<RecyclerItem> = GroupingUtil.groupCharactersByRole(connection.edges, null)
+        val rows = projectGroupedCharacterRows(groupedItems, onOpenCharacter)
+        listSection.renderPage(rows, connection.pageInfo, connection.isEmpty, emissionIdentity)
     }
 }

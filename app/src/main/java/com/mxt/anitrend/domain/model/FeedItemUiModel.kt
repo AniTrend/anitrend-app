@@ -1,15 +1,11 @@
 package com.mxt.anitrend.domain.model
 
 import com.mxt.anitrend.domain.feed.model.FeedRecord
-import com.mxt.anitrend.model.entity.anilist.FeedList
-import com.mxt.anitrend.model.entity.base.MediaBase
-import com.mxt.anitrend.model.entity.base.UserBase
 import java.util.Locale
 
 /**
- * Immutable render projection of a feed item. `FeedListAdapter` renders
- * exclusively from this model and never touches a mutable legacy `FeedList`
- * entity, so rows can be diffed and recycled safely.
+ * Immutable rendering snapshot for a feed row. Compose lists consume this projection,
+ * including ownership and server-operation state, without reading mutable network entities.
  */
 data class FeedItemUiModel(
     val id: Long,
@@ -42,52 +38,6 @@ data class FeedItemUiModel(
     val likes: List<UserSummaryRecord>,
     val feedText: String?,
 )
-
-/**
- * Legacy projection retained only for screens that still render from the
- * mutable `FeedList` network entity (`FeedListFragment`, `CommentFragment`).
- * New code should use [FeedRecord.toFeedItemUiModel] instead.
- */
-fun FeedList.toFeedItemUiModel(currentUserId: Long? = null): FeedItemUiModel {
-    val likes = likes.orEmpty()
-    val canModify = when {
-        currentUserId == null -> false
-        messenger?.id != null -> messenger?.id == currentUserId
-        else -> user?.id == currentUserId
-    }
-
-    return FeedItemUiModel(
-        id = id,
-        type = type,
-        headline = buildHeadline(),
-        body = text,
-        likeCount = likes.size,
-        isLikedByCurrentUser = currentUserId != null && likes.any { it.id == currentUserId },
-        replyCount = replyCount,
-        canEdit = canModify,
-        canDelete = canModify,
-        isLikePending = false,
-        isDeletePending = false,
-        createdAt = createdAt,
-        userAvatarUrl = user.avatarUrl(),
-        userName = user?.name,
-        userId = user?.id,
-        messengerAvatarUrl = messenger.avatarUrl(),
-        messengerName = messenger?.name,
-        messengerId = messenger?.id,
-        recipientAvatarUrl = recipient.avatarUrl(),
-        recipientName = recipient?.name,
-        recipientId = recipient?.id,
-        mediaId = media?.id,
-        mediaType = media?.type,
-        mediaTitleEnglish = media?.title?.english,
-        mediaTitleOriginal = media?.title?.original,
-        mediaCoverImageUrl = media.coverImageUrl(),
-        hasLikes = this.likes != null,
-        likes = likes.map(UserBase::toUserSummaryRecord),
-        feedText = text,
-    )
-}
 
 /**
  * Canonical projection from the feed store record. All store-driven feed
@@ -140,15 +90,6 @@ fun FeedRecord.toFeedItemUiModel(
     )
 }
 
-private fun FeedList.buildHeadline(): CharSequence {
-    val title = media?.title?.romaji.orEmpty()
-    return when {
-        title.isBlank() -> status ?: text.orEmpty()
-        text.isNullOrEmpty() -> String.format(Locale.getDefault(), "%s: %s", status, title)
-        else -> String.format(Locale.getDefault(), "%s %s of: %s", status, text, title)
-    }
-}
-
 private fun FeedRecord.buildHeadline(): CharSequence {
     val title = media?.titleRomaji.orEmpty()
     return when {
@@ -157,15 +98,3 @@ private fun FeedRecord.buildHeadline(): CharSequence {
         else -> String.format(Locale.getDefault(), "%s %s of: %s", status, text, title)
     }
 }
-
-private fun UserBase?.avatarUrl(): String? = this?.avatar?.large ?: this?.avatar?.medium ?: this?.avatar?.extraLarge
-
-private fun MediaBase?.coverImageUrl(): String? = this?.coverImage?.extraLarge ?: this?.coverImage?.large ?: this?.coverImage?.medium
-
-private fun UserBase.toUserSummaryRecord(): UserSummaryRecord = UserSummaryRecord(
-    id = id,
-    name = name,
-    avatar = avatarUrl(),
-    siteUrl = null,
-    isFollowing = isFollowing,
-)

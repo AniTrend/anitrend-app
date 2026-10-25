@@ -71,15 +71,12 @@ import com.mxt.anitrend.util.WidgetState
 internal fun FeedStatusRow(
     model: FeedItemUiModel,
     createdAtText: String,
-    isRecycled: Boolean,
-    bindingEpoch: Int,
     onToggleLike: () -> Unit,
     onShowLikes: () -> Unit,
     onOpenComments: () -> Unit,
     onEdit: () -> Unit,
-    onDelete: (Long, Int) -> Unit,
+    onDelete: (Long) -> Unit,
     onOpenProfile: () -> Unit,
-    onDeleteWidgetCreated: (StatusDeleteWidget) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val isPreview = LocalInspectionMode.current
@@ -118,32 +115,24 @@ internal fun FeedStatusRow(
             dimensionResource(R.dimen.lg_margin) +
             dimensionResource(R.dimen.xs_margin)
     val favouriteState =
-        remember(model.likeCount, model.isLikedByCurrentUser, model.isLikePending, isRecycled) {
-            if (isRecycled) {
-                FavouriteActionState(count = 0, isLiked = false, isEnabled = true, isLoading = false)
-            } else {
-                FavouriteActionState(
-                    count = model.likeCount,
-                    isLiked = model.isLikedByCurrentUser,
-                    isEnabled = !model.isLikePending,
-                    isLoading = model.isLikePending,
-                )
-            }
+        remember(model.likeCount, model.isLikedByCurrentUser, model.isLikePending) {
+            FavouriteActionState(
+                count = model.likeCount,
+                isLiked = model.isLikedByCurrentUser,
+                isEnabled = !model.isLikePending,
+                isLoading = model.isLikePending,
+            )
         }
     val deleteState =
-        remember(model.isDeletePending, isRecycled) {
-            if (isRecycled) {
-                StatusDeleteWidgetState(isEnabled = true, isLoading = false)
-            } else {
-                StatusDeleteWidgetState(
-                    isEnabled = !model.isDeletePending,
-                    isLoading = model.isDeletePending,
-                )
-            }
+        remember(model.isDeletePending) {
+            StatusDeleteWidgetState(
+                isEnabled = !model.isDeletePending,
+                isLoading = model.isDeletePending,
+            )
         }
     val deleteCurrentFeed =
-        remember(model, bindingEpoch, onDelete) {
-            { onDelete(model.id, bindingEpoch) }
+        remember(model, onDelete) {
+            { onDelete(model.id) }
         }
     val cardShape = RoundedCornerShape(dimensionResource(R.dimen.lg_margin))
     val bodyShape = RoundedCornerShape(dimensionResource(R.dimen.mg_margin))
@@ -173,7 +162,7 @@ internal fun FeedStatusRow(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 FeedStatusAvatar(
-                    imageUrl = model.userAvatarUrl.takeUnless { isRecycled },
+                    imageUrl = model.userAvatarUrl,
                     userName = model.userName,
                     profileDescription = profileDescription,
                     isPreview = isPreview,
@@ -263,10 +252,8 @@ internal fun FeedStatusRow(
                 }
                 if (model.canDelete) {
                     FeedDeleteAction(
-                        isRecycled = isRecycled,
                         state = deleteState,
                         onClick = deleteCurrentFeed,
-                        onWidgetCreated = onDeleteWidgetCreated,
                         modifier =
                         Modifier
                             .padding(start = dimensionResource(R.dimen.lg_margin))
@@ -452,13 +439,11 @@ internal fun FeedCommentAction(
     }
 }
 
-/** Recycler-safe delete affordance shared by feed rows. */
+/** Delete affordance shared by feed and comment rows. */
 @Composable
 internal fun FeedDeleteAction(
-    isRecycled: Boolean,
     state: StatusDeleteWidgetState,
     onClick: () -> Unit,
-    onWidgetCreated: (StatusDeleteWidget) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     if (LocalInspectionMode.current) {
@@ -478,18 +463,12 @@ internal fun FeedDeleteAction(
                             ViewGroup.LayoutParams.WRAP_CONTENT,
                             ViewGroup.LayoutParams.WRAP_CONTENT,
                         )
-                    onWidgetCreated(this)
                 }
             },
             modifier = modifier,
             update = { widget ->
-                if (isRecycled) {
-                    widget.setOnDeleteListener(null)
-                    widget.onViewRecycled()
-                } else {
-                    widget.render(state)
-                    widget.setOnDeleteListener(onClick)
-                }
+                widget.render(state)
+                widget.setOnDeleteListener(onClick)
             },
             onRelease = StatusDeleteWidget::onViewRecycled,
         )
@@ -535,15 +514,12 @@ private fun FeedStatusRowPreview() {
         FeedStatusRow(
             model = previewItem,
             createdAtText = "1 day ago",
-            isRecycled = false,
-            bindingEpoch = 0,
             onToggleLike = {},
             onShowLikes = {},
             onOpenComments = {},
             onEdit = {},
-            onDelete = { _, _ -> },
+            onDelete = {},
             onOpenProfile = {},
-            onDeleteWidgetCreated = {},
         )
     }
 }

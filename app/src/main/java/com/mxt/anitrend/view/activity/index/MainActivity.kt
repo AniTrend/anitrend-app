@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.IdRes
@@ -15,7 +14,6 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.net.toUri
 import androidx.core.view.GravityCompat
@@ -25,24 +23,21 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.withResumed
 import androidx.navigation.fragment.NavHostFragment
-import com.google.android.material.navigation.NavigationView
 import com.mxt.anitrend.R
 import com.mxt.anitrend.analytics.contract.ISupportAnalytics
 import com.mxt.anitrend.base.custom.activity.checkUpdate
 import com.mxt.anitrend.base.custom.activity.launchUpdateWorker
 import com.mxt.anitrend.base.custom.async.WebTokenRequest
-import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
 import com.mxt.anitrend.ui.designsystem.AniTrendTheme
-import com.mxt.anitrend.ui.profile.AvatarIndicator
+import com.mxt.anitrend.ui.navigation.MainNavigationDrawer
+import com.mxt.anitrend.ui.navigation.MainNavigationDrawerState
 import com.mxt.anitrend.ui.profile.AvatarIndicatorState
-import com.mxt.anitrend.base.custom.view.image.HeaderImageView
 import com.mxt.anitrend.base.custom.view.search.MaterialSearchView
 import com.mxt.anitrend.base.interfaces.event.BottomSheetChoice
 import com.mxt.anitrend.base.interfaces.event.ISearchDelegate
 import com.mxt.anitrend.databinding.ActivityMainBinding
 import com.mxt.anitrend.extension.LAZY_MODE_UNSAFE
-import com.mxt.anitrend.extension.getCompatDrawable
 import com.mxt.anitrend.extension.koinOf
 import com.mxt.anitrend.extension.requestNotificationsPermission
 import com.mxt.anitrend.navigation.extension.NavigationArgs
@@ -88,6 +83,7 @@ import com.mxt.anitrend.view.activity.CommonActivity
 import com.mxt.anitrend.view.fragment.detail.SharedContentFragment
 import com.mxt.anitrend.view.fragment.list.MediaListFragment
 import com.mxt.anitrend.view.fragment.list.MediaListOrigin
+import com.mxt.anitrend.view.fragment.list.WatchListFragment
 import com.mxt.anitrend.view.sheet.BottomSheetMessage
 import com.mxt.anitrend.viewmodel.MainViewModel
 import kotlinx.coroutines.Dispatchers
@@ -100,11 +96,9 @@ import timber.log.Timber
  * Base main_menu activity to show case template
  */
 
-class MainActivity :
-    CommonActivity(),
-    View.OnClickListener,
-    NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : CommonActivity() {
     private lateinit var binding: ActivityMainBinding
+    private var drawerState by mutableStateOf(MainNavigationDrawerState())
 
     // --- Fields carried over from ActivityBase shell ---
     private var mediaActionUtil: MediaActionUtil? = null
@@ -117,9 +111,6 @@ class MainActivity :
     }
     private val mDrawerLayout by lazy(LazyThreadSafetyMode.NONE) {
         binding.drawerLayout
-    }
-    private val mNavigationView by lazy(LazyThreadSafetyMode.NONE) {
-        binding.navView
     }
 
     private val navController
@@ -141,8 +132,12 @@ class MainActivity :
     @IdRes
     private var redirectShortcut: Int = 0
 
-    @IdRes
-    private var selectedItem: Int = 0
+    @get:IdRes
+    private var selectedItem: Int
+        get() = drawerState.selectedItemId
+        set(value) {
+            drawerState = drawerState.copy(selectedItemId = value)
+        }
 
     @StringRes
     private var selectedTitle: Int = 0
@@ -169,42 +164,26 @@ class MainActivity :
         navController.navigateToComment(param)
     }
 
-    private lateinit var menuItems: Menu
-
-    private lateinit var mHomeFeed: MenuItem
-    private lateinit var mAccountLogin: MenuItem
-    private lateinit var mSignOutProfile: MenuItem
-    private lateinit var mManageMenu: MenuItem
-
-    private val headerContainer by lazy(LAZY_MODE_UNSAFE) {
-        mNavigationView.getHeaderView(0)
-    }
-
-    private val mHeaderView by lazy(LAZY_MODE_UNSAFE) {
-        headerContainer.findViewById<HeaderImageView>(R.id.drawer_banner)
-    }
-    private val mUserName by lazy(LAZY_MODE_UNSAFE) {
-        headerContainer.findViewById<TextView>(R.id.drawer_app_name)
-    }
-    private var avatarIndicatorState by mutableStateOf(AvatarIndicatorState())
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        headerContainer
-            .findViewById<ComposeView>(R.id.drawer_avatar_indicator)
-            .apply {
-                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-                setContent {
-                    AniTrendTheme {
-                        AvatarIndicator(
-                            state = avatarIndicatorState,
-                            onAvatarClick = ::onAvatarClicked,
-                        )
-                    }
+        drawerState = drawerState.copy(
+            showUpdateAction = resources.getBoolean(R.bool.display_update_channel_pref),
+        )
+        binding.navComposeView.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                AniTrendTheme {
+                    MainNavigationDrawer(
+                        state = drawerState,
+                        onItemClick = ::onDrawerItemSelected,
+                        onHeaderClick = ::onDrawerHeaderClicked,
+                        onAvatarClick = ::onAvatarClicked,
+                    )
                 }
             }
+        }
         setSupportActionBar(mToolbar)
         mDrawerToggle.setToolbarNavigationClickListener { navigateBackFromDestination() }
         navController.addOnDestinationChangedListener { _, destination, _ ->
@@ -232,7 +211,7 @@ class MainActivity :
         searchView = binding.appBarMain.customToolbar.searchView
         val searchDelegate = object : ISearchDelegate {
             override fun onQueryChanged(query: String?) {
-                applySearchToAllListFragments(query)
+                applySearchToCurrentList(query)
             }
 
             override fun onSearchSubmitted(query: String?) {
@@ -244,7 +223,7 @@ class MainActivity :
             }
 
             override fun onSearchClosed() {
-                applySearchToAllListFragments(null)
+                applySearchToCurrentList(null)
             }
         }
         searchView?.apply {
@@ -299,9 +278,6 @@ class MainActivity :
         } else {
             shouldFinishExternalTaskOnBack = savedInstanceState.getBoolean(KEY_EXTERNAL_ENTRY)
         }
-        mNavigationView.itemBackground = getCompatDrawable(R.drawable.nav_background)
-        mNavigationView.setNavigationItemSelectedListener(this)
-        menuItems = mNavigationView.menu
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -327,11 +303,12 @@ class MainActivity :
         shouldFinishExternalTaskOnBack = false
     }
 
-    @Suppress("ComplexCondition") // The menu remains explicit to match the root destination set.
+    @Suppress("ComplexCondition") // Destinations supporting toolbar search remain explicit.
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         if (navController.currentDestination?.id == R.id.animeFragment ||
             navController.currentDestination?.id == R.id.mangaFragment ||
             navController.currentDestination?.id == R.id.mediaListFragment ||
+            navController.currentDestination?.id == R.id.watchListFragment ||
             navController.currentDestination?.id == R.id.airingFragment ||
             navController.currentDestination?.id == R.id.hubFragment ||
             navController.currentDestination?.id == R.id.feedFragment ||
@@ -403,7 +380,6 @@ class MainActivity :
                     }
                 }
         }
-        mNavigationView.setCheckedItem(selectedItem)
         if (navController.currentDestination?.id == R.id.animeFragment) {
             onNavigate(selectedItem)
         }
@@ -526,15 +502,13 @@ class MainActivity :
         requestCurrentUser()
     }
 
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        @IdRes val menu = item.itemId
+    private fun onDrawerItemSelected(@IdRes menu: Int) {
         if (selectedItem != menu || !isTopLevelDestination(navController.currentDestination?.id)) {
             onNavigate(menu)
         }
         if (menu != R.id.nav_sign_in) {
             mDrawerLayout.closeDrawer(GravityCompat.START)
         }
-        return true
     }
 
     @Suppress("ComplexCondition") // Drawer item routing remains explicit and centralized.
@@ -607,10 +581,12 @@ class MainActivity :
         }
     }
 
-    private fun applySearchToAllListFragments(query: String?) {
-        supportFragmentManager.fragments
-            .filterIsInstance<FragmentBaseList<*, *>>()
-            .forEach { it.applySearchQuery(query) }
+    private fun applySearchToCurrentList(query: String?) {
+        val navHost = supportFragmentManager.findFragmentById(R.id.main_nav_host) as? NavHostFragment
+        when (val fragment = navHost?.childFragmentManager?.primaryNavigationFragment) {
+            is MediaListFragment -> fragment.applySearchQuery(query)
+            is WatchListFragment -> fragment.applySearchQuery(query)
+        }
     }
 
     /**
@@ -629,27 +605,26 @@ class MainActivity :
     }
 
     fun updateUI() {
-        headerContainer
-            .findViewById<View>(R.id.banner_clickable)
-            .setOnClickListener(this)
-
-        mHomeFeed = menuItems.findItem(R.id.nav_home_feed)
-        mAccountLogin = menuItems.findItem(R.id.nav_sign_in)
-        mSignOutProfile = menuItems.findItem(R.id.nav_sign_out)
-        mManageMenu = menuItems.findItem(R.id.nav_header_manage)
-
         if (settings.isAuthenticated) {
             setupUserItems()
         } else {
+            drawerState = drawerState.copy(
+                isAuthenticated = false,
+                headerTitle = null,
+                bannerImageUrl = null,
+            )
             renderAvatarIndicator(null, 0)
-            mHeaderView.setImageResource(R.drawable.reg_bg)
         }
 
         checkUpdatedVersion()
     }
 
+    internal fun updateDrawerUpdateBadge(text: String) {
+        drawerState = drawerState.copy(updateBadgeText = text)
+    }
+
     fun makeRequest() {
-        launchUpdateWorker(menuItems)
+        launchUpdateWorker()
     }
 
     private fun checkUpdatedVersion() {
@@ -929,21 +904,25 @@ class MainActivity :
         avatarUrl: String?,
         unreadNotificationCount: Int,
     ) {
-        avatarIndicatorState =
-            AvatarIndicatorState(
+        drawerState = drawerState.copy(
+            avatarIndicatorState = AvatarIndicatorState(
                 avatarUrl = avatarUrl,
                 hasRenderedAvatar = true,
                 unreadNotificationCount = unreadNotificationCount,
                 showNotificationIndicator = unreadNotificationCount > 0,
-            )
+            ),
+        )
     }
 
     private fun setupUserItems() {
         val user = mainViewModel.currentUser()
+        drawerState = drawerState.copy(
+            isAuthenticated = true,
+            headerTitle = user?.name?.takeIf(String::isNotBlank),
+            bannerImageUrl = user?.bannerImage?.takeIf(String::isNotBlank),
+        )
+        renderAvatarIndicator(user?.avatar?.large, user?.unreadNotificationCount ?: 0)
         if (user != null) {
-            renderAvatarIndicator(user.avatar?.large, user.unreadNotificationCount)
-            mUserName.text = user.name.orEmpty()
-            mHeaderView.setImage(user.bannerImage.orEmpty())
             if (settings.shouldShowTipFor(KeyUtil.KEY_LOGIN_TIP)) {
                 settings.disableTipFor(KeyUtil.KEY_LOGIN_TIP)
                 mBottomSheet =
@@ -956,35 +935,26 @@ class MainActivity :
                 showBottomSheet()
             }
             koinOf<ISupportAnalytics>().setCrashAnalyticUser(user.name.orEmpty())
-        } else {
-            renderAvatarIndicator(null, 0)
         }
-        mAccountLogin.isVisible = false
-
-        mSignOutProfile.isVisible = true
-        mManageMenu.isVisible = true
-        mHomeFeed.isVisible = true
     }
 
-    override fun onClick(view: View) {
-        if (view.id == R.id.banner_clickable) {
-            if (settings.isAuthenticated) {
-                val user = mainViewModel.currentUser()
-                if (user != null) {
-                    // Name-only identity preserves the legacy redirect behaviour:
-                    // the profile resolves the current user by name, not by id.
-                    navController.navigateToProfile(UserScreenParam(userId = 0L, initialName = user.name))
-                } else {
-                    NotifyUtil
-                        .makeText(
-                            applicationContext,
-                            R.string.text_error_login,
-                            Toast.LENGTH_SHORT,
-                        ).show()
-                }
+    private fun onDrawerHeaderClicked() {
+        if (settings.isAuthenticated) {
+            val user = mainViewModel.currentUser()
+            if (user != null) {
+                // Name-only identity preserves the legacy redirect behaviour:
+                // the profile resolves the current user by name, not by id.
+                navController.navigateToProfile(UserScreenParam(userId = 0L, initialName = user.name))
             } else {
-                onNavigate(R.id.nav_sign_in)
+                NotifyUtil
+                    .makeText(
+                        applicationContext,
+                        R.string.text_error_login,
+                        Toast.LENGTH_SHORT,
+                    ).show()
             }
+        } else {
+            onNavigate(R.id.nav_sign_in)
         }
     }
 
@@ -995,7 +965,9 @@ class MainActivity :
             return
         }
         if (user.unreadNotificationCount > 0) {
-            avatarIndicatorState = avatarIndicatorState.copy(showNotificationIndicator = false)
+            drawerState = drawerState.copy(
+                avatarIndicatorState = drawerState.avatarIndicatorState.copy(showNotificationIndicator = false),
+            )
             navController.navigateToNotifications()
         } else {
             navController.navigateToProfile(UserScreenParam(userId = 0L, initialName = user.name))

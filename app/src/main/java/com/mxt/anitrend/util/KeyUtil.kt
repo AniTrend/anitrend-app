@@ -166,7 +166,6 @@ object KeyUtil {
     const val key_recycler_state = "key_recycler_state"
     const val key_model_state = "key_model_state"
     const val key_pagination = "key_pagination"
-    const val key_columns = "key_columns"
     const val key_navigation_selected = "key_navigation_selected"
     const val key_navigation_title = "key_navigation_title"
     const val key_bundle_param = "key_bundle_param"
@@ -789,27 +788,6 @@ object KeyUtil {
     @IntDef(MESSAGE_TYPE_INBOX, MESSAGE_TYPE_OUTBOX)
     @Retention(AnnotationRetention.SOURCE)
     annotation class MessageType
-
-    // Group types for recycler view
-    const val RECYCLER_TYPE_CONTENT = 0x00000010
-    const val RECYCLER_TYPE_HEADER = 0x00000011
-    const val RECYCLER_TYPE_LOADING = 0x00000100
-    const val RECYCLER_TYPE_EMPTY = 0x00000101
-    const val RECYCLER_TYPE_ERROR = 0x00000110
-    const val RECYCLER_TYPE_ANIME = 0x00000111
-    const val RECYCLER_TYPE_MANGA = 0x00001000
-
-    @IntDef(
-        RECYCLER_TYPE_CONTENT,
-        RECYCLER_TYPE_HEADER,
-        RECYCLER_TYPE_LOADING,
-        RECYCLER_TYPE_EMPTY,
-        RECYCLER_TYPE_ERROR,
-        RECYCLER_TYPE_ANIME,
-        RECYCLER_TYPE_MANGA,
-    )
-    @Retention(AnnotationRetention.SOURCE)
-    annotation class RecyclerViewType
 
     /** Application Tips */
     const val KEY_MAIN_TIP = "KEY_MAIN_TIP"

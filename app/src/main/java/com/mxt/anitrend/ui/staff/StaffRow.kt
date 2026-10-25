@@ -48,6 +48,7 @@ private const val STAFF_IMAGE_TAG = "staff-row-image"
 private const val STAFF_FAVORITE_TAG = "staff-row-favorite"
 
 internal data class StaffRowUiState(
+    val id: Long,
     val name: String?,
     val image: ImageBase?,
     val language: String?,
@@ -55,6 +56,7 @@ internal data class StaffRowUiState(
 ) {
     companion object {
         fun from(model: StaffBase): StaffRowUiState = StaffRowUiState(
+            id = model.id,
             name = model.name?.fullName,
             image = model.image,
             language = model.language?.takeIf { it.isNotBlank() }?.let(CompatUtil::capitalizeWords),

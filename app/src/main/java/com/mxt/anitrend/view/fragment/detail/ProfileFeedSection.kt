@@ -3,35 +3,37 @@ package com.mxt.anitrend.view.fragment.detail
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.referentialEqualityPolicy
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.mxt.anitrend.R
-import com.mxt.anitrend.adapter.recycler.index.FeedListAdapter
-import com.mxt.anitrend.base.custom.recycler.RecyclerScrollListener
-import com.mxt.anitrend.base.custom.view.container.CustomSwipeRefreshLayout
-import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener
 import com.mxt.anitrend.data.DatabaseHelper
-import com.mxt.anitrend.data.mapper.toPageInfo
+import com.mxt.anitrend.base.custom.view.container.CustomSwipeRefreshLayout
 import com.mxt.anitrend.databinding.FragmentListBinding
 import com.mxt.anitrend.domain.model.FeedItemUiModel
 import com.mxt.anitrend.domain.model.PageInfoRecord
-import com.mxt.anitrend.repository.UserRepository
-import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.extension.getCompatDrawable
+import com.mxt.anitrend.repository.UserRepository
+import com.mxt.anitrend.ui.designsystem.AniTrendTheme
+import com.mxt.anitrend.ui.feed.FeedItemLazyList
+import com.mxt.anitrend.ui.feed.FeedRowCallbacks
+import com.mxt.anitrend.ui.feed.countNewFeedItems
+import com.mxt.anitrend.ui.media.ManualGridAppendGate
+import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.Settings
+import com.mxt.anitrend.view.fragment.list.renderableFeedItems
 import com.mxt.anitrend.viewmodel.UserFeedViewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-/**
- * Ordinary feed renderer used by ProfileFragment's local section state.
- *
- * The callback-heavy constructor and grouped lifecycle helpers intentionally
- * preserve the profile destination's existing feed actions.
- */
+/** Ordinary feed renderer used by ProfileFragment's local section state. */
 @Suppress("LongParameterList", "TooManyFunctions")
 class ProfileFeedSection(
     private val settings: Settings,
@@ -49,38 +51,63 @@ class ProfileFeedSection(
     private val onLongPressMedia: (View, Long) -> Boolean,
     private val onToggleLike: (Long) -> Unit,
     private val onDeleteFeed: (Long) -> Unit,
-) : RecyclerLoadListener,
-    CustomSwipeRefreshLayout.OnRefreshAndLoadListener {
+) : CustomSwipeRefreshLayout.OnRefreshAndLoadListener {
     private var binding: FragmentListBinding? = null
-    private val scrollListener = RecyclerScrollListener()
-    private val adapter = FeedListAdapter(
-        onToggleLikeAction = onToggleLike,
-        onDeleteFeedAction = onDeleteFeed,
-        onOpenMedia = onOpenMedia,
-        onOpenComments = onOpenComments,
-        onEditFeed = onEditFeed,
-        onShowLikes = { id ->
-            currentItems().firstOrNull { it.id == id }?.let { onShowLikes(id, it.likes) }
-        },
-        onOpenProfile = onOpenProfile,
-        onLongPressMedia = onLongPressMedia,
-    )
+    private val listState = LazyListState()
+    private val items = mutableStateOf<List<FeedItemUiModel>>(emptyList(), referentialEqualityPolicy())
+    private val loadMoreRevision = mutableStateOf(0)
+    private val appendGate = ManualGridAppendGate()
+    private var pageInfo: PageInfoRecord? = null
+    private var currentPage = 1
+    private var activeRequestPage: Int? = null
+    private var requestStartFeedIds: Set<Long> = emptySet()
+    private var requestInFlight = false
+
+    private val rowCallbacks =
+        FeedRowCallbacks(
+            onToggleLike = onToggleLike,
+            onDelete = ::deleteFeed,
+            onOpenMedia = { target, item -> onOpenMedia(target, item.id) },
+            onOpenComments = onOpenComments,
+            onEdit = { item -> currentFeedItem(item.id)?.takeIf { it.canEdit }?.let { onEditFeed(it.id) } },
+            onShowLikes = { item ->
+                currentFeedItem(item.id)?.let { onShowLikes(it.id, it.likes) }
+            },
+            onOpenProfile = onOpenProfile,
+            onLongPressMedia = { target, item -> onLongPressMedia(target, item.id) },
+        )
 
     /** Inflates and initializes the profile feed view. */
     fun inflate(inflater: LayoutInflater, container: ViewGroup): View {
         val sectionBinding = FragmentListBinding.inflate(inflater, container, false)
         binding = sectionBinding
-        sectionBinding.recyclerView.setHasFixedSize(true)
-        sectionBinding.recyclerView.isNestedScrollingEnabled = true
-        val layoutManager = StaggeredGridLayoutManager(
-            sectionBinding.root.resources.getInteger(R.integer.single_list_x1),
-            StaggeredGridLayoutManager.VERTICAL,
+        val composeHost =
+            ComposeView(sectionBinding.root.context).apply {
+                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+                setContent {
+                    AniTrendTheme {
+                        FeedItemLazyList(
+                            items = items.value,
+                            listState = listState,
+                            callbacks = rowCallbacks,
+                            onLoadMore = ::loadNextPage,
+                            loadMoreRevision = loadMoreRevision.value,
+                        )
+                    }
+                }
+            }
+        sectionBinding.refreshLayout.addView(
+            composeHost,
+            0,
+            ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT,
+            ),
         )
-        sectionBinding.recyclerView.layoutManager = layoutManager
-        sectionBinding.recyclerView.adapter = adapter
         sectionBinding.refreshLayout.setOnRefreshAndLoadListener(this)
-        sectionBinding.recyclerView.addOnScrollListener(scrollListener)
-        scrollListener.initListener(layoutManager, this)
+        sectionBinding.refreshLayout.scrollBoundary = { direction ->
+            if (direction < 0) listState.canScrollBackward else listState.canScrollForward
+        }
         sectionBinding.root.context.let { context ->
             (context as? androidx.fragment.app.FragmentActivity)?.let {
                 CompatUtil.configureSwipeRefreshLayout(sectionBinding.refreshLayout, it)
@@ -96,36 +123,41 @@ class ProfileFeedSection(
                 viewModel.state.collect { state -> render(state) }
             }
         }
-        load(1)
+        if (!requestInFlight && items.value.isEmpty()) requestPage(1)
     }
 
-    /** Releases the profile feed binding and scroll resources. */
+    /** Releases the feed list's scroll bridge and binding. */
     fun clear() {
-        binding?.recyclerView?.clearOnScrollListeners()
+        binding?.refreshLayout?.apply {
+            setOnRefreshAndLoadListener(null)
+            scrollBoundary = null
+        }
         binding = null
     }
 
     /** Resets pagination and requests the first feed page. */
     override fun onRefresh() {
-        scrollListener.onRefreshPage()
-        load(1)
-    }
-
-    /** Requests the current page as an append operation. */
-    override fun onLoadMore() {
-        binding?.refreshLayout?.setLoading(true)
-        load(scrollListener.currentPage)
+        currentPage = 1
+        pageInfo = null
+        requestPage(1)
     }
 
     /** Ignores the refresh layout append callback. */
     override fun onLoad() = Unit
 
-    private fun load(page: Int) {
-        var resolvedUserId = userId
-        if (settings.isAuthenticated && isCurrentUser(resolvedUserId, userName)) {
-            resolvedUserId = userRepository.cachedCurrentUser?.id ?: resolvedUserId
-        }
-        if (resolvedUserId <= 0L) return
+    private fun loadNextPage() {
+        if (requestInFlight || !appendGate.canRequestNextPage || pageInfo?.hasNextPage != true) return
+        currentPage++
+        binding?.refreshLayout?.setLoading(true)
+        requestPage(currentPage)
+    }
+
+    private fun requestPage(page: Int) {
+        val resolvedUserId = resolvedUserId() ?: return
+        activeRequestPage = page
+        requestStartFeedIds = if (page <= 1) emptySet() else items.value.mapTo(mutableSetOf()) { it.id }
+        requestInFlight = true
+        appendGate.onRequestStarted()
         viewModel.load(
             userId = resolvedUserId.toInt(),
             page = page,
@@ -137,38 +169,83 @@ class ProfileFeedSection(
         )
     }
 
+    private fun resolvedUserId(): Long? {
+        var resolved = userId
+        if (settings.isAuthenticated && isCurrentUser(resolved, userName)) {
+            resolved = userRepository.cachedCurrentUser?.id ?: resolved
+        }
+        return resolved.takeIf { it > 0L }
+    }
+
     private fun render(state: UserFeedViewModel.UiState) {
         val sectionBinding = binding ?: return
         when (state) {
-            UserFeedViewModel.UiState.Loading -> sectionBinding.stateLayout.showLoading()
-            is UserFeedViewModel.UiState.Error -> sectionBinding.stateLayout.showError(
-                sectionBinding.root.context.getCompatDrawable(R.drawable.ic_emoji_cry),
-                state.message,
-                getStringSafely(R.string.try_again),
-            ) { onRefresh() }
-            is UserFeedViewModel.UiState.Success -> renderSuccess(state.items, state.pageInfo)
+            UserFeedViewModel.UiState.Loading -> if (items.value.isEmpty()) sectionBinding.stateLayout.showLoading()
+            is UserFeedViewModel.UiState.Error -> showError(state.message)
+            is UserFeedViewModel.UiState.Success -> renderSuccess(
+                items = state.items,
+                pageInfo = state.pageInfo,
+                requestedPage = state.requestedPage,
+                isLoading = state.isLoading,
+            )
         }
     }
 
-    private fun renderSuccess(items: List<FeedItemUiModel>, pageInfo: PageInfoRecord?) {
+    private fun renderSuccess(
+        items: List<FeedItemUiModel>,
+        pageInfo: PageInfoRecord?,
+        requestedPage: Int,
+        isLoading: Boolean,
+    ) {
         val sectionBinding = binding ?: return
-        pageInfo?.let { scrollListener.setPageInfo(it.toPageInfo()) }
-        adapter.submitList(items.filter { !it.type.isNullOrBlank() }) {
-            sectionBinding.refreshLayout.setRefreshing(false)
-            sectionBinding.refreshLayout.setLoading(false)
-            if (adapter.itemCount == 0) {
-                sectionBinding.stateLayout.showError(
-                    sectionBinding.root.context.getCompatDrawable(R.drawable.ic_emoji_sweat),
-                    getStringSafely(R.string.layout_empty_response),
-                    getStringSafely(R.string.try_again),
-                ) { onRefresh() }
-            } else {
-                sectionBinding.stateLayout.showContent()
-            }
+        pageInfo?.let { this.pageInfo = it }
+        val snapshot = renderableFeedItems(items)
+        this.items.value = snapshot
+        if (activeRequestPage == requestedPage && !isLoading) {
+            val previousIds = if (requestedPage <= 1) emptySet() else requestStartFeedIds
+            appendGate.onRequestSucceeded(countNewFeedItems(previousIds, snapshot))
+            activeRequestPage = null
+            requestInFlight = false
+            loadMoreRevision.value++
         }
+        if (isLoading) return
+        finishRefreshIndicators(sectionBinding)
+        if (snapshot.isEmpty()) showEmpty() else sectionBinding.stateLayout.showContent()
     }
 
-    private fun currentItems(): List<FeedItemUiModel> = adapter.currentList
+    private fun deleteFeed(feedId: Long) {
+        val item = items.value.firstOrNull { it.id == feedId } ?: return
+        if (item.canDelete && !item.isDeletePending) onDeleteFeed(feedId)
+    }
+    private fun currentFeedItem(feedId: Long): FeedItemUiModel? = items.value.firstOrNull { it.id == feedId }
+
+    private fun showError(message: String) {
+        requestInFlight = false
+        activeRequestPage = null
+        appendGate.onRequestFailed()
+        val sectionBinding = binding ?: return
+        finishRefreshIndicators(sectionBinding)
+        sectionBinding.stateLayout.showError(
+            sectionBinding.root.context.getCompatDrawable(R.drawable.ic_emoji_cry),
+            message,
+            getStringSafely(R.string.try_again),
+        ) { onRefresh() }
+    }
+
+    private fun showEmpty() {
+        val sectionBinding = binding ?: return
+        finishRefreshIndicators(sectionBinding)
+        sectionBinding.stateLayout.showError(
+            sectionBinding.root.context.getCompatDrawable(R.drawable.ic_emoji_sweat),
+            getStringSafely(R.string.layout_empty_response),
+            getStringSafely(R.string.try_again),
+        ) { onRefresh() }
+    }
+
+    private fun finishRefreshIndicators(sectionBinding: FragmentListBinding) {
+        if (sectionBinding.refreshLayout.isRefreshing()) sectionBinding.refreshLayout.setRefreshing(false)
+        if (sectionBinding.refreshLayout.isLoading()) sectionBinding.refreshLayout.setLoading(false)
+    }
 
     private fun isCurrentUser(id: Long, name: String?): Boolean = settings.isAuthenticated &&
         userRepository.cachedCurrentUser?.let { current ->

@@ -17,6 +17,7 @@ import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.graphql.generated.ScoreFormat
 import com.mxt.anitrend.model.api.retro.anilist.BrowseService
 import com.mxt.anitrend.model.entity.anilist.MediaList
+import com.mxt.anitrend.model.entity.anilist.meta.MediaTitle
 import com.mxt.anitrend.repository.BrowseRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -83,7 +84,9 @@ class AiringListViewModelTest {
             id = 1,
             mediaId = 100,
             progress = 7,
-            media = anAiringMediaBase(id = 100L),
+            media = anAiringMediaBase(id = 100L).apply {
+                title = MediaTitle(null, "English Title", "Original Title", "Preferred Title")
+            },
         )
         doReturn(Result.success(collectionResult(entry)))
             .`when`(browseRepository)
@@ -106,6 +109,7 @@ class AiringListViewModelTest {
             requestSequence = RequestSequence(),
         )
         val collector = backgroundScope.launch { vm.state.collect {} }
+        val displayItemsCollector = backgroundScope.launch { vm.display.collect {} }
 
         vm.load(
             type = MediaType.ANIME,
@@ -128,6 +132,16 @@ class AiringListViewModelTest {
         assertEquals(1, state.entries.size)
         assertEquals(7, state.entries.single().progress)
         assertEquals(7, state.renderedItems.single().progress)
+        vm.onSearchQueryChanged("  english TITLE  ")
+        advanceUntilIdle()
+        assertEquals(listOf(100L), vm.display.value?.rows.orEmpty().map { it.mediaId })
+        vm.onSearchQueryChanged("original title")
+        advanceUntilIdle()
+        assertEquals(listOf(100L), vm.display.value?.rows.orEmpty().map { it.mediaId })
+        vm.onSearchQueryChanged("no matching title")
+        advanceUntilIdle()
+        assertTrue(vm.display.value?.rows.orEmpty().isEmpty())
+        assertEquals(1, (vm.state.value as AiringListViewModel.UiState.Success).renderedItems.size)
         verify(browseRepository).getMediaListCollection(
             userId = 10L,
             type = MediaType.ANIME,
@@ -140,6 +154,7 @@ class AiringListViewModelTest {
             readToken = 1L,
         )
         collector.cancel()
+        displayItemsCollector.cancel()
     }
 
     @Test

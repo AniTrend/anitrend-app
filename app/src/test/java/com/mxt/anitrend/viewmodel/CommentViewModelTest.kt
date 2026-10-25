@@ -16,8 +16,6 @@ import com.mxt.anitrend.domain.feed.interactor.DeleteReplyInteractor
 import com.mxt.anitrend.domain.feed.interactor.SaveFeedInteractor
 import com.mxt.anitrend.domain.feed.interactor.SaveReplyInteractor
 import com.mxt.anitrend.domain.like.interactor.ToggleLikeInteractor
-import com.mxt.anitrend.domain.model.FeedItemUiModel
-import com.mxt.anitrend.domain.model.toFeedItemUiModel
 import com.mxt.anitrend.graphql.generated.LikeableType
 import com.mxt.anitrend.model.entity.anilist.FeedList
 import com.mxt.anitrend.model.entity.anilist.FeedReply
@@ -106,47 +104,25 @@ class CommentViewModelTest {
     }
 
     @Test
-    fun `state feed is a FeedRecord and feedItem is the canonical projection`() = runTest {
+    fun `failed initial load is an error and only an observed feed removal is deletion`() = runTest {
         val collector = backgroundScope.launch { viewModel.state.collect {} }
-        val feed = feed(1L, replyCount = 1)
-        val reply = reply(10L, activityId = 1L, text = "first")
-        stubDetailLoad(feed, listOf(reply))
+        doReturn(Result.failure<FeedDetailResult>(IllegalStateException("Offline")))
+            .`when`(feedRepository)
+            .getFeedListReplyRecords(1L, false, true, 0L, 1L)
 
         viewModel.load(1L)
         advanceUntilIdle()
+        assertEquals("Offline", viewModel.state.value.errorMessage)
+        assertFalse(viewModel.state.value.isDeleted)
 
-        val state = viewModel.state.value
-        val record = requireNotNull(state.feed)
-        assertEquals("feed-1", record.text)
-        // The header projection is precomputed from the store record.
-        val expected =
-            record.toFeedItemUiModel(
-                isLikePending = false,
-                isDeletePending = false,
-                currentUserId = null,
-            )
-        assertEquals(expected, state.feedItem)
-        assertTrue(state.feedItem is FeedItemUiModel)
-        collector.cancel()
-    }
-
-    @Test
-    fun `active state carries no legacy entity reverse mapping`() = runTest {
-        val collector = backgroundScope.launch { viewModel.state.collect {} }
-        val feed = feed(1L, replyCount = 1)
-        val reply = reply(10L, activityId = 1L, text = "first")
-        stubDetailLoad(feed, listOf(reply))
-
-        viewModel.load(1L)
+        store.apply(FeedStoreChange.FeedUpserted(feed(1L, replyCount = 0).toFeedRecord(revision = 1L)))
         advanceUntilIdle()
+        assertEquals(1L, viewModel.state.value.feed?.id)
+        assertFalse(viewModel.state.value.isDeleted)
 
-        val state = viewModel.state.value
-        // State surface is record-backed: the feed field is the exact store
-        // record, not a reverse-mapped legacy FeedList entity.
-        assertEquals(store.state.value.feedsById.getValue(1L), state.feed)
-        assertFalse(state.replies.isEmpty())
-        assertEquals(listOf(10L), state.replies.map { it.id })
-        assertEquals("first", state.replies.first().reply)
+        store.apply(FeedStoreChange.FeedDeleted(feedId = 1L, revision = 2L))
+        advanceUntilIdle()
+        assertTrue(viewModel.state.value.isDeleted)
         collector.cancel()
     }
 

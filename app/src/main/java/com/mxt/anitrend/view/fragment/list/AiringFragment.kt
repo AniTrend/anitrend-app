@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.mxt.anitrend.R
@@ -27,15 +26,7 @@ class AiringFragment : AiringListFragment() {
         val listContainer = root.findViewById<ViewGroup>(R.id.media_list_container)
         val binding = FragmentListBinding.inflate(inflater, listContainer, true)
         swipeRefreshLayout = binding.refreshLayout
-        recyclerView = binding.recyclerView
         stateLayout = binding.stateLayout
-        recyclerView.setHasFixedSize(true)
-        recyclerView.isNestedScrollingEnabled = true
-        mLayoutManager = StaggeredGridLayoutManager(
-            resources.getInteger(mColumnSize),
-            StaggeredGridLayoutManager.VERTICAL,
-        )
-        recyclerView.layoutManager = mLayoutManager
         swipeRefreshLayout.setOnRefreshAndLoadListener(this)
         activity?.let { CompatUtil.configureSwipeRefreshLayout(swipeRefreshLayout, it) }
         buildSectionSelector()

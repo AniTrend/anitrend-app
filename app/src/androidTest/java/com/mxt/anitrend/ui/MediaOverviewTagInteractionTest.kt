@@ -7,8 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewParent
 import android.view.accessibility.AccessibilityWindowInfo
+import androidx.compose.ui.test.junit4.createEmptyComposeRule
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import androidx.core.widget.NestedScrollView
-import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
@@ -34,11 +36,15 @@ import io.mockk.mockk
 import java.util.concurrent.atomic.AtomicReference
 import kotlinx.coroutines.Dispatchers
 import org.junit.Assert.assertEquals
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class MediaOverviewTagInteractionTest {
+    @get:Rule
+    val composeRule = createEmptyComposeRule()
+
     @Test
     fun tagMoreActionKeepsExistingBrowseCallback() {
         val tag =
@@ -119,14 +125,11 @@ class MediaOverviewTagInteractionTest {
             }
             InstrumentationRegistry.getInstrumentation().waitForIdleSync()
             scenario.onActivity { activity ->
-                val tagsRecycler = activity.findViewById<RecyclerView>(R.id.tags_recycler)
-                findNestedScrollView(tagsRecycler)?.fullScroll(View.FOCUS_DOWN)
+                val tagsComposeView = activity.findViewById<View>(R.id.tags_compose_view)
+                findNestedScrollView(tagsComposeView)?.fullScroll(View.FOCUS_DOWN)
             }
             InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-            scenario.onActivity { activity ->
-                val tagsRecycler = activity.findViewById<RecyclerView>(R.id.tags_recycler)
-                requireNotNull(tagsRecycler.findViewHolderForAdapterPosition(0)).itemView.performClick()
-            }
+            composeRule.onNodeWithText(TAG_NAME).performClick()
             InstrumentationRegistry.getInstrumentation().waitForIdleSync()
             InstrumentationRegistry.getInstrumentation().waitForFocusedWindowContainingText(
                 TAG_DESCRIPTION,

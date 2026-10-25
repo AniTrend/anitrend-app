@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.mxt.anitrend.R
@@ -50,15 +49,7 @@ class ReviewBrowseFragment : BrowseReviewFragment() {
         val listContainer = root.findViewById<ViewGroup>(R.id.review_list_container)
         val binding = FragmentListBinding.inflate(inflater, listContainer, true)
         swipeRefreshLayout = binding.refreshLayout
-        recyclerView = binding.recyclerView
         stateLayout = binding.stateLayout
-        recyclerView.setHasFixedSize(true)
-        recyclerView.isNestedScrollingEnabled = true
-        mLayoutManager = StaggeredGridLayoutManager(
-            resources.getInteger(mColumnSize),
-            StaggeredGridLayoutManager.VERTICAL,
-        )
-        recyclerView.layoutManager = mLayoutManager
         swipeRefreshLayout.setOnRefreshAndLoadListener(this)
         activity?.let { CompatUtil.configureSwipeRefreshLayout(swipeRefreshLayout, it) }
         buildSectionSelector()
@@ -88,10 +79,9 @@ class ReviewBrowseFragment : BrowseReviewFragment() {
         section = value
         mediaType = value.mediaType
         arguments = Bundle().apply { putString(KeyUtil.arg_mediaType, value.mediaType) }
-        reviewAdapter?.submitList(emptyList())
-        mScrollListener.onRefreshPage()
+        clearReviewItems()
         sectionSelector.check(sectionSelector.getChildAt(value.ordinal).id)
         showLoading()
-        makeRequest()
+        onRefresh()
     }
 }

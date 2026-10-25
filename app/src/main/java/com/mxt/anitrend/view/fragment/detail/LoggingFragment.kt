@@ -12,19 +12,24 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.VisibleForTesting
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.R
-import com.mxt.anitrend.adapter.recycler.detail.LogEntryAdapter
 import com.mxt.anitrend.databinding.ContentLoggingBinding
+import com.mxt.anitrend.model.entity.log.LogEntry
 import com.mxt.anitrend.model.entity.log.LogFilter
 import com.mxt.anitrend.model.entity.log.LogUiState
+import com.mxt.anitrend.ui.designsystem.AniTrendTheme
+import com.mxt.anitrend.ui.logging.LogEntryList
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.viewmodel.LoggingViewModel
 import kotlinx.coroutines.launch
@@ -43,7 +48,7 @@ class LoggingFragment : Fragment() {
     private var _binding: ContentLoggingBinding? = null
     private val binding get() = requireNotNull(_binding)
 
-    private val logAdapter by lazy { LogEntryAdapter(requireContext()) }
+    private var renderedEntries by mutableStateOf(emptyList<LogEntry>())
 
     @VisibleForTesting
     internal val loggingViewModel: LoggingViewModel by viewModel()
@@ -64,20 +69,21 @@ class LoggingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        configureRecycler()
+        configureLogList()
         configureFilterChips()
         observeViewModel()
         bindMetadataCard()
     }
 
-    private fun configureRecycler() {
-        binding.logRecycler.layoutManager = LinearLayoutManager(
-            requireContext(),
-            LinearLayoutManager.VERTICAL,
-            /* reverseLayout = */ true,
+    private fun configureLogList() {
+        binding.logEntries.setViewCompositionStrategy(
+            ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed,
         )
-        binding.logRecycler.adapter = logAdapter
-        binding.logRecycler.setHasFixedSize(true)
+        binding.logEntries.setContent {
+            AniTrendTheme {
+                LogEntryList(entries = renderedEntries)
+            }
+        }
     }
 
     private fun configureFilterChips() {
@@ -99,9 +105,12 @@ class LoggingFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 loggingViewModel.state.collect { state ->
                     when (state) {
-                        is LogUiState.Loading -> binding.stateLayout.showLoading()
+                        is LogUiState.Loading -> {
+                            renderedEntries = emptyList()
+                            binding.stateLayout.showLoading()
+                        }
                         is LogUiState.Success -> {
-                            logAdapter.onItemsInserted(state.entries)
+                            renderedEntries = state.entries
                             binding.stateLayout.showContent()
                         }
                         is LogUiState.Error -> binding.stateLayout.showContent()
@@ -226,7 +235,6 @@ class LoggingFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        binding.logRecycler.adapter = null
         _binding = null
         super.onDestroyView()
     }

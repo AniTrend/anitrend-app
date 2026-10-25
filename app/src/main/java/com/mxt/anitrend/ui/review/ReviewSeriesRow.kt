@@ -69,7 +69,7 @@ import com.mxt.anitrend.util.date.DateUtil
 
 private const val REVIEW_SERIES_COVER_TAG = "review-series-cover"
 
-/** Stateless series-review presentation with adapter-owned actions and vote state. */
+/** Stateless series-review row with actions and vote state supplied by its screen owner. */
 @Composable
 internal fun ReviewSeriesRow(
     review: ReviewRecord,
@@ -285,7 +285,6 @@ internal fun ReviewSeriesRow(
                             AndroidView(
                                 factory = { context ->
                                     createReviewReadMoreView(context).apply {
-                                        setOnClickListener { onReadMoreClick() }
                                         onReadMoreViewCreated(this)
                                     }
                                 },
@@ -300,6 +299,9 @@ internal fun ReviewSeriesRow(
                                             true
                                         }
                                     },
+                                update = { view ->
+                                    view.setOnClickListener { onReadMoreClick() }
+                                },
                                 onRelease = { view ->
                                     view.setOnClickListener(null)
                                     onReadMoreViewReleased(view)

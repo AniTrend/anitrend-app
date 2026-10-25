@@ -31,6 +31,7 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -69,28 +70,35 @@ class BrowseReviewViewModelRateTest {
     }
 
     @Test
-    fun `successful rate commits to store, emits Success outcome and rebinds state`() = runTest(testDispatcher) {
+    fun `active vote toggles to no vote, commits to store and rebinds state`() = runTest(testDispatcher) {
         val viewModel = viewModel()
         val outcomes = mutableListOf<ReviewRateOutcome>()
         backgroundScope.launch { viewModel.state.collect {} }
         backgroundScope.launch { viewModel.rateReviewEvents.collect { outcomes += it } }
 
-        stubPage()
+        stubPage(userRating = ReviewRating.UP_VOTE.name)
         viewModel.load(type = null, page = 1, sort = "ID_DESC")
         advanceUntilIdle()
         assertEquals(0, (viewModel.state.value as BrowseReviewViewModel.UiState.Success).content.pageData.single().rating)
 
-        doReturn(Result.success(review(id = 42L, rating = 55, ratingAmount = 3, userRating = "UP_VOTE")))
+        doReturn(Result.success(review(id = 42L, rating = 55, ratingAmount = 3, userRating = null)))
             .`when`(browseRepository)
             .rateReview(
                 id = 42L,
-                rating = ReviewRating.UP_VOTE,
+                rating = ReviewRating.NO_VOTE,
                 asHtml = false,
                 commitToStore = false,
                 revision = 1L,
             )
 
-        viewModel.rateReview(42L, ReviewRating.UP_VOTE)
+        assertEquals(
+            ReviewVoteActionResult.SUBMITTED,
+            viewModel.voteReview(
+                (viewModel.state.value as BrowseReviewViewModel.UiState.Success).content.pageData.single(),
+                ReviewRating.UP_VOTE,
+                isAuthenticated = true,
+            ),
+        )
         advanceUntilIdle()
 
         assertEquals(1, outcomes.size)
@@ -98,7 +106,7 @@ class BrowseReviewViewModelRateTest {
         assertEquals(MutationResult.Success, outcomes.single().result)
         val committed = reviewStore.state.value.reviewsById.getValue(42L).review
         assertEquals(55, committed.rating)
-        assertEquals("UP_VOTE", committed.userRating)
+        assertNull(committed.userRating)
         assertEquals(55, (viewModel.state.value as BrowseReviewViewModel.UiState.Success).content.pageData.single().rating)
     }
 
@@ -123,14 +131,39 @@ class BrowseReviewViewModelRateTest {
                 revision = 1L,
             )
 
-        viewModel.rateReview(42L, ReviewRating.UP_VOTE)
+        assertEquals(
+            ReviewVoteActionResult.SUBMITTED,
+            viewModel.voteReview(
+                (viewModel.state.value as BrowseReviewViewModel.UiState.Success).content.pageData.single(),
+                ReviewRating.UP_VOTE,
+                isAuthenticated = true,
+            ),
+        )
         advanceUntilIdle()
 
         assertEquals(1, outcomes.size)
         assertTrue(outcomes.single().result is MutationResult.Failure)
         assertEquals("rate failed", (outcomes.single().result as MutationResult.Failure).message)
+        assertTrue(viewModel.reviewVoteState.value.isEmpty())
         assertEquals(0, reviewStore.state.value.reviewsById.getValue(42L).review.rating)
         assertEquals(0, (viewModel.state.value as BrowseReviewViewModel.UiState.Success).content.pageData.single().rating)
+    }
+
+    @Test
+    fun `logged out vote is rejected before loading or mutation state begins`() = runTest(testDispatcher) {
+        val viewModel = viewModel()
+        backgroundScope.launch { viewModel.state.collect {} }
+
+        stubPage()
+        viewModel.load(type = null, page = 1, sort = "ID_DESC")
+        advanceUntilIdle()
+        val review = (viewModel.state.value as BrowseReviewViewModel.UiState.Success).content.pageData.single()
+
+        assertEquals(
+            ReviewVoteActionResult.LOGIN_REQUIRED,
+            viewModel.voteReview(review, ReviewRating.UP_VOTE, isAuthenticated = false),
+        )
+        assertTrue(viewModel.reviewVoteState.value.isEmpty())
     }
 
     @Test
@@ -154,7 +187,14 @@ class BrowseReviewViewModelRateTest {
 
         // No outcome collector is active while the mutation runs (the fragment view is
         // not in STARTED): the buffered channel must retain the outcome.
-        viewModel.rateReview(42L, ReviewRating.UP_VOTE)
+        assertEquals(
+            ReviewVoteActionResult.SUBMITTED,
+            viewModel.voteReview(
+                (viewModel.state.value as BrowseReviewViewModel.UiState.Success).content.pageData.single(),
+                ReviewRating.UP_VOTE,
+                isAuthenticated = true,
+            ),
+        )
         advanceUntilIdle()
 
         val outcomes = mutableListOf<ReviewRateOutcome>()
@@ -185,9 +225,9 @@ class BrowseReviewViewModelRateTest {
         ),
     )
 
-    private fun stubPage() {
+    private fun stubPage(userRating: String? = null) {
         val content = PageContainer<Review>().apply {
-            pageData = listOf(review(id = 42L))
+            pageData = listOf(review(id = 42L, userRating = userRating))
         }
         runBlocking {
             reviewStore.apply(
@@ -195,7 +235,7 @@ class BrowseReviewViewModelRateTest {
                     queryKey = queryKey,
                     page = 1,
                     token = 1L,
-                    reviews = listOf(review(id = 42L).toReviewRecord(revision = 1L)),
+                    reviews = listOf(review(id = 42L, userRating = userRating).toReviewRecord(revision = 1L)),
                     pageInfo = null,
                 ),
             )

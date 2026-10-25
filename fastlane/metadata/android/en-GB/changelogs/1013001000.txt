@@ -1,0 +1,5 @@
+🚀 What's New:
+- The latest and trending feeds now use the modernized in-app list engine.
+
+📈 Improvements:
+- Removed the inactive sort menu from the latest and trending screens.

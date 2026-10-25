@@ -1,16 +1,23 @@
 package com.mxt.anitrend.view.fragment.list
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.referentialEqualityPolicy
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
-import com.mxt.anitrend.adapter.recycler.index.MediaAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
 import com.mxt.anitrend.extension.parcelable
 import com.mxt.anitrend.navigation.extension.NavigationArgs
@@ -20,12 +27,16 @@ import com.mxt.anitrend.model.entity.anilist.Genre
 import com.mxt.anitrend.model.entity.anilist.MediaTag
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.container.body.PageContainer
+import com.mxt.anitrend.ui.designsystem.AniTrendTheme
+import com.mxt.anitrend.ui.media.ManualGridAppendGate
+import com.mxt.anitrend.ui.mediabrowse.MediaBrowseGrid
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.util.collection.GenreTagUtil
 import com.mxt.anitrend.util.date.DateUtil
+import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.util.media.MediaBrowseUtil
 import com.mxt.anitrend.view.sheet.BottomSheetMediaFilter
@@ -106,8 +117,17 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
     private var mediaBrowseUtil: MediaBrowseUtil? = null
 
     private val settings: Settings by inject()
-
     private val mediaBrowseViewModel: MediaBrowseViewModel by viewModel()
+    private val mediaBrowseItems =
+        mutableStateOf<List<MediaBase>>(emptyList(), referentialEqualityPolicy())
+    private val mediaBrowseGridState = LazyGridState()
+    private val mediaAppendGate = ManualGridAppendGate()
+    private val browseStyle = mutableIntStateOf(KeyUtil.LIST_VIEW_STYLE_DEFAULT)
+    private val gridColumnsResource = mutableIntStateOf(R.integer.grid_list_x2)
+    private var isCompatType = false
+    private var activeBrowseRequestPage: Int? = null
+    private var requestStartItemCount = 0
+    private var browseRequestInFlight = false
 
     /** Distinguishes which filter an open sheet result belongs to. */
     protected enum class BrowseFilterKind { SORT, ORDER, GENRES, TAGS, TYPE, YEAR, STATUS }
@@ -158,40 +178,112 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
 
         isPager = true
         isFilterableEnabled = browseUtil.isFilterEnabled
-
-        val ctx = requireContext()
-        mAdapter = MediaAdapter(ctx, browseUtil.isCompactType)
-
-        mColumnSize =
-            if (browseUtil.isCompactType) {
-                R.integer.grid_giphy_x3
-            } else {
-                if (settings.mediaListStyle == KeyUtil.LIST_VIEW_STYLE_COMPACT_X1) {
-                    R.integer.single_list_x1
-                } else {
-                    R.integer.grid_list_x2
-                }
-            }
+        isCompatType = browseUtil.isCompactType
+        updateBrowseLayoutSettings()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        attachBrowseComposeView()
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 mediaBrowseViewModel.state.collect { state ->
                     when (state) {
-                        is MediaBrowseViewModel.UiState.Loading -> {
-                            // Loading is handled by swipeRefreshLayout in the base class
-                        }
-                        is MediaBrowseViewModel.UiState.Success -> {
-                            handleSuccess(state.content)
-                        }
+                        is MediaBrowseViewModel.UiState.Loading -> Unit
+                        is MediaBrowseViewModel.UiState.Success -> handleSuccess(state)
                         is MediaBrowseViewModel.UiState.Error -> {
+                            onBrowseRequestFailed()
                             showError(state.message)
                         }
                     }
                 }
+            }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (mediaBrowseItems.value.isEmpty()) {
+            showLoading()
+            onRefresh()
+        } else {
+            updateUI()
+        }
+    }
+
+    override fun onDestroyView() {
+        swipeRefreshLayout.scrollBoundary = null
+        super.onDestroyView()
+    }
+
+    private fun attachBrowseComposeView() {
+        val host =
+            ComposeView(requireContext()).apply {
+                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+                setContent {
+                    AniTrendTheme {
+                        MediaBrowseGrid(
+                            items = mediaBrowseItems.value,
+                            isCompatType = isCompatType,
+                            style = browseStyle.intValue,
+                            columnsResource = gridColumnsResource.intValue,
+                            listState = mediaBrowseGridState,
+                            onMediaClick = ::onBrowseMediaClick,
+                            onMediaLongClick = ::onBrowseMediaLongClick,
+                            onLoadMore = ::onGridLoadMore,
+                        )
+                    }
+                }
+            }
+        swipeRefreshLayout.addView(
+            host,
+            0,
+            ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT),
+        )
+        swipeRefreshLayout.scrollBoundary = { direction ->
+            when (direction) {
+                -1 -> mediaBrowseGridState.canScrollBackward
+                1 -> mediaBrowseGridState.canScrollForward
+                else -> false
+            }
+        }
+    }
+
+    private fun updateBrowseLayoutSettings() {
+        val style = settings.mediaListStyle
+        browseStyle.intValue = style
+        mColumnSize =
+            when {
+                isCompatType -> R.integer.grid_giphy_x3
+                style == KeyUtil.LIST_VIEW_STYLE_COMPACT_X1 -> R.integer.single_list_x1
+                else -> R.integer.grid_list_x2
+            }
+        gridColumnsResource.intValue = mColumnSize
+    }
+
+    private fun onBrowseMediaClick(media: MediaBase) {
+        navigateToMedia(MediaScreenParam(media.id, media.type))
+    }
+
+    private fun onBrowseMediaLongClick(media: MediaBase) {
+        if (settings.isAuthenticated) {
+            val host = activity ?: return
+            mediaActionUtil =
+                MediaActionUtil
+                    .Builder()
+                    .setId(media.id)
+                    .build(host)
+            mediaActionUtil.startSeriesAction()
+        } else {
+            context?.let {
+                NotifyUtil
+                    .makeText(
+                        it,
+                        R.string.info_login_req,
+                        R.drawable.ic_group_add_grey_600_18dp,
+                        Toast.LENGTH_SHORT,
+                    ).show()
             }
         }
     }
@@ -424,11 +516,101 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
+        if (key == getString(R.string.pref_key_list_view_style)) {
+            updateBrowseLayoutSettings()
+        }
+        if (key != null && isFilterableEnabled && GraphUtil.isKeyFilter(key)) {
+            resetBrowseContent()
+            showLoading()
+            onRefresh()
+        } else {
+            super.onSharedPreferenceChanged(sharedPreferences, key)
+        }
+    }
+
     override fun updateUI() {
-        injectAdapter()
+        if (mediaBrowseItems.value.isEmpty()) {
+            showEmpty(getString(R.string.layout_empty_response))
+        } else {
+            showContent()
+        }
+        if (swipeRefreshLayout.isRefreshing()) {
+            swipeRefreshLayout.setRefreshing(false)
+        }
+        if (swipeRefreshLayout.isLoading()) {
+            swipeRefreshLayout.setLoading(false)
+        }
+    }
+
+    private fun onGridLoadMore() {
+        if (browseRequestInFlight || !mediaAppendGate.canRequestNextPage) return
+        if (pageState.getPageInfo()?.hasNextPage() == false) return
+        pageState.currentPage += 1
+        pageState.currentOffset += KeyUtil.PAGING_LIMIT
+        swipeRefreshLayout.setLoading(true)
+        makeRequest()
+    }
+
+    protected fun onBrowseRequestStarted() {
+        browseRequestInFlight = true
+        activeBrowseRequestPage = pageState.currentPage
+        requestStartItemCount = mediaBrowseItems.value.size
+        mediaAppendGate.onRequestStarted()
+    }
+
+    protected fun onBrowseRequestFailed() {
+        if (activeBrowseRequestPage != null) {
+            mediaAppendGate.onRequestFailed()
+            browseRequestInFlight = false
+            activeBrowseRequestPage = null
+        }
+    }
+
+    protected fun resetBrowseContent() {
+        mediaBrowseItems.value = emptyList()
+        mediaAppendGate.onRequestSucceeded(itemsInPage = 0)
+        browseRequestInFlight = false
+        activeBrowseRequestPage = null
+        requestStartItemCount = 0
+        pageState.setPageInfo(null)
+    }
+
+    protected fun appendBrowsePage(pageItems: List<MediaBase>) {
+        val page = activeBrowseRequestPage ?: pageState.currentPage
+        val currentItems = if (page <= 1) emptyList() else mediaBrowseItems.value
+        val knownIds = HashSet<Long>(currentItems.size + pageItems.size)
+        val nextItems = ArrayList<MediaBase>(currentItems.size + pageItems.size)
+        currentItems.forEach { item ->
+            knownIds.add(item.id)
+            nextItems.add(item)
+        }
+        var itemsInPage = 0
+        pageItems.forEach { item ->
+            if (knownIds.add(item.id)) {
+                nextItems.add(item)
+                itemsInPage += 1
+            }
+        }
+        if (page <= 1 || itemsInPage > 0) {
+            mediaBrowseItems.value = nextItems
+        }
+        completeBrowseRequest(itemsInPage)
+    }
+
+    private fun completeBrowseRequest(itemsInPage: Int) {
+        mediaAppendGate.onRequestSucceeded(itemsInPage)
+        browseRequestInFlight = false
+        activeBrowseRequestPage = null
+        requestStartItemCount = 0
+        if (itemsInPage == 0) {
+            setLimitReached()
+        }
+        updateUI()
     }
 
     override fun makeRequest() {
+        onBrowseRequestStarted()
         // All filter reads go through NavigationArgs so the exact containsKey /
         // null-versus-empty semantics are captured in production helpers and are
         // JVM-testable. The browse destination has no stable identity of its own;
@@ -495,7 +677,7 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
 
         mediaBrowseViewModel.load(
             type = type,
-            page = mScrollListener.currentPage,
+            page = pageState.currentPage,
             pageLimit = NavigationArgs.intWithDefault(requestArgs.containsKey(KeyUtil.arg_page_limit), requestArgs.getInt(KeyUtil.arg_page_limit), KeyUtil.PAGING_LIMIT),
             season = season,
             sort = sort,
@@ -512,58 +694,30 @@ open class MediaBrowseFragment : FragmentBaseList<MediaBase, PageContainer<Media
     /** No-op: StateFlow collector above handles the response. */
     override fun onChanged(value: PageContainer<MediaBase>?) = Unit
 
-    private fun handleSuccess(value: PageContainer<MediaBase>) {
-        if (value.hasPageInfo()) {
-            setPageInfo(value.pageInfo)
+    private fun handleSuccess(state: MediaBrowseViewModel.UiState.Success) {
+        val content = state.content
+        if (content.hasPageInfo()) {
+            pageState.setPageInfo(content.pageInfo)
         }
-        // The ViewModel always emits the complete accumulated deduplicated snapshot
-        // (page one, page two, and store recombination alike), so every success
-        // replaces the adapter contents. Appending would duplicate every item that
-        // was already rendered on a previous emission.
-        mAdapter.onItemsInserted(value.pageData)
-        updateUI()
-        if (mAdapter.itemCount < 1) {
-            onPostProcessed(null)
-        }
-    }
+        // Success contains the complete accumulated, deduplicated list, including
+        // store recombinations; never append a success emission to the visible rows.
+        mediaBrowseItems.value = content.pageData
 
-    override fun onItemClick(
-        target: View,
-        data: IndexedValue<MediaBase>,
-    ) {
-        when (target.id) {
-            R.id.container -> {
-                navigateToMedia(MediaScreenParam(data.value.id, data.value.type))
-            }
-        }
-    }
-
-    override fun onItemLongClick(
-        target: View,
-        data: IndexedValue<MediaBase>,
-    ) {
-        when (target.id) {
-            R.id.container -> {
-                if (settings.isAuthenticated) {
-                    val host = activity ?: return
-                    mediaActionUtil =
-                        MediaActionUtil
-                            .Builder()
-                            .setId(data.value.id)
-                            .build(host)
-                    mediaActionUtil.startSeriesAction()
+        val requestPage = activeBrowseRequestPage
+        if (requestPage != null && requestPage in state.loadedPages) {
+            val itemsInPage =
+                if (requestPage <= 1) {
+                    content.pageData.size
                 } else {
-                    context?.let {
-                        NotifyUtil
-                            .makeText(
-                                it,
-                                R.string.info_login_req,
-                                R.drawable.ic_group_add_grey_600_18dp,
-                                Toast.LENGTH_SHORT,
-                            ).show()
-                    }
+                    (content.pageData.size - requestStartItemCount).coerceAtLeast(0)
                 }
+            completeBrowseRequest(itemsInPage)
+        } else if (!browseRequestInFlight) {
+            if (content.pageData.isEmpty()) {
+                mediaAppendGate.onRequestSucceeded(itemsInPage = 0)
+                setLimitReached()
             }
+            updateUI()
         }
     }
 }

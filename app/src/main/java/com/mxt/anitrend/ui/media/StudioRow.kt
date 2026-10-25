@@ -1,5 +1,6 @@
 package com.mxt.anitrend.ui.media
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,6 +31,7 @@ internal fun StudioRow(
     studioName: String,
     isFavourite: Boolean,
     modifier: Modifier = Modifier,
+    onClick: () -> Unit,
 ) {
     val typography = MaterialTheme.typography
     val nameStyle =
@@ -41,7 +43,10 @@ internal fun StudioRow(
         }
 
     Row(
-        modifier = modifier.fillMaxWidth(),
+        modifier =
+        modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
@@ -73,8 +78,8 @@ internal fun StudioRow(
 private fun StudioRowPreview() {
     AniTrendTheme {
         Column(verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lg_margin))) {
-            StudioRow(studioName = "Studio One", isFavourite = false)
-            StudioRow(studioName = "Studio Two", isFavourite = true)
+            StudioRow(studioName = "Studio One", isFavourite = false, onClick = {})
+            StudioRow(studioName = "Studio Two", isFavourite = true, onClick = {})
         }
     }
 }

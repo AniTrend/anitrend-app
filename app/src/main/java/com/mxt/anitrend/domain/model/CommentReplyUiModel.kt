@@ -3,12 +3,8 @@ package com.mxt.anitrend.domain.model
 import com.mxt.anitrend.domain.feed.model.FeedReplyRecord
 
 /**
- * Immutable render projection of a feed reply. `CommentListAdapter` renders
- * exclusively from this model and never touches a mutable legacy `FeedReply`
- * entity, so rows can be diffed and recycled safely.
- *
- * [isLikedByCurrentUser] is precomputed by the ViewModel from the current user
- * id so the adapter never resolves current-user business state locally.
+ * Immutable render projection for a feed reply. Compose rows consume only this snapshot,
+ * including server-operation state and the current user's precomputed like state.
  */
 data class CommentReplyUiModel(
     val id: Long,

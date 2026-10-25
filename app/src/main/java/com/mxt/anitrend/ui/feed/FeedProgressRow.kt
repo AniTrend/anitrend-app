@@ -31,9 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -44,9 +42,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import com.mxt.anitrend.R
-import com.mxt.anitrend.base.custom.view.widget.StatusDeleteWidget
 import com.mxt.anitrend.base.custom.view.widget.StatusDeleteWidgetState
 import com.mxt.anitrend.domain.model.FeedItemUiModel
 import com.mxt.anitrend.extension.getCompatColorAttr
@@ -59,29 +55,23 @@ import com.mxt.anitrend.ui.favourite.FavouriteActionState
 import com.mxt.anitrend.util.KeyUtil
 
 /**
- * Composes progress and media-list feed rows from immutable feed state while leaving actions with
- * their existing adapter and widget owners.
+ * Composes progress and media-list feed rows from immutable feed state.
  */
 @Composable
 internal fun FeedProgressRow(
     model: FeedItemUiModel,
     createdAtText: String,
     isListVariant: Boolean,
-    isRecycled: Boolean,
-    bindingEpoch: Int,
-    favouriteActionView: ComposeView?,
     onToggleLike: () -> Unit,
     onShowLikes: () -> Unit,
     onOpenComments: () -> Unit,
     onOpenProfile: () -> Unit,
     onOpenMedia: () -> Unit,
     onLongPressMedia: () -> Boolean,
-    onDelete: (Long, Int) -> Unit,
-    onDeleteWidgetCreated: (StatusDeleteWidget) -> Unit,
+    onDelete: (Long) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
-    val isPreview = LocalInspectionMode.current
     val typography = MaterialTheme.typography
     val rowTextStyle =
         remember(typography) {
@@ -112,30 +102,22 @@ internal fun FeedProgressRow(
             dimensionResource(R.dimen.lg_margin) +
             dimensionResource(R.dimen.xs_margin)
     val favouriteState =
-        remember(model.likeCount, model.isLikedByCurrentUser, model.isLikePending, isRecycled) {
-            if (isRecycled) {
-                FavouriteActionState(count = 0, isLiked = false, isEnabled = true, isLoading = false)
-            } else {
-                FavouriteActionState(
-                    count = model.likeCount,
-                    isLiked = model.isLikedByCurrentUser,
-                    isEnabled = !model.isLikePending,
-                    isLoading = model.isLikePending,
-                )
-            }
+        remember(model.likeCount, model.isLikedByCurrentUser, model.isLikePending) {
+            FavouriteActionState(
+                count = model.likeCount,
+                isLiked = model.isLikedByCurrentUser,
+                isEnabled = !model.isLikePending,
+                isLoading = model.isLikePending,
+            )
         }
     val deleteState =
-        remember(model.isDeletePending, isRecycled) {
-            if (isRecycled) {
-                StatusDeleteWidgetState(isEnabled = true, isLoading = false)
-            } else {
-                StatusDeleteWidgetState(
-                    isEnabled = !model.isDeletePending,
-                    isLoading = model.isDeletePending,
-                )
-            }
+        remember(model.isDeletePending) {
+            StatusDeleteWidgetState(
+                isEnabled = !model.isDeletePending,
+                isLoading = model.isDeletePending,
+            )
         }
-    val deleteCurrentFeed = remember(model, bindingEpoch, onDelete) { { onDelete(model.id, bindingEpoch) } }
+    val deleteCurrentFeed = remember(model, onDelete) { { onDelete(model.id) } }
     val cardShape = RoundedCornerShape(dimensionResource(R.dimen.lg_margin))
     val contextShape = RoundedCornerShape(dimensionResource(R.dimen.mg_margin))
 
@@ -161,7 +143,6 @@ internal fun FeedProgressRow(
                 FeedProgressAvatar(
                     imageUrl = model.userAvatarUrl,
                     profileDescription = profileDescription,
-                    isRecycled = isRecycled,
                     onClick = onOpenProfile,
                 )
                 Spacer(modifier = Modifier.width(dimensionResource(R.dimen.lg_margin)))
@@ -237,7 +218,6 @@ internal fun FeedProgressRow(
                     backgroundColor = coverColor,
                     outlineColor = outlineColor,
                     isListVariant = isListVariant,
-                    isRecycled = isRecycled,
                     onMediaClick = onOpenMedia,
                     onMediaLongClick = onLongPressMedia,
                 )
@@ -260,18 +240,11 @@ internal fun FeedProgressRow(
                 }
                 Spacer(modifier = Modifier.weight(1f))
                 if (!isListVariant) {
-                    if (isPreview) {
-                        FavouriteAction(
-                            state = favouriteState,
-                            onClick = onToggleLike,
-                            modifier = Modifier.testTag(R.id.widget_favourite.toString()),
-                        )
-                    } else {
-                        AndroidView(
-                            factory = { requireNotNull(favouriteActionView) },
-                            modifier = Modifier.testTag(R.id.widget_favourite.toString()),
-                        )
-                    }
+                    FavouriteAction(
+                        state = favouriteState,
+                        onClick = onToggleLike,
+                        modifier = Modifier.testTag(R.id.widget_favourite.toString()),
+                    )
                 }
                 FeedCommentAction(
                     replyCount = model.replyCount,
@@ -287,10 +260,8 @@ internal fun FeedProgressRow(
                 )
                 if (model.canDelete) {
                     FeedDeleteAction(
-                        isRecycled = isRecycled,
                         state = deleteState,
                         onClick = deleteCurrentFeed,
-                        onWidgetCreated = onDeleteWidgetCreated,
                         modifier =
                         Modifier
                             .padding(start = dimensionResource(R.dimen.lg_margin))
@@ -306,7 +277,6 @@ internal fun FeedProgressRow(
 private fun FeedProgressAvatar(
     imageUrl: String?,
     profileDescription: String,
-    isRecycled: Boolean,
     onClick: () -> Unit,
 ) {
     Box(
@@ -317,7 +287,6 @@ private fun FeedProgressAvatar(
             .clickable(
                 interactionSource = null,
                 indication = ripple(),
-                enabled = !isRecycled,
                 role = Role.Button,
                 onClick = onClick,
             ).semantics(mergeDescendants = true) {
@@ -339,7 +308,6 @@ private fun FeedProgressMediaImage(
     backgroundColor: Color,
     outlineColor: Color,
     isListVariant: Boolean,
-    isRecycled: Boolean,
     onMediaClick: () -> Unit,
     onMediaLongClick: () -> Boolean,
 ) {
@@ -349,7 +317,6 @@ private fun FeedProgressMediaImage(
             Modifier
         } else {
             Modifier.combinedClickable(
-                enabled = !isRecycled,
                 role = Role.Button,
                 onClick = onMediaClick,
                 onLongClick = { onMediaLongClick() },
@@ -419,17 +386,13 @@ private fun FeedProgressRowPreview() {
             model = previewItem,
             createdAtText = "25 minutes ago",
             isListVariant = false,
-            isRecycled = false,
-            bindingEpoch = 0,
-            favouriteActionView = null,
             onToggleLike = {},
             onShowLikes = {},
             onOpenComments = {},
             onOpenProfile = {},
             onOpenMedia = {},
             onLongPressMedia = { false },
-            onDelete = { _, _ -> },
-            onDeleteWidgetCreated = {},
+            onDelete = {},
         )
     }
 }

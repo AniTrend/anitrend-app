@@ -44,7 +44,6 @@ class MediaBrowseViewModel(
         data class Success(
             val content: PageContainer<MediaBase>,
             val loadedPages: Set<Int>,
-            val replaceExisting: Boolean = false,
         ) : UiState
         data class Error(val message: String) : UiState
     }
@@ -197,7 +196,6 @@ class MediaBrowseViewModel(
                             pageData = updatedMedia
                         },
                         loadedPages = screen.loadedPages,
-                        replaceExisting = screen.lastRequestedPage <= 1,
                     )
                 }
             }

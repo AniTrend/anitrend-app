@@ -43,20 +43,20 @@
 - `ViewModel` owns loading, parsing, filtering, and state. Activities, Fragments, and Custom Views observe and render.
 - New ViewModels extend `androidx.lifecycle.ViewModel` directly. Do not
   reintroduce the deleted legacy base-class wiring.
-- Compose and Navigation 3 are future direction only. Current production UI is the XML/View system with AndroidX Navigation 2.9.8. Do not claim Compose or Navigation 3 is active.
+- Production collections use Compose lazy lists, grids, and pagers inside existing XML/View activity and fragment shells. Navigation remains AndroidX Navigation 2.9.8; Navigation 3 is not active. See `docs/architecture/compose-migration-inventory.md` for the collection cutover and verification history.
 
 ### Coexistence with legacy
 - `CommonActivity` is the current Koin `activityScope` shell for activities. Existing presenter dependencies are compatibility debt that must not be expanded.
-- Direct-ViewModel activities on `CommonActivity` are already proven: `LoggingActivity`, `StudioActivity`, `ProfileActivity`, `MediaActivity`, `CharacterActivity`, and `StaffActivity`. `CommonActivity` remains a legacy shell to thin out.
+- The former direct-ViewModel activity precedents now live in Navigation 2 destinations such as `LoggingFragment`, `StudioFragment`, `ProfileFragment`, `MediaFragment`, `CharacterFragment`, and `StaffFragment`. `CommonActivity` remains the legacy main-shell boundary, not a reason to expand presenters.
 - Do not add new presenter usage. Presenters are legacy-only and should be removed during refactors instead of being carried forward.
 - When presenter dependencies still exist during legacy cleanup, inject the required presenter explicitly at the usage site with `by inject<T>()` rather than relying on removed base-class presenter wiring.
 
 ### Feature shape
-- **Local feature** (app-local data, no API/domain layer): `UI -> ViewModel -> local collaborators` (e.g. `LoggingActivity`, settings screens).
+- **Local feature** (app-local data, no API/domain layer): `UI -> ViewModel -> local collaborators` (e.g. `LoggingFragment`, settings screens).
 - **Domain feature** (API-backed, needs business logic): `UI -> ViewModel -> interactor/use case -> repository/data source`. Only required when a real domain boundary exists; do not force this for every screen.
 
 ### State and testing
-- New ViewModel state surfaces use `StateFlow` by default. `SharedFlow` has no current main-source usage; adopt it only for explicit one-shot events. `LiveData` is acceptable for screens already using it.
+- New ViewModel state surfaces use `StateFlow` by default. `SharedFlow` is reserved for explicit one-shot UI feedback, such as review submission feedback, never committed business state. `LiveData` is acceptable for screens already using it.
 - Inject dispatchers into new ViewModels for testability. Keep `lifecycleScope` usage in activities limited to UI-bound launches and observation glue.
 - Parsing, filtering, state reduction, and metadata assembly must be unit-testable outside the activity.
 
@@ -64,7 +64,7 @@
 - Custom views remain view-only. They must not own a ViewModel or initiate data loading. Activities/Fragments observe the ViewModel and push data into custom views.
 
 ### Reference
-- See `docs/superpowers/specs/2026-07-19-viewmodel-first-architecture-modernization-design.md` for the full design spec and migration strategy; `LoggingActivity` is the existing local-feature ViewModel-first precedent, not a future refactor target.
+- See `docs/superpowers/specs/2026-07-19-viewmodel-first-architecture-modernization-design.md` for the design spec and migration strategy. `LoggingFragment` and `LoggingViewModel` are the current local-feature precedent; older `LoggingActivity` references are historical.
 
 ## State synchronisation and mutation architecture
 
@@ -75,16 +75,18 @@ The full specification lives at `docs/architecture/state-synchronization-and-mut
 - Do not introduce repository `SharedFlow` mutation events (`mutationEvents`); the pattern appears only in the proposed specification and has no current main-source symbol. Business state must live in observable store or ViewModel state, not transient event streams.
 - Do not create one generic global store. Stores are domain-specific (`FeedStore`, `MediaListStore`).
 
-### No repository or coordinator access from adapters or widgets
-- Adapters and custom views must not resolve repositories or any Koin business dependency.
-- Adapters render immutable item models and forward actions via callbacks. Widgets render immutable state and emit user actions only.
-- Do not launch business coroutines from adapters, ViewHolders, or widgets.
+### Render-only collection cells and widgets
+- Lazy cells and custom views must not resolve repositories or any Koin business dependency.
+- Render immutable item state and forward actions through callbacks. Do not launch business coroutines from collection cells or widgets.
+- Legacy entity equality often compares IDs only. Snapshot every displayed field, including committed follow state, rather than relying on mutable entity fields to trigger rendering.
 
-### Immutable RecyclerView items
-- Migrated adapters use `ListAdapter` or `AsyncListDiffer` with immutable item UI models. No submitted list or item may be mutated after submission.
-- Adapters must not maintain a canonical list independent of the ViewModel. Fragments call `submitList(state.items)`.
-- Stable IDs must use actual stable domain IDs, not `hashCode()` or object identity. For heterogeneous lists, namespace the ID by entity type (for example, `"media:123"` vs `"character:123"`) so different item types that share an ID do not collide.
-- The generic `RecyclerViewAdapter` base class is legacy infrastructure that uses `MutableList`, `notifyDataSetChanged()`, and `hashCode()`-based stable IDs. It remains for non-migrated screens. Do not use it for new or migrated screens. Use `ListAdapter` with `DiffUtil` instead. Track its removal as follow-up infrastructure debt.
+### Immutable Compose collections
+- Use native Compose lazy lists/grids or pagers with immutable item snapshots. No submitted list or item may be mutated after submission.
+- ViewModels own loaded result snapshots; renderers must not create a second canonical entity collection or append a replayed success state.
+- Use stable domain IDs as keys, not `hashCode()`, object identity, or positions. Namespace heterogeneous keys by entity type, for example `"media:123"` and `"character:123"`.
+- App-owned RecyclerView, NavigationView, ViewPager2, adapter/holder/section infrastructure, and the generic RecyclerViewAdapter have been retired. Do not reintroduce them.
+- A manual paged collection has one append trigger, scoped query/page identity, ID-deduplicated snapshots, same-page explicit retry, and a terminal or duplicate-only append gate. Bridge actual lazy scroll state to native refresh boundaries; disable competing native bottom-load gestures.
+- Compose collections inside native bottom sheets use nested-scroll interop so mid-list downward gestures scroll content rather than dragging or dismissing the sheet.
 
 ### Identity-only navigation
 - Navigation destinations receive stable IDs and presentation-independent arguments, not complete mutable entities.
@@ -97,6 +99,7 @@ The full specification lives at `docs/architecture/state-synchronization-and-mut
 
 ### Reference
 - See `docs/architecture/state-synchronization-and-mutation-refactor.md` for phase gates, prohibited patterns, and completion criteria.
+- Historical RecyclerView renderer examples in that proposed specification do not override the current Compose collection rules above.
 
 ## Kotlin-first domain model migration
 - The migration is proposed, not complete. See `docs/adr/2026-08-01-kotlin-first-domain-model-and-navigation.md` and its companion inventory `docs/adr/2026-08-01-kotlin-first-domain-model-inventory.md`.

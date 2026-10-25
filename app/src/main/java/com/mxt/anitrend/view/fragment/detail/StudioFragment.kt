@@ -1,43 +1,56 @@
 package com.mxt.anitrend.view.fragment.detail
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.referentialEqualityPolicy
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.mxt.anitrend.R
-import com.mxt.anitrend.adapter.recycler.index.MediaAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
 import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget
 import com.mxt.anitrend.base.custom.view.widget.FavouriteWidgetRenderState
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.container.body.PageContainer
-import com.mxt.anitrend.navigation.extension.screenParam
 import com.mxt.anitrend.navigation.extension.navigateToMedia
+import com.mxt.anitrend.navigation.extension.screenParam
 import com.mxt.anitrend.navigation.model.MediaScreenParam
 import com.mxt.anitrend.navigation.model.StudioScreenParam
+import com.mxt.anitrend.ui.designsystem.AniTrendTheme
+import com.mxt.anitrend.ui.media.ManualGridAppendGate
+import com.mxt.anitrend.ui.media.MediaSeriesGrid
+import com.mxt.anitrend.ui.media.appendMediaSeriesPage
+import com.mxt.anitrend.ui.mediasearch.MediaSeriesCardUiState
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.Settings
+import com.mxt.anitrend.util.graphql.GraphUtil
 import com.mxt.anitrend.util.media.MediaActionUtil
 import com.mxt.anitrend.util.selectedIndex
 import com.mxt.anitrend.viewmodel.StudioMediaViewModel
 import com.mxt.anitrend.viewmodel.StudioViewModel
+import java.util.Locale
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.util.Locale
 
 /**
  * Unified Studio destination.
@@ -53,6 +66,12 @@ class StudioFragment : FragmentBaseList<MediaBase, ConnectionContainer<PageConta
     private var model: com.mxt.anitrend.domain.model.StudioRecord? = null
     private var favouriteWidget: FavouriteToolbarWidget? = null
 
+    private val mediaGridState = LazyGridState()
+    private val mediaAppendGate = ManualGridAppendGate()
+    private val mediaItems = mutableStateOf(emptyList<MediaSeriesCardUiState>(), referentialEqualityPolicy())
+    private var mediaLoading = false
+    private var lastMediaState: StudioMediaViewModel.UiState? = null
+    private var composeView: ComposeView? = null
     private val settings: Settings by inject()
     private val studioViewModel: StudioViewModel by viewModel()
     private val mediaViewModel: StudioMediaViewModel by viewModel()
@@ -81,13 +100,40 @@ class StudioFragment : FragmentBaseList<MediaBase, ConnectionContainer<PageConta
         isPager = true
         isFilterableEnabled = true
         setInflateMenu(R.menu.custom_menu)
-        mAdapter = MediaAdapter(requireContext(), true)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        composeView = ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                AniTrendTheme {
+                    MediaSeriesGrid(
+                        items = mediaItems.value,
+                        modifier = Modifier,
+                        listState = mediaGridState,
+                        columnsResource = mColumnSize,
+                        onMediaClick = ::openMedia,
+                        onMediaLongClick = ::openManage,
+                        onLoadMore = ::onGridLoadMore,
+                    )
+                }
+            }
+        }
+        swapRefreshTarget(requireNotNull(composeView))
+        setSwipeRefreshLayoutEnabled(false)
         observeStudio()
         observeMedia()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (mediaItems.value.isEmpty()) {
+            onRefresh()
+        } else {
+            updateUI()
+        }
     }
 
     private fun observeStudio() {
@@ -129,20 +175,30 @@ class StudioFragment : FragmentBaseList<MediaBase, ConnectionContainer<PageConta
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 mediaViewModel.state.collect { state ->
+                    if (state === lastMediaState) return@collect
+                    lastMediaState = state
                     when (state) {
-                        is StudioMediaViewModel.UiState.Loading -> showLoading()
+                        is StudioMediaViewModel.UiState.Loading -> {
+                            mediaLoading = true
+                            showLoading()
+                        }
                         is StudioMediaViewModel.UiState.Success -> {
+                            mediaLoading = false
                             if (!state.container.isEmpty) {
                                 val pageContainer = state.container.connection
                                 if (pageContainer.hasPageInfo()) {
-                                    setPageInfo(pageContainer.pageInfo)
+                                    pageState.setPageInfo(pageContainer.pageInfo)
                                 }
-                                onPostProcessed(pageContainer.pageData)
+                                renderMediaPage(pageContainer.pageData)
                             } else {
-                                onPostProcessed(emptyList())
+                                renderMediaPage(emptyList())
                             }
                         }
-                        is StudioMediaViewModel.UiState.Error -> showError(state.message)
+                        is StudioMediaViewModel.UiState.Error -> {
+                            mediaLoading = false
+                            mediaAppendGate.onRequestFailed()
+                            showError(state.message)
+                        }
                     }
                 }
             }
@@ -238,46 +294,112 @@ class StudioFragment : FragmentBaseList<MediaBase, ConnectionContainer<PageConta
 
     override fun updateUI() {
         setSwipeRefreshLayoutEnabled(false)
-        injectAdapter()
+        showContent()
+        if (swipeRefreshLayout.isRefreshing()) {
+            swipeRefreshLayout.setRefreshing(false)
+        } else if (swipeRefreshLayout.isLoading()) {
+            swipeRefreshLayout.setLoading(false)
+        }
     }
 
     override fun makeRequest() {
         if (studioId <= 0) {
+            mediaLoading = false
             showError(getString(R.string.text_error_request))
             return
         }
+        mediaAppendGate.onRequestStarted()
+        mediaLoading = true
         mediaViewModel.load(
             studioId = studioId,
-            page = mScrollListener.currentPage,
+            page = pageState.currentPage,
             perPage = KeyUtil.PAGING_LIMIT,
             sort = settings.mediaSort + settings.sortOrder,
         )
     }
 
-    override fun onChanged(value: ConnectionContainer<PageContainer<MediaBase>>?) = Unit
+    private fun renderMediaPage(content: List<MediaBase>?) {
+        val mapped = content.orEmpty().map { MediaSeriesCardUiState.from(requireContext(), it) }
+        if (mapped.isEmpty()) {
+            if (pageState.currentPage <= 1) {
+                mediaItems.value = emptyList()
+            }
+            mediaAppendGate.onRequestSucceeded(itemsInPage = 0)
+            setLimitReached()
+            showEmpty(getString(R.string.layout_empty_response))
+            return
+        }
+        val previous = if (pageState.currentPage <= 1) emptyList() else mediaItems.value
+        val next = appendMediaSeriesPage(previous, mapped)
+        mediaItems.value = next
+        mediaAppendGate.onRequestSucceeded(itemsInPage = next.size - previous.size)
+        updateUI()
+    }
 
-    override fun onItemClick(target: View, data: IndexedValue<MediaBase>) {
-        if (target.id == R.id.container) {
-            navigateToMedia(MediaScreenParam(data.value.id, data.value.type))
+    private fun onGridLoadMore() {
+        if (
+            mediaLoading ||
+            !mediaAppendGate.canRequestNextPage ||
+            pageState.getPageInfo()?.hasNextPage() == false
+        ) {
+            return
+        }
+        mediaLoading = true
+        pageState.currentPage++
+        pageState.currentOffset += KeyUtil.PAGING_LIMIT
+        swipeRefreshLayout.setLoading(true)
+        makeRequest()
+    }
+
+    private fun swapRefreshTarget(host: View) {
+        if (host.parent !== swipeRefreshLayout) {
+            (host.parent as? ViewGroup)?.removeView(host)
+            swipeRefreshLayout.addView(
+                host,
+                0,
+                ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT),
+            )
+        }
+        swipeRefreshLayout.scrollBoundary = { direction ->
+            if (direction < 0) mediaGridState.canScrollBackward else mediaGridState.canScrollForward
         }
     }
 
-    override fun onItemLongClick(target: View, data: IndexedValue<MediaBase>) {
-        if (target.id == R.id.container) {
-            if (settings.isAuthenticated) {
-                val host = activity ?: return
-                mediaActionUtil = MediaActionUtil.Builder().setId(data.value.id).build(host)
-                mediaActionUtil.startSeriesAction()
-            } else {
-                context?.let {
-                    NotifyUtil.makeText(
-                        it,
-                        R.string.info_login_req,
-                        R.drawable.ic_group_add_grey_600_18dp,
-                        Toast.LENGTH_SHORT,
-                    ).show()
-                }
+    private fun openMedia(item: MediaSeriesCardUiState) {
+        navigateToMedia(MediaScreenParam(item.id, item.renderModel.mediaType))
+    }
+
+    private fun openManage(item: MediaSeriesCardUiState) {
+        openManage(item.id)
+    }
+
+    private fun openManage(mediaId: Long) {
+        if (settings.isAuthenticated) {
+            val host = activity ?: return
+            mediaActionUtil = MediaActionUtil.Builder().setId(mediaId).build(host)
+            mediaActionUtil.startSeriesAction()
+        } else {
+            context?.let {
+                NotifyUtil.makeText(
+                    it,
+                    R.string.info_login_req,
+                    R.drawable.ic_group_add_grey_600_18dp,
+                    Toast.LENGTH_SHORT,
+                ).show()
             }
+        }
+    }
+
+    override fun onChanged(value: ConnectionContainer<PageContainer<MediaBase>>?) = Unit
+
+    override fun onSharedPreferenceChanged(
+        sharedPreferences: SharedPreferences,
+        key: String?,
+    ) {
+        if (key != null && isFilterableEnabled && GraphUtil.isKeyFilter(key)) {
+            showLoading()
+            mediaItems.value = emptyList()
+            onRefresh()
         }
     }
 
@@ -289,6 +411,8 @@ class StudioFragment : FragmentBaseList<MediaBase, ConnectionContainer<PageConta
     }
 
     override fun onDestroyView() {
+        swipeRefreshLayout.scrollBoundary = null
+        composeView = null
         favouriteWidget?.setOnToggleAction(null)
         favouriteWidget = null
         super.onDestroyView()

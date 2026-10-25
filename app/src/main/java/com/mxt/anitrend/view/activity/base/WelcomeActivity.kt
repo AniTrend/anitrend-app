@@ -2,21 +2,20 @@ package com.mxt.anitrend.view.activity.base
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.children
-import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.ViewPager2
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import com.mxt.anitrend.R
 import com.mxt.anitrend.databinding.ActivityWelcomeBinding
-import com.mxt.anitrend.databinding.ItemOnboardingPageBinding
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.view.activity.CommonActivity
 import com.mxt.anitrend.view.activity.index.MainActivity
+import com.mxt.anitrend.ui.designsystem.AniTrendTheme
+import com.mxt.anitrend.ui.onboarding.OnboardingPager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /** Hosts the first-run onboarding flow and routes users into the main activity. */
@@ -24,6 +23,8 @@ class WelcomeActivity : CommonActivity() {
 
     private val onboardingViewModel by viewModel<OnboardingViewModel>()
     private lateinit var binding: ActivityWelcomeBinding
+    private val advanceRequests = mutableIntStateOf(0)
+    private var currentPage = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,26 +46,25 @@ class WelcomeActivity : CommonActivity() {
         }
         ViewCompat.requestApplyInsets(binding.root)
 
-        val adapter = OnboardingAdapter(onboardingViewModel.pages)
-        binding.viewPager.adapter = adapter
-
-        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                updatePageIndicator(position)
-                if (position == onboardingViewModel.pages.size - 1) {
-                    binding.actionButton.setText(R.string.get_started)
-                } else {
-                    binding.actionButton.setText(R.string.action_onboarding_continue)
+        binding.viewPager.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                AniTrendTheme {
+                    OnboardingPager(
+                        pages = onboardingViewModel.pages,
+                        advanceRequests = advanceRequests.intValue,
+                        onPageChanged = { position ->
+                            currentPage = position
+                            updatePageIndicator(position)
+                        },
+                    )
                 }
             }
-        })
-        updatePageIndicator(binding.viewPager.currentItem)
+        }
 
         binding.actionButton.setOnClickListener {
-            val currentItem = binding.viewPager.currentItem
-            if (currentItem < onboardingViewModel.pages.size - 1) {
-                binding.viewPager.currentItem = currentItem + 1
+            if (currentPage < onboardingViewModel.pages.lastIndex) {
+                advanceRequests.intValue++
             } else {
                 onFinishButtonPressed()
             }
@@ -75,6 +75,9 @@ class WelcomeActivity : CommonActivity() {
         binding.indicatorContainer.children.forEachIndexed { index, view ->
             view.isSelected = index == position
         }
+        binding.actionButton.setText(
+            if (position == onboardingViewModel.pages.lastIndex) R.string.get_started else R.string.action_onboarding_continue,
+        )
     }
 
     private fun onFinishButtonPressed() {
@@ -92,32 +95,5 @@ class WelcomeActivity : CommonActivity() {
                 View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
                 View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         }
-    }
-
-    private class OnboardingAdapter(
-        private val pages: List<OnboardingViewModel.OnboardingPage>,
-    ) : RecyclerView.Adapter<OnboardingAdapter.ViewHolder>() {
-
-        class ViewHolder(val binding: ItemOnboardingPageBinding) : RecyclerView.ViewHolder(binding.root)
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-            val binding = ItemOnboardingPageBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false,
-            )
-            return ViewHolder(binding)
-        }
-
-        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            val page = pages[position]
-            holder.binding.title.setText(page.titleRes)
-            holder.binding.description.setText(page.descriptionRes)
-            holder.binding.heroContainer.removeAllViews()
-            LayoutInflater.from(holder.binding.root.context)
-                .inflate(page.heroLayoutRes, holder.binding.heroContainer, true)
-        }
-
-        override fun getItemCount() = pages.size
     }
 }

@@ -64,9 +64,16 @@ class RatingTextView :
     }
 
     fun setListStatus(mediaBase: MediaBase) {
-        if (mediaBase.mediaListEntry != null) {
+        setListStatus(mediaBase.mediaListEntry != null, mediaBase.mediaListEntry?.status)
+    }
+
+    fun setListStatus(
+        hasMediaListEntry: Boolean,
+        status: String?,
+    ) {
+        if (hasMediaListEntry) {
             binding.ratingListStatus.visibility = View.VISIBLE
-            when (mediaBase.mediaListEntry?.status) {
+            when (status) {
                 KeyUtil.CURRENT -> binding.ratingListStatus.setTintDrawable(
                     R.drawable.ic_remove_red_eye_white_18dp,
                     R.color.white,

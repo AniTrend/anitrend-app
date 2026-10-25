@@ -155,6 +155,10 @@ class CustomSwipeRefreshLayout @JvmOverloads constructor(
     }
 
     private fun ensureTarget() {
+        // A cached target that left this container must not pin measurement forever.
+        if (target?.parent !== this) {
+            target = null
+        }
         if (target == null) {
             for (i in 0 until childCount) {
                 val child = getChildAt(i)
@@ -176,9 +180,7 @@ class CustomSwipeRefreshLayout @JvmOverloads constructor(
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        if (target == null) {
-            ensureTarget()
-        }
+        ensureTarget()
         target?.measure(
             MeasureSpec.makeMeasureSpec(
                 measuredWidth - paddingLeft - paddingRight,
@@ -208,9 +210,7 @@ class CustomSwipeRefreshLayout @JvmOverloads constructor(
         if (childCount == 0) {
             return
         }
-        if (target == null) {
-            ensureTarget()
-        }
+        ensureTarget()
         target?.let { child ->
             val childLeft = paddingLeft
             val childTop = paddingTop
@@ -449,9 +449,19 @@ class CustomSwipeRefreshLayout @JvmOverloads constructor(
 
     private fun isAnimationRunning(animation: Animation?): Boolean = animation != null && animation.hasStarted() && !animation.hasEnded()
 
-    fun canChildScrollUp(): Boolean = target?.let { it.canScrollVertically(-1) } ?: false
+    /**
+     * Optional scroll-boundary oracle for targets that cannot answer
+     * `canScrollVertically` themselves (Compose hosts do not delegate to their
+     * internal scrolling child). Receives -1 toward the start, 1 toward the end;
+     * when null the target's own answer is used.
+     */
+    var scrollBoundary: ((Int) -> Boolean)? = null
 
-    fun canChildScrollDown(): Boolean = target?.let { it.canScrollVertically(1) } ?: false
+    fun canChildScrollUp(): Boolean = scrollBoundary?.invoke(-1)
+        ?: target?.let { it.canScrollVertically(-1) } ?: false
+
+    fun canChildScrollDown(): Boolean = scrollBoundary?.invoke(1)
+        ?: target?.let { it.canScrollVertically(1) } ?: false
 
     override fun requestDisallowInterceptTouchEvent(b: Boolean) {
         val targetView = target

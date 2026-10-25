@@ -15,8 +15,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/links_recycler"
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/links_compose_view"
                     android:layout_margin="@dimen/lg_margin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -47,8 +47,8 @@
 
                 </com.mxt.anitrend.base.custom.view.container.CardViewBase>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/ranking_recycler"
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/ranking_compose_view"
                     android:layout_margin="@dimen/lg_margin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />

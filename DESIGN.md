@@ -151,16 +151,19 @@ Sheets are edge-to-edge. The content scrolls, but the action bar and app bar sta
 - Use `?attr/textAppearanceLabelMedium` for chip text.
 
 ### Lists
-- Use `RecyclerView` with consistent item layouts.
-- Item title: `?attr/textAppearanceBodyMedium`, `?attr/colorOnSurface`.
-- Item subtitle: `?attr/textAppearanceBodySmall`, `?attr/colorOnSurfaceVariant`.
-- Trailing actions use `?attr/materialIconButtonStyle`.
+- Use native Compose `LazyColumn`, `LazyRow`, lazy grids, and pagers for collections, with consistent item layouts and stable domain keys.
+- Bridge existing app themes through `AniTrendTheme`. Item titles use `MaterialTheme.typography.bodyMedium` and `colorScheme.onSurface`; subtitles use `bodySmall` and `onSurfaceVariant`.
+- Use Compose M3 icon buttons for trailing actions. Retained stateless View interop must receive immutable display values and use the corresponding XML M3 tokens.
+- Grouped details use direct lazy headers and keyed rows, not nested adapters or vertically nested collection scrollers. Native bottom-sheet collection hosts use nested-scroll interop.
 - Avoid arbitrary item heights. Use the same spacing tokens as the rest of the app.
 
 ### Navigation
 - Top app bars use `LightToolbarTheme`, `DarkToolbarTheme`, or `BlackToolbarTheme`.
 - Overflow menus use `PopupThemeLight` or `PopupThemeDark`, extending `Widget.Material3.PopupMenu.Overflow`.
 - Bottom navigation follows the M3 component and the active icon color is `colorPrimary`.
+- The main drawer uses one Compose lazy list inside the existing `DrawerLayout`. Its width is capped at `320.dp` and respects the native parent's available width without subtracting a second inset.
+- The drawer header is `150.dp`, rows are `48.dp`, and the header scrolls with the menu when space is constrained. Selected rows use `primary`/`onPrimary`; unselected icons and labels explicitly use `onSurface` on `surface`, including dark and black themes.
+- Preserve native drawer toggle/back behavior, authentication visibility, selected destination, header/avatar actions, unread counts, and flavor-specific update actions.
 
 ### Custom views
 - Custom views must read M3 tokens and never hardcode colors or sizes.
@@ -198,6 +201,6 @@ Progress dialogs must be lifecycle-aware. Tie them to the request lifecycle and 
 - Do use text buttons with `colorError` for destructive actions. Do not give destructive actions the same visual weight as save actions.
 - Do use `?attr/materialIconButtonStyle` for icon buttons. Do not tint icon buttons with `?colorAccent`.
 - Do use `ChipGroup` with filter chips for multi-select. Do not use nested `CheckBox` grids for lists of choices.
-- Do use `NestedScrollView` in bottom sheets. Do not use `ScrollView`.
+- Do use `NestedScrollView` for View-based sheet forms, not `ScrollView`. Compose collection sheets keep a single lazy scroller with native nested-scroll interop; do not wrap it in a vertical scroll view.
 - Do keep custom views view-only. Do not let custom views initiate loading or own ViewModels.
 - Do keep the manage list editor as the reference implementation. Future sheets, dialogs, and lists should reuse its spacing, card grouping, and typography choices.

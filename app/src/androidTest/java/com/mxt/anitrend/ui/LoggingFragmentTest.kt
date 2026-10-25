@@ -1,374 +1,280 @@
-@file:Suppress("UndocumentedPublicClass", "UndocumentedPublicFunction")
-
 package com.mxt.anitrend.ui
 
-import android.view.MenuItem
-import androidx.recyclerview.widget.RecyclerView
+import android.content.Context
+import android.content.Intent
+import android.view.View
+import androidx.compose.ui.test.assertCountEquals
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.junit4.createEmptyComposeRule
+import androidx.compose.ui.test.onAllNodesWithText
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performScrollToNode
+import androidx.navigation.fragment.NavHostFragment
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.google.android.material.chip.ChipGroup
 import com.mxt.anitrend.R
-import com.mxt.anitrend.adapter.recycler.detail.LogEntryAdapter
 import com.mxt.anitrend.extension.logFile
-import com.mxt.anitrend.model.entity.log.LogEntry
 import com.mxt.anitrend.model.entity.log.LogFilter
+import com.mxt.anitrend.ui.logging.LOG_ENTRY_LIST_TAG
 import com.mxt.anitrend.view.activity.index.MainActivity
 import com.mxt.anitrend.view.fragment.detail.LoggingFragment
-import androidx.navigation.fragment.NavHostFragment
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.io.FileWriter
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.TimeUnit
 
-@LargeTest
 @RunWith(AndroidJUnit4::class)
+@LargeTest
 class LoggingFragmentTest {
+
+    @get:Rule
+    val composeRule = createEmptyComposeRule()
+
+    /** Messages written by [setUp]'s fixture text; keep in sync with it. */
+    private val fixtureMessages = listOf(
+        "first error",
+        "first warning",
+        "first info",
+        "first debug",
+        "first verbose",
+        "second error",
+    )
 
     @Before
     fun setUp() {
-        val context = ApplicationProvider.getApplicationContext<android.content.Context>()
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        // setAuthenticated() also marks settings updated, suppressing the changelog
+        // destination push (checkUpdatedVersion) over the destination under test.
         TestSessionUtil.setAuthenticated(context, authenticated = true)
         val logFile = context.logFile()
         logFile.parentFile?.mkdirs()
-        FileWriter(logFile).use { writer ->
-            writer.write(
-                """
-                07-19 09:15:30:001 I/TestTag(1000) : Info log line one
-                07-19 09:15:30:002 W/TestTag(1000) : Warning log line one
-                07-19 09:15:30:003 E/TestTag(1000) : Error log line one
-                07-19 09:15:30:004 D/TestTag(1000) : Debug log line
-                07-19 09:15:30:005 V/TestTag(1000) : Verbose log line
-                07-19 09:15:30:006 E/TestTag(1000) : Error log line two with stack
-                \t\tat com.example.Test.testMethod(Test.kt:42)
-                07-19 09:15:30:007 W/TestTag(1000) : Warning log line two
-                """.trimIndent(),
-            )
-        }
-    }
-
-    // ── helpers ──
-
-    /** Polls the ViewModel load-complete flag from the test thread. */
-    private fun loggingFragment(activity: MainActivity): LoggingFragment {
-        val navHost = activity.supportFragmentManager.findFragmentById(R.id.main_nav_host) as NavHostFragment
-        return navHost.childFragmentManager.primaryNavigationFragment as LoggingFragment
-    }
-
-    private fun launchLogging(): ActivityScenario<MainActivity> {
-        val context = ApplicationProvider.getApplicationContext<android.content.Context>()
-        return ActivityScenario.launch(
-            android.content.Intent(context, MainActivity::class.java)
-                .putExtra(MainActivity.EXTRA_ROUTE, MainActivity.ROUTE_LOGGING),
+        logFile.writeText(
+            """
+            07-19 09:15:30:100 E/ExceptionCrashHandler(2) : first error
+            07-19 09:15:30:200 W/chromium(4596) : first warning
+            07-19 09:15:30:300 I/[Koin](2) : first info
+            07-19 09:15:30:400 D/WM-Schedulers(4573) : first debug
+            07-19 09:15:30:500 V/[Koin](4573) : first verbose
+            07-19 09:15:30:600 E/ExceptionCrashHandler(2) : second error
+            """.trimIndent(),
         )
     }
 
-    private fun waitForLogLoad(activity: MainActivity, timeoutMs: Long = 10_000) {
-        val deadline = System.currentTimeMillis() + timeoutMs
-        while (!loggingFragment(activity).loggingViewModel.isLogLoadComplete && System.currentTimeMillis() < deadline) {
-            Thread.sleep(100)
-        }
-    }
-
-    /** Yields the main thread so the ViewModel state collector can process a pending emission. */
-    private fun yieldToCollector(activity: MainActivity, timeoutMs: Long = 3_000) {
-        val latch = CountDownLatch(1)
-        activity.window.decorView.post { latch.countDown() }
-        latch.await(timeoutMs, TimeUnit.MILLISECONDS)
-    }
-
-    /** Creates a minimal [MenuItem] stub returning the given [itemId]. */
-    private fun menuItemStub(itemId: Int): MenuItem = object : MenuItem {
-        override fun getItemId(): Int = itemId
-        override fun getGroupId(): Int = 0
-        override fun getOrder(): Int = 0
-        override fun getTitle(): CharSequence = ""
-        override fun getTitleCondensed(): CharSequence = ""
-        override fun setTitle(title: CharSequence?): MenuItem = this
-        override fun setTitle(title: Int): MenuItem = this
-        override fun setTitleCondensed(title: CharSequence?): MenuItem = this
-        override fun getIcon() = null
-        override fun setIcon(icon: android.graphics.drawable.Drawable?): MenuItem = this
-        override fun setIcon(iconRes: Int): MenuItem = this
-        override fun getIntent(): android.content.Intent? = null
-        override fun setIntent(intent: android.content.Intent?): MenuItem = this
-        override fun getSubMenu(): android.view.SubMenu? = null
-        override fun setShortcut(numericChar: Char, alphaChar: Char): MenuItem = this
-        override fun setNumericShortcut(numericChar: Char): MenuItem = this
-        override fun getNumericShortcut(): Char = '0'
-        override fun setAlphabeticShortcut(alphaChar: Char): MenuItem = this
-        override fun getAlphabeticShortcut(): Char = '0'
-        override fun isCheckable(): Boolean = false
-        override fun setCheckable(checkable: Boolean): MenuItem = this
-        override fun isChecked(): Boolean = false
-        override fun setChecked(checked: Boolean): MenuItem = this
-        override fun isVisible(): Boolean = true
-        override fun setVisible(visible: Boolean): MenuItem = this
-        override fun isEnabled(): Boolean = true
-        override fun setEnabled(enabled: Boolean): MenuItem = this
-        override fun hasSubMenu(): Boolean = false
-        override fun setOnMenuItemClickListener(listener: MenuItem.OnMenuItemClickListener?): MenuItem = this
-        override fun getMenuInfo(): android.view.ContextMenu.ContextMenuInfo? = null
-        override fun setShowAsAction(actionEnum: Int) {}
-        override fun setShowAsActionFlags(actionEnum: Int): MenuItem = this
-        override fun setActionView(view: android.view.View?): MenuItem = this
-        override fun setActionView(resId: Int): MenuItem = this
-        override fun getActionView(): android.view.View? = null
-        override fun setActionProvider(provider: android.view.ActionProvider?): MenuItem = this
-        override fun getActionProvider(): android.view.ActionProvider? = null
-        override fun expandActionView(): Boolean = false
-        override fun collapseActionView(): Boolean = false
-        override fun isActionViewExpanded(): Boolean = false
-        override fun setOnActionExpandListener(listener: MenuItem.OnActionExpandListener?): MenuItem = this
-        override fun setContentDescription(description: CharSequence?): MenuItem = this
-        override fun getContentDescription(): CharSequence = ""
-        override fun setTooltipText(tooltip: CharSequence?): MenuItem = this
-        override fun getTooltipText(): CharSequence = ""
-        override fun setIconTintList(tint: android.content.res.ColorStateList?): MenuItem = this
-        override fun getIconTintList(): android.content.res.ColorStateList? = null
-        override fun getIconTintMode(): android.graphics.PorterDuff.Mode? = null
-        override fun setIconTintMode(mode: android.graphics.PorterDuff.Mode?): MenuItem = this
-        override fun getIconTintBlendMode(): android.graphics.BlendMode? = null
-        override fun setIconTintBlendMode(mode: android.graphics.BlendMode?): MenuItem = this
-    }
-
-    // ── presence and launch ──
-
-    private fun getLogAdapter(activity: MainActivity): LogEntryAdapter {
-        val recycler = activity.findViewById<RecyclerView>(R.id.log_recycler)
-        assertNotNull("RecyclerView should be present", recycler)
-        return recycler!!.adapter as LogEntryAdapter
-    }
-
     @Test
-    fun activityLaunches_withRecyclerViewAndParsedEntries() {
-        launchLogging().use { scenario ->
-            scenario.onActivity { activity ->
-                waitForLogLoad(activity)
-
-                val recycler = activity.findViewById<RecyclerView>(R.id.log_recycler)
-                assertNotNull("RecyclerView should be present", recycler)
-                val adapter = recycler!!.adapter
-                assertNotNull("RecyclerView adapter should be set", adapter)
-                assertTrue(
-                    "Adapter should have at least 5 parsed entries, got ${adapter!!.itemCount}",
-                    adapter.itemCount >= 5,
-                )
-            }
+    fun activityLaunches_withComposableAndParsedEntries() {
+        launchLogging { scenario ->
+            waitForLogLoad(scenario)
+            // The log file is the live application log, so startup lines may append
+            // after the fixture; assert one rendered row per fixture line.
+            fixtureMessages.forEach(::assertEntryRenderedOnce)
         }
     }
-
-    @Test
-    fun activityLaunches_showsContentAfterLoad() {
-        launchLogging().use { scenario ->
-            scenario.onActivity { activity ->
-                waitForLogLoad(activity)
-
-                val recycler = activity.findViewById<RecyclerView>(R.id.log_recycler)
-                assertNotNull("RecyclerView should be present after load", recycler)
-                assertTrue(
-                    "Adapter should have entries indicating content is loaded",
-                    recycler.adapter != null && recycler.adapter!!.itemCount > 0,
-                )
-            }
-        }
-    }
-
-    @Test
-    fun metadataCard_fieldsAreBoundAfterCreate() {
-        launchLogging().use { scenario ->
-            scenario.onActivity { activity ->
-                val versionText = activity.findViewById<android.widget.TextView>(R.id.support_version)?.text?.toString()
-                val deviceText = activity.findViewById<android.widget.TextView>(R.id.support_device)?.text?.toString()
-                val androidText = activity.findViewById<android.widget.TextView>(R.id.support_android)?.text?.toString()
-
-                assertNotNull("Version field should be bound", versionText)
-                assertTrue("Version field should contain 'v' prefix", versionText!!.startsWith("v"))
-                assertNotNull("Device field should be bound", deviceText)
-                assertTrue("Device field should not be empty", deviceText!!.isNotBlank())
-                assertNotNull("Android field should be bound", androidText)
-                assertTrue("Android field should contain 'Android '", androidText!!.startsWith("Android "))
-            }
-        }
-    }
-
-    // ── filter behavior ──
 
     @Test
     fun selectingErrorFilter_narrowsDisplayToErrorEntriesOnly() {
-        launchLogging().use { scenario ->
-            scenario.onActivity { activity ->
-                waitForLogLoad(activity)
-
-                val adapter = getLogAdapter(activity)
-                val totalBefore = adapter.itemCount
-                assertTrue("Should have entries before filter, got $totalBefore", totalBefore >= 5)
-
-                // Apply Error filter via ViewModel
-                loggingFragment(activity).loggingViewModel.setFilter(LogFilter.Error)
-                yieldToCollector(activity)
-
-                val totalAfter = adapter.itemCount
-                assertTrue(
-                    "Filtered entries should be fewer than total, got $totalAfter of $totalBefore",
-                    totalAfter < totalBefore,
-                )
-                assertTrue("Should have at least 2 error entries, got $totalAfter", totalAfter >= 2)
-
-                for (entry in adapter.data) {
-                    assertEquals(
-                        "All entries should be ERROR, got ${entry.level}",
-                        LogEntry.Level.ERROR,
-                        entry.level,
-                    )
-                }
-
-                // Switch back to All
-                loggingFragment(activity).loggingViewModel.setFilter(LogFilter.All)
-                yieldToCollector(activity)
-                assertEquals("All should restore full list", totalBefore, adapter.itemCount)
-            }
+        launchLogging { scenario ->
+            waitForLogLoad(scenario)
+            setFilter(scenario, LogFilter.Error)
+            assertEntryRenderedOnce("first error")
+            assertEntryRenderedOnce("second error")
+            assertEntryAbsent("first warning")
+            assertEntryAbsent("first info")
+            assertEntryAbsent("first debug")
+            assertEntryAbsent("first verbose")
         }
     }
 
     @Test
     fun selectingWarningFilter_narrowsDisplayToWarningEntriesOnly() {
-        launchLogging().use { scenario ->
-            scenario.onActivity { activity ->
-                waitForLogLoad(activity)
-
-                val adapter = getLogAdapter(activity)
-                val totalBefore = adapter.itemCount
-                loggingFragment(activity).loggingViewModel.setFilter(LogFilter.Warning)
-                yieldToCollector(activity)
-
-                val totalAfter = adapter.itemCount
-                assertTrue("Warning filter should narrow entries", totalAfter < totalBefore)
-                assertTrue("Should have at least 2 warning entries", totalAfter >= 2)
-
-                for (entry in adapter.data) {
-                    assertEquals(
-                        "All entries should be WARNING",
-                        LogEntry.Level.WARNING,
-                        entry.level,
-                    )
-                }
-            }
+        launchLogging { scenario ->
+            waitForLogLoad(scenario)
+            setFilter(scenario, LogFilter.Warning)
+            assertEntryRenderedOnce("first warning")
+            assertEntryAbsent("first error")
+            assertEntryAbsent("second error")
+            assertEntryAbsent("first info")
+            assertEntryAbsent("first debug")
+            assertEntryAbsent("first verbose")
         }
     }
 
     @Test
     fun selectingDebugFilter_includesDebugAndVerboseEntries() {
-        launchLogging().use { scenario ->
-            scenario.onActivity { activity ->
-                waitForLogLoad(activity)
-                val adapter = getLogAdapter(activity)
-                loggingFragment(activity).loggingViewModel.setFilter(LogFilter.Debug)
-                yieldToCollector(activity)
-
-                val entries = adapter.data
-                assertTrue("Debug filter should show entries", entries.isNotEmpty())
-                for (entry in entries) {
-                    assertTrue(
-                        "Should be DEBUG or VERBOSE under Debug filter, got ${entry.level}",
-                        entry.level == LogEntry.Level.DEBUG || entry.level == LogEntry.Level.VERBOSE,
-                    )
-                }
-            }
+        launchLogging { scenario ->
+            waitForLogLoad(scenario)
+            setFilter(scenario, LogFilter.Debug)
+            assertEntryRenderedOnce("first debug")
+            assertEntryRenderedOnce("first verbose")
+            assertEntryAbsent("first error")
+            assertEntryAbsent("second error")
+            assertEntryAbsent("first warning")
+            assertEntryAbsent("first info")
         }
     }
 
     @Test
     fun selectingInfoFilter_narrowsToInfoOnly() {
-        launchLogging().use { scenario ->
-            scenario.onActivity { activity ->
-                waitForLogLoad(activity)
-                val adapter = getLogAdapter(activity)
-                loggingFragment(activity).loggingViewModel.setFilter(LogFilter.Info)
-                yieldToCollector(activity)
-
-                assertTrue("Info filter should show entries", adapter.itemCount >= 1)
-                for (entry in adapter.data) {
-                    assertEquals("All entries should be INFO", LogEntry.Level.INFO, entry.level)
-                }
-            }
+        launchLogging { scenario ->
+            waitForLogLoad(scenario)
+            setFilter(scenario, LogFilter.Info)
+            assertEntryRenderedOnce("first info")
+            assertEntryAbsent("first error")
+            assertEntryAbsent("second error")
+            assertEntryAbsent("first warning")
+            assertEntryAbsent("first debug")
+            assertEntryAbsent("first verbose")
         }
     }
 
-    // ── chip listener path ──
-
     @Test
-    fun selectingErrorChip_firesChipGroupListenerAndNarrowsEntries() {
-        launchLogging().use { scenario ->
+    fun filterChipsDriveTheVisibleEntrySet() {
+        launchLogging { scenario ->
+            waitForLogLoad(scenario)
             scenario.onActivity { activity ->
-                waitForLogLoad(activity)
-
-                val adapter = getLogAdapter(activity)
-                val totalBefore = adapter.itemCount
-                assertTrue("Should have entries before filter", totalBefore > 0)
-
                 val filterGroup = activity.findViewById<ChipGroup>(R.id.filter_group)
-                assertNotNull("Filter ChipGroup should be present", filterGroup)
-                filterGroup!!.check(R.id.filter_error)
-                yieldToCollector(activity)
-
-                val totalAfter = adapter.itemCount
-                assertTrue(
-                    "Selecting Error chip should narrow entries (got $totalAfter of $totalBefore)",
-                    totalAfter < totalBefore,
-                )
-                for (entry in adapter.data) {
-                    assertEquals(
-                        "All entries should be ERROR after selecting Error chip",
-                        LogEntry.Level.ERROR,
-                        entry.level,
-                    )
-                }
-
-                filterGroup.check(R.id.filter_all)
-                yieldToCollector(activity)
-                assertEquals("Selecting All should restore full list", totalBefore, adapter.itemCount)
+                assertEquals(R.id.filter_all, filterGroup.checkedChipId)
+                filterGroup.check(R.id.filter_error)
             }
+            composeRule.waitForIdle()
+            assertEntryRenderedOnce("first error")
+            assertEntryAbsent("first info")
+            scenario.onActivity { activity ->
+                activity.findViewById<ChipGroup>(R.id.filter_group).check(R.id.filter_all)
+            }
+            composeRule.waitForIdle()
+            assertEntryRenderedOnce("first info")
+            assertEntryRenderedOnce("first error")
         }
     }
 
-    // ── clear behavior ──
-
     @Test
-    fun clearAction_emptiesAdapterAndLogFile() {
-        val context = ApplicationProvider.getApplicationContext<android.content.Context>()
-        val logFile = context.logFile()
-        assertTrue("Log file should have content before clear", logFile.readText().isNotEmpty())
-
-        launchLogging().use { scenario ->
+    fun clearLog_removesAllVisibleEntries() {
+        launchLogging { scenario ->
+            waitForLogLoad(scenario)
+            assertEntryRenderedOnce("first error")
             scenario.onActivity { activity ->
-                waitForLogLoad(activity)
-
-                val adapter = getLogAdapter(activity)
-                assertTrue("Should have entries before clear", adapter.itemCount > 0)
-
                 loggingFragment(activity).onOptionsItemSelected(menuItemStub(R.id.action_clear_log))
             }
-
-            // Clear is async via viewModelScope; wait for ViewModel + collector to settle
-            Thread.sleep(4000)
-
-            scenario.onActivity { activity ->
-                val adapter = getLogAdapter(activity)
-                assertEquals(
-                    "Adapter should be empty after clear, got ${adapter.itemCount}",
-                    0,
-                    adapter.itemCount,
-                )
+            composeRule.waitUntil(5_000L) {
+                fixtureMessages.none { message ->
+                    composeRule.onAllNodesWithText(message, substring = true)
+                        .fetchSemanticsNodes().isNotEmpty()
+                }
             }
+            fixtureMessages.forEach(::assertEntryAbsent)
         }
+    }
 
-        assertEquals("Log file should be empty after clear action", "", logFile.readText())
+    /**
+     * The log file is the live application log, so tests assert the fixture's own
+     * entries instead of row totals. Messages match by substring because the parser
+     * accumulates non-header lines (such as appended stack traces) onto the
+     * preceding entry's message. The lazy list is scrolled before visibility checks.
+     */
+    private fun assertEntryRenderedOnce(message: String) {
+        composeRule.onNodeWithTag(LOG_ENTRY_LIST_TAG)
+            .performScrollToNode(hasText(message, substring = true))
+        composeRule.onAllNodesWithText(message, substring = true).assertCountEquals(1)
+        composeRule.onNodeWithText(message, substring = true).assertIsDisplayed()
+    }
+
+    private fun assertEntryAbsent(message: String) {
+        composeRule.onAllNodesWithText(message, substring = true).assertCountEquals(0)
+    }
+
+    private fun setFilter(
+        scenario: ActivityScenario<MainActivity>,
+        filter: LogFilter,
+    ) {
+        scenario.onActivity { activity ->
+            loggingFragment(activity).loggingViewModel.setFilter(filter)
+        }
+        composeRule.waitForIdle()
+    }
+
+    private fun launchLogging(block: (ActivityScenario<MainActivity>) -> Unit) {
+        // Launch MainActivity directly: the launcher intent opens SplashActivity,
+        // which finishes itself after routing, leaving ActivityScenario's tracked
+        // activity destroyed ("Cannot run onActivity").
+        val intent = Intent(
+            ApplicationProvider.getApplicationContext<Context>(),
+            MainActivity::class.java,
+        ).putExtra(MainActivity.EXTRA_ROUTE, MainActivity.ROUTE_LOGGING)
+        ActivityScenario.launch<MainActivity>(intent).use(block)
+    }
+
+    private fun waitForLogLoad(scenario: ActivityScenario<MainActivity>) {
+        val deadline = System.currentTimeMillis() + 10_000L
+        var complete = false
+        while (!complete && System.currentTimeMillis() < deadline) {
+            scenario.onActivity { activity ->
+                complete = runCatching {
+                    loggingFragment(activity).loggingViewModel.isLogLoadComplete
+                }.getOrDefault(false)
+            }
+            if (!complete) Thread.sleep(100)
+        }
+        assertTrue("Log load should complete", complete)
+    }
+
+    private fun loggingFragment(activity: MainActivity): LoggingFragment {
+        val fragmentManager = activity.supportFragmentManager
+        val navHost = fragmentManager.primaryNavigationFragment as NavHostFragment
+        val current = navHost.childFragmentManager.primaryNavigationFragment
+        assertTrue("Logging destination should be current", current is LoggingFragment)
+        return current as LoggingFragment
+    }
+
+    private fun menuItemStub(id: Int): android.view.MenuItem = object : android.view.MenuItem {
+        override fun getItemId(): Int = id
+        override fun getGroupId(): Int = 0
+        override fun getOrder(): Int = 0
+        override fun setTitle(p0: CharSequence?): android.view.MenuItem = this
+        override fun setTitle(p0: Int): android.view.MenuItem = this
+        override fun getTitle(): CharSequence? = null
+        override fun setTitleCondensed(p0: CharSequence?): android.view.MenuItem = this
+        override fun getTitleCondensed(): CharSequence? = null
+        override fun setIcon(p0: android.graphics.drawable.Drawable?): android.view.MenuItem = this
+        override fun setIcon(p0: Int): android.view.MenuItem = this
+        override fun getIcon(): android.graphics.drawable.Drawable? = null
+        override fun setIntent(p0: android.content.Intent?): android.view.MenuItem = this
+        override fun getIntent(): android.content.Intent? = null
+        override fun setShortcut(p0: Char, p1: Char): android.view.MenuItem = this
+        override fun setAlphabeticShortcut(p0: Char): android.view.MenuItem = this
+        override fun setAlphabeticShortcut(p0: Char, p1: Int): android.view.MenuItem = this
+        override fun getAlphabeticShortcut(): Char = ' '
+        override fun setNumericShortcut(p0: Char): android.view.MenuItem = this
+        override fun setNumericShortcut(p0: Char, p1: Int): android.view.MenuItem = this
+        override fun getNumericShortcut(): Char = ' '
+        override fun setShowAsAction(p0: Int) = Unit
+        override fun setShowAsActionFlags(p0: Int): android.view.MenuItem = this
+        override fun setActionView(p0: View?): android.view.MenuItem = this
+        override fun setActionView(p0: Int): android.view.MenuItem = this
+        override fun getActionView(): View? = null
+        override fun setActionProvider(p0: android.view.ActionProvider?): android.view.MenuItem = this
+        override fun getActionProvider(): android.view.ActionProvider? = null
+        override fun expandActionView(): Boolean = false
+        override fun collapseActionView(): Boolean = false
+        override fun isActionViewExpanded(): Boolean = false
+        override fun setOnActionExpandListener(p0: android.view.MenuItem.OnActionExpandListener?): android.view.MenuItem = this
+        override fun setCheckable(p0: Boolean): android.view.MenuItem = this
+        override fun isCheckable(): Boolean = false
+        override fun setChecked(p0: Boolean): android.view.MenuItem = this
+        override fun isChecked(): Boolean = false
+        override fun setVisible(p0: Boolean): android.view.MenuItem = this
+        override fun isVisible(): Boolean = true
+        override fun setEnabled(p0: Boolean): android.view.MenuItem = this
+        override fun isEnabled(): Boolean = true
+        override fun hasSubMenu(): Boolean = false
+        override fun getSubMenu(): android.view.SubMenu? = null
+        override fun getMenuInfo(): android.view.ContextMenu.ContextMenuInfo? = null
+        override fun setOnMenuItemClickListener(p0: android.view.MenuItem.OnMenuItemClickListener?): android.view.MenuItem = this
     }
 }

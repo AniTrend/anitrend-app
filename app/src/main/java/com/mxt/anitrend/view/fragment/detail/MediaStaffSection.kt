@@ -8,13 +8,13 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.mxt.anitrend.adapter.recycler.detail.MediaStaffRoleAdapter
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.model.entity.anilist.edge.StaffEdge
 import com.mxt.anitrend.model.entity.base.StaffBase
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.container.body.EdgeContainer
 import com.mxt.anitrend.model.entity.group.RecyclerItem
+import com.mxt.anitrend.ui.detail.projectGroupedStaffRows
 import com.mxt.anitrend.util.collection.GroupingUtil
 import com.mxt.anitrend.viewmodel.MediaStaffViewModel
 import kotlinx.coroutines.launch
@@ -28,10 +28,8 @@ class MediaStaffSection(
     private val isAdultContent: Boolean,
     private val onOpenStaff: (View, StaffBase) -> Unit,
 ) {
-    private val adapter = MediaStaffRoleAdapter(onStaffClick = onOpenStaff)
     private val listSection = DetailListSection(
         context = context,
-        adapter = adapter,
         onLoadPage = ::load,
     )
 
@@ -45,7 +43,7 @@ class MediaStaffSection(
                 viewModel.state.collect { state ->
                     when (state) {
                         is MediaStaffViewModel.UiState.Loading -> listSection.renderLoading()
-                        is MediaStaffViewModel.UiState.Success -> render(state.content)
+                        is MediaStaffViewModel.UiState.Success -> render(state.content, state)
                         is MediaStaffViewModel.UiState.Error -> listSection.renderError(state.message)
                     }
                 }
@@ -59,7 +57,7 @@ class MediaStaffSection(
     /** Saves the section pagination state under [key]. */
     fun saveState(outState: android.os.Bundle, key: String) = listSection.saveState(outState, key)
 
-    /** Restores the section pagination state from [savedState]. */
+    /** Restores the section pagination state from [savedState] under [key]. */
     fun restoreState(savedState: android.os.Bundle?, key: String) = listSection.restoreState(savedState, key)
 
     /** Releases the section view resources. */
@@ -75,9 +73,13 @@ class MediaStaffSection(
         )
     }
 
-    private fun render(content: ConnectionContainer<EdgeContainer<StaffEdge>>) {
+    private fun render(
+        content: ConnectionContainer<EdgeContainer<StaffEdge>>,
+        emissionIdentity: Any,
+    ) {
         val connection = content.connection
-        val items: List<RecyclerItem> = GroupingUtil.groupStaffByRole(connection.edges, adapter.currentList)
-        listSection.render(items, connection.pageInfo, connection.isEmpty)
+        val groupedItems: List<RecyclerItem> = GroupingUtil.groupStaffByRole(connection.edges, null)
+        val rows = projectGroupedStaffRows(groupedItems, onOpenStaff)
+        listSection.renderPage(rows, connection.pageInfo, connection.isEmpty, emissionIdentity)
     }
 }

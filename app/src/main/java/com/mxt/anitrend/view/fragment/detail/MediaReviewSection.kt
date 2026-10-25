@@ -4,26 +4,34 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.mxt.anitrend.R
-import com.mxt.anitrend.adapter.recycler.index.ReviewAdapter
-import com.mxt.anitrend.adapter.recycler.index.ReviewImageAction
-import com.mxt.anitrend.base.custom.recycler.RecyclerScrollListener
-import com.mxt.anitrend.base.custom.view.container.CustomSwipeRefreshLayout
-import com.mxt.anitrend.base.interfaces.event.ItemClickListener
-import com.mxt.anitrend.base.interfaces.event.RecyclerLoadListener
-import com.mxt.anitrend.data.DatabaseHelper
 import com.mxt.anitrend.databinding.FragmentListBinding
+import com.mxt.anitrend.base.custom.view.container.CustomSwipeRefreshLayout
+import com.mxt.anitrend.data.DatabaseHelper
+import com.mxt.anitrend.data.store.mutation.MutationResult
 import com.mxt.anitrend.domain.model.ReviewRecord
 import com.mxt.anitrend.graphql.generated.MediaType
+import com.mxt.anitrend.graphql.generated.ReviewRating
 import com.mxt.anitrend.extension.getCompatDrawable
-import com.mxt.anitrend.model.entity.container.body.PageContainer
+import com.mxt.anitrend.ui.designsystem.AniTrendTheme
+import com.mxt.anitrend.ui.media.ManualGridAppendGate
+import com.mxt.anitrend.ui.review.ReviewImageAction
+import com.mxt.anitrend.ui.review.ReviewList
+import com.mxt.anitrend.ui.review.distinctReviewRows
 import com.mxt.anitrend.util.KeyUtil
+import com.mxt.anitrend.util.NotifyUtil
+import com.mxt.anitrend.viewmodel.ReviewVoteActionResult
 import com.mxt.anitrend.viewmodel.ReviewViewModel
 import kotlinx.coroutines.launch
 
@@ -36,7 +44,7 @@ import kotlinx.coroutines.launch
 @Suppress("LongParameterList", "TooManyFunctions")
 class MediaReviewSection(
     context: Context,
-    databaseHelper: DatabaseHelper,
+    private val databaseHelper: DatabaseHelper,
     private val viewModel: ReviewViewModel,
     private val mediaId: Long,
     @KeyUtil.MediaType private val mediaType: String?,
@@ -44,21 +52,15 @@ class MediaReviewSection(
     private val onReviewClick: (View, ReviewRecord) -> Unit,
 ) : CustomSwipeRefreshLayout.OnRefreshAndLoadListener {
     private val appContext = context
-    private val scrollListener = RecyclerScrollListener()
-    private val adapter = ReviewAdapter(
-        currentUser = databaseHelper.currentUser,
-        onRateReviewAction = viewModel::rateReview,
-        onReviewImageAction = onReviewImageAction,
-        isMediaType = true,
-    ).also { reviewAdapter ->
-        reviewAdapter.clickListener = object : ItemClickListener<ReviewRecord> {
-            override fun onItemClick(target: View, data: IndexedValue<ReviewRecord>) {
-                onReviewClick(target, data.value)
-            }
-
-            override fun onItemLongClick(target: View, data: IndexedValue<ReviewRecord>) = Unit
-        }
-    }
+    private val reviewItems = mutableStateOf<List<ReviewRecord>>(emptyList())
+    private val reviewListState = LazyListState()
+    private val loadMoreRevision = mutableStateOf(0)
+    private val appendGate = ManualGridAppendGate()
+    private var currentPage = 1
+    private var pageHasNext: Boolean? = null
+    private var requestInFlight = false
+    private var requestStartReviewIds: Set<Long> = emptySet()
+    private var lastCompletedRequestId = Long.MIN_VALUE
     private var binding: FragmentListBinding? = null
     private var staleSnackbar: Snackbar? = null
 
@@ -69,21 +71,40 @@ class MediaReviewSection(
     fun createView(inflater: LayoutInflater, container: ViewGroup?): View {
         val sectionBinding = FragmentListBinding.inflate(inflater, container, false)
         binding = sectionBinding
-        val layoutManager = StaggeredGridLayoutManager(
-            appContext.resources.getInteger(R.integer.single_list_x1),
-            StaggeredGridLayoutManager.VERTICAL,
-        )
-        sectionBinding.recyclerView.layoutManager = layoutManager
-        sectionBinding.recyclerView.setHasFixedSize(true)
         sectionBinding.refreshLayout.setOnRefreshAndLoadListener(this)
-        scrollListener.initListener(
-            layoutManager,
-            object : RecyclerLoadListener {
-                override fun onLoadMore() = loadNextPage()
-            },
+
+        val composeView = ComposeView(appContext).apply {
+            id = R.id.container
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                val voteStates = viewModel.reviewVoteState.collectAsState().value
+                AniTrendTheme {
+                    ReviewList(
+                        reviews = reviewItems.value,
+                        isBanner = false,
+                        voteStates = voteStates,
+                        listState = reviewListState,
+                        onVote = ::handleReviewVote,
+                        onImageAction = onReviewImageAction,
+                        onReviewClick = onReviewClick,
+                        loadMoreRevision = loadMoreRevision.value,
+                        onLoadMore = ::loadNextPage,
+                    )
+                }
+            }
+        }
+        sectionBinding.refreshLayout.addView(
+            composeView,
+            0,
+            ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT),
         )
-        sectionBinding.recyclerView.addOnScrollListener(scrollListener)
-        sectionBinding.recyclerView.adapter = adapter
+        sectionBinding.refreshLayout.scrollBoundary = { direction ->
+            when (direction) {
+                -1 -> reviewListState.canScrollBackward
+                1 -> reviewListState.canScrollForward
+                else -> false
+            }
+        }
         sectionBinding.stateLayout.showLoading()
         return sectionBinding.root
     }
@@ -96,14 +117,19 @@ class MediaReviewSection(
                     viewModel.state.collect { state ->
                         when (state) {
                             is ReviewViewModel.UiState.Loading -> showLoading()
-                            is ReviewViewModel.UiState.Success -> render(state.content, state.replaceExisting, state.isStale)
-                            is ReviewViewModel.UiState.Error -> showError(state.message)
+                            is ReviewViewModel.UiState.Success -> render(state)
+                            is ReviewViewModel.UiState.Error -> {
+                                requestInFlight = false
+                                appendGate.onRequestFailed()
+                                showError(state.message)
+                            }
                         }
                     }
                 }
                 launch {
                     viewModel.rateReviewEvents.collect { outcome ->
-                        adapter.onRateReviewResult(outcome.reviewId, outcome.result)
+                        val failure = outcome.result as? MutationResult.Failure ?: return@collect
+                        NotifyUtil.makeText(appContext, failure.message, Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -112,7 +138,7 @@ class MediaReviewSection(
 
     /** Activates the section and loads reviews when needed. */
     fun select() {
-        if (adapter.itemCount == 0) onRefresh() else showContent()
+        if (reviewItems.value.isEmpty()) onRefresh() else showContent()
     }
 
     /** Refreshes the review list from its first page. */
@@ -122,39 +148,83 @@ class MediaReviewSection(
     fun destroyView() {
         staleSnackbar?.dismiss()
         staleSnackbar = null
-        currentBinding.recyclerView.clearOnScrollListeners()
+        binding?.refreshLayout?.scrollBoundary = null
         binding = null
     }
 
     /** Resets pagination and requests the first review page. */
     override fun onRefresh() {
-        scrollListener.onRefreshPage()
-        load(scrollListener.currentPage)
+        requestInFlight = false
+        appendGate.onRequestFailed()
+        currentPage = 1
+        pageHasNext = null
+        load(currentPage)
     }
 
     /** Requests the next review page. */
     override fun onLoad() = loadNextPage()
 
     private fun loadNextPage() {
+        if (requestInFlight || !appendGate.canRequestNextPage) return
+        if (pageHasNext == false) {
+            stopRefreshIndicators()
+            return
+        }
+        currentPage++
         currentBinding.refreshLayout.setLoading(true)
-        load(scrollListener.currentPage)
+        load(currentPage)
     }
 
     private fun load(page: Int) {
-        if (mediaId == 0L) return
+        if (mediaId == 0L || requestInFlight) return
+        requestInFlight = true
+        appendGate.onRequestStarted()
+        requestStartReviewIds = reviewItems.value.mapTo(mutableSetOf()) { it.id }
         val type = mediaType?.let { runCatching { MediaType.valueOf(it) }.getOrNull() }
         viewModel.load(mediaId = mediaId, type = type, page = page)
     }
 
-    private fun render(content: PageContainer<ReviewRecord>, replaceExisting: Boolean, isStale: Boolean) {
-        renderStaleState(isStale)
-        scrollListener.setPageInfo(content.pageInfo)
-        if (!content.isEmpty) {
-            adapter.submitList(content.pageData) { showContent() }
-        } else if (replaceExisting) {
-            adapter.submitList(emptyList()) { showEmpty() }
+    private fun handleReviewVote(review: ReviewRecord, target: ReviewRating) {
+        when (viewModel.voteReview(review, target, databaseHelper.currentUser != null)) {
+            ReviewVoteActionResult.LOGIN_REQUIRED ->
+                NotifyUtil
+                    .makeText(
+                        appContext,
+                        R.string.info_login_req,
+                        R.drawable.ic_group_add_grey_600_18dp,
+                        Toast.LENGTH_SHORT,
+                    ).show()
+            ReviewVoteActionResult.BUSY ->
+                NotifyUtil
+                    .makeText(appContext, R.string.busy_please_wait, Toast.LENGTH_SHORT)
+                    .show()
+            ReviewVoteActionResult.SUBMITTED -> Unit
+        }
+    }
+
+    private fun render(state: ReviewViewModel.UiState.Success) {
+        val content = state.content
+        renderStaleState(state.isStale)
+        pageHasNext = content.pageInfo?.hasNextPage()
+        if (!content.isEmpty || state.replaceExisting) {
+            reviewItems.value = distinctReviewRows(content.pageData)
+        }
+
+        if (!state.isLoading && lastCompletedRequestId != state.requestId) {
+            lastCompletedRequestId = state.requestId
+            requestInFlight = false
+            val newReviewCount = if (state.requestedPage <= 1) {
+                reviewItems.value.size
+            } else {
+                reviewItems.value.count { it.id !in requestStartReviewIds }
+            }
+            appendGate.onRequestSucceeded(newReviewCount)
+            loadMoreRevision.value++
+        }
+
+        if (reviewItems.value.isEmpty() && state.replaceExisting) {
+            showEmpty()
         } else {
-            stopRefreshIndicators()
             showContent()
         }
     }

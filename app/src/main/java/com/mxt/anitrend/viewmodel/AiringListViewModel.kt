@@ -11,6 +11,7 @@ import com.mxt.anitrend.data.store.mutation.OperationStatus
 import com.mxt.anitrend.data.store.mutation.RequestSequence
 import com.mxt.anitrend.domain.medialist.model.MediaListRecord
 import com.mxt.anitrend.domain.model.MediaListItemUiModel
+import com.mxt.anitrend.domain.model.matchesFilter
 import com.mxt.anitrend.domain.model.toMediaListItemUiModel
 import com.mxt.anitrend.graphql.generated.MediaListSort
 import com.mxt.anitrend.graphql.generated.MediaListStatus
@@ -109,6 +110,33 @@ class AiringListViewModel(
                 started = SharingStarted.WhileSubscribed(5_000),
                 initialValue = UiState.Loading,
             )
+
+    private val searchQuery = MutableStateFlow("")
+
+    /**
+     * Rows and entries from the SAME success snapshot, so consumers can never
+     * pair newly committed entries (with advanced revisions) against rows
+     * derived from an earlier payload.
+     */
+    val display: StateFlow<MediaListDisplayState?> =
+        combine(state, searchQuery) { currentState, query ->
+            val success = currentState as? UiState.Success ?: return@combine null
+            val rows =
+                if (query.isEmpty()) {
+                    success.renderedItems
+                } else {
+                    success.renderedItems.filter { it.matchesFilter(query) }
+                }
+            MediaListDisplayState(rows = rows, entries = success.entries)
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = null,
+        )
+
+    fun onSearchQueryChanged(query: String?) {
+        searchQuery.value = query?.trim().orEmpty()
+    }
 
     /**
      * Loads airing media list collection. Single load; not paginated.

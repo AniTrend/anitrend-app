@@ -116,13 +116,10 @@ class ArchitectureEnforcementTest {
                 "app/src/main/java/com/mxt/anitrend/view/fragment/detail/MediaStatsSection.kt",
                 "app/src/main/java/com/mxt/anitrend/view/fragment/detail/MediaRelationSection.kt",
                 "app/src/main/java/com/mxt/anitrend/view/fragment/detail/MediaStaffSection.kt",
-                "app/src/main/java/com/mxt/anitrend/adapter/recycler/detail/MediaStaffRoleAdapter.kt",
                 "app/src/main/java/com/mxt/anitrend/view/fragment/detail/MediaCharacterSection.kt",
-                "app/src/main/java/com/mxt/anitrend/adapter/recycler/detail/MediaCharacterAdapter.kt",
                 "app/src/main/java/com/mxt/anitrend/view/fragment/detail/MediaRecommendationsSection.kt",
                 "app/src/main/java/com/mxt/anitrend/view/fragment/detail/MediaReviewSection.kt",
                 "app/src/main/java/com/mxt/anitrend/view/fragment/detail/MediaFeedSection.kt",
-                "app/src/main/java/com/mxt/anitrend/base/custom/recycler/RecyclerSectionAdapter.kt",
             ).map(projectRoot::resolve)
         val violations = migratedFiles.matching(
             Regex("BaseStatePageAdapter|FragmentStateAdapter|ViewPager2?|childFragmentManager"),

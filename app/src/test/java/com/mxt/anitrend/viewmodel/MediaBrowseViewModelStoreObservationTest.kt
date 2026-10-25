@@ -31,19 +31,11 @@ import org.mockito.Mockito.verify
 /**
  * Pins the complete-snapshot contract that [MediaBrowseFragment] renders.
  *
- * Regression scope: MediaBrowseFragment.handleSuccess no longer appends; every
- * [MediaBrowseViewModel.UiState.Success] replaces the adapter contents with
- * `content.pageData` via `mAdapter.onItemsInserted(...)` followed by `updateUI()`.
- * That replacement is only correct if every Success carries the full accumulated
- * deduplicated snapshot, so these tests pin that ViewModel contract for page one,
- * page two, and store recombination.
- *
- * Remaining UI seam: the replacement itself lives in the fragment and is not
- * exercised by the local JVM suite. A fragment-level test would require a live
- * MediaAdapter, scroll listener, Koin Settings, and view lifecycle (no
- * Robolectric/Espresso local runner exists), so it is deliberately out of scope
- * rather than introducing a new test framework. If an append path is ever
- * reintroduced, page-two snapshots will duplicate all previously rendered items.
+ * Every browse success carries the full accumulated, deduplicated snapshot,
+ * including store recombinations. The Compose host replaces its rows for each
+ * success, so these tests pin the ViewModel contract for page one, page two, and
+ * store recombination. Android UI row and routed-host behavior is covered by the
+ * instrumentation suite.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 class MediaBrowseViewModelStoreObservationTest {

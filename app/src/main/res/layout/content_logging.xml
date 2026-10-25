@@ -120,14 +120,11 @@
             </com.google.android.material.chip.ChipGroup>
         </HorizontalScrollView>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/log_recycler"
+        <androidx.compose.ui.platform.ComposeView
+            android:id="@+id/log_entries"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:clipToPadding="false"
-            android:paddingHorizontal="@dimen/xl_margin"
-            android:paddingBottom="@dimen/xl_margin" />
+            android:layout_weight="1" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

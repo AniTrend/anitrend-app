@@ -3,6 +3,10 @@
 package com.mxt.anitrend.ui
 
 import android.content.Intent
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.junit4.createEmptyComposeRule
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.fragment.NavHostFragment
@@ -11,7 +15,6 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry
-import com.google.android.material.navigation.NavigationView
 import com.mxt.anitrend.R
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.view.activity.index.MainActivity
@@ -21,6 +24,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -34,6 +38,8 @@ import org.junit.runner.RunWith
 @LargeTest
 @RunWith(AndroidJUnit4::class)
 class DrawerMediaListNavigationTest {
+    @get:Rule
+    val composeRule = createEmptyComposeRule()
 
     @Before
     fun setUp() {
@@ -49,19 +55,61 @@ class DrawerMediaListNavigationTest {
     }
 
     /**
-     * Selects a drawer destination through the real NavigationView menu, which
-     * dispatches to the activity's OnNavigationItemSelectedListener exactly
-     * like a user tap. The drawer is closed explicitly afterwards so the back
-     * presses under test exercise the destination back policy, not the drawer
-     * close animation.
+     * Opens the production DrawerLayout and selects a visible drawer label
+     * through Compose semantics, as a user does.
      */
-    @Suppress("DEPRECATION")
     private fun selectDrawerItem(scenario: ActivityScenario<MainActivity>, itemId: Int) {
-        scenario.onActivity { activity ->
-            activity.findViewById<NavigationView>(R.id.nav_view).menu.performIdentifierAction(itemId, 0)
-            activity.findViewById<DrawerLayout>(R.id.drawer_layout).closeDrawer(GravityCompat.START)
+        val labelId = when (itemId) {
+            R.id.nav_myanime -> R.string.drawer_title_myanime
+            R.id.nav_mymanga -> R.string.drawer_title_mymanga
+            else -> error("Unsupported drawer item id: $itemId")
         }
-        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+        var label = ""
+        scenario.onActivity { activity ->
+            activity.findViewById<DrawerLayout>(R.id.drawer_layout)
+                .openDrawer(GravityCompat.START, false)
+            label = activity.getString(labelId)
+        }
+        composeRule.waitForIdle()
+        composeRule.onNodeWithText(label).assertIsDisplayed().performClick()
+        composeRule.waitUntil(5_000L) {
+            var isDrawerOpen = true
+            scenario.onActivity { activity ->
+                isDrawerOpen = activity.findViewById<DrawerLayout>(R.id.drawer_layout)
+                    .isDrawerOpen(GravityCompat.START)
+            }
+            !isDrawerOpen
+        }
+    }
+
+    @Test
+    fun signInDrawerItemLeavesDrawerOpen() {
+        val context = ApplicationProvider.getApplicationContext<android.content.Context>()
+        TestSessionUtil.setAuthenticated(context, authenticated = false)
+        try {
+            ActivityScenario
+                .launch<MainActivity>(Intent(context, MainActivity::class.java))
+                .use { scenario ->
+                    var label = ""
+                    scenario.onActivity { activity ->
+                        activity.findViewById<DrawerLayout>(R.id.drawer_layout)
+                            .openDrawer(GravityCompat.START, false)
+                        label = activity.getString(R.string.drawer_title_sign_in)
+                    }
+                    composeRule.waitForIdle()
+                    composeRule.onNodeWithText(label).assertIsDisplayed().performClick()
+                    composeRule.waitForIdle()
+                    scenario.onActivity { activity ->
+                        assertTrue(
+                            "sign-in navigation must leave the drawer open",
+                            activity.findViewById<DrawerLayout>(R.id.drawer_layout)
+                                .isDrawerOpen(GravityCompat.START),
+                        )
+                    }
+                }
+        } finally {
+            TestSessionUtil.setAuthenticated(context, authenticated = true)
+        }
     }
 
     private fun navController(activity: MainActivity): androidx.navigation.NavController {

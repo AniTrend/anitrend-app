@@ -8,25 +8,21 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.mxt.anitrend.adapter.recycler.detail.CharacterMediaAdapter
 import com.mxt.anitrend.graphql.generated.MediaType
+import com.mxt.anitrend.model.entity.anilist.edge.MediaEdge
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.container.body.ConnectionContainer
 import com.mxt.anitrend.model.entity.container.body.EdgeContainer
-import com.mxt.anitrend.model.entity.anilist.edge.MediaEdge
 import com.mxt.anitrend.model.entity.group.RecyclerItem
+import com.mxt.anitrend.ui.detail.projectGroupedMediaSeriesRows
 import com.mxt.anitrend.util.collection.GroupingUtil
 import com.mxt.anitrend.viewmodel.MediaRelationViewModel
 import kotlinx.coroutines.launch
 
-/**
- * View-only relations section used by the media destination.
- * The callback-heavy constructor preserves the destination's existing media
- * actions at this section boundary.
- */
+/** View-only relations section used by the media destination. */
 @Suppress("LongParameterList")
 class MediaRelationSection(
-    context: Context,
+    private val context: Context,
     private val viewModel: MediaRelationViewModel,
     private val mediaId: Long,
     private val mediaType: String?,
@@ -34,13 +30,8 @@ class MediaRelationSection(
     private val onOpenMedia: (View, MediaBase) -> Unit,
     private val onLongPressMedia: (MediaBase) -> Unit,
 ) {
-    private val adapter = CharacterMediaAdapter(
-        onMediaClick = onOpenMedia,
-        onMediaLongClick = onLongPressMedia,
-    )
     private val listSection = DetailListSection(
         context = context,
-        adapter = adapter,
         onLoadPage = ::load,
     )
 
@@ -54,7 +45,7 @@ class MediaRelationSection(
                 viewModel.state.collect { state ->
                     when (state) {
                         is MediaRelationViewModel.UiState.Loading -> listSection.renderLoading()
-                        is MediaRelationViewModel.UiState.Success -> render(state.content)
+                        is MediaRelationViewModel.UiState.Success -> render(state.content, state)
                         is MediaRelationViewModel.UiState.Error -> listSection.renderError(state.message)
                     }
                 }
@@ -83,9 +74,19 @@ class MediaRelationSection(
         )
     }
 
-    private fun render(content: ConnectionContainer<EdgeContainer<MediaEdge>>) {
+    private fun render(
+        content: ConnectionContainer<EdgeContainer<MediaEdge>>,
+        emissionIdentity: Any,
+    ) {
         val connection = content.connection
-        val items: List<RecyclerItem> = GroupingUtil.groupMediaByRelationType(connection.edges)
-        listSection.render(items, connection.pageInfo, connection.isEmpty)
+        val groupedItems: List<RecyclerItem> = GroupingUtil.groupMediaByRelationType(connection.edges)
+        val rows =
+            projectGroupedMediaSeriesRows(
+                context = context,
+                items = groupedItems,
+                onMediaClick = onOpenMedia,
+                onMediaLongClick = { _, media -> onLongPressMedia(media) },
+            )
+        listSection.renderSnapshot(rows, connection.pageInfo, connection.isEmpty, emissionIdentity)
     }
 }

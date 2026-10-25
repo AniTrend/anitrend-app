@@ -7,16 +7,6 @@
     <com.mxt.anitrend.base.custom.view.container.CustomSwipeRefreshLayout
         android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:descendantFocusability="blocksDescendants">
-
-        <com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layoutAnimation="@anim/layout_animation_fall_down"
-            android:scrollbars="vertical"/>
-
-    </com.mxt.anitrend.base.custom.view.container.CustomSwipeRefreshLayout>
+        android:layout_height="match_parent" />
 
 </com.mxt.anitrend.widget.ProgressLayout>

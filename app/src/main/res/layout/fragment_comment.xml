@@ -13,41 +13,17 @@
         android:layout_weight="1"
         android:descendantFocusability="blocksDescendants">
 
-        <androidx.core.widget.NestedScrollView
-            android:layout_height="wrap_content"
+        <com.mxt.anitrend.widget.ProgressLayout
+            android:id="@+id/stateLayout"
             android:layout_width="match_parent"
-            android:scrollbars="vertical">
+            android:layout_height="match_parent">
 
-            <LinearLayout android:layout_height="wrap_content"
+            <androidx.compose.ui.platform.ComposeView
+                android:id="@+id/comment_list"
                 android:layout_width="match_parent"
-                android:orientation="vertical">
+                android:layout_height="match_parent" />
 
-                <com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView
-                    android:id="@+id/comment_origin"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp" />
-
-                <com.mxt.anitrend.widget.ProgressLayout
-                    android:id="@+id/stateLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView
-                        android:id="@+id/recyclerView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layoutAnimation="@anim/layout_animation_fall_down"
-                        android:scrollbars="vertical" />
-
-                </com.mxt.anitrend.widget.ProgressLayout>
-
-            </LinearLayout>
-
-        </androidx.core.widget.NestedScrollView>
+        </com.mxt.anitrend.widget.ProgressLayout>
 
     </com.mxt.anitrend.base.custom.view.container.CustomSwipeRefreshLayout>
 

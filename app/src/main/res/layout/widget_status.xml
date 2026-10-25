@@ -18,8 +18,8 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:visibility="visible">
 
-        <com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView
-            android:id="@+id/widget_status_recycler"
+        <androidx.compose.ui.platform.ComposeView
+            android:id="@+id/widget_status_compose_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

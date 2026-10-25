@@ -104,7 +104,6 @@ object GroupingUtil {
             if (!edge.characterRole.isNullOrBlank()) {
                 edge.node.subGroupTitle = edge.characterRole
             }
-            edge.node.contentType = KeyUtil.RECYCLER_TYPE_HEADER
             entityMap.add(edge.node)
             edge.voiceActors?.let { voiceActors ->
                 if (!CompatUtil.isEmpty(voiceActors)) {
@@ -281,6 +280,4 @@ object GroupingUtil {
         val currentSize = model?.size ?: 0
         return if (currentSize < recyclerItems.size) recyclerItems.subList(currentSize, recyclerItems.size) else emptyList()
     }
-
-    fun <T : RecyclerItem> wrapInGroup(data: List<T>): List<RecyclerItem> = ArrayList<RecyclerItem>(data)
 }

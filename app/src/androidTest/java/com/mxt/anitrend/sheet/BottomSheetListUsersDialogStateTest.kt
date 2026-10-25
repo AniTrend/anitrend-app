@@ -5,25 +5,30 @@ package com.mxt.anitrend.sheet
 import android.os.SystemClock
 import android.view.View
 import android.widget.TextView
+
+import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.FragmentActivity
 import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.platform.app.InstrumentationRegistry
+
 import com.google.android.material.button.MaterialButton
 import com.mxt.anitrend.R
-import com.mxt.anitrend.base.custom.recycler.StatefulRecyclerView
 import com.mxt.anitrend.model.entity.base.UserBase
+import com.mxt.anitrend.model.entity.container.attribute.PageInfo
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.repository.UserRepository
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.view.sheet.BottomSheetListUsers
 import com.mxt.anitrend.widget.ProgressLayout
 import com.mxt.anitrend.widget.ProgressLayoutTestActivity
+
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.CompletableDeferred
+
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -91,18 +96,13 @@ class BottomSheetListUsersDialogStateTest {
                 progressLayout(sheetFragment(activity!!))?.isLoading == true
             }
 
-            // Isolate state delivery from pagination: the real RecyclerScrollListener
-            // fires onLoadMore as soon as rows render, which would add a second
-            // repository call. Clear it before releasing the pending response.
-            instrumentation.runOnMainSync {
-                clearScrollListeners(sheetFragment(activity!!))
-            }
-
             gate.complete(Unit)
 
             waitUntil("success renders rows and leaves loading") {
                 val sheet = sheetFragment(activity!!)
-                progressLayout(sheet)?.isContent == true && adapterItemCount(sheet) == 2
+                progressLayout(sheet)?.isContent == true &&
+                    userListComposeView(sheet) != null &&
+                    userListItemCount(sheet) == 2
             }
             val progressIsLoading =
                 readOnMain { progressLayout(sheetFragment(activity!!))?.isLoading ?: true }
@@ -157,21 +157,169 @@ class BottomSheetListUsersDialogStateTest {
             assertTrue("retry button must be visible", retryVisible)
 
             // Backend recovers: retry must re-dispatch the request and render rows.
-            // Clear the scroll listeners first so the retried rows cannot trigger
-            // onLoadMore and add a third repository call.
             instrumentation.runOnMainSync {
                 followersResult = Result.success(containerOf(user(2L, "user-2")))
-                clearScrollListeners(sheetFragment(activity!!))
+                sheetFragment(activity!!)?.dialog
+                    ?.findViewById<MaterialButton>(R.id.progressStateErrorAction)
+                    ?.performClick()
+            }
+            waitUntil("retry re-dispatches and renders rows") {
+                val sheet = sheetFragment(activity!!)
+                progressLayout(sheet)?.isContent == true &&
+                    userListComposeView(sheet) != null &&
+                    userListItemCount(sheet) == 1
+            }
+            coVerify(exactly = 2) { repository.getFollowers(1L, any(), any(), any()) }
+        }
+    }
+
+    @Test
+    fun stopThenStartDoesNotDuplicateTheReplayedPage() {
+        val repository = mockk<UserRepository>()
+        coEvery {
+            repository.getFollowers(1L, any(), any(), any())
+        } returns Result.success(containerOf(user(2L, "user-2"), user(7L, "user-7")))
+        coEvery {
+            repository.getFollowing(any(), any(), any(), any())
+        } returns Result.success(PageContainer())
+        install(repository)
+
+        ActivityScenario.launch(ProgressLayoutTestActivity::class.java).use { scenario ->
+            var activity: FragmentActivity? = null
+            scenario.onActivity { host ->
+                activity = host
+                showFollowersSheet(host)
+            }
+
+            waitUntil("rows render before the lifecycle stop") {
+                val sheet = sheetFragment(activity!!)
+                progressLayout(sheet)?.isContent == true && userListItemCount(sheet) == 2
+            }
+
+            // Stopping re-subscribes the StateFlow collector on the way back to
+            // STARTED; the replayed Success must not append its page again.
+            scenario.moveToState(androidx.lifecycle.Lifecycle.State.CREATED)
+            scenario.moveToState(androidx.lifecycle.Lifecycle.State.RESUMED)
+            instrumentation.waitForIdleSync()
+
+            waitUntil("replayed page does not duplicate rows") {
+                userListItemCount(sheetFragment(activity!!)) == 2
+            }
+            assertEquals(2, readOnMain { userListItemCount(sheetFragment(activity!!)) })
+            coVerify(exactly = 1) { repository.getFollowers(1L, any(), any(), any()) }
+        }
+    }
+
+    @Test
+    fun nextPageFailureThenRetryDoesNotDuplicateTheRefreshedFirstPage() {
+        var followerCalls = 0
+        val requestedPages = mutableListOf<Int>()
+        val pageTwoFailure = CompletableDeferred<Unit>()
+        val repository = mockk<UserRepository>()
+        coEvery {
+            repository.getFollowers(1L, any(), any(), any())
+        } coAnswers {
+            val page = invocation.args[1] as Int
+            requestedPages.add(page)
+            followerCalls++
+            when {
+                followerCalls == 1 -> Result.success(
+                    containerOf(user(2L, "user-2"), user(7L, "user-7"), hasNextPage = true),
+                )
+                // Park the next-page failure until the first page is visibly
+                // rendered, or the immediate Error state races the content sample.
+                page > 1 -> {
+                    pageTwoFailure.await()
+                    Result.failure(RuntimeException("next page down"))
+                }
+                else -> Result.success(containerOf(user(2L, "user-2"), user(7L, "user-7")))
+            }
+        }
+        coEvery {
+            repository.getFollowing(any(), any(), any(), any())
+        } returns Result.success(PageContainer())
+        install(repository)
+
+        ActivityScenario.launch(ProgressLayoutTestActivity::class.java).use { scenario ->
+            var activity: FragmentActivity? = null
+            scenario.onActivity { host ->
+                activity = host
+                showFollowersSheet(host)
+            }
+
+            waitUntil("first page rows render") {
+                userListItemCount(sheetFragment(activity!!)) == 2
+            }
+            waitUntil("page two is requested") {
+                requestedPages.size >= 2
+            }
+            pageTwoFailure.complete(Unit)
+
+            // The parked page-2 request now fails, surfacing the error/retry state.
+            waitUntil("next-page failure surfaces retry") {
+                progressLayout(sheetFragment(activity!!))?.isError == true
+            }
+            instrumentation.runOnMainSync {
                 sheetFragment(activity!!)?.dialog
                     ?.findViewById<MaterialButton>(R.id.progressStateErrorAction)
                     ?.performClick()
             }
 
-            waitUntil("retry re-dispatches and renders rows") {
+            // Retry re-requests page 1; its rows must replace, not append, or the
+            // keyed lazy grid crashes on duplicate row keys.
+            waitUntil("retry refreshes the first page without duplicates") {
                 val sheet = sheetFragment(activity!!)
-                progressLayout(sheet)?.isContent == true && adapterItemCount(sheet) == 1
+                progressLayout(sheet)?.isContent == true && userListItemCount(sheet) == 2
             }
-            coVerify(exactly = 2) { repository.getFollowers(1L, any(), any(), any()) }
+            assertEquals(2, readOnMain { userListItemCount(sheetFragment(activity!!)) })
+            assertEquals("expected load, next-page failure, then page-1 retry", listOf(1, 2, 1), requestedPages)
+        }
+    }
+
+    @Test
+    fun nonemptyThenEmptyRefreshClearsRowsAndShowsEmptySurface() {
+        var followerCalls = 0
+        val repository = mockk<UserRepository>()
+        coEvery {
+            repository.getFollowers(1L, any(), any(), any())
+        } coAnswers {
+            followerCalls++
+            if (followerCalls == 1) {
+                Result.success(containerOf(user(2L, "user-2"), user(7L, "user-7")))
+            } else {
+                Result.success(PageContainer())
+            }
+        }
+        coEvery {
+            repository.getFollowing(any(), any(), any(), any())
+        } returns Result.success(PageContainer())
+        install(repository)
+
+        ActivityScenario.launch(ProgressLayoutTestActivity::class.java).use { scenario ->
+            var activity: FragmentActivity? = null
+            scenario.onActivity { host ->
+                activity = host
+                showFollowersSheet(host)
+            }
+
+            waitUntil("first page rows render") {
+                userListItemCount(sheetFragment(activity!!)) == 2
+            }
+
+            // A successful but now-empty page 1 must replace the rows and reach
+            // the empty surface instead of leaving stale rows behind.
+            instrumentation.runOnMainSync {
+                sheetFragment(activity!!)?.makeRequest()
+            }
+            waitUntil("empty refresh clears rows") {
+                sheetFragment(activity!!)?.userItems?.value.isNullOrEmpty()
+            }
+            waitUntil("empty surface shows") {
+                progressLayout(sheetFragment(activity!!))?.isError == true
+            }
+            assertTrue(
+                readOnMain { sheetFragment(activity!!)?.userItems?.value.isNullOrEmpty() },
+            )
         }
     }
 
@@ -199,12 +347,9 @@ class BottomSheetListUsersDialogStateTest {
 
     private fun progressLayout(sheet: BottomSheetListUsers?): ProgressLayout? = sheet?.dialog?.findViewById(R.id.stateLayout)
 
-    private fun clearScrollListeners(sheet: BottomSheetListUsers?) {
-        sheet?.dialog?.findViewById<StatefulRecyclerView>(R.id.recyclerView)
-            ?.clearOnScrollListeners()
-    }
+    private fun userListComposeView(sheet: BottomSheetListUsers?): ComposeView? = sheet?.dialog?.findViewById(R.id.userListComposeView)
 
-    private fun adapterItemCount(sheet: BottomSheetListUsers?): Int? = sheet?.dialog?.findViewById<StatefulRecyclerView>(R.id.recyclerView)?.adapter?.itemCount
+    private fun userListItemCount(sheet: BottomSheetListUsers?): Int? = sheet?.userListState?.layoutInfo?.totalItemsCount
 
     private inline fun <T> readOnMain(crossinline block: () -> T): T {
         var result: T? = null
@@ -231,8 +376,12 @@ class BottomSheetListUsersDialogStateTest {
         this.id = id
     }
 
-    private fun containerOf(vararg users: UserBase): PageContainer<UserBase> = PageContainer<UserBase>().apply {
+    private fun containerOf(
+        vararg users: UserBase,
+        hasNextPage: Boolean = false,
+    ): PageContainer<UserBase> = PageContainer<UserBase>().apply {
         pageData = users.toList()
+        pageInfo = PageInfo().apply { setHasNextPage(hasNextPage) }
     }
 
     private companion object {

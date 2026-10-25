@@ -280,7 +280,6 @@ class GroupingUtilTests {
 
         media.forEachIndexed { index, item ->
             verify(item).subGroupTitle = characterRoles[index]
-            verify(item).contentType = KeyUtil.RECYCLER_TYPE_HEADER
         }
     }
 

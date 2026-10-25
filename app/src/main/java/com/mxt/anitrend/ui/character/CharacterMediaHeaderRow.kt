@@ -68,12 +68,13 @@ internal data class CharacterMediaHeaderUiState(
     }
 }
 
-/** Renders one media entry in the character-role grid; the adapter remains the action owner. */
+/** Stateless media-role header row; the detail grid owns its destination actions. */
 @Composable
 internal fun CharacterMediaHeaderRow(
     state: CharacterMediaHeaderUiState,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
     val cardColor = remember(context) { Color(context.getCompatColorAttr(R.attr.cardColor)) }
@@ -88,7 +89,7 @@ internal fun CharacterMediaHeaderRow(
 
     Card(
         modifier =
-        Modifier
+        modifier
             .fillMaxWidth()
             .combinedClickable(
                 role = Role.Button,

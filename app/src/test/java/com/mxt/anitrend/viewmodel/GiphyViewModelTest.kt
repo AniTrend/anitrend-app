@@ -2,8 +2,11 @@ package com.mxt.anitrend.viewmodel
 
 import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.model.api.retro.base.GiphyService
+import com.mxt.anitrend.model.entity.giphy.Giphy
 import com.mxt.anitrend.model.entity.giphy.GiphyContainer
+import com.mxt.anitrend.model.entity.giphy.Pagination
 import com.mxt.anitrend.util.KeyUtil
+import java.io.IOException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -16,19 +19,19 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.mock
+import org.mockito.Mockito.times
+import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 import retrofit2.Response
-import java.io.IOException
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class GiphyViewModelTest {
-
-    private val testDispatcher = UnconfinedTestDispatcher()
+    private val dispatcher = UnconfinedTestDispatcher()
     private lateinit var service: GiphyService
 
     @Before
     fun setUp() {
-        Dispatchers.setMain(testDispatcher)
+        Dispatchers.setMain(dispatcher)
         service = mock(GiphyService::class.java)
     }
 
@@ -38,75 +41,57 @@ class GiphyViewModelTest {
     }
 
     @Test
-    fun `UiState Loading is a singleton`() {
-        assertEquals(
-            GiphyViewModel.UiState.Loading,
-            GiphyViewModel.UiState.Loading,
-        )
-    }
-
-    @Test
-    fun `UiState Success wraps container`() {
-        val container = GiphyContainer()
-        val state = GiphyViewModel.UiState.Success(container)
-        assertEquals(container, state.container)
-    }
-
-    @Test
-    fun `UiState Error holds message`() {
-        val state = GiphyViewModel.UiState.Error("Failed")
-        assertEquals("Failed", state.message)
-        assertTrue(state.message.isNotEmpty())
-    }
-
-    @Test
-    fun `initial state is Loading`() = runTest {
-        val vm = GiphyViewModel(
-            giphyService = service,
-            ioDispatcher = testDispatcher,
-        )
-        assertTrue(vm.state.value is GiphyViewModel.UiState.Loading)
-    }
-
-    @Test
-    fun `loadTrending emits Success on successful response`() = runTest {
-        val container = GiphyContainer()
-
+    fun `overlapping pages keep unique ids and stop at server total`() = runTest {
         `when`(service.getTrending(BuildConfig.GIPHY_KEY, KeyUtil.PAGING_LIMIT, 0, "PG"))
-            .thenReturn(Response.success(container))
+            .thenReturn(Response.success(page(0, 4, "a", "b")))
+        `when`(service.getTrending(BuildConfig.GIPHY_KEY, KeyUtil.PAGING_LIMIT, 2, "PG"))
+            .thenReturn(Response.success(page(2, 4, "b", "c")))
+        val viewModel = GiphyViewModel(service, dispatcher)
 
-        val vm = GiphyViewModel(
-            giphyService = service,
-            ioDispatcher = testDispatcher,
-        )
+        viewModel.refresh(null)
+        viewModel.loadMore()
+        viewModel.loadMore()
 
-        vm.loadTrending(0)
-
-        val state = vm.state.value as GiphyViewModel.UiState.Success
-        assertEquals(container, state.container)
+        val state = viewModel.state.value as GiphyViewModel.UiState.Success
+        assertEquals(listOf("a", "b", "c"), state.container.data.map { it.id })
+        verify(service, times(1)).getTrending(BuildConfig.GIPHY_KEY, KeyUtil.PAGING_LIMIT, 2, "PG")
     }
 
     @Test
-    fun `search emits Error on request failure`() = runTest {
-        `when`(
-            service.findGif(
-                BuildConfig.GIPHY_KEY,
-                "naruto",
-                KeyUtil.PAGING_LIMIT,
-                25,
-                "PG",
-                "en",
-            ),
-        ).thenAnswer { throw IOException("Network failed") }
+    fun `failed append cannot advance and refresh replaces with empty result`() = runTest {
+        `when`(service.getTrending(BuildConfig.GIPHY_KEY, KeyUtil.PAGING_LIMIT, 0, "PG"))
+            .thenReturn(Response.success(page(0, 4, "a", "b")))
+            .thenReturn(Response.success(page(0, 0)))
+        `when`(service.getTrending(BuildConfig.GIPHY_KEY, KeyUtil.PAGING_LIMIT, 2, "PG"))
+            .thenAnswer { throw IOException("Offline") }
+        val viewModel = GiphyViewModel(service, dispatcher)
 
-        val vm = GiphyViewModel(
-            giphyService = service,
-            ioDispatcher = testDispatcher,
-        )
+        viewModel.refresh(null)
+        viewModel.loadMore()
+        assertEquals("Offline", (viewModel.state.value as GiphyViewModel.UiState.Error).message)
+        viewModel.loadMore()
+        verify(service, times(1)).getTrending(BuildConfig.GIPHY_KEY, KeyUtil.PAGING_LIMIT, 2, "PG")
+        viewModel.refresh(null)
 
-        vm.search("naruto", 25)
-
-        val state = vm.state.value as GiphyViewModel.UiState.Error
-        assertEquals("Network failed", state.message)
+        assertTrue((viewModel.state.value as GiphyViewModel.UiState.Success).container.data.isEmpty())
     }
+
+    @Test
+    fun `query submission resets offset and replaces trending rows`() = runTest {
+        `when`(service.getTrending(BuildConfig.GIPHY_KEY, KeyUtil.PAGING_LIMIT, 0, "PG"))
+            .thenReturn(Response.success(page(0, 10, "old")))
+        `when`(service.findGif(BuildConfig.GIPHY_KEY, "cat", KeyUtil.PAGING_LIMIT, 0, "PG", "en"))
+            .thenReturn(Response.success(page(0, 1, "cat")))
+        val viewModel = GiphyViewModel(service, dispatcher)
+
+        viewModel.refresh(null)
+        viewModel.refresh("cat")
+
+        assertEquals(listOf("cat"), (viewModel.state.value as GiphyViewModel.UiState.Success).container.data.map { it.id })
+    }
+
+    private fun page(offset: Int, total: Int, vararg ids: String): GiphyContainer = GiphyContainer(
+        data = ids.map { Giphy(id = it, title = it) },
+        pagination = Pagination(total_count = total, count = ids.size, offset = offset),
+    )
 }

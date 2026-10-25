@@ -29,6 +29,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
@@ -40,8 +41,8 @@ import timber.log.Timber
 /**
  * Comment/reply lane ViewModel. All committed state comes from the feed store
  * as `FeedRecord` / `FeedReplyRecord`; the active state carries no reverse
- * mapped legacy entities. `[CommentUiState.feedItem]` is the canonical feed
- * projection precomputed here and rendered as the header by the fragment.
+ * mapped legacy entities. The fragment renders the origin and its replies in
+ * one canonical list using the immutable feed and reply projections.
  */
 class CommentViewModel(
     private val feedStore: FeedStore,
@@ -58,6 +59,7 @@ class CommentViewModel(
     data class CommentUiState(
         val isLoading: Boolean = true,
         val feed: FeedRecord? = null,
+        val currentUserId: Long? = null,
         val feedItem: FeedItemUiModel? = null,
         val replies: List<CommentReplyUiModel> = emptyList(),
         val isDeleted: Boolean = false,
@@ -69,16 +71,19 @@ class CommentViewModel(
         val currentUserId: Long? = null,
         val requestToken: Long = 0L,
         val isLoading: Boolean = false,
-        val hasAttemptedLoad: Boolean = false,
         val errorMessage: String? = null,
     )
 
     private val screenState = MutableStateFlow(ScreenState())
 
+    // Missing data is deletion only after this screen has observed the canonical entity.
+    private var observedFeedId: Long? = null
+
     val state: StateFlow<CommentUiState> =
         screenState
             .map { it.feedId }
             .filterNotNull()
+            .distinctUntilChanged()
             .flatMapLatest { feedId ->
                 combine(
                     feedStore.observeFeed(feedId),
@@ -86,8 +91,10 @@ class CommentViewModel(
                     mutationRegistry.state,
                     screenState,
                 ) { feed, replies, operations, screen ->
+                    if (feed != null) observedFeedId = feedId
                     CommentUiState(
                         isLoading = screen.isLoading && feed == null,
+                        currentUserId = screen.currentUserId,
                         feed = feed,
                         feedItem = feed?.toFeedItemUiModel(
                             isLikePending = operations[OperationKey.feedLike(feed.id)].isRunning(),
@@ -101,7 +108,7 @@ class CommentViewModel(
                                 currentUserId = screen.currentUserId,
                             )
                         },
-                        isDeleted = screen.hasAttemptedLoad && !screen.isLoading && feed == null,
+                        isDeleted = observedFeedId == feedId && feed == null,
                         errorMessage = screen.errorMessage,
                     )
                 }
@@ -121,7 +128,6 @@ class CommentViewModel(
                     feedId = feedId,
                     currentUserId = currentUserId,
                     isLoading = false,
-                    hasAttemptedLoad = true,
                     errorMessage = "Invalid feed id",
                 )
             }
@@ -135,7 +141,6 @@ class CommentViewModel(
                 currentUserId = currentUserId,
                 requestToken = token,
                 isLoading = true,
-                hasAttemptedLoad = true,
                 errorMessage = null,
             )
         }

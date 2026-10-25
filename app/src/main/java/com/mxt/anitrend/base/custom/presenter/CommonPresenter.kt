@@ -3,9 +3,9 @@ package com.mxt.anitrend.base.custom.presenter
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import com.mxt.anitrend.base.custom.recycler.RecyclerScrollListener
 import com.mxt.anitrend.base.interfaces.dao.BoxQuery
 import com.mxt.anitrend.base.interfaces.event.LifecycleListener
+import com.mxt.anitrend.ui.paging.ManualPageState
 import com.mxt.anitrend.util.Settings
 
 /**
@@ -17,7 +17,7 @@ abstract class CommonPresenter(
     val context: Context,
     val database: BoxQuery,
     val settings: Settings,
-) : RecyclerScrollListener(),
+) : ManualPageState(),
     LifecycleListener {
     private var bundle: Bundle? = null
 

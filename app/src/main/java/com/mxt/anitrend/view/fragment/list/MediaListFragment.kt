@@ -6,15 +6,19 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AlertDialog
+import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.RecyclerView
 import com.mxt.anitrend.R
-import com.mxt.anitrend.adapter.recycler.index.MediaListAdapter
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
 import com.mxt.anitrend.data.mapper.toPageInfo
 import com.mxt.anitrend.domain.medialist.model.MediaListCollectionPageResult
@@ -23,10 +27,12 @@ import com.mxt.anitrend.domain.model.MediaListItemUiModel
 import com.mxt.anitrend.domain.model.buildIncrementMediaProgressCommand
 import com.mxt.anitrend.extension.parcelable
 import com.mxt.anitrend.graphql.generated.MediaType
-import com.mxt.anitrend.navigation.model.UserScreenParam
-import com.mxt.anitrend.navigation.model.MediaScreenParam
 import com.mxt.anitrend.navigation.extension.navigateToMedia
 import com.mxt.anitrend.navigation.extension.screenParam
+import com.mxt.anitrend.navigation.model.MediaScreenParam
+import com.mxt.anitrend.navigation.model.UserScreenParam
+import com.mxt.anitrend.ui.designsystem.AniTrendTheme
+import com.mxt.anitrend.ui.medialist.MediaListGrid
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
@@ -37,8 +43,10 @@ import com.mxt.anitrend.util.media.MediaListUtil
 import com.mxt.anitrend.view.sheet.BottomSheetMediaFilter
 import com.mxt.anitrend.view.sheet.BottomSheetSeriesManage
 import com.mxt.anitrend.view.sheet.MediaFilterSheetResult
+import com.mxt.anitrend.viewmodel.MediaListDisplayState
 import com.mxt.anitrend.viewmodel.MediaListMutationViewModel
 import com.mxt.anitrend.viewmodel.MediaListViewModel
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -72,15 +80,26 @@ open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, MediaListC
     private val mediaListViewModel: MediaListViewModel by viewModel()
     private val mediaListMutationViewModel: MediaListMutationViewModel by viewModel()
 
+    protected open val display: StateFlow<MediaListDisplayState?>
+        get() = mediaListViewModel.display
+
+    protected open fun onSearchQueryChanged(searchQuery: String?) {
+        mediaListViewModel.onSearchQueryChanged(searchQuery)
+    }
+
     /** Distinguishes which filter an open sheet result belongs to. */
     private enum class MediaListFilterKind { SORT, ORDER }
 
     private var pendingFilter: MediaListFilterKind? = null
     private var pendingFilterRequestId: String? = null
 
-    protected var stateListAdapter: MediaListAdapter? = null
+    protected var mediaListStyle: Int = KeyUtil.LIST_VIEW_STYLE_DEFAULT
+    private val renderedItems = mutableStateOf(emptyList<MediaListItemUiModel>())
+    private val mediaListState = LazyGridState()
+    private var composeView: ComposeView? = null
     private var latestEntries: List<MediaListRecord> = emptyList()
     private var pendingViewportAnchor: PendingViewportAnchor? = null
+    private val pendingViewportRestore = mutableStateOf<PendingViewportAnchor?>(null)
 
     private data class PendingViewportAnchor(
         val anchorMediaId: Long,
@@ -167,6 +186,7 @@ open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, MediaListC
             val mediaId = bundle.getLong(BottomSheetSeriesManage.MEDIA_LIST_MUTATION_FAILED_MEDIA_ID)
             if (pendingViewportAnchor?.targetMediaId == mediaId) {
                 pendingViewportAnchor = null
+                pendingViewportRestore.value = null
             }
         }
         fromBundle(arguments)?.let { args ->
@@ -182,44 +202,101 @@ open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, MediaListC
 
         isFilterableEnabled = true
         isPager = false
-        val ctx = requireContext()
-        stateListAdapter =
-            MediaListAdapter(
-                context = ctx,
-                mediaListStyle = settings.mediaListStyle,
-                onIncrement = ::incrementMediaProgress,
-                onOpenMedia = ::openMedia,
-                onOpenManage = ::openManage,
-            )
-
-        mColumnSize =
-            if (settings.mediaListStyle == KeyUtil.LIST_VIEW_STYLE_COMPACT_X1) {
-                R.integer.single_list_x1
-            } else {
-                R.integer.grid_list_x2
-            }
+        mediaListStyle = settings.mediaListStyle
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        attachMediaListComposeHost()
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                mediaListViewModel.state.collect { state ->
-                    when (state) {
-                        is MediaListViewModel.UiState.Loading -> {
-                            // Loading is handled by swipeRefreshLayout in the base class
+                launch {
+                    display.collect { snapshot ->
+                        if (snapshot != null) {
+                            submitStateList(snapshot.rows, snapshot.entries)
                         }
-                        is MediaListViewModel.UiState.Success -> {
-                            handleSuccess(state)
-                        }
-                        is MediaListViewModel.UiState.Error -> {
-                            showError(state.message)
+                    }
+                }
+                launch {
+                    mediaListViewModel.state.collect { state ->
+                        when (state) {
+                            is MediaListViewModel.UiState.Loading -> {
+                                // Loading is handled by swipeRefreshLayout in the base class
+                            }
+                            is MediaListViewModel.UiState.Success -> {
+                                handleSuccess(state)
+                            }
+                            is MediaListViewModel.UiState.Error -> {
+                                showError(state.message)
+                            }
                         }
                     }
                 }
             }
         }
+    }
+
+    private fun attachMediaListComposeHost() {
+        val host = ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                AniTrendTheme {
+                    val items = renderedItems.value
+                    val restoreAnchor = pendingViewportRestore.value
+                    MediaListGrid(
+                        items = items,
+                        style = mediaListStyle,
+                        listState = mediaListState,
+                        onIncrement = ::incrementMediaProgress,
+                        onIncrementBusy = ::showIncrementBusy,
+                        onIncrementLimit = ::showIncrementLimit,
+                        onOpenMedia = ::openMedia,
+                        onOpenManage = ::openManage,
+                    )
+                    LaunchedEffect(items, restoreAnchor) {
+                        if (restoreAnchor != null) {
+                            restoreViewportAnchor(restoreAnchor)
+                        }
+                    }
+                }
+            }
+        }
+        composeView = host
+        swipeRefreshLayout.addView(
+            host,
+            0,
+            ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT),
+        )
+        swipeRefreshLayout.scrollBoundary = { direction ->
+            if (direction < 0) mediaListState.canScrollBackward else mediaListState.canScrollForward
+        }
+    }
+
+    private fun showIncrementBusy() {
+        val context = context ?: return
+        NotifyUtil.makeText(context, R.string.busy_please_wait, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun showIncrementLimit() {
+        val context = context ?: return
+        NotifyUtil
+            .makeText(
+                context,
+                if (mediaType == KeyUtil.ANIME) {
+                    R.string.text_unable_to_increment_episodes
+                } else {
+                    R.string.text_unable_to_increment_chapters
+                },
+                R.drawable.ic_warning_white_18dp,
+                Toast.LENGTH_SHORT,
+            ).show()
+    }
+
+    override fun onDestroyView() {
+        swipeRefreshLayout.scrollBoundary = null
+        composeView = null
+        super.onDestroyView()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -274,12 +351,8 @@ open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, MediaListC
             .show(childFragmentManager, FILTER_SHEET_TAG)
     }
 
-    override fun applySearchQuery(searchQuery: String?) {
-        this.query = searchQuery
-        if (!isPager && (stateListAdapter?.itemCount ?: 0) > 0) {
-            val filterQuery = if (searchQuery.isNullOrEmpty()) "" else searchQuery
-            stateListAdapter?.filter?.filter(filterQuery)
-        }
+    fun applySearchQuery(searchQuery: String?) {
+        onSearchQueryChanged(searchQuery)
     }
 
     @Deprecated("Deprecated in Java")
@@ -356,14 +429,8 @@ open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, MediaListC
     }
 
     override fun updateUI() {
-        val adapter = stateListAdapter ?: return
-        // Content/empty is decided by the success handler from the submitted payload
-        // (submitItems applies asynchronously through the filter + AsyncListDiffer), so
-        // itemCount must not gate the teardown here. Both callers (onStart with
-        // itemCount >= 1, and handleSuccess with a non-empty payload) guarantee content.
-        if (recyclerView.adapter !== adapter) {
-            recyclerView.adapter = adapter
-        }
+        // Content/empty is decided by the success handler from the unfiltered payload;
+        // this method only ends refresh/loading and reveals the successful list surface.
         if (swipeRefreshLayout.isRefreshing()) {
             swipeRefreshLayout.setRefreshing(false)
         } else if (swipeRefreshLayout.isLoading()) {
@@ -387,7 +454,7 @@ open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, MediaListC
                 mediaListViewModel.onSortPreferenceChanged()
             } else {
                 showLoading()
-                stateListAdapter?.submitItems(emptyList())
+                submitStateList(emptyList())
                 onRefresh()
             }
         }
@@ -397,9 +464,9 @@ open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, MediaListC
     override fun onChanged(value: MediaListCollectionPageResult?) = Unit
 
     private fun handleSuccess(state: MediaListViewModel.UiState.Success) {
-        latestEntries = state.entries
-        submitStateList(state.renderedItems)
-        state.pageInfo?.let { setPageInfo(it.toPageInfo()) }
+        // Rows and entries arrive through the display collector as one snapshot;
+        // this handler only owns the page info and content/empty surface decision.
+        state.pageInfo?.let { pageState.setPageInfo(it.toPageInfo()) }
         if (state.renderedItems.isNotEmpty()) {
             updateUI()
         } else {
@@ -407,30 +474,28 @@ open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, MediaListC
         }
     }
 
-    protected fun submitStateList(rendered: List<MediaListItemUiModel>) {
-        val anchor = pendingViewportAnchor
-        if (anchor != null && isMutationApplied(anchor)) {
-            stateListAdapter?.submitItems(rendered) {
-                restoreViewportAnchor(anchor)
-            }
-        } else {
-            stateListAdapter?.submitItems(rendered)
+    protected fun submitStateList(
+        rendered: List<MediaListItemUiModel>,
+        entries: List<MediaListRecord>? = null,
+    ) {
+        if (entries != null) {
+            latestEntries = entries
+        }
+        renderedItems.value = rendered
+        pendingViewportAnchor?.takeIf(::isMutationApplied)?.let { anchor ->
+            pendingViewportRestore.value = anchor
         }
     }
 
     private fun captureViewportAnchor(targetMediaId: Long) {
-        val adapter = stateListAdapter ?: return
-        val position = mLayoutManager.findFirstVisibleItemPositions(null)
-            .filter { it != RecyclerView.NO_POSITION }
-            .minOrNull() ?: return
-        val item = adapter.currentList.getOrNull(position) ?: return
-        val row = mLayoutManager.findViewByPosition(position) ?: return
+        val position = mediaListState.firstVisibleItemIndex
+        val item = renderedItems.value.getOrNull(position) ?: return
         pendingViewportAnchor = PendingViewportAnchor(
             anchorMediaId = item.mediaId,
-            offset = mLayoutManager.getDecoratedTop(row) - recyclerView.paddingTop,
+            offset = mediaListState.firstVisibleItemScrollOffset,
             targetMediaId = targetMediaId,
             targetBaselineRevision = latestEntries.firstOrNull { it.mediaId == targetMediaId }?.revision ?: Long.MIN_VALUE,
-            predecessorMediaIds = adapter.currentList.take(position).asReversed().map(MediaListItemUiModel::mediaId),
+            predecessorMediaIds = renderedItems.value.take(position).asReversed().map(MediaListItemUiModel::mediaId),
         )
     }
 
@@ -439,41 +504,28 @@ open class MediaListFragment : FragmentBaseList<MediaListItemUiModel, MediaListC
         return targetEntry == null || targetEntry.revision > anchor.targetBaselineRevision
     }
 
-    private fun restoreViewportAnchor(anchor: PendingViewportAnchor) {
-        if (pendingViewportAnchor != anchor) return
-        val adapter = stateListAdapter ?: return
+    private suspend fun restoreViewportAnchor(anchor: PendingViewportAnchor) {
+        if (pendingViewportAnchor != anchor || !isMutationApplied(anchor)) return
         val itemPosition = sequenceOf(anchor.anchorMediaId)
             .plus(anchor.predecessorMediaIds.asSequence())
-            .map { mediaId -> adapter.currentList.indexOfFirst { it.mediaId == mediaId } }
+            .map { mediaId -> renderedItems.value.indexOfFirst { it.mediaId == mediaId } }
             .firstOrNull { it >= 0 }
-        mLayoutManager.scrollToPositionWithOffset(itemPosition ?: 0, if (itemPosition == null) 0 else anchor.offset)
+        mediaListState.scrollToItem(itemPosition ?: 0, if (itemPosition == null) 0 else anchor.offset)
         pendingViewportAnchor = null
+        pendingViewportRestore.value = null
     }
 
     override fun onStart() {
         super.onStart()
-        showLoading()
-        if ((stateListAdapter?.itemCount ?: 0) < 1) {
+        if (latestEntries.isEmpty()) {
+            showLoading()
             onRefresh()
         } else {
             updateUI()
         }
     }
 
-    override fun onItemClick(
-        target: View,
-        data: IndexedValue<MediaListItemUiModel>,
-    ) = Unit
-
-    override fun onItemLongClick(
-        target: View,
-        data: IndexedValue<MediaListItemUiModel>,
-    ) = Unit
-
-    private fun openMedia(
-        target: View,
-        item: MediaListItemUiModel,
-    ) {
+    private fun openMedia(item: MediaListItemUiModel) {
         navigateToMedia(MediaScreenParam(item.mediaId, item.mediaType))
     }
 

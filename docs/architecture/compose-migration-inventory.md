@@ -1,6 +1,6 @@
 # Incremental XML-to-Compose migration inventory
 
-**Status:** In progress. This record covers the Compose foundation and migrated surfaces through the fortieth slice, the Coil image-loading cutover. It does not mark the app-wide migration program complete.
+**Status:** Complete for app-owned collections: lists, grids, grouped detail sections, carousels, pagers, and the navigation drawer use Compose collections. XML activity/fragment shells, selected stateless View interop, and Navigation 2 remain. Earlier slice tables and checkpoints are historical snapshots, not an outstanding Recycler backlog; this does not mark the broader XML-to-Compose program complete. The final frozen-code verification is recorded below.
 
 ## Baseline and constraints
 
@@ -292,6 +292,12 @@ Empty generic frame resources are structural containers with no active Java/Kotl
 
 `widget_toolbar_favourite.xml` is a distinct higher-fan-out action-view layout used by four detail fragments.
 
+### Lazy-list host cutover
+
+- `MediaOverviewSection` now renders `TagGrid` directly in `tagsComposeView`, a two-column `LazyVerticalGrid` using the existing `grid_list_x2` resource. The ComposeView keeps the section's visibility toggle (`tagItems` non-empty) and the existing dialog, More, and browse-callback ownership.
+- `TagGridComposeTest` passed 2/2 in the full connected run on `emulator-5554` (`Custom_API_36`) covering name/rank text semantics and non-overlap; the bounds query uses unmerged text nodes so measurements target the text nodes instead of the merged clickable card. `MediaOverviewTagInteractionTest` continues to cover the overview tag click dialog and browse callback (1/1).
+- After checking all `app/src` references, `TagAdapter` and its adapter-host test `TagAdapterComposeTest` were removed; no adapter consumers remain.
+
 
 ## Eleventh migrated slice: Profile tab strip
 
@@ -333,7 +339,7 @@ Empty generic frame resources are structural containers with no active Java/Kotl
 - `AboutPanelWidget` hosts the row in a pool-aware `ComposeView`. It retains the `NotLoaded`/`Failed`/`Loaded` click mapping, five-minute user-stat reset, loading toast, loaded-zero list-sheet behavior, and favourites/user callbacks. The unused lifecycle argument to `setUserId` and the XML child-ID click path were removed.
 - `AniTrendTheme` maps `labelMedium` and `titleMedium` to the existing condensed font family and XML-compatible font padding. Label weight is Normal to match the XML capture.
 - `AboutPanelWidgetComposeTest` checks accessible labels, formatted counts, favourites navigation, and displayed-count persistence after reattachment. `AboutPanelWidgetInstrumentationTest` checks loaded-zero/nonzero follower/following sheets and NotLoaded/Failed no-sheet behavior. Focused results: 2 Compose tests and 5 interaction tests passed with 0 failures each.
-- `EventBusMutationStateGuardTest` retains the AvatarIndicator reattachment coverage; the AboutPanel ViewBinding/reflection test was replaced by the Compose reattachment test.
+- The AvatarIndicator reattachment coverage lives in `AboutPanelWidgetComposeTest` (displayed-count persistence after reattachment) and `AvatarIndicatorComposeTest` (launcher/avatar rendering and badge counts); the legacy `EventBusMutationStateGuardTest` and AboutPanel ViewBinding/reflection tests were replaced by these Compose contracts and removed.
 
 ### Baselines and comparison
 
@@ -574,6 +580,12 @@ At this checkpoint, the Changelog screen and twelve Compose components (five Set
 - Connected instrumentation: 147 tests, 0 failures, 0 skipped on `emulator-5554` (`Custom_API_36`). `GenreAdapterComposeTest` passed both cases.
 - `:app:assembleAppDebug` and `:app:assembleGithubDebug` produced `app/build/outputs/apk/app/debug/app-debug.apk` and `app/build/outputs/apk/github/debug/github-debug.apk`.
 
+### Lazy-list host cutover
+
+- `MediaOverviewSection` now renders `GenreGrid` directly in `genre_grid`, using a two-column `LazyVerticalGrid` with the existing `grid_list_x2` resource and XML margin. Its viewport is bounded because the ComposeView remains inside the section's `NestedScrollView`.
+- `GenreGridComposeTest` passed 2/2 in the full connected run on `emulator-5554` (`Custom_API_36`), covering two-column placement, text semantics, and click routing to the owner.
+- After checking all `app/src` references, `GenreAdapter` and its adapter-host test `GenreAdapterComposeTest` were removed; no adapter consumers remain.
+
 ## Nineteenth Compose slice: external link row
 
 ### Candidate audit and XML baseline
@@ -625,6 +637,12 @@ At this checkpoint, the Changelog screen and twelve Compose components (five Set
 
 - `LinkAdapterComposeTest` passed 2/2 and `GenreAdapterComposeTest` passed 2/2 in the connected suite on `emulator-5554` (`Custom_API_36`).
 - `:app:assembleAppDebug` and `:app:assembleGithubDebug` produced `app/build/outputs/apk/app/debug/app-debug.apk` and `app/build/outputs/apk/github/debug/github-debug.apk`.
+
+### Lazy-list host cutover
+
+- `MediaStatsSection` now renders `LinkGrid` directly in `links_compose_view`, using a two-column `LazyVerticalGrid` with the existing `grid_list_x2` resource and XML margin. Its viewport is bounded because the ComposeView remains inside the section's `NestedScrollView`. Tap still opens the link URL and long-press still copies it to the clipboard before the owner callback.
+- `LinkGridComposeTest` passed 2/2 in the full connected run on `emulator-5554` (`Custom_API_36`), covering site text semantics, tap forwarding to the open owner, and long-press forwarding to the copy owner.
+- After checking all `app/src` references, `LinkAdapter` and its adapter-host test `LinkAdapterComposeTest` were removed; no adapter consumers remain. `MediaOverviewTagInteractionTest` migrates the overview tag click to a Compose row click while keeping its dialog and browse-callback assertions.
 
 ## Twentieth Compose slice: studio adapter row
 
@@ -738,16 +756,17 @@ Ranked the remaining simple adapter rows by hierarchy, state, owner fan-out, and
 | 4 | `adapter_character.xml` | 4/5 | `AspectImageView`, `SingleLineTextView`, `AppCompatTintImageView` | Two adapters; loaded image, favorite state, and click routing |
 | 5 | `adapter_staff.xml` | 4/5 | `AspectImageView`, `SingleLineTextView`, `AppCompatTintImageView` | Five adapters; loaded image, favorite state, and several owner callbacks |
 
-- `LogEntryAdapter` is the only adapter inflating `adapter_log_entry.xml`, and `LoggingFragment` is its only screen owner. It binds `LogEntry.level.name` and `message`; the five levels map to red, orange, blue, accent, and grey resources. The XML shows the level as bold Caption text and makes only the message selectable. The row has no click or long-click action. `LoggingFragment` owns reverse list layout and ViewModel-backed filtering; `LoggingFragmentTest` covers parsing, filters, and clearing, but no existing test covers row semantics, severity colors, or message selection.
+- The legacy `LogEntryAdapter`/`adapter_log_entry.xml` pair was replaced by `LogEntryList` over `List<LogEntry>`. It renders `LogEntry.level.name` and `message`; the five levels map to red, orange, blue, accent, and grey resources. `LoggingFragment` retains reverse list layout and ViewModel-backed filtering. `LogEntryComposeListTest` covers rendered text, reverse order, level colors, state replacement, and row semantics; `LoggingFragmentTest` covers parsing, filters, and clearing.
 - Captured the XML row with each of the five `LogEntry.Level` values before production edits using the production adapter on `Custom_API_36`. The `drawToBitmap` captures are each 1080×81px; message selection remains scoped to one row, matching the existing per-TextView behavior.
 
 ### Compose contract and adapter behavior
 
 - Before implementation, the Compose UI contract failed because the XML MaterialTextViews for `ERROR` and `select this log` were not exposed as Compose semantics nodes.
 - `LogEntryRow` is stateless over severity, message, and holder-owned `SelectionState`. It resolves Body1 text color from the active XML theme's `android:textColorPrimary`, reuses `mediaCaptionTextStyle()` for bold Caption labels, maps the same five color resources, and baseline-aligns the label with the message.
-- `LogEntryAdapterComposeTest` passes both content/color and long-press selection/rebind tests on `emulator-5554` (`Custom_API_36`). The holder clears selection on bind and recycle, keeping selection per row; cross-row selection is not added, following the prior AniTrend decision.
+- `LogEntryComposeListTest` covers rendered text, reverse ordering, level-color pixels, and state replacement on `emulator-5554` (`Custom_API_36`). `LogEntryList` keeps selection per row through the native `SelectionState`; cross-row selection is not added, following the prior AniTrend decision.
 - Only the message is inside `SelectionContainer`, whose standard Copy toolbar is documented by [Android Compose text selection guidance](https://developer.android.com/develop/ui/compose/text/user-interactions). The permanent test exercises selection state; it does not separately click the system Copy action.
-- The adapter uses a pool-safe root `ComposeView` with match-parent/wrap-content RecyclerView layout params. `LoggingFragment` retains reverse-list layout, filtering, and data ownership; the row remains without click or long-click callbacks.
+- The row-only phase hosted `LogEntryRow` in a pool-safe root `ComposeView` with match-parent/wrap-content RecyclerView layout params; the logging list-host cutover replaced that adapter entirely, and `LogEntryList` now renders the rows directly. `LoggingFragment` retains reverse-list layout, filtering, and data ownership; the row has no click or long-click callbacks.
+- The screen renders the app's live log file: `FileLoggerTree` appends startup and stack-trace lines during tests, and `LogParser` accumulates non-header lines onto the preceding entry's message. `LoggingFragmentTest` therefore asserts the fixture entries by substring after scrolling them into view rather than exact row totals or exact message equality; its targeted run passed 7/7 on `emulator-5554`.
 
 ### Visual comparison
 
@@ -759,8 +778,8 @@ Ranked the remaining simple adapter rows by hierarchy, state, owner fan-out, and
 
 ### Resource audit and next candidate ranking
 
-- Before deletion, source search found no `AdapterLogEntryBinding`, `R.layout.adapter_log_entry`, `R.id.log_level`, or `R.id.log_message` callers outside the migrated adapter/layout. After deleting `adapter_log_entry.xml`, the resource and child-ID search returned no matches. `LogEntryAdapter` remains used by `LoggingFragment`.
-- Removed the temporary `LogEntryComposeCaptureTest` and its host/emulator PNG artifacts after comparison. `LogEntryAdapterComposeTest` and the existing `LoggingFragmentTest` remain as permanent behavior coverage.
+- Before deletion, source search found no `AdapterLogEntryBinding`, `R.layout.adapter_log_entry`, `R.id.log_level`, or `R.id.log_message` callers outside the migrated adapter/layout. After deleting `adapter_log_entry.xml`, the resource and child-ID search returned no matches. `LoggingFragment` now renders `LogEntryList`; `LogEntryAdapter` is removed.
+- Removed the temporary `LogEntryComposeCaptureTest` and its host/emulator PNG artifacts after comparison. `LogEntryComposeListTest` and `LoggingFragmentTest` are the permanent behavior coverage; the legacy RecyclerView adapter test was deleted after its tests moved to these Compose contracts.
 - Re-rank the remaining production-used layouts in the next candidate audit; the shortlist above is not treated as a permanent order after the log row is removed.
 
 ### Full verification gate
@@ -956,8 +975,8 @@ Compared equal-size PixelCopy captures on `Custom_API_36` with the same local `r
 
 - `RankRow` keeps `RichMarkdownTextView` in `AndroidView` so Markwon HTML formatting, text selection, linkification, and `BetterLinkMovementMethod` remain unchanged. `TextViewCompat` applies the XML AppCompat Caption style; the Preview uses `HtmlCompat` in inspection mode, while runtime uses the existing Markwon extension.
 - The Compose card uses the XML `colorSurfaceContainerLow` surface, 8dp radius, 2dp elevation, and 16dp content padding. Its outer 2dp horizontal and 3dp vertical insets reproduce `CardViewBase.useCompatPadding` with `preventCornerOverlap=false`. The title and heart/star icons retain their XML resources and dimensions.
-- `RankAdapter` uses a pool-safe `ComposeView`; the root keeps `R.id.container`, and the embedded text view keeps `R.id.sub_container`. Root click/long-click and text click continue through the original `MediaStatsSection` listener.
-- `RankAdapterComposeTest` passed 2/2. It covers rated/popular text, star/heart states, native selectable text, the root and `sub_container` click targets, and root long-click forwarding. The pre-implementation RED lacked the Compose row tags and semantics.
+- The initial row-only Compose step used `RankAdapter` to host each row in a pool-safe `ComposeView`; its root used `R.id.container`, and the embedded `RichMarkdownTextView` retained `R.id.sub_container`. Root click/long-click and text click continued through the original `MediaStatsSection` listener.
+- That adapter-host version's `RankAdapterComposeTest` passed 2/2, covering rated/popular text, star/heart states, native selectable text, the root and `sub_container` click targets, and root long-click forwarding. The list-host cutover below replaces it with behavior tests against the native lazy grid.
 
 ### Visual comparison
 
@@ -976,10 +995,17 @@ Compared rated and popular PixelCopy captures from the production `RankAdapter` 
 
 ### XML removal and next candidate
 
-- Removed `adapter_ranking.xml` and the temporary XML/Compose PixelCopy capture tests after a search under `app/src` returned no remaining `adapter_ranking`, `AdapterRankingBinding`, `ranking_type`, or capture-test references. `RankAdapterComposeTest` remains as the permanent behavior contract.
-- Kept `R.id.sub_container` in `custom_ids.xml` because `RankAdapter`, the embedded `RichMarkdownTextView`, and the permanent adapter test still use it. The former `ranking_type` view ID had no remaining consumer.
+- Removed `adapter_ranking.xml` and the temporary XML/Compose PixelCopy capture tests after a search under `app/src` returned no remaining `adapter_ranking`, `AdapterRankingBinding`, `ranking_type`, or capture-test references. The focused behavior test was later migrated from `RankAdapterComposeTest` to `RankingsGridComposeTest`.
+- Kept `R.id.sub_container` in `custom_ids.xml` because the `RankRow`-embedded `RichMarkdownTextView` and its focused Compose test still use it. The former `ranking_type` view ID had no remaining consumer.
 - The post-removal audit selected `adapter_character.xml` for the next slice: two adapter owners (`MediaCharacterAdapter` and `GroupCharacterAdapter`) across Media detail, Favorites, and Search. The source-backed contract and baseline follow below.
 - `adapter_feed_slide.xml` remains an alternative with `ImagePreviewAdapter` and `YouTubeEmbedFragment` owners plus Glide transformations and a play overlay. `adapter_user.xml` has filtering and follow-mutation state; `adapter_staff.xml` has broader adapter fan-out.
+
+### Lazy-list host cutover
+
+- `MediaStatsSection` now renders `RankingsGrid` directly in `ranking_compose_view`, using a two-column `LazyVerticalGrid` with the existing `grid_list_x2` resource and XML margin. Its viewport is bounded because the ComposeView remains inside the section's `NestedScrollView`.
+- `RankingsGridComposeTest` passed 2/2 on `emulator-5554` (`Custom_API_36`), covering rated/popular formatting, icons, selectable rich text, click forwarding, and long-click semantics.
+- Verification: `jenv exec ./gradlew :app:compileAppDebugKotlin :app:compileAppDebugAndroidTestKotlin` succeeded; `ANDROID_SERIAL=emulator-5554 jenv exec ./gradlew :app:connectedAppDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.mxt.anitrend.widget.RankingsGridComposeTest` passed with 2 tests and 0 failures/errors/skips.
+- After checking all `app/src` references, `RankAdapter` was removed; no adapter consumers remain.
 
 ### Full verification gate
 
@@ -1346,6 +1372,29 @@ Compared stable PixelCopy captures from the same API 36 emulator, local image fi
 - `:app:spotlessCheck`, `:app:assembleAppDebug`, and `:app:assembleGithubDebug` passed. APKs: `app/build/outputs/apk/app/debug/app-debug.apk` and `app/build/outputs/apk/github/debug/github-debug.apk`.
 - `bash .github/scripts/validate-changelogs.sh` passed. All six en-GB store changelog files remain within the 500-character limit.
 - Gradle reported the existing ObjectBox configuration-cache serialization warning; it did not fail a task.
+
+### Lazy-list host cutover
+
+- `MediaLatestList` is now a standalone `Fragment` with no `MediaBrowseFragment`/`FragmentBaseList` inheritance, owning paging, refresh, and state. `FragmentMediaLatestBinding` keeps `stateLayout` and `refreshLayout` while `mediaListView` hosts the keyed `LatestMediaList` `LazyVerticalGrid` with `DisposeOnViewTreeLifecycleDestroyed`; `TrendingFragment` subclasses it and embeds the same list under its chip `sectionSelector` through `attachList`.
+- Rendered rows accumulate in `MediaLatestViewModel` (`UiState.Success(items, hasMorePages)`; page 1 resets, later pages append). `UiState.Success` and `UiState.Error` are deliberately identity-typed rather than data classes because `MediaBase.equals` is id-only and `StateFlow` conflates equal values: `MediaLatestViewModelTest` pins the accumulation contract and that a same-id reload re-emits a fresh state instance.
+- The fragment holds the rendered list with `referentialEqualityPolicy()` and `LatestMediaList` takes a fresh `MediaItems` identity batch per emission: together they defeat structural-equality write rejection and equality-based Compose skipping, so same-id in-place `MediaBase` mutations always rerender (the adapter-era `neverEqualPolicy()` holder contract preserved).
+- Load-more keeps the legacy `RecyclerScrollListener.visibleThreshold = 9` first-visible formula plus the swipe-up `CustomSwipeRefreshLayout` gesture; pull-to-refresh resets to page 1. Column count follows the legacy `single_list_x1` span resource (1 column normally, 2 on large-landscape, 3 on xlarge-landscape) via `GridCells.Fixed`.
+- UX delta: the inherited `MediaBrowseFragment` options menu no longer attaches to the latest/trending screens. Its five filter items were already hidden there (`isFilterableEnabled = false`), and the sort item only wrote `settings.mediaSort`, which these request paths never read.
+- `MediaLatestAdapter` was removed after a zero-consumer `app/src` audit. `MediaLatestRowComposeTest` migrated to the list host and keeps the Anime/Manga content, same-ID rebind, cover release on removal, and action-semantics contracts (targeted run: 4/4 on `emulator-5554`); entry-point smoke tests still open both screens via `ROUTE_TRENDING`. Post-cutover full-suite numbers are recorded in the final gate below.
+
+### Post-cutover verification gate
+
+- Commands: `jenv exec ./gradlew spotlessApply --no-daemon --max-workers=1 -Dorg.gradle.parallel=false --quiet`, followed by `jenv exec ./gradlew spotlessCheck :app:testAppDebugUnitTest :app:testGithubDebugUnitTest :app:connectedAppDebugAndroidTest :app:assembleAppDebug :app:assembleGithubDebug --no-daemon --max-workers=1 -Dorg.gradle.parallel=false --quiet` and `bash .github/scripts/validate-changelogs.sh`. All completed successfully.
+
+| Task | Tests | Failures | Skipped |
+|---|---:|---:|---:|
+| `:app:testAppDebugUnitTest` | 1,288 | 0 | 3 |
+| `:app:testGithubDebugUnitTest` | 1,288 | 0 | 3 |
+| `:app:connectedAppDebugAndroidTest` | 211 | 0 | 0 |
+
+- Connected instrumentation on `Custom_API_36` (`emulator-5554`) enumerates 63 suites, including `LoggingFragmentTest` 7/7, `MediaLatestRowComposeTest` 4/4, `TagGridComposeTest` 2/2, `GenreGridComposeTest` 2/2, `LinkGridComposeTest` 2/2, `RankingsGridComposeTest` 2/2, `LogEntryComposeListTest` 3/3, `MediaOverviewTagInteractionTest` 1/1, and both entry-point render suites. The suite surface replaces the adapter-host tests removed in this phase (Tag/Genre/Link/LogEntry/Rank adapter tests and other superseded instrumentation); the drop from intermediate run totals reflects those removals and test rewrites, with each removed contract recorded in its slice entry above.
+- Both debug APKs assembled; `validate-changelogs.sh` passed with every changelog file under 500 characters, including the new `1013001000.txt` (177 characters) recording the menu UX delta.
+- Live pass on the installed `app-debug.apk` (`emulator-5554`) verified: trending chips and row rendering; threshold load-more after scrolling (previously unseen rows rendered); pull-to-refresh resetting to page 1; the anime-to-manga section switch rendering manga rows; row-tap navigation to the media screen; the tag-row dialog with its description and `Close`/`More` actions; the two-column tag grid with name/rank cells and the Series Stats link grid; and the logging screen's filter chips narrowing the live log to the selected level.
 
 
 ## Thirty-third Compose slice: media-list progress control
@@ -1781,7 +1830,351 @@ Debug APKs: `app/build/outputs/apk/app/debug/app-debug.apk` and `app/build/outpu
 - Debug APKs were generated at `app/build/outputs/apk/app/debug/app-debug.apk` and `app/build/outputs/apk/github/debug/github-debug.apk`.
 - `bash .github/scripts/validate-changelogs.sh` passed; all six store changelog files remain below 500 characters, with the longest at 491.
 
+## Forty-first Compose slice: search and favourites section grids
+
+### Candidate audit and contracts
+
+- `SearchFragment` and `FavouriteFragment` swap `RecyclerSectionAdapter` delegates per tab (`select(createAdapter(...))`): `MediaAdapter` for the media tabs, `GroupCharacterAdapter`/`StaffAdapter`/`StudioAdapter` for the CHARACTERS/STAFF/STUDIO(S) tabs, and `UserAdapter` for the search USERS tab. The three delegate adapters hosted rows that earlier slices already migrated to Compose (`CharacterRow`, `StaffRow`, `StudioRow`) inside pooled `ComposeView` holders with per-item Compose state (the character and staff holders used `neverEqualPolicy()`, the studio holder plain `mutableStateOf`).
+- `GroupingUtil.wrapInGroup` was an identity copy (`ArrayList(data)`), so the character tabs have always rendered flat lists; the real grouping (`groupCharactersByRole` and siblings) belongs to the detail sections and remains unchanged.
+- Paging ran through `RecyclerScrollListener` on the shared RecyclerView (visible threshold 9, first-visible formula) with `mScrollListener.currentPage` feeding each section ViewModel's `load(...)`; section clicks route by model type (`CharacterBase`/`StaffBase`/`StudioBase` → typed detail screens).
+
+### Compose implementation
+
+- New keyed lazy grids beside their rows: `StudioGrid` (`grid_list_x2`), `StaffGrid` and `CharacterGrid` (`grid_giphy_x3`), each rendering projected immutable row states (`StudioRowUiState`, `StaffRowUiState` plus its `id`, `CharacterRowUiState`) in `Card` surfaces with `colorSurfaceContainerLow` fill, `lg_margin` corners and item spacing, `sm_margin` elevation, and `xl_margin` content padding. Row composables own clicks (`StudioRow` gained the `onClick` seam for parity with `CharacterRow`/`StaffRow`); navigation remains in the fragments via `navigateToCharacter`/`navigateToStaff`/`navigateToStudio`.
+- `LazyGridLoadMoreEffect` centralizes the legacy first-visible load-more formula (threshold 9) in `ui/media/LazyGridLoadMore.kt`; `LatestMediaList` now shares it.
+- Both fragments host one `ComposeView` as a sibling of the `FragmentListBinding` root inside each screen's `*_list_container` FrameLayout, because `CustomSwipeRefreshLayout` measures only its single target child and would lay out a second content child at zero size. `section` is observable state; the section switch toggles the RecyclerView and Compose surfaces.
+- Compose sections carry their own paging state (`composePage`, `composeHasMore`, and a `composeLoading` in-flight guard that a blank search query cannot wedge) and merge pages into `referentialEqualityPolicy()` lists of projected states; `commitComposePage` reproduces the `onPostProcessed` empty/limit semantics. The query-change, section-switch, and swipe-refresh paths reset paging and items exactly as the adapter paths did.
+- No intended UX delta: the tabs render the same rows, column counts, and click targets through the grids.
+
+### Removals
+
+- Deleted `GroupCharacterAdapter`, `StaffAdapter`, `StudioAdapter`, their `createAdapter` branches in both fragments, and `GroupingUtil.wrapInGroup` after zero-consumer audits. The search USERS tab and both media tabs keep `UserAdapter`/`MediaAdapter` on the shared `RecyclerSectionAdapter` shell for later slices.
+
+### Verification
+
+| Task | Tests | Failures | Skipped |
+|---|---:|---:|---:|
+| `:app:testAppDebugUnitTest` | 1,288 | 0 | 3 |
+| `:app:testGithubDebugUnitTest` | 1,288 | 0 | 3 |
+| `:app:connectedAppDebugAndroidTest` | 211 | 1 (environment flake) | 0 |
+
+- Targeted runs on `emulator-5554` (`Custom_API_36`): `StudioGridComposeTest` 2/2, `StaffGridComposeTest` 3/3, `CharacterGridComposeTest` 2/2. Spotless, both debug assembles, and `validate-changelogs.sh` passed.
+- Each full connected run's single failure was environmental rather than behavioral, and both classes passed targeted reruns: `LoginShortcutIntentTest.myAnimeShortcutIntentCarriesTypedIdentityRouteAndPushedOrigin` (45s cold-start intent timeout while the per-test logcat recorded an emulator wifi drop, a 37s FocusEvent stall, and HWUI/JNI main-thread contention; rerun 2/2) and `LoggingFragmentTest.activityLaunches_withComposableAndParsedEntries` (Compose-Espresso idling timeout under a 25s HWUI Davey, wifi disconnect, and a startup 401; rerun 7/7). Both classes cover surfaces untouched by this slice and were green in the preceding full gate.
+- Live pass on the installed `app-debug.apk` (`emulator-5554`) verified the search screen end-to-end: query-driven loading, the section chips switching surfaces (studio chip checked state observed), `StudioGrid` two-column rows (WIT STUDIO, Studio Ghibli, Kyoto Animation, MADHOUSE, MAPPA and others), `StaffGrid` rows with language captions (Kana Hanazawa, Kana Ichinose and others), `CharacterGrid` rows (Kana Arima, Tanjirou Kamado and others), the empty state ("No data to display" with retry) for a non-matching query, and a studio row tap navigating to the WIT STUDIO media list. The favourites screen requires AniList sign-in on this fresh install and was not exercised live; it shares this slice's wiring shape and the same three grid test suites.
+
+## Forty-second Compose slice: episodes feed list and refresh-target host
+
+### Candidate audit and contracts
+
+- `WatchListFragment` (the sole `FragmentChannelBase` subclass) hosted `EpisodeAdapter` rows: the row was already Compose (`EpisodeRow(title, duration, imageUrl, onClick, onLongClick)`) inside a bare `ComposeView` holder carrying `R.id.series_image` (the `FragmentChannelBase` episode action target) with `lg_margin` item margins; `formatDuration` lived adapter-locally (seconds to `m:ss`, `00:00` fallback) and deliberately outside the presenter lane.
+- The lane is feed-only from the live entries (`navigateToWatchList` writes `ARG_FEED_ROUTE` + `arg_popular`; AiringFragment's feed chip, HubFragment's button, and the drawer item); the `newInstance(externalLinks, popular)` variant has zero call sites since the pager hosts were deleted. Clicks route through the base's `ItemClickListener` (the `R.id.series_image` dialog with Watch/Dismiss/Search), and `onChanged(Rss)`/`updateUI`/`onStart` drive the load state.
+- `Episode` has no stable domain id (RSS input), so position is the identity fallback for list keys.
+
+### Compose implementation
+
+- New `ui/episode/EpisodeList.kt`: `EpisodeRowUiState(id, title, duration, imageUrl)` (position keys; `formatDuration` moved into the projection) and `EpisodeList` as a `LazyVerticalGrid(GridCells.Fixed(single_list_x1))` host with `lg_margin` row padding matching the retired adapter's item margins.
+- `WatchListFragment` hosts the `ComposeView` (id `R.id.series_image`, `DisposeOnViewTreeLifecycleDestroyed`) and overrides `onChanged(Rss)` (projects rows into state), `updateUI()`, and `hasContent()` (extracted in `FragmentChannelBase` so Compose hosts stop consulting the dead `mAdapter`), and forwards row clicks by index to the base's `ItemClickListener` with the id-carrying host as target.
+
+### Live-found defects fixed in this slice
+
+- The feed route could never reach `getLatestFeed`/`getPopularFeed`: `makeRequest`'s gate tested `externalLinks != null`, which the nav entry never sets, so every feed navigation fell into `getMediaEpisodes(id = 0)` (HTTP 404 "Not Found.") whose failure path only logs, leaving the screen loading forever. The gate is now `externalLinks != null || targetLink != null`, preserving the media-entry link resolution path and its missing-links empty state.
+- `CustomSwipeRefreshLayout` measures only its single cached target, and `ensureTarget()` resolved (and pinned) the RecyclerView before the fragment could insert the Compose host, leaving the host at 0x0 (confirmed in `dumpsys activity top`). `ensureTarget()` now drops a cached target that left the container, `onMeasure`/`onLayout` resolve it unconditionally instead of only when `target == null`, and `WatchListFragment` removes the legacy RecyclerView from the refresh container so the Compose host owns the target slot.
+
+### Removals
+
+- Deleted `adapter/recycler/index/EpisodeAdapter.kt` after zero-consumer checks and migrated `EpisodeAdapterComposeTest` to `EpisodeListComposeTest`, which hosts the grid directly: title/duration projection ("1421" to "23:41", invalid to "00:00"), click and long-click routing by index, null-thumbnail resource fallback, blank-thumbnail shared error drawable, and the legacy image height contract.
+
+### Verification
+
+- `EpisodeListComposeTest` 3/3 and `WatchListComposeTest` 1/1 on `emulator-5554` (`Custom_API_36`); the watch-list smoke drives the real airing entry (feed chip) and settles on rows or the shared empty/error state.
+- The manual live pass on this emulator was environmentally blocked (cold-start ANR "failed to complete startup" after dexopt, persistent 30-40-frame Choreographer skips, and adb shell churn). It did confirm the feed request reaching `https://feeds.feedburner.com/crunchyroll/rss` (HTTP 200) and exposed both defects fixed above before the instrumented smoke took over as the behavioral proof.
+- Full gate: `spotlessCheck` and both unit variants green (1,288 tests, 0 failures, 3 skipped each), connected instrumentation on `emulator-5554` green (213 tests, 0 failures, 0 skipped), both debug assembles built, and `validate-changelogs.sh` passed (longest file 491 characters).
+
+## Forty-third Compose slice: notifications list
+
+### Candidate audit and contracts
+
+- `NotificationListAdapter` was a plain `ListAdapter` (DiffUtil by stable server notification id) with three view types: SOCIAL and FORUM shared `item_notification_person.xml` (only the fallback drawable differed: account-circle vs comment icon) and MEDIA used `item_notification_media.xml`. Both rows are `Widget.AniTrend.ManageSheet.SectionCard` cards (surfaceContainer, 0dp elevation, 16dp content padding, lg_margin margins) with an unread indicator bar (md_margin primary), subject/time/header/content text stack (bold header when unread), and an image: leading 100dp aspect cover for media rows, trailing 48dp circular avatar for person rows.
+- `NotificationFragment` (the sole consumer) is a `FragmentBaseList` shell fed by `NotificationViewModel` StateFlow pages, projecting `NotificationRecord` into immutable `NotificationItemUiModel(id, record, isRead)` with append-on-pagination semantics and ObjectBox `NotificationHistory` read-state persistence. Row clicks route by type (comment/profile/media/forum intents) with an avatar-click split (`R.id.notification_img` target id), and long-click is AIRING-only (series manage action).
+
+### Compose implementation
+
+- New `ui/notification/NotificationList.kt`: `NotificationRowUiState` reproduces the adapter's bindings verbatim (the 15 type-to-subject mappings, per-type header/content rules, PrettyTime relative dates, unread description suffix, and per-view-type image fallbacks), `NotificationRow` renders the person/media card layouts with the `SectionCard` chrome, and `NotificationList` is a keyed `LazyVerticalGrid(single_list_x1)` host with the shared `LazyGridLoadMoreEffect` paging trigger.
+- `NotificationFragment` hosts the ComposeView in the refresh container's target slot (the self-healing `CustomSwipeRefreshLayout` from the episodes slice serves it), keeps every side effect (read-state writes, mark-all menu, forum intents, MediaActionUtil), splits row/avatar/long dispatch explicitly, and pages through `composePage`/`composeHasMore` state feeding `notificationViewModel.load(page)`.
+
+### Defect found and fixed during migration
+
+- `AniTrendImage` renders nothing for null models, but the retired Glide bindings always painted a fallback drawable and kept the avatar tap target alive. The row now renders `painterResource(imageErrorResource)` with the same size/shape/tag/click chain whenever the URL is null or blank (common for notifications without avatars), restoring that parity.
+
+### Removals
+
+- Deleted `adapter/recycler/detail/NotificationListAdapter.kt` and `NotificationListAdapterDiffTest` (its DiffUtil contract died with the adapter). `NotificationItemUiModelProjectionTest`, `NotificationRecordNavigationTest`, `NotificationViewModelTest`, and `UserRepositoryNotificationsTest` remain green unchanged; the row/routing contracts moved to `NotificationListComposeTest` (per-type projection and read chrome, row/avatar/long-click routing split, stable-id keys).
+
+### Verification
+
+- `NotificationListComposeTest` 3/3 on `emulator-5554` (`Custom_API_36`). Full gate: `spotlessCheck` and both unit variants green (1,284 tests, 0 failures, 3 skipped each; the -4 versus the prior gate is the deleted `NotificationListAdapterDiffTest`), connected instrumentation green (216 tests, 0 failures, 0 skipped), both debug assembles built, and `validate-changelogs.sh` passed.
+
+## Forty-fourth Compose slice: media search browse list (Paging3)
+
+### Candidate audit and contracts
+
+- `MediaSearchAdapter` was already a Paging3 `PagingDataAdapter` over immutable `MediaSearchItemUiModel` (stable server id) with a single view type, the shared `adapter_series.xml` card (aspect cover, coloured status strip, title, year/type caption, and a `RatingTextView` score/favourite overlay). Its sole consumer was SearchFragment's ANIME/MANGA tabs; FavouriteFragment uses `MediaAdapter` and keeps `adapter_series.xml` alive with the other shared consumers.
+- Pages flow through `MediaSearchViewModel.pagingDataFlow` (query-keyed `Pager`, `cachedIn`), with query submits and pull-to-refresh calling `adapter.refresh()`; `PagingLoadStateRenderer` (item-count-gated) drives the shared ProgressLayout surfaces and `LoadStateFooter` handles append states.
+
+### Compose implementation
+
+- Added `androidx.paging:paging-compose` 3.5.3 (catalog + `ProjectDependencies`), the first paging-compose adoption in the repo. New `ui/mediasearch/MediaSearchList.kt`: `MediaSeriesCardUiState` reproduces the adapter's bindings (status colours, the year/type caption rules incl. TBA and episode/chapter suffixes), `MediaSeriesCard` renders the card with the `RatingTextView` overlay kept through `AndroidView` interop for score-format parity, and `MediaSearchPagingList` is a keyed 3-column `LazyVerticalGrid` over `LazyPagingItems` with the shared `LoadStateFooter` append state (indexed `items(count)` bridge; the paging-compose `items` extension does not exist in 3.5.3).
+- SearchFragment's media tabs host the list in the refresh container's target slot via `swapRefreshTarget`; the Compose-backed USERS list also uses that target slot and swaps back to media. Media refresh requests hoist through a `mediaRefreshSignal` state consumed by `LaunchedEffect`, and media load states flow into the existing `PagingLoadStateRenderer` through fragment state. The unreachable `createAdapter` media arm and the `mediaAdapterWithFooter` concat are deleted.
+
+### Defects found and fixed during migration
+
+- Coverless cards collapsed to captions because `AniTrendImage` emits no node for null models; the cover now reserves its `AspectImageView` bounds in an unconditional box (the `MediaLatestRow` pattern) with the image filling it.
+- Scroll gating: `CustomSwipeRefreshLayout` gates its refresh/load gestures on `target.canScrollVertically`, which ComposeView cannot answer (it does not delegate to its internal scrolling child; it is also a final class, so a subclass bridge is impossible). Mid-list downward drags were therefore hijacked as refresh gestures on every Compose host placed in the container. The container now accepts an optional `scrollBoundary` oracle (direction -1/1) with the target's own answer as fallback, and the episodes, notifications, and search hosts bridge it from their `LazyGridState`; `CustomSwipeRefreshBoundaryTest` covers both the oracle and the fallback.
+
+### Removals
+
+- Deleted `adapter/recycler/search/MediaSearchAdapter.kt` (zero-consumer verified). The paging source, ViewModel, mapper, renderer, and footer unit tests remain green unchanged; the row contracts moved to `MediaSearchListComposeTest` (title/year-type caption rules incl. TBA, cover bounds reservation, card/long-click routing).
+
+### Verification
+
+- `MediaSearchListComposeTest` 2/2, `CustomSwipeRefreshBoundaryTest` 2/2, and `SearchMediaTabsComposeTest` 1/1 on `emulator-5554` (`Custom_API_36`); the integration smoke drives the real fragment entry (search route + query), asserts the mid-list downward drag scrolls the grid while refresh stays inactive, and exercises the tab round-trip whose cached load state must dismiss the selection loading surface. The three host smokes (`WatchListComposeTest`, `FavouriteSectionsComposeTest`, `NotificationListComposeTest`) stay green.
+- Test-environment note: fresh installs raise the notification-permission dialog and the first-run "What's New" sheet, both of which prevent the routed destination from composing; the smoke grants the permission deterministically (verified via `checkSelfPermission`) and dismisses the sheet when present. Full gate: `spotlessCheck` and both unit variants green (1,284 tests, 0 failures, 3 skipped each), connected instrumentation green (221 tests, 0 failures, 0 skipped), both debug assembles built, and `validate-changelogs.sh` passed.
 
 
 
 
+
+## Forty-fifth Compose slice: media and airing lists
+
+### Candidate audit and contracts
+
+- `MediaListAdapter` was the RecyclerView row host for media-list and airing-list screens. `MediaListFragment` and `AiringListFragment` keep their existing StateFlow-backed success payloads, progress mutations, manage sheet, navigation, filter settings, and unfiltered empty-state semantics; only their row presentation moves to Compose. `AiringFragment` independently builds the same refresh/list container and inherits the shared host swap through `AiringListFragment`.
+- Search filtering now belongs to each screen's ViewModel and matches the preferred, English, or original media title. A search with no matching rows leaves the unfiltered `UiState.Success` payload intact, so it does not become an empty-list or reload condition.
+
+### Compose implementation
+
+- `MediaListFragment` replaces the RecyclerView target with a lifecycle-disposed `ComposeView` hosting the existing stateless `MediaListGrid`; `LazyGridState` supplies the refresh-boundary oracle. `AiringListFragment` selects `AiringListViewModel.display` through the same protected list-state seams, so its own state and filtering remain authoritative.
+- Mutation restoration preserves the existing target/revision gate and predecessor search. It captures the first visible lazy-grid item and `firstVisibleItemScrollOffset`, then restores to the same item, nearest predecessor, or item zero after the new rows have committed.
+
+### Removals
+
+- Deleted `MediaListAdapter`, its adapter-backed DiffUtil and progress tests, and moved the row contracts to `MediaListGridComposeTest`: expanded and compact X1/X2 projection, nonzero compact status-stripe height, hidden X2 progress pill, title/year-type/airing metadata, click and long-click routing, and increment callback routing.
+
+### Verification
+
+- `MediaListGridComposeTest` 2/2 on `emulator-5554` (`Custom_API_36`): expanded and compact X1/X2 projection (title, year-type, airing captions asserted through the native interop view tree), nonzero compact status-stripe height, hidden X2 progress pill, click/long-click routing, increment routing. The ViewModel suites cover query filtering (including the no-match case that keeps the unfiltered payload) and the atomic display snapshot contract: a reorder or removal response pairs rows and entries from one success, which is what keeps viewport-anchor restoration from consuming a revision against stale row order.
+- Post-cutover hardening: search filtering lives in each ViewModel (`MediaListViewModel`/`AiringListViewModel`); rows and entries are emitted as one `MediaListDisplayState` snapshot instead of two independently scheduled flows; compact status stripe sizes against the completed row via `matchParentSize`; caption assertions target the native interop views (Compose semantics do not see `SeriesYearTypeTextView`/`AiringTextView` text).
+- Full gate: `spotlessCheck` and both unit variants green (1,284 tests, 0 failures, 3 skipped each), connected instrumentation green (220 tests, 0 failures, 0 skipped, exit 0), both debug assembles built, and `validate-changelogs.sh` passed.
+
+## Forty-sixth Compose slice: user lists
+
+### Candidate audit and contracts
+
+- `UserAdapter` hosted the existing Compose `UserRow` through RecyclerView and was used by SearchFragment's USERS tab and both user sheets. The row projection must snapshot mutable `UserBase` presentation data because entity equality is id-only; follow convergence replaces projections, including the `isFollowing` value used by data-class equality.
+- `BottomSheetUsers` receives `UserSheetModel`, not parcelled `UserBase`; its mapper and boundary contract remain intact. The shared `bottom_sheet_list.xml` also served `BottomSheetGiphy`, so Giphy retains its RecyclerView host through the new dedicated `bottom_sheet_giphy.xml`.
+
+### Compose implementation
+
+- Added `ui/user/UserList.kt`, a responsive `LazyVerticalGrid` using `single_list_x1`, stable user-id keys, `md_margin` bottom spacing, and the existing `UserRow` with the current user passed through.
+- SearchFragment now swaps a dedicated users ComposeView into the refresh target, routes row/follow callbacks, and uses `LazyGridState` near-end observation for the existing manual page requests. StateFlow page success runs through `onPostProcessed` into fresh row projections; the list's scroll boundary and follow-state convergence are bridged without adapter notifications.
+- Both user sheets host `UserList` through the shared ComposeView binding. BottomSheetListUsers retains manual pages, retry surfaces, and UserStore convergence; refresh and retry re-request page 1 and replace the rows (including an empty result) so keyed rows cannot duplicate. BottomSheetUsers forwards name-query changes to its ViewModel-owned filter and keeps its supplied-list parcel boundary.
+
+### Removals
+
+- Deleted `UserAdapter.kt` after confirming zero remaining consumers and migrated the adapter-era row contract to `UserListComposeTest`, which hosts the lazy grid directly. RecyclerView base classes and the separate Giphy RecyclerView host remain.
+
+### Verification
+
+- `UserListComposeTest` 3/3 and `BottomSheetListUsersDialogStateTest` 5/5 on `emulator-5554` (`Custom_API_36`); `SearchMediaTabsComposeTest` 1/1 re-verified after the surface-dismiss fix. Full gate: `spotlessCheck` and both unit variants green (1,288 tests, 0 failures, 3 skipped each), connected instrumentation green (223 tests, 0 failures, 0 skipped), both debug assembles built, and `validate-changelogs.sh` passed.
+- Duplicate-key hardening (keyed lazy grids turn legacy row duplication into a crash, so accumulation is now idempotent): StateFlow collectors apply each Success emission instance exactly once (STOPPED to STARTED replays), page 1 replaces rows even when the refreshed result is empty (next-page failure followed by retry no longer appends a second page 1), and page appends filter out already-present domain ids. `BottomSheetListUsersDialogStateTest` carries regressions for the replay, retry, and nonempty-then-empty cases.
+- Search surface hardening: returning to a media tab re-renders the cached paging snapshot synchronously (the query-keyed Pager emits no new load state, which left the selection loading surface up and the composed cards hidden behind it), and load state plus item count travel through one observed pair so count-only changes re-trigger rendering.
+
+## Forty-seventh Compose slice: studio and favourites media grids
+
+### Candidate audit and contracts
+
+- StudioFragment and FavouriteFragment were the final targets in this slice to construct `MediaAdapter(context, true)` for their media sections, so both rendered `adapter_series.xml`: cover, status stripe, preferred title, year/type caption, and the RatingTextView overlay at top-start, including the conditional `rating_list_status` icon for list entries. The existing `MediaSeriesCard` in `ui/mediasearch/` already renders that projection; the new `MediaBase` projection snapshots list-entry presence/status and delegates status colour and year/type formatting to the same helpers as the legacy XML bindings. No extra row fields or actions were added.
+- The RecyclerView destinations retain their FragmentBaseList refresh/loading/error shell, manual page requests, existing sort/order and section request wiring, and route-specific click/long-click behavior. Keyed page append is domain-id unique, and each success StateFlow instance is applied once. A shared append gate prevents automatic page advancement after errors or empty/duplicate results until a retry returns new rows; page-1 empty results replace stale rows.
+
+### Compose implementation
+
+- Added `ui/media/MediaSeriesGrid.kt`, a keyed lazy grid reusing `MediaSeriesCard`, resource-driven columns, and `LazyGridLoadMoreEffect` with the legacy visible-threshold formula. StudioFragment swaps a lifecycle-bound ComposeView into the refresh target, bridges its `LazyGridState` for scroll-boundary checks, and preserves stored media sort/order requests.
+- FavouriteFragment now hosts every section through one ComposeView and `FavouriteGridHost`: ANIME/MANGA render the shared media grid; CHARACTERS/STAFF/STUDIOS keep their existing Compose grids. Tab selection clears and reloads rows while each tab keeps its own grid state and scroll-boundary bridge.
+
+### Removals
+
+- Deleted `RecyclerSectionAdapter.kt`, whose final construction site was FavouriteFragment, and removed its obsolete architecture-test file reference. No adapter-era behavior tests remained to migrate; `MediaSeriesGridComposeTest` directly hosts the grids and checks adapter-series projection and list-status visibility, media click routing, and Favourite media/Compose-grid surface swaps. `ManualGridAppendGateTest` covers failed/empty appends blocking page advancement until a retry contributes rows.
+- Kept `MediaAdapter.kt` and its five row layouts. The remaining constructor is `MediaBrowseFragment.kt:163`, which passes `browseUtil.isCompactType`; the browse lane still consumes the adapter and may use either compatibility mode.
+
+### Verification
+
+- `MediaSeriesGridComposeTest` 2/2 and `FavouriteSectionsComposeTest` 2/2 on `emulator-5554`. The deferred-anime-error regression fails before the media-tab guard and passes afterward; Characters stays visible when the old anime request fails.
+- `LazyGridLoadMoreComposeTest` fails before and passes after observing layout samples rather than a Boolean near-end result. Short appends can request another page while remaining near the end.
+- The full entry-point smoke exposed duplicate media ids within Studio page one. `appendMediaSeriesPage` now deduplicates first pages as well as appends; the append gate counts only newly inserted rows. Both authenticated and unauthenticated entry-point suites passed afterward. `MediaSeriesPageTest` covers duplicate page-one ids and overlapping/replayed pages.
+
+## Forty-eighth Compose slice: media browse grids
+
+### Cutover and contracts
+
+- `MediaBrowseFragment` and its Anime, Manga, Suggestion, and Hub consumers render a direct `LazyVerticalGrid` with the existing refresh shell and scroll-boundary bridge. Compatibility-series, expanded anime/manga, and compact X1/X2 layouts retain their airing caption, rating visibility, status stripe, and click/long-click behavior.
+- Browse successes replace the complete ViewModel snapshot, including store recombinations. Suggestion page payloads append once by success identity and deduplicate by media id. Existing filter arguments, pending filter result identities, settings, and request semantics remain unchanged.
+- Removed `MediaAdapter` and its four exclusive anime/manga XML rows. Shared series XML remained until the grouped detail and recommendation cutovers below.
+- Removed `remember(media)` from the card projection: legacy media equality is id-only, so it could preserve stale title/caption data after a same-id replacement. The row test now changes media type and title under the same id.
+
+### Verification
+
+- `MediaBrowseGridComposeTest` 1/1 verifies all row variants and actions. `MediaBrowseRouteComposeTest` 1/1 launches the existing browse ingress and verifies media navigation.
+
+## Forty-ninth Compose slice: grouped detail lists
+
+### Cutover and contracts
+
+- Media relations, characters, and staff; Character anime/manga/actor roles; and Staff anime/media/staff roles now render immutable `DetailGridRow` snapshots through `DetailListGrid`. Group titles and actor-media headers span the grid; content rows reuse the existing Compose cards.
+- `DetailListSection` owns view lifecycle, refresh/retry presentation, manual page gating, and viewport restoration instead of an adapter. Full snapshots replace rows; page payloads merge beneath their original group headers. Stable keys include group identity so the same entity can appear in different role groups.
+- Removed the six character/staff detail adapters. After zero-consumer checks, also removed `GroupSeriesAdapter`, `GroupTitleViewHolder`, the unused Recycler loading/unresolved holder classes, shared series/airing row XMLs, and the unused loading/footer XMLs.
+- Extended the grouped append regression to a third page: it failed with count 2 instead of 3. Header counts now add unique new rows to the committed header count rather than the incoming page's count.
+
+### Verification
+
+- `DetailListGridRowsTest` 3/3. `CharacterRowComposeTest` 1/1, `MediaHeaderComposeTest` 2/2, `StaffCharacterRolesComposeTest` 3/3, and `StaffRowHostComposeTest` 2/2 exercise the direct lazy grid, row state changes, image semantics, and action targets.
+- Live emulator pass: Cowboy Bebop relations display full-width Adaptation/Side Story headers and media cards; selecting Shooting Star Bebop opens the manga destination. Spike Spiegel's anime and manga role groups render, the anime grid scrolls, and actor roles show media headers and voice actors. Selecting Kouichi Yamadera opens Staff; year-grouped anime roles, empty manga roles, and role-grouped staff credits all settle visibly. Screenshot: `/tmp/anitrend-compose-relations.png` is a local verification artifact, not a committed asset.
+
+## Fiftieth Compose slice: Giphy picker
+
+### Cutover and contracts
+
+- `BottomSheetGiphy` hosts `GiphyGrid` directly and retains selection, preview URL behavior, search submission, and loading/error/retry presentation. Removed `GiphyAdapter` and the single-consumer `BottomSheetGiphyList` base.
+- `GiphyViewModel` owns query identity, offset paging, accumulated unique-id snapshots, cancellation, and terminal-page gating. Refresh replaces results even when empty; failed or unproductive appends cannot advance automatically.
+- Collection uses the fragment lifecycle because this dialog installs content in `onCreateDialog` and does not create a fragment view. Reattaching the dialog does not restart an existing query.
+
+### Verification
+
+- `GiphyViewModelTest` 3/3 covers overlapping pages, terminal metadata, failed append gating, empty refresh, and query replacement. `GiphyGridComposeTest` 1/1 retains local animated-image/thumbnail, aspect, badge, selection, and preview checks. `BottomSheetGiphyDialogStateTest` 1/1 exercises deferred loading, failure, retry, visible rows, and selection through the actual dialog.
+
+## Fifty-first Compose slice: recommendations
+
+### Cutover and contracts
+
+- `MediaRecommendationsSection` now renders Paging 3 `LazyPagingItems` in `RecommendationGrid`, reusing `MediaSeriesCard`. Keys use recommendation ids, not media ids, so separate recommendations of the same media remain distinct.
+- Load state and item count travel as one snapshot into the existing renderer. Cached state re-renders on section selection, refresh requests are consumed once, the grid supplies swipe boundaries, and append retry uses the existing Compose footer.
+- Removed `RecommendationAdapter`, its obsolete DiffUtil tests, and `LoadStateFooterAdapter`. The footer state projection now lives with the direct Compose footer; its behavior tests no longer create a RecyclerView.
+
+### Verification and integrated checkpoint
+
+- `RecommendationSectionComposeTest` 1/1 renders two recommendations for the same media and verifies independent click/long-click actions and cached section selection. `LoadStateFooterComposeTest` 1/1 retains loading/error/retry/settled checks.
+- Spotless passed, both unit variants passed (1,288 tests, 0 failures, 3 skipped each), and both debug APKs assembled. The latest full connected run executed 232 tests with two incidental assertion failures; after removing those assertions, the affected browse and media-header suites passed 1/1 and 2/2 respectively. This is not a claim of a subsequent full connected green run. Final app-wide verification remains required after the remaining hosts are migrated.
+
+## Fifty-second Compose slice: feed and comment threads
+
+### Cutover and contracts
+
+- Home/message feeds, media/profile activity sections, and comment threads render direct keyed `LazyColumn` content. `CommentFragment` places the origin and replies in one list above the existing composer instead of nesting two RecyclerViews.
+- Removed `FeedListAdapter`, `CommentListAdapter`, the placeholder reply adapter, and the single-consumer `FragmentBaseComment`. Rows render immutable canonical-store projections and forward actions; loading/page metadata and current-user ownership remain in ViewModels.
+- Full store snapshots replace rows; productive-page gating uses unique new feed ids. MESSAGE rows retain Markdown spans, sender/recipient identity, likes, comments, and edit controls. A missed MESSAGE likes callback was caught on-device and wired to the screen callback.
+- A failed initial detail request previously marked missing data as deletion and popped external activity links back to Anime. `CommentViewModel` now distinguishes a missing initial entity from removal of an observed canonical feed. Its regression failed before and passed after the correction, including later store-driven deletion.
+
+### Verification
+
+- `FeedPageSnapshotTest` 1/1, `CommentViewModelTest` 13/13. Device checks: `FeedProgressRowComposeTest` 5/5, `FeedStatusRowComposeTest` 4/4, `FeedCommentFavouriteComposeTest` 2/2, `CommentThreadLazyListComposeTest` 6/6, and external ingress 11/11.
+- Live feed scrolling crossed the page boundary; process-scoped HTTP logs contained page 1 and page 2 requests and no fatal-exception marker. Opening a visible feed's comments showed the origin above the composer; first back dismissed input UI without leaving, and second back returned to the retained feed viewport. No remote mutation was submitted during this manual pass.
+
+## Fifty-third Compose slice: review lists and vote ownership
+
+### Cutover and contracts
+
+- Browse and media review sections use `ReviewList`, preserving banner/default variants and the actual hosted `MaterialTextView` reader action. Removed `ReviewAdapter`, holder registries, and adapter-only DiffUtil tests.
+- ViewModels own per-review, per-direction pending vote tickets through `ReviewVoteStateOwner`. Active votes toggle to `NO_VOTE`; counts remain server-authoritative. Timeout and late completion clear only the matching ticket, including when a row leaves the viewport. Login gating, stale-refresh feedback, failure handling, sorting, and manual paging remain intact.
+
+### Verification
+
+- `ReviewVoteStateOwnerTest` 4/4 uses fake time for timeout and late-result boundaries; `ReviewListProjectionTest` 1/1 and both rate ViewModel suites passed in the unit gate. `ReviewListComposeTest` 2/2 verifies both variants, image/profile actions, vote dispatch, and the real reader target.
+- Live review browse displayed server cards and settled after pull-to-refresh. Read More opened the complete matching review, author, media title, and body in the existing reader sheet.
+
+## Fifty-fourth Compose slice: status attachment carousel
+
+### Cutover and contracts
+
+- `StatusContentWidget` renders immutable typed attachments with `FeedAttachmentCarousel` and native `HorizontalPager`. Removed `ImagePreviewAdapter` and its now-unreferenced `CenterSnapUtil`.
+- Image, WebM, and YouTube routing; case-insensitive markup; fit/center-crop choices; wide-image height; playback badges; current-page indicator; and selection callbacks remain. Null text and recycling clear previous attachment content; unchanged status rebinds retain the current page.
+
+### Verification
+
+- `FeedSlideComposeTest` 6/6 covers local image pixels, fit/fill placement, height, playback affordance, clearing on reuse, and real swipe/selection/indicator behavior. No RecyclerView or holder is created by these tests.
+
+## Fifty-fifth Compose slice: onboarding pager
+
+### Cutover and contracts
+
+- `WelcomeActivity` uses native `HorizontalPager` instead of a RecyclerView adapter behind `ViewPager2`. Existing non-list hero artwork remains View interop; the native Continue/Get Started button, page indicators, completion action, and window handling remain.
+- Pager state is saveable. Each Continue request is a distinct UI action, so swiping back does not suppress the next button press.
+
+### Verification and pre-retirement checkpoint
+
+- `OnboardingPagerComposeTest` 1/1 verifies swipes, Continue after swiping back, page restoration after recreation, and the final button state.
+- Current App unit gate: 1,283 tests, 0 failures, 3 skipped. The preceding Github gate passed 1,284 tests before removing two projection-only checks and adding the comment failure/deletion regression. Both debug APKs assembled before those final feed/comment corrections.
+- The full device run executed 226 tests with four failures. After corrections, the affected ingress/progress/status/review suites passed 11/11, 5/5, 4/4, and 2/2. A fresh full matrix is still required after removing shared Recycler infrastructure and the Recycler-backed navigation drawer.
+
+## Fifty-sixth Compose slice: retire shared Recycler infrastructure
+
+- `FragmentBaseList` retains only native refresh/error presentation and `ManualPageState` bookkeeping. It no longer owns a RecyclerView, adapter, layout manager, or scroll listener. Direct section controllers mount Compose content into the empty refresh target.
+- `CommonPresenter` uses the same framework-independent page bookkeeping without a Recycler dependency. This does not expand presenter usage or replace the ViewModel-first direction.
+- `FragmentChannelBase` is removed. `WatchListViewModel` owns RSS loading, cached content, title filtering, request freshness, and source episode identity; the screen renders state and forwards selections.
+- Unused adapter/holder/scroll-listener bases, stateful Recycler hosts, selection callbacks, animation infrastructure, Recycler row XML, and obsolete recycling/wiring tests are removed after their consumers were migrated.
+- Paging load-state rendering and footer code live in `ui.paging`. The direct Paging runtime dependency and catalog alias are removed; Compose paging retains the required common API.
+- Unused grouped-row `contentType` metadata is removed. ObjectBox generation reported its schema JSON unchanged, so this renderer retirement adds no persistence migration.
+
+## Fifty-seventh Compose slice: native collection drawer
+
+- `MainNavigationDrawer` replaces the Recycler-backed Material `NavigationView`, including its header and update row. `DrawerLayout`, the toolbar toggle, and Navigation 2 remain.
+- Drawer constraints are applied once: the lazy list respects the native child width with a `320.dp` maximum. The header participates in the same lazy list rather than remaining pinned.
+- Selected labels/icons use `onPrimary`; unselected labels/icons explicitly use `onSurface`. Authentication-dependent entries, unread count, header/avatar actions, destination callbacks, and app/github update behavior remain explicit immutable render state.
+- `MainNavigationDrawerComposeTest` covers signed-in/out visibility, row selection, update badges, native-parent width, dark/black label contrast, constrained-height header scrolling, and keyboard traversal/activation.
+- Live API 36 screenshots exercised light, dark, and black app themes with the real drawer toggle and destination selection. Captures are local artifacts at `/tmp/anitrend-compose-drawer-light.png`, `/tmp/anitrend-compose-drawer-dark.png`, and `/tmp/anitrend-compose-drawer-black.png`.
+- The final Github APK also rendered the public media grid and exposed its drawer Update row. A real row tap opened the update confirmation sheet; choosing No dismissed it without downloading or installing a release. Local capture: `/tmp/anitrend-compose-github-update.png`.
+
+## Fifty-eighth Compose slice: lifecycle and native-container boundaries
+
+- Notifications publish page-keyed, ID-deduplicated full snapshots. Resume and view recreation re-render those snapshots rather than appending the same page again. The lifecycle regression loads two pages, replays state, recreates the view, and reaches earlier rows without requesting page three.
+- Manual character, staff, studio, and user search retain unique full snapshots with submitted query/page identity. Saved counters are reconciled before the first request, and fresh-process state reloads page one rather than skipping a missing page.
+- Editable search drafts are separate from submitted query identity. Draft edits do not discard pending responses; explicit submission or tab selection commits the query. Consumed media refresh signals do not refresh again on detail/back.
+- Lazy viewport detection owns manual appends. Search and direct detail grids disable competing native bottom-load gestures, retain same-page retry, stop both native indicators on success, and stop after terminal or duplicate-only pages.
+- `FollowStateWidget.setUserState(userId, isFollowing)` renders the committed flag without retaining or mutating the target entity. User rows pass snapshot values; profile rendering no longer allocates a copied user merely to carry follow state.
+- Giphy, supplied-user/likes, and fetched followers/following sheets connect their lazy content to native nested scrolling. Real downward mid-list drag checks verify earlier content becomes visible while the dialog stays expanded at the same position.
+- Gesture fixtures position content semantically before the native drag. This avoids unrelated fast-fling edge/idle races while preserving the real touch interception assertion. Native retry interaction waits for the snackbar action to finish entering before clicking it.
+- Final live RSS smoke exposed an unreachable toolbar bridge: the activity fragment list contained the NavHost rather than its active list destination. Toolbar text changes and closing now reach the NavHost's primary media-list or episode destination. Episode screens expose title search instead of unrelated media API filters.
+- `ToolbarEpisodeSearchNavigationTest` failed before that correction because the episode search action was absent, then passed native typing, visible row filtering, and cached-row restoration on close. Live RSS filtering for `Attack` also opened the correct nonzero-source episode preview, without starting playback.
+- The comment action regression uses an image-independent fixture instead of waiting for an unrelated avatar center pixel. It verifies mention, profile, and likes callbacks both before and after replacing the reply snapshot, including the rebound reply/user IDs.
+
+### Removal boundary and rollback
+
+- Production source scans cover `app/src/main`, `app/src/app`, `app/src/github`, and `app/src/debug`; catalog/build scans cover `gradle/libs.versions.toml`, `buildSrc`, and `app/build.gradle.kts`.
+- No app-owned RecyclerView, NavigationView, ViewPager2, retired adapter/holder/scroll helper, or direct Recycler-backed dependency reference remains in those scopes. Third-party Material/debug artifacts may still contain Recycler bytecode; this is not a claim that all transitive library classes were stripped from APKs.
+- Roll back renderer/state bookkeeping changes together if necessary. Do not preserve a parallel legacy adapter path or reintroduce an event-based entity synchronization shim. No database schema migration is required by the final infrastructure retirement.
+
+## Final collection-cutover verification
+
+All commands below completed successfully against the final production code. The only subsequent code change was the image-independent comment-action test fixture; the complete connected suite was rerun after that change.
+
+| Suite | Tests | Failures | Skipped |
+| --- | ---: | ---: | ---: |
+| App debug unit tests | 1,281 | 0 | 1 |
+| Github debug unit tests | 1,281 | 0 | 1 |
+| App debug connected tests, API 36 | 245 | 0 | 0 |
+
+The unit skip is pre-existing. Spotless and both debug APK assemblies passed:
+
+```sh
+jenv exec ./gradlew :app:spotlessCheck :app:testAppDebugUnitTest :app:testGithubDebugUnitTest :app:assembleAppDebug :app:assembleGithubDebug --no-configuration-cache --no-daemon --max-workers=1 -Dorg.gradle.parallel=false --quiet
+```
+
+The final unfiltered connected run passed all cases, including native drawer sizing/focus/themes, search paging/retry/recreation/drafts, RSS toolbar filtering, notification lifecycle replay, sheet touch interception, comment snapshot actions, and existing entry-point regressions:
+
+```sh
+jenv exec ./gradlew :app:connectedAppDebugAndroidTest --no-configuration-cache --no-daemon --max-workers=1 -Dorg.gradle.parallel=false --quiet
+```
+
+`bash .github/scripts/validate-changelogs.sh` passed. Final production and catalog/build scans returned zero references to the retired Recycler hosts/helpers and direct dependencies in the scopes above.
+
+Live checks across the migration exercised public feed scrolling/paging and comments/back behavior, review opening and refresh, grouped media/character/staff navigation, live search drafts and detail/back, RSS filtering and correct episode preview identity, light/dark/black drawer rendering, and the Github update confirmation. No remote social mutation or playback was triggered. The Github update confirmation was dismissed without downloading or installing a release.
+
+Runtime evidence is from the API 36 emulator. Release/R8 builds and a physical-device/API-level matrix were not run. Integrated paging/state, drawer/pager, search-lifecycle, and native-sheet reviews were completed; their identified cutover regressions were corrected and exercised by the final suite.

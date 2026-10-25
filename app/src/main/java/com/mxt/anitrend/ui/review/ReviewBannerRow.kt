@@ -55,7 +55,7 @@ import com.mxt.anitrend.ui.designsystem.aniTrendPlatformTextStyle
 import com.mxt.anitrend.ui.image.AniTrendImage
 import com.mxt.anitrend.util.KeyUtil
 
-/** Stateless browse-review banner, retaining its View-owned rating and Read More leaves. */
+/** Stateless browse-review banner with actions and vote state supplied by its screen owner. */
 @Composable
 internal fun ReviewBannerRow(
     review: ReviewRecord,
@@ -228,7 +228,6 @@ internal fun ReviewBannerRow(
                     AndroidView(
                         factory = { context ->
                             createReviewReadMoreView(context).apply {
-                                setOnClickListener { onReadMoreClick() }
                                 onReadMoreViewCreated(this)
                             }
                         },
@@ -243,6 +242,9 @@ internal fun ReviewBannerRow(
                                     true
                                 }
                             },
+                        update = { view ->
+                            view.setOnClickListener { onReadMoreClick() }
+                        },
                         onRelease = { view ->
                             view.setOnClickListener(null)
                             onReadMoreViewReleased(view)

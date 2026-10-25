@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.mxt.anitrend.widget.ProgressLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/stateLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.mxt.anitrend.base.custom.view.container.CustomSwipeRefreshLayout
+        android:id="@+id/refreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:descendantFocusability="blocksDescendants">
+
+        <androidx.compose.ui.platform.ComposeView
+            android:id="@+id/media_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </com.mxt.anitrend.base.custom.view.container.CustomSwipeRefreshLayout>
+
+</com.mxt.anitrend.widget.ProgressLayout>

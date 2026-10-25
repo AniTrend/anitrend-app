@@ -3,7 +3,6 @@
 package com.mxt.anitrend.widget
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.net.Uri
@@ -26,11 +25,12 @@ import androidx.compose.ui.test.captureToImage
 import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.v2.runAndroidComposeUiTest
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.swipeLeft
+import androidx.compose.ui.test.click
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.mxt.anitrend.R
-import com.mxt.anitrend.adapter.recycler.detail.ImagePreviewAdapter
 import com.mxt.anitrend.base.custom.view.widget.StatusContentWidget
 import com.mxt.anitrend.ui.designsystem.AniTrendTheme
 import com.mxt.anitrend.ui.media.FeedSlideRow
@@ -51,7 +51,6 @@ class FeedSlideComposeTest {
             val imageUrl = "android.resource://${hostActivity.packageName}/${R.drawable.reg_bg}"
             val expectedCenterColor = resourceCenterPixel(hostActivity)
             lateinit var statusWidget: StatusContentWidget
-            lateinit var recyclerView: RecyclerView
             runOnUiThread {
                 statusWidget = StatusContentWidget(hostActivity)
                 val margin = hostActivity.resources.getDimensionPixelSize(R.dimen.lg_margin)
@@ -66,11 +65,7 @@ class FeedSlideComposeTest {
                         )
                     },
                 )
-                recyclerView = statusWidget.findViewById(R.id.widget_status_recycler)
-                statusWidget.setTextData(RegexUtil.createImageStandard(imageUrl))
-            }
-            waitUntil("feed slide holder binds", 5_000L) {
-                recyclerView.findViewHolderForAdapterPosition(0) != null
+                statusWidget.setTextData("IMG250($imageUrl)")
             }
             waitUntil("local feed image pixels are visible", 5_000L) {
                 val images =
@@ -87,13 +82,10 @@ class FeedSlideComposeTest {
             onNodeWithTag(FEED_SLIDE_IMAGE_TAG, useUnmergedTree = true).assertIsDisplayed().assertHasClickAction()
             onNodeWithTag(FEED_SLIDE_IMAGE_CONTENT_TAG, useUnmergedTree = true).assertIsDisplayed()
             assertEquals(0, onAllNodesWithTag(FEED_SLIDE_PLAY_TAG, useUnmergedTree = true).fetchSemanticsNodes().size)
-            var transitionName: String? = null
-            runOnUiThread {
-                transitionName =
-                    requireNotNull(recyclerView.findViewHolderForAdapterPosition(0)?.itemView as? ComposeView)
-                        .transitionName
-            }
-            assertEquals(imageUrl, transitionName)
+            var selected: String? = null
+            runOnUiThread { statusWidget.onImagePreviewRequested = { selected = it } }
+            onNodeWithTag(FEED_SLIDE_IMAGE_TAG, useUnmergedTree = true).performClick()
+            assertEquals(imageUrl, selected)
         }
     }
 
@@ -136,7 +128,7 @@ class FeedSlideComposeTest {
             val hostActivity = requireNotNull(activity)
             val imageUrl = "android.resource://${hostActivity.packageName}/${R.drawable.reg_bg}"
             lateinit var statusWidget: StatusContentWidget
-            lateinit var recyclerView: RecyclerView
+            lateinit var pagerView: ComposeView
             runOnUiThread {
                 statusWidget = StatusContentWidget(hostActivity)
                 val margin = hostActivity.resources.getDimensionPixelSize(R.dimen.lg_margin)
@@ -151,14 +143,13 @@ class FeedSlideComposeTest {
                         )
                     },
                 )
-                recyclerView = statusWidget.findViewById(R.id.widget_status_recycler)
+                pagerView = statusWidget.findViewById(R.id.widget_status_compose_view)
                 statusWidget.setTextData(RegexUtil.createImageStandard(imageUrl))
             }
             waitUntil("feed image row attaches", 5_000L) {
-                recyclerView.findViewHolderForAdapterPosition(0)?.itemView?.isShown == true &&
-                    onAllNodesWithTag(FEED_SLIDE_IMAGE_CONTENT_TAG, useUnmergedTree = true)
-                        .fetchSemanticsNodes()
-                        .size == 1
+                onAllNodesWithTag(FEED_SLIDE_IMAGE_CONTENT_TAG, useUnmergedTree = true)
+                    .fetchSemanticsNodes()
+                    .size == 1
             }
             waitForIdle()
 
@@ -171,7 +162,7 @@ class FeedSlideComposeTest {
             assertEquals(expectedHeight.toFloat(), imageHeight, 1f)
             var rowHeight = 0
             runOnUiThread {
-                rowHeight = requireNotNull(recyclerView.findViewHolderForAdapterPosition(0)).itemView.height
+                rowHeight = pagerView.height
             }
             assertEquals("Feed row retains the legacy wide-image sizing formula", expectedHeight, rowHeight)
         }
@@ -274,60 +265,59 @@ class FeedSlideComposeTest {
 
     @Test
     @OptIn(ExperimentalTestApi::class)
-    fun reusedPreviewHostClearsTransitionNameForBlankImage() {
+    fun reusedStatusClearsAttachmentsWhenTheNextTextHasNone() {
         runAndroidComposeUiTest<ProgressLayoutTestActivity> {
             val hostActivity = requireNotNull(activity)
             val imageUrl = "android.resource://${hostActivity.packageName}/${R.drawable.reg_bg}"
-            val expectedCenterColor = resourceCenterPixel(hostActivity)
-            lateinit var recyclerView: RecyclerView
-            lateinit var adapter: ImagePreviewAdapter
+            lateinit var widget: StatusContentWidget
             runOnUiThread {
-                adapter =
-                    ImagePreviewAdapter(listOf(RegexUtil.KEY_IMG), hostActivity).apply {
-                        onItemsInserted(listOf(imageUrl))
-                    }
-                recyclerView =
-                    RecyclerView(hostActivity).apply {
-                        layoutManager = LinearLayoutManager(hostActivity, LinearLayoutManager.HORIZONTAL, false)
-                        itemAnimator = null
-                        this.adapter = adapter
-                    }
-                hostActivity.setContentView(recyclerView)
+                widget = StatusContentWidget(hostActivity)
+                hostActivity.setContentView(widget)
+                widget.setTextData(RegexUtil.createImageStandard(imageUrl))
             }
-            waitUntil("image preview host receives its shared transition name", 5_000L) {
-                val host = recyclerView.findViewHolderForAdapterPosition(0)?.itemView as? ComposeView
-                host?.transitionName == imageUrl
+            waitUntil("initial attachment is visible", 5_000L) {
+                onAllNodesWithTag(FEED_SLIDE_IMAGE_TAG, useUnmergedTree = true).fetchSemanticsNodes().isNotEmpty()
             }
-            val originalHost = requireNotNull(recyclerView.findViewHolderForAdapterPosition(0)?.itemView as? ComposeView)
-            val imageContent = onNodeWithTag(FEED_SLIDE_IMAGE_CONTENT_TAG, useUnmergedTree = true)
-            waitUntil("local image is visible before blank rebind", 5_000L) {
-                onAllNodesWithTag(FEED_SLIDE_IMAGE_CONTENT_TAG, useUnmergedTree = true).fetchSemanticsNodes().size == 1 &&
-                    isColorNear(imageCenterPixel(imageContent), expectedCenterColor)
+            runOnUiThread { widget.setTextData(null) }
+            waitUntil("a status without attachments cannot retain the previous image", 5_000L) {
+                onAllNodesWithTag(FEED_SLIDE_IMAGE_TAG, useUnmergedTree = true).fetchSemanticsNodes().isEmpty()
             }
-            val originalPixels = imageContent.captureToImage().asAndroidBitmap()
-            try {
-                runOnUiThread { adapter.onItemChanged("", 0) }
-                waitUntil("reused image preview host clears its transition name", 5_000L) {
-                    val host = recyclerView.findViewHolderForAdapterPosition(0)?.itemView as? ComposeView
-                    host === originalHost && host.transitionName == null
-                }
-                waitForIdle()
-                val blankImage = onNodeWithTag(FEED_SLIDE_IMAGE_CONTENT_TAG, useUnmergedTree = true)
-                blankImage.assertIsDisplayed()
-                val blankPixels = blankImage.captureToImage().asAndroidBitmap()
-                try {
-                    assertTrue("blank image binding removes the previous local pixels", !originalPixels.sameAs(blankPixels))
-                    assertTrue("blank image binding leaves a uniform surface", blankPixels.isUniformColor())
-                    assertEquals(
-                        wideImageHeightPixels(hostActivity).toFloat(),
-                        blankImage.fetchSemanticsNode().boundsInRoot.height,
-                        1f,
-                    )
-                } finally {
-                    blankPixels.recycle()
-                }
-            } finally {
-                originalPixels.recycle()
+            runOnUiThread { widget.setTextData(RegexUtil.createImageStandard(imageUrl)) }
+            waitUntil("attachments can render again after a clear", 5_000L) {
+                onAllNodesWithTag(FEED_SLIDE_IMAGE_TAG, useUnmergedTree = true).fetchSemanticsNodes().isNotEmpty()
+            }
+            runOnUiThread { widget.onViewRecycled() }
+            waitUntil("recycling also clears attachment content", 5_000L) {
+                onAllNodesWithTag(FEED_SLIDE_IMAGE_TAG, useUnmergedTree = true).fetchSemanticsNodes().isEmpty()
+            }
+        }
+    }
+
+    @Test
+    @OptIn(ExperimentalTestApi::class)
+    fun swipingTheAttachmentPagerUpdatesTheIndicatorAndOpensTheSelectedImage() {
+        runAndroidComposeUiTest<ProgressLayoutTestActivity> {
+            val hostActivity = requireNotNull(activity)
+            val firstUrl = "android.resource://${hostActivity.packageName}/${R.drawable.reg_bg}"
+            val secondUrl = "android.resource://${hostActivity.packageName}/${R.drawable.empty_icon}"
+            lateinit var widget: StatusContentWidget
+            var selected: String? = null
+            runOnUiThread {
+                widget = StatusContentWidget(hostActivity)
+                hostActivity.setContentView(widget)
+                widget.onImagePreviewRequested = { selected = it }
+                widget.setTextData(RegexUtil.createImageStandard(firstUrl) + " " + RegexUtil.createImageStandard(secondUrl))
+            }
+            waitForIdle()
+            val pager = onNodeWithTag("feed-attachment-pager", useUnmergedTree = true)
+            pager.performTouchInput { click(center) }
+            assertEquals(firstUrl, selected)
+            pager.performTouchInput { swipeLeft() }
+            waitForIdle()
+            pager.performTouchInput { click(center) }
+            assertEquals(secondUrl, selected)
+            runOnUiThread {
+                assertEquals("2 / 2", widget.findViewById<android.widget.TextView>(R.id.widget_status_indicator).text.toString())
             }
         }
     }
@@ -348,16 +338,6 @@ class FeedSlideComposeTest {
         } finally {
             bitmap.recycle()
         }
-    }
-
-    private fun Bitmap.isUniformColor(): Boolean {
-        val firstPixel = getPixel(0, 0)
-        for (y in 0 until height) {
-            for (x in 0 until width) {
-                if (getPixel(x, y) != firstPixel) return false
-            }
-        }
-        return true
     }
 
     private fun wideImageHeightPixels(context: Context): Int {

@@ -1,7 +1,7 @@
 package com.mxt.anitrend.view.fragment.list
 
-import android.os.Bundle
 import android.content.SharedPreferences
+import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -13,9 +13,11 @@ import com.mxt.anitrend.graphql.generated.ScoreFormat
 import com.mxt.anitrend.repository.UserRepository
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.Settings
-import com.mxt.anitrend.util.media.MediaListUtil
 import com.mxt.anitrend.util.graphql.GraphUtil
+import com.mxt.anitrend.util.media.MediaListUtil
 import com.mxt.anitrend.viewmodel.AiringListViewModel
+import com.mxt.anitrend.viewmodel.MediaListDisplayState
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -29,6 +31,13 @@ open class AiringListFragment : MediaListFragment() {
     private val userRepository: UserRepository by inject()
 
     private val airingListViewModel: AiringListViewModel by viewModel()
+
+    override val display: StateFlow<MediaListDisplayState?>
+        get() = airingListViewModel.display
+
+    override fun onSearchQueryChanged(searchQuery: String?) {
+        airingListViewModel.onSearchQueryChanged(searchQuery)
+    }
 
     companion object {
         @JvmStatic
@@ -94,9 +103,8 @@ open class AiringListFragment : MediaListFragment() {
     override fun onChanged(value: MediaListCollectionPageResult?) = Unit
 
     /**
-     * The base class resolves the tapped entry from its own latestEntries,
-     * which the Airing screen never populates. Resolve from the Airing
-     * ViewModel state (the source of truth) and reuse the shared dispatch.
+     * Resolve against the Airing ViewModel's current state and reuse the shared
+     * mutation dispatch, including its viewport-anchor restoration.
      */
     override fun incrementMediaProgress(item: MediaListItemUiModel) {
         val state = airingListViewModel.state.value as? AiringListViewModel.UiState.Success ?: return
@@ -107,8 +115,9 @@ open class AiringListFragment : MediaListFragment() {
     }
 
     private fun handleSuccess(state: AiringListViewModel.UiState.Success) {
-        state.pageInfo?.let(::setPageInfo)
-        submitStateList(state.renderedItems)
+        // Rows and entries arrive through the inherited display collector as one
+        // snapshot; this handler only owns page info and the surface decision.
+        state.pageInfo?.let(pageState::setPageInfo)
         if (state.renderedItems.isNotEmpty()) {
             updateUI()
         } else {

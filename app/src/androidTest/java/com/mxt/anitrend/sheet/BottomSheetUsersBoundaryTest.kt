@@ -134,7 +134,7 @@ class BottomSheetUsersBoundaryTest {
                         deliveredUserIds.add(userId)
                     },
                 )
-                widget.setUserModel(roundTrippedUser)
+                widget.setUserState(roundTrippedUser.id, roundTrippedUser.isFollowing)
 
                 val flipper = widget.findViewById<ViewFlipper>(R.id.widget_flipper)
                 flipper.performClick()

@@ -61,7 +61,7 @@ internal fun Project.configureDependencies() {
     /** Architecture Components */
     dependencies.implementation(libs.androidx.constraintLayout)
     dependencies.implementation(libs.androidx.collectionKtx)
-    dependencies.implementation(libs.androidx.paging.runtime)
+    dependencies.implementation(libs.androidx.paging.compose)
 
     dependencies.implementation(libs.androidx.coreKtx)
     dependencies.implementation(libs.androidx.appcompat)
