@@ -160,7 +160,7 @@ internal fun MediaListProgressControl(
 @Preview(name = "Media list progress control", showBackground = true, widthDp = 80, heightDp = 48)
 @Composable
 private fun MediaListProgressControlPreview() {
-    AniTrendTheme {
+    AniTrendTheme("light") {
         Box(
             modifier =
             Modifier

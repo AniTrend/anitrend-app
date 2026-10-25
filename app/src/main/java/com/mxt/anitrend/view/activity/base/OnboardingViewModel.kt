@@ -1,43 +1,53 @@
 package com.mxt.anitrend.view.activity.base
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import com.mxt.anitrend.R
 import com.mxt.anitrend.util.Settings
 
+/** Stable identity of one onboarding tour page. */
+enum class OnboardingPageId {
+    DISCOVER,
+    TRACK,
+    SOCIAL,
+    START,
+}
+
 /**
- * Defines the pages shown during first-run onboarding and records completion.
+ * Defines the four pages shown during first-run onboarding and records
+ * completion.
+ *
+ * Pages are immutable resource definitions owned by this ViewModel; the
+ * Compose screen keeps only the current page index and completion state in
+ * saveable state.
  */
 class OnboardingViewModel(
     private val settings: Settings,
 ) : ViewModel() {
 
-    val pages = listOf(
-        OnboardingPage(
-            R.string.app_name,
-            R.string.description_onboarding_welcome,
-            R.layout.layout_onboarding_welcome_hero,
-        ),
-        OnboardingPage(
-            R.string.app_intro_colors_title,
-            R.string.description_onboarding_colors,
-            R.layout.layout_onboarding_colors_hero,
-        ),
-        OnboardingPage(
-            R.string.app_intro_content_title,
-            R.string.description_onboarding_content,
-            R.layout.layout_onboarding_content_hero,
-        ),
-        OnboardingPage(
-            R.string.app_intro_search_title,
-            R.string.description_onboarding_searching,
-            R.layout.layout_onboarding_searching_hero,
-        ),
-        OnboardingPage(
-            R.string.title_onboarding_manage,
-            R.string.description_onboarding_manage,
-            R.layout.layout_onboarding_manage_hero,
-        ),
-    )
+    val pages =
+        listOf(
+            OnboardingPage(
+                id = OnboardingPageId.DISCOVER,
+                titleRes = R.string.title_onboarding_discover,
+                descriptionRes = R.string.description_onboarding_discover,
+            ),
+            OnboardingPage(
+                id = OnboardingPageId.TRACK,
+                titleRes = R.string.title_onboarding_track,
+                descriptionRes = R.string.description_onboarding_track,
+            ),
+            OnboardingPage(
+                id = OnboardingPageId.SOCIAL,
+                titleRes = R.string.title_onboarding_social,
+                descriptionRes = R.string.description_onboarding_social,
+            ),
+            OnboardingPage(
+                id = OnboardingPageId.START,
+                titleRes = R.string.title_onboarding_start,
+                descriptionRes = R.string.description_onboarding_start,
+            ),
+        )
 
     /** Marks onboarding as completed so it is not shown on the next launch. */
     fun onPostFreshInstall() {
@@ -46,8 +56,8 @@ class OnboardingViewModel(
 
     /** Immutable resources used to render one onboarding page. */
     data class OnboardingPage(
-        val titleRes: Int,
-        val descriptionRes: Int,
-        val heroLayoutRes: Int,
+        val id: OnboardingPageId,
+        @StringRes val titleRes: Int,
+        @StringRes val descriptionRes: Int,
     )
 }

@@ -104,53 +104,6 @@
 
     <string name="Watch">Watch</string>
 
-    <!--First time usage intro screen-->
-    <string name="get_started">Get Started</string>
-    <!-- Action label on the onboarding button before the final page; advances to the next page -->
-    <string name="action_onboarding_continue">Continue</string>
-    <string name="app_intro_colors_title">Color States</string>
-    <string name="app_intro_colors_text">Colors Representing Anime/Manga Status!</string>
-    <string name="app_intro_content_title">Content</string>
-    <string name="app_intro_content_text">Multiple Anime &amp; Manga Listings!</string>
-    <string name="app_intro_search_title">Searching</string>
-    <string name="app_intro_search_text">Anime, Manga &amp; More Search Functionality!</string>
-    <string name="app_intro_videos_title">Videos</string>
-    <string name="app_intro_videos_text">Using Builtin Youtube Video Player!</string>
-    <string name="app_greeting">Welcome to AniTrend, this is not a streaming app!</string>
-
-    <!-- Status chip label in the onboarding heroes; shows the "watching" list status -->
-    <string name="label_onboarding_status_watching">Watching</string>
-    <!-- Status chip label in the onboarding heroes; shows the "completed" list status -->
-    <string name="label_onboarding_status_completed">Completed</string>
-    <!-- Status chip label in the onboarding heroes; shows the "plan to watch" list status -->
-    <string name="label_onboarding_status_plan_to_watch">Plan to Watch</string>
-    <!-- Status chip label in the onboarding heroes; shows the "dropped" list status -->
-    <string name="label_onboarding_status_dropped">Dropped</string>
-    <!-- Status chip label in the onboarding heroes; shows the "on hold" list status -->
-    <string name="label_onboarding_status_on_hold">On Hold</string>
-    <!-- Status chip label in the onboarding heroes; shows the "rewatching" list status -->
-    <string name="label_onboarding_status_rewatching">Rewatching</string>
-
-    <!-- Placeholder text in the search bar mockup of the onboarding searching hero -->
-    <string name="placeholder_onboarding_search">Search anime, manga...</string>
-    <!-- Example search result in the onboarding searching hero; Jujutsu Kaisen is an anime title -->
-    <string name="label_onboarding_search_result_jujutsu_kaisen">Jujutsu Kaisen</string>
-    <!-- Example search result in the onboarding searching hero; One Piece is an anime title -->
-    <string name="label_onboarding_search_result_one_piece">One Piece</string>
-
-    <!-- First onboarding page description; friendly benefit-led copy about discovering, tracking, and organizing anime and manga -->
-    <string name="description_onboarding_welcome">Discover new favourites, track your progress, and keep every anime and manga list in one place.</string>
-    <!-- Colors page description; explains the color coding of anime/manga list statuses -->
-    <string name="description_onboarding_colors">Quickly identify what you\'re watching, completed, or planning to watch with intuitive color coding at a glance.</string>
-    <!-- Content page description; explains the browsable catalog -->
-    <string name="description_onboarding_content">Browse thousands of titles with detailed info, ratings, seasonal charts, and staff credits - updated daily.</string>
-    <!-- Searching page description; explains search and filter capabilities -->
-    <string name="description_onboarding_searching">Powerful search with filters by genre, year, studio, and status - find exactly what you\'re looking for.</string>
-    <!-- Final onboarding page title; introduces managing anime and manga lists -->
-    <string name="title_onboarding_manage">Manage Your List</string>
-    <!-- Final onboarding page description; long-pressing an anime or manga item opens list management for status, progress, and details -->
-    <string name="description_onboarding_manage">Long-press any anime or manga to manage its status, progress, and details.</string>
-
     <!--Filter menu entry these are the dialog titles-->
     <string name="app_filter_sort">Sort By?</string>
     <string name="app_filter_on_list">On My List?</string>
@@ -200,13 +153,6 @@
         ]]>
     </string>
 
-    <!-- translators: This copy is shown on the full-screen onboarding card (the final
-     welcome card). It explains that tapping a card lets users explore anime and
-     manga, and that signing in with AniList lets them manage their lists. -->
-    <string name="app_intro_guide">Tap a card to explore anime and manga. Sign in with AniList to manage your lists.</string>
-    <!-- translators: Heading for the full-screen onboarding card, shown directly above
-         the guide text. -->
-    <string name="app_intro_title">Get started</string>
 
     <string name="login_welcome_title">Welcome %s</string>
 
@@ -821,10 +767,6 @@
     <string name="dialog_title_completed_at">Finish Date</string>
     <string name="dialog_button_clear">Clear</string>
 
-    <string name="pref_header_customize">Customize</string>
-    <string name="pref_header_customize_summary">Customize the look and feel of the app</string>
-    <string name="text_application_restart_required">Please restart the application for changes to take effect</string>
-
     <!-- Image Preview strings -->
     <string name="image_preview_title">Preview</string>
     <string name="image_preview_download">Download</string>
@@ -931,8 +873,6 @@
     <string name="dialog_title_delete_activity">Delete Activity</string>
     <string name="dialog_message_delete_activity">Are you sure you want delete this activity? This is irreversible!!</string>
 
-    <string name="pref_title_display_adult_content">Display Adult Content</string>
-    <string name="pref_summary_display_adult_content">Allow the application to show NSFW content, for this to work +18 content must be enabled in anilist</string>
 
     <string name="pref_summary_clear_notification_on_dismiss">Marks notifications as read when you dismiss them from the status bar</string>
     <string name="pref_title_clear_notification_on_dismiss">Mark all notifications as read on dismiss</string>
@@ -942,22 +882,14 @@
     <string name="title_bottom_sheet_spoiler">Spoiler</string>
     <string name="notification_action_mark_as_read">Mark as read</string>
 
-    <string name="pref_header_accessibility">Accessibility</string>
-    <string name="pref_header_accessibility_summary">Adjust display for accessibility needs</string>
+    <!-- Settings hub category for the app theme, language and list view style -->
     <string name="pref_header_appearance">Appearance</string>
-    <string name="pref_header_appearance_summary">Customize visual appearance and density</string>
-    <string name="pref_header_content">Content</string>
-    <string name="pref_header_content_summary">Control how content is displayed</string>
-    <string name="pref_title_accent_color">Accent color</string>
-    <string name="pref_title_autoplay">Auto-play trailers</string>
-    <string name="pref_title_font_scale">Font scale</string>
-    <string name="pref_title_high_contrast">High contrast mode</string>
-    <string name="pref_title_list_density">List density</string>
-    <string name="pref_title_reduce_motion">Reduce motion</string>
+    <!-- Summary under the Appearance settings hub category -->
+    <string name="pref_header_appearance_summary">Theme, language and list view style</string>
+    <!-- Settings row for the AniList score display format -->
     <string name="pref_title_score_format">Score format</string>
-    <string name="pref_title_spoiler_behavior">Spoiler behavior</string>
+    <!-- Settings row for the preferred language for series titles -->
     <string name="pref_title_title_language">Preferred title language</string>
-    <string name="pref_summary_placeholder">Coming soon</string>
 
     <string name="search_hint">Search</string>
     <string name="patreon">https://www.patreon.com/wax911</string>

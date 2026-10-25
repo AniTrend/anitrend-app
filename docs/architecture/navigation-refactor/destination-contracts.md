@@ -1,6 +1,6 @@
 # Navigation destination contracts
 
-**Status:** Navigation 2 route contracts observed in the working tree; coverage claims reconciled with the actual tests
+**Status:** Navigation 3 route contracts (`AppNavKey`/`StackKey` in `ui/navigation/`) are the active production navigation layer; the external ingress and wire-key contracts below remain valid and are decoded at ingress boundaries via `resolveExternalEntry`.
 
 This document records the argument contracts that Navigation 2 destinations
 must preserve. It is intentionally separate from implementation details so

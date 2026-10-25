@@ -26,7 +26,7 @@ internal fun SettingsDivider(modifier: Modifier = Modifier) {
 @Preview(name = "Settings divider light", showBackground = true)
 @Composable
 private fun SettingsDividerPreview() {
-    AniTrendTheme {
+    AniTrendTheme("light") {
         Surface {
             SettingsDivider()
         }
@@ -40,7 +40,7 @@ private fun SettingsDividerPreview() {
 )
 @Composable
 private fun SettingsDividerDarkPreview() {
-    AniTrendTheme {
+    AniTrendTheme("dark") {
         Surface {
             SettingsDivider()
         }

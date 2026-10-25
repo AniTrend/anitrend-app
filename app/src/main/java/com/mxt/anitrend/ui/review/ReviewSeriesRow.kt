@@ -2,10 +2,6 @@
 
 package com.mxt.anitrend.ui.review
 
-import android.view.ContextThemeWrapper
-import android.graphics.Typeface
-import android.view.View
-import android.view.ViewGroup
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -15,6 +11,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -26,14 +23,17 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
@@ -50,12 +50,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
-import com.google.android.material.textview.MaterialTextView
 import com.mxt.anitrend.R
-import com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView
-import com.mxt.anitrend.base.custom.view.widget.CustomRatingBar
-import com.mxt.anitrend.binding.markDown
 import com.mxt.anitrend.domain.model.MediaSummaryRecord
 import com.mxt.anitrend.domain.model.ReviewRecord
 import com.mxt.anitrend.domain.model.UserSummaryRecord
@@ -64,8 +59,11 @@ import com.mxt.anitrend.ui.designsystem.AniTrendTheme
 import com.mxt.anitrend.ui.designsystem.aniTrendPlatformTextStyle
 import com.mxt.anitrend.ui.image.AniTrendAvatarImage
 import com.mxt.anitrend.ui.image.AniTrendImage
+import com.mxt.anitrend.ui.markdown.MarkdownText
+import com.mxt.anitrend.ui.markdown.createMarkwon
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.date.DateUtil
+import io.noties.markwon.Markwon
 
 private const val REVIEW_SERIES_COVER_TAG = "review-series-cover"
 
@@ -78,9 +76,10 @@ internal fun ReviewSeriesRow(
     onDownVoteClick: () -> Unit,
     onProfileClick: () -> Unit,
     onReadMoreClick: () -> Unit,
-    onReadMoreViewCreated: (MaterialTextView) -> Unit,
-    onReadMoreViewReleased: (MaterialTextView) -> Unit,
     onCoverLongClick: () -> Unit,
+    markwon: Markwon,
+    onLinkClick: (String) -> Unit,
+    onLinkLongClick: (String) -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     val isPreview = LocalInspectionMode.current
@@ -194,7 +193,7 @@ internal fun ReviewSeriesRow(
 
                     if (isPreview) {
                         Text(
-                            text = review.summary ?: "No content available",
+                            text = review.summary ?: stringResource(R.string.layout_empty_response),
                             modifier = Modifier.fillMaxWidth(),
                             color = MaterialTheme.colorScheme.onSurface,
                             style =
@@ -206,54 +205,22 @@ internal fun ReviewSeriesRow(
                             overflow = TextOverflow.Ellipsis,
                         )
                     } else {
-                        AndroidView(
-                            factory = { context ->
-                                RichMarkdownTextView(context).apply {
-                                    id = R.id.review_summary
-                                    layoutParams =
-                                        ViewGroup.LayoutParams(
-                                            ViewGroup.LayoutParams.MATCH_PARENT,
-                                            ViewGroup.LayoutParams.WRAP_CONTENT,
-                                        )
-                                    maxLines = 4
-                                    setTypeface(typeface, Typeface.ITALIC)
-                                    tag = review.summary
-                                    markDown(review.summary)
-                                }
-                            },
+                        MarkdownText(
+                            markdown = review.summary ?: stringResource(R.string.layout_empty_response),
+                            markwon = markwon,
+                            onLinkClick = onLinkClick,
+                            onLinkLongClick = onLinkLongClick,
                             modifier = Modifier.fillMaxWidth(),
-                            update = { textView ->
-                                if (textView.tag != review.summary) {
-                                    textView.tag = review.summary
-                                    textView.markDown(review.summary)
-                                }
-                            },
-                            onRelease = RichMarkdownTextView::onViewRecycled,
+                            maxLines = 4,
+                            fontStyle = FontStyle.Italic,
                         )
                     }
 
                     Spacer(modifier = Modifier.height(dimensionResource(R.dimen.lg_margin)))
 
-                    AndroidView(
-                        factory = { ratingContext ->
-                            CustomRatingBar(ContextThemeWrapper(ratingContext, R.style.SmallRating)).apply {
-                                id = R.id.series_rating
-                                layoutParams =
-                                    ViewGroup.LayoutParams(
-                                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                                    )
-                                importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
-                                contentDescription = ratingDescription
-                                CustomRatingBar.setAverageScore(this, review.score)
-                            }
-                        },
-                        modifier = Modifier.wrapContentSize(),
-                        update = { ratingView ->
-                            ratingView.contentDescription = ratingDescription
-                            CustomRatingBar.setAverageScore(ratingView, review.score)
-                        },
-                        onRelease = CustomRatingBar::onViewRecycled,
+                    ReviewScoreStars(
+                        score = review.score,
+                        contentDescription = ratingDescription,
                     )
 
                     Row(
@@ -263,49 +230,23 @@ internal fun ReviewSeriesRow(
                             .padding(top = dimensionResource(R.dimen.spacing_small)),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        if (isPreview) {
-                            Text(
-                                text = readMoreLabel,
-                                modifier =
-                                Modifier
-                                    .weight(1f)
-                                    .padding(vertical = dimensionResource(R.dimen.md_margin))
-                                    .semantics(mergeDescendants = true) {
-                                        contentDescription = readMoreLabel
-                                        role = Role.Button
-                                        onClick(label = readMoreLabel) {
-                                            onReadMoreClick()
-                                            true
-                                        }
-                                    },
-                                color = MaterialTheme.colorScheme.primary,
-                                style = MaterialTheme.typography.labelLarge.copy(platformStyle = aniTrendPlatformTextStyle),
-                            )
-                        } else {
-                            AndroidView(
-                                factory = { context ->
-                                    createReviewReadMoreView(context).apply {
-                                        setOnClickListener { onReadMoreClick() }
-                                        onReadMoreViewCreated(this)
+                        Text(
+                            text = readMoreLabel,
+                            modifier =
+                            Modifier
+                                .weight(1f)
+                                .padding(vertical = dimensionResource(R.dimen.md_margin))
+                                .semantics(mergeDescendants = true) {
+                                    contentDescription = readMoreLabel
+                                    role = Role.Button
+                                    onClick(label = readMoreLabel) {
+                                        onReadMoreClick()
+                                        true
                                     }
                                 },
-                                modifier =
-                                Modifier
-                                    .weight(1f)
-                                    .semantics(mergeDescendants = true) {
-                                        contentDescription = readMoreLabel
-                                        role = Role.Button
-                                        onClick(label = readMoreLabel) {
-                                            onReadMoreClick()
-                                            true
-                                        }
-                                    },
-                                onRelease = { view ->
-                                    view.setOnClickListener(null)
-                                    onReadMoreViewReleased(view)
-                                },
-                            )
-                        }
+                            color = MaterialTheme.colorScheme.primary,
+                            style = MaterialTheme.typography.labelLarge.copy(platformStyle = aniTrendPlatformTextStyle),
+                        )
                         ReviewVoteRow(
                             state = voteState,
                             onUpVoteClick = onUpVoteClick,
@@ -379,7 +320,7 @@ private fun ReviewSeriesRowPreview() {
             ),
             revision = 1L,
         )
-    AniTrendTheme {
+    AniTrendTheme("light") {
         ReviewSeriesRow(
             review = review,
             voteState =
@@ -392,9 +333,60 @@ private fun ReviewSeriesRowPreview() {
             onDownVoteClick = {},
             onProfileClick = {},
             onReadMoreClick = {},
-            onReadMoreViewCreated = {},
-            onReadMoreViewReleased = {},
             onCoverLongClick = {},
+            markwon = createMarkwon(LocalContext.current) {},
+            onLinkClick = {},
         )
+    }
+}
+
+private const val REVIEW_SCORE_STAR_SIZE = 16
+private const val REVIEW_SCORE_STAR_COUNT = 5
+
+/**
+ * Five-star average-score indicator ported from the legacy CustomRatingBar:
+ * score is a 0-100 mean rendered as 0-5 stars with fractional fill.
+ */
+@Composable
+internal fun ReviewScoreStars(
+    score: Int,
+    contentDescription: String,
+) {
+    val starSize = REVIEW_SCORE_STAR_SIZE.dp
+    val rating = (score * REVIEW_SCORE_STAR_COUNT / 100f).coerceIn(0f, REVIEW_SCORE_STAR_COUNT.toFloat())
+
+    Row(
+        modifier =
+        Modifier
+            .wrapContentSize()
+            .semantics(mergeDescendants = true) {
+                this.contentDescription = contentDescription
+            },
+    ) {
+        repeat(REVIEW_SCORE_STAR_COUNT) { index ->
+            val fraction = (rating - index).coerceIn(0f, 1f)
+            Box(modifier = Modifier.size(starSize)) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_star_grey_600_24dp),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize(),
+                )
+                if (fraction > 0f) {
+                    Box(
+                        modifier =
+                        Modifier
+                            .fillMaxHeight()
+                            .width(starSize * fraction)
+                            .clipToBounds(),
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_star_yellow_700_24dp),
+                            contentDescription = null,
+                            modifier = Modifier.size(starSize),
+                        )
+                    }
+                }
+            }
+        }
     }
 }

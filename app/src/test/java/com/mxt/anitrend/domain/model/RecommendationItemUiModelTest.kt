@@ -114,7 +114,6 @@ class RecommendationItemUiModelTest {
         )
 
         val item = record.toRecommendationItemUiModel()
-        val renderModel = item?.toRenderModel()
 
         assertEquals("cover.jpg", item?.coverImage)
         assertEquals("ANIME", item?.mediaType)
@@ -123,9 +122,6 @@ class RecommendationItemUiModelTest {
         assertEquals(12, item?.mediaEpisodes)
         assertEquals(82, item?.averageScore)
         assertTrue(item?.isFavourite == true)
-        assertEquals(2024, renderModel?.mediaStartDate?.year)
-        assertEquals(82, renderModel?.averageScore)
-        assertTrue(renderModel?.isFavourite == true)
     }
 
     private fun recommendationRecord(

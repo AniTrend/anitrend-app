@@ -552,7 +552,7 @@ class MediaFormatViewModelTest {
             .getStaffMedia(id = OWNER_ID, onList = true, page = 1, perPage = KeyUtil.PAGING_LIMIT, type = MediaType.ANIME)
         val vm = viewModel()
 
-        vm.loadPage(onList = true, mediaType = "ANIME", page = 1, requestType = KeyUtil.STAFF_MEDIA_REQ)
+        vm.loadPage(onList = true, mediaType = "ANIME", page = 1, staff = true)
         advanceUntilIdle()
 
         val state = vm.state.value as MediaFormatViewModel.UiState.Success
@@ -571,8 +571,12 @@ class MediaFormatViewModelTest {
         onList: Boolean? = null,
         mediaType: String? = null,
         page: Int,
-        requestType: Int = KeyUtil.CHARACTER_MEDIA_REQ,
-    ) = load(id = id, onList = onList, mediaType = mediaType, page = page, requestType = requestType)
+        staff: Boolean = false,
+    ) = if (staff) {
+        loadStaffMedia(id = id, onList = onList, mediaType = mediaType, page = page)
+    } else {
+        loadCharacterMedia(id = id, mediaType = mediaType, page = page)
+    }
 
     private fun media(
         id: Long,

@@ -1,6 +1,6 @@
 # Incremental XML-to-Compose migration inventory
 
-**Status:** In progress. This record covers the Compose foundation and migrated surfaces through the fortieth slice, the Coil image-loading cutover. It does not mark the app-wide migration program complete.
+**Status:** Complete. The app-wide XML-to-Compose migration is finished; all screens use Compose Material 3 and Navigation 3. The XML/View system and Navigation 2 have been removed. This record is retained as historical inventory of the incremental slices.
 
 ## Baseline and constraints
 

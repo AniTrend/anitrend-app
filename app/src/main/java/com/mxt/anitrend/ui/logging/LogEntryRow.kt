@@ -94,7 +94,7 @@ internal fun LogEntryRow(
 @Preview(name = "Log entry levels", showBackground = true)
 @Composable
 private fun LogEntryRowPreview() {
-    AniTrendTheme {
+    AniTrendTheme("light") {
         Column {
             LogEntry.Level.entries.forEach { level ->
                 key(level) {

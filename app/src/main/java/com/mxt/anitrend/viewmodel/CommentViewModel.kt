@@ -101,7 +101,9 @@ class CommentViewModel(
                                 currentUserId = screen.currentUserId,
                             )
                         },
-                        isDeleted = screen.hasAttemptedLoad && !screen.isLoading && feed == null,
+                        // A failed load is not a deletion: keep the screen
+                        // rendered so an armed deep-link landing stays alive.
+                        isDeleted = screen.hasAttemptedLoad && !screen.isLoading && screen.errorMessage == null && feed == null,
                         errorMessage = screen.errorMessage,
                     )
                 }

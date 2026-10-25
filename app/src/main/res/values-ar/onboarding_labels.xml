@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Onboarding tour copy for the four-page first-run flow. -->
+<resources>
+    <!-- Onboarding page 1 heading about discovering media -->
+    <string name="title_onboarding_discover">اعثر على قصتك التالية</string>
+    <!-- Onboarding page 1 supporting copy about exploring and filtering media -->
+    <string name="description_onboarding_discover">استكشف الأنمي والمانغا، ثم قلّص القائمة بمرشحات تناسب ما تريد مشاهدته أو قراءته.</string>
+
+    <!-- Onboarding page 2 heading about tracking lists -->
+    <string name="title_onboarding_track">حافظ على توافق قوائمك</string>
+    <!-- Onboarding page 2 supporting copy about saving media and updating progress -->
+    <string name="description_onboarding_track">احفظ الأنمي والمانغا في قوائمك، بدّل إلى المستمر، وحدّث التقدم أثناء المشاهدة أو القراءة.</string>
+
+    <!-- Onboarding page 3 heading about social features -->
+    <string name="title_onboarding_social">تابع المحادثة</string>
+    <!-- Onboarding page 3 supporting copy about activity, comments and messages -->
+    <string name="description_onboarding_social">تصفح نشاط AniList، شارك في التعليقات والردود، واستخدم الرسائل. اربط AniList عندما تختار.</string>
+
+    <!-- Onboarding page 4 heading about choosing how to start -->
+    <string name="title_onboarding_start">ابدأ بطريقتك</string>
+    <!-- Onboarding page 4 supporting copy about connecting an account or continuing as a guest -->
+    <string name="description_onboarding_start">اربط AniList لاستخدام الإجراءات المرتبطة بالحساب، أو تابع كضيف. يمكنك الربط لاحقًا.</string>
+
+    <!-- Onboarding action advancing to the next page -->
+    <string name="action_onboarding_next">التالي</string>
+
+    <!-- Onboarding action completing the tour with an existing session -->
+    <string name="action_onboarding_continue">متابعة</string>
+
+    <!-- Onboarding action opening the privacy controls sheet -->
+    <string name="action_onboarding_privacy_choices">خيارات الخصوصية</string>
+    <!-- Onboarding action returning to the previous page -->
+    <string name="action_onboarding_previous">السابق</string>
+    <!-- Onboarding action opening the AniList sign-in flow -->
+    <string name="action_onboarding_connect">ربط AniList</string>
+    <!-- Onboarding action completing the tour without an account -->
+    <string name="action_onboarding_continue_as_guest">المتابعة كضيف</string>
+
+    <!-- Onboarding page position indicator; %1$d is the current page number, %2$d is the total page count -->
+    <string name="label_onboarding_page_indicator" formatted="true">صفحة %1$d من %2$d</string>
+</resources>

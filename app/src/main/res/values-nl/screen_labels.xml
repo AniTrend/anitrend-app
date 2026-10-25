@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Dutch translations for the Discover and Library preset chips. Keep keys in
+    sync with values/screen_labels.xml.
+-->
+<resources>
+
+    <!-- Discover preset chip: configurable browse query -->
+    <string name="discover_preset_browse">Bladeren</string>
+    <!-- Discover preset chip: trending query -->
+    <string name="discover_preset_trending">Trending</string>
+    <!-- Discover preset chip: recently added query -->
+    <string name="discover_preset_recent">Onlangs toegevoegd</string>
+    <!-- Discover preset chip: recommendations from favourite tags and genres -->
+    <string name="discover_preset_for_you">Voor jou</string>
+
+    <!-- Library preset chip: the signed-in user's anime list -->
+    <string name="library_preset_my_anime">Mijn anime</string>
+    <!-- Library preset chip: the signed-in user's manga list -->
+    <string name="library_preset_my_manga">Mijn manga</string>
+    <!-- Library preset chip: still-releasing anime list entries -->
+    <string name="library_preset_airing">Lopend</string>
+
+    <!-- Back action for screens with a bottom action bar -->
+    <string name="action_back">Terug</string>
+    <!-- Refresh action for feeds and lists -->
+    <string name="action_refresh">Vernieuwen</string>
+
+    <!-- Action opening the complete list behind a preview section -->
+    <string name="action_see_all">Alles bekijken</string>
+
+    <!-- Metadata row label for the release format on media details -->
+    <string name="metadata_format">Formaat</string>
+
+    <!-- Metadata row label for the release status on media details -->
+    <string name="metadata_status">Status</string>
+
+    <!-- Metadata row label for the premiere season on media details -->
+    <string name="metadata_season">Seizoen</string>
+
+    <!-- Metadata row label for the source material on media details -->
+    <string name="metadata_source">Bron</string>
+
+    <!-- Metadata row label for the episode count on media details -->
+    <string name="metadata_episodes">Afleveringen</string>
+
+    <!-- Metadata row label for the episode duration on media details -->
+    <string name="metadata_duration">Duur</string>
+
+    <!-- Metadata row label for the volume count on media details -->
+    <string name="metadata_volumes">Delen</string>
+
+    <!-- Metadata row label for the chapter count on media details -->
+    <string name="metadata_chapters">Hoofdstukken</string>
+
+    <!-- Bottom action bar control opening the app navigation drawer -->
+    <string name="action_menu">Menu</string>
+
+    <!-- Message card label naming the sender -->
+    <string name="message_from_label">Van</string>
+
+    <!-- Message card label naming the recipient -->
+    <string name="message_to_label">Aan</string>
+
+    <!-- Messages bottom action opening the recipient-seeded composer -->
+    <string name="action_new_message">Nieuw bericht</string>
+
+    <!-- Notification bottom action marking every notification as read -->
+    <string name="notification_mark_all_read">Alles markeren als gelezen</string>
+
+    <!-- Notification row action opening the related activity -->
+    <string name="notification_open_activity">Activiteit</string>
+
+    <!-- Notification row action opening the related forum thread -->
+    <string name="notification_open_thread">Draad</string>
+
+    <!-- Review reader label showing the review average rating; %1$d is the rating count -->
+    <string name="review_rating_average">Gemiddelde beoordeling: %1$d</string>
+
+    <!-- Search entity chip filtering results to user accounts -->
+    <string name="search_entity_users">Gebruikers</string>
+
+    <!-- Notification settings card title showing the OS permission state -->
+    <string name="notification_permission_title">Meldingsmachtiging</string>
+
+    <!-- Notification settings card summary when the OS denies notifications -->
+    <string name="notification_permission_summary_denied">Geweigerd. Schakel meldingen in de systeeminstellingen in om ze te ontvangen.</string>
+
+    <!-- Notification settings card action requesting the OS permission -->
+    <string name="action_enable_notifications">Meldingen inschakelen</string>
+
+    <!-- Settings hub About category card summary -->
+    <string name="settings_about_summary">Wijzigingslog, logboeken en ondersteuningslinks</string>
+
+    <!-- Navigation drawer root entry for the user's lists -->
+    <string name="drawer_title_library">Bibliotheek</string>
+
+    <!-- Navigation drawer entry opening the episode feed -->
+    <string name="drawer_title_episodes">Afleveringen</string>
+
+    <!-- Navigation drawer entry opening direct messages -->
+    <string name="drawer_title_messages">Berichten</string>
+
+    <!-- Navigation drawer entry opening notifications -->
+    <string name="drawer_title_notifications">Meldingen</string>
+
+</resources>

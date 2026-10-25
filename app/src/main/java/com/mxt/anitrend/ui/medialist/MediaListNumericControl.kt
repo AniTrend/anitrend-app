@@ -127,7 +127,7 @@ private fun StepperButton(
 @Preview
 @Composable
 private fun MediaListNumericControlPreview() {
-    AniTrendTheme {
+    AniTrendTheme("light") {
         MediaListNumericControl(
             value = TextFieldValue("5"),
             maximumLabel = "/ 12",

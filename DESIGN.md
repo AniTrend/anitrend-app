@@ -2,202 +2,169 @@
 
 ## 1. Overview
 
-AniTrend is an anime and manga tracking app for AniList. This is the app-wide design system for its View-based Android UI. The current implementation uses Material 3 XML components. Compose is the future direction, but every new and refactored screen must follow these M3 rules today.
+AniTrend is a content-dense anime and manga tracking app for AniList. This document is the
+binding design system for its Jetpack Compose UI. It replaces the previous XML/View rules;
+Compose `MaterialTheme` tokens are the source of truth for every new and refactored surface.
 
-The app ships three themes: `AppThemeLightBase` (`Theme.Material3.Light.NoActionBar`), `AppThemeDarkBase` (`Theme.Material3.Dark.NoActionBar`), and `AppThemeBlack` (`Theme.Material3.Dark.NoActionBar` with AMOLED black surfaces). All three share the same token structure, color roles, surface container hierarchy, shape theming, and typography overrides.
+The legacy XML themes (`AppThemeLightBase`, `AppThemeDarkBase`, `AppThemeBlack`) remain only for
+the activity window chrome (manifest themes and `CommonActivity` theming) and mirror the same
+token values in
+`values/m3_color.xml`. When the two disagree, the Compose schemes in
+`ui/designsystem/AniTrendTheme.kt` are authoritative.
 
-The manage list editor sheet is the reference implementation of this language. Its choices for cards, spacing, typography, and action anchoring are the default for all future screens, sheets, dialogs, and lists.
+### Product intent
 
-## 2. Colors
+AniTrend supports discovery, tracking and social context at high information throughput.
+Media identity (title, artwork, status, score, progress, availability) comes before decoration.
 
-Use Material 3 tokens only. Never use raw hex values or legacy platform colors in new code.
+### Decision rule
 
-Core roles: `colorPrimary`, `colorOnPrimary`, `colorPrimaryContainer`, `colorOnPrimaryContainer`; `colorSecondary`, `colorOnSecondary`, `colorSecondaryContainer`, `colorOnSecondaryContainer`; `colorTertiary`, `colorOnTertiary`, `colorTertiaryContainer`, `colorOnTertiaryContainer`; `colorError`, `colorOnError`, `colorErrorContainer`, `colorOnErrorContainer`.
+When trade-offs are unclear, evaluate in this order:
 
-Surface roles: `colorSurface`, `colorOnSurface`, `colorSurfaceVariant`, `colorOnSurfaceVariant`, `colorOutline`, `colorOutlineVariant`, `colorPrimaryInverse`, `colorSurfaceInverse`, `colorOnSurfaceInverse`.
+1. **Comprehension speed** — can users parse state and actions quickly?
+2. **Task efficiency** — can users finish common actions with low effort?
+3. **Consistency** — does this match existing AniTrend interaction language?
+4. **Expression** — does the UI still feel premium and intentional?
 
-Surface container hierarchy:
+Expression never wins at the expense of comprehension or efficiency. Dense is valid; crowded is
+not. Group related metadata into clear bands instead of unstructured stacks, and never collapse
+hierarchy into uniform visual weight.
 
-- `colorSurfaceContainerLowest`: lowest emphasis, closest to background.
-- `colorSurfaceContainerLow`: subtle grouping, secondary backgrounds.
-- `colorSurfaceContainer`: grouped section cards (the default card fill).
-- `colorSurfaceContainerHigh`: sheet backgrounds and raised panels.
-- `colorSurfaceContainerHighest`: top app bars, toolbars, and cards that need to sit above a sheet.
+## 2. Theme and color
 
-Custom attrs are mapped to M3 tokens:
-
-- `cardColor` -> `colorSurfaceContainerHighest`
-- `rootColor` -> `colorSurface`
-- `titleColor` -> `colorOnSurface`
-- `subtitleColor` -> `colorOnSurfaceVariant`
-- `contentColor` -> `colorOnSurfaceVariant`
-
-Legacy compat: `colorAccent` resolves to `colorPrimary`, `colorPrimaryDark` resolves to `colorPrimaryContainer`. Treat these as legacy bridges only. New code uses the M3 token directly.
-
-Dark and black themes keep the same role names. `AppThemeBlack` flattens surfaces to black, but containers still provide grouping. Do not invent new black-only color names.
-
-### Image overlay text
-
-Profile and media hero images may use white overlay text when a dark scrim is
-present beneath the text and the image cannot provide a stable surface token.
-The scrim is responsible for contrast across dynamic artwork and all three
-themes. Keep this exception limited to image-overlay content; regular screen
-text must continue using the M3 `colorOnSurface*` roles.
+- Wrap every screen in `AniTrendTheme(theme, content)` where `theme` is the observed Settings
+  value: `light`, `dark` or `black` (AMOLED). Previews pass the value explicitly.
+- The three schemes are the brand palettes: brand-blue primary, blue-grey secondary, warm-brown
+  tertiary, standard M3 error roles, and the full `surfaceContainer*` hierarchy with paired
+  on-colors. `black` is the dark scheme with every surface/bottom layer forced to `#000000`.
+- Never hard-code colors or read live XML theme attributes in Compose code. Use
+  `MaterialTheme.colorScheme` and `MaterialTheme.typography` roles.
+- Use tonal layering (`surfaceContainerLow` → `surfaceContainer` → `surfaceContainerHigh`) to
+  separate groups. No ornamental shadows, no nested cards around every row.
+- Hero artwork may carry white overlay text only on a contrast-protected scrim or a stable
+  surface; text must survive light, dark and AMOLED schemes.
 
 ## 3. Typography
 
-All text uses the `TextAppearance.AniTrend.*` overrides. The family is condensed. Reference tokens through `?attr/textAppearance*` and never set raw `android:textSize` or `android:textColor`.
+The family is condensed (`aniTrendCondensedFontFamily`, bold `aniTrendCondensedBoldFontFamily`)
+with the platform font-padded text style. Role usage:
 
-Tokens:
+| Role | Use |
+|---|---|
+| `headlineSmall` | Screen headings |
+| `titleMedium` | Section headings |
+| `bodyMedium` | Content |
+| `labelLarge` | Controls (buttons, chips, action bars) |
 
-- `textAppearanceHeadlineMedium`, `textAppearanceHeadlineSmall`
-- `textAppearanceTitleLarge`, `textAppearanceTitleMedium`, `textAppearanceTitleSmall`
-- `textAppearanceBodyLarge`, `textAppearanceBodyMedium`, `textAppearanceBodySmall`
-- `textAppearanceLabelLarge`, `textAppearanceLabelMedium`, `textAppearanceLabelSmall`
+Supporting rows use `titleSmall`, `bodySmall` and `labelMedium` as already mapped in
+`AniTrendTheme`. Do not set raw font sizes or invent per-screen type styles.
 
-Usage:
+## 4. Shape, spacing and width
 
-- Screen titles: `?attr/textAppearanceTitleLarge`
-- Section headers: `?attr/textAppearanceTitleSmall` (style `Widget.AniTrend.ManageSheet.SectionLabel`)
-- Field labels: `?attr/textAppearanceLabelMedium` (style `Widget.AniTrend.ManageSheet.FieldLabel`)
-- Body values and list item titles: `?attr/textAppearanceBodyMedium`
-- Helper text and captions: `?attr/textAppearanceBodySmall`
-- Button labels: `?attr/textAppearanceLabelLarge`
+- `Shapes(extraSmall = 4.dp, small = 8.dp, medium = 16.dp, large = 24.dp, extraLarge = 28.dp)`,
+  all `RoundedCornerShape`.
+- Chips and buttons use fully rounded component shapes, posters `medium`, grouped cards `large`,
+  sheets `extraLarge`.
+- Screen and card insets: 16dp. Intra-group gaps: 8/12dp. Between major sections: 24dp.
+- Content stays within 1040dp overall; prose is constrained to 720dp. Cover grids are adaptive
+  with a 148dp minimum tile. On wide windows keep the same drawer and bottom-action model; no
+  speculative navigation rails or multi-pane layouts.
 
-Use the same styles for sheet, dialog, and list labels. Do not create one-off text appearances.
+## 5. Screen chrome
 
-## 4. Layout & Spacing
+### Scaffold
 
-The app-wide spacing scale is:
+Every destination uses `AniTrendScaffold`: one bottom action bar, one snackbar host, safe
+drawing insets. Content consumes the Scaffold padding exactly once. The bar stays visible while
+content scrolls. A scrollable heading or artwork hero supplies top identity — never a second
+toolbar.
 
-- `xl_margin` = 16dp
-- `mg_margin` = 12dp
-- `lg_margin` = 8dp
-- `md_margin` = 4dp
-- `sm_margin` = 2dp
-- `xs_margin` = 1dp
+### Bottom action bars
 
-Structural spacing:
+These are **action bars**, not icon-only primary-destination navigation bars.
 
-- `spacing_xl` = 48dp
-- `spacing_lg` = 40dp
-- `spacing_md` = 32dp
-- `spacing_sm` = 24dp
-- `spacing_xs` = 16dp
+- One bar per screen. Leading Menu at roots, Back below roots.
+- At most three other frequent actions; rare actions go in a localized overflow.
+- Never move row-specific actions (Like, Reply, progress steppers) into a global bar, never
+  duplicate an action at top and bottom, never stack a FAB over a composer.
+- While a sheet is open, the screen bar is replaced by the sheet's task-specific footer.
 
-Screen padding: `activity_horizontal_margin` = 16dp, `activity_vertical_margin` = 16dp. Treat `xl_margin` as the default horizontal screen inset.
+### Route drawer
 
-Group related controls in filled `MaterialCardView` sections. Use `MaterialDivider` for major breaks. Do not use empty `View` spacers.
+One M3 `ModalBottomSheet` opened by the root Menu button: profile/sign-in header, static
+labeled route rows, selected state. Tonal grouping and rounded sheet language only. Back, scrim
+and drag dismiss without navigating. Selecting the current root just dismisses; selecting
+another root restores its saved screen state.
 
-Sheet spacing pattern:
+### Chips are in-screen controls
 
-- `sheet_section_margin` = 16dp between section cards
-- `sheet_card_padding` = 16dp inside a section card
-- `sheet_field_margin` = 12dp between a header and its first field
-- `sheet_inline_spacing` = 4dp between a label and its control
+Chips are presets, section selection or filters — never disguised global tabs.
 
-Sheets are edge-to-edge. The content scrolls, but the action bar and app bar stay anchored.
+- `FilterChip` with a checkmark and selected semantics for single selection.
+- `LazyRow` for a compact preset strip; `FlowRow` for small multi-select sets; an advanced
+  filter sheet for large option sets.
+- No TabLayout, TabRow, pager-backed tab strip, and no raw ordinal or enum `.name` as UI copy.
+  All categorical values render through `ui/format/EnumLabels.kt`.
+- Swipe paging exists only for onboarding and image browsing.
 
-## 5. Components
+## 6. Components
 
-### Bottom sheets
-- Use `BottomSheetDragHandleView` at the top.
-- Header: title + optional subtitle, both centered.
-- Body goes inside `NestedScrollView`.
-- Action bar is sticky at the bottom, separated by `MaterialDivider`.
-- Open expanded and allow drag-to-dismiss. Use `skipCollapsed` for forms.
+- **Buttons**: filled for primary, outlined for equally reachable alternatives, text for
+  tertiary. Minimum 48dp targets.
+- **Text fields**: Compose `OutlinedTextField`; editors share `ui/composer/MarkdownComposer`
+  with a formatting toolbar and a read-only preview.
+- **Switches and sliders**: `Switch` for booleans with label plus supporting text; `Slider` with
+  a visible value label for numeric ranges.
+- **Rating indicators**: display-only average scores use the five-star
+  `ui/review/ReviewSeriesRow` `ReviewScoreStars` pattern (fractional fill over the base star,
+  localized content description); interactive rating lives in the review reader sheet.
+- **Date controls**: staged list dates use `ui/medialist/FuzzyDateField` opening an M3
+  `DatePickerDialog` seeded from the staged value; the TBA action clears the field.
+- **Lists**: keyed `LazyColumn`/`LazyRow`/`LazyVerticalGrid` with immutable item models and
+  domain-prefixed keys (`media:123`). Refresh/append states are handled separately and stay
+  inline with prior content retained.
+- **Rows**: adapt the existing media/feed/person/settings row families; identity on the
+  artwork/title rail, actions in stable positions.
+- **Custom views** remain view-only: no ViewModel, no data loading; they receive state and emit
+  actions.
+- **Markdown**: the only `AndroidView` in the app is `ui/markdown/MarkdownText`, a TextView
+  renderer with route-owned link dispatch.
 
-### Dialogs
-- Use `MaterialAlertDialogBuilder` for confirmations.
-- Title: `?attr/textAppearanceHeadlineSmall`.
-- Body: `?attr/textAppearanceBodyMedium`.
-- Positive action: filled button. Negative action: text button. Neutral action: text button.
-- Destructive confirmations use a text button with `?attr/colorError`.
+## 7. State, feedback and motion
 
-### Cards
-- Use filled `MaterialCardView` for grouped sections.
-- Default style: `Widget.AniTrend.ManageSheet.SectionCard` extends `Widget.Material3.CardView.Filled`, with `colorSurfaceContainer` fill, `0dp` elevation, and `0dp` stroke.
-- Elevated cards are reserved for items that need to float above a list.
+- Every screen defines loading, empty, populated and error states (`ui/state/ScreenState.kt`).
+  Initial loading uses geometry-matched placeholders; empty states explain and offer the
+  relevant inline action; initial failure offers Retry. Refresh and append errors stay inline.
+- A failing optional section never replaces a loaded screen; retry only the failed request and
+  retain drafts and filters.
+- Selection, disabled and loading states are explicit — never color alone.
+- Actions give immediate visual response. Validation and status errors appear next to their
+  field. Prefer inline feedback over toasts; use snackbars for transient, non-blocking notices.
+- Motion is restrained and respects the system reduced-motion setting; no looping spectacle.
 
-### Buttons
-- Primary action: `Widget.Material3.Button` (filled).
-- Secondary action: `Widget.Material3.Button.TextButton`.
-- Tertiary action: `Widget.Material3.Button.OutlinedButton`.
-- Icon-only buttons: `?attr/materialIconButtonStyle`.
-- Destructive action: text button with `?attr/colorError`.
-- Keep button labels short and action-oriented.
+## 8. Accessibility and adaptation
 
-### Text fields
-- Use `TextInputLayout` with `Widget.Material3.TextInputLayout.OutlinedBox`.
-- Dropdowns use `Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu`.
-- Show hints, helper text, and error text through the layout.
-- Use start icons for semantic affordance (status, date, score, progress).
-- Never use a raw `EditText`.
+- 48dp minimum touch targets; keyboard focus visible; start/end layout for RTL.
+- Headings use semantic roles; icon-only controls carry labels; selected/disabled/loading are
+  exposed as state semantics.
+- Respect system font scaling. At large text or short height, body scrolls and decorative
+  infographic space shrinks before text or actions are hidden.
+- Light/dark/AMOLED contrast must hold for text on artwork and tonal surfaces.
 
-### Switches
-- Use `MaterialSwitch` for boolean options.
-- Pair with a label and supporting text below.
-- Supporting text uses `?attr/textAppearanceBodySmall` and `?attr/colorOnSurfaceVariant`.
+## 9. Do's and don'ts
 
-### Sliders
-- Use `Slider` with a visible value label.
-- Show the label and current value below the track.
-- Set a clear `stepSize` and value range.
-- Update the value label in real time.
+- Do use `AniTrendTheme` and `MaterialTheme` tokens; don't create per-screen themes or a
+  competing theme wrapper.
+- Do use `surfaceContainer*` roles for grouped backgrounds; don't use raw hex values.
+- Do localize every control and category label through `EnumLabels`/string resources in all ten
+  supported locales; don't display enum names, ordinals or capitalization as copy.
+- Do keep one bottom action bar per screen; don't add top toolbars, tab strips or stacked
+  composers.
+- Do ship only working settings entries; don't add "Coming soon" rows or unimplemented feature
+  promises.
 
-### Chips
-- Use `ChipGroup` with filter chips for multi-select.
-- Keep chip labels short.
-- Use `?attr/textAppearanceLabelMedium` for chip text.
+## 10. Change management
 
-### Lists
-- Use `RecyclerView` with consistent item layouts.
-- Item title: `?attr/textAppearanceBodyMedium`, `?attr/colorOnSurface`.
-- Item subtitle: `?attr/textAppearanceBodySmall`, `?attr/colorOnSurfaceVariant`.
-- Trailing actions use `?attr/materialIconButtonStyle`.
-- Avoid arbitrary item heights. Use the same spacing tokens as the rest of the app.
-
-### Navigation
-- Top app bars use `LightToolbarTheme`, `DarkToolbarTheme`, or `BlackToolbarTheme`.
-- Overflow menus use `PopupThemeLight` or `PopupThemeDark`, extending `Widget.Material3.PopupMenu.Overflow`.
-- Bottom navigation follows the M3 component and the active icon color is `colorPrimary`.
-
-### Custom views
-- Custom views must read M3 tokens and never hardcode colors or sizes.
-- `ProgressWidget`, `ScoreWidget`, and `FuzzyDateWidget` are the existing pattern: a horizontal layout that uses `?attr/materialIconButtonStyle` and outlined `TextInputLayout`.
-- Custom views must not own their own ViewModel or theme. They receive values and state from the parent.
-
-### Loading
-- Use `ProgressLayout` with `Widget.AniTrend.ProgressLayout.LoadingIndicator`, which extends `Widget.Material3.LoadingIndicator.Contained`.
-- Show loading inline inside a container, not as a full-screen overlay unless the whole screen is waiting.
-- Lifecycle-aware: dismiss progress indicators when the host stops or the request is cancelled.
-
-## 6. Motion & Feedback
-
-Prefer inline feedback over toasts. Status conflicts, validation errors, and helper updates appear next to the field that caused them.
-
-Use `Snackbar` for undoable actions or global confirmations. Use `Toast` only for transient background events that do not need a user decision.
-
-Update values in real time: status icons, score labels, priority values, and progress counters should reflect the latest input immediately.
-
-Bottom sheets open expanded. Do not let forms start in a collapsed state. The action bar stays visible while the body scrolls.
-
-Progress dialogs must be lifecycle-aware. Tie them to the request lifecycle and cancel them on configuration change or sheet dismissal.
-
-## 7. Do's and Don'ts
-
-- Do use the three M3 themes (`AppThemeLightBase`, `AppThemeDarkBase`, `AppThemeBlack`) for all screens. Do not create screen-specific themes.
-- Do use `?attr/colorSurfaceContainer*` for grouped backgrounds. Do not use raw color values or legacy `?android:colorBackground`.
-- Do use `MaterialCardView` filled sections for grouping. Do not leave long forms as flat vertical lists.
-- Do use `MaterialDivider` for major breaks. Do not use empty `View` spacers.
-- Do anchor primary and secondary actions at the bottom of sheets and dialogs. Do not let actions scroll away with the content.
-- Do use `?attr/textAppearance*` tokens. Do not set raw text sizes or colors.
-- Do use `TextInputLayout` with outlined style for inputs and dropdowns. Do not use raw `EditText` widgets.
-- Do use `MaterialSwitch` for booleans. Do not use `CheckBox` or `ToggleButton` for app settings.
-- Do show slider values inline. Do not show a bare slider without a value label.
-- Do use text buttons with `colorError` for destructive actions. Do not give destructive actions the same visual weight as save actions.
-- Do use `?attr/materialIconButtonStyle` for icon buttons. Do not tint icon buttons with `?colorAccent`.
-- Do use `ChipGroup` with filter chips for multi-select. Do not use nested `CheckBox` grids for lists of choices.
-- Do use `NestedScrollView` in bottom sheets. Do not use `ScrollView`.
-- Do keep custom views view-only. Do not let custom views initiate loading or own ViewModels.
-- Do keep the manage list editor as the reference implementation. Future sheets, dialogs, and lists should reuse its spacing, card grouping, and typography choices.
+When a design decision changes (new component pattern, revised token usage, updated spacing
+convention), update this document in the same change so it stays the source of truth.
+`ui/manage/ManageListSheet.kt` is the reference implementation of this language.

@@ -2,41 +2,43 @@ package com.mxt.anitrend.view.activity.base
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.Window
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.activity.compose.setContent
 import androidx.annotation.VisibleForTesting
-import androidx.core.view.isVisible
-import androidx.lifecycle.Lifecycle
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.target.Target
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.mxt.anitrend.R
-import com.mxt.anitrend.databinding.ActivityGiphyPreviewBinding
 import com.mxt.anitrend.navigation.extension.putScreenParam
 import com.mxt.anitrend.navigation.extension.screenParam
 import com.mxt.anitrend.navigation.model.GiphyPreviewScreenParam
+import com.mxt.anitrend.ui.designsystem.AniTrendTheme
+import com.mxt.anitrend.ui.designsystem.currentAniTrendTheme
+import com.mxt.anitrend.ui.image.AniTrendImage
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.view.activity.CommonActivity
 
-class GiphyPreviewActivity :
-    CommonActivity(),
-    RequestListener<Drawable> {
+class GiphyPreviewActivity : CommonActivity() {
 
     companion object {
-        fun newIntent(context: Context, param: GiphyPreviewScreenParam): Intent = Intent(context, GiphyPreviewActivity::class.java).apply {
-            putScreenParam(param)
-            // Interim boundary: keep the legacy wire key alongside the typed param
-            // until all pre-bridge callers and fixtures migrate.
-            putExtra(KeyUtil.arg_model, param.url)
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        }
+        fun newIntent(context: Context, param: GiphyPreviewScreenParam): Intent = Intent(context, GiphyPreviewActivity::class.java).apply { putScreenParam(param) }
 
         /**
          * Compatibility overload preserving the legacy URL-based callers. Bridges
@@ -53,12 +55,12 @@ class GiphyPreviewActivity :
          * not a parcel path for any remote model.
          */
         fun fromIntent(intent: Intent): GiphyPreviewScreenParam? = resolve(
-            typed = intent.screenParam<GiphyPreviewScreenParam>(),
-            legacyUrl = intent.getStringExtra(KeyUtil.arg_model),
+            intent.screenParam<GiphyPreviewScreenParam>(),
+            intent.extras?.getString(KeyUtil.arg_model),
         )
 
         /**
-         * Production parsing rule for the Giphy preview destination.
+         * Production parsing rule for the giphy preview destination.
          *
          * A present typed parameter wins; it is accepted only when it carries a
          * non-empty url. Otherwise the legacy [KeyUtil.arg_model] extra is bridged
@@ -67,17 +69,13 @@ class GiphyPreviewActivity :
          */
         @VisibleForTesting
         internal fun resolve(typed: GiphyPreviewScreenParam?, legacyUrl: String?): GiphyPreviewScreenParam? {
-            typed?.let { param ->
-                return if (param.url.isNotEmpty()) param else null
-            }
+            if (typed != null) return if (typed.url.isNotEmpty()) typed else null
             return parseUrl(legacyUrl)
         }
 
         @VisibleForTesting
         internal fun parseUrl(raw: String?): GiphyPreviewScreenParam? = if (!raw.isNullOrEmpty()) GiphyPreviewScreenParam(url = raw) else null
     }
-
-    private lateinit var binding: ActivityGiphyPreviewBinding
 
     @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -88,65 +86,71 @@ class GiphyPreviewActivity :
         )
         super.onCreate(savedInstanceState)
 
-        binding = ActivityGiphyPreviewBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        binding.previewClose.setOnClickListener { finish() }
-
         val args = fromIntent(intent)
-        if (args != null) {
-            Glide
-                .with(this)
-                .load(args.url)
-                .listener(this)
-                .into(binding.previewImage)
-        } else {
+        if (args == null) {
             NotifyUtil.makeText(
                 this,
                 R.string.layout_empty_response,
-                R.drawable.ic_warning_white_18dp,
                 Toast.LENGTH_SHORT,
             ).show()
-            showStatus(R.string.layout_empty_response)
         }
 
-        binding.previewCredits.setImageResource(
+        val creditsRes =
             if (!CompatUtil.isLightTheme(settings)) {
                 R.drawable.powered_by_giphy_light
             } else {
                 R.drawable.powered_by_giphy_dark
-            },
+            }
+
+        setContent {
+            AniTrendTheme(currentAniTrendTheme()) {
+                GiphyPreviewScreen(
+                    url = args?.url,
+                    creditsRes = creditsRes,
+                    onCloseClick = { finish() },
+                )
+            }
+        }
+    }
+}
+
+/** Fullscreen GIF preview with close affordance and attribution credits. */
+@Composable
+private fun GiphyPreviewScreen(
+    url: String?,
+    creditsRes: Int,
+    onCloseClick: () -> Unit,
+) {
+    Box(
+        modifier =
+        Modifier
+            .fillMaxSize()
+            .background(Color.Black),
+    ) {
+        if (url != null) {
+            AniTrendImage(
+                model = url,
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+            )
+        }
+        IconButton(
+            onClick = onCloseClick,
+            modifier = Modifier.align(Alignment.TopEnd).padding(12.dp).size(48.dp),
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_close_grey_600_24dp),
+                contentDescription = stringResource(R.string.Close),
+                tint = Color.White,
+            )
+        }
+        Image(
+            painter = painterResource(creditsRes),
+            contentDescription = null,
+            modifier =
+            Modifier
+                .align(Alignment.BottomCenter)
+                .padding(12.dp),
         )
-    }
-
-    override fun onLoadFailed(
-        e: GlideException?,
-        model: Any,
-        target: Target<Drawable>,
-        isFirstResource: Boolean,
-    ): Boolean {
-        if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
-            showStatus(R.string.text_unknown_error)
-        }
-        return false
-    }
-
-    override fun onResourceReady(
-        resource: Drawable,
-        model: Any,
-        target: Target<Drawable>,
-        dataSource: DataSource,
-        isFirstResource: Boolean,
-    ): Boolean {
-        if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
-            binding.previewLoadingContainer.isVisible = false
-            binding.previewStatusCard.isVisible = false
-        }
-        return false
-    }
-
-    private fun showStatus(messageRes: Int) {
-        binding.previewLoadingContainer.isVisible = false
-        binding.previewStatusMessage.setText(messageRes)
-        binding.previewStatusCard.isVisible = true
     }
 }

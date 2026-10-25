@@ -136,7 +136,8 @@
 
     <string name="pref_selected_theme_title_light">Light</string>
     <string name="pref_selected_theme_title_dark">Dark</string>
-    <string name="pref_selected_theme_title_black">Black</string>
+    <!-- Theme choice using a pure black background for AMOLED screens; AMOLED is a display technology term -->
+    <string name="pref_selected_theme_title_black">AMOLED</string>
 
     <string name="pref_selected_language_title_en" translatable="false">English</string>
     <string name="pref_selected_language_title_ar" translatable="false">العربية</string>

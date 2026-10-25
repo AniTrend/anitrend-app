@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Composer toolbar label translations.
+    Keep keys in sync with values/composer_labels.xml.
+-->
+<resources>
+
+    <!-- Composer toolbar action wrapping the selection in bold markdown -->
+    <string name="format_bold">Vet</string>
+
+    <!-- Composer toolbar action wrapping the selection in italic markdown -->
+    <string name="format_italic">Cursief</string>
+
+    <!-- Composer toolbar action converting the selection into a markdown link -->
+    <string name="format_link">Koppeling</string>
+
+    <!-- Composer overflow action wrapping the selection in strikethrough markdown -->
+    <string name="format_strike">Doorstreept</string>
+
+    <!-- Composer overflow action prefixing the line with a bullet -->
+    <string name="format_list">Lijst met opsommingstekens</string>
+
+    <!-- Composer overflow action prefixing the line with a number -->
+    <string name="format_numbered">Genummerde lijst</string>
+
+    <!-- Composer overflow action prefixing the line as a heading -->
+    <string name="format_heading">Kop</string>
+
+    <!-- Composer overflow action wrapping the selection as centered markdown -->
+    <string name="format_center">Centreren</string>
+
+    <!-- Composer overflow action prefixing the line as a quote -->
+    <string name="format_quote">Citaat</string>
+
+    <!-- Composer overflow action wrapping the selection as inline code -->
+    <string name="format_code">Code</string>
+
+    <!-- Composer overflow action inserting a YouTube video link -->
+    <string name="format_youtube">YouTube-video</string>
+
+    <!-- Composer overflow action inserting a WebM video link -->
+    <string name="format_webm">WebM-video</string>
+
+    <!-- Composer overflow action opening the GIF picker -->
+    <string name="format_gif">GIF-afbeelding</string>
+
+    <!-- Feed bottom action opening the status composer -->
+    <string name="action_new_post">Nieuwe post</string>
+
+</resources>

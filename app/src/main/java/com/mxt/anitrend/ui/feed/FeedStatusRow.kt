@@ -1,6 +1,5 @@
 package com.mxt.anitrend.ui.feed
 
-import android.view.ViewGroup
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -46,12 +45,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import com.mxt.anitrend.R
-import com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView
-import com.mxt.anitrend.base.custom.view.widget.StatusDeleteWidget
-import com.mxt.anitrend.base.custom.view.widget.StatusDeleteWidgetState
-import com.mxt.anitrend.binding.richMarkDown
 import com.mxt.anitrend.domain.model.FeedItemUiModel
 import com.mxt.anitrend.extension.getCompatColorAttr
 import com.mxt.anitrend.ui.designsystem.AniTrendTheme
@@ -60,12 +54,15 @@ import com.mxt.anitrend.ui.designsystem.aniTrendPlatformTextStyle
 import com.mxt.anitrend.ui.favourite.FavouriteAction
 import com.mxt.anitrend.ui.favourite.FavouriteActionState
 import com.mxt.anitrend.ui.image.AniTrendAvatarImage
+import com.mxt.anitrend.ui.markdown.MarkdownText
+import com.mxt.anitrend.ui.markdown.createMarkwon
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.WidgetState
+import io.noties.markwon.Markwon
 
 /**
- * Compose layout for a text-status feed row. Rich Markdown and delete confirmation stay in their
- * existing Android views so their rendering and lifecycle behavior remain unchanged.
+ * Compose layout for a text-status feed row. Rich Markdown renders through the shared
+ * MarkdownText bridge and deletion uses the native StatusDeleteAction composable.
  */
 @Composable
 internal fun FeedStatusRow(
@@ -79,7 +76,9 @@ internal fun FeedStatusRow(
     onEdit: () -> Unit,
     onDelete: (Long, Int) -> Unit,
     onOpenProfile: () -> Unit,
-    onDeleteWidgetCreated: (StatusDeleteWidget) -> Unit,
+    markwon: Markwon,
+    onLinkClick: (String) -> Unit,
+    onLinkLongClick: (String) -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     val isPreview = LocalInspectionMode.current
@@ -215,6 +214,9 @@ internal fun FeedStatusRow(
                     body = model.body?.toString(),
                     textStyle = rowTextStyle,
                     isPreview = isPreview,
+                    markwon = markwon,
+                    onLinkClick = onLinkClick,
+                    onLinkLongClick = onLinkLongClick,
                 )
             }
             Spacer(modifier = Modifier.height(dimensionResource(R.dimen.mg_margin)))
@@ -228,14 +230,14 @@ internal fun FeedStatusRow(
                     description = likesDescription,
                     onClick = onShowLikes,
                     minimumHeight = legacyActionHeight,
-                    modifier = Modifier.testTag(R.id.widget_users.toString()),
+                    modifier = Modifier.testTag("widget_users"),
                     tint = accentColor,
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 FavouriteAction(
                     state = favouriteState,
                     onClick = onToggleLike,
-                    modifier = Modifier.testTag(R.id.widget_favourite.toString()),
+                    modifier = Modifier.testTag("widget_favourite"),
                 )
                 FeedCommentAction(
                     replyCount = model.replyCount,
@@ -246,7 +248,7 @@ internal fun FeedStatusRow(
                     modifier =
                     Modifier
                         .padding(start = dimensionResource(R.dimen.lg_margin))
-                        .testTag(R.id.widget_comment.toString()),
+                        .testTag("widget_comment"),
                     tint = accentColor,
                 )
                 if (model.canEdit) {
@@ -258,19 +260,18 @@ internal fun FeedStatusRow(
                         modifier =
                         Modifier
                             .padding(start = dimensionResource(R.dimen.lg_margin))
-                            .testTag(R.id.widget_edit.toString()),
+                            .testTag("widget_edit"),
                     )
                 }
                 if (model.canDelete) {
-                    FeedDeleteAction(
-                        isRecycled = isRecycled,
-                        state = deleteState,
+                    StatusDeleteAction(
+                        isEnabled = deleteState.isEnabled,
+                        isLoading = deleteState.isLoading,
                         onClick = deleteCurrentFeed,
-                        onWidgetCreated = onDeleteWidgetCreated,
                         modifier =
                         Modifier
                             .padding(start = dimensionResource(R.dimen.lg_margin))
-                            .testTag(R.id.widget_delete.toString()),
+                            .testTag("widget_delete"),
                     )
                 }
             }
@@ -327,10 +328,14 @@ private fun FeedStatusBody(
     body: String?,
     textStyle: TextStyle,
     isPreview: Boolean,
+    markwon: Markwon,
+    onLinkClick: (String) -> Unit,
+    onLinkLongClick: (String) -> Unit,
 ) {
+    val markdown = body ?: stringResource(R.string.layout_empty_response)
     if (isPreview) {
         Text(
-            text = body ?: "No content available",
+            text = markdown,
             modifier =
             Modifier
                 .fillMaxWidth()
@@ -343,33 +348,18 @@ private fun FeedStatusBody(
         )
     } else {
         key(body) {
-            AndroidView(
-                factory = { context ->
-                    RichMarkdownTextView(context).apply {
-                        id = R.id.widget_status_text
-                        setPadding(
-                            0,
-                            resources.getDimensionPixelSize(R.dimen.md_margin),
-                            0,
-                            resources.getDimensionPixelSize(R.dimen.sm_margin),
-                        )
-                        tag = body
-                        richMarkDown(body)
-                        layoutParams =
-                            ViewGroup.LayoutParams(
-                                ViewGroup.LayoutParams.MATCH_PARENT,
-                                ViewGroup.LayoutParams.WRAP_CONTENT,
-                            )
-                    }
-                },
-                modifier = Modifier.fillMaxWidth(),
-                update = { textView ->
-                    if (textView.tag != body) {
-                        textView.tag = body
-                        textView.richMarkDown(body)
-                    }
-                },
-                onRelease = RichMarkdownTextView::onViewRecycled,
+            MarkdownText(
+                markdown = markdown,
+                markwon = markwon,
+                onLinkClick = onLinkClick,
+                onLinkLongClick = onLinkLongClick,
+                modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        top = dimensionResource(R.dimen.md_margin),
+                        bottom = dimensionResource(R.dimen.sm_margin),
+                    ),
             )
         }
     }
@@ -452,50 +442,6 @@ internal fun FeedCommentAction(
     }
 }
 
-/** Recycler-safe delete affordance shared by feed rows. */
-@Composable
-internal fun FeedDeleteAction(
-    isRecycled: Boolean,
-    state: StatusDeleteWidgetState,
-    onClick: () -> Unit,
-    onWidgetCreated: (StatusDeleteWidget) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    if (LocalInspectionMode.current) {
-        StatusDeleteAction(
-            isEnabled = state.isEnabled,
-            isLoading = state.isLoading,
-            onClick = onClick,
-            modifier = modifier,
-        )
-    } else {
-        AndroidView(
-            factory = { context ->
-                StatusDeleteWidget(context).apply {
-                    id = R.id.widget_delete
-                    layoutParams =
-                        ViewGroup.LayoutParams(
-                            ViewGroup.LayoutParams.WRAP_CONTENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT,
-                        )
-                    onWidgetCreated(this)
-                }
-            },
-            modifier = modifier,
-            update = { widget ->
-                if (isRecycled) {
-                    widget.setOnDeleteListener(null)
-                    widget.onViewRecycled()
-                } else {
-                    widget.render(state)
-                    widget.setOnDeleteListener(onClick)
-                }
-            },
-            onRelease = StatusDeleteWidget::onViewRecycled,
-        )
-    }
-}
-
 @Preview(name = "Feed status row", showBackground = true, widthDp = 360)
 @Composable
 private fun FeedStatusRowPreview() {
@@ -531,7 +477,7 @@ private fun FeedStatusRowPreview() {
             likes = emptyList(),
             feedText = "A status with bold text and a link.",
         )
-    AniTrendTheme {
+    AniTrendTheme("light") {
         FeedStatusRow(
             model = previewItem,
             createdAtText = "1 day ago",
@@ -543,7 +489,8 @@ private fun FeedStatusRowPreview() {
             onEdit = {},
             onDelete = { _, _ -> },
             onOpenProfile = {},
-            onDeleteWidgetCreated = {},
+            markwon = createMarkwon(LocalContext.current) {},
+            onLinkClick = {},
         )
     }
 }

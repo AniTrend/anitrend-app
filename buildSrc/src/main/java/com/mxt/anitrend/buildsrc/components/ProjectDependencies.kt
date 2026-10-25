@@ -51,6 +51,8 @@ internal fun Project.configureDependencies() {
     dependencies.implementation(libs.androidx.compose.animation)
     dependencies.implementation(libs.androidx.compose.ui.tooling.preview)
     dependencies.implementation(libs.androidx.activity.compose)
+    /** Media3 Compose playback surfaces */
+    dependencies.implementation(libs.androidx.media3.ui.compose.material3)
     /** Coil image loading for Compose surfaces */
     dependencies.implementation(libs.coil.compose)
     dependencies.implementation(libs.coil.network.okhttp)
@@ -62,6 +64,7 @@ internal fun Project.configureDependencies() {
     dependencies.implementation(libs.androidx.constraintLayout)
     dependencies.implementation(libs.androidx.collectionKtx)
     dependencies.implementation(libs.androidx.paging.runtime)
+    dependencies.implementation(libs.androidx.paging.compose)
 
     dependencies.implementation(libs.androidx.coreKtx)
     dependencies.implementation(libs.androidx.appcompat)
@@ -77,14 +80,18 @@ internal fun Project.configureDependencies() {
     dependencies.implementation(libs.androidx.lifecycle.liveDataKtx)
     dependencies.implementation(libs.androidx.lifecycle.viewModelKtx)
     dependencies.implementation(libs.androidx.lifecycle.liveDataCoreKtx)
+    dependencies.implementation(libs.androidx.lifecycle.runtime.compose)
+    dependencies.implementation(libs.androidx.lifecycle.viewmodel.compose)
 
-    /** AndroidX Navigation 2 (Fragment/XML host inside SettingsActivity) */
-    dependencies.implementation(libs.androidx.navigation.fragmentKtx)
-    dependencies.implementation(libs.androidx.navigation.uiKtx)
+    /** AndroidX Navigation 3 (the single app navigation host) */
+    dependencies.implementation(libs.androidx.navigation3.runtime)
+    dependencies.implementation(libs.androidx.navigation3.ui)
+    dependencies.implementation(libs.androidx.lifecycle.viewmodel.navigation3)
 
     /** Koin AndroidX Dependency Injection */
     dependencies.implementation(libs.koin.core)
     dependencies.implementation(libs.koin.android)
+    dependencies.implementation(libs.koin.androidx.compose)
     dependencies.implementation(libs.koin.workManager)
     dependencies.testImplementation(libs.koin.test)
     dependencies.testImplementation(libs.koin.test.jUnit4)

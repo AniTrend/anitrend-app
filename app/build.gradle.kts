@@ -15,21 +15,11 @@ android {
 
 dependencies {
 
-    /** Tap Target Prompt */
-    implementation(libs.material.tap.target.prompt)
-
     /** Pretty Time */
     implementation(libs.prettyTime)
 
     /** Media3 ExoPlayer */
     implementation(libs.androidx.media3.exoplayer)
-    implementation(libs.androidx.media3.ui)
-
-    /** Photo View */
-    implementation(libs.photoview)
-
-    /** Charts */
-    implementation(libs.mpandroidchart)
 
     /** Event Bus Library */
     implementation(libs.eventbus)

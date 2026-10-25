@@ -1,49 +1,29 @@
 package com.mxt.anitrend.base.plugin.text
 
 import android.view.View
-import android.webkit.MimeTypeMap
-import androidx.core.net.toUri
-import androidx.fragment.app.FragmentActivity
-import com.mxt.anitrend.R
-import com.mxt.anitrend.view.activity.base.VideoPlayerActivity
-import com.mxt.anitrend.view.sheet.BottomSheetSpoiler
-import io.noties.markwon.*
+import io.noties.markwon.AbstractMarkwonPlugin
+import io.noties.markwon.LinkResolverDef
+import io.noties.markwon.MarkwonConfiguration
 
-internal class TextConfigurationPlugin private constructor() : AbstractMarkwonPlugin() {
-
-    private val regex = Regex("mp4|webm", RegexOption.IGNORE_CASE)
-
-    private fun decodeDataIn(link: String): String? {
-        val uri = link.toUri()
-        return uri.getQueryParameter("data")
-    }
+/**
+ * Emits clicked link targets to [onLinkClick]. The owning route performs the
+ * dispatch for decoded spoiler text, native video and external links; this
+ * plugin never resolves destinations itself.
+ */
+internal class TextConfigurationPlugin
+private constructor(
+    private val onLinkClick: (String) -> Unit,
+) : AbstractMarkwonPlugin() {
 
     override fun configureConfiguration(builder: MarkwonConfiguration.Builder) {
         builder.linkResolver(object : LinkResolverDef() {
             override fun resolve(view: View, link: String) {
-                if (link.startsWith("app.anitrend")) {
-                    val context = view.context
-                    if (context is FragmentActivity) {
-                        val sheet = BottomSheetSpoiler.Builder()
-                            .setText(decodeDataIn(link))
-                            .setTitle(R.string.title_bottom_sheet_spoiler)
-                            .build()
-                        sheet.show(context.supportFragmentManager, sheet.tag)
-                    }
-                } else {
-                    val mediaType = MimeTypeMap.getFileExtensionFromUrl(link)
-                    if (mediaType.matches(regex)) {
-                        val intent = VideoPlayerActivity.newIntent(view.context, link)
-                        view.context.startActivity(intent)
-                    } else {
-                        super.resolve(view, link)
-                    }
-                }
+                onLinkClick(link)
             }
         })
     }
 
     companion object {
-        fun create() = TextConfigurationPlugin()
+        fun create(onLinkClick: (String) -> Unit) = TextConfigurationPlugin(onLinkClick)
     }
 }

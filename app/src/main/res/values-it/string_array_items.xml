@@ -113,8 +113,8 @@
 
     <string name="manga_format_all">Tutti</string>
     <string name="manga_format_manga">Manga</string>
-    <string name="manga_format_novel">Novel</string>
-    <string name="manga_format_oneshot">One Shot</string>
+    <string name="manga_format_novel">Romanzo</string>
+    <string name="manga_format_oneshot">One shot</string>
 
     <string name="media_list_status_current">Attuali</string>
     <string name="media_list_status_planning">Pianificati</string>
@@ -136,5 +136,6 @@
 
     <string name="pref_selected_theme_title_light">Light</string>
     <string name="pref_selected_theme_title_dark">Dark</string>
-    <string name="pref_selected_theme_title_black">Black</string>
+    <!-- Theme choice using a pure black background for AMOLED screens; AMOLED is a display technology term -->
+    <string name="pref_selected_theme_title_black">AMOLED</string>
 </resources>

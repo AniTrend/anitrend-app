@@ -71,7 +71,7 @@ internal fun StudioRow(
 @Preview(name = "Studio rows", showBackground = true, widthDp = 180)
 @Composable
 private fun StudioRowPreview() {
-    AniTrendTheme {
+    AniTrendTheme("light") {
         Column(verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lg_margin))) {
             StudioRow(studioName = "Studio One", isFavourite = false)
             StudioRow(studioName = "Studio Two", isFavourite = true)

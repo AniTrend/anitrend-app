@@ -11,6 +11,14 @@ import android.os.Bundle
 import androidx.annotation.RequiresApi
 import androidx.annotation.VisibleForTesting
 import com.mxt.anitrend.R
+import com.mxt.anitrend.navigation.EXTRA_ROUTE
+import com.mxt.anitrend.navigation.ROUTE_NOTIFICATIONS
+import com.mxt.anitrend.navigation.ROUTE_MEDIA_LIST
+import com.mxt.anitrend.navigation.ROUTE_PROFILE
+import com.mxt.anitrend.navigation.ROUTE_SEARCH
+import com.mxt.anitrend.navigation.ROUTE_AIRING
+import com.mxt.anitrend.navigation.ROUTE_FEED
+import com.mxt.anitrend.navigation.ROUTE_TRENDING
 import com.mxt.anitrend.view.activity.index.MainActivity
 import org.xmlpull.v1.XmlPullParser
 
@@ -32,20 +40,20 @@ object ShortcutUtil {
     }
 
     /**
-     * Producer-to-route contract: the [MainActivity.EXTRA_ROUTE] value each
+     * Producer-to-route contract: the [EXTRA_ROUTE] value each
      * shortcut type launches with. Every producer intent must carry a route so
      * a cold launch lands on the shortcut's destination instead of the start
      * destination. NFR-004 added the Airing, Feed, and Trending producers.
      */
     @VisibleForTesting
     internal fun routeForShortcutType(shortcutType: Int): String? = when (shortcutType) {
-        KeyUtil.SHORTCUT_NOTIFICATION -> MainActivity.ROUTE_NOTIFICATIONS
-        KeyUtil.SHORTCUT_MY_ANIME, KeyUtil.SHORTCUT_MY_MANGA -> MainActivity.ROUTE_MEDIA_LIST
-        KeyUtil.SHORTCUT_PROFILE -> MainActivity.ROUTE_PROFILE
-        KeyUtil.SHORTCUT_SEARCH -> MainActivity.ROUTE_SEARCH
-        KeyUtil.SHORTCUT_AIRING -> MainActivity.ROUTE_AIRING
-        KeyUtil.SHORTCUT_FEEDS -> MainActivity.ROUTE_FEED
-        KeyUtil.SHORTCUT_TRENDING -> MainActivity.ROUTE_TRENDING
+        KeyUtil.SHORTCUT_NOTIFICATION -> ROUTE_NOTIFICATIONS
+        KeyUtil.SHORTCUT_MY_ANIME, KeyUtil.SHORTCUT_MY_MANGA -> ROUTE_MEDIA_LIST
+        KeyUtil.SHORTCUT_PROFILE -> ROUTE_PROFILE
+        KeyUtil.SHORTCUT_SEARCH -> ROUTE_SEARCH
+        KeyUtil.SHORTCUT_AIRING -> ROUTE_AIRING
+        KeyUtil.SHORTCUT_FEEDS -> ROUTE_FEED
+        KeyUtil.SHORTCUT_TRENDING -> ROUTE_TRENDING
         else -> null
     }
 
@@ -144,7 +152,7 @@ object ShortcutUtil {
 
     /**
      * Builds the [ShortcutInfo] for one producer. The produced intent carries
-     * the producer's params, its [MainActivity.EXTRA_ROUTE] so a cold launch
+     * the producer's params, its [EXTRA_ROUTE] so a cold launch
      * lands on the shortcut's destination, and the legacy
      * [KeyUtil.arg_shortcut_used] marker. Returns null for unknown types.
      */
@@ -156,7 +164,7 @@ object ShortcutUtil {
     ): ShortcutInfo? {
         val intent = createIntentAction(context, MainActivity::class.java, shortcutBuilder.params)
         routeForShortcutType(shortcutBuilder.shortcutType)?.let { route ->
-            intent.putExtra(MainActivity.EXTRA_ROUTE, route)
+            intent.putExtra(EXTRA_ROUTE, route)
         }
         return when (shortcutBuilder.shortcutType) {
             KeyUtil.SHORTCUT_NOTIFICATION ->

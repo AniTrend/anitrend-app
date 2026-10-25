@@ -1,6 +1,5 @@
 package com.mxt.anitrend.ui.feed
 
-import android.view.ViewGroup
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -42,12 +41,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.viewinterop.AndroidView
 import com.mxt.anitrend.R
-import com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView
-import com.mxt.anitrend.base.custom.view.widget.StatusDeleteWidget
-import com.mxt.anitrend.base.custom.view.widget.StatusDeleteWidgetState
-import com.mxt.anitrend.binding.richMarkDown
 import com.mxt.anitrend.domain.model.CommentReplyUiModel
 import com.mxt.anitrend.extension.getCompatColorAttr
 import com.mxt.anitrend.ui.designsystem.AniTrendTheme
@@ -56,6 +50,9 @@ import com.mxt.anitrend.ui.designsystem.aniTrendPlatformTextStyle
 import com.mxt.anitrend.ui.favourite.FavouriteAction
 import com.mxt.anitrend.ui.favourite.FavouriteActionState
 import com.mxt.anitrend.ui.image.AniTrendAvatarImage
+import com.mxt.anitrend.ui.markdown.MarkdownText
+import com.mxt.anitrend.ui.markdown.createMarkwon
+import io.noties.markwon.Markwon
 
 /**
  * Compose layout for a feed reply. Rich Markdown and delete-confirmation widgets remain Android views so
@@ -73,7 +70,9 @@ internal fun CommentReplyRow(
     onMention: () -> Unit,
     onShowLikes: () -> Unit,
     onOpenProfile: () -> Unit,
-    onDeleteWidgetCreated: (StatusDeleteWidget) -> Unit,
+    markwon: Markwon,
+    onLinkClick: (String) -> Unit,
+    onLinkLongClick: (String) -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     val isPreview = LocalInspectionMode.current
@@ -181,6 +180,9 @@ internal fun CommentReplyRow(
                 reply = model.reply,
                 textStyle = rowTextStyle,
                 isPreview = isPreview,
+                markwon = markwon,
+                onLinkClick = onLinkClick,
+                onLinkLongClick = onLinkLongClick,
             )
             Spacer(modifier = Modifier.height(dimensionResource(R.dimen.md_margin)))
 
@@ -193,7 +195,7 @@ internal fun CommentReplyRow(
                     Modifier
                         .align(Alignment.CenterStart)
                         .heightIn(min = legacyTextActionHeight)
-                        .testTag(R.id.widget_users.toString()),
+                        .testTag("widget_users"),
                     tint = MaterialTheme.colorScheme.primary,
                 )
                 Row(
@@ -203,7 +205,7 @@ internal fun CommentReplyRow(
                     FavouriteAction(
                         state = favouriteState,
                         onClick = onToggleLike,
-                        modifier = Modifier.testTag(R.id.widget_favourite.toString()),
+                        modifier = Modifier.testTag("widget_favourite"),
                     )
                     if (isCurrentUser) {
                         CommentActionIcon(
@@ -214,13 +216,11 @@ internal fun CommentReplyRow(
                             Modifier
                                 .padding(start = dimensionResource(R.dimen.lg_margin))
                                 .heightIn(min = legacyTextActionHeight)
-                                .testTag(R.id.widget_edit.toString()),
+                                .testTag("widget_edit"),
                         )
                         CommentDeleteAction(
                             state = deleteState,
-                            isRecycled = isRecycled,
                             onClick = onDelete,
-                            onWidgetCreated = onDeleteWidgetCreated,
                             modifier = Modifier.padding(start = dimensionResource(R.dimen.lg_margin)),
                         )
                     } else {
@@ -228,7 +228,7 @@ internal fun CommentReplyRow(
                             iconResource = R.drawable.ic_reply_blue_600_18dp,
                             description = mentionDescription,
                             onClick = onMention,
-                            modifier = Modifier.padding(start = dimensionResource(R.dimen.lg_margin)).testTag(R.id.widget_mention.toString()),
+                            modifier = Modifier.padding(start = dimensionResource(R.dimen.lg_margin)).testTag("widget_mention"),
                         )
                     }
                 }
@@ -298,10 +298,14 @@ private fun CommentReplyBody(
     reply: String?,
     textStyle: androidx.compose.ui.text.TextStyle,
     isPreview: Boolean,
+    markwon: Markwon,
+    onLinkClick: (String) -> Unit,
+    onLinkLongClick: (String) -> Unit,
 ) {
+    val body = reply ?: stringResource(R.string.layout_empty_response)
     if (isPreview) {
         Text(
-            text = reply ?: "No content available",
+            text = body,
             modifier =
             Modifier
                 .fillMaxWidth()
@@ -311,28 +315,15 @@ private fun CommentReplyBody(
         )
     } else {
         key(reply) {
-            AndroidView(
-                factory = { context ->
-                    RichMarkdownTextView(context).apply {
-                        id = R.id.widget_status_text
-                        val padding = resources.getDimensionPixelSize(R.dimen.md_margin)
-                        setPadding(padding, padding, padding, padding)
-                        tag = reply
-                        richMarkDown(reply)
-                        layoutParams = ViewGroup.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT,
-                        )
-                    }
-                },
-                modifier = Modifier.fillMaxWidth(),
-                update = { textView ->
-                    if (textView.tag != reply) {
-                        textView.tag = reply
-                        textView.richMarkDown(reply)
-                    }
-                },
-                onRelease = RichMarkdownTextView::onViewRecycled,
+            MarkdownText(
+                markdown = body,
+                markwon = markwon,
+                onLinkClick = onLinkClick,
+                onLinkLongClick = onLinkLongClick,
+                modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(dimensionResource(R.dimen.md_margin)),
             )
         }
     }
@@ -371,44 +362,16 @@ private fun CommentActionIcon(
 
 @Composable
 private fun CommentDeleteAction(
-    isRecycled: Boolean,
     state: StatusDeleteWidgetState,
     onClick: () -> Unit,
-    onWidgetCreated: (StatusDeleteWidget) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    if (LocalInspectionMode.current) {
-        StatusDeleteAction(
-            isEnabled = state.isEnabled,
-            isLoading = state.isLoading,
-            onClick = onClick,
-            modifier = modifier,
-        )
-    } else {
-        AndroidView(
-            factory = { context ->
-                StatusDeleteWidget(context).apply {
-                    id = R.id.widget_delete
-                    layoutParams = ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                    )
-                    onWidgetCreated(this)
-                }
-            },
-            modifier = modifier,
-            update = { view ->
-                if (isRecycled) {
-                    view.setOnDeleteListener(null)
-                    view.onViewRecycled()
-                } else {
-                    view.render(state)
-                    view.setOnDeleteListener(onClick)
-                }
-            },
-            onRelease = StatusDeleteWidget::onViewRecycled,
-        )
-    }
+    StatusDeleteAction(
+        isEnabled = state.isEnabled,
+        isLoading = state.isLoading,
+        onClick = onClick,
+        modifier = modifier,
+    )
 }
 
 @Preview(name = "Comment reply row", showBackground = true, widthDp = 360)
@@ -428,7 +391,7 @@ private fun CommentReplyRowPreview() {
             isLikePending = false,
             isDeletePending = false,
         )
-    AniTrendTheme {
+    AniTrendTheme("light") {
         Column(verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lg_margin))) {
             CommentReplyRow(
                 model = reply.copy(isLikedByCurrentUser = false),
@@ -441,7 +404,8 @@ private fun CommentReplyRowPreview() {
                 onMention = {},
                 onShowLikes = {},
                 onOpenProfile = {},
-                onDeleteWidgetCreated = {},
+                markwon = createMarkwon(LocalContext.current) {},
+                onLinkClick = {},
             )
             CommentReplyRow(
                 model = reply.copy(isDeletePending = true),
@@ -454,7 +418,8 @@ private fun CommentReplyRowPreview() {
                 onMention = {},
                 onShowLikes = {},
                 onOpenProfile = {},
-                onDeleteWidgetCreated = {},
+                markwon = createMarkwon(LocalContext.current) {},
+                onLinkClick = {},
             )
         }
     }

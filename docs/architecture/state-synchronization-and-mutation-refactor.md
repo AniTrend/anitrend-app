@@ -242,8 +242,8 @@ No phase may require:
 
 The following work is explicitly outside the required scope unless a later phase states otherwise:
 
-1. Migrating the application to Jetpack Compose.
-2. Migrating navigation to Navigation 3.
+1. ~~Migrating the application to Jetpack Compose.~~ **Completed**: Compose Material 3 is the production UI stack; XML/View and Navigation 2 have been removed.
+2. ~~Migrating navigation to Navigation 3.~~ **Completed**: Navigation 3 (`ui/navigation/AniTrendApp.kt`) is the production shell.
 3. Splitting the single `:app` module.
 4. Replacing Koin.
 5. Replacing Retrofit or the generated GraphQL request system.

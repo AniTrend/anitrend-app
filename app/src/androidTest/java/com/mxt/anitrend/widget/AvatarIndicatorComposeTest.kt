@@ -82,7 +82,7 @@ class AvatarIndicatorComposeTest {
                 val avatarComposeView = ComposeView(hostActivity).apply {
                     setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                     setContent {
-                        AniTrendTheme {
+                        AniTrendTheme("light") {
                             AvatarIndicator(
                                 state = state.value,
                                 onAvatarClick = {},

@@ -19,6 +19,7 @@ import com.mxt.anitrend.model.entity.anilist.MediaList
 import com.mxt.anitrend.model.entity.anilist.User
 import com.mxt.anitrend.repository.BrowseRepository
 import com.mxt.anitrend.repository.UserRepository
+import com.mxt.anitrend.ui.library.LibraryPreset
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.Settings
 import kotlinx.coroutines.Dispatchers
@@ -100,7 +101,7 @@ class MediaListViewModelImmutableStateTest {
         val viewModel = createViewModel()
         val collector = backgroundScope.launch { viewModel.state.collect {} }
 
-        viewModel.load(userId = 42L, userName = null, mediaType = KeyUtil.ANIME, statusIn = KeyUtil.CURRENT)
+        viewModel.load(userId = 42L, userName = null, mediaType = KeyUtil.ANIME, statusIn = KeyUtil.CURRENT, preset = LibraryPreset.MY_ANIME)
         mediaListStore.apply(
             MediaListStoreChange.CollectionLoaded(
                 queryKey = queryKey,
@@ -140,7 +141,7 @@ class MediaListViewModelImmutableStateTest {
         val viewModel = createViewModel()
         val collector = backgroundScope.launch { viewModel.state.collect {} }
 
-        viewModel.load(userId = 42L, userName = null, mediaType = KeyUtil.ANIME, statusIn = KeyUtil.CURRENT)
+        viewModel.load(userId = 42L, userName = null, mediaType = KeyUtil.ANIME, statusIn = KeyUtil.CURRENT, preset = LibraryPreset.MY_ANIME)
         mediaListStore.apply(
             MediaListStoreChange.CollectionLoaded(
                 queryKey = queryKey,

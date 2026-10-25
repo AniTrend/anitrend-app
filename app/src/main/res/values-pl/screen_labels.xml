@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Polish translations for the Discover and Library preset chips. Keep keys in
+    sync with values/screen_labels.xml.
+-->
+<resources>
+
+    <!-- Discover preset chip: configurable browse query -->
+    <string name="discover_preset_browse">Przeglądaj</string>
+    <!-- Discover preset chip: trending query -->
+    <string name="discover_preset_trending">W trendach</string>
+    <!-- Discover preset chip: recently added query -->
+    <string name="discover_preset_recent">Ostatnio dodane</string>
+    <!-- Discover preset chip: recommendations from favourite tags and genres -->
+    <string name="discover_preset_for_you">Dla Ciebie</string>
+
+    <!-- Library preset chip: the signed-in user's anime list -->
+    <string name="library_preset_my_anime">Moje anime</string>
+    <!-- Library preset chip: the signed-in user's manga list -->
+    <string name="library_preset_my_manga">Moje manga</string>
+    <!-- Library preset chip: still-releasing anime list entries -->
+    <string name="library_preset_airing">Emitowane</string>
+
+    <!-- Back action for screens with a bottom action bar -->
+    <string name="action_back">Wstecz</string>
+    <!-- Refresh action for feeds and lists -->
+    <string name="action_refresh">Odśwież</string>
+
+    <!-- Action opening the complete list behind a preview section -->
+    <string name="action_see_all">Zobacz wszystko</string>
+
+    <!-- Metadata row label for the release format on media details -->
+    <string name="metadata_format">Format</string>
+
+    <!-- Metadata row label for the release status on media details -->
+    <string name="metadata_status">Status</string>
+
+    <!-- Metadata row label for the premiere season on media details -->
+    <string name="metadata_season">Sezon</string>
+
+    <!-- Metadata row label for the source material on media details -->
+    <string name="metadata_source">Źródło</string>
+
+    <!-- Metadata row label for the episode count on media details -->
+    <string name="metadata_episodes">Odcinki</string>
+
+    <!-- Metadata row label for the episode duration on media details -->
+    <string name="metadata_duration">Czas trwania</string>
+
+    <!-- Metadata row label for the volume count on media details -->
+    <string name="metadata_volumes">Tomy</string>
+
+    <!-- Metadata row label for the chapter count on media details -->
+    <string name="metadata_chapters">Rozdziały</string>
+
+    <!-- Bottom action bar control opening the app navigation drawer -->
+    <string name="action_menu">Menu</string>
+
+    <!-- Message card label naming the sender -->
+    <string name="message_from_label">Od</string>
+
+    <!-- Message card label naming the recipient -->
+    <string name="message_to_label">Do</string>
+
+    <!-- Messages bottom action opening the recipient-seeded composer -->
+    <string name="action_new_message">Nowa wiadomość</string>
+
+    <!-- Notification bottom action marking every notification as read -->
+    <string name="notification_mark_all_read">Oznacz wszystkie jako przeczytane</string>
+
+    <!-- Notification row action opening the related activity -->
+    <string name="notification_open_activity">Aktywność</string>
+
+    <!-- Notification row action opening the related forum thread -->
+    <string name="notification_open_thread">Wątek</string>
+
+    <!-- Review reader label showing the review average rating; %1$d is the rating count -->
+    <string name="review_rating_average">Średnia ocena: %1$d</string>
+
+    <!-- Search entity chip filtering results to user accounts -->
+    <string name="search_entity_users">Użytkownicy</string>
+
+    <!-- Notification settings card title showing the OS permission state -->
+    <string name="notification_permission_title">Uprawnienie powiadomień</string>
+
+    <!-- Notification settings card summary when the OS denies notifications -->
+    <string name="notification_permission_summary_denied">Odrzucono. Włącz powiadomienia w ustawieniach systemu, aby je otrzymywać.</string>
+
+    <!-- Notification settings card action requesting the OS permission -->
+    <string name="action_enable_notifications">Włącz powiadomienia</string>
+
+    <!-- Settings hub About category card summary -->
+    <string name="settings_about_summary">Dziennik zmian, dzienniki i linki pomocy</string>
+
+    <!-- Navigation drawer root entry for the user's lists -->
+    <string name="drawer_title_library">Biblioteka</string>
+
+    <!-- Navigation drawer entry opening the episode feed -->
+    <string name="drawer_title_episodes">Odcinki</string>
+
+    <!-- Navigation drawer entry opening direct messages -->
+    <string name="drawer_title_messages">Wiadomości</string>
+
+    <!-- Navigation drawer entry opening notifications -->
+    <string name="drawer_title_notifications">Powiadomienia</string>
+
+</resources>

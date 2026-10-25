@@ -114,14 +114,14 @@
     <string name="manga_format_all">Todos</string>
     <string name="manga_format_manga">Manga</string>
     <string name="manga_format_novel">Novela</string>
-    <string name="manga_format_oneshot">One Shot</string>
+    <string name="manga_format_oneshot">One shot</string>
 
-    <string name="media_list_status_current">Current</string>
-    <string name="media_list_status_planning">Planning</string>
-    <string name="media_list_status_completed">Completed</string>
-    <string name="media_list_status_dropped">Dropped</string>
-    <string name="media_list_status_paused">Paused</string>
-    <string name="media_list_status_repeating">Repeating</string>
+    <string name="media_list_status_current">En curso</string>
+    <string name="media_list_status_planning">Planeado</string>
+    <string name="media_list_status_completed">Completado</string>
+    <string name="media_list_status_dropped">Abandonado</string>
+    <string name="media_list_status_paused">En pausa</string>
+    <string name="media_list_status_repeating">Repitiendo</string>
 
     <string name="messages_page_title_inbox">Inbox</string>
     <string name="messages_page_title_outbox">Outbox</string>
@@ -136,5 +136,6 @@
 
     <string name="pref_selected_theme_title_light">Light</string>
     <string name="pref_selected_theme_title_dark">Dark</string>
-    <string name="pref_selected_theme_title_black">Black</string>
+    <!-- Theme choice using a pure black background for AMOLED screens; AMOLED is a display technology term -->
+    <string name="pref_selected_theme_title_black">AMOLED</string>
 </resources>

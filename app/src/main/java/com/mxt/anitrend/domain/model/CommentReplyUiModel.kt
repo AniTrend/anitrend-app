@@ -51,7 +51,7 @@ fun FeedReplyRecord.toCommentReplyUiModel(
  * Reverse projection used only by the composer interaction path (edit and
  * mention). The active comment state never carries `FeedReplyRecord` reverse
  * mappings; this bridges the immutable UI projection back into a record so
- * [com.mxt.anitrend.base.custom.view.editor.ComposerWidget] can consume it.
+ * [com.mxt.anitrend.ui.composer.MarkdownComposer] can consume it.
  */
 fun CommentReplyUiModel.toFeedReplyRecord(
     activityId: Long = 0L,

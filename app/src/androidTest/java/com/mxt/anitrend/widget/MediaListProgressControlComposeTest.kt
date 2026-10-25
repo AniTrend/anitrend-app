@@ -158,7 +158,7 @@ private fun installProgressControl(
         ComposeView(activity).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                AniTrendTheme {
+                AniTrendTheme("light") {
                     Box(
                         modifier =
                         Modifier

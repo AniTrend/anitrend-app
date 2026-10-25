@@ -6,19 +6,6 @@ import android.webkit.WebSettings
 import co.anitrend.retrofit.graphql.converter.GraphConverter
 import co.anitrend.retrofit.graphql.model.GraphQLDocumentRegistry
 import co.anitrend.retrofit.graphql.serialization.kotlinx.KotlinxGraphQLJson
-import co.anitrend.support.markdown.center.CenterPlugin
-import co.anitrend.support.markdown.core.CorePlugin
-import co.anitrend.support.markdown.ephasis.EmphasisPlugin
-import co.anitrend.support.markdown.heading.HeadingPlugin
-import co.anitrend.support.markdown.horizontal.HorizontalLinePlugin
-import co.anitrend.support.markdown.image.ImagePlugin
-import co.anitrend.support.markdown.italics.ItalicsPlugin
-import co.anitrend.support.markdown.mention.MentionPlugin
-import co.anitrend.support.markdown.spoiler.SpoilerPlugin
-import co.anitrend.support.markdown.strike.StrikeThroughPlugin
-import co.anitrend.support.markdown.webm.WebMPlugin
-import co.anitrend.support.markdown.youtube.YouTubePlugin
-import com.bumptech.glide.Glide
 import com.chuckerteam.chucker.api.ChuckerCollector
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.chuckerteam.chucker.api.RetentionManager
@@ -30,9 +17,6 @@ import com.mxt.anitrend.analytics.contract.ISupportAnalytics
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.async.WebTokenRequest
 import com.mxt.anitrend.base.interfaces.dao.BoxQuery
-import com.mxt.anitrend.base.plugin.image.GlideImagePlugin
-import com.mxt.anitrend.base.plugin.image.ImageConfigurationPlugin
-import com.mxt.anitrend.base.plugin.text.TextConfigurationPlugin
 import com.mxt.anitrend.data.DatabaseHelper
 import com.mxt.anitrend.data.store.AccountStoreClearer
 import com.mxt.anitrend.data.store.mutation.RequestSequence
@@ -98,45 +82,22 @@ import com.mxt.anitrend.repository.StaffRepository
 import com.mxt.anitrend.repository.StudioRepository
 import com.mxt.anitrend.repository.UserRepository
 import com.mxt.anitrend.util.CompatUtil.cacheProvider
-import com.mxt.anitrend.util.ConfigurationUtil
 import com.mxt.anitrend.util.JobSchedulerUtil
 import com.mxt.anitrend.util.NotificationUtil
 import com.mxt.anitrend.util.Settings
-import com.mxt.anitrend.view.fragment.detail.AboutFragment
-import com.mxt.anitrend.view.fragment.detail.BrowseReviewFragment
-import com.mxt.anitrend.view.fragment.detail.ChangelogFragment
-import com.mxt.anitrend.view.fragment.detail.CharacterFragment
-import com.mxt.anitrend.view.fragment.detail.CommentFragment
-import com.mxt.anitrend.view.fragment.detail.MediaFragment
-import com.mxt.anitrend.view.fragment.detail.MessageFragment
-import com.mxt.anitrend.view.fragment.detail.NotificationFragment
-import com.mxt.anitrend.view.fragment.detail.StaffFragment
-import com.mxt.anitrend.view.fragment.detail.StudioFragment
-import com.mxt.anitrend.view.fragment.detail.ProfileFragment
-import com.mxt.anitrend.view.fragment.detail.SharedContentFragment
-import com.mxt.anitrend.view.fragment.list.AiringListFragment
-import com.mxt.anitrend.view.fragment.list.FeedListFragment
-import com.mxt.anitrend.view.fragment.list.MediaBrowseFragment
-import com.mxt.anitrend.view.fragment.list.MediaLatestList
-import com.mxt.anitrend.view.fragment.list.MediaListFragment
-import com.mxt.anitrend.view.fragment.list.SuggestionListFragment
-import com.mxt.anitrend.view.fragment.list.WatchListFragment
-import com.mxt.anitrend.view.fragment.settings.CustomizeSettingsFragment
-import com.mxt.anitrend.view.fragment.settings.SettingsCategoryLegacyFragment
-import com.mxt.anitrend.view.fragment.settings.SettingsHubFragment
-import com.mxt.anitrend.view.fragment.youtube.YouTubeEmbedFragment
-import com.mxt.anitrend.view.sheet.BottomSheetGiphy
+import com.mxt.anitrend.util.migration.MigrationUtil
+import com.mxt.anitrend.util.migration.Migrations
 import com.mxt.anitrend.view.activity.base.OnboardingViewModel
 import com.mxt.anitrend.viewmodel.AccountSettingsViewModel
-import com.mxt.anitrend.viewmodel.AiringListViewModel
 import com.mxt.anitrend.viewmodel.BrowseReviewViewModel
+import com.mxt.anitrend.viewmodel.EpisodesViewModel
 import com.mxt.anitrend.viewmodel.CharacterActorsViewModel
 import com.mxt.anitrend.viewmodel.CharacterFavouritesViewModel
 import com.mxt.anitrend.viewmodel.CharacterOverviewViewModel
 import com.mxt.anitrend.viewmodel.CharacterSearchViewModel
 import com.mxt.anitrend.viewmodel.CharacterViewModel
-import com.mxt.anitrend.viewmodel.CustomizePreferenceKeys
-import com.mxt.anitrend.viewmodel.CustomizeSettingsViewModel
+import com.mxt.anitrend.viewmodel.AppearancePreferenceKeys
+import com.mxt.anitrend.viewmodel.AppearanceSettingsViewModel
 import com.mxt.anitrend.viewmodel.CommentViewModel
 import com.mxt.anitrend.viewmodel.FeedListViewModel
 import com.mxt.anitrend.viewmodel.GiphyViewModel
@@ -150,7 +111,6 @@ import com.mxt.anitrend.viewmodel.MediaCharacterViewModel
 import com.mxt.anitrend.viewmodel.MediaFavouritesViewModel
 import com.mxt.anitrend.viewmodel.MediaFeedViewModel
 import com.mxt.anitrend.viewmodel.MediaFormatViewModel
-import com.mxt.anitrend.viewmodel.MediaLatestViewModel
 import com.mxt.anitrend.viewmodel.MediaListViewModel
 import com.mxt.anitrend.viewmodel.MediaListMutationViewModel
 import com.mxt.anitrend.viewmodel.MediaOverviewViewModel
@@ -170,25 +130,17 @@ import com.mxt.anitrend.viewmodel.StaffFavouritesViewModel
 import com.mxt.anitrend.viewmodel.StaffOverviewViewModel
 import com.mxt.anitrend.viewmodel.StaffSearchViewModel
 import com.mxt.anitrend.viewmodel.StaffViewModel
+import com.mxt.anitrend.viewmodel.StartupViewModel
+import com.mxt.anitrend.viewmodel.ChangelogViewModel
 import com.mxt.anitrend.viewmodel.StudioFavouritesViewModel
 import com.mxt.anitrend.viewmodel.StudioMediaViewModel
 import com.mxt.anitrend.viewmodel.StudioSearchViewModel
 import com.mxt.anitrend.viewmodel.StudioViewModel
-import com.mxt.anitrend.viewmodel.SuggestionListViewModel
 import com.mxt.anitrend.viewmodel.UserFeedViewModel
 import com.mxt.anitrend.viewmodel.UserListViewModel
 import com.mxt.anitrend.viewmodel.UserOverviewViewModel
 import com.mxt.anitrend.viewmodel.UserSearchViewModel
 import com.mxt.anitrend.worker.*
-import io.noties.markwon.Markwon
-import io.noties.markwon.editor.MarkwonEditor
-import io.noties.markwon.editor.handler.EmphasisEditHandler
-import io.noties.markwon.editor.handler.StrongEmphasisEditHandler
-import io.noties.markwon.ext.strikethrough.StrikethroughPlugin
-import io.noties.markwon.ext.tasklist.TaskListPlugin
-import io.noties.markwon.html.HtmlPlugin
-import io.noties.markwon.image.glide.GlideImagesPlugin
-import io.noties.markwon.linkify.LinkifyPlugin
 import io.wax911.emojify.EmojiManager
 import io.wax911.emojify.serializer.gson.GsonDeserializer
 import kotlinx.coroutines.CoroutineDispatcher
@@ -201,7 +153,6 @@ import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
-import org.koin.androidx.fragment.dsl.fragment
 import org.koin.androidx.workmanager.dsl.worker
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.qualifier.named
@@ -271,12 +222,6 @@ private val coreModule = module {
     }
 
     factory {
-        ConfigurationUtil(
-            settings = get(),
-        )
-    }
-
-    factory {
         val context = androidContext()
         NotificationUtil(
             context = context,
@@ -296,45 +241,6 @@ private val coreModule = module {
         qualifier = named("ua"),
     ) {
         WebSettings.getDefaultUserAgent(androidContext())
-    }
-}
-
-private val widgetModule = module {
-    factory {
-        Markwon.builder(get())
-            .usePlugin(HtmlPlugin.create())
-            .usePlugin(CorePlugin.create())
-            .usePlugin(HorizontalLinePlugin.create())
-            .usePlugin(HeadingPlugin.create())
-            .usePlugin(EmphasisPlugin.create())
-            .usePlugin(CenterPlugin.create())
-            .usePlugin(ImagePlugin.create())
-            .usePlugin(WebMPlugin.create())
-            .usePlugin(YouTubePlugin.create())
-            .usePlugin(LinkifyPlugin.create())
-            .usePlugin(SpoilerPlugin.create())
-            .usePlugin(MentionPlugin.create())
-            .usePlugin(StrikeThroughPlugin.create())
-            .usePlugin(StrikethroughPlugin.create())
-            .usePlugin(TaskListPlugin.create(get<Context>()))
-            .usePlugin(ItalicsPlugin.create())
-            .usePlugin(
-                GlideImagesPlugin.create(
-                    GlideImagePlugin.create(
-                        Glide.with(get<Context>()),
-                        get(named("ua")),
-                    ),
-                ),
-            )
-            .usePlugin(ImageConfigurationPlugin.create())
-            .usePlugin(TextConfigurationPlugin.create())
-            .build()
-    }
-    single {
-        MarkwonEditor.builder(get())
-            .useEditHandler(EmphasisEditHandler())
-            .useEditHandler(StrongEmphasisEditHandler())
-            .build()
     }
 }
 
@@ -621,14 +527,12 @@ private val repositoryModule = module {
 }
 
 private val mediaFeatureModule = module {
-    viewModel { AiringListViewModel(browseRepository = get(), mediaListStore = get(), mutationRegistry = get(), requestSequence = get()) }
     viewModel { BrowseReviewViewModel(browseRepository = get(), reviewStore = get(), requestSequence = get(), rateReviewInteractor = get()) }
-    viewModel { MediaBrowseViewModel(baseRepository = get(), browseRepository = get(), mediaListStore = get()) }
-    viewModel { MediaLatestViewModel(browseRepository = get()) }
+    viewModel { EpisodesViewModel(crunchyrollRepository = get()) }
+    viewModel { MediaBrowseViewModel(baseRepository = get(), browseRepository = get(), mediaListStore = get(), userRepository = get()) }
     viewModel { MediaListViewModel(browseRepository = get(), mediaListStore = get(), mutationRegistry = get(), userRepository = get(), settings = get(), requestSequence = get()) }
     viewModel { MediaListMutationViewModel(saveMediaListEntryInteractor = get(), deleteMediaListEntryInteractor = get(), incrementMediaProgressInteractor = get(), mutationRegistry = get(), userRepository = get()) }
     viewModel { ReviewViewModel(browseRepository = get(), reviewStore = get(), requestSequence = get(), rateReviewInteractor = get()) }
-    viewModel { SuggestionListViewModel(userRepository = get(), browseRepository = get()) }
     viewModel { MediaCharacterViewModel(mediaRepository = get()) }
     viewModel {
         MediaFeedViewModel(
@@ -651,7 +555,7 @@ private val mediaFeatureModule = module {
 }
 
 private val userFeatureModule = module {
-    viewModel { MainViewModel(userRepository = get()) }
+    viewModel { MainViewModel(userRepository = get(), settings = get()) }
     viewModel { UserOverviewViewModel(userRepository = get(), toggleUserFollowInteractor = get(), userStore = get()) }
     viewModel {
         UserFeedViewModel(
@@ -667,6 +571,22 @@ private val userFeatureModule = module {
     viewModel { UserSearchViewModel(searchRepository = get(), toggleUserFollowInteractor = get(), userStore = get()) }
     viewModel { NotificationViewModel(userRepository = get()) }
     viewModel { ProfileViewModel(userRepository = get()) }
+    viewModel {
+        StartupViewModel(
+            settings = get(),
+            userRepository = get(),
+            scheduler = get(),
+            migrationUtil =
+            MigrationUtil.Builder()
+                .addMigration(Migrations.MIGRATION_101_108)
+                .addMigration(Migrations.MIGRATION_109_134)
+                .addMigration(Migrations.MIGRATION_135_136)
+                .addMigration(Migrations.MIGRATION_18400_18500)
+                .addMigration(Migrations.MIGRATION_1090700_1090800)
+                .build(androidContext()),
+            applicationContext = androidContext(),
+        )
+    }
     viewModel {
         FeedListViewModel(
             feedRepository = get(),
@@ -701,7 +621,13 @@ private val userFeatureModule = module {
         )
     }
     viewModel { LoginUserViewModel(userRepository = get()) }
-    viewModel { AccountSettingsViewModel(userRepository = get()) }
+    viewModel {
+        AccountSettingsViewModel(
+            userRepository = get(),
+            settings = get(),
+            adultContentAllowed = androidContext().resources.getBoolean(R.bool.display_adult_content_pref),
+        )
+    }
 }
 
 private val characterFeatureModule = module {
@@ -740,9 +666,12 @@ private val utilityFeatureModule = module {
         )
     }
     viewModel {
-        CustomizeSettingsViewModel(
+        ChangelogViewModel(assets = androidContext().assets)
+    }
+    viewModel {
+        AppearanceSettingsViewModel(
             settings = get(),
-            keys = CustomizePreferenceKeys(
+            keys = AppearancePreferenceKeys(
                 themeKey = androidContext().getString(R.string.pref_key_app_theme),
                 languageKey = androidContext().getString(R.string.pref_key_selected_language),
                 listViewStyleKey = androidContext().getString(R.string.pref_key_list_view_style),
@@ -764,86 +693,10 @@ private val utilityFeatureModule = module {
     }
 }
 
-private val fragmentModule = module {
-    fragment {
-        SettingsHubFragment()
-    }
-    fragment {
-        CustomizeSettingsFragment()
-    }
-    fragment {
-        SettingsCategoryLegacyFragment()
-    }
-    fragment {
-        BottomSheetGiphy()
-    }
-    fragment {
-        AiringListFragment()
-    }
-    fragment {
-        WatchListFragment()
-    }
-    fragment {
-        FeedListFragment()
-    }
-    fragment {
-        SuggestionListFragment()
-    }
-    fragment {
-        MediaBrowseFragment()
-    }
-    fragment {
-        MediaLatestList()
-    }
-    fragment {
-        MediaListFragment()
-    }
-    fragment {
-        BrowseReviewFragment()
-    }
-    fragment {
-        MediaFragment()
-    }
-    fragment {
-        CharacterFragment()
-    }
-    fragment {
-        StaffFragment()
-    }
-    fragment {
-        ProfileFragment()
-    }
-    fragment {
-        SharedContentFragment()
-    }
-    fragment {
-        MessageFragment()
-    }
-    fragment {
-        ChangelogFragment()
-    }
-    fragment {
-        AboutFragment()
-    }
-    fragment {
-        CommentFragment()
-    }
-    fragment {
-        StudioFragment()
-    }
-    fragment {
-        NotificationFragment()
-    }
-    fragment {
-        YouTubeEmbedFragment()
-    }
-}
-
 val appModules = module {
     includes(
         coroutineModule,
         coreModule,
-        widgetModule,
         workerModule,
         presenterModule,
         networkModule,
@@ -856,6 +709,5 @@ val appModules = module {
         staffFeatureModule,
         studioFeatureModule,
         utilityFeatureModule,
-        fragmentModule,
     )
 }

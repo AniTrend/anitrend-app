@@ -42,7 +42,7 @@ class FuzzyDateFieldComposeTest {
                     id = View.generateViewId()
                     setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool)
                     setContent {
-                        AniTrendTheme {
+                        AniTrendTheme("light") {
                             Column {
                                 FuzzyDateField(value = "TBA", contentDescription = "Start date, TBA", onClick = { pickerRequests++ })
                                 FuzzyDateField(value = "2024", contentDescription = "Start date, 2024", onClick = {})

@@ -8,22 +8,47 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.view.Menu
-import android.view.MenuItem
 import android.view.Window
 import android.view.WindowManager
-import android.view.animation.DecelerateInterpolator
+import androidx.activity.compose.setContent
 import android.widget.Toast
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.annotation.VisibleForTesting
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
-import com.bumptech.glide.Glide
 import com.mxt.anitrend.R
-import com.mxt.anitrend.databinding.ActivityImagePreviewBinding
 import com.mxt.anitrend.navigation.extension.putScreenParam
 import com.mxt.anitrend.navigation.extension.screenParam
 import com.mxt.anitrend.navigation.model.ImagePreviewScreenParam
+import com.mxt.anitrend.ui.designsystem.AniTrendTheme
+import com.mxt.anitrend.ui.designsystem.currentAniTrendTheme
+import com.mxt.anitrend.ui.image.AniTrendImage
 import com.mxt.anitrend.util.DialogUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
@@ -82,8 +107,6 @@ class ImagePreviewActivity : CommonActivity() {
         private const val REQUEST_PERMISSION = 102
     }
 
-    private lateinit var binding: ActivityImagePreviewBinding
-
     private var imageUri: String? = null
 
     @Suppress("DEPRECATION")
@@ -95,90 +118,69 @@ class ImagePreviewActivity : CommonActivity() {
         )
         super.onCreate(savedInstanceState)
 
-        binding = ActivityImagePreviewBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        setSupportActionBar(binding.toolbarPreviewImage)
-        supportActionBar?.title = ""
-
-        binding.previewImage.setOnClickListener {
-            binding.toolbarPreviewImage
-                .animate()
-                .alpha(if (binding.toolbarPreviewImage.alpha == 1f) 0f else 1f)
-                .setDuration(500)
-                .setInterpolator(DecelerateInterpolator())
-        }
-
         val args = fromIntent(intent)
         if (args != null) {
             imageUri = args.url
-            Glide.with(this).load(args.url).into(binding.previewImage)
         } else {
             NotifyUtil.makeText(
                 this,
                 R.string.layout_empty_response,
-                R.drawable.ic_warning_white_18dp,
                 Toast.LENGTH_SHORT,
             ).show()
         }
-    }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        if (!imageUri.isNullOrEmpty()) {
-            menuInflater.inflate(R.menu.image_preview_menu, menu)
-        }
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.image_preview_download -> {
-                val permission = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-                    null
-                } else {
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                }
-                if (permission == null || requestWritePermission(permission)) {
-                    downloadAttachment()
-                } else if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
-                    DialogUtil.createMessage(
-                        this,
-                        R.string.title_permission_write,
-                        R.string.text_permission_write,
-                    ) { _, _ ->
-                        ActivityCompat.requestPermissions(
-                            this,
-                            arrayOf(permission),
-                            REQUEST_PERMISSION,
-                        )
-                    }
-                }
-                return true
-            }
-            R.id.image_preview_share,
-            R.id.action_share,
-            -> {
-                val intent =
-                    Intent(Intent.ACTION_SEND).apply {
-                        type = "text/plain"
-                        putExtra(Intent.EXTRA_TEXT, imageUri)
-                    }
-                startActivity(Intent.createChooser(intent, resources.getText(R.string.image_preview_share)))
-                return true
-            }
-            R.id.image_preview_link -> {
-                return try {
-                    val intent = Intent(Intent.ACTION_VIEW).apply { data = Uri.parse(imageUri) }
-                    startActivity(intent)
-                    true
-                } catch (e: Exception) {
-                    Timber.e(e.localizedMessage)
-                    NotifyUtil.makeText(this, R.string.text_unknown_error, Toast.LENGTH_SHORT).show()
-                    true
-                }
+        setContent {
+            AniTrendTheme(currentAniTrendTheme()) {
+                ImagePreviewScreen(
+                    imageUri = imageUri,
+                    onDownloadClick = { onDownloadRequested() },
+                    onShareClick = { shareImage() },
+                    onLinkClick = { openLink() },
+                )
             }
         }
-        return super.onOptionsItemSelected(item)
+    }
+
+    private fun onDownloadRequested() {
+        val permission = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            null
+        } else {
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        }
+        if (permission == null || requestWritePermission(permission)) {
+            downloadAttachment()
+        } else if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
+            DialogUtil.createMessage(
+                this,
+                R.string.title_permission_write,
+                R.string.text_permission_write,
+            ) { _, _ ->
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(permission),
+                    REQUEST_PERMISSION,
+                )
+            }
+        }
+    }
+
+    private fun shareImage() {
+        val intent =
+            Intent(Intent.ACTION_SEND).apply {
+                type = "text/plain"
+                putExtra(Intent.EXTRA_TEXT, imageUri)
+            }
+        startActivity(Intent.createChooser(intent, resources.getText(R.string.image_preview_share)))
+    }
+
+    private fun openLink() {
+        try {
+            val intent = Intent(Intent.ACTION_VIEW).apply { data = Uri.parse(imageUri) }
+            startActivity(intent)
+        } catch (e: Exception) {
+            Timber.e(e.localizedMessage)
+            NotifyUtil.makeText(this, R.string.text_unknown_error, Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onRequestPermissionsResult(
@@ -237,6 +239,86 @@ class ImagePreviewActivity : CommonActivity() {
                 R.color.colorStateRed,
                 KeyUtil.DURATION_SHORT,
             )
+        }
+    }
+}
+
+/**
+ * Fullscreen zoomable image preview with a control overlay: tapping the image
+ * toggles the download/share/link controls, pinch gestures zoom and pan.
+ */
+@Composable
+private fun ImagePreviewScreen(
+    imageUri: String?,
+    onDownloadClick: () -> Unit,
+    onShareClick: () -> Unit,
+    onLinkClick: () -> Unit,
+) {
+    var controlsVisible by remember { mutableStateOf(true) }
+
+    Box(
+        modifier =
+        Modifier
+            .fillMaxSize()
+            .background(Color.Black)
+            .pointerInput(Unit) {
+                detectTapGestures { controlsVisible = !controlsVisible }
+            },
+    ) {
+        var scale by remember { mutableFloatStateOf(1f) }
+        var offset by remember { mutableStateOf(Offset.Zero) }
+        if (imageUri != null) {
+            AniTrendImage(
+                model = imageUri,
+                contentDescription = null,
+                modifier =
+                Modifier
+                    .fillMaxSize()
+                    .pointerInput(Unit) {
+                        detectTransformGestures { _, pan, zoom, _ ->
+                            val nextScale = (scale * zoom).coerceIn(1f, 6f)
+                            scale = nextScale
+                            offset = if (nextScale > 1f) offset + pan else Offset.Zero
+                        }
+                    }
+                    .graphicsLayer {
+                        scaleX = scale
+                        scaleY = scale
+                        translationX = offset.x
+                        translationY = offset.y
+                    },
+            )
+        }
+        if (controlsVisible) {
+            Row(
+                modifier =
+                Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(12.dp),
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
+                IconButton(onClick = onDownloadClick, modifier = Modifier.size(48.dp)) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_cloud_download_white_24dp),
+                        contentDescription = stringResource(R.string.image_preview_download),
+                        tint = Color.White,
+                    )
+                }
+                IconButton(onClick = onShareClick, modifier = Modifier.size(48.dp)) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_share_white_24dp),
+                        contentDescription = stringResource(R.string.image_preview_share),
+                        tint = Color.White,
+                    )
+                }
+                IconButton(onClick = onLinkClick, modifier = Modifier.size(48.dp)) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_link_white_24dp),
+                        contentDescription = stringResource(R.string.image_preview_link),
+                        tint = Color.White,
+                    )
+                }
+            }
         }
     }
 }

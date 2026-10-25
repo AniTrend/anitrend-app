@@ -1,7 +1,7 @@
 # AniTrend navigation refactor specification
 
-**Status:** Navigation 2 internal-destination migration implemented in the working tree; boundary review and enforcement recorded, validation gates open
-**Target:** AndroidX Navigation 2 with Fragment destinations
+**Status:** Navigation 3 migration complete. The app uses Navigation 3 (`ui/navigation/AniTrendApp.kt`) with `AppNavKey`/`StackKey` as the production shell. Navigation 2 and the XML/View system have been removed. The external ingress and wire-key contracts recorded below remain valid.
+**Target:** Navigation 3 with Compose Material 3 destinations (the original Navigation 2 target described in the body below is historical; see `future-work.md` FW-009)
 **Date:** 16 August 2026
 
 The wrap-up record for this branch is

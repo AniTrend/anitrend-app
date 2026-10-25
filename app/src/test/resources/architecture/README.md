@@ -35,18 +35,14 @@ ADR deletes after all consumers migrate (ADR sections 3 and 9, Phase 6). The 89
 current Kotlin files are frozen at their pre-migration state. Phase 1 forbids
 adding classes here so the legacy surface can only shrink, never grow.
 
-### `parcelable-baseline.txt` (61 entries)
+### `parcelable-baseline.txt` (49 entries)
 
 ADR section 9 Phase 1 and section 7.6 prohibit new handwritten Parcelable code.
-The current violations are the two documented scoped exceptions (ADR section 9,
-Phase 1):
+The current violations are the single documented scoped exception (ADR
+section 9, Phase 1):
 
 - Handwritten `Parcelable` implementations inside `model/entity/**` (legacy
   entity classes awaiting migration, e.g. `Media`, `User`, `MediaList`).
-- `MaterialSearchView.SavedState` (lines 629-638 of
-  `base/custom/view/search/MaterialSearchView.kt`), a `Parcelable.Creator`
-  owned by a custom view for view-state serialization, not a domain or
-  navigation model.
 
 New Parcelable code, including new lines added to these legacy files, fails.
 

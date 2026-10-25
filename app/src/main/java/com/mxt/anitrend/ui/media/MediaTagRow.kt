@@ -87,7 +87,7 @@ internal fun MediaTagRow(
 @Preview(name = "Media tag rows", showBackground = true)
 @Composable
 private fun MediaTagRowPreview() {
-    AniTrendTheme {
+    AniTrendTheme("light") {
         Surface(color = MaterialTheme.colorScheme.surface) {
             Column(
                 modifier = Modifier.padding(8.dp),

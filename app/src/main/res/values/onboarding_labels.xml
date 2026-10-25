@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Onboarding tour copy for the four-page first-run flow. -->
+<resources>
+    <!-- Onboarding page 1 heading about discovering media -->
+    <string name="title_onboarding_discover">Find your next story</string>
+    <!-- Onboarding page 1 supporting copy about exploring and filtering media -->
+    <string name="description_onboarding_discover">Explore anime and manga, then narrow the list with filters that fit what you want to watch or read.</string>
+
+    <!-- Onboarding page 2 heading about tracking lists -->
+    <string name="title_onboarding_track">Keep your lists in step</string>
+    <!-- Onboarding page 2 supporting copy about saving media and updating progress -->
+    <string name="description_onboarding_track">Save anime and manga to your lists, switch to Airing, and update progress as you watch or read.</string>
+
+    <!-- Onboarding page 3 heading about social features -->
+    <string name="title_onboarding_social">Follow the conversation</string>
+    <!-- Onboarding page 3 supporting copy about activity, comments and messages -->
+    <string name="description_onboarding_social">Browse AniList activity, join comments and replies, and use messages. Connect AniList when you choose.</string>
+
+    <!-- Onboarding page 4 heading about choosing how to start -->
+    <string name="title_onboarding_start">Start your way</string>
+    <!-- Onboarding page 4 supporting copy about connecting an account or continuing as a guest -->
+    <string name="description_onboarding_start">Connect AniList to use account-linked actions, or continue as a guest. You can connect later.</string>
+
+    <!-- Onboarding action advancing to the next page -->
+    <string name="action_onboarding_next">Next</string>
+
+    <!-- Onboarding action completing the tour with an existing session -->
+    <string name="action_onboarding_continue">Continue</string>
+
+    <!-- Onboarding action opening the privacy controls sheet -->
+    <string name="action_onboarding_privacy_choices">Privacy choices</string>
+    <!-- Onboarding action returning to the previous page -->
+    <string name="action_onboarding_previous">Previous</string>
+    <!-- Onboarding action opening the AniList sign-in flow -->
+    <string name="action_onboarding_connect">Connect AniList</string>
+    <!-- Onboarding action completing the tour without an account -->
+    <string name="action_onboarding_continue_as_guest">Continue as guest</string>
+
+    <!-- Onboarding page position indicator; %1$d is the current page number, %2$d is the total page count -->
+    <string name="label_onboarding_page_indicator" formatted="true">Page %1$d of %2$d</string>
+</resources>

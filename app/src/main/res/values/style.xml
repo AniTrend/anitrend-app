@@ -6,7 +6,7 @@
         Theme base styles.
         API-specific attrs (window transitions, status/nav bar colors) live in
         values-v23/ overrides that extend these base styles.
-        minSdk = 23 so the v23 overrides always apply.
+        minSdk = 24 so the v23 overrides always apply.
     -->
 
     <!-- Light theme shared attributes (no API-specific items) -->
@@ -170,12 +170,6 @@
     </style>
 
 
-    <!-- App bar and popup overlays (migrated to M3) -->
-    <style name="AppThemeLight.AppBarOverlay" parent="ThemeOverlay.Material3.Light" />
-    <style name="AppThemeLight.PopupOverlay" parent="ThemeOverlay.Material3" />
-    <style name="AppThemeDark.AppBarOverlay" parent="ThemeOverlay.Material3.Dark" />
-    <style name="AppThemeDark.PopupOverlay" parent="ThemeOverlay.Material3" />
-
     <!-- AMOLED Black theme (API-independent, already dark) -->
     <style name="AppThemeBlack" parent="Theme.Material3.Dark.NoActionBar">
 
@@ -293,11 +287,6 @@
         <item name="android:textColorSecondary">?attr/subtitleColor</item>
     </style>
 
-    <!-- Rating bar styles (migrated to M3) -->
-    <style name="SmallRating" parent="Theme.Material3.Light">
-        <item name="ratingBarStyle">?android:attr/ratingBarStyleSmall</item>
-    </style>
-
 
     <!-- Translucent window themes (API-independent base attrs) -->
     <style name="AppThemeDark.TranslucentBase">
@@ -318,79 +307,6 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowAnimationStyle">@null</item>
-    </style>
-
-    <!-- Misc widget styles -->
-
-    <style name="Widget.AniTrend.ProgressLayout.LoadingIndicator" parent="Widget.Material3.LoadingIndicator.Contained">
-        <item name="indicatorColor">?attr/colorAccent</item>
-        <item name="containerColor">?attr/cardColor</item>
-        <item name="indicatorSize">@dimen/widget_spinner_compact_size</item>
-    </style>
-
-    <style name="ThemeOverlay.AniTrend.ProgressLayout.Material3" parent="Theme.Material3.Light.NoActionBar">
-        <!-- Custom attrs explicitly defined so they resolve in this overlay context -->
-        <item name="colorAccent">@color/m3_light_primary</item>
-        <item name="cardColor">@color/m3_light_surfaceContainerHighest</item>
-        <item name="titleColor">@color/m3_light_onSurface</item>
-        <item name="subtitleColor">@color/m3_light_onSurfaceVariant</item>
-
-        <item name="colorPrimary">?attr/colorAccent</item>
-        <item name="colorSecondary">?attr/colorAccent</item>
-        <item name="colorSurface">?attr/cardColor</item>
-        <item name="colorSurfaceContainerHighest">?attr/cardColor</item>
-        <item name="colorOnSurface">?attr/titleColor</item>
-        <item name="colorOnSurfaceVariant">?attr/subtitleColor</item>
-        <item name="colorSecondaryContainer">?attr/cardColor</item>
-        <item name="colorOnSecondaryContainer">?attr/titleColor</item>
-    </style>
-
-    <style name="ImagePreviewToolbar" parent="AppThemeBlack">
-        <item name="android:textColorPrimary">?colorOnSurface</item>
-        <item name="android:textColor">?colorOnSurface</item>
-        <item name="android:textColorSecondary">?colorOnSurface</item>
-    </style>
-
-
-    <style name="MSV_ImageButton">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:background">?android:attr/selectableItemBackground</item>
-        <item name="android:paddingLeft">@dimen/search_icon_padding</item>
-        <item name="android:paddingRight">@dimen/search_icon_padding</item>
-    </style>
-
-    <!-- Manage sheet section styles -->
-    <style name="Widget.AniTrend.ManageSheet.SectionCard" parent="Widget.Material3.CardView.Filled">
-        <item name="cardBackgroundColor">?attr/colorSurfaceContainer</item>
-        <item name="cardElevation">0dp</item>
-        <item name="contentPadding">@dimen/sheet_card_padding</item>
-        <item name="strokeWidth">0dp</item>
-    </style>
-
-    <style name="Widget.AniTrend.ManageSheet.SectionLabel" parent="TextAppearance.Material3.TitleSmall">
-        <item name="android:textColor">?attr/colorOnSurface</item>
-    </style>
-
-    <style name="Widget.AniTrend.ManageSheet.FieldLabel" parent="TextAppearance.Material3.LabelMedium">
-        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
-    </style>
-
-    <style name="Widget.AniTrend.ManageSheet.CustomListChip" parent="Widget.Material3.Chip.Filter">
-        <item name="android:textColor">@color/manage_sheet_chip_text</item>
-        <item name="checkedIcon">@drawable/ic_check_circle_white_24dp</item>
-        <item name="checkedIconEnabled">true</item>
-        <item name="checkedIconTint">?attr/colorOnSecondaryContainer</item>
-        <item name="chipBackgroundColor">@color/manage_sheet_chip_background</item>
-        <item name="chipCornerRadius">18dp</item>
-        <item name="chipEndPadding">12dp</item>
-        <item name="chipMinHeight">40dp</item>
-        <item name="chipStartPadding">12dp</item>
-        <item name="chipStrokeColor">@color/manage_sheet_chip_stroke</item>
-        <item name="chipStrokeWidth">1dp</item>
-        <item name="ensureMinTouchTargetSize">true</item>
-        <item name="rippleColor">?attr/colorSecondaryContainer</item>
-        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.Material3.Corner.Full</item>
     </style>
 
 </resources>

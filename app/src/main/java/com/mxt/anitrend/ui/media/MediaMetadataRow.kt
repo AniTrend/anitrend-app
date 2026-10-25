@@ -69,7 +69,7 @@ internal fun MediaMetadataRow(
 @Preview(name = "Media metadata rows", showBackground = true, widthDp = 180)
 @Composable
 private fun MediaMetadataRowPreview() {
-    AniTrendTheme {
+    AniTrendTheme("light") {
         Column(verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.lg_margin))) {
             MediaMetadataRow(
                 iconResource = R.drawable.ic_label_outline_white_24dp,

@@ -71,69 +71,6 @@
     <string name="Retry">"Wiederholen"</string>
     <string name="Watch">"Anschauen"</string>
 
-    <!-- Try to keep all titles short and do not change the order of the <item> tags
-Try to keep all titles short
-Try to keep all titles short
-Try to keep all titles short
-Try to keep all titles short
-Try to keep all titles short
-Try to keep all titles short
-First time usage intro screen -->
-    <string name="get_started">"Los geht's"</string>
-
-    <!-- Try to keep all titles short and do not change the order of the <item> tags
-Try to keep all titles short
-Try to keep all titles short
-Try to keep all titles short
-Try to keep all titles short
-Try to keep all titles short
-Try to keep all titles short
-First time usage intro screen -->
-    <string name="app_intro_colors_title">"Bedeutung der Farben"</string>
-    <string name="app_intro_colors_text">"Farben zeigen den Anime/Manga Status!"</string>
-    <string name="app_intro_content_title">"Inhalt"</string>
-    <string name="app_intro_content_text">"Mehrere Anime &amp; Manga Listen!"</string>
-    <string name="app_intro_search_title">"Suche"</string>
-    <string name="app_intro_search_text">"Anime, Manga &amp; Weitere Suchfunktionen!"</string>
-    <string name="app_intro_videos_title">"Videos"</string>
-    <string name="app_intro_videos_text">"Verwendet den eingebauten Youtube Video Player!"</string>
-    <string name="app_greeting">"Wilkommen bei AniTrend! Dies ist keine Streaming App!"</string>
-
-    <!-- Action label on the onboarding button before the final page; advances to the next page -->
-    <string name="action_onboarding_continue">"Weiter"</string>
-    <!-- Status chip label in the onboarding heroes; shows the "watching" list status -->
-    <string name="label_onboarding_status_watching">"Wird angesehen"</string>
-    <!-- Status chip label in the onboarding heroes; shows the "completed" list status -->
-    <string name="label_onboarding_status_completed">"Abgeschlossen"</string>
-    <!-- Status chip label in the onboarding heroes; shows the "plan to watch" list status -->
-    <string name="label_onboarding_status_plan_to_watch">"Geplant"</string>
-    <!-- Status chip label in the onboarding heroes; shows the "dropped" list status -->
-    <string name="label_onboarding_status_dropped">"Abgebrochen"</string>
-    <!-- Status chip label in the onboarding heroes; shows the "on hold" list status -->
-    <string name="label_onboarding_status_on_hold">"Pausiert"</string>
-    <!-- Status chip label in the onboarding heroes; shows the "rewatching" list status -->
-    <string name="label_onboarding_status_rewatching">"Wird erneut angesehen"</string>
-
-    <!-- Placeholder text in the search bar mockup of the onboarding searching hero -->
-    <string name="placeholder_onboarding_search">"Anime, Manga suchen..."</string>
-    <!-- Example search result in the onboarding searching hero; Jujutsu Kaisen is an anime title -->
-    <string name="label_onboarding_search_result_jujutsu_kaisen">Jujutsu Kaisen</string>
-    <!-- Example search result in the onboarding searching hero; One Piece is an anime title -->
-    <string name="label_onboarding_search_result_one_piece">One Piece</string>
-
-    <!-- First onboarding page description; friendly benefit-led copy about discovering, tracking, and organizing anime and manga -->
-    <string name="description_onboarding_welcome">"Entdecke neue Favoriten, verfolge deinen Fortschritt und verwalte alle Anime- und Manga-Listen an einem Ort."</string>
-    <!-- Colors page description; explains the color coding of anime/manga list statuses -->
-    <string name="description_onboarding_colors">"Erkenne schnell, was du gerade ansiehst, abgeschlossen hast oder ansehen möchtest, dank intuitiver Farbcodierung."</string>
-    <!-- Content page description; explains the browsable catalog -->
-    <string name="description_onboarding_content">"Durchsuche Tausende Titel mit detaillierten Infos, Bewertungen, saisonalen Übersichten und Mitarbeiterangaben, täglich aktualisiert."</string>
-    <!-- Searching page description; explains search and filter capabilities -->
-    <string name="description_onboarding_searching">"Leistungsstarke Suche mit Filtern nach Genre, Jahr, Studio und Status, damit du genau findest, was du suchst."</string>
-    <!-- Final onboarding page title; introduces managing anime and manga lists -->
-    <string name="title_onboarding_manage">"Deine Liste verwalten"</string>
-    <!-- Final onboarding page description; long-pressing an anime or manga item opens list management for status, progress, and details -->
-    <string name="description_onboarding_manage">"Drücke lange auf einen Anime oder Manga, um Status, Fortschritt und Details zu verwalten."</string>
-
     <!-- Filter menu entry these are the dialog titles -->
     <string name="app_filter_sort">"Sortieren nach?"</string>
     <string name="app_filter_order">"Reihenfolge?"</string>
@@ -174,13 +111,6 @@ You can translate this just try to keep the meaning consistent :) -->
 
         Ebenso kannst du Anime & Manga zu deinen Favoriten hinzufügen oder entfernen, indem du auf das Herz tippst.
         ]]></string>
-    <!-- translators: This copy is shown on the full-screen onboarding card (the final
-     welcome card). It explains that tapping a card lets users explore anime and
-     manga, and that signing in with AniList lets them manage their lists. -->
-    <string name="app_intro_guide">Tippe auf eine Karte, um Anime und Manga zu entdecken. Melde dich mit AniList an, um deine Listen zu verwalten.</string>
-    <!-- translators: Heading for the full-screen onboarding card, shown directly above
-         the guide text. -->
-    <string name="app_intro_title">Loslegen</string>
     <string name="login_welcome_title">"Wilkommen %s"</string>
     <string name="login_welcome_text">"Erfolgreich angemeldet"</string>
 
@@ -621,9 +551,6 @@ These are the anime time labels in your profile -->
     <string name="dialog_title_started_at">"Startdatum"</string>
     <string name="dialog_title_completed_at">"Enddatum"</string>
     <string name="dialog_button_clear">"Leeren"</string>
-    <string name="pref_header_customize">"Anpassen"</string>
-    <string name="pref_header_customize_summary">"Passe das Aussehen der App an"</string>
-    <string name="text_application_restart_required">"Bitte starte die App neu, um die Änderungen anzuwenden"</string>
 
     <!-- Image Preview strings -->
     <string name="image_preview_title">"Vorschau"</string>
@@ -664,8 +591,6 @@ These are the anime time labels in your profile -->
     <string name="pref_title_app_theme">"App Thema"</string>
     <string name="dialog_title_delete_activity">"Aktivität löschen"</string>
     <string name="dialog_message_delete_activity">"Bist du sicher, dass du diese Aktivität löschen möchtest? Dies kann nicht rückgängig gemacht werden!"</string>
-    <string name="pref_title_display_adult_content">"18+ Inhalte anzeigen"</string>
-    <string name="pref_summary_display_adult_content">"Erlaube der App, 18+ (NSFW) Inhalte anzuzeigen. Dies muss außerdem in deinem AniList Konto aktiviert werden"</string>
     <string name="pref_summary_clear_notification_on_dismiss">"Benachrichtungen als gelesen markieren, wenn du sie in der Statusleiste verwirfst"</string>
     <string name="pref_title_clear_notification_on_dismiss">"Benachrichtigungen als gelesen markieren"</string>
     <string name="pref_summary_notification_work_around">"Aktiviere dies nur, wenn du keine Benachrichtigungen erhälst"</string>
@@ -871,38 +796,14 @@ These are the anime time labels in your profile -->
     <!-- TalkBack description for the staff loading indicator -->
     <string name="staff_loading_content_description">Mitarbeiter werden geladen</string>
 
-    <!-- Settings category header for accessibility options -->
-    <string name="pref_header_accessibility">Barrierefreiheit</string>
-    <!-- Summary under the accessibility category header -->
-    <string name="pref_header_accessibility_summary">Anzeige an die Bedürfnisse der Barrierefreiheit anpassen</string>
     <!-- Settings category header for appearance options -->
     <string name="pref_header_appearance">Darstellung</string>
     <!-- Summary under the appearance category header -->
-    <string name="pref_header_appearance_summary">Visuelle Darstellung und Dichte anpassen</string>
-    <!-- Settings category header for content options -->
-    <string name="pref_header_content">Inhalte</string>
-    <!-- Summary under the content category header -->
-    <string name="pref_header_content_summary">Steuern, wie Inhalte angezeigt werden</string>
-    <!-- Setting label for the accent color picker -->
-    <string name="pref_title_accent_color">Akzentfarbe</string>
-    <!-- Setting label for automatic trailer playback -->
-    <string name="pref_title_autoplay">Trailer automatisch abspielen</string>
-    <!-- Setting label for the font size scale slider -->
-    <string name="pref_title_font_scale">Schriftgröße</string>
-    <!-- Setting label for the high contrast display mode -->
-    <string name="pref_title_high_contrast">Hoher Kontrast</string>
-    <!-- Setting label for the list density selector -->
-    <string name="pref_title_list_density">Listendichte</string>
-    <!-- Setting label that reduces animations and motion -->
-    <string name="pref_title_reduce_motion">Bewegung reduzieren</string>
+    <string name="pref_header_appearance_summary">Design, Sprache und Listenstil</string>
     <!-- Setting label for the score display format -->
     <string name="pref_title_score_format">Bewertungsformat</string>
-    <!-- Setting label for how spoiler content is handled -->
-    <string name="pref_title_spoiler_behavior">Spoiler-Verhalten</string>
     <!-- Setting label for the preferred title language -->
     <string name="pref_title_title_language">Bevorzugte Titelsprache</string>
-    <!-- Placeholder summary shown for settings that are not implemented yet -->
-    <string name="pref_summary_placeholder">Demnächst</string>
 
     <!-- Warning shown when the review list may be stale; offers a page refresh -->
     <string name="review_stale_message">Rezensionen sind möglicherweise veraltet. Aktualisieren, um die neueste Reihenfolge zu sehen.</string>

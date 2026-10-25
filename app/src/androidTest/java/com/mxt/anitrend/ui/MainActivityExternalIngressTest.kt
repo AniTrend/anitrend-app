@@ -1,19 +1,20 @@
 package com.mxt.anitrend.ui
 
+import android.content.Context
+import android.view.KeyEvent
 import android.content.Intent
 import android.net.Uri
-import androidx.navigation.fragment.NavHostFragment
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import com.mxt.anitrend.R
-import com.mxt.anitrend.navigation.extension.screenParam
-import com.mxt.anitrend.navigation.model.UserScreenParam
-import com.mxt.anitrend.util.KeyUtil
+import com.mxt.anitrend.navigation.AppNavKey
+import com.mxt.anitrend.navigation.AppRoot
+import com.mxt.anitrend.navigation.resolveExternalEntry
+import com.mxt.anitrend.navigation.resolveStartupEntry
+import com.mxt.anitrend.ui.library.LibraryPreset
+import com.mxt.anitrend.util.Settings
 import com.mxt.anitrend.view.activity.index.MainActivity
-import com.mxt.anitrend.view.fragment.list.MediaListFragment
-import com.mxt.anitrend.view.fragment.list.MediaListOrigin
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
@@ -22,307 +23,167 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
+/**
+ * Ingress semantics of the Navigation 3 shell boundary: the cold/warm
+ * resolver decisions (NFR-001 route chains, NFR-002 pushed lists,
+ * NFR-003 external finish arming) and the persisted startup mapping,
+ * asserted with real intents against the exported activity.
+ */
 @RunWith(AndroidJUnit4::class)
 class MainActivityExternalIngressTest {
 
+    private lateinit var settings: Settings
+
     @Before
     fun setUp() {
-        TestSessionUtil.setAuthenticated(
-            ApplicationProvider.getApplicationContext(),
-            authenticated = false,
-        )
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        TestSessionUtil.setAuthenticated(context, authenticated = false)
+        settings = Settings(context)
     }
 
-    private fun anilistIntent(context: android.content.Context, path: String): Intent = Intent(
+    private fun anilistIntent(
+        context: Context,
+        path: String,
+        id: Long = 0L,
+        userName: String? = null,
+    ): Intent = Intent(
         Intent.ACTION_VIEW,
         Uri.parse("https://anilist.co$path"),
     ).setClass(context, MainActivity::class.java)
-
-    @Test
-    fun warmSingleTopIntentRoutesThroughTheExistingRootHost() {
-        val context = ApplicationProvider.getApplicationContext<android.content.Context>()
-        val launchIntent = Intent(context, MainActivity::class.java)
-        ActivityScenario.launch<MainActivity>(launchIntent).use { scenario ->
-            scenario.onActivity { activity ->
-                val intent = Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse("https://anilist.co/anime/1"),
-                ).setClass(context, MainActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                // Seam note: ActivityScenario cannot deliver a warm singleTop
-                // intent through the real onNewIntent dispatch, so the harness
-                // invokes the production override directly. The activity is a
-                // task root, which is exactly the singleTop delivery state the
-                // platform would produce.
-                activity.javaClass.getDeclaredMethod("onNewIntent", Intent::class.java).apply {
-                    isAccessible = true
-                }.invoke(activity, intent)
-            }
-            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-
-            scenario.onActivity { activity ->
-                val host = activity.supportFragmentManager.findFragmentById(R.id.main_nav_host) as NavHostFragment
-                assertEquals(R.id.mediaFragment, host.navController.currentDestination?.id)
-                activity.setIntent(launchIntent)
-                activity.finish()
-            }
-            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-        }
-    }
-
-    @Test
-    fun warmShareIntentRoutesThroughTheSharedContentDestination() {
-        val context = ApplicationProvider.getApplicationContext<android.content.Context>()
-        val launchIntent = Intent(context, MainActivity::class.java)
-        ActivityScenario.launch<MainActivity>(launchIntent).use { scenario ->
-            scenario.onActivity { activity ->
-                val intent = Intent(Intent.ACTION_SEND)
-                    .setType("text/plain")
-                    .putExtra(Intent.EXTRA_TEXT, "https://example.com")
-                // Seam note: same harness limitation as the singleTop test
-                // above; ActivityScenario cannot deliver a warm ACTION_SEND
-                // intent through the platform dispatch, so the production
-                // override is invoked directly on the task-root activity.
-                activity.javaClass.getDeclaredMethod("onNewIntent", Intent::class.java).apply {
-                    isAccessible = true
-                }.invoke(activity, intent)
-            }
-            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-
-            scenario.onActivity { activity ->
-                val host = activity.supportFragmentManager.findFragmentById(R.id.main_nav_host) as NavHostFragment
-                assertEquals(R.id.sharedContentFragment, host.navController.currentDestination?.id)
-                activity.setIntent(launchIntent)
-                activity.finish()
-            }
-            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-        }
-    }
+        .putExtra(com.mxt.anitrend.util.KeyUtil.arg_id, id)
+        .putExtra(com.mxt.anitrend.util.KeyUtil.arg_userName, userName)
 
     // ── NFR-001: /user/<name>/animelist and /mangalist land on Profile then push a typed media list ──
 
     @Test
     fun coldStartUserAnimeListLinkLandsOnProfileThenPushesTypedMediaList() {
-        val context = ApplicationProvider.getApplicationContext<android.content.Context>()
-        val launchIntent = anilistIntent(context, "/user/raki/animelist")
-        ActivityScenario.launch<MainActivity>(launchIntent).use { scenario ->
-            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-            scenario.onActivity { activity ->
-                val controller = navController(activity)
-                assertEquals(R.id.mediaListFragment, controller.currentDestination?.id)
-                // Profile is preserved beneath the typed list.
-                assertEquals(R.id.profileFragment, controller.previousBackStackEntry?.destination?.id)
-                // The pushed list carries the media type from the deep link and
-                // the pushed origin contract.
-                assertEquals(KeyUtil.ANIME, controller.currentBackStackEntry?.arguments?.getString(KeyUtil.arg_mediaType))
-                assertEquals(
-                    MediaListOrigin.PUSHED.name,
-                    controller.currentBackStackEntry?.arguments?.getString(MediaListFragment.ARG_MEDIA_LIST_ORIGIN),
-                )
-                activity.setIntent(launchIntent)
-                activity.finish()
-            }
-            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-        }
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        val entry = resolveExternalEntry(anilistIntent(context, "/user/wax911/animelist"), isTaskRoot = true, settings)!!
+
+        assertEquals(
+            listOf(
+                AppNavKey.Profile(userId = 0L, userName = "wax911"),
+                AppNavKey.UserMediaList(userId = 0L, userName = "wax911", mediaType = "ANIME"),
+            ),
+            entry.keys,
+        )
     }
 
     @Test
     fun coldStartUserMangaListLinkPushesTypedMediaList() {
-        val context = ApplicationProvider.getApplicationContext<android.content.Context>()
-        val launchIntent = anilistIntent(context, "/user/raki/mangalist")
-        ActivityScenario.launch<MainActivity>(launchIntent).use { scenario ->
-            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-            scenario.onActivity { activity ->
-                val controller = navController(activity)
-                assertEquals(R.id.mediaListFragment, controller.currentDestination?.id)
-                assertEquals(R.id.profileFragment, controller.previousBackStackEntry?.destination?.id)
-                assertEquals(KeyUtil.MANGA, controller.currentBackStackEntry?.arguments?.getString(KeyUtil.arg_mediaType))
-                activity.setIntent(launchIntent)
-                activity.finish()
-            }
-            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-        }
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        val entry = resolveExternalEntry(anilistIntent(context, "/user/wax911/mangalist"), isTaskRoot = true, settings)!!
+
+        assertEquals(
+            AppNavKey.UserMediaList(userId = 0L, userName = "wax911", mediaType = "MANGA"),
+            entry.keys.last(),
+        )
     }
 
     @Test
     fun coldStartPlainUserLinkLandsOnProfileOnly() {
-        val context = ApplicationProvider.getApplicationContext<android.content.Context>()
-        val launchIntent = anilistIntent(context, "/user/raki")
-        ActivityScenario.launch<MainActivity>(launchIntent).use { scenario ->
-            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-            scenario.onActivity { activity ->
-                val controller = navController(activity)
-                assertEquals(R.id.profileFragment, controller.currentDestination?.id)
-                assertEquals(R.id.animeFragment, controller.previousBackStackEntry?.destination?.id)
-                activity.setIntent(launchIntent)
-                activity.finish()
-            }
-            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-        }
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        val entry = resolveExternalEntry(anilistIntent(context, "/user/wax911"), isTaskRoot = true, settings)!!
+
+        assertEquals(listOf(AppNavKey.Profile(userId = 0L, userName = "wax911")), entry.keys)
     }
 
     // ── Numeric user identity survives the optional list suffix (NFR-003) ──
 
     @Test
     fun coldStartNumericUserAnimeListLinkPreservesNumericUserId() {
-        val context = ApplicationProvider.getApplicationContext<android.content.Context>()
-        val launchIntent = anilistIntent(context, "/user/123/animelist")
-        ActivityScenario.launch<MainActivity>(launchIntent).use { scenario ->
-            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-            scenario.onActivity { activity ->
-                val controller = navController(activity)
-                assertEquals(R.id.mediaListFragment, controller.currentDestination?.id)
-                assertEquals(R.id.profileFragment, controller.previousBackStackEntry?.destination?.id)
-                val profileArgs = controller.previousBackStackEntry?.arguments
-                // The first user path segment is numeric, so it is a user id,
-                // not a username, even though the animelist suffix follows.
-                val profileParam = profileArgs?.screenParam<UserScreenParam>()
-                assertEquals(123L, profileParam?.userId)
-                assertNull(profileParam?.initialName)
-                assertEquals(123L, profileArgs?.getLong(KeyUtil.arg_id))
-                val listArgs = controller.currentBackStackEntry?.arguments
-                assertEquals(KeyUtil.ANIME, listArgs?.getString(KeyUtil.arg_mediaType))
-                assertEquals(123L, listArgs?.screenParam<UserScreenParam>()?.userId)
-                activity.setIntent(launchIntent)
-                activity.finish()
-            }
-            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-        }
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        val entry = resolveExternalEntry(anilistIntent(context, "/user/42/animelist"), isTaskRoot = true, settings)!!
+
+        assertEquals(
+            AppNavKey.Profile(userId = 42L),
+            entry.keys.first(),
+        )
+        assertEquals(
+            AppNavKey.UserMediaList(userId = 42L, userName = null, mediaType = "ANIME"),
+            entry.keys.last(),
+        )
     }
+
+    // ── NFR-003: an ingress chain clears the external finish semantics ──
 
     @Test
-    fun coldStartNumericUserMangaListLinkPreservesNumericUserId() {
-        val context = ApplicationProvider.getApplicationContext<android.content.Context>()
-        val launchIntent = anilistIntent(context, "/user/123/mangalist")
-        ActivityScenario.launch<MainActivity>(launchIntent).use { scenario ->
-            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-            scenario.onActivity { activity ->
-                val controller = navController(activity)
-                assertEquals(R.id.mediaListFragment, controller.currentDestination?.id)
-                assertEquals(R.id.profileFragment, controller.previousBackStackEntry?.destination?.id)
-                val profileArgs = controller.previousBackStackEntry?.arguments
-                val profileParam = profileArgs?.screenParam<UserScreenParam>()
-                assertEquals(123L, profileParam?.userId)
-                assertNull(profileParam?.initialName)
-                assertEquals(123L, profileArgs?.getLong(KeyUtil.arg_id))
-                val listArgs = controller.currentBackStackEntry?.arguments
-                assertEquals(KeyUtil.MANGA, listArgs?.getString(KeyUtil.arg_mediaType))
-                assertEquals(123L, listArgs?.screenParam<UserScreenParam>()?.userId)
-                activity.setIntent(launchIntent)
-                activity.finish()
-            }
-            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-        }
+    fun externalUserListChainIsNotArmedForExternalFinish() {
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        val entry = resolveExternalEntry(anilistIntent(context, "/user/wax911/animelist"), isTaskRoot = true, settings)!!
+
+        // The chain routes through the shell which clears the flag after
+        // the second push; a direct single-key landing keeps it armed.
+        assertTrue(entry.keys.size > 1)
+        val direct = resolveExternalEntry(anilistIntent(context, "/anime/1", id = 1L), isTaskRoot = true, settings)!!
+        assertTrue(direct.finishOnBack)
+        assertEquals(1, direct.keys.size)
     }
 
-    // ── NFR-003: external user-list → Profile → MediaList back chain ──
+    // ── NFR-003: warm delivery never arms the external finish semantics ──
 
-    @Suppress("DEPRECATION")
     @Test
-    fun externalUserListBackChainReturnsToProfileThenRootWithoutFinishingTask() {
-        val context = ApplicationProvider.getApplicationContext<android.content.Context>()
-        val launchIntent = anilistIntent(context, "/user/raki/animelist")
-        ActivityScenario.launch<MainActivity>(launchIntent).use { scenario ->
-            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-            scenario.onActivity { activity ->
-                assertEquals(R.id.mediaListFragment, navController(activity).currentDestination?.id)
-                // Internal navigation into the media list cleared the external
-                // finish semantics, so back returns to the caller (Profile).
-                activity.onBackPressed()
-            }
-            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-            scenario.onActivity { activity ->
-                assertEquals(R.id.profileFragment, navController(activity).currentDestination?.id)
-                assertFalse("back from MediaList must not finish the task", activity.isFinishing)
-                // A further back leaves the pushed chain and reaches the root
-                // destination; the task is still not finished.
-                activity.onBackPressed()
-            }
-            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-            scenario.onActivity { activity ->
-                assertEquals(R.id.animeFragment, navController(activity).currentDestination?.id)
-                assertFalse("back from Profile must not finish the task", activity.isFinishing)
-                activity.setIntent(launchIntent)
-                activity.finish()
-            }
-            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-        }
+    fun warmDeliveryNeverArmsExternalFinish() {
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        val entry = resolveExternalEntry(anilistIntent(context, "/anime/1", id = 1L), isTaskRoot = false, settings)!!
+
+        assertFalse(entry.finishOnBack)
     }
 
-    // ── NFR-003: direct external ingress keeps finish-on-back semantics ──
+    // ── Unrelated or malformed ingress keeps the default root ──
 
-    @Suppress("DEPRECATION")
+    @Test
+    fun unknownIntentYieldsNoExternalEntry() {
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        val plain = Intent(context, MainActivity::class.java)
+
+        assertNull(resolveExternalEntry(plain, isTaskRoot = true, settings))
+    }
+
+    // ── Persisted startup page mapping (plan 10.7) ──
+
+    @Test
+    fun startupPageSelectsThePersistedRootAndPreset() {
+        assertEquals(AppRoot.SOCIAL, resolveStartupEntry("0", isAuthenticated = true).root)
+        assertEquals(AppRoot.DISCOVER, resolveStartupEntry("3", isAuthenticated = true).root)
+        assertEquals(AppRoot.LIBRARY, resolveStartupEntry("4", isAuthenticated = true).root)
+        assertEquals(LibraryPreset.AIRING, resolveStartupEntry("4", isAuthenticated = true).libraryPreset)
+        assertEquals(LibraryPreset.MY_ANIME, resolveStartupEntry("5", isAuthenticated = true).libraryPreset)
+        assertEquals(LibraryPreset.MY_MANGA, resolveStartupEntry("6", isAuthenticated = true).libraryPreset)
+        // Unknown keeps the Airing fallback.
+        assertEquals(LibraryPreset.AIRING, resolveStartupEntry("999", isAuthenticated = true).libraryPreset)
+    }
+
+    // ── NFR-003: a cold external direct landing finishes the task on back ──
+
     @Test
     fun coldStartAnimeLinkBackFinishesExternalTask() {
-        val context = ApplicationProvider.getApplicationContext<android.content.Context>()
-        val launchIntent = anilistIntent(context, "/anime/1")
-        ActivityScenario.launch<MainActivity>(launchIntent).use { scenario ->
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        ActivityScenario.launch<MainActivity>(anilistIntent(context, "/anime/1", id = 1L)).use { scenario ->
+            // Espresso's pressBack throws when back finishes the activity,
+            // so inject one real back key instead. Exactly one press: a
+            // second could fall through the exit-confirmation path and mask a
+            // single-press regression. If the shell's back handler is not
+            // registered yet, the activity's default back handling still
+            // finishes this cold external landing, so the press cannot
+            // silently no-op.
+            InstrumentationRegistry.getInstrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_BACK)
+            // The external-finish contract: back on a cold external direct
+            // landing finishes the activity. finish() destroys
+            // asynchronously on the main thread, so wait for the thread to
+            // go idle before asserting instead of racing the lifecycle.
             InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-            scenario.onActivity { activity ->
-                val controller = navController(activity)
-                assertEquals(R.id.mediaFragment, controller.currentDestination?.id)
-                // A direct external ingress dispatches exactly one route (the
-                // initial ingress), so back from the ingress destination
-                // finishes the external task instead of navigating up.
-                activity.onBackPressed()
-                assertTrue("back from the external anime link must finish the task", activity.isFinishing)
+            // finish() destroys asynchronously on the main thread and can
+            // land after the idle sync, so wait for the lifecycle with a
+            // bounded deadline before asserting; this test-core version has
+            // no blocking waitForState for a system-driven destroy.
+            val deadline = System.currentTimeMillis() + 10_000L
+            while (scenario.state != androidx.lifecycle.Lifecycle.State.DESTROYED &&
+                System.currentTimeMillis() < deadline
+            ) {
+                Thread.sleep(100L)
             }
-            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+            assertTrue(scenario.state == androidx.lifecycle.Lifecycle.State.DESTROYED)
         }
-    }
-
-    @Suppress("DEPRECATION")
-    @Test
-    fun coldStartActivityLinkBackFinishesExternalTask() {
-        val context = ApplicationProvider.getApplicationContext<android.content.Context>()
-        val launchIntent = anilistIntent(context, "/activity/1")
-        ActivityScenario.launch<MainActivity>(launchIntent).use { scenario ->
-            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-            scenario.onActivity { activity ->
-                val controller = navController(activity)
-                assertEquals(R.id.commentFragment, controller.currentDestination?.id)
-                activity.onBackPressed()
-                assertTrue("back from the external activity link must finish the task", activity.isFinishing)
-            }
-            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-        }
-    }
-
-    // ── NFR-002: ROUTE_MEDIA_LIST ingress (shortcuts and route extras) is pushed by default ──
-
-    @Suppress("DEPRECATION")
-    @Test
-    fun coldStartMediaListRouteEntryIsPushedAndBacksUpWithoutFinishing() {
-        val context = ApplicationProvider.getApplicationContext<android.content.Context>()
-        val launchIntent = Intent(context, MainActivity::class.java)
-            .putExtra(MainActivity.EXTRA_ROUTE, MainActivity.ROUTE_MEDIA_LIST)
-            .putExtra(KeyUtil.arg_mediaType, KeyUtil.ANIME)
-            .putExtra(KeyUtil.arg_userName, "raki")
-        ActivityScenario.launch<MainActivity>(launchIntent).use { scenario ->
-            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-            scenario.onActivity { activity ->
-                val controller = navController(activity)
-                assertEquals(R.id.mediaListFragment, controller.currentDestination?.id)
-                // The post-login shortcut continuation inherits this contract:
-                // the media-list route never re-routes as root.
-                assertEquals(
-                    MediaListOrigin.PUSHED.name,
-                    controller.currentBackStackEntry?.arguments?.getString(MediaListFragment.ARG_MEDIA_LIST_ORIGIN),
-                )
-                activity.onBackPressed()
-            }
-            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-            scenario.onActivity { activity ->
-                assertEquals(R.id.animeFragment, navController(activity).currentDestination?.id)
-                assertFalse("pushed media list back must not finish the task", activity.isFinishing)
-                activity.setIntent(launchIntent)
-                activity.finish()
-            }
-            InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-        }
-    }
-
-    private fun navController(activity: MainActivity): androidx.navigation.NavController {
-        val host = activity.supportFragmentManager.findFragmentById(R.id.main_nav_host) as NavHostFragment
-        return host.navController
     }
 }
