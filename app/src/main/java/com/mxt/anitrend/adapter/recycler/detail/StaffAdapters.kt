@@ -2,6 +2,9 @@ package com.mxt.anitrend.adapter.recycler.detail
 
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -13,14 +16,35 @@ import com.mxt.anitrend.base.custom.view.image.AspectImageView
 import com.mxt.anitrend.base.custom.view.text.SeriesYearTypeTextView
 import com.mxt.anitrend.base.custom.view.widget.SeriesStatusWidget
 import com.mxt.anitrend.binding.setAverageRating
-import com.mxt.anitrend.databinding.AdapterCharacterStaffBinding
-import com.mxt.anitrend.databinding.AdapterEntityGroupBinding
 import com.mxt.anitrend.databinding.AdapterSeriesBinding
 import com.mxt.anitrend.extension.getLayoutInflater
 import com.mxt.anitrend.model.entity.base.CharacterStaffBase
 import com.mxt.anitrend.model.entity.base.MediaBase
 import com.mxt.anitrend.model.entity.group.RecyclerItem
+import com.mxt.anitrend.ui.designsystem.AniTrendTheme
+import com.mxt.anitrend.ui.staff.StaffCharacterRoleRow
 import com.mxt.anitrend.util.KeyUtil
+
+private data class CharacterRoleRowState(
+    val characterName: String,
+    val mediaTitle: String,
+    val imageUrl: String?,
+    val isFavourite: Boolean,
+)
+
+private fun CharacterStaffBase.roleImageUrl(): String? = character.image?.let { it.extraLarge ?: it.large }
+
+private fun CharacterStaffBase.toRoleRowState(): CharacterRoleRowState = CharacterRoleRowState(
+    characterName = character.name?.fullName.orEmpty(),
+    mediaTitle = media.title?.userPreferred.orEmpty(),
+    imageUrl = roleImageUrl(),
+    isFavourite = character.isFavourite,
+)
+
+private fun CharacterStaffBase.hasSameRoleContent(other: CharacterStaffBase): Boolean = character.name?.fullName == other.character.name?.fullName &&
+    media.title?.userPreferred == other.media.title?.userPreferred &&
+    roleImageUrl() == other.roleImageUrl() &&
+    character.isFavourite == other.character.isFavourite
 
 private val staffItemDiff = object : DiffUtil.ItemCallback<RecyclerItem>() {
     override fun areItemsTheSame(oldItem: RecyclerItem, newItem: RecyclerItem): Boolean = when {
@@ -29,7 +53,10 @@ private val staffItemDiff = object : DiffUtil.ItemCallback<RecyclerItem>() {
         else -> oldItem == newItem
     }
 
-    override fun areContentsTheSame(oldItem: RecyclerItem, newItem: RecyclerItem): Boolean = oldItem == newItem
+    override fun areContentsTheSame(oldItem: RecyclerItem, newItem: RecyclerItem): Boolean = when {
+        oldItem is CharacterStaffBase && newItem is CharacterStaffBase -> oldItem.hasSameRoleContent(newItem)
+        else -> oldItem == newItem
+    }
 }
 
 /** Displays media associated with a staff member, including group headers. */
@@ -41,7 +68,7 @@ class StaffMediaAdapter(
     override fun getItemViewType(position: Int): Int = getItem(position).contentType
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder = if (viewType == KeyUtil.RECYCLER_TYPE_HEADER) {
-        GroupTitleViewHolder(AdapterEntityGroupBinding.inflate(parent.context.getLayoutInflater(), parent, false))
+        GroupTitleViewHolder(parent)
     } else {
         MediaViewHolder(AdapterSeriesBinding.inflate(parent.context.getLayoutInflater(), parent, false))
     }
@@ -103,9 +130,24 @@ class StaffCharacterRolesAdapter(
     override fun getItemViewType(position: Int): Int = getItem(position).contentType
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder = if (viewType == KeyUtil.RECYCLER_TYPE_HEADER) {
-        GroupTitleViewHolder(AdapterEntityGroupBinding.inflate(parent.context.getLayoutInflater(), parent, false))
+        GroupTitleViewHolder(parent)
     } else {
-        CharacterViewHolder(AdapterCharacterStaffBinding.inflate(parent.context.getLayoutInflater(), parent, false))
+        val rowMargin = parent.resources.getDimensionPixelSize(R.dimen.lg_margin)
+        CharacterViewHolder(
+            ComposeView(parent.context).apply {
+                id = R.id.container
+                layoutParams =
+                    RecyclerView.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ).apply {
+                        setMargins(rowMargin, rowMargin, rowMargin, rowMargin)
+                    }
+                setViewCompositionStrategy(
+                    ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool,
+                )
+            },
+        )
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -118,34 +160,43 @@ class StaffCharacterRolesAdapter(
     }
 
     private inner class CharacterViewHolder(
-        private val binding: AdapterCharacterStaffBinding,
-    ) : RecyclerViewHolder<RecyclerItem>(binding.root) {
+        private val composeView: ComposeView,
+    ) : RecyclerViewHolder<RecyclerItem>(composeView) {
+        private val characterRoleState = mutableStateOf<CharacterRoleRowState?>(null)
+
         init {
-            itemView.findViewById<View>(R.id.container)?.setOnClickListener { view ->
-                boundItem()?.let { onCharacterClick(view, it) }
+            composeView.setContent {
+                AniTrendTheme {
+                    characterRoleState.value?.let { item ->
+                        StaffCharacterRoleRow(
+                            characterName = item.characterName,
+                            mediaTitle = item.mediaTitle,
+                            imageUrl = item.imageUrl,
+                            isFavourite = item.isFavourite,
+                            onClick = { this@CharacterViewHolder.onClick(composeView) },
+                        )
+                    }
+                }
             }
         }
 
         override fun onBindViewHolder(model: RecyclerItem) {
-            val characterStaff = model as? CharacterStaffBase ?: return
-            AspectImageView.setImage(binding.characterImg, characterStaff.character.image)
-            binding.characterName.text = characterStaff.character.name?.fullName
-            binding.mediaTitle.text = characterStaff.media.title?.userPreferred
-            binding.favouriteIndicator.visibility =
-                if (characterStaff.character.isFavourite) View.VISIBLE else View.GONE
+            characterRoleState.value = (model as? CharacterStaffBase)?.toRoleRowState()
         }
 
         override fun onViewRecycled() {
-            Glide.with(getContext()).clear(binding.characterImg)
+            characterRoleState.value = null
         }
 
-        override fun onClick(v: View) = boundItem()?.let { onCharacterClick(v, it) } ?: Unit
-
-        override fun onLongClick(v: View): Boolean = false
+        override fun onClick(v: View) {
+            boundItem()?.let { onCharacterClick(v, it) }
+        }
 
         private fun boundItem(): CharacterStaffBase? = bindingAdapterPosition
             .takeIf { it != RecyclerView.NO_POSITION }
             ?.let(::getItem)
             as? CharacterStaffBase
+
+        override fun onLongClick(v: View): Boolean = false
     }
 }

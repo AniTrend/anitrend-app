@@ -343,6 +343,11 @@
     <!-- Translator: Explain that the review order may have changed and offer a page-one refresh. -->
     <string name="review_stale_message">Reviews may be out of date. Refresh to see the latest order.</string>
     <string name="review_stale_refresh">Refresh reviews</string>
+    <!-- Accessible label for the positive vote action on a review card. -->
+    <string name="description_review_vote_up">Up vote</string>
+
+    <!-- Accessible label for the negative vote action on a review card. -->
+    <string name="description_review_vote_down">Down vote</string>
 
     <string name="title_view_likes">View Likes</string>
     <string name="input_empty_warning">Input cannot be empty!</string>
@@ -529,6 +534,27 @@
 
     <string name="text_item_in_favourites">Already in favourites</string>
     <string name="text_item_not_in_favourites">Not in favourites</string>
+
+    <!-- Accessibility label for the favorite control when the item is not yet in favourites. -->
+    <string name="description_favourite_action_add">Add to favourites</string>
+
+    <!-- Accessibility label for the favorite control when the item is already in favourites. -->
+    <string name="description_favourite_action_remove">Remove from favourites</string>
+
+    <!-- TalkBack label for the edit action on a comment reply row. -->
+    <string name="description_comment_edit_reply">Edit reply</string>
+
+    <!-- TalkBack label for mentioning the author while replying to a comment. -->
+    <string name="description_comment_mention">Mention this user in a reply</string>
+
+    <!-- TalkBack label for opening a user's profile from a feed status or comment; %1$s is the displayed username. -->
+    <string name="description_comment_open_profile" formatted="true">Open profile for %1$s</string>
+    <!-- TalkBack label for opening a review author's profile; %1$s is the displayed username. -->
+    <string name="description_review_open_profile" formatted="true">Open profile for %1$s</string>
+    <!-- TalkBack label for a review's star rating; %1$.1f is the score out of five stars. -->
+    <string name="description_review_rating" formatted="true">Review score: %1$.1f out of 5 stars</string>
+    <!-- TalkBack label for opening comments from a feed status row. -->
+    <string name="description_feed_open_comments">Open comments</string>
 
     <string name="text_error_request">Could not complete request successfully</string>
 

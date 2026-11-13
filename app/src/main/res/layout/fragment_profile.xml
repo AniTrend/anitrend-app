@@ -88,16 +88,17 @@
             </LinearLayout>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
-        <com.mxt.anitrend.base.custom.view.widget.ProfileStatsWidget
+        <androidx.compose.ui.platform.ComposeView
             android:id="@+id/profile_stats_widget"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/colorSurfaceContainerHigh"
             app:layout_scrollFlags="scroll" />
 
-        <include
+        <androidx.compose.ui.platform.ComposeView
             android:id="@+id/profile_sections"
-            layout="@layout/custom_tab" />
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <FrameLayout

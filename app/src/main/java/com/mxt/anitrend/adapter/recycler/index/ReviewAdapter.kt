@@ -1,45 +1,52 @@
 package com.mxt.anitrend.adapter.recycler.index
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.annotation.ColorRes
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import com.google.android.material.textview.MaterialTextView
 import com.mxt.anitrend.R
-import com.mxt.anitrend.base.custom.view.image.AspectImageView
-import com.mxt.anitrend.base.custom.view.image.WideImageView
-import com.mxt.anitrend.base.custom.view.widget.CustomRatingBar
-import com.mxt.anitrend.base.custom.view.widget.VoteWidget
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener
-import com.mxt.anitrend.binding.markDown
-import com.mxt.anitrend.binding.setImage
 import com.mxt.anitrend.data.store.mutation.MutationResult
-import com.mxt.anitrend.databinding.AdapterReviewBinding
-import com.mxt.anitrend.databinding.AdapterSeriesReviewBinding
 import com.mxt.anitrend.domain.model.ReviewRecord
-import com.mxt.anitrend.extension.getLayoutInflater
 import com.mxt.anitrend.graphql.generated.ReviewRating
 import com.mxt.anitrend.model.entity.base.UserBase
-import com.mxt.anitrend.util.date.DateUtil
+import com.mxt.anitrend.ui.designsystem.AniTrendTheme
+import com.mxt.anitrend.ui.review.ReviewBannerRow
+import com.mxt.anitrend.ui.review.ReviewSeriesRow
+import com.mxt.anitrend.ui.review.ReviewVoteRowState
+import com.mxt.anitrend.util.NotifyUtil
+
+/** Typed image actions dispatched from review rows to their owning destination. */
+enum class ReviewImageAction {
+    OPEN_MEDIA,
+    OPEN_PROFILE,
+    LONG_PRESS_MEDIA,
+}
 
 /**
  * Created by max on 2017/10/30.
  * Media review adapter
  *
  * Immutable [ListAdapter] over [ReviewRecord]: items are submitted whole, never mutated
- * after submission, and diffed on stable review ids. The ViewHolder layouts, view ids,
- * and click callbacks are unchanged from the legacy path.
+ * after submission, and diffed on stable review ids. Both rows are Compose-hosted;
+ * the adapter retains vote state, mutation routing, and existing action owners.
  */
 class ReviewAdapter(
-    context: Context,
     private val currentUser: UserBase?,
     private val onRateReviewAction: (Long, ReviewRating?) -> Unit,
+    private val onReviewImageAction: (ReviewImageAction, ReviewRecord) -> Unit,
     private val isMediaType: Boolean = false,
 ) : ListAdapter<ReviewRecord, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
-
-    private val appContext = context.applicationContext
 
     var clickListener: ItemClickListener<ReviewRecord>? = null
 
@@ -50,26 +57,15 @@ class ReviewAdapter(
      */
     private val holderRegistry = ReviewHolderRegistry<RecyclerView.ViewHolder>()
 
-    private val voteListener = object : VoteWidget.Listener {
-        override fun onRateReview(
-            id: Long,
-            rating: ReviewRating?,
-        ) = onRateReviewAction(id, rating)
-    }
-
-    /**
-     * Forwards a rate mutation outcome to the bound vote control for the review.
-     * The canonical store rebinding already converges success; this mainly resets the
-     * vote loading state and surfaces failures on the visible holder.
-     */
+    /** Routes mutation outcomes to the holder currently bound to [reviewId]. */
     fun onRateReviewResult(
         reviewId: Long,
         result: MutationResult,
     ) {
         val holder = holderRegistry.holderFor(reviewId) ?: return
         when (holder) {
-            is ReviewBanner -> holder.binding.reviewVote.onRateReviewResult(result)
-            is ReviewDefault -> holder.binding.reviewVote.onRateReviewResult(result)
+            is ReviewBanner -> holder.onRateReviewResult(result)
+            is ReviewDefault -> holder.onRateReviewResult(result)
         }
     }
 
@@ -80,11 +76,36 @@ class ReviewAdapter(
         viewType: Int,
     ): RecyclerView.ViewHolder = if (viewType == VIEW_TYPE_BANNER) {
         ReviewBanner(
-            AdapterReviewBinding.inflate(parent.context.getLayoutInflater(), parent, false),
+            ComposeView(parent.context).apply {
+                id = R.id.container
+                layoutParams = RecyclerView.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                ).apply {
+                    val margin = parent.context.resources.getDimensionPixelSize(R.dimen.lg_margin)
+                    setMargins(margin, margin, margin, margin)
+                }
+                setViewCompositionStrategy(
+                    ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool,
+                )
+            },
         )
     } else {
         ReviewDefault(
-            AdapterSeriesReviewBinding.inflate(parent.context.getLayoutInflater(), parent, false),
+            ComposeView(parent.context).apply {
+                id = R.id.container
+                layoutParams =
+                    RecyclerView.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ).apply {
+                        val margin = parent.context.resources.getDimensionPixelSize(R.dimen.lg_margin)
+                        setMargins(margin, margin, margin, margin)
+                    }
+                setViewCompositionStrategy(
+                    ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool,
+                )
+            },
         )
     }
 
@@ -110,80 +131,185 @@ class ReviewAdapter(
     }
 
     inner class ReviewBanner(
-        val binding: AdapterReviewBinding,
-    ) : RecyclerView.ViewHolder(binding.root),
-        View.OnClickListener,
-        View.OnLongClickListener {
+        private val composeView: ComposeView,
+    ) : RecyclerView.ViewHolder(composeView) {
+        private val model = mutableStateOf<ReviewRecord?>(null)
+        private val voteController = VoteController(composeView.context)
+        private var readMoreView: MaterialTextView? = null
+
         init {
-            binding.seriesImage.setOnClickListener(this)
-            binding.seriesImage.setOnLongClickListener(this)
-            binding.reviewReadMore.setOnClickListener(this)
+            composeView.setContent {
+                AniTrendTheme {
+                    model.value?.let { review ->
+                        ReviewBannerRow(
+                            review = review,
+                            voteState = voteController.state.value,
+                            onUpVoteClick = { voteController.onVote(ReviewRating.UP_VOTE) },
+                            onDownVoteClick = { voteController.onVote(ReviewRating.DOWN_VOTE) },
+                            onImageClick = {
+                                forwardImageAction(ReviewImageAction.OPEN_MEDIA, bindingAdapterPosition)
+                            },
+                            onImageLongClick = {
+                                forwardImageAction(ReviewImageAction.LONG_PRESS_MEDIA, bindingAdapterPosition)
+                            },
+                            onReadMoreClick = {
+                                readMoreView?.let { forwardClick(it, bindingAdapterPosition) }
+                            },
+                            onReadMoreViewCreated = { readMoreView = it },
+                            onReadMoreViewReleased = { view ->
+                                view.setOnClickListener(null)
+                                if (readMoreView === view) readMoreView = null
+                            },
+                        )
+                    }
+                }
+            }
         }
 
         fun bind(model: ReviewRecord) {
-            WideImageView.setImage(binding.seriesImage, model.media?.bannerImage)
-            binding.reviewUserName.text = model.user?.name
-            CustomRatingBar.setAverageScore(binding.seriesRating, model.score)
-            binding.seriesTitle.setTitle(model)
-            binding.reviewVote.setModel(model, R.color.white)
-            binding.reviewVote.setCurrentUser(currentUser)
-            binding.reviewVote.setListener(voteListener)
-            binding.reviewSummary.text = model.summary
+            voteController.bind(model, R.color.white)
+            this.model.value = model
+        }
+
+        fun onRateReviewResult(result: MutationResult) {
+            voteController.onRateReviewResult(result)
         }
 
         fun recycle() {
-            Glide.with(appContext).clear(binding.seriesImage)
-            binding.reviewVote.setListener(null)
-            binding.reviewVote.onViewRecycled()
-        }
-
-        override fun onClick(v: View) {
-            forwardClick(v, bindingAdapterPosition)
-        }
-
-        override fun onLongClick(v: View): Boolean {
-            forwardLongClick(v, bindingAdapterPosition)
-            return true
+            voteController.onViewRecycled()
         }
     }
 
     inner class ReviewDefault(
-        val binding: AdapterSeriesReviewBinding,
-    ) : RecyclerView.ViewHolder(binding.root),
-        View.OnClickListener,
-        View.OnLongClickListener {
+        private val composeView: ComposeView,
+    ) : RecyclerView.ViewHolder(composeView) {
+        private val model = mutableStateOf<ReviewRecord?>(null)
+        private val voteController = VoteController(composeView.context)
+        private var readMoreView: MaterialTextView? = null
+
         init {
-            binding.reviewReadMore.setOnClickListener(this)
-            binding.userAvatar.setOnClickListener(this)
-            binding.seriesImage.setOnLongClickListener(this)
+            composeView.setContent {
+                AniTrendTheme {
+                    model.value?.let { review ->
+                        ReviewSeriesRow(
+                            review = review,
+                            voteState = voteController.state.value,
+                            onUpVoteClick = { voteController.onVote(ReviewRating.UP_VOTE) },
+                            onDownVoteClick = { voteController.onVote(ReviewRating.DOWN_VOTE) },
+                            onProfileClick = {
+                                forwardImageAction(ReviewImageAction.OPEN_PROFILE, bindingAdapterPosition)
+                            },
+                            onReadMoreClick = {
+                                readMoreView?.let { forwardClick(it, bindingAdapterPosition) }
+                            },
+                            onReadMoreViewCreated = { readMoreView = it },
+                            onReadMoreViewReleased = { view ->
+                                view.setOnClickListener(null)
+                                if (readMoreView === view) readMoreView = null
+                            },
+                            onCoverLongClick = {
+                                forwardImageAction(ReviewImageAction.LONG_PRESS_MEDIA, bindingAdapterPosition)
+                            },
+                        )
+                    }
+                }
+            }
         }
 
         fun bind(model: ReviewRecord) {
-            binding.userAvatar.setImage(model.user?.avatar)
-            binding.userName.text = model.user?.name
-            binding.reviewDate.text = DateUtil.convertDate(model.createdAt)
-            binding.seriesTitle.setTitle(model)
-            binding.reviewSummary.markDown(model.summary)
-            CustomRatingBar.setAverageScore(binding.seriesRating, model.score)
-            binding.reviewVote.setModel(model, 0)
-            binding.reviewVote.setCurrentUser(currentUser)
-            binding.reviewVote.setListener(voteListener)
-            AspectImageView.setImage(binding.seriesImage, model.media?.coverImage)
+            voteController.bind(model, 0)
+            this.model.value = model
+        }
+
+        fun onRateReviewResult(result: MutationResult) {
+            voteController.onRateReviewResult(result)
         }
 
         fun recycle() {
-            Glide.with(appContext).clear(binding.seriesImage)
-            binding.reviewVote.setListener(null)
-            binding.reviewVote.onViewRecycled()
+            voteController.onViewRecycled()
+        }
+    }
+
+    private inner class VoteController(
+        private val context: Context,
+    ) {
+        val state = mutableStateOf(ReviewVoteRowState())
+        private val mainHandler = Handler(Looper.getMainLooper())
+        private val loadingFallback = Runnable { resetLoadingState() }
+        private var model: ReviewRecord? = null
+
+        fun bind(
+            model: ReviewRecord,
+            @ColorRes colorStyle: Int,
+        ) {
+            resetLoadingState()
+            this.model = model
+            state.value =
+                ReviewVoteRowState(
+                    upVoteCount = model.rating,
+                    downVoteCount = (model.ratingAmount - model.rating).coerceAtLeast(0),
+                    userRating = model.userRating,
+                    colorStyle = colorStyle,
+                )
         }
 
-        override fun onClick(v: View) {
-            forwardClick(v, bindingAdapterPosition)
+        fun onRateReviewResult(result: MutationResult) {
+            if (result is MutationResult.Failure) {
+                NotifyUtil.makeText(context, result.message, Toast.LENGTH_SHORT).show()
+            }
+            resetLoadingState()
         }
 
-        override fun onLongClick(v: View): Boolean {
-            forwardLongClick(v, bindingAdapterPosition)
-            return true
+        fun onViewRecycled() {
+            resetLoadingState()
+            model = null
+            state.value = ReviewVoteRowState()
+        }
+
+        fun onVote(target: ReviewRating) {
+            val currentModel = model ?: return
+            if (currentUser == null) {
+                NotifyUtil
+                    .makeText(
+                        context,
+                        R.string.info_login_req,
+                        R.drawable.ic_group_add_grey_600_18dp,
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                return
+            }
+
+            val currentState = state.value
+            val isLoading =
+                when (target) {
+                    ReviewRating.UP_VOTE -> currentState.upVoteLoading
+                    ReviewRating.DOWN_VOTE -> currentState.downVoteLoading
+                    else -> false
+                }
+            if (isLoading) {
+                NotifyUtil.makeText(context, R.string.busy_please_wait, Toast.LENGTH_SHORT).show()
+                return
+            }
+
+            state.value =
+                when (target) {
+                    ReviewRating.UP_VOTE -> currentState.copy(upVoteLoading = true)
+                    ReviewRating.DOWN_VOTE -> currentState.copy(downVoteLoading = true)
+                    else -> currentState
+                }
+            mainHandler.removeCallbacks(loadingFallback)
+            mainHandler.postDelayed(loadingFallback, LOADING_FALLBACK_TIMEOUT_MS)
+
+            val rating = if (currentModel.userRating == target.name) ReviewRating.NO_VOTE else target
+            onRateReviewAction(currentModel.id, rating)
+        }
+
+        private fun resetLoadingState() {
+            mainHandler.removeCallbacks(loadingFallback)
+            val currentState = state.value
+            if (currentState.upVoteLoading || currentState.downVoteLoading) {
+                state.value = currentState.copy(upVoteLoading = false, downVoteLoading = false)
+            }
         }
     }
 
@@ -198,20 +324,20 @@ class ReviewAdapter(
         listener.onItemClick(target, IndexedValue(position, getItem(position)))
     }
 
-    private fun forwardLongClick(
-        target: View,
+    private fun forwardImageAction(
+        action: ReviewImageAction,
         position: Int,
     ) {
-        val listener = clickListener ?: return
         if (position == RecyclerView.NO_POSITION) {
             return
         }
-        listener.onItemLongClick(target, IndexedValue(position, getItem(position)))
+        onReviewImageAction(action, getItem(position))
     }
 
     companion object {
         private const val VIEW_TYPE_BANNER = 0
         private const val VIEW_TYPE_DEFAULT = 1
+        private const val LOADING_FALLBACK_TIMEOUT_MS = 10_000L
 
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ReviewRecord>() {
             override fun areItemsTheSame(

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Stable view IDs for debug-only instrumentation hosts. Keeping these IDs
+    outside production resources prevents the tests from depending on UI IDs.
+-->
+<resources>
+    <item name="progressLayout" type="id" />
+    <item name="contentChild" type="id" />
+    <item name="secondContentChild" type="id" />
+    <item name="initiallyGoneContentChild" type="id" />
+    <item name="initiallyInvisibleContentChild" type="id" />
+    <item name="searchView" type="id" />
+</resources>

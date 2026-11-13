@@ -1,7 +1,6 @@
 package com.mxt.anitrend.util.media
 
 import android.os.Bundle
-import com.mxt.anitrend.base.custom.view.widget.AutoIncrementWidget
 import com.mxt.anitrend.model.entity.anilist.MediaList
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
@@ -11,7 +10,6 @@ object MediaListUtil {
 
     /**
      * Creates query variables for updating the status of the current users lists, use cases
-     * @see AutoIncrementWidget.updateModelState
      * @see BottomSheetSeriesManage.handleSave
      * @param model the current media list item
      */

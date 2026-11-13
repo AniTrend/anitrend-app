@@ -5,32 +5,33 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import androidx.annotation.VisibleForTesting
 import androidx.core.content.edit
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.fragment.app.Fragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.FirebaseApp
 import com.mxt.anitrend.R
 import com.mxt.anitrend.databinding.FragmentSettingsM3Binding
-import com.mxt.anitrend.databinding.ItemSettingsRowSwitchBinding
-import com.mxt.anitrend.databinding.ItemSettingsRowValueBinding
-import com.mxt.anitrend.databinding.ItemSettingsSectionCardBinding
 import com.mxt.anitrend.navigation.extension.screenParam
 import com.mxt.anitrend.navigation.model.SettingsCategoryScreenParam
+import com.mxt.anitrend.ui.settings.SettingsDivider
+import com.mxt.anitrend.ui.settings.SettingsValueRow
+import com.mxt.anitrend.ui.settings.addSettingsComposeContent
+import com.mxt.anitrend.ui.settings.SettingsSectionCard
+import com.mxt.anitrend.ui.settings.SettingsToggleRow
 import com.mxt.anitrend.presenter.base.BasePresenter
 import com.mxt.anitrend.util.JobSchedulerUtil
 import com.mxt.anitrend.util.Settings
 import org.koin.android.ext.android.inject
 
 /**
- * Renders a single legacy settings section for the category resolved from
- * the navigation argument [SettingsCategoryRegistry.ARG_CATEGORY_ID].
- *
- * Keeps the legacy row rendering, preference writes, and side-effect
- * handling exactly as the previous single-screen settings did.
+ * Renders a settings category with Compose while retaining the existing
+ * preference storage and side-effect handling.
  */
+
 class SettingsCategoryLegacyFragment :
     Fragment(),
     SharedPreferences.OnSharedPreferenceChangeListener {
@@ -94,146 +95,106 @@ class SettingsCategoryLegacyFragment :
         ) ?: return
         activity?.title = getString(section.titleRes)
 
-        val sectionBinding = ItemSettingsSectionCardBinding.inflate(layoutInflater, sectionHost, false)
-        sectionBinding.sectionTitle.setText(section.titleRes)
-        sectionBinding.sectionSummary.setText(section.summaryRes)
-        sectionBinding.sectionIcon.setImageResource(iconForSection(section.id))
-
         val visibleRows = section.rows.filter { it.visible }
-        visibleRows.forEachIndexed { index, row ->
-            when (row) {
-                is SettingsRow.Choice -> bindChoiceRow(sectionBinding.sectionContent, row)
-                is SettingsRow.Info -> bindInfoRow(sectionBinding.sectionContent, row)
-                is SettingsRow.Toggle -> bindToggleRow(sectionBinding.sectionContent, row)
-            }
-            if (index < visibleRows.lastIndex) {
-                val divider = layoutInflater.inflate(R.layout.item_settings_divider, sectionBinding.sectionContent, false)
-                sectionBinding.sectionContent.addView(divider)
+        sectionHost.addSettingsComposeContent {
+            val context = LocalContext.current
+            SettingsSectionCard(
+                title = context.getString(section.titleRes),
+                summary = context.getString(section.summaryRes),
+                iconRes = iconForSection(section.id),
+            ) {
+                visibleRows.forEachIndexed { index, row ->
+                    when (row) {
+                        is SettingsRow.Choice -> renderChoiceRow(row)
+                        is SettingsRow.Info -> renderInfoRow(row)
+                        is SettingsRow.Toggle -> renderToggleRow(row)
+                    }
+                    if (index < visibleRows.lastIndex) {
+                        SettingsDivider()
+                    }
+                }
             }
         }
-
-        sectionHost.addView(sectionBinding.root)
     }
 
-    private fun bindChoiceRow(
-        container: LinearLayout,
-        row: SettingsRow.Choice,
-    ) {
-        val rowBinding = ItemSettingsRowValueBinding.inflate(layoutInflater, container, false)
-        val context = rowBinding.root.context
+    @Composable
+    private fun renderChoiceRow(row: SettingsRow.Choice) {
+        val context = LocalContext.current
         val labels = context.resources.getStringArray(row.entriesRes)
         val values = context.resources.getStringArray(row.valuesRes)
         val preferenceKey = context.getString(row.keyRes)
         val currentValue = settings.getString(preferenceKey, row.defaultValue) ?: row.defaultValue
-        val currentLabel = labels[values.indexOf(currentValue).coerceAtLeast(0)]
+        val currentValueIndex = values.indexOf(currentValue).coerceAtLeast(0)
+        val currentLabel = labels[currentValueIndex]
+        val title = context.getString(row.titleRes)
+        val contentDescription =
+            context.getString(
+                R.string.settings_choice_content_description,
+                title,
+                currentLabel,
+            )
 
-        rowBinding.rowTitle.setText(row.titleRes)
-        rowBinding.rowSummary.apply {
-            if (row.summaryRes != null) {
-                setText(row.summaryRes)
-                visibility = View.VISIBLE
+        SettingsValueRow(
+            title = title,
+            summary = row.summaryRes?.let { context.getString(it) },
+            value = currentLabel,
+            enabled = row.enabled,
+            contentDescription = contentDescription,
+            showChevron = row.enabled,
+            onClick =
+            if (row.enabled) {
+                {
+                    MaterialAlertDialogBuilder(context)
+                        .setTitle(row.titleRes)
+                        .setSingleChoiceItems(labels, currentValueIndex) { dialog, which ->
+                            settings.edit { putString(preferenceKey, values[which]) }
+                            dialog.dismiss()
+                        }.setNegativeButton(R.string.Cancel, null)
+                        .show()
+                }
             } else {
-                visibility = View.GONE
-            }
-        }
-        rowBinding.rowValue.text = currentLabel
-        rowBinding.rowValue.visibility = View.VISIBLE
-        rowBinding.rowChevron.visibility = if (row.enabled) View.VISIBLE else View.GONE
-        rowBinding.root.isEnabled = row.enabled
-        rowBinding.root.isClickable = row.enabled
-        rowBinding.rowTitle.isEnabled = row.enabled
-        rowBinding.rowSummary.isEnabled = row.enabled
-        rowBinding.rowValue.isEnabled = row.enabled
-        rowBinding.rowChevron.isEnabled = row.enabled
-        rowBinding.root.alpha = if (row.enabled) 1f else DISABLED_ALPHA
-
-        rowBinding.root.contentDescription = context.getString(
-            R.string.settings_choice_content_description,
-            context.getString(row.titleRes),
-            currentLabel,
+                null
+            },
         )
-
-        if (row.enabled) {
-            rowBinding.root.setOnClickListener {
-                MaterialAlertDialogBuilder(context)
-                    .setTitle(row.titleRes)
-                    .setSingleChoiceItems(labels, values.indexOf(currentValue).coerceAtLeast(0)) { dialog, which ->
-                        settings.edit { putString(preferenceKey, values[which]) }
-                        dialog.dismiss()
-                    }.setNegativeButton(R.string.Cancel, null)
-                    .show()
-            }
-        } else {
-            rowBinding.root.setOnClickListener(null)
-        }
-
-        container.addView(rowBinding.root)
     }
 
-    private fun bindToggleRow(
-        container: LinearLayout,
-        row: SettingsRow.Toggle,
-    ) {
-        val rowBinding = ItemSettingsRowSwitchBinding.inflate(layoutInflater, container, false)
-        val context = rowBinding.root.context
+    @Composable
+    private fun renderToggleRow(row: SettingsRow.Toggle) {
+        val context = LocalContext.current
         val preferenceKey = context.getString(row.keyRes)
         val checked = settings.getBoolean(preferenceKey, row.defaultValue)
+        val accessibilityStateRes =
+            if (checked) R.string.accessibility_switch_on else R.string.accessibility_switch_off
 
-        rowBinding.rowTitle.setText(row.titleRes)
-        rowBinding.rowSummary.apply {
-            val summaryRes = row.summaryRes(checked)
-            if (summaryRes != null) {
-                setText(summaryRes)
-                visibility = View.VISIBLE
-            } else {
-                visibility = View.GONE
-            }
-        }
-        rowBinding.rowSwitch.isChecked = checked
-        rowBinding.root.isEnabled = row.enabled
-        rowBinding.root.isClickable = row.enabled
-        rowBinding.rowTitle.isEnabled = row.enabled
-        rowBinding.rowSummary.isEnabled = row.enabled
-        rowBinding.rowSwitch.isEnabled = row.enabled
-        rowBinding.root.alpha = if (row.enabled) 1f else DISABLED_ALPHA
-
-        rowBinding.root.contentDescription = context.getString(
-            R.string.settings_toggle_content_description,
-            context.getString(row.titleRes),
-            context.getString(if (checked) R.string.accessibility_switch_on else R.string.accessibility_switch_off),
+        SettingsToggleRow(
+            title = context.getString(row.titleRes),
+            summary = row.summaryRes(checked)?.let { context.getString(it) },
+            checked = checked,
+            enabled = row.enabled,
+            contentDescription =
+            context.getString(
+                R.string.settings_toggle_content_description,
+                context.getString(row.titleRes),
+                context.getString(accessibilityStateRes),
+            ),
+            onCheckedChange = { newValue ->
+                settings.edit { putBoolean(preferenceKey, newValue) }
+            },
         )
-
-        if (row.enabled) {
-            rowBinding.root.setOnClickListener {
-                rowBinding.rowSwitch.isChecked = !rowBinding.rowSwitch.isChecked
-            }
-            rowBinding.rowSwitch.setOnCheckedChangeListener { _, isChecked ->
-                settings.edit { putBoolean(preferenceKey, isChecked) }
-            }
-        } else {
-            rowBinding.root.setOnClickListener(null)
-            rowBinding.rowSwitch.setOnCheckedChangeListener(null)
-        }
-
-        container.addView(rowBinding.root)
     }
 
-    private fun bindInfoRow(
-        container: LinearLayout,
-        row: SettingsRow.Info,
-    ) {
-        val rowBinding = ItemSettingsRowValueBinding.inflate(layoutInflater, container, false)
-        rowBinding.rowTitle.setText(row.titleRes)
-        rowBinding.rowSummary.setText(row.summaryRes)
-        rowBinding.rowSummary.visibility = View.VISIBLE
-        rowBinding.rowValue.visibility = View.GONE
-        rowBinding.rowChevron.visibility = View.GONE
-        rowBinding.root.isEnabled = false
-        rowBinding.root.isClickable = false
-        rowBinding.rowTitle.isEnabled = false
-        rowBinding.rowSummary.isEnabled = false
-        rowBinding.root.alpha = DISABLED_ALPHA
-        container.addView(rowBinding.root)
+    @Composable
+    private fun renderInfoRow(row: SettingsRow.Info) {
+        val context = LocalContext.current
+        SettingsValueRow(
+            title = context.getString(row.titleRes),
+            summary = context.getString(row.summaryRes),
+            value = null,
+            enabled = false,
+            contentDescription = null,
+            showChevron = false,
+            onClick = null,
+        )
     }
 
     @DrawableRes
@@ -249,9 +210,7 @@ class SettingsCategoryLegacyFragment :
         else -> R.drawable.ic_build_grey_600_24dp
     }
 
-    /** Alpha used to communicate disabled setting rows without hiding them. */
     companion object {
-        private const val DISABLED_ALPHA = 0.38f
 
         /**
          * Resolves the settings category from the fragment arguments.

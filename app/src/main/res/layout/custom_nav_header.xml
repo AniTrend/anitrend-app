@@ -13,7 +13,7 @@
     android:background="?attr/selectableItemBackground"
     tools:showIn="@layout/nav_header_main">
 
-        <com.mxt.anitrend.base.custom.view.image.AvatarIndicatorView
+        <androidx.compose.ui.platform.ComposeView
             android:id="@+id/drawer_avatar_indicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

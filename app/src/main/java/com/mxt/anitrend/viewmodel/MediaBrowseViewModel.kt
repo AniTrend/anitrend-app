@@ -16,6 +16,7 @@ import com.mxt.anitrend.model.entity.container.attribute.PageInfo
 import com.mxt.anitrend.model.entity.container.body.PageContainer
 import com.mxt.anitrend.repository.BaseRepository
 import com.mxt.anitrend.repository.BrowseRepository
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -147,6 +148,9 @@ class MediaBrowseViewModel(
                     )
                 }
             }.onFailure { throwable ->
+                if (throwable is CancellationException) {
+                    throw throwable
+                }
                 if (generation != screenState.value.requestGeneration) {
                     return@onFailure
                 }

@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.ReviewAdapter
+import com.mxt.anitrend.adapter.recycler.index.ReviewImageAction
 import com.mxt.anitrend.base.custom.recycler.RecyclerScrollListener
 import com.mxt.anitrend.base.custom.view.container.CustomSwipeRefreshLayout
 import com.mxt.anitrend.base.interfaces.event.ItemClickListener
@@ -39,15 +40,15 @@ class MediaReviewSection(
     private val viewModel: ReviewViewModel,
     private val mediaId: Long,
     @KeyUtil.MediaType private val mediaType: String?,
+    private val onReviewImageAction: (ReviewImageAction, ReviewRecord) -> Unit,
     private val onReviewClick: (View, ReviewRecord) -> Unit,
-    private val onReviewLongClick: (View, ReviewRecord) -> Unit,
 ) : CustomSwipeRefreshLayout.OnRefreshAndLoadListener {
     private val appContext = context
     private val scrollListener = RecyclerScrollListener()
     private val adapter = ReviewAdapter(
-        context = context,
         currentUser = databaseHelper.currentUser,
         onRateReviewAction = viewModel::rateReview,
+        onReviewImageAction = onReviewImageAction,
         isMediaType = true,
     ).also { reviewAdapter ->
         reviewAdapter.clickListener = object : ItemClickListener<ReviewRecord> {
@@ -55,9 +56,7 @@ class MediaReviewSection(
                 onReviewClick(target, data.value)
             }
 
-            override fun onItemLongClick(target: View, data: IndexedValue<ReviewRecord>) {
-                onReviewLongClick(target, data.value)
-            }
+            override fun onItemLongClick(target: View, data: IndexedValue<ReviewRecord>) = Unit
         }
     }
     private var binding: FragmentListBinding? = null

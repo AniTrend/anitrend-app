@@ -7,16 +7,21 @@ import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
 import android.widget.LinearLayout.LayoutParams
+import android.widget.Toast
+
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
+
 import com.bumptech.glide.Glide
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.view.image.AspectImageView
 import com.mxt.anitrend.base.custom.view.text.AiringTextView
 import com.mxt.anitrend.base.custom.view.text.SeriesYearTypeTextView
-import com.mxt.anitrend.base.custom.view.widget.AutoIncrementWidgetState
 import com.mxt.anitrend.base.custom.view.widget.SeriesStatusWidget
 import com.mxt.anitrend.binding.setAverageRating
 import com.mxt.anitrend.databinding.AdapterSeriesAiringBinding
@@ -24,7 +29,11 @@ import com.mxt.anitrend.databinding.AdapterSeriesAiringCompactBinding
 import com.mxt.anitrend.domain.model.MediaListItemUiModel
 import com.mxt.anitrend.domain.model.matchesFilter
 import com.mxt.anitrend.domain.model.toRenderModel
+import com.mxt.anitrend.ui.designsystem.AniTrendTheme
+import com.mxt.anitrend.ui.media.MediaListProgressControl
+import com.mxt.anitrend.ui.media.MediaListProgressState
 import com.mxt.anitrend.util.KeyUtil
+import com.mxt.anitrend.util.NotifyUtil
 
 class MediaListAdapter(
     context: Context,
@@ -101,8 +110,43 @@ class MediaListAdapter(
     private inner class SeriesListViewHolder(
         private val binding: ViewBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
+        private val progressControl = itemView.findViewById<ComposeView>(R.id.series_episodes)
+        private val progressState = mutableStateOf<MediaListProgressState?>(null)
+        private var boundModel: MediaListItemUiModel? = null
+
+        init {
+            progressControl.setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool)
+            progressControl.setContent {
+                AniTrendTheme {
+                    progressState.value?.let { state ->
+                        MediaListProgressControl(
+                            state = state,
+                            onIncrement = { boundModel?.let(this@MediaListAdapter.onIncrement) },
+                            onBusyClick = {
+                                NotifyUtil.makeText(progressControl.context, R.string.busy_please_wait, Toast.LENGTH_SHORT).show()
+                            },
+                            onLimitReached = {
+                                NotifyUtil
+                                    .makeText(
+                                        progressControl.context,
+                                        if (state.mediaType == KeyUtil.ANIME) {
+                                            R.string.text_unable_to_increment_episodes
+                                        } else {
+                                            R.string.text_unable_to_increment_chapters
+                                        },
+                                        R.drawable.ic_warning_white_18dp,
+                                        Toast.LENGTH_SHORT,
+                                    ).show()
+                            },
+                        )
+                    }
+                }
+            }
+        }
 
         fun bind(model: MediaListItemUiModel) {
+            boundModel = model
+            progressState.value = model.toMediaListProgressState()
             itemView.setOnClickListener { onOpenMedia(itemView, model) }
             itemView.setOnLongClickListener {
                 onOpenManage(model)
@@ -123,17 +167,15 @@ class MediaListAdapter(
         }
 
         fun recycle() {
+            boundModel = null
+            progressState.value = null
             when (binding) {
                 is AdapterSeriesAiringBinding -> {
                     Glide.with(appContext).clear(binding.seriesImage)
-                    binding.seriesEpisodes.setOnIncrementListener(null)
-                    binding.seriesEpisodes.onViewRecycled()
                     binding.customRatingWidget.onViewRecycled()
                 }
                 is AdapterSeriesAiringCompactBinding -> {
                     Glide.with(appContext).clear(binding.seriesImage)
-                    binding.seriesEpisodes.setOnIncrementListener(null)
-                    binding.seriesEpisodes.onViewRecycled()
                     binding.customRatingWidget.onViewRecycled()
                 }
             }
@@ -151,10 +193,6 @@ class MediaListAdapter(
         SeriesYearTypeTextView.htmlText(binding.seriesYearType, renderModel)
         binding.customRatingWidget.setAverageRating(renderModel)
         binding.seriesTitle.text = model.mediaTitle
-        binding.seriesEpisodes.render(model.toAutoIncrementWidgetState())
-        binding.seriesEpisodes.setOnIncrementListener {
-            onIncrement(model)
-        }
     }
 
     private fun bindCompact(
@@ -168,10 +206,6 @@ class MediaListAdapter(
         SeriesYearTypeTextView.htmlText(binding.seriesYearType, renderModel)
         binding.customRatingWidget.setAverageRating(renderModel)
         binding.seriesTitle.text = model.mediaTitle
-        binding.seriesEpisodes.render(model.toAutoIncrementWidgetState())
-        binding.seriesEpisodes.setOnIncrementListener {
-            onIncrement(model)
-        }
 
         when (mediaListStyle) {
             KeyUtil.LIST_VIEW_STYLE_COMPACT_X1 -> {
@@ -187,9 +221,9 @@ class MediaListAdapter(
         }
     }
 
-    private fun MediaListItemUiModel.toAutoIncrementWidgetState(): AutoIncrementWidgetState {
+    private fun MediaListItemUiModel.toMediaListProgressState(): MediaListProgressState {
         val maxProgress = if (mediaType == KeyUtil.ANIME) mediaEpisodes else mediaChapters
-        return AutoIncrementWidgetState(
+        return MediaListProgressState(
             progress = progress,
             maxProgress = maxProgress,
             isEnabled = canIncrement && !isIncrementPending && !isDeletePending,

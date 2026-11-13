@@ -129,7 +129,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
-            <com.mxt.anitrend.base.custom.view.widget.FavouriteWidget
+            <androidx.compose.ui.platform.ComposeView
                 android:id="@+id/widget_favourite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />

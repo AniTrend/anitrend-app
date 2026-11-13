@@ -20,6 +20,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.chip.Chip
 import com.mxt.anitrend.R
+import com.mxt.anitrend.adapter.recycler.index.ReviewImageAction
 import com.mxt.anitrend.base.custom.view.widget.FavouriteToolbarWidget
 import com.mxt.anitrend.base.custom.view.widget.FavouriteWidgetRenderState
 import com.mxt.anitrend.data.DatabaseHelper
@@ -293,8 +294,8 @@ class MediaFragment : Fragment() {
             viewModel = reviewViewModel,
             mediaId = mediaId,
             mediaType = type,
+            onReviewImageAction = ::handleReviewImageAction,
             onReviewClick = ::openReview,
-            onReviewLongClick = ::longPressReview,
         )
     }
 
@@ -494,10 +495,16 @@ class MediaFragment : Fragment() {
         mediaActionUtil?.startSeriesAction()
     }
 
+    private fun handleReviewImageAction(action: ReviewImageAction, review: ReviewRecord) {
+        when (action) {
+            ReviewImageAction.OPEN_MEDIA -> review.media?.let { navigateToMedia(MediaScreenParam(it.id, it.type)) }
+            ReviewImageAction.OPEN_PROFILE -> review.user?.id?.let { navigateToProfile(UserScreenParam(it)) }
+            ReviewImageAction.LONG_PRESS_MEDIA -> review.media?.id?.let(::longPressMedia)
+        }
+    }
+
     private fun openReview(target: View, review: ReviewRecord) {
         when (target.id) {
-            R.id.series_image -> review.media?.let { navigateToMedia(MediaScreenParam(it.id, it.type)) }
-            R.id.user_avatar -> review.user?.id?.let { navigateToProfile(UserScreenParam(it)) }
             R.id.review_read_more -> BottomReviewReader.Builder()
                 .setReview(review)
                 .setOnUserClick(::navigateToProfile)
@@ -505,10 +512,6 @@ class MediaFragment : Fragment() {
                 .build()
                 .show(parentFragmentManager, "review_reader")
         }
-    }
-
-    private fun longPressReview(target: View, review: ReviewRecord) {
-        if (target.id == R.id.series_image) review.media?.id?.let(::longPressMedia)
     }
 
     private fun editFeed(item: FeedItemUiModel) {

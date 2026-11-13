@@ -9,7 +9,14 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.annotation.VisibleForTesting
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -19,13 +26,14 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
-import com.google.android.material.tabs.TabLayout
+import com.google.android.material.snackbar.Snackbar
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.view.image.WideImageView
 import com.mxt.anitrend.data.DatabaseHelper
 import com.mxt.anitrend.data.mapper.toUserBase
 import com.mxt.anitrend.databinding.FragmentProfileBinding
 import com.mxt.anitrend.domain.model.UserSummaryRecord
+import com.mxt.anitrend.domain.user.model.UserStatisticsRecord
 import com.mxt.anitrend.model.entity.base.UserBase
 import com.mxt.anitrend.navigation.extension.navigateToComment
 import com.mxt.anitrend.navigation.extension.navigateToMedia
@@ -39,6 +47,9 @@ import com.mxt.anitrend.navigation.extension.screenParam
 import com.mxt.anitrend.navigation.model.CommentScreenParam
 import com.mxt.anitrend.navigation.model.UserScreenParam
 import com.mxt.anitrend.repository.UserRepository
+import com.mxt.anitrend.ui.designsystem.AniTrendTheme
+import com.mxt.anitrend.ui.profile.ProfileStatsRow
+import com.mxt.anitrend.ui.profile.ProfileSectionTabs
 import com.mxt.anitrend.util.CompatUtil
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
@@ -70,9 +81,10 @@ class ProfileFragment : Fragment() {
     private val feedViewModel: UserFeedViewModel by viewModel()
 
     private var model: UserBase? = null
+    private var profileStats by mutableStateOf<UserStatisticsRecord?>(null)
     private var userId = 0L
     private var userName: String? = null
-    private var section = Section.OVERVIEW
+    private var section by mutableStateOf(Section.OVERVIEW)
     private var activeSection: Any? = null
     private var renderedSection: Section? = null
     private var mediaActionUtil: MediaActionUtil? = null
@@ -115,12 +127,22 @@ class ProfileFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
-        binding.profileStatsWidget.onMediaListRequested = { mediaType ->
-            model?.let { user ->
-                findNavControllerOrNull()?.navigateToMediaList(
-                    UserScreenParam(user.id, user.name),
-                    mediaType,
-                )
+        binding.profileStatsWidget.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                AniTrendTheme {
+                    ProfileStatsRow(
+                        stats = profileStats,
+                        onAnimeTotalClick = { onProfileMediaListRequested(KeyUtil.ANIME) },
+                        onAnimeTimeClick = { value ->
+                            showProfileStatsSnackbar(R.string.text_user_anime_time, value)
+                        },
+                        onMangaTotalClick = { onProfileMediaListRequested(KeyUtil.MANGA) },
+                        onMangaChaptersClick = { value ->
+                            showProfileStatsSnackbar(R.string.text_user_manga_chapters, value)
+                        },
+                    )
+                }
             }
         }
         return binding.root
@@ -194,28 +216,27 @@ class ProfileFragment : Fragment() {
     override fun onDestroyView() {
         mediaActionUtil?.onDestroy()
         clearActiveSection()
-        binding.profileStatsWidget.onMediaListRequested = null
+        profileStats = null
         _binding = null
         super.onDestroyView()
     }
 
     private fun setupSections() {
-        val tabs = binding.profileSections.smartTab
-        tabs.removeAllTabs()
-        listOf(
-            R.string.profile_section_overview,
-            R.string.profile_section_media,
-            R.string.profile_section_text,
-        ).forEach { tabs.addTab(tabs.newTab().setText(it)) }
-        tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab) {
-                section = Section.entries.getOrElse(tab.position) { Section.OVERVIEW }
-                renderSection()
+        binding.profileSections.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                AniTrendTheme {
+                    ProfileSectionTabs(
+                        selectedTabIndex = section.ordinal,
+                        onTabSelected = { index ->
+                            section = Section.entries.getOrElse(index) { Section.OVERVIEW }
+                            renderSection()
+                        },
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                }
             }
-            override fun onTabUnselected(tab: TabLayout.Tab) = Unit
-            override fun onTabReselected(tab: TabLayout.Tab) = Unit
-        })
-        tabs.getTabAt(section.ordinal)?.select()
+        }
     }
 
     private fun observeProfile() {
@@ -237,9 +258,29 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    private fun onProfileMediaListRequested(mediaType: String) {
+        model?.let { user ->
+            findNavControllerOrNull()?.navigateToMediaList(
+                UserScreenParam(user.id, user.name),
+                mediaType,
+            )
+        }
+    }
+
+    private fun showProfileStatsSnackbar(
+        @StringRes messageRes: Int,
+        formattedValue: String,
+    ) {
+        Snackbar.make(
+            binding.profileStatsWidget,
+            getString(messageRes, formattedValue),
+            Snackbar.LENGTH_LONG,
+        ).show()
+    }
+
     private fun bindHeader(user: UserBase) {
         viewLifecycleOwner.lifecycleScope.launch {
-            profileViewModel.loadStats(userId, userName).onSuccess(binding.profileStatsWidget::setStats)
+            profileViewModel.loadStats(userId, userName).onSuccess { profileStats = it }
         }
         WideImageView.setImage(binding.profileBanner, user.bannerImage)
         binding.profileDisplayName.text = user.name

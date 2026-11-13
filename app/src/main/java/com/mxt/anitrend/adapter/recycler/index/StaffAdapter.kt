@@ -4,15 +4,20 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
-import com.bumptech.glide.Glide
+
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.neverEqualPolicy
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.recyclerview.widget.RecyclerView
+
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder
-import com.mxt.anitrend.base.custom.view.image.AspectImageView
-import com.mxt.anitrend.databinding.AdapterStaffBinding
-import com.mxt.anitrend.extension.getLayoutInflater
 import com.mxt.anitrend.model.entity.base.StaffBase
-import com.mxt.anitrend.util.CompatUtil
+import com.mxt.anitrend.ui.designsystem.AniTrendTheme
+import com.mxt.anitrend.ui.staff.StaffRow
+import com.mxt.anitrend.ui.staff.StaffRowUiState
 
 /**
  * Created by max on 2017/12/20.
@@ -24,35 +29,46 @@ class StaffAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): RecyclerViewHolder<StaffBase> = StaffViewHolder(
-        AdapterStaffBinding.inflate(parent.context.getLayoutInflater(), parent, false),
-    )
+    ): RecyclerViewHolder<StaffBase> = StaffViewHolder(parent)
 
     override fun getFilter(): Filter? = null
 
     inner class StaffViewHolder(
-        private val binding: AdapterStaffBinding,
-    ) : RecyclerViewHolder<StaffBase>(binding.root) {
+        parent: ViewGroup,
+    ) : RecyclerViewHolder<StaffBase>(
+        ComposeView(parent.context).apply {
+            id = R.id.container
+            val margin = parent.resources.getDimensionPixelSize(R.dimen.lg_margin)
+            layoutParams =
+                RecyclerView.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                ).apply { setMargins(margin, margin, margin, margin) }
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool)
+        },
+    ) {
+        private val composeView = itemView as ComposeView
+        private val staff = mutableStateOf<StaffRowUiState?>(null, neverEqualPolicy())
+
         init {
-            bindClickListeners(R.id.container)
+            composeView.setContent {
+                AniTrendTheme {
+                    staff.value?.let { current ->
+                        StaffRow(
+                            state = current,
+                            onClick = { this@StaffViewHolder.onClick(composeView) },
+                        )
+                    }
+                }
+            }
         }
 
         override fun onBindViewHolder(model: StaffBase) {
-            AspectImageView.setImage(binding.staffImg, model.image)
-            binding.staffNameText.text = model.name?.fullName
-            val language = model.language
-            if (language.isNullOrBlank()) {
-                binding.staffLanguageText.visibility = View.GONE
-            } else {
-                binding.staffLanguageText.visibility = View.VISIBLE
-                binding.staffLanguageText.text = CompatUtil.capitalizeWords(language)
-            }
-            binding.favouriteIndicator.visibility =
-                if (model.isFavourite) View.VISIBLE else View.GONE
+            staff.value = StaffRowUiState.from(model)
         }
 
         override fun onViewRecycled() {
-            Glide.with(getContext()).clear(binding.staffImg)
+            staff.value = null
         }
 
         override fun onClick(v: View) {

@@ -31,6 +31,9 @@
     <dimen name="sm_margin">2dp</dimen>
     <dimen name="xs_margin">1dp</dimen>
 
+    <dimen name="episode_duration_padding">10dp</dimen>
+    <dimen name="feed_slide_playback_size">88dp</dimen>
+
     <dimen name="widget_flipper_padding">6dp</dimen>
     <dimen name="widget_spinner_compact_size">18dp</dimen>
 
