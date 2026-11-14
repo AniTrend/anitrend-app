@@ -32,7 +32,7 @@ io-mockk = "1.14.12"
 jetbrains-dokka = "1.7.20"
 jetbrains-kotlin = "2.4.21"
 jetbrains-kotlinx-coroutines = "1.11.0"
-jetbrains-kotlinx-serialization = "1.12.0"
+jetbrains-kotlinx-serialization = "1.13.0"
 
 mpandroidchartVersion = "3.1.0"
 noties-markwon = "4.6.2"
