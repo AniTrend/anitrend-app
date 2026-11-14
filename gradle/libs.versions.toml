@@ -70,7 +70,7 @@ google-firebase-crashlytics = "20.1.1"
 google-firebase-crashlytics-gradle = "3.0.8"
 google-android-flexbox = "3.0.0"
 google-android-material = "1.14.0"
-google-gms-google-services = "4.5.0"
+google-gms-google-services = "4.6.0"
 
 [libraries]
 spotless-gradle-plugin = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
