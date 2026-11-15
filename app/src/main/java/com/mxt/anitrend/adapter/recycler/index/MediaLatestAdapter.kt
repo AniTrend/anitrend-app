@@ -1,22 +1,23 @@
 package com.mxt.anitrend.adapter.recycler.index
 
 import android.content.Context
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
-import com.bumptech.glide.Glide
+
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.neverEqualPolicy
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.recyclerview.widget.RecyclerView
+
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder
-import com.mxt.anitrend.base.custom.view.image.AspectImageView
-import com.mxt.anitrend.base.custom.view.text.AiringTextView
-import com.mxt.anitrend.base.custom.view.text.SeriesYearTypeTextView
-import com.mxt.anitrend.base.custom.view.widget.SeriesStatusWidget
-import com.mxt.anitrend.binding.setAverageRating
-import com.mxt.anitrend.databinding.AdapterLatestAnimeBinding
-import com.mxt.anitrend.databinding.AdapterLatestMangaBinding
 import com.mxt.anitrend.model.entity.base.MediaBase
+import com.mxt.anitrend.ui.designsystem.AniTrendTheme
+import com.mxt.anitrend.ui.media.LatestMediaRowUiState
+import com.mxt.anitrend.ui.media.MediaLatestRow
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.KeyUtil.RecyclerViewType
 
@@ -25,20 +26,30 @@ import com.mxt.anitrend.util.KeyUtil.RecyclerViewType
  */
 class MediaLatestAdapter(context: Context) : RecyclerViewAdapter<MediaBase>(context) {
 
-    private val cardInteractionIds = intArrayOf(
-        R.id.container,
-        R.id.series_image,
-        R.id.series_status,
-        R.id.series_airing,
-        R.id.series_title,
-        R.id.series_year_type,
-        R.id.custom_rating_widget,
-    )
-
-    override fun onCreateViewHolder(parent: ViewGroup, @RecyclerViewType viewType: Int): RecyclerViewHolder<MediaBase> = if (viewType == KeyUtil.RECYCLER_TYPE_ANIME) {
-        LatestAnimeViewHolder(AdapterLatestAnimeBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        @RecyclerViewType viewType: Int,
+    ): RecyclerViewHolder<MediaBase> = if (viewType == KeyUtil.RECYCLER_TYPE_ANIME) {
+        LatestAnimeViewHolder(parent)
     } else {
-        LatestMangaViewHolder(AdapterLatestMangaBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        LatestMangaViewHolder(parent)
+    }
+
+    private fun createComposeView(parent: ViewGroup): ComposeView {
+        val margin = parent.resources.getDimensionPixelSize(R.dimen.lg_margin)
+        return ComposeView(parent.context).apply {
+            id = R.id.container
+            layoutParams =
+                RecyclerView.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                ).apply {
+                    marginStart = margin
+                    marginEnd = margin
+                    topMargin = margin
+                }
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool)
+        }
     }
 
     @RecyclerViewType
@@ -54,67 +65,75 @@ class MediaLatestAdapter(context: Context) : RecyclerViewAdapter<MediaBase>(cont
      * View holder for the latest anime card layout.
      */
     inner class LatestAnimeViewHolder(
-        private val binding: AdapterLatestAnimeBinding,
-    ) : RecyclerViewHolder<MediaBase>(binding.root) {
+        parent: ViewGroup,
+    ) : RecyclerViewHolder<MediaBase>(createComposeView(parent)) {
+        private val composeView = itemView as ComposeView
+        private val rowState = mutableStateOf<LatestMediaRowUiState?>(null, neverEqualPolicy())
 
         init {
-            cardInteractionIds.forEach { viewId ->
-                bindClickListeners(viewId)
-                bindLongClickListeners(viewId)
+            composeView.setContent {
+                AniTrendTheme {
+                    rowState.value?.let { state ->
+                        MediaLatestRow(
+                            state = state,
+                            onClick = { this@LatestAnimeViewHolder.onClick(composeView) },
+                            onLongClick = { this@LatestAnimeViewHolder.onLongClick(composeView) },
+                        )
+                    }
+                }
             }
         }
 
         override fun onBindViewHolder(model: MediaBase) {
-            AspectImageView.setImage(binding.seriesImage, model.coverImage)
-            SeriesStatusWidget.setStatus(binding.seriesStatus, model)
-            AiringTextView.setAiring(binding.seriesAiring, model)
-            SeriesYearTypeTextView.htmlText(binding.seriesYearType, model)
-            binding.customRatingWidget.setAverageRating(model)
-            binding.seriesTitle.setTitle(model)
+            rowState.value = LatestMediaRowUiState.from(composeView.context, model)
         }
 
         override fun onViewRecycled() {
-            Glide.with(context).clear(binding.seriesImage)
+            rowState.value = null
         }
 
         override fun onClick(v: View) {
-            performClick(clickListener, data, itemView)
+            performClick(clickListener, data, composeView)
         }
 
-        override fun onLongClick(v: View): Boolean = performLongClick(clickListener, data, itemView)
+        override fun onLongClick(v: View): Boolean = performLongClick(clickListener, data, composeView)
     }
 
     /**
      * View holder for the latest manga card layout.
      */
     inner class LatestMangaViewHolder(
-        private val binding: AdapterLatestMangaBinding,
-    ) : RecyclerViewHolder<MediaBase>(binding.root) {
+        parent: ViewGroup,
+    ) : RecyclerViewHolder<MediaBase>(createComposeView(parent)) {
+        private val composeView = itemView as ComposeView
+        private val rowState = mutableStateOf<LatestMediaRowUiState?>(null, neverEqualPolicy())
 
         init {
-            cardInteractionIds.forEach { viewId ->
-                bindClickListeners(viewId)
-                bindLongClickListeners(viewId)
+            composeView.setContent {
+                AniTrendTheme {
+                    rowState.value?.let { state ->
+                        MediaLatestRow(
+                            state = state,
+                            onClick = { this@LatestMangaViewHolder.onClick(composeView) },
+                            onLongClick = { this@LatestMangaViewHolder.onLongClick(composeView) },
+                        )
+                    }
+                }
             }
         }
 
         override fun onBindViewHolder(model: MediaBase) {
-            AspectImageView.setImage(binding.seriesImage, model.coverImage)
-            SeriesStatusWidget.setStatus(binding.seriesStatus, model)
-            SeriesYearTypeTextView.htmlText(binding.seriesYearType, model)
-            binding.customRatingWidget.setAverageRating(model)
-            binding.seriesTitle.setTitle(model)
-            binding.seriesAiring.text = binding.root.context.getString(R.string.label_latest_release)
+            rowState.value = LatestMediaRowUiState.from(composeView.context, model)
         }
 
         override fun onViewRecycled() {
-            Glide.with(context).clear(binding.seriesImage)
+            rowState.value = null
         }
 
         override fun onClick(v: View) {
-            performClick(clickListener, data, itemView)
+            performClick(clickListener, data, composeView)
         }
 
-        override fun onLongClick(v: View): Boolean = performLongClick(clickListener, data, itemView)
+        override fun onLongClick(v: View): Boolean = performLongClick(clickListener, data, composeView)
     }
 }

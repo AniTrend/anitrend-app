@@ -14,9 +14,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.snackbar.Snackbar
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.index.ReviewAdapter
+import com.mxt.anitrend.adapter.recycler.index.ReviewImageAction
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
 import com.mxt.anitrend.data.DatabaseHelper
-import com.mxt.anitrend.domain.model.MediaSummaryRecord
 import com.mxt.anitrend.domain.model.ReviewRecord
 import com.mxt.anitrend.graphql.generated.MediaType
 import com.mxt.anitrend.model.entity.container.body.PageContainer
@@ -31,6 +31,7 @@ import com.mxt.anitrend.util.selectedIndex
 import com.mxt.anitrend.navigation.extension.navigateToMedia
 import com.mxt.anitrend.navigation.extension.navigateToProfile
 import com.mxt.anitrend.navigation.model.MediaScreenParam
+import com.mxt.anitrend.navigation.model.UserScreenParam
 import com.mxt.anitrend.view.sheet.BottomReviewReader
 import com.mxt.anitrend.viewmodel.BrowseReviewViewModel
 import kotlinx.coroutines.launch
@@ -84,16 +85,15 @@ open class BrowseReviewFragment : FragmentBaseList<ReviewRecord, PageContainer<R
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val ctx = requireContext()
         mediaType = fromBundle(arguments)
         isPager = true
         mColumnSize = R.integer.single_list_x1
         isFilterableEnabled = true
         reviewAdapter =
             ReviewAdapter(
-                context = ctx,
                 currentUser = databaseHelper.currentUser,
                 onRateReviewAction = browseReviewViewModel::rateReview,
+                onReviewImageAction = ::handleReviewImageAction,
             ).also { adapter ->
                 adapter.clickListener = this
             }
@@ -271,41 +271,20 @@ open class BrowseReviewFragment : FragmentBaseList<ReviewRecord, PageContainer<R
     /** No-op: StateFlow collector above handles the response. */
     override fun onChanged(value: PageContainer<ReviewRecord>?) = Unit
 
-    override fun onItemClick(
-        target: View,
-        data: IndexedValue<ReviewRecord>,
-    ) {
-        when (target.id) {
-            R.id.series_image -> {
-                val mediaBase: MediaSummaryRecord? = data.value.media
-                val media = mediaBase ?: return
+    private fun handleReviewImageAction(action: ReviewImageAction, review: ReviewRecord) {
+        when (action) {
+            ReviewImageAction.OPEN_MEDIA -> review.media?.let { media ->
                 navigateToMedia(MediaScreenParam(media.id, media.type))
             }
-            R.id.review_read_more -> {
-                mBottomSheet =
-                    BottomReviewReader
-                        .Builder()
-                        .setReview(data.value)
-                        .setOnUserClick(::navigateToProfile)
-                        .setTitle(R.string.drawer_title_reviews)
-                        .build()
-                showBottomSheet()
-            }
-        }
-    }
-
-    override fun onItemLongClick(
-        target: View,
-        data: IndexedValue<ReviewRecord>,
-    ) {
-        when (target.id) {
-            R.id.series_image -> {
+            ReviewImageAction.OPEN_PROFILE -> review.user?.id?.let { navigateToProfile(UserScreenParam(it)) }
+            ReviewImageAction.LONG_PRESS_MEDIA -> {
                 if (settings.isAuthenticated) {
                     val host = activity ?: return
+                    val mediaId = review.media?.id ?: return
                     mediaActionUtil =
                         MediaActionUtil
                             .Builder()
-                            .setId(data.value.media?.id ?: return)
+                            .setId(mediaId)
                             .build(host)
                     mediaActionUtil.startSeriesAction()
                 } else {
@@ -322,4 +301,27 @@ open class BrowseReviewFragment : FragmentBaseList<ReviewRecord, PageContainer<R
             }
         }
     }
+
+    override fun onItemClick(
+        target: View,
+        data: IndexedValue<ReviewRecord>,
+    ) {
+        when (target.id) {
+            R.id.review_read_more -> {
+                mBottomSheet =
+                    BottomReviewReader
+                        .Builder()
+                        .setReview(data.value)
+                        .setOnUserClick(::navigateToProfile)
+                        .setTitle(R.string.drawer_title_reviews)
+                        .build()
+                showBottomSheet()
+            }
+        }
+    }
+
+    override fun onItemLongClick(
+        target: View,
+        data: IndexedValue<ReviewRecord>,
+    ) = Unit
 }

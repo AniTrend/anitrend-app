@@ -4,15 +4,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import androidx.activity.compose.setContent
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.res.stringResource
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.FirebaseApp
 import com.mxt.anitrend.R
 import com.mxt.anitrend.databinding.FragmentSettingsM3Binding
-import com.mxt.anitrend.databinding.ItemSettingsCategoryCardBinding
 import com.mxt.anitrend.navigation.extension.asBundle
 import com.mxt.anitrend.navigation.model.SettingsCategoryScreenParam
+import com.mxt.anitrend.ui.designsystem.AniTrendTheme
+import com.mxt.anitrend.ui.settings.SettingsCategoryCard
 import com.mxt.anitrend.util.Settings
 import org.koin.android.ext.android.inject
 
@@ -52,21 +61,39 @@ class SettingsHubFragment : Fragment() {
     private fun renderCategories() {
         val binding = binding ?: return
         val context = requireContext()
+        val categories =
+            SettingsCategoryRegistry.categories(
+                isFirebaseVisible = FirebaseApp.getApps(context).isNotEmpty(),
+                isAuthenticated = settings.isAuthenticated,
+            )
         val sectionHost = binding.settingsSections
+        val composeView =
+            ComposeView(context).apply {
+                id = View.generateViewId()
+                layoutParams =
+                    LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                    )
+                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+                setContent {
+                    AniTrendTheme {
+                        Column(modifier = Modifier.fillMaxWidth()) {
+                            categories.forEach { category ->
+                                val title = stringResource(category.titleRes)
+                                SettingsCategoryCard(
+                                    title = title,
+                                    summary = stringResource(category.summaryRes),
+                                    iconRes = iconForCategory(category.id),
+                                    onClick = { openCategory(category.id) },
+                                )
+                            }
+                        }
+                    }
+                }
+            }
         sectionHost.removeAllViews()
-
-        SettingsCategoryRegistry.categories(
-            isFirebaseVisible = FirebaseApp.getApps(context).isNotEmpty(),
-            isAuthenticated = settings.isAuthenticated,
-        ).forEach { category ->
-            val cardBinding = ItemSettingsCategoryCardBinding.inflate(layoutInflater, sectionHost, false)
-            cardBinding.categoryTitle.setText(category.titleRes)
-            cardBinding.categorySummary.setText(category.summaryRes)
-            cardBinding.categoryIcon.setImageResource(iconForCategory(category.id))
-            cardBinding.root.contentDescription = context.getString(category.titleRes)
-            cardBinding.root.setOnClickListener { openCategory(category.id) }
-            sectionHost.addView(cardBinding.root)
-        }
+        sectionHost.addView(composeView)
     }
 
     @DrawableRes

@@ -122,7 +122,9 @@ class ProfileOverviewSection(
         sectionBinding.userAboutPanelWidget.setFragmentActivity(activity)
         sectionBinding.userAboutPanelWidget.onFavouritesRequested = onOpenFavourites
         sectionBinding.userAboutPanelWidget.onUserRequested = onOpenUser
-        lifecycleOwner?.let { owner -> sectionBinding.userAboutPanelWidget.setUserId(user.id, owner.lifecycle) }
+        if (lifecycleOwner != null) {
+            sectionBinding.userAboutPanelWidget.setUserId(user.id)
+        }
         loadPanelStats(user.id)
         showRingStats()
     }

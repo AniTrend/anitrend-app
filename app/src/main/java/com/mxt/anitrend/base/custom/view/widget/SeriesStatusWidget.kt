@@ -49,19 +49,18 @@ constructor(
     override fun onViewRecycled() = Unit
 
     companion object {
+        internal fun statusColorResource(mediaStatus: String?): Int = when (mediaStatus ?: KeyUtil.NOT_YET_RELEASED) {
+            KeyUtil.RELEASING -> R.color.colorStateBlue
+            KeyUtil.FINISHED -> R.color.colorStateGreen
+            KeyUtil.NOT_YET_RELEASED -> R.color.colorStateOrange
+            else -> R.color.colorStateRed
+        }
+
         private fun applyStatus(
             view: SeriesStatusWidget,
             mediaStatus: String?,
         ) {
-            val resolvedStatus = mediaStatus ?: KeyUtil.NOT_YET_RELEASED
-            val colorRes =
-                when (resolvedStatus) {
-                    KeyUtil.RELEASING -> R.color.colorStateBlue
-                    KeyUtil.FINISHED -> R.color.colorStateGreen
-                    KeyUtil.NOT_YET_RELEASED -> R.color.colorStateOrange
-                    else -> R.color.colorStateRed
-                }
-            view.setBackgroundColor(view.context.getCompatColor(colorRes))
+            view.setBackgroundColor(view.context.getCompatColor(statusColorResource(mediaStatus)))
         }
 
         /** Give the current airing status of the series */

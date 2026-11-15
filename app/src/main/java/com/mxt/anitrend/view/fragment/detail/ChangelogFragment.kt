@@ -4,19 +4,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.button.MaterialButton
-import com.google.android.material.textview.MaterialTextView
 import com.mxt.anitrend.BuildConfig
 import com.mxt.anitrend.R
-import com.mxt.anitrend.base.custom.view.text.RichMarkdownTextView
-import com.mxt.anitrend.binding.richMarkDown
+import com.mxt.anitrend.ui.changelog.ChangelogMarkdown
+import com.mxt.anitrend.ui.changelog.ChangelogScreen
+import com.mxt.anitrend.ui.designsystem.AniTrendTheme
 import timber.log.Timber
 import java.io.IOException
 
 /**
- * Fragment that renders the changelog content as a full-screen destination.
+ * Fragment that hosts the Compose changelog while retaining Navigation 2 ownership.
  */
 class ChangelogFragment : Fragment() {
 
@@ -24,31 +25,37 @@ class ChangelogFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View = inflater.inflate(R.layout.fragment_changelog_m3, container, false)
+    ): View {
+        val markdown =
+            try {
+                requireContext().assets
+                    .open("changelog.md")
+                    .bufferedReader()
+                    .use { it.readText() }
+            } catch (e: IOException) {
+                Timber.e(e)
+                null
+            }
+        val versionName = String.format("v%s", BuildConfig.versionName)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        // Set version text
-        val versionView = view.findViewById<MaterialTextView>(R.id.changelog_version)
-        versionView?.text = String.format("v%s", BuildConfig.versionName)
-
-        // Load and render changelog markdown from assets
-        try {
-            val changelog = requireContext().assets
-                .open("changelog.md")
-                .bufferedReader()
-                .use { it.readText() }
-            val richMarkdownTextView =
-                view.findViewById<RichMarkdownTextView>(R.id.changelog_information)
-            richMarkdownTextView?.richMarkDown(changelog)
-        } catch (e: IOException) {
-            Timber.e(e)
-        }
-
-        // Wire dismiss button to the owning Navigation 2 graph.
-        view.findViewById<MaterialButton>(R.id.changelog_dismiss)?.setOnClickListener {
-            findNavController().navigateUp()
+        return ComposeView(requireContext()).apply {
+            id = R.id.changelog_compose_view
+            layoutParams =
+                ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                )
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                AniTrendTheme {
+                    ChangelogScreen(
+                        versionName = versionName,
+                        onDismiss = { findNavController().navigateUp() },
+                    ) {
+                        ChangelogMarkdown(markdown)
+                    }
+                }
+            }
         }
     }
 }

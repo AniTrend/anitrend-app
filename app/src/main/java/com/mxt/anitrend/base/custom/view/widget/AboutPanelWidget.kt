@@ -2,17 +2,23 @@ package com.mxt.anitrend.base.custom.view.widget
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.Toast
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.Lifecycle
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
 import com.mxt.anitrend.base.interfaces.view.CustomView
-import com.mxt.anitrend.databinding.WidgetProfileAboutPanelBinding
+import com.mxt.anitrend.ui.designsystem.AniTrendTheme
+import com.mxt.anitrend.ui.profile.AboutPanelStats
+import com.mxt.anitrend.ui.profile.AboutPanelStatsRow
 import com.mxt.anitrend.util.KeyUtil
 import com.mxt.anitrend.util.NotifyUtil
 import com.mxt.anitrend.util.WidgetState
@@ -31,20 +37,15 @@ constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr),
-    CustomView,
-    View.OnClickListener {
+    CustomView {
 
-    private lateinit var binding: WidgetProfileAboutPanelBinding
-    private var lifecycle: Lifecycle? = null
     private var userId: Long = 0L
-    private val tag = AboutPanelWidget::class.java.simpleName
 
     private var lastSynced: Long = 0L
 
     private var followers: StatState = StatState.NotLoaded
     private var following: StatState = StatState.NotLoaded
     private var favourites: StatState = StatState.NotLoaded
-    private var lastAppliedFollowState: Boolean? = null
 
     var onFavouritesRequested: ((Long) -> Unit)? = null
     var onUserRequested: ((UserScreenParam) -> Unit)? = null
@@ -53,6 +54,9 @@ constructor(
     private var fragmentManager: FragmentManager? = null
 
     private val placeHolder = ".."
+    private var followingCount by mutableStateOf(placeHolder)
+    private var followersCount by mutableStateOf(placeHolder)
+    private var favouritesCount by mutableStateOf(placeHolder)
 
     /**
      * Loaded-state contract for a profile stat container (Favourite, Following, Followers).
@@ -86,23 +90,44 @@ constructor(
      * Optionally included when constructing custom views
      */
     override fun onInit() {
-        binding = WidgetProfileAboutPanelBinding.inflate(LayoutInflater.from(context), this, true)
-        binding.userFollowingContainer.setOnClickListener(this)
-        binding.userFollowersContainer.setOnClickListener(this)
-        binding.userFavouritesContainer.setOnClickListener(this)
+        val composeView =
+            ComposeView(context).apply {
+                id = View.generateViewId()
+                setViewCompositionStrategy(
+                    ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool,
+                )
+                setContent {
+                    AniTrendTheme {
+                        AboutPanelStatsRow(
+                            stats =
+                            AboutPanelStats(
+                                followingCount = followingCount,
+                                followersCount = followersCount,
+                                favouritesCount = favouritesCount,
+                            ),
+                            onFollowingClick = ::onFollowingClick,
+                            onFollowersClick = ::onFollowersClick,
+                            onFavouritesClick = ::onFavouritesClick,
+                        )
+                    }
+                }
+            }
+        addView(
+            composeView,
+            FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+            ),
+        )
     }
 
-    fun setUserId(
-        userId: Long,
-        lifecycle: Lifecycle,
-    ) {
+    fun setUserId(userId: Long) {
         this.userId = userId
-        this.lifecycle = lifecycle
 
         if (DateUtil.timeDifferenceSatisfied(KeyUtil.TIME_UNIT_MINUTES, lastSynced, 5)) {
-            binding.userFavouritesCount.text = placeHolder
-            binding.userFollowersCount.text = placeHolder
-            binding.userFollowingCount.text = placeHolder
+            followersCount = placeHolder
+            followingCount = placeHolder
+            favouritesCount = placeHolder
             followers = StatState.NotLoaded
             following = StatState.NotLoaded
             favourites = StatState.NotLoaded
@@ -120,13 +145,13 @@ constructor(
         this.following = following
         this.favourites = favourites
         (followers as? StatState.Loaded)?.let { state ->
-            binding.userFollowersCount.text = WidgetState.valueFormatter(state.total)
+            followersCount = WidgetState.valueFormatter(state.total)
         }
         (following as? StatState.Loaded)?.let { state ->
-            binding.userFollowingCount.text = WidgetState.valueFormatter(state.total)
+            followingCount = WidgetState.valueFormatter(state.total)
         }
         (favourites as? StatState.Loaded)?.let { state ->
-            binding.userFavouritesCount.text = WidgetState.valueFormatter(state.total)
+            favouritesCount = WidgetState.valueFormatter(state.total)
         }
     }
 
@@ -140,52 +165,57 @@ constructor(
         onUserRequested = null
     }
 
-    override fun onClick(view: View) {
-        when (view.id) {
-            R.id.user_favourites_container -> {
-                if (favourites.resolveStatClick() == StatClickAction.Open) {
-                    onFavouritesRequested?.invoke(userId)
-                } else {
-                    NotifyUtil.makeText(context, R.string.text_activity_loading, Toast.LENGTH_SHORT).show()
-                }
-            }
-            R.id.user_followers_container -> {
-                if (followers.resolveStatClick() == StatClickAction.Open) {
-                    val loaded = followers as StatState.Loaded
-                    val manager = fragmentManager ?: return
-                    bottomSheet =
-                        BottomSheetListUsers
-                            .Builder()
-                            .setUserId(userId)
-                            .setModelCount(loaded.total)
-                            .setRequestType(KeyUtil.USER_FOLLOWERS_REQ)
-                            .setOnUserClick { param -> onUserRequested?.invoke(param) }
-                            .setTitle(R.string.title_bottom_sheet_followers)
-                            .build()
-                    bottomSheet?.show(manager, bottomSheet?.tag)
-                } else {
-                    NotifyUtil.makeText(context, R.string.text_activity_loading, Toast.LENGTH_SHORT).show()
-                }
-            }
-            R.id.user_following_container -> {
-                if (following.resolveStatClick() == StatClickAction.Open) {
-                    val loaded = following as StatState.Loaded
-                    val manager = fragmentManager ?: return
-                    bottomSheet =
-                        BottomSheetListUsers
-                            .Builder()
-                            .setUserId(userId)
-                            .setModelCount(loaded.total)
-                            .setRequestType(KeyUtil.USER_FOLLOWING_REQ)
-                            .setOnUserClick { param -> onUserRequested?.invoke(param) }
-                            .setTitle(R.string.title_bottom_sheet_following)
-                            .build()
-                    bottomSheet?.show(manager, bottomSheet?.tag)
-                } else {
-                    NotifyUtil.makeText(context, R.string.text_activity_loading, Toast.LENGTH_SHORT).show()
-                }
-            }
+    private fun onFavouritesClick() {
+        handleStatClick(favourites) { onFavouritesRequested?.invoke(userId) }
+    }
+
+    private fun onFollowersClick() {
+        handleStatClick(followers) {
+            showUserList(
+                state = followers as StatState.Loaded,
+                requestType = KeyUtil.USER_FOLLOWERS_REQ,
+                title = R.string.title_bottom_sheet_followers,
+            )
         }
+    }
+
+    private fun onFollowingClick() {
+        handleStatClick(following) {
+            showUserList(
+                state = following as StatState.Loaded,
+                requestType = KeyUtil.USER_FOLLOWING_REQ,
+                title = R.string.title_bottom_sheet_following,
+            )
+        }
+    }
+
+    private fun handleStatClick(
+        state: StatState,
+        onOpen: () -> Unit,
+    ) {
+        when (state.resolveStatClick()) {
+            StatClickAction.Open -> onOpen()
+            StatClickAction.ShowLoading ->
+                NotifyUtil.makeText(context, R.string.text_activity_loading, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun showUserList(
+        state: StatState.Loaded,
+        requestType: Int,
+        title: Int,
+    ) {
+        val manager = fragmentManager ?: return
+        bottomSheet =
+            BottomSheetListUsers
+                .Builder()
+                .setUserId(userId)
+                .setModelCount(state.total)
+                .setRequestType(requestType)
+                .setOnUserClick { param -> onUserRequested?.invoke(param) }
+                .setTitle(title)
+                .build()
+        bottomSheet?.show(manager, bottomSheet?.tag)
     }
 
     fun setFragmentActivity(activity: FragmentActivity?) {

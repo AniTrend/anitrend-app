@@ -127,6 +127,7 @@ private fun ApplicationExtension.setUpWith(project: Project) {
         dataBinding = false
         viewBinding = true
         buildConfig = true
+        compose = true
         resValues = true
     }
 

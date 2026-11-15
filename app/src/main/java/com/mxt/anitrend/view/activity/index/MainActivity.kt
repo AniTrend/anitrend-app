@@ -12,6 +12,11 @@ import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.net.toUri
 import androidx.core.view.GravityCompat
 import androidx.core.view.isVisible
@@ -28,7 +33,9 @@ import com.mxt.anitrend.base.custom.activity.launchUpdateWorker
 import com.mxt.anitrend.base.custom.async.WebTokenRequest
 import com.mxt.anitrend.base.custom.fragment.FragmentBaseList
 import com.mxt.anitrend.base.custom.sheet.BottomSheetBase
-import com.mxt.anitrend.base.custom.view.image.AvatarIndicatorView
+import com.mxt.anitrend.ui.designsystem.AniTrendTheme
+import com.mxt.anitrend.ui.profile.AvatarIndicator
+import com.mxt.anitrend.ui.profile.AvatarIndicatorState
 import com.mxt.anitrend.base.custom.view.image.HeaderImageView
 import com.mxt.anitrend.base.custom.view.search.MaterialSearchView
 import com.mxt.anitrend.base.interfaces.event.BottomSheetChoice
@@ -179,15 +186,25 @@ class MainActivity :
     private val mUserName by lazy(LAZY_MODE_UNSAFE) {
         headerContainer.findViewById<TextView>(R.id.drawer_app_name)
     }
-    private val mUserAvatar by lazy(LAZY_MODE_UNSAFE) {
-        headerContainer.findViewById<AvatarIndicatorView>(R.id.drawer_avatar_indicator)
-    }
+    private var avatarIndicatorState by mutableStateOf(AvatarIndicatorState())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        mUserAvatar.onAvatarClick = ::onAvatarClicked
+        headerContainer
+            .findViewById<ComposeView>(R.id.drawer_avatar_indicator)
+            .apply {
+                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+                setContent {
+                    AniTrendTheme {
+                        AvatarIndicator(
+                            state = avatarIndicatorState,
+                            onAvatarClick = ::onAvatarClicked,
+                        )
+                    }
+                }
+            }
         setSupportActionBar(mToolbar)
         mDrawerToggle.setToolbarNavigationClickListener { navigateBackFromDestination() }
         navController.addOnDestinationChangedListener { _, destination, _ ->
@@ -624,7 +641,7 @@ class MainActivity :
         if (settings.isAuthenticated) {
             setupUserItems()
         } else {
-            mUserAvatar.render(null, 0)
+            renderAvatarIndicator(null, 0)
             mHeaderView.setImageResource(R.drawable.reg_bg)
         }
 
@@ -908,10 +925,23 @@ class MainActivity :
         else -> R.id.nav_airing
     }
 
+    private fun renderAvatarIndicator(
+        avatarUrl: String?,
+        unreadNotificationCount: Int,
+    ) {
+        avatarIndicatorState =
+            AvatarIndicatorState(
+                avatarUrl = avatarUrl,
+                hasRenderedAvatar = true,
+                unreadNotificationCount = unreadNotificationCount,
+                showNotificationIndicator = unreadNotificationCount > 0,
+            )
+    }
+
     private fun setupUserItems() {
         val user = mainViewModel.currentUser()
         if (user != null) {
-            mUserAvatar.render(user.avatar?.large, user.unreadNotificationCount)
+            renderAvatarIndicator(user.avatar?.large, user.unreadNotificationCount)
             mUserName.text = user.name.orEmpty()
             mHeaderView.setImage(user.bannerImage.orEmpty())
             if (settings.shouldShowTipFor(KeyUtil.KEY_LOGIN_TIP)) {
@@ -927,7 +957,7 @@ class MainActivity :
             }
             koinOf<ISupportAnalytics>().setCrashAnalyticUser(user.name.orEmpty())
         } else {
-            mUserAvatar.render(null, 0)
+            renderAvatarIndicator(null, 0)
         }
         mAccountLogin.isVisible = false
 
@@ -965,7 +995,7 @@ class MainActivity :
             return
         }
         if (user.unreadNotificationCount > 0) {
-            mUserAvatar.hideNotificationWidget()
+            avatarIndicatorState = avatarIndicatorState.copy(showNotificationIndicator = false)
             navController.navigateToNotifications()
         } else {
             navController.navigateToProfile(UserScreenParam(userId = 0L, initialName = user.name))
@@ -973,7 +1003,6 @@ class MainActivity :
     }
 
     override fun onDestroy() {
-        mUserAvatar.onViewRecycled()
         searchView?.apply {
             setOnQueryTextListener(null)
             setOnSearchViewListener(null)

@@ -73,6 +73,7 @@
     <color name="colorGrey600">#757575</color> <!-- 12% black -->
 
     <color name="black_transparent_image">#46000000</color>
+    <color name="colorGradientShadowEnd">#88333333</color>
     <color name="divider">#1f000000</color> <!-- 12% black -->
 
     <color name="toolbar_transparent">#50000000</color>

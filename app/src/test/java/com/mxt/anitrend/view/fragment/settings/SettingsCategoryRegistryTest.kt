@@ -203,4 +203,16 @@ class SettingsCategoryRegistryTest {
 
         assertFalse(workaround.enabled)
     }
+
+    @Test
+    fun `privacy summaries follow the checked state`() {
+        val privacyRows = sectionFor(SettingsCategoryRegistry.PRIVACY)!!.rows.filterIsInstance<SettingsRow.Toggle>()
+        val crashReports = privacyRows.first { it.keyRes == R.string.pref_key_crash_reports }
+        val usageAnalytics = privacyRows.first { it.keyRes == R.string.pref_key_usage_analytics }
+
+        assertEquals(R.string.pref_crash_reports_summary_on, crashReports.summaryRes(checked = true))
+        assertEquals(R.string.pref_crash_reports_summary_off, crashReports.summaryRes(checked = false))
+        assertEquals(R.string.pref_usage_analytics_summary_on, usageAnalytics.summaryRes(checked = true))
+        assertEquals(R.string.pref_usage_analytics_summary_off, usageAnalytics.summaryRes(checked = false))
+    }
 }

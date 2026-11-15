@@ -41,25 +41,6 @@ class ArchitectureEnforcementTest {
     }
 
     @Test
-    fun `avatar indicator is render only and emits clicks`() {
-        val avatar = projectRoot.resolve(
-            "app/src/main/java/com/mxt/anitrend/base/custom/view/image/AvatarIndicatorView.kt",
-        )
-        val source = avatar.readText()
-        val forbidden = listOf(
-            "KoinComponent",
-            "BoxQuery",
-            "Settings",
-            "startActivity",
-            "MainActivity",
-            "LoginActivity",
-        ).filter(source::contains)
-        assertTrue("AvatarIndicatorView must not own state or navigation: $forbidden", forbidden.isEmpty())
-        assertTrue("AvatarIndicatorView must expose render state.", source.contains("fun render("))
-        assertTrue("AvatarIndicatorView must expose a UI action callback.", source.contains("onAvatarClick"))
-    }
-
-    @Test
     fun `status content widget emits preview actions instead of navigating`() {
         val status = projectRoot.resolve(
             "app/src/main/java/com/mxt/anitrend/base/custom/view/widget/StatusContentWidget.kt",

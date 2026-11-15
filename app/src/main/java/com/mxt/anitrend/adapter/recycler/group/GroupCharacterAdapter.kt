@@ -4,19 +4,20 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.neverEqualPolicy
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.bumptech.glide.Glide
 import com.mxt.anitrend.R
 import com.mxt.anitrend.adapter.recycler.shared.GroupTitleViewHolder
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder
-import com.mxt.anitrend.base.custom.view.image.AspectImageView
-import com.mxt.anitrend.databinding.AdapterCharacterBinding
-import com.mxt.anitrend.databinding.AdapterEntityGroupBinding
-import com.mxt.anitrend.extension.getLayoutInflater
 import com.mxt.anitrend.model.entity.base.CharacterBase
 import com.mxt.anitrend.model.entity.group.RecyclerItem
+import com.mxt.anitrend.ui.character.CharacterRow
+import com.mxt.anitrend.ui.designsystem.AniTrendTheme
 import com.mxt.anitrend.util.KeyUtil
 
 /**
@@ -29,13 +30,24 @@ class GroupCharacterAdapter(
         parent: ViewGroup,
         @KeyUtil.RecyclerViewType viewType: Int,
     ): RecyclerViewHolder<RecyclerItem> = if (viewType == KeyUtil.RECYCLER_TYPE_HEADER) {
-        GroupTitleViewHolder(
-            AdapterEntityGroupBinding.inflate(parent.context.getLayoutInflater(), parent, false),
-        )
+        GroupTitleViewHolder(parent)
     } else {
-        CharacterViewHolder(
-            AdapterCharacterBinding.inflate(parent.context.getLayoutInflater(), parent, false),
-        )
+        val rowMargin = parent.resources.getDimensionPixelSize(R.dimen.lg_margin)
+        val composeView =
+            ComposeView(parent.context).apply {
+                id = R.id.container
+                layoutParams =
+                    RecyclerView.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ).apply {
+                        setMargins(rowMargin, rowMargin, rowMargin, rowMargin)
+                    }
+                setViewCompositionStrategy(
+                    ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool,
+                )
+            }
+        CharacterViewHolder(composeView)
     }
 
     override fun onViewAttachedToWindow(holder: RecyclerViewHolder<RecyclerItem>) {
@@ -56,23 +68,32 @@ class GroupCharacterAdapter(
 
     override fun getFilter(): Filter? = null
 
-    inner class CharacterViewHolder(
-        private val binding: AdapterCharacterBinding,
-    ) : RecyclerViewHolder<RecyclerItem>(binding.root) {
+    private inner class CharacterViewHolder(
+        private val composeView: ComposeView,
+    ) : RecyclerViewHolder<RecyclerItem>(composeView) {
+        private val character = mutableStateOf<CharacterBase?>(null, neverEqualPolicy())
+
         init {
-            bindClickListeners(R.id.container)
+            composeView.setContent {
+                AniTrendTheme {
+                    character.value?.let { current ->
+                        CharacterRow(
+                            characterName = current.name?.fullName.orEmpty(),
+                            imageUrl = current.image?.let { it.extraLarge ?: it.large },
+                            isFavourite = current.isFavourite,
+                            onClick = { onClick(composeView) },
+                        )
+                    }
+                }
+            }
         }
 
         override fun onBindViewHolder(model: RecyclerItem) {
-            val character = model as? CharacterBase ?: return
-            AspectImageView.setImage(binding.characterImg, character.image)
-            binding.characterNameText.text = character.name?.fullName
-            binding.favouriteIndicator.visibility =
-                if (character.isFavourite) View.VISIBLE else View.GONE
+            character.value = model as? CharacterBase
         }
 
         override fun onViewRecycled() {
-            Glide.with(getContext()).clear(binding.characterImg)
+            character.value = null
         }
 
         override fun onClick(v: View) {

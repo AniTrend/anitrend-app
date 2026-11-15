@@ -4,15 +4,19 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
-import com.bumptech.glide.Glide
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.neverEqualPolicy
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.recyclerview.widget.RecyclerView
 import com.mxt.anitrend.R
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder
 import com.mxt.anitrend.base.custom.view.widget.FollowStateWidget
-import com.mxt.anitrend.binding.setImage
-import com.mxt.anitrend.databinding.AdapterUserBinding
-import com.mxt.anitrend.extension.getLayoutInflater
 import com.mxt.anitrend.model.entity.base.UserBase
+import com.mxt.anitrend.ui.designsystem.AniTrendTheme
+import com.mxt.anitrend.ui.user.UserRow
+import com.mxt.anitrend.ui.user.UserRowUiState
 import java.util.Locale
 
 /**
@@ -26,9 +30,7 @@ class UserAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): RecyclerViewHolder<UserBase> = UserViewHolder(
-        AdapterUserBinding.inflate(parent.context.getLayoutInflater(), parent, false),
-    )
+    ): RecyclerViewHolder<UserBase> = UserViewHolder(parent)
 
     override fun getFilter(): Filter {
         return object : Filter() {
@@ -75,26 +77,50 @@ class UserAdapter(
     }
 
     inner class UserViewHolder(
-        private val binding: AdapterUserBinding,
-    ) : RecyclerViewHolder<UserBase>(binding.root) {
+        parent: ViewGroup,
+    ) : RecyclerViewHolder<UserBase>(
+        ComposeView(parent.context).apply {
+            id = R.id.container
+            layoutParams =
+                RecyclerView.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                ).apply {
+                    bottomMargin = parent.resources.getDimensionPixelSize(R.dimen.md_margin)
+                }
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool)
+        },
+    ) {
+        private val composeView = itemView as ComposeView
+        private val user = mutableStateOf<UserRowUiState?>(null, neverEqualPolicy())
+
         init {
-            bindClickListeners(R.id.container)
+            composeView.setContent {
+                AniTrendTheme {
+                    user.value?.let { current ->
+                        UserRow(
+                            state = current,
+                            currentUser = currentUser,
+                            followListener = followListener,
+                            onClick = { this@UserViewHolder.onClick(composeView) },
+                        )
+                    }
+                }
+            }
         }
 
         override fun onBindViewHolder(model: UserBase) {
-            binding.userAvatar.setImage(model.avatar)
-            binding.userName.text = model.name
-            // Current-user context first: the widget evaluates control visibility on
-            // model bind, so a fresh row must never evaluate against a null context.
-            binding.userFollowStateWidget.setCurrentUser(currentUser)
-            binding.userFollowStateWidget.setUserModel(model)
-            binding.userFollowStateWidget.setListener(followListener)
+            user.value =
+                UserRowUiState(
+                    model = model,
+                    name = model.name,
+                    avatar = model.avatar,
+                    isFollowing = model.isFollowing,
+                )
         }
 
         override fun onViewRecycled() {
-            Glide.with(getContext()).clear(binding.userAvatar)
-            binding.userFollowStateWidget.setListener(null)
-            binding.userFollowStateWidget.onViewRecycled()
+            user.value = null
         }
 
         override fun onClick(v: View) {

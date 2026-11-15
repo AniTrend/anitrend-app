@@ -4,16 +4,15 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.bumptech.glide.request.RequestOptions
-import com.mxt.anitrend.R
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.recyclerview.widget.RecyclerView
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewAdapter
 import com.mxt.anitrend.base.custom.recycler.RecyclerViewHolder
-import com.mxt.anitrend.databinding.AdapterGiphyBinding
-import com.mxt.anitrend.extension.getLayoutInflater
 import com.mxt.anitrend.model.entity.giphy.Giphy
-import com.mxt.anitrend.util.KeyUtil
+import com.mxt.anitrend.ui.designsystem.AniTrendTheme
+import com.mxt.anitrend.ui.giphy.GiphyResultRow
 
 /**
  * Created by max on 2017/12/09.
@@ -24,38 +23,49 @@ class GiphyAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): RecyclerViewHolder<Giphy> = GiphyViewHolder(
-        AdapterGiphyBinding.inflate(parent.context.getLayoutInflater(), parent, false),
-    )
+    ): RecyclerViewHolder<Giphy> {
+        val composeView =
+            ComposeView(parent.context).apply {
+                id = View.generateViewId()
+                layoutParams =
+                    RecyclerView.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                    )
+                setViewCompositionStrategy(
+                    ViewCompositionStrategy.DisposeOnDetachedFromWindowOrReleasedFromPool,
+                )
+            }
+        return GiphyViewHolder(composeView)
+    }
 
     override fun getFilter(): Filter? = null
 
-    inner class GiphyViewHolder(
-        private val binding: AdapterGiphyBinding,
-    ) : RecyclerViewHolder<Giphy>(binding.root) {
-        init {
-            bindClickListeners(R.id.giphy_image)
-            bindLongClickListeners(R.id.giphy_image)
-        }
+    private inner class GiphyViewHolder(
+        private val composeView: ComposeView,
+    ) : RecyclerViewHolder<Giphy>(composeView) {
+        private val giphy = mutableStateOf<Giphy?>(null)
 
-        override fun onBindViewHolder(model: Giphy) {
-            val giphy = model.images
-            val giphyImage =
-                giphy[KeyUtil.GIPHY_PREVIEW]
-                    ?: giphy[KeyUtil.GIPHY_ORIGINAL_ANIMATED]
-            if (giphyImage != null) {
-                Glide
-                    .with(getContext())
-                    .load(giphyImage.url)
-                    .transition(DrawableTransitionOptions.withCrossFade(250))
-                    .apply(RequestOptions.centerCropTransform())
-                    .into(binding.giphyImage)
+        init {
+            composeView.setContent {
+                AniTrendTheme {
+                    giphy.value?.let { item ->
+                        GiphyResultRow(
+                            giphy = item,
+                            onClick = { this@GiphyViewHolder.onClick(itemView) },
+                            onLongClick = { this@GiphyViewHolder.onLongClick(itemView) },
+                        )
+                    }
+                }
             }
         }
 
+        override fun onBindViewHolder(model: Giphy) {
+            giphy.value = model
+        }
+
         override fun onViewRecycled() {
-            Glide.with(getContext()).clear(binding.giphyImage)
-            binding.giphyImage.onViewRecycled()
+            giphy.value = null
         }
 
         override fun onClick(v: View) {
